@@ -24,7 +24,7 @@ class DynamicSectionController extends Controller
         }
 
         $sections = DynamicSection::active()
-            ->module($moduleId)
+            ->byModule($moduleId)
             ->with([
                 'items' => function ($query) {
                     $query->where('status', 1)

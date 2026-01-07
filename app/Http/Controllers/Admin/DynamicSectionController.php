@@ -18,7 +18,7 @@ class DynamicSectionController extends Controller
      */
     public function index(Request $request)
     {
-        $sections = DynamicSection::module(Config::get('module.current_module_id'))
+        $sections = DynamicSection::byModule(Config::get('module.current_module_id'))
             ->withCount('items')
             ->orderBy('priority')
             ->paginate(config('default_pagination'));
@@ -56,7 +56,7 @@ class DynamicSectionController extends Controller
         $section->title = $request->title;
         $section->subtitle = $request->subtitle;
         $section->module_id = Config::get('module.current_module_id');
-        $section->priority = DynamicSection::module(Config::get('module.current_module_id'))->max('priority') + 1;
+        $section->priority = DynamicSection::byModule(Config::get('module.current_module_id'))->max('priority') + 1;
         $section->status = $request->has('status') ? 1 : 0;
 
         if ($request->hasFile('background_image')) {

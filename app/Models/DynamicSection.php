@@ -92,7 +92,7 @@ class DynamicSection extends Model
     /**
      * Scope for module.
      */
-    public function scopeModule(Builder $query, int $moduleId): Builder
+    public function scopeByModule(Builder $query, int $moduleId): Builder
     {
         return $query->where('module_id', $moduleId);
     }
