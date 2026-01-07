@@ -153,6 +153,17 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('video-image/store', 'OtherBannerController@video_image_store')->name('video-image-store');
         });
 
+        Route::group(['prefix' => 'dynamic-section', 'as' => 'dynamic-section.', 'middleware' => ['module:banner']], function () {
+            Route::get('add-new', 'DynamicSectionController@index')->name('add-new');
+            Route::get('create', 'DynamicSectionController@create')->name('create');
+            Route::post('store', 'DynamicSectionController@store')->name('store');
+            Route::get('edit/{id}', 'DynamicSectionController@edit')->name('edit');
+            Route::post('update/{id}', 'DynamicSectionController@update')->name('update');
+            Route::get('status/{id}', 'DynamicSectionController@status')->name('status');
+            Route::delete('delete/{id}', 'DynamicSectionController@destroy')->name('delete');
+            Route::post('priority', 'DynamicSectionController@priority')->name('priority');
+        });
+
         Route::group(['prefix' => 'campaign', 'as' => 'campaign.', 'middleware' => ['module:campaign']], function () {
             Route::get('{type}/add-new', 'CampaignController@index')->name('add-new');
             Route::post('store/basic', 'CampaignController@storeBasic')->name('store-basic');
@@ -359,8 +370,10 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('review-section/update/{id}', 'BusinessSettingsController@review_update')->name('review-update');
             Route::delete('review/delete/{review}', 'BusinessSettingsController@review_destroy')->name('review-delete');
             Route::get('pages/react-landing-page-settings/{tab?}', 'BusinessSettingsController@react_landing_page_settings')->name('react-landing-page-settings');
-            Route::POST('pages/react-landing-page-settings/{tab?}',
-                'BusinessSettingsController@update_react_landing_page_settings')->name('react-landing-page-settings');
+            Route::POST(
+                'pages/react-landing-page-settings/{tab?}',
+                'BusinessSettingsController@update_react_landing_page_settings'
+            )->name('react-landing-page-settings');
             Route::DELETE('react-landing-page-settings/{tab}/{key}', 'BusinessSettingsController@delete_react_landing_page_settings')->name('react-landing-page-settings-delete');
             Route::get('review-react-status/{id}/{status}', 'BusinessSettingsController@review_react_status')->name('review-react-status');
             Route::get('pages/react-landing-page-settings/testimonials/review-react-list/edit/{id}', 'BusinessSettingsController@review_react_edit')->name('review-react-edit');
