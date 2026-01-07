@@ -1,0 +1,59 @@
+# Dependencies
+/node_modules
+/vendor
+
+# Laravel specific
+/public/hot
+/public/storage
+/storage/*.key
+/storage/logs/*
+!/storage/logs/.gitkeep
+/bootstrap/cache/*
+!/bootstrap/cache/.gitkeep
+
+# Environment files
+.env
+.env.backup
+.env.*.local
+
+# Compiled/Cache
+.phpunit.result.cache
+*.cache
+
+# Composer
+composer.phar
+
+# Docker
+docker-compose.override.yml
+docker-local/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Development tools
+Homestead.json
+Homestead.yaml
+.ddev/
+
+# Logs
+npm-debug.log
+yarn-error.log
+error_log
+
+# Temp files
+/storage/tmp
+.rnd
+
+# Public
+/public/.well-known
+
+# Package locks (optional - uncomment if you want to ignore)
+# package-lock.json
+# composer.lock
