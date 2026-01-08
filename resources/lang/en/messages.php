@@ -9078,4 +9078,5 @@ Smartly or Earn. ',
   'select_items' => 'Select items',
   'taxi' => 'Taxi',
   '500_warning_message' => '500 warning message',
+  'No rides yet' => 'No rides yet',
 );
