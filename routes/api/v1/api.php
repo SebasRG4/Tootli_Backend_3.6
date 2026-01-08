@@ -531,5 +531,34 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
     Route::get('vehicle/extra_charge', 'ConfigController@extra_charge');
     Route::get('get-vehicles', 'ConfigController@get_vehicles');
     Route::get('get-parcel-cancellation-reasons', 'ConfigController@parcel_cancellation_reason');
+
+    // Taxi module routes
+    Route::group(['prefix' => 'taxi'], function () {
+        // Public routes
+        Route::post('estimate-fare', 'TaxiController@estimateFare');
+
+        // User routes (authenticated)
+        Route::group(['middleware' => 'auth:api'], function () {
+            Route::post('request-ride', 'TaxiController@requestRide');
+            Route::get('ride/{id}', 'TaxiController@getRide');
+            Route::post('ride/{id}/cancel', 'TaxiController@cancelRide');
+            Route::post('ride/{id}/rate', 'TaxiController@rateRide');
+            Route::get('history', 'TaxiController@history');
+        });
+
+        // Driver routes (authenticated)
+        Route::group(['prefix' => 'driver', 'middleware' => 'auth:api'], function () {
+            Route::post('toggle-status', 'TaxiDriverController@toggleStatus');
+            Route::post('location', 'TaxiDriverController@updateLocation');
+            Route::get('pending-requests', 'TaxiDriverController@getPendingRequests');
+            Route::post('accept-ride', 'TaxiDriverController@acceptRide');
+            Route::post('ride/{id}/arriving', 'TaxiDriverController@markArriving');
+            Route::post('ride/{id}/arrived', 'TaxiDriverController@markArrived');
+            Route::post('ride/{id}/start', 'TaxiDriverController@startRide');
+            Route::post('ride/{id}/complete', 'TaxiDriverController@completeRide');
+            Route::get('current-ride', 'TaxiDriverController@getCurrentRide');
+            Route::get('history', 'TaxiDriverController@history');
+        });
+    });
 });
 
