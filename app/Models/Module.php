@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\DB;
 class Module extends Model
 {
     use HasFactory;
-    protected $with = ['translations','storage'];
+    protected $with = ['translations', 'storage'];
     /**
      * The attributes that are mass assignable.
      *
@@ -54,14 +54,14 @@ class Module extends Model
      * @var string[]
      */
     protected $casts = [
-        'id'=>'integer',
-        'stores_count'=>'integer',
-        'theme_id'=>'integer',
-        'status'=>'string',
-        'all_zone_service'=>'integer'
+        'id' => 'integer',
+        'stores_count' => 'integer',
+        'theme_id' => 'integer',
+        'status' => 'string',
+        'all_zone_service' => 'integer'
     ];
 
-    protected $appends = ['icon_full_url','thumbnail_full_url'];
+    protected $appends = ['icon_full_url', 'thumbnail_full_url'];
 
     /**
      * @return HasMany
@@ -137,11 +137,21 @@ class Module extends Model
      */
     public function scopeNotParcel($query): mixed
     {
-        return $query->where('module_type', '!=' ,'parcel');
+        return $query->where('module_type', '!=', 'parcel');
     }
     public function scopeNotRental($query): mixed
     {
-        return $query->where('module_type', '!=' ,'rental');
+        return $query->where('module_type', '!=', 'rental');
+    }
+
+    public function scopeNotTaxi($query): mixed
+    {
+        return $query->where('module_type', '!=', 'taxi');
+    }
+
+    public function scopeTaxi($query): mixed
+    {
+        return $query->where('module_type', 'taxi');
     }
 
     /**
@@ -153,29 +163,31 @@ class Module extends Model
         return $query->where('status', '=', 1);
     }
 
-    public function getIconFullUrlAttribute(){
+    public function getIconFullUrlAttribute()
+    {
         $value = $this->icon;
         if (count($this->storage) > 0) {
             foreach ($this->storage as $storage) {
                 if ($storage['key'] == 'icon') {
-                    return Helpers::get_full_url('module',$value,$storage['value']);
+                    return Helpers::get_full_url('module', $value, $storage['value']);
                 }
             }
         }
 
-        return Helpers::get_full_url('module',$value,'public');
+        return Helpers::get_full_url('module', $value, 'public');
     }
-    public function getThumbnailFullUrlAttribute(){
+    public function getThumbnailFullUrlAttribute()
+    {
         $value = $this->thumbnail;
         if (count($this->storage) > 0) {
             foreach ($this->storage as $storage) {
                 if ($storage['key'] == 'thumbnail') {
-                    return Helpers::get_full_url('module',$value,$storage['value']);
+                    return Helpers::get_full_url('module', $value, $storage['value']);
                 }
             }
         }
 
-        return Helpers::get_full_url('module',$value,'public');
+        return Helpers::get_full_url('module', $value, 'public');
     }
 
     public function storage()
@@ -188,9 +200,11 @@ class Module extends Model
             $builder->with('storage');
         });
         static::addGlobalScope('translate', function (Builder $builder) {
-            $builder->with(['translations' => function($query){
-                return $query->where('locale', app()->getLocale());
-            }]);
+            $builder->with([
+                'translations' => function ($query) {
+                    return $query->where('locale', app()->getLocale());
+                }
+            ]);
         });
     }
 
@@ -215,7 +229,7 @@ class Module extends Model
     {
         parent::boot();
         static::saved(function ($model) {
-            if($model->isDirty('icon')){
+            if ($model->isDirty('icon')) {
                 $value = Helpers::getDisk();
 
                 DB::table('storages')->updateOrInsert([
@@ -228,7 +242,7 @@ class Module extends Model
                     'updated_at' => now(),
                 ]);
             }
-            if($model->isDirty('thumbnail')){
+            if ($model->isDirty('thumbnail')) {
                 $value = Helpers::getDisk();
 
                 DB::table('storages')->updateOrInsert([
