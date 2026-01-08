@@ -9077,4 +9077,5 @@ Smartly or Earn. ',
   'you_wont_be_able_to_revert_this' => 'You wont be able to revert this',
   'select_items' => 'Select items',
   'taxi' => 'Taxi',
+  '500_warning_message' => '500 warning message',
 );
