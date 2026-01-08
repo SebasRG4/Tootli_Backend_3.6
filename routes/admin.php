@@ -164,6 +164,35 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('priority', 'DynamicSectionController@priority')->name('priority');
         });
 
+        // Taxi Management Routes
+        Route::group(['prefix' => 'taxi', 'as' => 'taxi.'], function () {
+            Route::get('dashboard', 'TaxiManagementController@dashboard')->name('dashboard');
+
+            // Drivers
+            Route::get('drivers', 'TaxiManagementController@drivers')->name('drivers');
+            Route::post('drivers/store', 'TaxiManagementController@storeDriver')->name('drivers.store');
+            Route::post('drivers/update/{id}', 'TaxiManagementController@updateDriver')->name('drivers.update');
+            Route::delete('drivers/delete/{id}', 'TaxiManagementController@deleteDriver')->name('drivers.delete');
+            Route::get('drivers/toggle-verification/{id}', 'TaxiManagementController@toggleDriverVerification')->name('drivers.toggle-verification');
+            Route::get('drivers/search-users', 'TaxiManagementController@searchUsers')->name('drivers.search-users');
+
+            // Vehicles
+            Route::get('vehicles', 'TaxiManagementController@vehicles')->name('vehicles');
+            Route::post('vehicles/store', 'TaxiManagementController@storeVehicle')->name('vehicles.store');
+            Route::post('vehicles/update/{id}', 'TaxiManagementController@updateVehicle')->name('vehicles.update');
+            Route::delete('vehicles/delete/{id}', 'TaxiManagementController@deleteVehicle')->name('vehicles.delete');
+
+            // Fare Configuration
+            Route::get('fare-config', 'TaxiManagementController@fareConfig')->name('fare-config');
+            Route::post('fare-config/store', 'TaxiManagementController@storeFareConfig')->name('fare-config.store');
+            Route::post('fare-config/update/{id}', 'TaxiManagementController@updateFareConfig')->name('fare-config.update');
+            Route::delete('fare-config/delete/{id}', 'TaxiManagementController@deleteFareConfig')->name('fare-config.delete');
+
+            // Rides
+            Route::get('rides', 'TaxiManagementController@rides')->name('rides');
+            Route::get('rides/{id}', 'TaxiManagementController@rideDetails')->name('rides.details');
+        });
+
         Route::group(['prefix' => 'campaign', 'as' => 'campaign.', 'middleware' => ['module:campaign']], function () {
             Route::get('{type}/add-new', 'CampaignController@index')->name('add-new');
             Route::post('store/basic', 'CampaignController@storeBasic')->name('store-basic');

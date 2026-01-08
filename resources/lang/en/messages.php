@@ -9076,4 +9076,5 @@ Smartly or Earn. ',
   'yes_delete_it' => 'Yes delete it',
   'you_wont_be_able_to_revert_this' => 'You wont be able to revert this',
   'select_items' => 'Select items',
+  'taxi' => 'Taxi',
 );
