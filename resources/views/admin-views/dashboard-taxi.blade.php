@@ -30,7 +30,7 @@
                     <select name="zone_id" class="form-control js-select2-custom fetch_data_zone_wise">
                         <option value="all">{{ translate('messages.All_Zones') }}</option>
                         @foreach(\App\Models\Zone::orderBy('name')->get() as $zone)
-                            <option value="{{$zone['id']}}" {{$params['zone_id'] == $zone['id'] ? 'selected' : ''}}>
+                            <option value="{{$zone['id']}}" {{isset($params) && $params['zone_id'] == $zone['id'] ? 'selected' : ''}}>
                                 {{$zone['name']}}
                             </option>
                         @endforeach
