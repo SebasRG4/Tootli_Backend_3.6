@@ -1,0 +1,106 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+
+return new class extends Migration {
+    public function up(): void
+    {
+        // Create vehicle types table
+        Schema::create('taxi_vehicle_types', function (Blueprint $table) {
+            $table->id();
+            $table->string('slug', 50)->unique();
+            $table->string('name', 100);
+            $table->text('description')->nullable();
+            $table->integer('max_passengers')->default(4);
+            $table->string('image')->nullable();
+            $table->integer('sort_order')->default(0);
+            $table->boolean('status')->default(true);
+            $table->timestamps();
+        });
+
+        // Seed with default types
+        DB::table('taxi_vehicle_types')->insert([
+            [
+                'slug' => 'economy',
+                'name' => 'Económico',
+                'description' => 'Viajes económicos y accesibles',
+                'max_passengers' => 4,
+                'sort_order' => 1,
+                'status' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'slug' => 'comfort',
+                'name' => 'Comfort',
+                'description' => 'Mayor comodidad para tu viaje',
+                'max_passengers' => 4,
+                'sort_order' => 2,
+                'status' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'slug' => 'premium',
+                'name' => 'Premium',
+                'description' => 'Vehículos de lujo',
+                'max_passengers' => 6,
+                'sort_order' => 3,
+                'status' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+
+        // Drop the unique constraint first
+        Schema::table('taxi_fare_config', function (Blueprint $table) {
+            $table->dropUnique(['zone_id', 'vehicle_type']);
+        });
+
+        // Add vehicle_type_id to fare_config
+        Schema::table('taxi_fare_config', function (Blueprint $table) {
+            $table->foreignId('vehicle_type_id')->nullable()->after('zone_id');
+        });
+
+        // Migrate existing data
+        $types = DB::table('taxi_vehicle_types')->get()->keyBy('slug');
+        foreach ($types as $slug => $type) {
+            DB::table('taxi_fare_config')
+                ->where('vehicle_type', $slug)
+                ->update(['vehicle_type_id' => $type->id]);
+        }
+
+        // Remove old columns
+        Schema::table('taxi_fare_config', function (Blueprint $table) {
+            $table->dropColumn(['vehicle_type', 'max_passengers', 'vehicle_image']);
+        });
+
+        // Add new unique constraint and foreign key
+        Schema::table('taxi_fare_config', function (Blueprint $table) {
+            $table->unique(['zone_id', 'vehicle_type_id']);
+            $table->foreign('vehicle_type_id')
+                ->references('id')
+                ->on('taxi_vehicle_types')
+                ->onDelete('cascade');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('taxi_fare_config', function (Blueprint $table) {
+            $table->dropForeign(['vehicle_type_id']);
+            $table->dropUnique(['zone_id', 'vehicle_type_id']);
+            $table->dropColumn('vehicle_type_id');
+            $table->string('vehicle_type')->default('economy');
+            $table->integer('max_passengers')->default(4);
+            $table->string('vehicle_image')->nullable();
+            $table->unique(['zone_id', 'vehicle_type']);
+        });
+
+        Schema::dropIfExists('taxi_vehicle_types');
+    }
+};
+

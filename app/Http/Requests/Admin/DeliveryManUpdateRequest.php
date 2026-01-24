@@ -8,20 +8,20 @@ use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rules\Password;
 
 /**
- * @property int id
- * @property array|string title
- * @property array translations
- * @property string|null|array description
- * @property string bonus_type
- * @property float bonus_amount
- * @property float minimum_add_amount
- * @property float maximum_bonus_amount
- * @property Carbon|null start_date
- * @property Carbon|null end_date
- * @property bool status
- * @property Carbon|null created_at
- * @property Carbon|null updated_at
- * @property array lang
+ * @property int $id
+ * @property array|string $title
+ * @property array $translations
+ * @property string|null|array $description
+ * @property string $bonus_type
+ * @property float $bonus_amount
+ * @property float $minimum_add_amount
+ * @property float $maximum_bonus_amount
+ * @property Carbon|null $start_date
+ * @property Carbon|null $end_date
+ * @property bool $status
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property array $lang
  */
 class DeliveryManUpdateRequest extends FormRequest
 {
@@ -43,11 +43,17 @@ class DeliveryManUpdateRequest extends FormRequest
             'f_name' => 'required|max:100',
             'l_name' => 'nullable|max:100',
             'identity_number' => 'required|max:30',
-            'email' => 'required|unique:delivery_men,email,'.$this->id,
-            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:delivery_men,phone,'.$this->id,
+            'email' => 'required|unique:delivery_men,email,' . $this->id,
+            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:delivery_men,phone,' . $this->id,
             'vehicle_id' => 'required',
             'earning' => 'required',
-            'password' => ['nullable', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised(),
+            'can_deliver' => 'nullable|boolean',
+            'can_drive_taxi' => 'nullable|boolean',
+            'taxi_license_number' => 'required_if:can_drive_taxi,1|nullable|max:50',
+            'taxi_license_expiry' => 'required_if:can_drive_taxi,1|nullable|date',
+            'password' => [
+                'nullable',
+                Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised(),
                 function ($attribute, $value, $fail) {
                     if (strpos($value, ' ') !== false) {
                         $fail('The :attribute cannot contain white spaces.');

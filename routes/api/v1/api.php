@@ -152,6 +152,12 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
                 Route::get('details', 'ConversationController@dm_messages');
                 Route::post('send', 'ConversationController@dm_messages_store');
             });
+
+            // Taxi/Unified Service Routes
+            Route::post('toggle-services', 'DeliverymanController@toggleServices');
+            Route::get('taxi-profile', 'DeliverymanController@getTaxiProfile');
+
+
         });
     });
 
@@ -365,6 +371,9 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
                 Route::get('search-list', 'ConversationController@search_conversations');
                 Route::get('details', 'ConversationController@messages');
                 Route::post('send', 'ConversationController@messages_store');
+
+                // Taxi driver chat (ensures UserInfo exists)
+
             });
 
             Route::group(['prefix' => 'wish-list'], function () {
@@ -532,32 +541,20 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
     Route::get('get-vehicles', 'ConfigController@get_vehicles');
     Route::get('get-parcel-cancellation-reasons', 'ConfigController@parcel_cancellation_reason');
 
-    // Taxi module routes
-    Route::group(['prefix' => 'taxi'], function () {
+    // Taxi module routes moved to Modules/Taxi/routes/api.php
+
+    // Sabores de la Ciudad module routes
+    Route::group(['prefix' => 'sabores'], function () {
         // Public routes
-        Route::post('estimate-fare', 'TaxiController@estimateFare');
+        Route::get('stores-map', 'SaboresCiudadController@getStoresForMap');
+        Route::get('store-details/{id}', 'SaboresCiudadController@getStoreDetails');
 
         // User routes (authenticated)
         Route::group(['middleware' => 'auth:api'], function () {
-            Route::post('request-ride', 'TaxiController@requestRide');
-            Route::get('ride/{id}', 'TaxiController@getRide');
-            Route::post('ride/{id}/cancel', 'TaxiController@cancelRide');
-            Route::post('ride/{id}/rate', 'TaxiController@rateRide');
-            Route::get('history', 'TaxiController@history');
-        });
-
-        // Driver routes (authenticated)
-        Route::group(['prefix' => 'driver', 'middleware' => 'auth:api'], function () {
-            Route::post('toggle-status', 'TaxiDriverController@toggleStatus');
-            Route::post('location', 'TaxiDriverController@updateLocation');
-            Route::get('pending-requests', 'TaxiDriverController@getPendingRequests');
-            Route::post('accept-ride', 'TaxiDriverController@acceptRide');
-            Route::post('ride/{id}/arriving', 'TaxiDriverController@markArriving');
-            Route::post('ride/{id}/arrived', 'TaxiDriverController@markArrived');
-            Route::post('ride/{id}/start', 'TaxiDriverController@startRide');
-            Route::post('ride/{id}/complete', 'TaxiDriverController@completeRide');
-            Route::get('current-ride', 'TaxiDriverController@getCurrentRide');
-            Route::get('history', 'TaxiDriverController@history');
+            Route::post('reservations', 'SaboresCiudadController@createReservation');
+            Route::get('reservations', 'SaboresCiudadController@getUserReservations');
+            Route::put('reservations/{id}', 'SaboresCiudadController@updateReservation');
+            Route::delete('reservations/{id}', 'SaboresCiudadController@cancelReservation');
         });
     });
 });

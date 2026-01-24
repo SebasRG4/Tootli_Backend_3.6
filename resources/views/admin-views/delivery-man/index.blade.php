@@ -92,6 +92,39 @@
                                         </div>
                                     </div>
 
+                                    <div class="col-sm-12">
+                                        <div class="form-group mb-0">
+                                            <label class="input-label">{{translate('messages.service_type')}} <span class="form-label-secondary text-danger" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.Required.') }}"> *</span></label>
+                                            <div class="resturant-type-group d-flex align-items-center gap-3 border rounded p-2">
+                                                <label class="form-check form--check mr-2 mr-md-4">
+                                                    <input class="form-check-input" type="checkbox" name="can_deliver" value="1" checked id="can_deliver">
+                                                    <span class="form-check-label">
+                                                        {{translate('messages.delivery_man')}}
+                                                    </span>
+                                                </label>
+                                                <label class="form-check form--check mr-2 mr-md-4">
+                                                    <input class="form-check-input" type="checkbox" name="can_drive_taxi" value="1" id="can_drive_taxi">
+                                                    <span class="form-check-label">
+                                                        {{translate('messages.taxi_driver')}}
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-sm-6 taxi-info" style="display: none;">
+                                        <div class="form-group mb-0">
+                                            <label class="input-label">{{translate('messages.taxi_license_number')}}</label>
+                                            <input type="text" name="taxi_license_number" class="form-control" placeholder="{{translate('messages.Ex: 123456789')}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 taxi-info" style="display: none;">
+                                        <div class="form-group mb-0">
+                                            <label class="input-label">{{translate('messages.taxi_license_expiry')}}</label>
+                                            <input type="date" name="taxi_license_expiry" class="form-control">
+                                        </div>
+                                    </div>
+
                                     <div class="col-sm-6" id="ref_code" style="display: none;">
                                         <div class="form-group mb-0">
                                             <label class="input-label"
@@ -470,6 +503,18 @@
             } else {
                 $('#ref_code').hide();
                 $('#referral_code').val('');
+            }
+        });
+
+        $('#can_drive_taxi').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('.taxi-info').show();
+                $('input[name="taxi_license_number"]').attr('required', true);
+                $('input[name="taxi_license_expiry"]').attr('required', true);
+            } else {
+                $('.taxi-info').hide();
+                $('input[name="taxi_license_number"]').removeAttr('required');
+                $('input[name="taxi_license_expiry"]').removeAttr('required');
             }
         });
 

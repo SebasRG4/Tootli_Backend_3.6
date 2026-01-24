@@ -23,8 +23,9 @@ class BkashPaymentController extends Controller
     private PaymentRequest $payment;
     private $user;
 
-    public function __construct(PaymentRequest $payment,User $user)
+    public function __construct(PaymentRequest $payment, User $user)
     {
+        $this->config_values = null;
         $config = $this->payment_config('bkash', 'payment_config');
         if (!is_null($config) && $config->mode == 'live') {
             $this->config_values = json_decode($config->live_values);
@@ -32,11 +33,11 @@ class BkashPaymentController extends Controller
             $this->config_values = json_decode($config->test_values);
         }
 
-        if ($config) {
-            $this->app_key = $this->config_values->app_key;
-            $this->app_secret = $this->config_values->app_secret;
-            $this->username = $this->config_values->username;
-            $this->password = $this->config_values->password;
+        if ($config && isset($this->config_values)) {
+            $this->app_key = $this->config_values->app_key ?? '';
+            $this->app_secret = $this->config_values->app_secret ?? '';
+            $this->username = $this->config_values->username ?? '';
+            $this->password = $this->config_values->password ?? '';
             $this->base_url = ($config->mode == 'live') ? 'https://tokenized.pay.bka.sh/v1.2.0-beta' : 'https://tokenized.sandbox.bka.sh/v1.2.0-beta';
         }
 
@@ -101,7 +102,7 @@ class BkashPaymentController extends Controller
 
         $requestbody = array(
             'mode' => '0011',
-            'amount' => (string)round($data->payment_amount, 2),
+            'amount' => (string) round($data->payment_amount, 2),
             'currency' => 'BDT',
             'intent' => 'sale',
             'payerReference' => $payer->phone,
@@ -172,13 +173,13 @@ class BkashPaymentController extends Controller
                 call_user_func($data->success_hook, $data);
             }
 
-            return $this->payment_response($data,'success');
+            return $this->payment_response($data, 'success');
         } else {
             $payment_data = $this->payment::where(['id' => $request['payment_id']])->first();
             if (isset($payment_data) && function_exists($payment_data->failure_hook)) {
                 call_user_func($payment_data->failure_hook, $payment_data);
             }
-            return $this->payment_response($payment_data,'fail');
+            return $this->payment_response($payment_data, 'fail');
         }
     }
 

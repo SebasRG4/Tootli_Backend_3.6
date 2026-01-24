@@ -27,6 +27,7 @@ class PaytmController extends Controller
 
     public function __construct(PaymentRequest $payment, User $user)
     {
+        $this->config_values = null;
         $config = $this->payment_config('paytm', 'payment_config');
         if (!is_null($config) && $config->mode == 'live') {
             $this->config_values = json_decode($config->live_values);
@@ -44,9 +45,9 @@ class PaytmController extends Controller
 
             $config = array(
                 'PAYTM_ENVIRONMENT' => ($config->mode == 'test') ? 'TEST' : 'PROD',
-                'PAYTM_MERCHANT_KEY' => env('PAYTM_MERCHANT_KEY', $this->config_values->merchant_key),
-                'PAYTM_MERCHANT_MID' => env('PAYTM_MERCHANT_MID', $this->config_values->merchant_id),
-                'PAYTM_MERCHANT_WEBSITE' => env('PAYTM_MERCHANT_WEBSITE', $this->config_values->merchant_website_link),
+                'PAYTM_MERCHANT_KEY' => env('PAYTM_MERCHANT_KEY', $this->config_values->merchant_key ?? ''),
+                'PAYTM_MERCHANT_MID' => env('PAYTM_MERCHANT_MID', $this->config_values->merchant_id ?? ''),
+                'PAYTM_MERCHANT_WEBSITE' => env('PAYTM_MERCHANT_WEBSITE', $this->config_values->merchant_website_link ?? ''),
                 'PAYTM_REFUND_URL' => env('PAYTM_REFUND_URL', $this->config_values->refund_url ?? ''),
                 'PAYTM_STATUS_QUERY_URL' => env('PAYTM_STATUS_QUERY_URL', $PAYTM_STATUS_QUERY_NEW_URL),
                 'PAYTM_STATUS_QUERY_NEW_URL' => env('PAYTM_STATUS_QUERY_NEW_URL', $PAYTM_STATUS_QUERY_NEW_URL),
@@ -78,7 +79,7 @@ class PaytmController extends Controller
     function generateSalt_e($length): string
     {
         $random = "";
-        srand((double)microtime() * 1000000);
+        srand((double) microtime() * 1000000);
 
         $data = "AbcDE123IJKLMN67QRSTUVWXYZ";
         $data .= "aBCdefghijklmn123opq45rs67tuv89wxyz";

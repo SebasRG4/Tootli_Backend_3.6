@@ -9,20 +9,20 @@ use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rules\Password;
 
 /**
- * @property int id
- * @property array|string title
- * @property array translations
- * @property string|null|array description
- * @property string bonus_type
- * @property float bonus_amount
- * @property float minimum_add_amount
- * @property float maximum_bonus_amount
- * @property Carbon|null start_date
- * @property Carbon|null end_date
- * @property bool status
- * @property Carbon|null created_at
- * @property Carbon|null updated_at
- * @property array lang
+ * @property int $id
+ * @property array|string $title
+ * @property array $translations
+ * @property string|null|array $description
+ * @property string $bonus_type
+ * @property float $bonus_amount
+ * @property float $minimum_add_amount
+ * @property float $maximum_bonus_amount
+ * @property Carbon|null $start_date
+ * @property Carbon|null $end_date
+ * @property bool $status
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property array $lang
  */
 class DeliveryManAddRequest extends FormRequest
 {
@@ -49,7 +49,9 @@ class DeliveryManAddRequest extends FormRequest
             'zone_id' => 'required',
             'earning' => 'required',
             'vehicle_id' => 'required',
-            'password' => ['required', Password::min(8)->mixedCase()->letters()->numbers()->symbols(),
+            'password' => [
+                'required',
+                Password::min(8)->mixedCase()->letters()->numbers()->symbols(),
                 function ($attribute, $value, $fail) {
                     if (strpos($value, ' ') !== false) {
                         $fail('The :attribute cannot contain white spaces.');
@@ -67,6 +69,11 @@ class DeliveryManAddRequest extends FormRequest
                     }
                 }
             ],
+            // Taxi service validation
+            'can_deliver' => 'nullable|boolean',
+            'can_drive_taxi' => 'nullable|boolean',
+            'taxi_license_number' => 'required_if:can_drive_taxi,1|nullable|max:50',
+            'taxi_license_expiry' => 'required_if:can_drive_taxi,1|nullable|date',
         ];
     }
 

@@ -84,6 +84,54 @@
                                                             </select>
                                                         </div>
                                                     </div>
+
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group mb-0">
+                                                            <label class="input-label">{{translate('messages.service_type')}} <span class="form-label-secondary text-danger" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.Required.') }}"> *</span></label>
+                                                            <div class="resturant-type-group d-flex align-items-center gap-3 border rounded p-2">
+                                                                <label class="form-check form--check mr-2 mr-md-4">
+                                                                    <input class="form-check-input" type="checkbox" name="can_deliver" value="1" {{$deliveryMan->can_deliver?'checked':''}} id="can_deliver">
+                                                                    <span class="form-check-label">
+                                                                        {{translate('messages.delivery_man')}}
+                                                                    </span>
+                                                                </label>
+                                                                <label class="form-check form--check mr-2 mr-md-4">
+                                                                    <input class="form-check-input" type="checkbox" name="can_drive_taxi" value="1" {{$deliveryMan->can_drive_taxi?'checked':''}} id="can_drive_taxi">
+                                                                    <span class="form-check-label">
+                                                                        {{translate('messages.taxi_driver')}}
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-6 taxi-info" style="display: {{$deliveryMan->can_drive_taxi?'block':'none'}};">
+                                                        <div class="form-group mb-0">
+                                                            <label class="input-label">{{translate('messages.taxi_license_number')}}</label>
+                                                            <input type="text" name="taxi_license_number" class="form-control" value="{{$deliveryMan->taxi_license_number}}" placeholder="{{translate('messages.Ex: 123456789')}}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6 taxi-info" style="display: {{$deliveryMan->can_drive_taxi?'block':'none'}};">
+                                                        <div class="form-group mb-0">
+                                                            <label class="input-label">{{translate('messages.taxi_license_expiry')}}</label>
+                                                            @php($expiry = $deliveryMan->taxi_license_expiry instanceof \Carbon\Carbon ? $deliveryMan->taxi_license_expiry->format('Y-m-d') : $deliveryMan->taxi_license_expiry)
+                                                            <input type="date" name="taxi_license_expiry" class="form-control" value="{{$expiry}}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6 taxi-info" style="display: {{$deliveryMan->can_drive_taxi?'block':'none'}};">
+                                                        <div class="form-group mb-0">
+                                                            <label class="input-label">{{translate('messages.taxi_is_verified')}}</label>
+                                                            <div class="d-flex align-items-center">
+                                                                <label class="toggle-switch toggle-switch-sm mr-2" for="taxi_is_verified">
+                                                                    <input type="checkbox" class="toggle-switch-input" name="taxi_is_verified" id="taxi_is_verified" value="1" {{$deliveryMan->taxi_is_verified?'checked':''}}>
+                                                                    <span class="toggle-switch-label">
+                                                                        <span class="toggle-switch-indicator"></span>
+                                                                    </span>
+                                                                </label>
+                                                                <span class="mb-0">{{translate('messages.verify_taxi_service')}}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <div class="col-sm-6">
                                                         <div class="form-group mb-0">
                                                             <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Delivery zone')}} <span class="form-label-secondary text-danger"
@@ -135,7 +183,7 @@
                                                 'id' => 'image-input',
                                                 'name' => 'image',
                                                 'ratio' => '1:1',
-                                                'isRequired' => true,
+                                                'isRequired' => false,
                                                 'existingImage' => $deliveryMan['image_full_url'] ?? null,
                                                 'imageExtension' => IMAGE_EXTENSION,
                                                 'imageFormat' => IMAGE_FORMAT,
@@ -420,5 +468,24 @@
             $('form').append('<input type="hidden" name="delete_identity_image[]" value="' + img + '">');
             initSpatanImagePicker();
         });
+    </script>
+    <script>
+        $('#can_drive_taxi').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('.taxi-info').show();
+                $('input[name="taxi_license_number"]').attr('required', true);
+                $('input[name="taxi_license_expiry"]').attr('required', true);
+            } else {
+                $('.taxi-info').hide();
+                $('input[name="taxi_license_number"]').removeAttr('required');
+                $('input[name="taxi_license_expiry"]').removeAttr('required');
+            }
+        });
+        
+        // Initial check for validation
+        if ($('#can_drive_taxi').is(':checked')) {
+            $('input[name="taxi_license_number"]').attr('required', true);
+            $('input[name="taxi_license_expiry"]').attr('required', true);
+        }
     </script>
 @endpush

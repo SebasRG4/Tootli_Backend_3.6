@@ -18,9 +18,7 @@
                     </h1>
                 </div>
                 <div class="col-sm-auto">
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#addDriverModal">
-                        <i class="tio-add"></i> {{ translate('Add Driver') }}
-                    </button>
+                    {{-- Registration removed - drivers must be added via Delivery Man module or API --}}
                 </div>
             </div>
         </div>
@@ -38,11 +36,14 @@
                             <select name="status" class="form-control">
                                 <option value="">{{ translate('All Status') }}</option>
                                 <option value="available" {{ request('status') == 'available' ? 'selected' : '' }}>
-                                    {{ translate('Available') }}</option>
+                                    {{ translate('Available') }}
+                                </option>
                                 <option value="busy" {{ request('status') == 'busy' ? 'selected' : '' }}>
-                                    {{ translate('Busy') }}</option>
+                                    {{ translate('Busy') }}
+                                </option>
                                 <option value="offline" {{ request('status') == 'offline' ? 'selected' : '' }}>
-                                    {{ translate('Offline') }}</option>
+                                    {{ translate('Offline') }}
+                                </option>
                             </select>
                         </div>
                         <div class="col-md-2">
@@ -79,20 +80,20 @@
                                         <div class="d-flex align-items-center">
                                             <div class="avatar avatar-circle mr-3">
                                                 <img class="avatar-img"
-                                                    src="{{ $driver->user->imageFullUrl ?? asset('public/assets/admin/img/160x160/img1.jpg') }}"
+                                                    src="{{ $driver->imageFullUrl ?? asset('public/assets/admin/img/160x160/img1.jpg') }}"
                                                     alt="">
                                             </div>
                                             <div>
-                                                <span class="d-block font-weight-bold">{{ $driver->user->f_name ?? '' }}
-                                                    {{ $driver->user->l_name ?? '' }}</span>
-                                                <small class="text-muted">{{ $driver->total_rides }}
+                                                <span class="d-block font-weight-bold">{{ $driver->f_name ?? '' }}
+                                                    {{ $driver->l_name ?? '' }}</span>
+                                                <small class="text-muted">{{ $driver->taxi_total_rides ?? 0 }}
                                                     {{ translate('rides') }}</small>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="d-block">{{ $driver->user->phone ?? 'N/A' }}</span>
-                                        <small class="text-muted">{{ $driver->user->email ?? '' }}</small>
+                                        <span class="d-block">{{ $driver->phone ?? 'N/A' }}</span>
+                                        <small class="text-muted">{{ $driver->email ?? '' }}</small>
                                     </td>
                                     <td>
                                         @if($driver->vehicle)
@@ -111,12 +112,12 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <i class="tio-star text-warning"></i> {{ number_format($driver->rating, 1) }}
+                                        <i class="tio-star text-warning"></i> {{ number_format($driver->taxi_rating ?? 5, 1) }}
                                     </td>
                                     <td>
                                         <a href="{{ route('admin.taxi.drivers.toggle-verification', $driver->id) }}"
-                                            class="btn btn-sm {{ $driver->is_verified ? 'btn-success' : 'btn-outline-secondary' }}">
-                                            {{ $driver->is_verified ? translate('Verified') : translate('Verify') }}
+                                            class="btn btn-sm {{ $driver->taxi_is_verified ? 'btn-success' : 'btn-outline-secondary' }}">
+                                            {{ $driver->taxi_is_verified ? translate('Verified') : translate('Verify') }}
                                         </a>
                                     </td>
                                     <td>
@@ -157,108 +158,81 @@
         </div>
     </div>
 
-    <!-- Add Driver Modal -->
-    <div class="modal fade" id="addDriverModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">{{ translate('Add New Driver') }}</h5>
-                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+    {{-- Edit Driver Modals --}}
+    @foreach($drivers as $driver)
+        <div class="modal fade" id="editDriverModal{{ $driver->id }}" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ translate('Edit Driver') }}: {{ $driver->f_name }} {{ $driver->l_name }}</h5>
+                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    </div>
+                    <form action="{{ route('admin.taxi.drivers.update', $driver->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>{{ translate('Zone') }} *</label>
+                                <select name="zone_id" class="form-control" required>
+                                    @foreach($zones as $zone)
+                                        <option value="{{ $zone->id }}" {{ $driver->zone_id == $zone->id ? 'selected' : '' }}>{{ $zone->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>{{ translate('Vehicle') }}</label>
+                                <select name="vehicle_id" class="form-control">
+                                    <option value="">{{ translate('No vehicle') }}</option>
+                                    @foreach($vehicles as $vehicle)
+                                        <option value="{{ $vehicle->id }}" {{ $driver->vehicle_id == $vehicle->id ? 'selected' : '' }}>
+                                            {{ $vehicle->brand }} {{ $vehicle->model }} ({{ $vehicle->plate }})
+                                        </option>
+                                    @endforeach
+                                    @if($driver->vehicle && !$vehicles->contains('id', $driver->vehicle_id))
+                                        <option value="{{ $driver->vehicle_id }}" selected>
+                                            {{ $driver->vehicle->brand }} {{ $driver->vehicle->model }} ({{ $driver->vehicle->plate }}) - Asignado
+                                        </option>
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>{{ translate('Taxi License Number') }}</label>
+                                        <input type="text" name="taxi_license_number" class="form-control" value="{{ $driver->taxi_license_number }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>{{ translate('License Expiry') }}</label>
+                                        <input type="date" name="taxi_license_expiry" class="form-control" value="{{ $driver->taxi_license_expiry ? $driver->taxi_license_expiry->format('Y-m-d') : '' }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" name="taxi_is_verified" class="custom-control-input" id="taxiVerified{{ $driver->id }}" {{ $driver->taxi_is_verified ? 'checked' : '' }}>
+                                    <label class="custom-control-label" for="taxiVerified{{ $driver->id }}">{{ translate('Taxi Verified') }}</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" name="taxi_active" class="custom-control-input" id="taxiActive{{ $driver->id }}" {{ $driver->taxi_active ? 'checked' : '' }}>
+                                    <label class="custom-control-label" for="taxiActive{{ $driver->id }}">{{ translate('Taxi Service Active') }}</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ translate('Cancel') }}</button>
+                            <button type="submit" class="btn btn-primary">{{ translate('Update') }}</button>
+                        </div>
+                    </form>
                 </div>
-                <form action="{{ route('admin.taxi.drivers.store') }}" method="POST">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>{{ translate('Select User') }} *</label>
-                            <select name="user_id" class="form-control" id="userSearch" required>
-                                <option value="">{{ translate('Search user...') }}</option>
-                            </select>
-                            <small class="text-muted">{{ translate('Search by name, phone or email') }}</small>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>{{ translate('Zone') }} *</label>
-                                    <select name="zone_id" class="form-control" required>
-                                        <option value="">{{ translate('Select Zone') }}</option>
-                                        @foreach($zones as $zone)
-                                            <option value="{{ $zone->id }}">{{ $zone->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>{{ translate('Vehicle') }}</label>
-                                    <select name="vehicle_id" class="form-control">
-                                        <option value="">{{ translate('No vehicle') }}</option>
-                                        @foreach($vehicles as $vehicle)
-                                            <option value="{{ $vehicle->id }}">{{ $vehicle->brand }} {{ $vehicle->model }}
-                                                ({{ $vehicle->plate }})</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>{{ translate('License Number') }}</label>
-                                    <input type="text" name="license_number" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>{{ translate('License Expiry') }}</label>
-                                    <input type="date" name="license_expiry" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox" name="is_verified" class="custom-control-input" id="isVerified">
-                                <label class="custom-control-label"
-                                    for="isVerified">{{ translate('Mark as Verified') }}</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
-                            data-dismiss="modal">{{ translate('Cancel') }}</button>
-                        <button type="submit" class="btn btn-primary">{{ translate('Add Driver') }}</button>
-                    </div>
-                </form>
             </div>
         </div>
-    </div>
+    @endforeach
 @endsection
 
 @push('script_2')
-    <script src="{{ asset('public/assets/admin/js/select2.min.js') }}"></script>
-    <script>
-        $(document).ready(function () {
-            $('#userSearch').select2({
-                dropdownParent: $('#addDriverModal'),
-                ajax: {
-                    url: '{{ route("admin.taxi.drivers.search-users") }}',
-                    dataType: 'json',
-                    delay: 250,
-                    data: function (params) {
-                        return { search: params.term };
-                    },
-                    processResults: function (data) {
-                        return {
-                            results: data.map(function (user) {
-                                return {
-                                    id: user.id,
-                                    text: user.f_name + ' ' + user.l_name + ' (' + user.phone + ')'
-                                };
-                            })
-                        };
-                    }
-                },
-                minimumInputLength: 2
-            });
-        });
-    </script>
+    {{-- Select2 script removed - no longer needed for driver registration --}}
 @endpush

@@ -76,15 +76,15 @@
             <div class="card-body pt-0">
                 <div class="row g-2" id="order_stats">
                     @php
-                        $totalDrivers = \App\Models\TaxiDriver::count();
-                        $onlineDrivers = \App\Models\TaxiDriver::where('status', 'available')->count();
-                        $totalVehicles = \App\Models\TaxiVehicle::count();
-                        $totalRides = \App\Models\TaxiRide::count();
-                        $pendingRides = \App\Models\TaxiRide::where('status', 'pending')->count();
-                        $activeRides = \App\Models\TaxiRide::whereIn('status', ['accepted', 'arriving', 'arrived', 'in_progress'])->count();
-                        $completedRides = \App\Models\TaxiRide::where('status', 'completed')->count();
-                        $cancelledRides = \App\Models\TaxiRide::where('status', 'cancelled')->count();
-                        $totalEarnings = \App\Models\TaxiRide::where('status', 'completed')->sum('final_fare');
+                        $totalDrivers = \Modules\Taxi\Models\TaxiDriver::count();
+                        $onlineDrivers = \Modules\Taxi\Models\TaxiDriver::where('status', 'available')->count();
+                        $totalVehicles = \Modules\Taxi\Models\TaxiVehicle::count();
+                        $totalRides = \Modules\Taxi\Models\TaxiRide::count();
+                        $pendingRides = \Modules\Taxi\Models\TaxiRide::where('status', 'pending')->count();
+                        $activeRides = \Modules\Taxi\Models\TaxiRide::whereIn('status', ['accepted', 'arriving', 'arrived', 'in_progress'])->count();
+                        $completedRides = \Modules\Taxi\Models\TaxiRide::where('status', 'completed')->count();
+                        $cancelledRides = \Modules\Taxi\Models\TaxiRide::where('status', 'cancelled')->count();
+                        $totalEarnings = \Modules\Taxi\Models\TaxiRide::where('status', 'completed')->sum('final_fare');
                     @endphp
                     <div class="col-sm-6 col-lg-3">
                         <div class="__dashboard-card-2">
@@ -212,7 +212,7 @@
                         </thead>
                         <tbody>
                             @php
-                                $recentRides = \App\Models\TaxiRide::with(['user', 'driver.user'])
+                                $recentRides = \Modules\Taxi\Models\TaxiRide::with(['user', 'driver.user'])
                                     ->orderBy('created_at', 'desc')
                                     ->take(10)
                                     ->get();

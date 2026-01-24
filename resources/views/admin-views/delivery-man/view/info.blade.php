@@ -130,6 +130,38 @@
                                 </div>
                             </div>
 
+                            <div class="text-muted line-30"></div>
+                            <div class="d-flex justify-content-center justify-content-md-start gap-3">
+                                <div class="">
+                                    <h6 class="fs-13 mb-1 font-weight-normal text-dark">
+                                        {{ translate('messages.services') }} </h6>
+                                    <div class="mb-0 fs-14 font-weight-bold text-dark ">
+                                        @if($deliveryMan->can_deliver)
+                                            <span class="badge badge-soft-info">{{translate('messages.delivery')}}</span>
+                                        @endif
+                                        @if($deliveryMan->can_drive_taxi)
+                                            <span class="badge badge-soft-warning">{{translate('messages.taxi')}}</span>
+                                            @if($deliveryMan->taxi_is_verified)
+                                                <i class="tio-checkmark-circle text-success" title="{{translate('messages.verified')}}"></i>
+                                            @else
+                                                <i class="tio-warning text-warning" title="{{translate('messages.unverified')}}"></i>
+                                            @endif
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                            @if($deliveryMan->can_drive_taxi)
+                            <div class="text-muted line-30"></div>
+                            <div class="d-flex justify-content-center justify-content-md-start gap-3">
+                                <div class="">
+                                    <h6 class="fs-13 mb-1 font-weight-normal text-dark">{{ translate('messages.taxi_license_number') }}</h6>
+                                    <p class="mb-0 fs-14 font-weight-bold text-dark ">
+                                        {{ $deliveryMan->taxi_license_number }}
+                                    </p>
+                                </div>
+                            </div>
+                            @endif
+
                         </div>
                     </div>
                     @if ($deliveryMan->application_status == 'approved')

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Taxi\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Zone;
 
 class TaxiFareConfig extends Model
 {
@@ -14,7 +15,7 @@ class TaxiFareConfig extends Model
 
     protected $fillable = [
         'zone_id',
-        'vehicle_type',
+        'vehicle_type_id',
         'base_fare',
         'per_km_rate',
         'per_min_rate',
@@ -30,6 +31,7 @@ class TaxiFareConfig extends Model
     protected $casts = [
         'id' => 'integer',
         'zone_id' => 'integer',
+        'vehicle_type_id' => 'integer',
         'base_fare' => 'float',
         'per_km_rate' => 'float',
         'per_min_rate' => 'float',
@@ -47,6 +49,11 @@ class TaxiFareConfig extends Model
         return $this->belongsTo(Zone::class);
     }
 
+    public function vehicleType(): BelongsTo
+    {
+        return $this->belongsTo(TaxiVehicleType::class, 'vehicle_type_id');
+    }
+
     public function scopeActive($query)
     {
         return $query->where('status', true);
@@ -57,9 +64,16 @@ class TaxiFareConfig extends Model
         return $query->where('zone_id', $zoneId);
     }
 
-    public function scopeForVehicleType($query, string $type)
+    public function scopeForVehicleType($query, int $vehicleTypeId)
     {
-        return $query->where('vehicle_type', $type);
+        return $query->where('vehicle_type_id', $vehicleTypeId);
+    }
+
+    public function scopeForVehicleTypeSlug($query, string $slug)
+    {
+        return $query->whereHas('vehicleType', function ($q) use ($slug) {
+            $q->where('slug', $slug);
+        });
     }
 
     /**
@@ -84,3 +98,4 @@ class TaxiFareConfig extends Model
         ];
     }
 }
+

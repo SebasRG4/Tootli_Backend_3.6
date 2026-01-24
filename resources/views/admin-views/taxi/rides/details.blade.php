@@ -54,6 +54,39 @@
                                 @endif
                             </div>
                         @endif
+
+                        @if(!in_array($ride->status, ['completed', 'cancelled']))
+                            <div class="mt-3">
+                                <button class="btn btn-sm btn-outline-primary btn-block" type="button" data-toggle="collapse"
+                                    data-target="#collapseStatus" aria-expanded="false" aria-controls="collapseStatus">
+                                    {{ translate('Change Status') }}
+                                </button>
+                                <div class="collapse mt-2" id="collapseStatus">
+                                    <form action="{{ route('admin.taxi.rides.update-status', $ride->id) }}" method="POST">
+                                        @csrf
+                                        <div class="form-group mb-2">
+                                            <select name="status" class="form-control">
+                                                <option value="pending" {{ $ride->status == 'pending' ? 'selected' : '' }}>
+                                                    {{ translate('Pending') }}</option>
+                                                <option value="accepted" {{ $ride->status == 'accepted' ? 'selected' : '' }}>
+                                                    {{ translate('Accepted') }}</option>
+                                                <option value="arriving" {{ $ride->status == 'arriving' ? 'selected' : '' }}>
+                                                    {{ translate('Arriving') }}</option>
+                                                <option value="arrived" {{ $ride->status == 'arrived' ? 'selected' : '' }}>
+                                                    {{ translate('Arrived') }}</option>
+                                                <option value="in_progress" {{ $ride->status == 'in_progress' ? 'selected' : '' }}>{{ translate('In Progress') }}</option>
+                                                <option value="completed" {{ $ride->status == 'completed' ? 'selected' : '' }}>
+                                                    {{ translate('Completed') }}</option>
+                                                <option value="cancelled" {{ $ride->status == 'cancelled' ? 'selected' : '' }}>
+                                                    {{ translate('Cancelled') }}</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit"
+                                            class="btn btn-primary btn-sm btn-block">{{ translate('Update Status') }}</button>
+                                    </form>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
 

@@ -27,6 +27,7 @@ class SslCommerzPaymentController extends Controller
 
     public function __construct(PaymentRequest $payment, User $user)
     {
+        $values = null;
         $config = $this->payment_config('ssl_commerz', 'payment_config');
         if (!is_null($config) && $config->mode == 'live') {
             $values = json_decode($config->live_values);
@@ -34,9 +35,9 @@ class SslCommerzPaymentController extends Controller
             $values = json_decode($config->test_values);
         }
 
-        if ($config) {
-            $this->store_id = $values->store_id;
-            $this->store_password = $values->store_password;
+        if ($config && isset($values)) {
+            $this->store_id = $values->store_id ?? null;
+            $this->store_password = $values->store_password ?? null;
 
             # REQUEST SEND TO SSLCOMMERZ
             $this->direct_api_url = "https://sandbox.sslcommerz.com/gwprocess/v4/api.php";
@@ -121,7 +122,7 @@ class SslCommerzPaymentController extends Controller
         curl_setopt($handle, CURLOPT_POST, 1);
         curl_setopt($handle, CURLOPT_POSTFIELDS, $post_data);
         curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($handle, CURLOPT_SSL_VERIFYPEER,  in_array(getEnvMode(),['demo','test' ,'dev']) ? false : $this->host); # KEEP IT FALSE IF YOU RUN FROM LOCAL PC
+        curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, in_array(getEnvMode(), ['demo', 'test', 'dev']) ? false : $this->host); # KEEP IT FALSE IF YOU RUN FROM LOCAL PC
 
         $content = curl_exec($handle);
         $code = curl_getinfo($handle, CURLINFO_HTTP_CODE);

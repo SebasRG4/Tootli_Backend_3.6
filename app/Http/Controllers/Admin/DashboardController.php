@@ -24,7 +24,11 @@ class DashboardController extends Controller
 
     public function __construct()
     {
-        DB::statement("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+        try {
+            DB::statement("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+        } catch (\Exception $e) {
+            // pass
+        }
     }
 
     public function user_dashboard(Request $request)

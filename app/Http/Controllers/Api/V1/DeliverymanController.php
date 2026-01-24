@@ -60,26 +60,26 @@ class DeliverymanController extends Controller
         // Added DM TIPS
 
 
-            $fees = ParcelCancellation::whereHas('order', function ($q) use ($dm) {
-                    $q->where('delivery_man_id', $dm->id);
-                })
-                ->where('return_fee_payment_status', 'paid')
-                ->selectRaw("
+        $fees = ParcelCancellation::whereHas('order', function ($q) use ($dm) {
+            $q->where('delivery_man_id', $dm->id);
+        })
+            ->where('return_fee_payment_status', 'paid')
+            ->selectRaw("
                     SUM(CASE WHEN DATE(updated_at) = ? THEN return_fee ELSE 0 END) as today,
                     SUM(CASE WHEN updated_at BETWEEN ? AND ? THEN return_fee ELSE 0 END) as week,
                     SUM(CASE WHEN updated_at BETWEEN ? AND ? THEN return_fee ELSE 0 END) as month
                 ", [
-                    Carbon::today(),
-                    Carbon::now()->startOfWeek(),
-                    Carbon::now()->endOfWeek(),
-                    Carbon::now()->startOfMonth(),
-                    Carbon::now()->endOfMonth(),
-                ])
-                ->first();
+                Carbon::today(),
+                Carbon::now()->startOfWeek(),
+                Carbon::now()->endOfWeek(),
+                Carbon::now()->startOfMonth(),
+                Carbon::now()->endOfMonth(),
+            ])
+            ->first();
 
-            $todays_return_fee    = (float) $fees->today;
-            $this_week_return_fee = (float) $fees->week;
-            $this_month_return_fee= (float) $fees->month;
+        $todays_return_fee = (float) $fees->today;
+        $this_week_return_fee = (float) $fees->week;
+        $this_month_return_fee = (float) $fees->month;
 
 
         $dm['todays_earning'] = (float) ($dm->todays_earning()->sum('original_delivery_charge') + $dm->todays_earning()->sum('dm_tips') + $todays_return_fee);
@@ -298,15 +298,16 @@ class DeliverymanController extends Controller
 
         if ($request->has('lat') && $request->has('lng') && $dm && $order->order_type != 'parcel') {
             try {
-            $zoneIds =  Zone::whereContains('coordinates', new Point($request->lat, $request->lng, POINT_SRID))->pluck('id')->toArray();
-            if (($dm->zone_id && !in_array($dm->zone_id, $zoneIds))) {
-                        return response()->json([
-                            'errors' => [
-                                ['code' => 'dm_out_of_zone', 'message' => translate('messages.You are outside the service area. Move closer to accept this order.')]
-                            ]
-                        ], 403);
-                    }
-                } catch (\Throwable $th) { }
+                $zoneIds = Zone::whereContains('coordinates', new Point($request->lat, $request->lng, POINT_SRID))->pluck('id')->toArray();
+                if (($dm->zone_id && !in_array($dm->zone_id, $zoneIds))) {
+                    return response()->json([
+                        'errors' => [
+                            ['code' => 'dm_out_of_zone', 'message' => translate('messages.You are outside the service area. Move closer to accept this order.')]
+                        ]
+                    ], 403);
+                }
+            } catch (\Throwable $th) {
+            }
         }
 
 
@@ -698,7 +699,7 @@ class DeliverymanController extends Controller
 
         $paginator = Order::with(['customer', 'store', 'parcel_category'])
             ->where(['delivery_man_id' => $dm['id']])
-            ->whereIn('order_status', ['delivered', 'canceled','returned' ,'refund_requested', 'refunded', 'failed'])
+            ->whereIn('order_status', ['delivered', 'canceled', 'returned', 'refund_requested', 'refunded', 'failed'])
             ->orderBy('schedule_at', 'desc')
             ->dmOrder()
             ->paginate($request['limit'], ['*'], 'page', $request['offset']);
@@ -1618,5 +1619,105 @@ class DeliverymanController extends Controller
 
     }
 
+    /**
+     * Toggle active services (delivery and/or taxi)
+     * Allows drivers to choose which types of requests they want to receive
+     */
+    public function toggleServices(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'delivery_active' => 'boolean',
+            'taxi_active' => 'boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+
+        if (!$dm) {
+            return response()->json(['message' => translate('Deliveryman not found')], 404);
+        }
+
+        // Only allow toggling services the driver is approved for
+        if ($request->has('delivery_active')) {
+            if (!$dm->can_deliver) {
+                return response()->json([
+                    'errors' => [['code' => 'service', 'message' => translate('Not approved for delivery service')]]
+                ], 403);
+            }
+            $dm->delivery_active = filter_var($request->delivery_active, FILTER_VALIDATE_BOOLEAN);
+        }
+
+        if ($request->has('taxi_active')) {
+            if (!$dm->can_drive_taxi) {
+                return response()->json([
+                    'errors' => [['code' => 'service', 'message' => translate('Not approved for taxi service')]]
+                ], 403);
+            }
+            if (!$dm->taxi_is_verified) {
+                return response()->json([
+                    'errors' => [['code' => 'service', 'message' => translate('Taxi service not verified yet')]]
+                ], 403);
+            }
+            $dm->taxi_active = filter_var($request->taxi_active, FILTER_VALIDATE_BOOLEAN);
+        }
+
+        // At least one service must be active when driver is online
+        if ($dm->active && !$dm->delivery_active && !$dm->taxi_active) {
+            return response()->json([
+                'errors' => [['code' => 'service', 'message' => translate('At least one service must be active when you are online')]]
+            ], 403);
+        }
+
+        $dm->save();
+
+        return response()->json([
+            'message' => translate('Services updated successfully'),
+            'services' => [
+                'can_deliver' => $dm->can_deliver,
+                'can_drive_taxi' => $dm->can_drive_taxi,
+                'delivery_active' => $dm->delivery_active,
+                'taxi_active' => $dm->taxi_active,
+                'taxi_is_verified' => $dm->taxi_is_verified,
+            ],
+        ], 200);
+    }
+
+    /**
+     * Get taxi-specific profile and capabilities
+     */
+    public function getTaxiProfile(Request $request)
+    {
+        $dm = DeliveryMan::with(['vehicle'])->where(['auth_token' => $request['token']])->first();
+
+        if (!$dm) {
+            return response()->json(['message' => translate('Deliveryman not found')], 404);
+        }
+
+        return response()->json([
+            'can_drive_taxi' => $dm->can_drive_taxi,
+            'taxi_active' => $dm->taxi_active,
+            'taxi_is_verified' => $dm->taxi_is_verified,
+            'taxi_license_number' => $dm->taxi_license_number,
+            'taxi_license_expiry' => $dm->taxi_license_expiry,
+            'taxi_rating' => $dm->taxi_rating,
+            'taxi_total_rides' => $dm->taxi_total_rides,
+            'vehicle' => $dm->vehicle ? [
+                'id' => $dm->vehicle->id,
+                'type' => $dm->vehicle->type,
+                'brand' => $dm->vehicle->brand,
+                'model' => $dm->vehicle->model,
+                'color' => $dm->vehicle->color,
+                'license_plate' => $dm->vehicle->license_plate,
+                'seats' => $dm->vehicle->seats,
+                'can_taxi' => $dm->vehicle->can_taxi,
+                'can_delivery' => $dm->vehicle->can_delivery,
+            ] : null,
+        ], 200);
+    }
+
 
 }
+

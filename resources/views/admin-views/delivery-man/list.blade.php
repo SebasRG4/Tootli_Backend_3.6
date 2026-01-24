@@ -118,6 +118,7 @@
                         <th class="border-0 text-capitalize">{{translate('messages.name')}}</th>
                         <th class="border-0 text-capitalize">{{translate('messages.contact_info')}}</th>
                         <th class="border-0 text-capitalize">{{translate('messages.zone')}}</th>
+                        <th class="border-0 text-capitalize">{{translate('messages.services')}}</th>
                         <th class="border-0 text-capitalize">{{translate('messages.Total_Completed_Orders')}}</th>
                         <th class="border-0 text-capitalize">{{translate('messages.availability_status')}}</th>
                         <th class="border-0 text-capitalize">{{translate('messages.Status')}}</th>
@@ -152,6 +153,21 @@
                                 <label class="text--title font-medium mb-0">{{$dm->zone->name}}</label>
                                 @else
                                 <label class="text--title font-medium mb-0">{{translate('messages.zone_deleted')}}</label>
+                                @endif
+                            </td>
+                            <td>
+                                @if($dm->can_deliver)
+                                <span class="badge badge-soft-info mb-1">{{translate('messages.delivery')}}</span>
+                                @endif
+                                @if($dm->can_drive_taxi)
+                                <div class="d-flex align-items-center gap-1">
+                                    <span class="badge badge-soft-warning">{{translate('messages.taxi')}}</span>
+                                    @if($dm->taxi_is_verified)
+                                        <i class="tio-checkmark-circle text-success" title="{{translate('messages.verified')}}"></i>
+                                    @else
+                                        <i class="tio-warning text-warning" title="{{translate('messages.unverified')}}"></i>
+                                    @endif
+                                </div>
                                 @endif
                             </td>
                             <td>

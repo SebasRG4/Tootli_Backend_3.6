@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
- use App\Models\Module;
+use App\Models\Module;
 use App\Models\Vendor;
 use App\Models\DataSetting;
 use Illuminate\Http\Request;
@@ -13,8 +13,8 @@ use Illuminate\Support\Carbon;
 use App\Models\BusinessSetting;
 use App\CentralLogics\SMS_module;
 use App\Models\PhoneVerification;
- use Illuminate\Support\Facades\DB;
- use Gregwar\Captcha\CaptchaBuilder;
+use Illuminate\Support\Facades\DB;
+use Gregwar\Captcha\CaptchaBuilder;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use App\Mail\AdminPasswordResetMail;
@@ -29,7 +29,7 @@ use Modules\Gateways\Traits\SmsGateway;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
- 
+
 class LoginController extends Controller
 {
     public function __construct()
@@ -48,7 +48,11 @@ class LoginController extends Controller
                 }
             }
         }
-        $data = array_column(DataSetting::whereIn('key', ['store_employee_login_url', 'store_login_url', 'admin_employee_login_url', 'admin_login_url'
+        $data = array_column(DataSetting::whereIn('key', [
+            'store_employee_login_url',
+            'store_login_url',
+            'admin_employee_login_url',
+            'admin_login_url'
         ])->get(['key', 'value'])->toArray(), 'value', 'key');
 
         $loginTypes = [
@@ -127,27 +131,11 @@ class LoginController extends Controller
             'role' => 'required'
         ]);
 
-        $recaptcha = Helpers::get_business_settings('recaptcha');
-        if (isset($recaptcha) && $recaptcha['status'] == 1 && !$request?->set_default_captcha) {
-            $request->validate([
-                'g-recaptcha-response' => [
-                    function ($attribute, $value, $fail) {
-                        $secret_key = Helpers::get_business_settings('recaptcha')['secret_key'];
-                        $gResponse = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-                            'secret' => $secret_key,
-                            'response' => $value,
-                            'remoteip' => \request()->ip(),
-                        ]);
-
-                        if (!$gResponse->successful()) {
-                            $fail(translate('ReCaptcha Failed'));
-                        }
-                    },
-                ],
-            ]);
-        } else if (strtolower(session('six_captcha')) != strtolower($request->custome_recaptcha)) {
-            Toastr::error(translate('messages.ReCAPTCHA Failed'));
-            return back();
+        // Honeypot check - if this field is filled, it's a bot
+        if ($request->filled('website')) {
+            // Bot detected - silently reject by returning generic error
+            return redirect()->back()->withInput($request->only('email', 'remember'))
+                ->withErrors(['Credentials do not match.']);
         }
 
         $ip = $request->ip();
@@ -174,22 +162,20 @@ class LoginController extends Controller
                 return redirect()->back()->withInput($request->only('email', 'remember'))
                     ->withErrors(['Email does not match.']);
             }
-        }
-        elseif ($request->role == 'admin') {
+        } elseif ($request->role == 'admin') {
             $data = Admin::where('email', $request->email)->where('role_id', 1)->exists();
             if (!$data) {
                 RateLimiter::hit($key, $decayMinutes * 60);
                 return redirect()->back()->withInput($request->only('email', 'remember'))
                     ->withErrors(['Email does not match.']);
             }
-        }
-        elseif ($request->role == 'vendor') {
+        } elseif ($request->role == 'vendor') {
             $vendor = Vendor::where('email', $request->email)->first();
             if ($vendor) {
-                if($vendor?->stores[0]?->module?->module_type == 'rental'){
-                    if(!addon_published_status('Rental')){
+                if ($vendor?->stores[0]?->module?->module_type == 'rental') {
+                    if (!addon_published_status('Rental')) {
                         return redirect()->back()->withInput($request->only('email', 'remember'))
-                        ->withErrors([translate('messages.rental_module_is_not_available')]);
+                            ->withErrors([translate('messages.rental_module_is_not_available')]);
                     }
                 }
                 if ($vendor?->stores[0]?->store_business_model == 'none') {
@@ -208,35 +194,35 @@ class LoginController extends Controller
                     return redirect()->back()->withInput($request->only('email', 'remember'))
                         ->withErrors([translate('messages.Admin_did_not_approve_your_registration_yet.')]);
                 }
-            }else{
+            } else {
                 RateLimiter::hit($key, $decayMinutes * 60);
                 return redirect()->back()->withInput($request->only('email', 'remember'))
-                ->withErrors(['Email does not match.']);
+                    ->withErrors(['Email does not match.']);
             }
         } elseif ($request->role == 'vendor_employee') {
             $employee = VendorEmployee::where('email', $request->email)->first();
-                if($employee?->store?->module?->module_type == 'rental'){
-                    if(!addon_published_status('Rental')){
-                        return redirect()->back()->withInput($request->only('email', 'remember'))
+            if ($employee?->store?->module?->module_type == 'rental') {
+                if (!addon_published_status('Rental')) {
+                    return redirect()->back()->withInput($request->only('email', 'remember'))
                         ->withErrors([translate('messages.rental_module_is_not_available')]);
-                    }
                 }
-                if ($employee && (in_array($employee?->store?->store_business_model, ['none', 'unsubscribed']) || $employee?->store?->status == 0)) {
-                    return redirect()->back()->withInput($request->only('email', 'remember'))
-                        ->withErrors([translate('messages.store_is_inactive')]);
-                }
-                if (!$employee) {
-                    RateLimiter::hit($key, $decayMinutes * 60);
-                    return redirect()->back()->withInput($request->only('email', 'remember'))
-                        ->withErrors(['Email does not match.']);
-                }
+            }
+            if ($employee && (in_array($employee?->store?->store_business_model, ['none', 'unsubscribed']) || $employee?->store?->status == 0)) {
+                return redirect()->back()->withInput($request->only('email', 'remember'))
+                    ->withErrors([translate('messages.store_is_inactive')]);
+            }
+            if (!$employee) {
+                RateLimiter::hit($key, $decayMinutes * 60);
+                return redirect()->back()->withInput($request->only('email', 'remember'))
+                    ->withErrors(['Email does not match.']);
+            }
         }
 
         $data = $this->login_attemp($request->role, $request->email, $request->password, $request->ip(), $request->remember);
 
-        if($request->remember){
+        if ($request->remember) {
             $forgetCookies = [];
-        }else{
+        } else {
             $forgetCookies = [
                 Cookie::forget('role'),
                 Cookie::forget('e_token'),
@@ -262,7 +248,7 @@ class LoginController extends Controller
                 $employee->is_logged_in = 1;
                 $employee->save();
             }
-            if(Helpers::get_store_data()?->module_type == 'rental' && addon_published_status('Rental')){
+            if (Helpers::get_store_data()?->module_type == 'rental' && addon_published_status('Rental')) {
                 return redirect()->route('vendor.providerDashboard')->withCookies($forgetCookies);
             }
             return redirect()->route('vendor.dashboard')->withCookies($forgetCookies);
@@ -367,13 +353,15 @@ class LoginController extends Controller
         if ($data->created_by == 'admin') {
             $admin = Admin::where('email', $data->email)->where('role_id', 1)->first();
             $otp = rand(10000, 99999);
-            DB::table('phone_verifications')->updateOrInsert(['phone' => $admin['phone']],
+            DB::table('phone_verifications')->updateOrInsert(
+                ['phone' => $admin['phone']],
                 [
                     'token' => $otp,
                     'otp_hit_count' => 0,
                     'created_at' => now(),
                     'updated_at' => now(),
-                ]);
+                ]
+            );
             //for payment and sms gateway addon
 
             $response = null;
@@ -489,8 +477,8 @@ class LoginController extends Controller
             session()->forget('subscription_cancel_close_btn');
         } else {
             if (auth()?->guard('admin')?->user()?->role_id == 1) {
-                    $user_link = Helpers::get_login_url('admin_login_url');
-                } else {
+                $user_link = Helpers::get_login_url('admin_login_url');
+            } else {
                 $user_link = Helpers::get_login_url('admin_employee_login_url');
             }
             auth()?->guard('admin')?->logout();
@@ -512,13 +500,15 @@ class LoginController extends Controller
         if ($data->created_by == 'admin') {
             $admin = Admin::where('email', $data->email)->where('role_id', 1)->first();
             $otp = rand(10000, 99999);
-            DB::table('phone_verifications')->updateOrInsert(['phone' => $admin['phone']],
+            DB::table('phone_verifications')->updateOrInsert(
+                ['phone' => $admin['phone']],
                 [
                     'token' => $otp,
                     'otp_hit_count' => 0,
                     'created_at' => now(),
                     'updated_at' => now(),
-                ]);
+                ]
+            );
             //for payment and sms gateway addon
 
 

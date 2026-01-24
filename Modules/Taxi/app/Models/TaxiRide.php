@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Taxi\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\User;
+use App\Models\DeliveryMan;
+use App\Models\Zone;
 
 class TaxiRide extends Model
 {
@@ -12,7 +15,7 @@ class TaxiRide extends Model
 
     protected $fillable = [
         'user_id',
-        'driver_id',
+        'delivery_man_id', // New unified driver reference
         'zone_id',
         'pickup_lat',
         'pickup_lng',
@@ -42,12 +45,24 @@ class TaxiRide extends Model
         'payment_method',
         'payment_status',
         'transaction_id',
+        // Third party passenger
+        'is_for_another_person',
+        'passenger_name',
+        'passenger_phone',
+        'passenger_address_details',
+        // Driver tracking
+        'driver_current_lat',
+        'driver_current_lng',
+        'driver_updated_at',
+        'eta_minutes',
+        'distance_to_pickup_km',
+        'is_test',
     ];
 
     protected $casts = [
         'id' => 'integer',
         'user_id' => 'integer',
-        'driver_id' => 'integer',
+        'delivery_man_id' => 'integer', // New
         'zone_id' => 'integer',
         'pickup_lat' => 'float',
         'pickup_lng' => 'float',
@@ -66,6 +81,7 @@ class TaxiRide extends Model
         'cancelled_at' => 'datetime',
         'user_rating' => 'integer',
         'driver_rating' => 'integer',
+        'is_for_another_person' => 'boolean',
     ];
 
     // Status constants
@@ -82,15 +98,46 @@ class TaxiRide extends Model
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Get the driver (unified DeliveryMan model)
+     */
     public function driver(): BelongsTo
     {
-        return $this->belongsTo(TaxiDriver::class, 'driver_id');
+        return $this->belongsTo(DeliveryMan::class, 'delivery_man_id');
     }
+
+
 
     public function zone(): BelongsTo
     {
         return $this->belongsTo(Zone::class);
     }
+
+    /**
+     * Get the vehicle type for this ride
+     */
+    public function vehicleType()
+    {
+        return $this->belongsTo(TaxiVehicleType::class, 'vehicle_type', 'slug');
+    }
+
+    /**
+     * Get vehicle type image URL
+     */
+    public function getVehicleTypeImageUrlAttribute(): ?string
+    {
+        // Try to get image from related vehicle type model
+        $vehicleTypeModel = TaxiVehicleType::where('slug', $this->vehicle_type)->first();
+        if ($vehicleTypeModel && $vehicleTypeModel->image) {
+            return $vehicleTypeModel->image_url;
+        }
+        return null;
+    }
+
+    /**
+     * Append vehicle_type_image_url to JSON serialization
+     */
+    protected $appends = ['vehicle_type_image_url'];
 
     // Status scopes
     public function scopePending($query)
@@ -120,7 +167,7 @@ class TaxiRide extends Model
 
     public function scopeForDriver($query, int $driverId)
     {
-        return $query->where('driver_id', $driverId);
+        return $query->where('delivery_man_id', $driverId);
     }
 
     // Status checks
@@ -150,15 +197,19 @@ class TaxiRide extends Model
     }
 
     // Status transitions
-    public function accept(TaxiDriver $driver): void
+    /**
+     * Accept ride with unified DeliveryMan
+     */
+    public function acceptByDeliveryMan(DeliveryMan $dm): void
     {
         $this->update([
-            'driver_id' => $driver->id,
+            'delivery_man_id' => $dm->id,
             'status' => self::STATUS_ACCEPTED,
             'accepted_at' => now(),
         ]);
-        $driver->setBusy();
     }
+
+
 
     public function markArriving(): void
     {
@@ -181,7 +232,7 @@ class TaxiRide extends Model
         ]);
     }
 
-    public function complete(float $finalFare = null): void
+    public function complete(?float $finalFare = null): void
     {
         $this->update([
             'status' => self::STATUS_COMPLETED,
@@ -189,13 +240,13 @@ class TaxiRide extends Model
             'final_fare' => $finalFare ?? $this->estimated_fare,
         ]);
 
+        // Update DeliveryMan taxi stats
         if ($this->driver) {
-            $this->driver->goOnline();
-            $this->driver->increment('total_rides');
+            $this->driver->increment('taxi_total_rides');
         }
     }
 
-    public function cancel(string $cancelledBy, string $reason = null): void
+    public function cancel(string $cancelledBy, ?string $reason = null): void
     {
         $this->update([
             'status' => self::STATUS_CANCELLED,
@@ -204,8 +255,19 @@ class TaxiRide extends Model
             'cancellation_reason' => $reason,
         ]);
 
+        // Notify user if cancelled by driver or admin, otherwise notify driver
+        if ($cancelledBy !== 'user') {
+            \App\Services\FirebaseService::sendRideCancelledNotification($this, $cancelledBy);
+        } else {
+            \App\Services\FirebaseService::sendRideCancelledByUserNotification($this);
+        }
+
+        // Release delivery man if assigned
         if ($this->driver) {
-            $this->driver->goOnline();
+            $this->driver->decrement('current_orders');
+
+            // TODO: Notify driver if cancelled by user/admin
+            // if ($cancelledBy !== 'driver') { ... }
         }
     }
 }

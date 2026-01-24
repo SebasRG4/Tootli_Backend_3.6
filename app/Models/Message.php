@@ -18,9 +18,9 @@ class Message extends Model
         'sender_id' => 'integer',
         'is_seen' => 'integer',
         'order_id' => 'integer',
+        'taxi_ride_id' => 'integer',
         'details_count' => 'integer',
         'order_amount' => 'float',
-
     ];
 
     protected $appends = ['file_full_url'];
@@ -31,7 +31,13 @@ class Message extends Model
     }
     public function order()
     {
-        return $this->belongsTo(Order::class)->select(['id','order_amount' ,'order_status' ,'created_at','delivery_address'])->withcount('details');
+        return $this->belongsTo(Order::class)->select(['id', 'order_amount', 'order_status', 'created_at', 'delivery_address'])->withcount('details');
+    }
+
+    public function taxiRide()
+    {
+        return $this->belongsTo(\Modules\Taxi\Models\TaxiRide::class, 'taxi_ride_id')
+            ->select(['id', 'estimated_fare', 'status', 'created_at', 'pickup_address', 'dropoff_address']);
     }
 
     public function conversation()
@@ -39,17 +45,18 @@ class Message extends Model
         return $this->belongsTo(Conversation::class);
     }
 
-    public function getFileFullUrlAttribute(){
+    public function getFileFullUrlAttribute()
+    {
         $images = [];
         $value = is_array($this->file)
             ? $this->file
             : ($this->file && is_string($this->file) && $this->isValidJson($this->file)
                 ? json_decode($this->file, true)
                 : []);
-        if ($value){
-            foreach ($value as $item){
-                $item = is_array($item)?$item:(is_object($item) && get_class($item) == 'stdClass' ? json_decode(json_encode($item), true):['img' => $item, 'storage' => 'public']);
-                $images[] = Helpers::get_full_url('conversation',$item['img'],$item['storage']);
+        if ($value) {
+            foreach ($value as $item) {
+                $item = is_array($item) ? $item : (is_object($item) && get_class($item) == 'stdClass' ? json_decode(json_encode($item), true) : ['img' => $item, 'storage' => 'public']);
+                $images[] = Helpers::get_full_url('conversation', $item['img'], $item['storage']);
             }
         }
 
