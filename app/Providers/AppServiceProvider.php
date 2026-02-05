@@ -39,6 +39,9 @@ class AppServiceProvider extends ServiceProvider
         }
 
         try {
+            // Register Observers
+            \App\Models\Store::observe(\App\Observers\StoreObserver::class);
+
             Config::set('addon_admin_routes', $this->get_addon_admin_routes());
             Config::set('get_payment_publish_status', $this->get_payment_publish_status());
             Paginator::useBootstrap();

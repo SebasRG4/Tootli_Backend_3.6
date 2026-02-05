@@ -185,31 +185,138 @@ class SaboresController extends Controller
     {
         $request->validate([
             'average_ticket' => 'nullable|numeric|min:0',
+            'cuisine_names' => 'nullable|string|max:255',
             'accepts_reservations' => 'nullable|boolean',
+            'serves_alcohol' => 'nullable|boolean',
             'infrastructure_images' => 'nullable|array',
-            'infrastructure_images.*' => 'image|max:2048'
+            'infrastructure_images.*' => 'image|max:2048',
+            'google_address' => 'nullable|string|max:255',
+            'google_place_id' => 'nullable|string|max:255',
         ]);
 
         $restaurant = Store::findOrFail($id);
 
         // Update restaurant-specific fields
         $restaurant->average_ticket = $request->average_ticket;
+        $restaurant->cuisine_names = $request->cuisine_names;
         $restaurant->accepts_reservations = $request->has('accepts_reservations');
+        $restaurant->serves_alcohol = $request->has('serves_alcohol');
+        $restaurant->google_address = $request->google_address;
+        $restaurant->google_place_id = $request->google_place_id;
 
-        // Handle infrastructure images upload
-        if ($request->hasFile('infrastructure_images')) {
-            $images = [];
-            foreach ($request->file('infrastructure_images') as $image) {
-                $imageName = \Illuminate\Support\Str::random(10) . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('storage/store'), $imageName);
-                $images[] = ['img' => $imageName, 'storage' => 'public'];
+        // Handle infrastructure images
+        $infrastructure_images = $restaurant->infrastructure_images ?? [];
+
+        // Remove deleted images
+        if ($request->removedImageKeys) {
+            $removedKeys = explode(',', $request->removedImageKeys);
+            foreach ($infrastructure_images as $key => $value) {
+                // If value is array (robustness), check 'img' key, else check value itself
+                $imgName = is_array($value) ? $value['img'] : $value;
+                if (in_array($imgName, $removedKeys)) {
+                    \App\CentralLogics\Helpers::check_and_delete('store/', $imgName);
+                    unset($infrastructure_images[$key]);
+                }
             }
-            $restaurant->infrastructure_images = array_merge($restaurant->infrastructure_images ?? [], $images);
+            $infrastructure_images = array_values($infrastructure_images);
         }
+
+        if ($request->has('infrastructure_images')) {
+            foreach ($request->infrastructure_images as $img) {
+                $image_name = \App\CentralLogics\Helpers::upload('store/', 'png', $img);
+                $infrastructure_images[] = ['img' => $image_name, 'storage' => \App\CentralLogics\Helpers::getDisk()];
+            }
+        }
+        $restaurant->infrastructure_images = $infrastructure_images;
+
+        // Handle menu images
+        $menu_images = $restaurant->menu_images ?? [];
+
+        // Remove deleted images
+        if ($request->removedMenuImageKeys) {
+            $removedKeys = explode(',', $request->removedMenuImageKeys);
+            foreach ($menu_images as $key => $value) {
+                $imgName = is_array($value) ? $value['img'] : $value;
+                // Check if filename matches (handling basenames)
+                $found = false;
+                foreach ($removedKeys as $removedKey) {
+                    if ($imgName == $removedKey || basename($imgName) == $removedKey) {
+                        $found = true;
+                        break;
+                    }
+                }
+
+                if ($found) {
+                    \App\CentralLogics\Helpers::check_and_delete('store/', $imgName);
+                    unset($menu_images[$key]);
+                }
+            }
+            $menu_images = array_values($menu_images);
+        }
+
+        if ($request->has('menu_images')) {
+            foreach ($request->menu_images as $img) {
+                $image_name = \App\CentralLogics\Helpers::upload('store/', 'png', $img);
+                $menu_images[] = ['img' => $image_name, 'storage' => \App\CentralLogics\Helpers::getDisk()];
+            }
+        }
+        $restaurant->menu_images = $menu_images;
 
         $restaurant->save();
 
+        // Update Schedules
+        if ($request->has('schedules')) {
+            \App\Models\StoreSchedule::where('store_id', $restaurant->id)->delete();
+            foreach ($request->schedules as $day => $times) {
+                if (isset($times['opening_time']) && isset($times['closing_time']) && $times['opening_time'] && $times['closing_time']) {
+                    $schedule = new \App\Models\StoreSchedule();
+                    $schedule->store_id = $restaurant->id;
+                    $schedule->day = $day;
+                    $schedule->opening_time = $times['opening_time'];
+                    $schedule->closing_time = $times['closing_time'];
+                    $schedule->save();
+                }
+            }
+        }
+
         return redirect()->route('admin.sabores.restaurants')->with('success', translate('messages.restaurant_updated'));
+    }
+
+    /**
+     * Update infrastructure images order
+     */
+    public function updateInfrastructureImagesOrder(Request $request, $id)
+    {
+        $request->validate([
+            'images' => 'required|array',
+        ]);
+
+        $restaurant = Store::findOrFail($id);
+
+        // Reorder images based on the received list
+        // Current images in DB
+        $currentImages = $restaurant->infrastructure_images ?? [];
+
+        // New ordered list
+        $newOrder = $request->images;
+        $orderedImages = [];
+
+        // Map current images structure to verify/reorder
+        foreach ($newOrder as $filename) {
+            foreach ($currentImages as $imgObj) {
+                // If it's an array (new format) or string (old format)
+                $name = is_array($imgObj) ? $imgObj['img'] : $imgObj;
+                if ($name == $filename) {
+                    $orderedImages[] = $imgObj;
+                    break;
+                }
+            }
+        }
+
+        $restaurant->infrastructure_images = $orderedImages;
+        $restaurant->save();
+
+        return response()->json(['message' => translate('messages.images_reordered_successfully')]);
     }
 
     /**
@@ -222,7 +329,7 @@ class SaboresController extends Controller
 
         $coupons = Coupon::with(['store'])
             ->whereHas('store.module', function ($query) {
-                $query->where('module_type', 'food');
+                $query->whereIn('module_type', ['food', 'sabores']);
             })
             ->when($search, function ($query) use ($search) {
                 return $query->where('title', 'like', '%' . $search . '%')
@@ -240,6 +347,25 @@ class SaboresController extends Controller
         })->get();
 
         return view('admin-views.sabores.coupons.index', compact('coupons', 'stores', 'search', 'store_id'));
+    }
+
+    /**
+     * List basic campaigns for food module
+     */
+    public function campaigns(Request $request)
+    {
+        $search = $request->get('search');
+
+        $campaigns = \App\Models\Campaign::whereHas('module', function ($query) {
+            $query->whereIn('module_type', ['food', 'sabores']);
+        })
+            ->when($search, function ($query) use ($search) {
+                return $query->where('title', 'like', '%' . $search . '%');
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(25);
+
+        return view('admin-views.sabores.campaigns.index', compact('campaigns', 'search'));
     }
 
     /**

@@ -18,6 +18,8 @@ use Illuminate\Support\Str;
  * @property string $status
  * @property string|null $special_requests
  * @property string $confirmation_code
+ * @property string|null $customer_name
+ * @property string|null $customer_phone
  */
 class Reservation extends Model
 {
@@ -35,6 +37,8 @@ class Reservation extends Model
         'status',
         'special_requests',
         'confirmation_code',
+        'customer_name',
+        'customer_phone',
     ];
 
     /**

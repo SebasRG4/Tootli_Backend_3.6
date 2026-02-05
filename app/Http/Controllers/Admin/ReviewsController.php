@@ -9,25 +9,36 @@ use Illuminate\Http\Request;
 
 class ReviewsController extends Controller
 {
-    public function list(){
-        $reviews=Review::with(['item','customer'])->latest()->paginate(config('default_pagination'));
-        return view('admin-views.reviews.list',compact('reviews'));
+    public function list()
+    {
+        $reviews = Review::with(['item', 'customer'])->latest()->paginate(config('default_pagination'));
+        return view('admin-views.reviews.list', compact('reviews'));
     }
 
-    public function search(Request $request){
+    public function search(Request $request)
+    {
         $key = explode(' ', $request['search']);
-        $foods=Item::where(function ($q) use ($key) {
+        $foods = Item::where(function ($q) use ($key) {
             foreach ($key as $value) {
                 $q->orWhere('name', 'like', "%{$value}%");
             }
         })->pluck('id')->toArray();
-        $reviews=Review::whereIn('item_id',$foods)->where(function ($q) use ($key) {
+        $reviews = Review::whereIn('item_id', $foods)->where(function ($q) use ($key) {
             foreach ($key as $value) {
                 $q->orWhere('review_id', 'like', "%{$value}%");
             }
         })->get();
         return response()->json([
-            'view'=>view('admin-views.reviews.partials._table',compact('reviews'))->render()
+            'view' => view('admin-views.reviews.partials._table', compact('reviews'))->render()
         ]);
+    }
+    public function delete(Request $request)
+    {
+        $review = Review::find($request->id);
+        if ($review) {
+            $review->delete();
+            return back()->with('success', translate('messages.review_deleted_successfully'));
+        }
+        return back()->with('error', translate('messages.review_not_found'));
     }
 }

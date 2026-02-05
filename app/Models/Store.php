@@ -146,6 +146,11 @@ class Store extends Model
         'average_ticket',
         'infrastructure_images',
         'accepts_reservations',
+        'google_address',
+        'google_place_id',
+        'serves_alcohol',
+        'cuisine_names',
+        'menu_images',
     ];
 
     /**
@@ -191,12 +196,14 @@ class Store extends Model
         'average_ticket' => 'float',
         'infrastructure_images' => 'array',
         'accepts_reservations' => 'boolean',
+        'serves_alcohol' => 'boolean',
+        'menu_images' => 'array',
     ];
 
     /**
      * @var string[]
      */
-    protected $appends = ['gst_status', 'gst_code', 'logo_full_url', 'cover_photo_full_url', 'meta_image_full_url', 'tin_certificate_image_full_url', 'infrastructure_images_full_url'];
+    protected $appends = ['gst_status', 'gst_code', 'logo_full_url', 'cover_photo_full_url', 'meta_image_full_url', 'tin_certificate_image_full_url', 'infrastructure_images_full_url', 'menu_images_full_url'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -230,6 +237,47 @@ class Store extends Model
         }
 
         return $value;
+    }
+
+    /**
+     * @param $value
+     * @return array
+     */
+    public function getCuisineNamesAttribute($value)
+    {
+        if (is_null($value)) {
+            return [];
+        }
+
+        $decoded = json_decode($value, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+            return $decoded;
+        }
+
+        // Fallback for legacy comma-separated data
+        return array_values(array_filter(array_map('trim', explode(',', $value))));
+    }
+
+    /**
+     * @param $value
+     * @return void
+     */
+    public function setCuisineNamesAttribute($value)
+    {
+        if (is_array($value)) {
+            $this->attributes['cuisine_names'] = json_encode($value);
+        } else {
+            // Check if it's already a JSON string
+            $decoded = json_decode($value, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $this->attributes['cuisine_names'] = $value;
+            } else {
+                // Convert comma-separated string to JSON
+                $parts = array_map('trim', explode(',', $value));
+                $parts = array_filter($parts);
+                $this->attributes['cuisine_names'] = json_encode(array_values($parts));
+            }
+        }
     }
 
     /**
@@ -549,6 +597,24 @@ class Store extends Model
     }
 
     /**
+     * Get the dineout categories for this store (for Sabores module).
+     * 
+     * @return BelongsToMany
+     */
+    public function dineoutCategories(): BelongsToMany
+    {
+        return $this->belongsToMany(DineoutCategory::class, 'store_dineout_category');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class);
+    }
+
+    /**
      * @return HasMany
      */
     public function itemCampaigns(): HasMany
@@ -571,6 +637,24 @@ class Store extends Model
     public function reviews_comments()
     {
         return $this->reviews()->whereNotNull('comment');
+    }
+
+    /**
+     * Get wishlists (saved count) for this store.
+     * @return HasMany
+     */
+    public function wishlists(): HasMany
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    /**
+     * Get user list stores relationship (for custom lists saved count)
+     * @return HasMany
+     */
+    public function userListStores(): HasMany
+    {
+        return $this->hasMany(UserListStore::class);
     }
 
     /**
@@ -958,6 +1042,19 @@ class Store extends Model
     public function orderTaxes(): MorphMany
     {
         return $this->morphMany(OrderTax::class, 'store');
+    }
+
+
+    public function getMenuImagesFullUrlAttribute()
+    {
+        $value = $this->menu_images;
+        $images = [];
+        if ($value) {
+            foreach ($value as $item) {
+                $images[] = Helpers::get_full_url('store', $item['img'] ?? $item, $item['storage'] ?? 'public');
+            }
+        }
+        return $images;
     }
 
 }

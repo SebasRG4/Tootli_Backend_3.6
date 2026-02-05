@@ -13,6 +13,8 @@ class Wishlist extends Model
         'updated_at' => 'datetime'
     ];
 
+    protected $fillable = ['user_id', 'item_id', 'store_id', 'list_name'];
+
     public function item()
     {
         return $this->belongsTo(Item::class);

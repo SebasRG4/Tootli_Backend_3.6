@@ -87,6 +87,7 @@
                                             <option value="free_delivery">{{translate('messages.free_delivery')}}</option>
                                             <option value="first_order">{{translate('messages.first_order')}}</option>
                                             <option value="default">{{translate('messages.default')}}</option>
+                                            <option value="dineout">{{translate('messages.dineout')}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -381,6 +382,53 @@
 <script src="{{asset('assets/admin')}}/js/view-pages/coupon-index.js"></script>
 <script>
     "use strict";
+
+        function coupon_type_change(coupon_type) {
+            $('#zone_wise, #store_wise, #customer_wise').hide();
+            $('#coupon_limit').attr("readonly", false);
+            $('#limit_for_same_user').removeClass('d-none');
+            switch (coupon_type) {
+                case 'zone_wise':
+                    $('#zone_wise').show();
+                    break;
+
+                case 'store_wise':
+                    $('#store_wise').show();
+                    $('#customer_wise').show();
+                    break;
+                
+                case 'dineout':
+                    $('#store_wise').show();
+                    $('#customer_wise').show();
+                    break;
+
+                case 'first_order':
+                    $('#coupon_limit').val(1).attr("readonly", true);
+                    $('#limit_for_same_user').addClass('d-none');
+                    break;
+
+                default:
+                    $('#customer_wise').show();
+                    $('#coupon_limit').val($('#coupon_limit').data('value')).attr("readonly", false);
+                    $('#limit_for_same_user').removeClass('d-none');
+                    break;
+            }
+
+            if (coupon_type === 'free_delivery') {
+                $('#discount_type').attr("disabled", true).val("").trigger("change");
+                $('#max_discount, #discount').val(0).attr("readonly", true);
+            } else {
+                $('#discount_type').removeAttr("disabled").attr("required", true);
+                $('#max_discount, #discount').removeAttr("readonly");
+            }
+
+            if ($('#discount_type').val() === 'amount') {
+                $('#max_discount').val(0).attr("readonly", true);
+            } else if($('#discount_type').val() === 'percent') {
+                $('#max_discount').removeAttr("readonly");
+            }
+        }
+
 $(document).on('click', '.copy-to-clipboard', function () {
     copyToClipboardById($(this).data('id'));
 });

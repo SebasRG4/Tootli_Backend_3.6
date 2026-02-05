@@ -57,3 +57,4 @@ error_log
 # Package locks (optional - uncomment if you want to ignore)
 # package-lock.json
 # composer.lock
+Tootli_AI/

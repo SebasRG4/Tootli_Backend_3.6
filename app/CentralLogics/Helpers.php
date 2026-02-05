@@ -866,6 +866,13 @@ class Helpers
                 $item['avg_rating'] = $ratings['rating'];
                 $item['rating_count'] = $ratings['total'];
                 $item['positive_rating'] = $ratings['positive_rating'];
+                // Individual rating counts for mood display (ratings array is [5★,4★,3★,2★,1★])
+                $item['rating_2_count'] = (int) ($item['ratings'][3] ?? 0);
+                $item['rating_3_count'] = (int) ($item['ratings'][2] ?? 0);
+                $item['rating_4_count'] = (int) ($item['ratings'][1] ?? 0);
+                $item['rating_5_count'] = (int) ($item['ratings'][0] ?? 0);
+                // Saved/wishlist count
+                $item['saved_count'] = (int) ($item->wishlists_count ?? 0);
                 $item['total_items'] = $item['items_count'];
                 $item['total_campaigns'] = $item['campaigns_count'];
                 $item['is_recommended'] = false;
@@ -906,6 +913,13 @@ class Helpers
             $data['avg_rating'] = $ratings['rating'];
             $data['rating_count'] = $ratings['total'];
             $data['positive_rating'] = $ratings['positive_rating'];
+            // Individual rating counts for mood display (ratings array is [5★,4★,3★,2★,1★])
+            $data['rating_2_count'] = (int) ($data['ratings'][3] ?? 0);
+            $data['rating_3_count'] = (int) ($data['ratings'][2] ?? 0);
+            $data['rating_4_count'] = (int) ($data['ratings'][1] ?? 0);
+            $data['rating_5_count'] = (int) ($data['ratings'][0] ?? 0);
+            // Saved/wishlist count
+            $data['saved_count'] = (int) ($data->wishlists_count ?? 0);
             $data['total_items'] = $data['items_count'];
             $data['total_campaigns'] = $data['campaigns_count'];
             $data['current_opening_time'] = self::getNextOpeningTime($data['schedules']) ?? 'closed';
@@ -927,18 +941,26 @@ class Helpers
 
             foreach ($data as $temp) {
                 if ($temp->item) {
-                    $items[] = self::product_data_formatting($temp->item, false, false, app()->getLocale());
+                    $item = self::product_data_formatting($temp->item, false, false, app()->getLocale());
+                    $item['list_name'] = $temp->list_name;
+                    $items[] = $item;
                 }
                 if ($temp->store) {
-                    $stores[] = self::store_data_formatting($temp->store);
+                    $store = self::store_data_formatting($temp->store);
+                    $store['list_name'] = $temp->list_name;
+                    $stores[] = $store;
                 }
             }
         } else {
             if ($data->item) {
-                $items[] = self::product_data_formatting($data->item, false, false, app()->getLocale());
+                $item = self::product_data_formatting($data->item, false, false, app()->getLocale());
+                $item['list_name'] = $data->list_name;
+                $items[] = $item;
             }
             if ($data->store) {
-                $stores[] = self::store_data_formatting($data->store);
+                $store = self::store_data_formatting($data->store);
+                $store['list_name'] = $data->list_name;
+                $stores[] = $store;
             }
         }
 
@@ -2122,16 +2144,16 @@ class Helpers
                     $image = $image->encode(new WebpEncoder(quality: 80));
                     $format = 'webp';
                 }
-                $imageName = \Carbon\Carbon::now()->toDateString().'-'.uniqid().'.'.$format;
+                $imageName = \Carbon\Carbon::now()->toDateString() . '-' . uniqid() . '.' . $format;
 
-                if (! Storage::disk(self::getDisk())->exists($dir)) {
+                if (!Storage::disk(self::getDisk())->exists($dir)) {
                     Storage::disk(self::getDisk())->makeDirectory($dir);
                 }
 
                 if ($image instanceof UploadedFile) {
                     Storage::disk(self::getDisk())->putFileAs($dir, $image, $imageName);
                 } else {
-                    Storage::disk(self::getDisk())->put($dir.'/'.$imageName, $image->toString());
+                    Storage::disk(self::getDisk())->put($dir . '/' . $imageName, $image->toString());
                 }
 
             } else {
@@ -4731,61 +4753,61 @@ class Helpers
 
     public static function validateFile($image)
     {
-        if (! $image instanceof UploadedFile) {
+        if (!$image instanceof UploadedFile) {
             throw new InvalidUploadException('Invalid file upload.');
         }
 
         if ($image->getSize() > MAX_FILE_SIZE * 1024 * 1024) {
-            throw new InvalidUploadException('File size exceeds the limit of '.MAX_FILE_SIZE.'MB');
+            throw new InvalidUploadException('File size exceeds the limit of ' . MAX_FILE_SIZE . 'MB');
         }
 
-        $allowedExtensions = explode(',', IMAGE_EXTENSION.','.VIDEO_EXTENSION.','.DOCUMENT_EXTENSION.','.AUDIO_EXTENSION.','.FILE_EXTENSION);
+        $allowedExtensions = explode(',', IMAGE_EXTENSION . ',' . VIDEO_EXTENSION . ',' . DOCUMENT_EXTENSION . ',' . AUDIO_EXTENSION . ',' . FILE_EXTENSION);
         $allowedExtensions = array_map(function ($ext) {
             return str_replace('.', '', trim($ext));
         }, $allowedExtensions);
 
         $extension = strtolower($image->getClientOriginalExtension());
 
-        if(!$extension || $extension == '') {
-            $extension= self::extensionFromMimeType($image->getMimeType());
+        if (!$extension || $extension == '') {
+            $extension = self::extensionFromMimeType($image->getMimeType());
         }
 
-        if (! in_array($extension, $allowedExtensions)) {
+        if (!in_array($extension, $allowedExtensions)) {
             throw new InvalidUploadException('File type not allowed.');
         }
     }
 
-   public static function extensionFromMimeType(string $mimeType): string
+    public static function extensionFromMimeType(string $mimeType): string
     {
         $mimeType = strtolower($mimeType);
 
         $map = [
-        // images
-        'image/jpeg' => 'jpg',   // jpeg / jpg
-        'image/png'  => 'png',
-        'image/gif'  => 'gif',
-        'image/webp' => 'webp',
+            // images
+            'image/jpeg' => 'jpg',   // jpeg / jpg
+            'image/png' => 'png',
+            'image/gif' => 'gif',
+            'image/webp' => 'webp',
 
-        // video
-        'video/mp4'  => 'mp4',
-        'video/webm' => 'webm',
-        'video/ogg'  => 'ogg',
+            // video
+            'video/mp4' => 'mp4',
+            'video/webm' => 'webm',
+            'video/ogg' => 'ogg',
 
-        // audio
-        'audio/mpeg' => 'mp3',
-        'audio/wav'  => 'wav',
-        'audio/ogg'  => 'ogg',
+            // audio
+            'audio/mpeg' => 'mp3',
+            'audio/wav' => 'wav',
+            'audio/ogg' => 'ogg',
 
-        // documents
-        'application/pdf' => 'pdf',
-        'application/msword' => 'doc',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'docx',
-        'application/vnd.ms-excel' => 'excel',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'excel',
+            // documents
+            'application/pdf' => 'pdf',
+            'application/msword' => 'doc',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'docx',
+            'application/vnd.ms-excel' => 'excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'excel',
 
-        // archive / misc
-        'application/zip' => 'zip',
-        'application/octet-stream' => 'p8',
+            // archive / misc
+            'application/zip' => 'zip',
+            'application/octet-stream' => 'p8',
         ];
 
         if (isset($map[$mimeType])) {

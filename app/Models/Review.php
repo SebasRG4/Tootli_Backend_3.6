@@ -16,7 +16,8 @@ class Review extends Model
         'rating' => 'integer',
         'store_id' => 'integer',
         'created_at' => 'datetime',
-        'updated_at' => 'datetime'
+        'updated_at' => 'datetime',
+        'attachment' => 'array'
     ];
 
     public function scopeModule($query, $module_id)
@@ -41,14 +42,14 @@ class Review extends Model
 
     public function scopeActive($query)
     {
-        return $query->where('status',1);
+        return $query->where('status', 1);
     }
 
     protected static function boot()
     {
         parent::boot();
         static::saved(function ($review) {
-            if($review->review_id == null){
+            if ($review->review_id == null) {
                 $review->review_id = $review->generateReviewId($review->order_id);
                 $review->save();
             }
@@ -56,15 +57,19 @@ class Review extends Model
     }
     private function generateReviewId($id)
     {
+        if ($id === null) {
+            $id = uniqid();
+        }
         $review_id = Str::slug($id);
-        if ($max_review_id = static::where('review_id', 'like',"{$review_id}%")->latest('id')->value('review_id')) {
+        if ($max_review_id = static::where('review_id', 'like', "{$review_id}%")->latest('id')->value('review_id')) {
 
-            if($max_review_id == $review_id) return "{$review_id}-2";
+            if ($max_review_id == $review_id)
+                return "{$review_id}-2";
 
-            $max_review_id = explode('-',$max_review_id);
+            $max_review_id = explode('-', $max_review_id);
             $count = array_pop($max_review_id);
             if (isset($count) && is_numeric($count)) {
-                $max_review_id[]= ++$count;
+                $max_review_id[] = ++$count;
                 return implode('-', $max_review_id);
             }
         }

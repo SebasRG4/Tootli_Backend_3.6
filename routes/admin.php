@@ -179,12 +179,38 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('restaurants', 'SaboresController@restaurants')->name('restaurants');
             Route::get('restaurants/{id}/edit', 'SaboresController@editRestaurant')->name('restaurants.edit');
             Route::post('restaurants/{id}/update', 'SaboresController@updateRestaurant')->name('restaurants.update');
+            Route::post('restaurants/{id}/update-images-order', 'SaboresController@updateInfrastructureImagesOrder')->name('restaurants.update-images-order');
+
+            // Dineout Categories
+            Route::group(['prefix' => 'dineout-categories', 'as' => 'dineout-categories.'], function () {
+                Route::get('/', 'Sabores\DineoutCategoryController@index')->name('index');
+                Route::get('/create', 'Sabores\DineoutCategoryController@create')->name('create');
+                Route::post('/store', 'Sabores\DineoutCategoryController@store')->name('store');
+                Route::get('/{id}/edit', 'Sabores\DineoutCategoryController@edit')->name('edit');
+                Route::post('/{id}/update', 'Sabores\DineoutCategoryController@update')->name('update');
+                Route::get('/{id}/toggle-status', 'Sabores\DineoutCategoryController@toggleStatus')->name('toggle-status');
+                Route::delete('/{id}/delete', 'Sabores\DineoutCategoryController@destroy')->name('delete');
+                Route::get('/{id}/stores', 'Sabores\DineoutCategoryController@stores')->name('stores');
+                Route::post('/{id}/assign-store', 'Sabores\DineoutCategoryController@assignStore')->name('assign-store');
+                Route::delete('/{id}/remove-store/{storeId}', 'Sabores\DineoutCategoryController@removeStore')->name('remove-store');
+            });
 
             // Coupons
             Route::get('coupons', 'SaboresController@coupons')->name('coupons');
 
+            // Campaigns
+            Route::get('campaigns', 'SaboresController@campaigns')->name('campaigns');
+
             // Analytics
             Route::get('analytics', 'SaboresController@analytics')->name('analytics');
+
+            // Reviews (Security Section)
+            Route::group(['prefix' => 'reviews', 'as' => 'reviews.'], function () {
+                Route::get('list', 'SaboresReviewsController@list')->name('list');
+                Route::get('edit/{id}', 'SaboresReviewsController@edit')->name('edit');
+                Route::post('update/{id}', 'SaboresReviewsController@update')->name('update');
+                Route::delete('delete', 'SaboresReviewsController@delete')->name('delete');
+            });
         });
 
         Route::group(['prefix' => 'campaign', 'as' => 'campaign.', 'middleware' => ['module:campaign']], function () {
@@ -648,6 +674,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         Route::group(['prefix' => 'reviews', 'as' => 'reviews.', 'middleware' => ['module:customer_management']], function () {
             Route::get('list', 'ReviewsController@list')->name('list');
             Route::post('search', 'ReviewsController@search')->name('search');
+            Route::delete('delete/{id}', 'ReviewsController@delete')->name('delete');
         });
 
         Route::group(['prefix' => 'report', 'as' => 'report.', 'middleware' => ['module:report']], function () {

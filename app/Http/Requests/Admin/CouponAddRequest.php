@@ -53,9 +53,9 @@ class CouponAddRequest extends FormRequest
             'start_date' => 'required',
             'expire_date' => 'required',
             'discount' => 'required',
-            'coupon_type' => 'required|in:zone_wise,store_wise,free_delivery,first_order,default',
+            'coupon_type' => 'required|in:zone_wise,store_wise,free_delivery,first_order,default,dineout',
             'zone_ids' => 'required_if:coupon_type,zone_wise',
-            'store_ids' => 'required_if:coupon_type,store_wise',
+            'store_ids' => 'required_if:coupon_type,store_wise|required_if:coupon_type,dineout',
             'title.0' => 'required',
         ];
     }
@@ -63,7 +63,7 @@ class CouponAddRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'title.0.required'=>translate('default_title_is_required'),
+            'title.0.required' => translate('default_title_is_required'),
         ];
     }
 }

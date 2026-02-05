@@ -32,10 +32,93 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
+                                    <label class="input-label" for="cuisine_names">{{ translate('Cuisine Names') }}</label>
+                                    <div class="form-group">
+                                        <div class="d-flex flex-wrap border rounded p-2" id="tags-container" style="background-color: #fff;">
+                                            <!-- Tags will be injected here -->
+                                            <input type="text" id="tag-input" class="border-0 flex-grow-1" style="outline: none; min-width: 150px;" placeholder="{{ translate('Type and hit Enter') }}">
+                                        </div>
+                                        @php
+                                            $cuisineNames = old('cuisine_names', $restaurant->cuisine_names);
+                                            if (is_array($cuisineNames)) {
+                                                $cuisineNames = implode(',', $cuisineNames);
+                                            }
+                                        @endphp
+                                        <input type="hidden" name="cuisine_names" id="hidden_cuisine_names" value="{{ $cuisineNames }}">
+                                    </div>
+
+                                    @push('script_2')
+                                    <script>
+                                        $(document).ready(function() {
+                                            const $container = $('#tags-container');
+                                            const $input = $('#tag-input');
+                                            const $hiddenInput = $('#hidden_cuisine_names');
+                                            
+                                            let tags = $hiddenInput.val() ? $hiddenInput.val().split(',').map(t => t.trim()).filter(t => t) : [];
+
+                                            function renderTags() {
+                                                $container.find('.tag-item').remove();
+                                                tags.forEach((tag, index) => {
+                                                    const tagHtml = `
+                                                        <span class="tag-item badge badge-primary m-1 p-2" style="font-size: 14px;">
+                                                            ${tag}
+                                                            <span class="ml-2 cursor-pointer remove-tag" data-index="${index}" style="cursor: pointer;">&times;</span>
+                                                        </span>
+                                                    `;
+                                                    $input.before(tagHtml);
+                                                });
+                                                $hiddenInput.val(tags.join(','));
+                                            }
+
+                                            $input.on('keydown', function(e) {
+                                                if (e.key === 'Enter' || e.key === ',') {
+                                                    e.preventDefault();
+                                                    
+                                                    // MAX TAGS CHECK
+                                                    if (tags.length >= 3) {
+                                                        toastr.warning('{{ translate('Maximum 3 tags allowed') }}', {
+                                                            CloseButton: true,
+                                                            ProgressBar: true
+                                                        });
+                                                        $(this).val('');
+                                                        return;
+                                                    }
+
+                                                    const val = $(this).val().trim();
+                                                    if (val && !tags.includes(val)) {
+                                                        tags.push(val);
+                                                        renderTags();
+                                                    }
+                                                    $(this).val('');
+                                                } else if (e.key === 'Backspace' && !$(this).val() && tags.length > 0) {
+                                                    tags.pop();
+                                                    renderTags();
+                                                }
+                                            });
+
+                                            $container.on('click', '.remove-tag', function() {
+                                                const index = $(this).data('index');
+                                                tags.splice(index, 1);
+                                                renderTags();
+                                            });
+
+                                            // Initial render
+                                            renderTags();
+
+                                            // Focus input when clicking container
+                                            $container.on('click', function(e) {
+                                                if (e.target === this) {
+                                                    $input.focus();
+                                                }
+                                            });
+                                        });
+                                    </script>
+                                    @endpush
+
                                 <!-- Average Ticket -->
                                 <div class="col-md-6 mb-3">
                                     <label class="input-label" for="average_ticket">
-                                        {{ translate('Average Ticket') }} ($)
+                                        {{ translate('Average Ticket') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})
                                         <span class="input-label-secondary" title="{{ translate('Average cost per person') }}">
                                             <i class="tio-info-outined"></i>
                                         </span>
@@ -46,50 +129,135 @@
                                            placeholder="{{ translate('e.g., 25.00') }}">
                                 </div>
 
-                                <!-- Accepts Reservations -->
+                                <!-- Serves Alcohol -->
                                 <div class="col-md-6 mb-3">
-                                    <label class="input-label d-block">{{ translate('Accepts Reservations') }}</label>
-                                    <label class="toggle-switch toggle-switch-sm" for="accepts_reservations">
+                                    <label class="input-label d-block">{{ translate('Serves Alcohol') }}</label>
+                                    <label class="toggle-switch toggle-switch-sm" for="serves_alcohol">
                                         <input type="checkbox" class="toggle-switch-input" 
-                                               id="accepts_reservations" name="accepts_reservations" 
-                                               {{ $restaurant->accepts_reservations ? 'checked' : '' }}>
+                                               id="serves_alcohol" name="serves_alcohol" 
+                                               {{ $restaurant->serves_alcohol ? 'checked' : '' }} value="1">
                                         <span class="toggle-switch-label">
                                             <span class="toggle-switch-indicator"></span>
                                         </span>
                                     </label>
                                 </div>
 
-                                <!-- Infrastructure Images -->
-                                <div class="col-12">
-                                    <label class="input-label">
-                                        {{ translate('Infrastructure Images') }}
-                                        <span class="input-label-secondary" title="{{ translate('Upload photos of restaurant interior, exterior, etc.') }}">
+                                <!-- Accepts Reservations -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="input-label d-block">{{ translate('Accepts Reservations') }}</label>
+                                    <label class="toggle-switch toggle-switch-sm" for="accepts_reservations">
+                                        <input type="checkbox" class="toggle-switch-input" 
+                                               id="accepts_reservations" name="accepts_reservations" 
+                                               {{ $restaurant->accepts_reservations ? 'checked' : '' }} value="1">
+                                        <span class="toggle-switch-label">
+                                            <span class="toggle-switch-indicator"></span>
+                                        </span>
+                                    </label>
+                                </div>
+
+                                <!-- Google Address -->
+                                <div class="col-md-12 mb-3">
+                                    <label class="input-label" for="google_address">
+                                        {{ translate('Google Address') }}
+                                        <span class="input-label-secondary" title="{{ translate('Address from Google Maps') }}">
                                             <i class="tio-info-outined"></i>
                                         </span>
                                     </label>
-                                    
-                                    <!-- Current Images -->
-                                    @if($restaurant->infrastructure_images && count($restaurant->infrastructure_images) > 0)
-                                        <div class="row mb-3">
-                                            @foreach($restaurant->infrastructure_images_full_url as $image)
-                                                <div class="col-md-3 mb-2">
-                                                    <img src="{{ $image }}" class="img-fluid rounded" alt="Infrastructure">
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    @endif
+                                    <input type="text" name="google_address" class="form-control" id="google_address" 
+                                           value="{{ old('google_address', $restaurant->google_address) }}"
+                                           placeholder="{{ translate('e.g., 1600 Amphitheatre Parkway, Mountain View, CA') }}">
+                                           
+                                    <input type="hidden" name="google_place_id" id="google_place_id" value="{{ old('google_place_id', $restaurant->google_place_id) }}">
+                                </div>
 
-                                    <!-- Upload New Images -->
-                                    <div class="custom-file">
-                                        <input type="file" name="infrastructure_images[]" class="custom-file-input" 
-                                               id="infrastructure_images" accept="image/*" multiple>
-                                        <label class="custom-file-label" for="infrastructure_images">
-                                            {{ translate('Choose files') }}
-                                        </label>
+                                <!-- Infrastructure Images -->
+                                <div class="col-12">
+                                     <div class="form-group mb-0">
+                                        <label class="input-label">{{ translate('Infrastructure Images') }} ({{ translate('Ratio 1:1') }})</label>
+                                        <div class="row" id="infrastructure_images">
+                                            @if(isset($restaurant->infrastructure_images_full_url) && count($restaurant->infrastructure_images_full_url) > 0)
+                                                @foreach($restaurant->infrastructure_images_full_url as $key => $img)
+                                                    @php
+                                                        $rawImage = $restaurant->infrastructure_images[$key] ?? null;
+                                                        $imageName = is_array($rawImage) ? $rawImage['img'] : $rawImage;
+                                                    @endphp
+                                                    <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-4 sortable-img" id="infrastructure_image_{{$key}}" data-filename="{{basename($imageName)}}">
+                                                        <div class="img_box" style="position: relative; aspect-ratio: 1; border: 1px dashed #e2e2e2; border-radius: 5px; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: move;">
+                                                            <img src="{{$img}}" style="width: 100%; height: 100%; object-fit: cover;">
+                                                            <div class="remove_btn" onclick="removeInfrastructureImage({{$key}}, '{{basename($imageName)}}')" style="position: absolute; top: 0; right: 0; background: #ff4d4d; color: white; border-radius: 0 0 0 5px; cursor: pointer; padding: 2px 6px; z-index: 10;">
+                                                                <i class="tio-clear"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        </div>
+                                        <input type="hidden" id="removedImageKeys" name="removedImageKeys" value="">
                                     </div>
-                                    <small class="form-text text-muted">
-                                        {{ translate('You can select multiple images. Max 2MB per image.') }}
-                                    </small>
+
+                                    <!-- Menu Images -->
+                                    <div class="col-12 mt-4">
+                                        <label class="input-label">{{ translate('Menu Images') }} ({{ translate('Ratio 1:1') }})</label>
+                                        <div class="row" id="menu_images">
+                                            @if(isset($restaurant->menu_images_full_url) && count($restaurant->menu_images_full_url) > 0)
+                                                @foreach($restaurant->menu_images_full_url as $key => $img)
+                                                    @php
+                                                        $rawImage = $restaurant->menu_images[$key] ?? null;
+                                                        $imageName = is_array($rawImage) ? $rawImage['img'] : $rawImage;
+                                                    @endphp
+                                                    <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-4" id="menu_image_{{$key}}">
+                                                        <div class="img_box" style="position: relative; aspect-ratio: 1; border: 1px dashed #e2e2e2; border-radius: 5px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                                                            <img src="{{$img}}" style="width: 100%; height: 100%; object-fit: cover;">
+                                                            <div class="remove_btn" onclick="removeMenuImage({{$key}}, '{{basename($imageName)}}')" style="position: absolute; top: 0; right: 0; background: #ff4d4d; color: white; border-radius: 0 0 0 5px; cursor: pointer; padding: 2px 6px; z-index: 10;">
+                                                                <i class="tio-clear"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        </div>
+                                        <input type="hidden" id="removedMenuImageKeys" name="removedMenuImageKeys" value="">
+                                    </div>
+                                    </div>
+
+                                <!-- Operating Hours -->
+                                <div class="col-12 mt-4">
+                                    <h4 class="mb-3">{{ translate('Operating Hours') }}</h4>
+                                    <div class="row">
+                                        @php
+                                            $days = [
+                                                0 => 'Sunday',
+                                                1 => 'Monday',
+                                                2 => 'Tuesday',
+                                                3 => 'Wednesday',
+                                                4 => 'Thursday',
+                                                5 => 'Friday',
+                                                6 => 'Saturday'
+                                            ];
+                                        @endphp
+                                        @foreach($days as $key => $day)
+                                            @php
+                                                $schedule = $restaurant->schedules->where('day', $key)->first();
+                                                $open = $schedule ? \Carbon\Carbon::parse($schedule->opening_time)->format('H:i') : '';
+                                                $close = $schedule ? \Carbon\Carbon::parse($schedule->closing_time)->format('H:i') : '';
+                                            @endphp
+                                            <div class="col-md-6 mb-3">
+                                                <div class="card p-3 border">
+                                                    <h5 class="mb-2">{{ translate($day) }}</h5>
+                                                    <div class="d-flex align-items-center justify-content-between">
+                                                        <div class="form-group mb-0 mr-2 w-100">
+                                                            <label>{{ translate('Opening Time') }}</label>
+                                                            <input type="time" name="schedules[{{$key}}][opening_time]" class="form-control" value="{{ $open }}">
+                                                        </div>
+                                                        <div class="form-group mb-0 w-100">
+                                                            <label>{{ translate('Closing Time') }}</label>
+                                                            <input type="time" name="schedules[{{$key}}][closing_time]" class="form-control" value="{{ $close }}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -106,14 +274,124 @@
 @endsection
 
 @push('script_2')
-<script>
-    // Update file input label with selected files count
-    document.getElementById('infrastructure_images').addEventListener('change', function(e) {
-        const fileCount = e.target.files.length;
-        const label = document.querySelector('label[for="infrastructure_images"]');
-        if (fileCount > 0) {
-            label.textContent = fileCount + ' {{ translate("file(s) selected") }}';
+    <script src="{{ asset('assets/admin/js/spartan-multi-image-picker.js') }}"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Initialize Sortable
+            $("#infrastructure_images").sortable({
+                items: ".sortable-img",
+                cursor: "move",
+                opacity: 0.7,
+                update: function(event, ui) {
+                    let imageOrder = [];
+                    $(".sortable-img").each(function() {
+                        imageOrder.push($(this).data('filename'));
+                    });
+
+                    // Send AJAX request
+                    $.ajax({
+                        url: "{{ route('admin.sabores.restaurants.update-images-order', $restaurant->id) }}",
+                        method: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            images: imageOrder
+                        },
+                        success: function(response) {
+                            toastr.success(response.message);
+                        },
+                        error: function(xhr) {
+                            toastr.error('{{ translate('Failed to update image order') }}');
+                        }
+                    });
+                }
+            });
+
+            $("#infrastructure_images").spartanMultiImagePicker({
+                fieldName: 'infrastructure_images[]',
+                maxCount: 10,
+                rowHeight: '120px',
+                groupClassName: 'col-6 col-sm-4 col-md-3 col-lg-2',
+                maxFileSize: '',
+                placeholderImage: {
+                    image: "{{ asset('assets/admin/img/400x400/img2.jpg') }}",
+                    width: '100%'
+                },
+                dropFileLabel: "Drop Here",
+                onAddRow: function(index, file) {
+
+                },
+                onRenderedPreview: function(index) {
+
+                },
+                onRemoveRow: function(index) {
+
+                },
+                onExtensionErr: function(index, file) {
+                    toastr.error('{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                },
+                onSizeErr: function(index, file) {
+                    toastr.error('{{ translate('messages.file_size_too_big') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                }
+            });
+        });
+
+        function removeInfrastructureImage(index, key) {
+            $('#infrastructure_image_' + index).remove();
+            let removedImageKeys = $('#removedImageKeys').val();
+            if (removedImageKeys === '') {
+                removedImageKeys = key;
+            } else {
+                removedImageKeys += ',' + key;
+            }
+            $('#removedImageKeys').val(removedImageKeys);
         }
-    });
-</script>
+
+        function removeMenuImage(index, key) {
+            $('#menu_image_' + index).remove();
+            let removedImageKeys = $('#removedMenuImageKeys').val();
+            if (removedImageKeys === '') {
+                removedImageKeys = key;
+            } else {
+                removedImageKeys += ',' + key;
+            }
+            $('#removedMenuImageKeys').val(removedImageKeys);
+        }
+
+        $(document).ready(function() {
+            $("#menu_images").spartanMultiImagePicker({
+                fieldName: 'menu_images[]',
+                maxCount: 20,
+                rowHeight: '120px',
+                groupClassName: 'col-6 col-sm-4 col-md-3 col-lg-2',
+                maxFileSize: '',
+                placeholderImage: {
+                    image: "{{ asset('assets/admin/img/400x400/img2.jpg') }}",
+                    width: '100%'
+                },
+                dropFileLabel: "Drop Here",
+                onAddRow: function(index, file) {},
+                onRenderedPreview: function(index) {},
+                onRemoveRow: function(index) {},
+                onExtensionErr: function(index, file) {
+                    toastr.error('{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                },
+                onSizeErr: function(index, file) {
+                    toastr.error('{{ translate('messages.file_size_too_big') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                }
+            });
+        });
+    </script>
 @endpush

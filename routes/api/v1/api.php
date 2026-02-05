@@ -32,6 +32,9 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
     Route::get('addon-category/list', 'AddonCategoryController@getList');
     Route::get('zone/check', 'ZoneController@zonesCheck');
 
+    // Dineout categories (for Sabores module filters)
+    Route::get('dineout-categories', 'DineoutCategoryController@index');
+
     Route::get('offline_payment_method_list', 'ConfigController@offline_payment_method_list');
     Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
         Route::post('sign-up', 'CustomerAuthController@register');
@@ -376,12 +379,6 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
 
             });
 
-            Route::group(['prefix' => 'wish-list'], function () {
-                Route::get('/', 'WishlistController@wish_list');
-                Route::post('add', 'WishlistController@add_to_wishlist');
-                Route::delete('remove', 'WishlistController@remove_from_wishlist');
-            });
-
             //Loyalty
             Route::group(['prefix' => 'loyalty-point'], function () {
                 Route::post('point-transfer', 'LoyaltyPointController@point_transfer');
@@ -404,6 +401,12 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
 
         });
         Route::group(['prefix' => 'customer', 'middleware' => 'apiGuestCheck'], function () {
+            Route::group(['prefix' => 'wish-list'], function () {
+                Route::get('/', 'WishlistController@wish_list');
+                Route::post('add', 'WishlistController@add_to_wishlist');
+                Route::delete('remove', 'WishlistController@remove_from_wishlist');
+            });
+
             Route::group(['prefix' => 'order'], function () {
                 Route::get('list', 'OrderController@get_order_list');
                 Route::get('running-orders', 'OrderController@get_running_orders');
@@ -549,13 +552,40 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         Route::get('stores-map', 'SaboresCiudadController@getStoresForMap');
         Route::get('store-details/{id}', 'SaboresCiudadController@getStoreDetails');
 
+        // AI Search Public Endpoints
+        Route::get('ai-trending', 'AiSearchController@getTrending');
+
         // User routes (authenticated)
         Route::group(['middleware' => 'auth:api'], function () {
             Route::post('reservations', 'SaboresCiudadController@createReservation');
             Route::get('reservations', 'SaboresCiudadController@getUserReservations');
             Route::put('reservations/{id}', 'SaboresCiudadController@updateReservation');
             Route::delete('reservations/{id}', 'SaboresCiudadController@cancelReservation');
+
+            // Visited
+            Route::post('visited', 'SaboresCiudadController@addToVisited');
+            Route::get('visited', 'SaboresCiudadController@getVisited');
+
+            // Reviews (Sabores specific)
+            Route::post('reviews/submit', 'SaboresCiudadController@submitReview');
+
+            // AI Search Endpoint
+            Route::post('ai-search', 'AiSearchController@search');
+
+            // Sabores Lists - User custom lists (separate from global favorites)
+            Route::get('lists', 'SaboresListController@index');
+            Route::post('lists', 'SaboresListController@store');
+            Route::delete('lists/{id}', 'SaboresListController@destroy');
+            Route::post('lists/{id}/stores', 'SaboresListController@addStore');
+            Route::delete('lists/{id}/stores/{store_id}', 'SaboresListController@removeStore');
         });
+
+        // Public Review Routes
+        Route::get('reviews/{store_id}', 'SaboresCiudadController@getReviews');
+
+        // New Features (Global Coupons & Specialized Campaigns)
+        Route::get('coupons/global', 'SaboresCiudadController@getGlobalCoupons');
+        Route::get('campaigns', 'SaboresCiudadController@getSpecializedCampaigns');
     });
 });
 

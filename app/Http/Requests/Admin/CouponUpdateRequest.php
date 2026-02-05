@@ -48,14 +48,14 @@ class CouponUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code' => 'required|max:100|unique:coupons,code,'.$this->id,
+            'code' => 'required|max:100|unique:coupons,code,' . $this->id,
             'title' => 'required|max:191',
             'start_date' => 'required',
             'expire_date' => 'required',
             'discount' => 'required',
             'discount_type' => 'required_unless:coupon_type,free_delivery',
             'zone_ids' => 'required_if:coupon_type,zone_wise',
-            'store_ids' => 'required_if:coupon_type,store_wise',
+            'store_ids' => 'required_if:coupon_type,store_wise|required_if:coupon_type,dineout',
             'title.0' => 'required',
         ];
     }
@@ -63,7 +63,7 @@ class CouponUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'title.0.required'=>translate('default_title_is_required'),
+            'title.0.required' => translate('default_title_is_required'),
         ];
     }
 }

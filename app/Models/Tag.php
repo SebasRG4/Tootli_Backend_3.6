@@ -15,4 +15,9 @@ class Tag extends Model
     {
         return $this->belongsToMany(Item::class)->using('App\Models\ItemTag');
     }
+
+    public function stores()
+    {
+        return $this->belongsToMany(Store::class);
+    }
 }

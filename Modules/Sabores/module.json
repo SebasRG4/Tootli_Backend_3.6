@@ -1,0 +1,11 @@
+{
+    "name": "Sabores",
+    "alias": "sabores",
+    "description": "Sabores de la Ciudad Module",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Sabores\\App\\Providers\\SaboresServiceProvider"
+    ],
+    "files": []
+}

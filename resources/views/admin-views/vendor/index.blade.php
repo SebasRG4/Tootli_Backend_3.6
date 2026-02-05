@@ -138,6 +138,14 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="form-group error-wrapper">
+                                    <label class="input-label" for="tags">{{ translate('messages.tags') }}</label>
+                                    <select name="tags[]" id="tags" class="form-control js-select2-custom" multiple="multiple" data-placeholder="{{ translate('messages.select_tags') }}">
+                                        @foreach (\App\Models\Tag::all() as $tag)
+                                            <option value="{{ $tag->tag }}">{{ $tag->tag }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="position-relative">
                                     <label class="input-label"
                                         for="tax">{{ translate('Estimated Delivery Time ( Min & Maximum Time)') }}
@@ -603,6 +611,10 @@
         "use strict";
 
         $(document).on('ready', function() {
+            $('#tags').select2({
+                tags: true,
+                tokenSeparators: [',']
+            });
             @if (isset(auth('admin')->user()->zone_id))
                 $('#choice_zones').trigger('change');
             @endif

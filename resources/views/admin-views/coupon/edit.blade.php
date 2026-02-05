@@ -83,6 +83,7 @@
                                     <option value="free_delivery" {{$coupon['coupon_type']=='free_delivery'?'selected':''}}>{{translate('messages.free_delivery')}}</option>
                                     <option value="first_order" {{$coupon['coupon_type']=='first_order'?'selected':''}}>{{translate('messages.first_order')}}</option>
                                     <option value="default" {{$coupon['coupon_type']=='default'?'selected':''}}>{{translate('messages.default')}}</option>
+                                    <option value="dineout" {{$coupon['coupon_type']=='dineout'?'selected':''}}>{{translate('messages.dineout')}}</option>
                                 </select>
                             </div>
                         </div>
@@ -91,7 +92,7 @@
                                     <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.store')}}<span
                                             class="input-label-secondary"></span></label>
                                     <select name="store_ids[]" class="js-data-example-ajax form-control"  title="Select Restaurant">
-                                    @if($coupon->coupon_type == 'store_wise')
+                                    @if($coupon->coupon_type == 'store_wise' || $coupon->coupon_type == 'dineout')
                                     @php($store=\App\Models\Store::find(json_decode($coupon->data)[0]))
                                         @if($store)
                                         <option value="{{$store->id}}">{{$store->name}}</option>
@@ -209,9 +210,56 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('assets/admin')}}/js/view-pages/coupon-edit.js"></script>
+<script src="{{asset('assets/admin')}}/js/view-pages/coupon-edit.js"></script>
     <script>
         "use strict";
+
+        function coupon_type_change(coupon_type) {
+            $('#zone_wise, #store_wise, #customer_wise').hide();
+            $('#coupon_limit').attr("readonly", false);
+            $('#limit_for_same_user').removeClass('d-none');
+            switch (coupon_type) {
+                case 'zone_wise':
+                    $('#zone_wise').show();
+                    break;
+
+                case 'store_wise':
+                    $('#store_wise').show();
+                    $('#customer_wise').show();
+                    break;
+                
+                case 'dineout':
+                    $('#store_wise').show();
+                    $('#customer_wise').show();
+                    break;
+
+                case 'first_order':
+                    $('#coupon_limit').val(1).attr("readonly", true);
+                    $('#limit_for_same_user').addClass('d-none');
+                    break;
+
+                default:
+                    $('#customer_wise').show();
+                    $('#coupon_limit').val($('#coupon_limit').data('value')).attr("readonly", false);
+                    $('#limit_for_same_user').removeClass('d-none');
+                    break;
+            }
+
+            if (coupon_type === 'free_delivery') {
+                $('#discount_type').attr("disabled", true).val("").trigger("change");
+                $('#max_discount, #discount').val(0).attr("readonly", true);
+            } else {
+                $('#discount_type').removeAttr("disabled").attr("required", true);
+                $('#max_discount, #discount').removeAttr("readonly");
+            }
+
+            if ($('#discount_type').val() === 'amount') {
+                $('#max_discount').val(0).attr("readonly", true);
+            } else if($('#discount_type').val() === 'percent') {
+                $('#max_discount').removeAttr("readonly");
+            }
+        }
+
         coupon_type_change('{{$coupon->coupon_type}}');
 
         $(document).on('ready', function () {

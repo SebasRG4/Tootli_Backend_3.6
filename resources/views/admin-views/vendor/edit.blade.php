@@ -167,6 +167,15 @@
                                             @endif
                                         @endforeach
                                     </select>
+
+                                </div>
+                                <div class="form-group error-wrapper">
+                                    <label class="input-label" for="tags">{{ translate('messages.tags') }}</label>
+                                    <select name="tags[]" id="tags" class="form-control js-select2-custom" multiple="multiple" data-placeholder="{{ translate('messages.select_tags') }}">
+                                        @foreach (\App\Models\Tag::all() as $tag)
+                                            <option value="{{ $tag->tag }}" {{ $store->tags->contains('tag', $tag->tag) ? 'selected' : '' }}>{{ $tag->tag }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="position-relative">
                                     <label class="input-label"
@@ -281,6 +290,50 @@
 
 
 
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-20">
+                <div class="card-header">
+                    <div class="mb-0">
+                        <h3 class="mb-1">
+                            {{ translate('Restaurant Details') }}
+                        </h3>
+                        <p class="mb-0 fs-12">
+                            {{ translate('Extra information for the restaurant page.') }}
+                        </p>
+                    </div>
+                </div>
+                <div class="card-body p-xxl-20 p-3">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="form-group mb-0">
+                                <label class="input-label" for="average_ticket">{{ translate('Average Ticket Cost') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
+                                <input type="number" name="average_ticket" id="average_ticket" step="0.01" min="0" class="form-control" placeholder="100" value="{{ $store->average_ticket }}">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-0">
+                                <label class="input-label" for="cuisine_names">{{ translate('Cuisine Names') }}</label>
+                                <input type="text" name="cuisine_names" id="cuisine_names" class="form-control" placeholder="{{ translate('Ex: Japanese, Asian') }}" value="{{ is_array($store->cuisine_names) ? implode(', ', $store->cuisine_names) : $store->cuisine_names }}">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                             <div class="form-group mb-0">
+                                <label class="input-label" for="serves_alcohol">{{ translate('Serves Alcohol') }}</label>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" name="serves_alcohol" class="custom-control-input" id="serves_alcohol" {{ $store->serves_alcohol ? 'checked' : '' }} value="1">
+                                    <label class="custom-control-label" for="serves_alcohol"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                             <div class="form-group mb-0">
+                                <label class="input-label">{{ translate('Infrastructure Images') }} ({{ translate('Ratio 1:1') }})</label>
+                                <div class="row" id="infrastructure_images"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -683,10 +736,59 @@
     <script>
         "use strict";
         $(document).on('ready', function() {
+            $('#tags').select2({
+                tags: true,
+                tokenSeparators: [',']
+            });
             @if (isset(auth('admin')->user()->zone_id))
                 $('#choice_zones').trigger('change');
             @endif
+
+            $("#infrastructure_images").spartanMultiImagePicker({
+                fieldName: 'infrastructure_images[]',
+                maxCount: 10,
+                rowHeight: '120px',
+                groupClassName: 'col-6 col-sm-4 col-md-3 col-lg-2',
+                maxFileSize: '',
+                placeholderImage: {
+                    image: "{{ asset('assets/admin/img/400x400/img2.jpg') }}",
+                    width: '100%'
+                },
+                dropFileLabel: "Drop Here",
+                onAddRow: function(index, file) {
+
+                },
+                onRenderedPreview: function(index) {
+
+                },
+                onRemoveRow: function(index) {
+
+                },
+                onExtensionErr: function(index, file) {
+                    toastr.error('{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                },
+                onSizeErr: function(index, file) {
+                    toastr.error('{{ translate('messages.file_size_too_big') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                }
+            });
         });
+
+        function removeInfrastructureImage(index, key) {
+            $('#infrastructure_image_' + index).remove();
+            let removedImageKeys = $('#removedImageKeys').val();
+            if (removedImageKeys === '') {
+                removedImageKeys = key;
+            } else {
+                removedImageKeys += ',' + key;
+            }
+            $('#removedImageKeys').val(removedImageKeys);
+        }
 
 
         $('#reset_btn').click(function() {

@@ -1,0 +1,7 @@
+INFO:     Will watch for changes in these directories: ['/Users/giovannavilchis/Herd/back3.6/Tootli_AI']
+ERROR:    [Errno 48] Address already in use
+🤖 Starting Tootli AI Service...
+📍 Location: /Users/giovannavilchis/Herd/back3.6/Tootli_AI
+🚀 Service will be enabled at: http://127.0.0.1:8000
+Press Ctrl+C to stop.
+--------------------------------------------------

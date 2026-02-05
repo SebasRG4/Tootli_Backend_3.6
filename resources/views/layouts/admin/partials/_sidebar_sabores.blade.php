@@ -163,6 +163,45 @@
                     </li>
                     <!-- End Restaurants -->
 
+                    <!-- Dineout Categories -->
+                    <li
+                        class="navbar-vertical-aside-has-menu {{ Request::is('admin/sabores/dineout-categories*') ? 'active' : '' }}">
+                        <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
+                            title="{{ translate('Dineout Categories') }}">
+                            <i class="tio-category nav-icon"></i>
+                            <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                {{ translate('Dineout Categories') }}
+                            </span>
+                        </a>
+                        <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
+                            style="display:{{ Request::is('admin/sabores/dineout-categories*') ? 'block' : 'none' }}">
+                            <li
+                                class="nav-item {{ Request::is('admin/sabores/dineout-categories') && !Request::is('admin/sabores/dineout-categories/create') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('admin.sabores.dineout-categories.index') }}"
+                                    title="{{ translate('All Categories') }}">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate sidebar--badge-container">
+                                        {{ translate('All Categories') }}
+                                        <span class="badge badge-soft-info badge-pill ml-1">
+                                            {{ \App\Models\DineoutCategory::count() }}
+                                        </span>
+                                    </span>
+                                </a>
+                            </li>
+                            <li
+                                class="nav-item {{ Request::is('admin/sabores/dineout-categories/create') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('admin.sabores.dineout-categories.create') }}"
+                                    title="{{ translate('Add New') }}">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate">
+                                        {{ translate('Add New') }}
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- End Dineout Categories -->
+
                     <!-- Coupons -->
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/sabores/coupons*') ? 'active' : '' }}">
@@ -175,6 +214,38 @@
                         </a>
                     </li>
                     <!-- End Coupons -->
+
+                    <!-- Campaigns -->
+                    <li
+                        class="navbar-vertical-aside-has-menu {{ Request::is('admin/sabores/campaigns*') ? 'active' : '' }}">
+                        <a class="js-navbar-vertical-aside-menu-link nav-link"
+                            href="{{ route('admin.sabores.campaigns') }}" title="{{ translate('Campaigns') }}">
+                            <i class="tio-layers nav-icon"></i>
+                            <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                {{ translate('Campaigns') }}
+                            </span>
+                        </a>
+                    </li>
+                    <!-- End Campaigns -->
+
+                    <!-- Security Section -->
+                    <li class="nav-item">
+                        <small class="nav-subtitle"
+                            title="{{ translate('Security') }}">{{ translate('Security') }}</small>
+                        <small class="tio-more-horizontal nav-subtitle-replacer"></small>
+                    </li>
+
+                    <li
+                        class="navbar-vertical-aside-has-menu {{ Request::is('admin/sabores/reviews*') ? 'active' : '' }}">
+                        <a class="js-navbar-vertical-aside-menu-link nav-link"
+                            href="{{ route('admin.sabores.reviews.list') }}" title="{{ translate('Reviews') }}">
+                            <i class="tio-star nav-icon"></i>
+                            <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                {{ translate('Reviews') }}
+                            </span>
+                        </a>
+                    </li>
+                    <!-- End Security Section -->
 
                     <!-- Analytics Section -->
                     <li class="nav-item">
