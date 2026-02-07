@@ -801,6 +801,22 @@ class Store extends Model
     }
 
     /**
+     * Filter stores within a maximum radius from the user's location.
+     * The distance is calculated in meters by ST_Distance_Sphere, so we convert km to meters.
+     *
+     * @param $query
+     * @param $maxRadiusKm Maximum radius in kilometers
+     * @return void
+     */
+    public function scopeWithinRadius($query, $maxRadiusKm): void
+    {
+        if ($maxRadiusKm && $maxRadiusKm > 0) {
+            // ST_Distance_Sphere returns distance in meters, convert km to meters
+            $query->having('distance', '<=', $maxRadiusKm * 1000);
+        }
+    }
+
+    /**
      * @param $query
      * @return mixed
      */

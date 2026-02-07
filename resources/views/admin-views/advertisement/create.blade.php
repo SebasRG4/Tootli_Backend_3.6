@@ -1,112 +1,116 @@
 @extends('layouts.admin.app')
 
-@section('title','Advertisement Create')
+@section('title', 'Advertisement Create')
 
 
 @section('advertisement')
-active
+    active
 @endsection
 @section('advertisement_create')
-active
+    active
 @endsection
 
 
 @push('css_or_js')
-    <link rel="stylesheet" type="text/css" href="{{asset('assets/admin/css/daterangepicker.css')}}"/>
+    <link rel="stylesheet" type="text/css" href="{{asset('assets/admin/css/daterangepicker.css')}}" />
 @endpush
 
 @section('content')
-<div class="content container-fluid">
+    <div class="content container-fluid">
 
 
-    <!-- Advertisement -->
-    <h1 class="page-header-title mb-3">
-        {{ translate('Create_Advertisement') }}
-    </h1>
-    <div class="card mb-20">
-        <div class="card-body p-30">
-            <form id="create-add-form"  method="POST" enctype="multipart/form-data" >
-                @csrf
-                @method("POST")
-                <div class="row g-4">
-                    <div class="col-lg-6">
-                        <div class="js-nav-scroller hs-nav-scroller-horizontal">
-                        <ul class="nav nav-tabs mb-3 border-0">
-                        <li class="nav-item">
-                            <a class="nav-link lang_link active"
-                            href="#"
-                            id="default-link">{{translate('messages.default')}}</a>
-                        </li>
+        <!-- Advertisement -->
+        <h1 class="page-header-title mb-3">
+            {{ translate('Create_Advertisement') }}
+        </h1>
+        <div class="card mb-20">
+            <div class="card-body p-30">
+                <form id="create-add-form" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method("POST")
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="js-nav-scroller hs-nav-scroller-horizontal">
+                                <ul class="nav nav-tabs mb-3 border-0">
+                                    <li class="nav-item">
+                                        <a class="nav-link lang_link active" href="#"
+                                            id="default-link">{{translate('messages.default')}}</a>
+                                    </li>
 
-                        @if ($language)
-                        @foreach ($language as $lang)
-                            <li class="nav-item">
-                                <a class="nav-link lang_link"
-                                    href="#"
-                                    id="{{ $lang }}-link">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
-                                </li>
-                                @endforeach
-                            </ul>
-                        </div>
+                                    @if ($language)
+                                                @foreach ($language as $lang)
+                                                    <li class="nav-item">
+                                                        <a class="nav-link lang_link" href="#"
+                                                            id="{{ $lang }}-link">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
 
-                            <div class="lang_form" id="default-form">
+                                        <div class="lang_form" id="default-form">
 
 
-                            <div class="mb-20">
-                                <label class="form-label">{{ translate('Advertisement_Title') }} ({{ translate('Default') }})</label>
-                                <input type="text" class="form-control" id="title" name="title[]"
-                                    value="{{ old('title.0') }}" placeholder="{{ translate('Exclusive_Offer') }}" maxlength="255"
-                                    data-preview-text="preview-title">
-                            </div>
-                            <div class="form-floating mb-20">
-                                <label class="form-label">{{ translate('Short_Description') }} ({{ translate('Default') }})</label>
-                                <textarea class="form-control resize-none" id="description"
-                                    placeholder="{{ translate('Get_Discount') }}" name="description[]"
-                                    data-preview-text="preview-description">{{ old('description.0') }}</textarea>
-                                </div>
+                                            <div class="mb-20">
+                                                <label class="form-label">{{ translate('Advertisement_Title') }}
+                                                    ({{ translate('Default') }})</label>
+                                                <input type="text" class="form-control" id="title" name="title[]"
+                                                    value="{{ old('title.0') }}" placeholder="{{ translate('Exclusive_Offer') }}"
+                                                    maxlength="255" data-preview-text="preview-title">
+                                            </div>
+                                            <div class="form-floating mb-20">
+                                                <label class="form-label">{{ translate('Short_Description') }}
+                                                    ({{ translate('Default') }})</label>
+                                                <textarea class="form-control resize-none" id="description"
+                                                    placeholder="{{ translate('Get_Discount') }}" name="description[]"
+                                                    data-preview-text="preview-description">{{ old('description.0') }}</textarea>
+                                            </div>
 
-                            <input type="hidden" name="lang[]" value="default">
-                            </div>
+                                            <input type="hidden" name="lang[]" value="default">
+                                        </div>
 
-                            @foreach ($language as $key => $lang)
-                            <div class="d-none lang_form"
-                                id="{{ $lang }}-form">
-
+                                        @foreach ($language as $key => $lang)
+                                            <div class="d-none lang_form" id="{{ $lang }}-form">
 
 
+
+
+                                                <div class="mb-20">
+                                                    <label class="form-label">{{ translate('Advertisement_Title') }}
+                                                        ({{ strtoupper($lang) }})</label>
+                                                    <input type="text" class="form-control" id="title" name="title[]"
+                                                        value="{{ old('title.0') }}" placeholder="{{ translate('Exclusive_Offer') }}"
+                                                        maxlength="255" data-preview-text="preview-title">
+                                                </div>
+                                                <div class="form-floating mb-20">
+                                                    <label class="form-label">{{ translate('Short_Description') }}
+                                                        ({{ strtoupper($lang) }})</label>
+                                                    <textarea class="form-control resize-none" id="description"
+                                                        placeholder="{{ translate('Get_Discount') }}" name="description[]"
+                                                        data-preview-text="preview-description">{{ old('description.0') }}</textarea>
+                                                </div>
+
+                                                <input type="hidden" name="lang[]" value="{{ $lang }}">
+                                            </div>
+                                        @endforeach
+
+                                    @else
 
                                 <div class="mb-20">
-                                    <label class="form-label">{{ translate('Advertisement_Title') }}   ({{ strtoupper($lang) }})</label>
+                                    <label class="input-label" for="store_id">{{ translate('messages.select_store') }} <span
+                                            class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.If_you_want_to_create_video_advertisement_then_you_can_skip_this_field') }}"><img
+                                                src="{{ asset('assets/admin/img/info-circle.svg') }}" alt=""></span></label>
                                     <input type="text" class="form-control" id="title" name="title[]"
-                                        value="{{ old('title.0') }}" placeholder="{{ translate('Exclusive_Offer') }}" maxlength="255"
-                                        data-preview-text="preview-title">
+                                        value="{{ old('title.0') }}" placeholder="{{ translate('Exclusive_Offer') }}"
+                                        maxlength="255" data-preview-text="preview-title">
                                 </div>
                                 <div class="form-floating mb-20">
-                                    <label class="form-label">{{ translate('Short_Description') }}   ({{ strtoupper($lang) }})</label>
+                                    <label class="form-label">{{ translate('Short_Description') }}</label>
                                     <textarea class="form-control resize-none" id="description"
                                         placeholder="{{ translate('Get_Discount') }}" name="description[]"
                                         data-preview-text="preview-description">{{ old('description.0') }}</textarea>
-                                    </div>
-
-                                <input type="hidden" name="lang[]" value="{{ $lang }}">
-                            </div>
-                        @endforeach
-
-                            @else
-
-                            <div class="mb-20">
-                                <label class="form-label">{{ translate('Advertisement_Title') }}</label>
-                                <input type="text" class="form-control" id="title" name="title[]"
-                                    value="{{ old('title.0') }}" placeholder="{{ translate('Exclusive_Offer') }}" maxlength="255"
-                                    data-preview-text="preview-title">
-                            </div>
-                            <div class="form-floating mb-20">
-                                <label class="form-label">{{ translate('Short_Description') }}</label>
-                                <textarea class="form-control resize-none" id="description"
-                                    placeholder="{{ translate('Get_Discount') }}" name="description[]"
-                                    data-preview-text="preview-description">{{ old('description.0') }}</textarea>
-                            </div>
-                            <input type="hidden" name="lang[]" value="default">
+                                </div>
+                                <input type="hidden" name="lang[]" value="default">
 
                             @endif
 
@@ -119,226 +123,240 @@ active
 
 
 
-                        <label class="form-label" for="exampleFormControlSelect1">{{ translate('messages.Select_Store') }} </label>
-                        <div class="mb-20">
-                            <select name="store_id" id="store_id"  data-placeholder="{{ translate('messages.select_store') }}"
-                            class="js-data-example-ajax form-control">
-                            </select>
-                        </div>
-
-                        <label class="form-label">{{ translate('Select_Priority') }}</label>
-                        <div class="mb-20">
-                            <select class="form-control w-100 js-select2-custom" name="priority">
-                                <option value="" selected="" disabled="">{{ translate('Priority') }}</option>
-                                <option value="">{{ translate('messages.N/A') }}</option>
-                                @for ($i = 1; $i <= $total_adds; $i++)
-                                    <option value="{{ $i }}">{{ $i }}</option>
-                                @endfor
-                            </select>
-                        </div>
-                        <div class="mb-20">
-                            <label class="form-label">{{ translate('Advertisement_Type') }}</label>
-                            <select class="js-select form-control w-100 promotion_type" name="advertisement_type">
-                                <option value="video_promotion">{{ translate('Video_Promotion') }}</option>
-                                <option value="store_promotion" selected="">{{ translate('store_promotion') }}</option>
-                            </select>
-                        </div>
-                        <div class="mb-20">
-                            <label class="form-label">{{ translate('Validity') }}</label>
-                            <div class="position-relative">
-                                <i class="tio-calendar-month icon-absolute-on-right"></i>
-                                <input type="text" class="form-control h-45 position-relative bg-transparent"  name="dates" placeholder="{{ translate('messages.Select_Date') }}">
+                            <label class="form-label"
+                                for="exampleFormControlSelect1">{{ translate('messages.Select_Store') }} </label>
+                            <div class="mb-20">
+                                <select name="store_id" id="store_id"
+                                    data-placeholder="{{ translate('messages.select_store') }}"
+                                    class="js-data-example-ajax form-control">
+                                </select>
                             </div>
-                        </div>
 
-                        <div class="promotion-typewise-upload-box" id="video-upload-box">
-                            <label class="form-label">{{ translate('Upload Related Files') }}</label>
-                            <div class="border rounded p-3">
-                                <div class="d-flex flex-column align-items-center gap-3">
-                                    <p class="title-color mb-0 ">{{ translate('Upload Your Video') }}
-
-                                        ({{ translate('16:9') }})</p>
-
-                                    <div class="upload-file">
-                                        <input type="file" class="video_attachment" name="video_attachment"
-                                            accept="video/mp4, video/webm, video/mkv">
-                                        <div class="upload-file__img upload-file__img_banner upload-file__video-not-playable h-140">
-                                        </div>
-                                        <button class="remove-file-button" type="button">
-                                            <i class="tio-clear"></i>
-                                        </button>
-                                    </div>
-
-                                    <p class="opacity-75 max-w220 mx-auto text-center fs-12">
-                                        {{ translate('Maximum 5 MB') }}
-                                        <br>
-                                        {{ translate('Supports: MP4, WEBM, MKV') }}
-                                    </p>
+                            <label class="form-label">{{ translate('Select_Priority') }}</label>
+                            <div class="mb-20">
+                                <select class="form-control w-100 js-select2-custom" name="priority">
+                                    <option value="" selected="" disabled="">{{ translate('Priority') }}</option>
+                                    <option value="">{{ translate('messages.N/A') }}</option>
+                                    @for ($i = 1; $i <= $total_adds; $i++)
+                                        <option value="{{ $i }}">{{ $i }}</option>
+                                    @endfor
+                                </select>
+                            </div>
+                            <div class="mb-20">
+                                <label class="form-label">{{ translate('Advertisement_Type') }}</label>
+                                <select class="js-select form-control w-100 promotion_type" name="advertisement_type">
+                                    <option value="video_promotion">{{ translate('Video_Promotion') }}</option>
+                                    <option value="store_promotion" selected="">{{ translate('store_promotion') }}</option>
+                                </select>
+                            </div>
+                            <div class="mb-20">
+                                <label class="form-label">{{ translate('Validity') }}</label>
+                                <div class="position-relative">
+                                    <i class="tio-calendar-month icon-absolute-on-right"></i>
+                                    <input type="text" class="form-control h-45 position-relative bg-transparent"
+                                        name="dates" placeholder="{{ translate('messages.Select_Date') }}">
                                 </div>
                             </div>
-                        </div>
-                        <div class="promotion-typewise-upload-box" id="profile-upload-box">
-                            <h5 class="mb-3">{{ translate('Show Review') }} &amp; {{ translate('Ratings') }}</h5>
-                            <div class="card bg--secondary shadow-none">
-                                <div class="card-body p-3">
-                                    <div class="w-100 d-flex flex-wrap gap-3">
-                                        <label class="form-check form--check-2 me-3">
-                                            <input type="checkbox" id="is_review_checked" class="form-check-input" value="1" name="review" checked="">
-                                            <span class="form-check-label">{{ translate('Review') }}</span>
-                                        </label>
-                                        <label class="form-check form--check-2">
-                                            <input type="checkbox" id="is_rating_checked" class="form-check-input" value="1" name="rating" checked="">
-                                            <span class="form-check-label">{{ translate('Rating') }}</span>
-                                        </label>
+
+                            <div class="promotion-typewise-upload-box" id="video-upload-box">
+                                <label class="form-label">{{ translate('Upload Related Files') }}</label>
+                                <div class="border rounded p-3">
+                                    <div class="d-flex flex-column align-items-center gap-3">
+                                        <p class="title-color mb-0 ">{{ translate('Upload Your Video') }}
+
+                                            ({{ translate('16:9') }})</p>
+
+                                        <div class="upload-file">
+                                            <input type="file" class="video_attachment" name="video_attachment"
+                                                accept="video/mp4, video/webm, video/mkv">
+                                            <div
+                                                class="upload-file__img upload-file__img_banner upload-file__video-not-playable h-140">
+                                            </div>
+                                            <button class="remove-file-button" type="button">
+                                                <i class="tio-clear"></i>
+                                            </button>
+                                        </div>
+
+                                        <p class="opacity-75 max-w220 mx-auto text-center fs-12">
+                                            {{ translate('Maximum 5 MB') }}
+                                            <br>
+                                            {{ translate('Supports: MP4, WEBM, MKV') }}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
-                            <br>
-                            <label class="form-label">{{ translate('Upload Related Files') }}</label>
-                            <div class="d-flex flex-wrap flex-sm-nowrap justify-content-center gap-3 border rounded p-3">
-                                <div class="d-flex flex-column align-items-center gap-3 flex-shrink-0">
-                                    <p class="title-color mb-0">{{ translate('Profile Image') }} <span class="text-danger">({{ translate('Ratio - 1:1') }})</span></p>
-
-                                    <div class="upload-file">
-                                        <input type="file" class="cover_attachment js-upload-input"
-                                            data-target="profile-prev-image" name="profile_image"
-                                            accept=".webp, .png,.jpg,.jpeg,.gif, |image/*">
-                                        <div class="upload-file__img">
-                                            <img src="{{asset('assets/admin/img/media/upload-file.png')}}" alt="" >
+                            <div class="promotion-typewise-upload-box" id="profile-upload-box">
+                                <h5 class="mb-3">{{ translate('Show Review') }} &amp; {{ translate('Ratings') }}</h5>
+                                <div class="card bg--secondary shadow-none">
+                                    <div class="card-body p-3">
+                                        <div class="w-100 d-flex flex-wrap gap-3">
+                                            <label class="form-check form--check-2 me-3">
+                                                <input type="checkbox" id="is_review_checked" class="form-check-input"
+                                                    value="1" name="review" checked="">
+                                                <span class="form-check-label">{{ translate('Review') }}</span>
+                                            </label>
+                                            <label class="form-check form--check-2">
+                                                <input type="checkbox" id="is_rating_checked" class="form-check-input"
+                                                    value="1" name="rating" checked="">
+                                                <span class="form-check-label">{{ translate('Rating') }}</span>
+                                            </label>
                                         </div>
-                                        <button class="remove-file-button" type="button">
-                                            <i class="tio-clear"></i>
-                                        </button>
                                     </div>
-
-                                    <p class="opacity-75 max-w220 mx-auto text-center fs-12">
-                                        {{ translate('Supports: PNG, JPG, JPEG, WEBP') }}
-                                        <br>
-                                        {{ translate('Maximum 2 MB') }}
-                                    </p>
                                 </div>
-                                <div class="d-flex flex-column align-items-center gap-3">
-                                    <p class="title-color mb-0">{{ translate('Upload Cover') }} <span class="text-danger">({{ translate('Ratio - 2:1') }})</span></p>
-                                    <div class="upload-file">
-                                        <input type="file" class="cover_attachment js-upload-input"
-                                            data-target="main-image" name="cover_image"
-                                            accept=".webp, .png,.jpg,.jpeg,.gif, |image/*">
-                                        <div class="upload-file__img upload-file__img_banner aspect-2-1">
-                                            <img src="{{asset('assets/admin/img/media/banner-upload-file.png')}}" alt="" >
-                                        </div>
-                                        <button class="remove-file-button" type="button">
-                                            <i class="tio-clear"></i>
-                                        </button>
-                                    </div>
+                                <br>
+                                <label class="form-label">{{ translate('Upload Related Files') }}</label>
+                                <div
+                                    class="d-flex flex-wrap flex-sm-nowrap justify-content-center gap-3 border rounded p-3">
+                                    <div class="d-flex flex-column align-items-center gap-3 flex-shrink-0">
+                                        <p class="title-color mb-0">{{ translate('Profile Image') }} <span
+                                                class="text-danger">({{ translate('Ratio - 1:1') }})</span></p>
 
-                                    <p class="opacity-75 max-w220 mx-auto text-center fs-12">
-                                        {{ translate('Supports: PNG, JPG, JPEG, WEBP') }}
-                                        <br>
-                                        {{ translate('Maximum 2 MB') }}
-                                    </p>
+                                        <div class="upload-file">
+                                            <input type="file" class="cover_attachment js-upload-input"
+                                                data-target="profile-prev-image" name="profile_image"
+                                                accept=".webp, .png,.jpg,.jpeg,.gif, |image/*">
+                                            <div class="upload-file__img">
+                                                <img src="{{asset('assets/admin/img/media/upload-file.png')}}" alt="">
+                                            </div>
+                                            <button class="remove-file-button" type="button">
+                                                <i class="tio-clear"></i>
+                                            </button>
+                                        </div>
+
+                                        <p class="opacity-75 max-w220 mx-auto text-center fs-12">
+                                            {{ translate('Supports: PNG, JPG, JPEG, WEBP') }}
+                                            <br>
+                                            {{ translate('Maximum 2 MB') }}
+                                        </p>
+                                    </div>
+                                    <div class="d-flex flex-column align-items-center gap-3">
+                                        <p class="title-color mb-0">{{ translate('Upload Cover') }} <span
+                                                class="text-danger">({{ translate('Ratio - 2:1') }})</span></p>
+                                        <div class="upload-file">
+                                            <input type="file" class="cover_attachment js-upload-input"
+                                                data-target="main-image" name="cover_image"
+                                                accept=".webp, .png,.jpg,.jpeg,.gif, |image/*">
+                                            <div class="upload-file__img upload-file__img_banner aspect-2-1">
+                                                <img src="{{asset('assets/admin/img/media/banner-upload-file.png')}}"
+                                                    alt="">
+                                            </div>
+                                            <button class="remove-file-button" type="button">
+                                                <i class="tio-clear"></i>
+                                            </button>
+                                        </div>
+
+                                        <p class="opacity-75 max-w220 mx-auto text-center fs-12">
+                                            {{ translate('Supports: PNG, JPG, JPEG, WEBP') }}
+                                            <br>
+                                            {{ translate('Maximum 2 MB') }}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="position-sticky top-80px text-8797AB">
-                            <div class="bg-light p-3 p-sm-4 rounded">
-                                <label class="form-label">{{ translate('Advertisement Preview') }}</label>
-                                <div id="video-preview-box" class="video-preview-box">
-                                    <div class="bg--secondary rounded">
-                                        <div class="video h-200">
-                                            <video controls>
-                                                {{ translate('Your browser does not support the video tag.') }}
-                                            </video>
-                                        </div>
-                                        <div
-                                            class="prev-video-box rounded bg-white px-3 py-4 position-relative gap-4 mt-n2">
-                                            <div class="profile-img">
+                        <div class="col-lg-6">
+                            <div class="position-sticky top-80px text-8797AB">
+                                <div class="bg-light p-3 p-sm-4 rounded">
+                                    <label class="form-label">{{ translate('Advertisement Preview') }}</label>
+                                    <div id="video-preview-box" class="video-preview-box">
+                                        <div class="bg--secondary rounded">
+                                            <div class="video h-200">
+                                                <video controls>
+                                                    {{ translate('Your browser does not support the video tag.') }}
+                                                </video>
                                             </div>
                                             <div
-                                                class="d-flex align-items-center justify-content-between gap-2">
-                                                <div class="d-flex flex-column gap-2 flex-grow-1">
-                                                    <div class="preview-title w-100">
-                                                        <h5 class="main-text pe-4">{{ translate('Title') }}</h5>
-                                                        <div class="placeholder-text bg--secondary p-2 w-50"></div>
-                                                    </div>
-                                                    <div class="preview-description w-100">
-                                                        <div class="main-text line-limit-2">{{ translate('messages.Description') }}
-                                                        </div>
-                                                        <div class="placeholder-text bg--secondary p-2 w-75"></div>
-                                                    </div>
-                                                    <div class="preview-description w-100">
-                                                        <div class="placeholder-text bg--secondary p-2 w-65"></div>
-                                                    </div>
+                                                class="prev-video-box rounded bg-white px-3 py-4 position-relative gap-4 mt-n2">
+                                                <div class="profile-img">
                                                 </div>
-                                                <a class="btn btn--primary py-2 px-3 cursor-auto">
-                                                    <span class="tio-arrow-forward"></span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="profile-preview-box" class="profile-preview-box">
-                                    <div class="bg--secondary rounded">
-                                        <!-- Existing Profile Banner Image -->
-                                        <div class="main-image rounded min-h-200" style="background: url('') center center / cover no-repeat">
-                                        </div>
-                                        <div class="rounded bg-white px-3 py-4 position-relative mt-n2">
-                                            <div class="preview-title preview-description">
-                                                <div class="wishlist-btn bg--secondary placeholder-text"></div>
-                                                <div class="static-text wishlist-btn-2" style="display: block;">
-                                                    <div
-                                                        class="h-100 w-100 d-flex align-items-center justify-content-center">
-                                                        <i class="tio-heart-outlined"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div
-                                                class="d-flex align-items-center justify-content-between gap-2">
-                                                <!-- Existing Profile Image -->
-                                                <div class="profile-prev-image bg--secondary me-xl-3" style="background: url('') center center / cover no-repeat">
-                                                </div>
-                                                <div class="review-rating-demo">
-                                                    <div class="rating-text static-text">
-                                                        <div class="rating-number d-flex align-items-center">
-                                                            <i  class="tio-star"></i><span id="rating_data">{{ translate('4.7') }}</span>
-                                                        </div>
-                                                    </div>
-                                                    <span id="review_data" class="review--text static-text">({{ translate('25+') }})</span>
-                                                </div>
-                                                <div class="w-0 d-flex flex-column gap-2 flex-grow-1">
-                                                    <div class="d-flex justify-content-between">
+                                                <div class="d-flex align-items-center justify-content-between gap-2">
+                                                    <div class="d-flex flex-column gap-2 flex-grow-1">
                                                         <div class="preview-title w-100">
                                                             <h5 class="main-text pe-4">{{ translate('Title') }}</h5>
                                                             <div class="placeholder-text bg--secondary p-2 w-50"></div>
                                                         </div>
-                                                    </div>
-                                                    <div class="preview-description w-100">
-                                                        <div class="main-text line-limit-2">{{ translate('messages.Description') }}
+                                                        <div class="preview-description w-100">
+                                                            <div class="main-text line-limit-2">
+                                                                {{ translate('messages.Description') }}
+                                                            </div>
+                                                            <div class="placeholder-text bg--secondary p-2 w-75"></div>
                                                         </div>
-                                                        <div class="placeholder-text bg--secondary p-2 w-75"></div>
+                                                        <div class="preview-description w-100">
+                                                            <div class="placeholder-text bg--secondary p-2 w-65"></div>
+                                                        </div>
+                                                    </div>
+                                                    <a class="btn btn--primary py-2 px-3 cursor-auto">
+                                                        <span class="tio-arrow-forward"></span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="profile-preview-box" class="profile-preview-box">
+                                        <div class="bg--secondary rounded">
+                                            <!-- Existing Profile Banner Image -->
+                                            <div class="main-image rounded min-h-200"
+                                                style="background: url('') center center / cover no-repeat">
+                                            </div>
+                                            <div class="rounded bg-white px-3 py-4 position-relative mt-n2">
+                                                <div class="preview-title preview-description">
+                                                    <div class="wishlist-btn bg--secondary placeholder-text"></div>
+                                                    <div class="static-text wishlist-btn-2" style="display: block;">
+                                                        <div
+                                                            class="h-100 w-100 d-flex align-items-center justify-content-center">
+                                                            <i class="tio-heart-outlined"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex align-items-center justify-content-between gap-2">
+                                                    <!-- Existing Profile Image -->
+                                                    <div class="profile-prev-image bg--secondary me-xl-3"
+                                                        style="background: url('') center center / cover no-repeat">
+                                                    </div>
+                                                    <div class="review-rating-demo">
+                                                        <div class="rating-text static-text">
+                                                            <div class="rating-number d-flex align-items-center">
+                                                                <i class="tio-star"></i><span
+                                                                    id="rating_data">{{ translate('4.7') }}</span>
+                                                            </div>
+                                                        </div>
+                                                        <span id="review_data"
+                                                            class="review--text static-text">({{ translate('25+') }})</span>
+                                                    </div>
+                                                    <div class="w-0 d-flex flex-column gap-2 flex-grow-1">
+                                                        <div class="d-flex justify-content-between">
+                                                            <div class="preview-title w-100">
+                                                                <h5 class="main-text pe-4">{{ translate('Title') }}</h5>
+                                                                <div class="placeholder-text bg--secondary p-2 w-50"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="preview-description w-100">
+                                                            <div class="main-text line-limit-2">
+                                                                {{ translate('messages.Description') }}
+                                                            </div>
+                                                            <div class="placeholder-text bg--secondary p-2 w-75"></div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <br>
+                                <br>
                             </div>
-                            <br>
-                            <br>
                         </div>
                     </div>
-                </div>
-                <div class="btn--container justify-content-end">
-                    <button type="reset" id="reset_btn" class="btn btn--reset">{{ translate('Reset') }}</button>
-                    <button type="submit" class="btn btn--primary">{{ translate('Submit') }}</button>
-                </div>
-            </form>
+                    <div class="btn--container justify-content-end">
+                        <button type="reset" id="reset_btn" class="btn btn--reset">{{ translate('Reset') }}</button>
+                        <button type="submit" class="btn btn--primary">{{ translate('Submit') }}</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-    <!-- Advertisement -->
+        <!-- Advertisement -->
 
-</div>
+    </div>
 @endsection
 
 @push('script_2')
@@ -347,7 +365,7 @@ active
     <script type="text/javascript" src="{{asset('assets/admin/js/daterangepicker.min.js')}}"></script>
 
     <script>
-        $(function() {
+        $(function () {
             $('input[name="dates"]').daterangepicker({
                 // timePicker: true,
                 minDate: new Date(),
@@ -392,7 +410,7 @@ active
             const videoEl = $(".video > video")
             let blobURL = "";
             // prev video attachment file
-            {{-- blobURL = "{{asset('storage/app/public/advertisement').'/' . $advertisement?->attachment?->file_name}}"; --}}
+            // prev video attachment file
 
             videoEl.css('display', 'block');
             videoEl.attr('src', blobURL);
@@ -500,7 +518,7 @@ active
             } else {
                 $('.review-placeholder').show()
                 $('.review--text').hide()
-                if(!$('[name="rating"]').is(':checked')){
+                if (!$('[name="rating"]').is(':checked')) {
                     $('.review-rating-demo').css('opacity', '0')
                 }
             }
@@ -511,7 +529,7 @@ active
                 $('.review-rating-demo').css('opacity', '1')
             } else {
                 $('.rating-text').hide()
-                if(!$('[name="review"]').is(':checked')){
+                if (!$('[name="review"]').is(':checked')) {
                     $('.review-rating-demo').css('opacity', '0')
                 }
             }
@@ -524,7 +542,7 @@ active
                     $('.review--text').show()
                 } else {
                     $('.review--text').hide()
-                    if(!$('[name="rating"]').is(':checked')){
+                    if (!$('[name="rating"]').is(':checked')) {
                         $('.review-rating-demo').css('opacity', '0')
                     }
                 }
@@ -534,7 +552,7 @@ active
                     $('.rating-text').show()
                 } else {
                     $('.rating-text').hide()
-                    if(!$('[name="review"]').is(':checked')){
+                    if (!$('[name="review"]').is(':checked')) {
                         $('.review-rating-demo').css('opacity', '0')
                     }
                 }
@@ -542,132 +560,162 @@ active
         })
     </script>
 
-<script>
-            $(document).on('ready', function() {
-                    $('.js-data-example-ajax').select2({
-                        ajax: {
-                            url: '{{ url('/') }}/admin/store/get-stores',
-                            data: function(params) {
-                                return {
-                                    q: params.term, // search term
-                                    page: params.page,
-                                    module_id:{{ config('module')['current_module_id'] }}
-                                };
-                            },
-                            processResults: function(data) {
-                                return {
-                                    results: data
-                                };
-                            },
-                            __port: function(params, success, failure) {
-                                let $request = $.ajax(params);
+    <script>
+        $(document).on('ready', function () {
+            $('.js-data-example-ajax').select2({
+                ajax: {
+                    url: '{{ url('/') }}/admin/store/get-stores',
+                    data: function (params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page,
+                            module_id:{{ config('module')['current_module_id'] }}
+                                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    __port: function (params, success, failure) {
+                        let $request = $.ajax(params);
 
-                                $request.then(success);
-                                $request.fail(failure);
+                        $request.then(success);
+                        $request.fail(failure);
 
-                                return $request;
-                            }
-                        }
-                    });
-
-
-                $('#create-add-form').on('submit', function (event) {
-                    event.preventDefault();
-                    let formData = new FormData(this);
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-                    $.post({
-                        url: '{{ route('admin.advertisement.store') }}',
-                        data: $('#create-add-form').serialize(),
-                        data: formData,
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        beforeSend: function () {
-                            $('#loading').show();
-                        },
-                        success: function (data) {
-                            $('#loading').hide();
-
-                            if (data.errors) {
-                                for (let i = 0; i < data.errors.length; i++) {
-                                    toastr.error(data.errors[i].message, {
-                                        CloseButton: true,
-                                        ProgressBar: true
-                                    });
-                                }
-                            } else {
-                                toastr.success(data.message, {
-                                    CloseButton: true,
-                                    ProgressBar: true
-                                });
-                                setTimeout(function () {
-                                    location.href = '{{route('admin.advertisement.index')}}';
-                                }, 2000);
-                            }
-                        }
-                    });
-                });
-            });
-
-
-
-            $(document).on('change', '.js-data-example-ajax', function () {
-                var store_id= $(this).val();
-                check_review_and_rating(store_id)
-            });
-            $(document).on('change', '#is_review_checked', function () {
-
-                if($(this).is(':checked') == true){
-                    var store_id= $('.js-data-example-ajax').val();
-                    if(store_id){
-                        check_review_and_rating(store_id)
+                        return $request;
                     }
-                }
-
-            });
-            $(document).on('change', '#is_rating_checked', function () {
-
-                if($(this).is(':checked') == true){
-                    var store_id= $('.js-data-example-ajax').val();
-                    if(store_id){
-                        check_review_and_rating(store_id)
-                    }
-                }
+                },
+                allowClear: true,
+                placeholder: "{{ translate('messages.select_store') }}"
             });
 
 
-
-
-
-
-            function check_review_and_rating(store_id){
+            $('#create-add-form').on('submit', function (event) {
+                event.preventDefault();
+                let formData = new FormData(this);
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
-                $.ajax({
-                    url: "{{route('admin.store.get-store-ratings')}}",
-                    method: 'get',
-                    data: {
-                        store_id: store_id,
-                    },
+                $.post({
+                    url: '{{ route('admin.advertisement.store') }}',
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
                     beforeSend: function () {
-
+                        $('#loading').show();
                     },
-                    success: function (response) {
-                        $('#rating_data').html(response.rating);
-                        $('#review_data').html( ' (' + response.review +  '+)' ) ;
-
+                    success: function (data) {
+                        if (data.errors) {
+                            for (let i = 0; i < data.errors.length; i++) {
+                                toastr.error(data.errors[i].message, {
+                                    CloseButton: true,
+                                    ProgressBar: true
+                                });
+                            }
+                        } else {
+                            toastr.success(data.message, {
+                                CloseButton: true,
+                                ProgressBar: true
+                            });
+                            setTimeout(function () {
+                                location.href = '{{route('admin.advertisement.index')}}';
+                            }, 2000);
+                        }
                     },
-                    complete: function () {
+                    error: function(xhr, status, error) {
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            // Handle validation errors from Laravel
+                            let errors = xhr.responseJSON.errors;
+                            // Check if errors is an array of objects (custom helper format) or standard Laravel object
+                            if (Array.isArray(errors)) {
+                                for (let i = 0; i < errors.length; i++) {
+                                    toastr.error(errors[i].message, {
+                                        CloseButton: true,
+                                        ProgressBar: true
+                                    });
+                                }
+                            } else {
+                                // Standard Laravel validation errors (object of arrays)
+                                $.each(errors, function(key, value) {
+                                    toastr.error(value[0], {
+                                        CloseButton: true,
+                                        ProgressBar: true
+                                    });
+                                });
+                            }
+                        } else {
+                             toastr.error(xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : error, {
+                                CloseButton: true,
+                                ProgressBar: true
+                            });
+                        }
                     },
+                    complete: function() {
+                        $('#loading').hide();
+                    }
                 });
+            });
+        });
+
+
+
+        $(document).on('change', '.js-data-example-ajax', function () {
+            var store_id = $(this).val();
+            check_review_and_rating(store_id)
+        });
+        $(document).on('change', '#is_review_checked', function () {
+
+            if ($(this).is(':checked') == true) {
+                var store_id = $('.js-data-example-ajax').val();
+                if (store_id) {
+                    check_review_and_rating(store_id)
+                }
             }
 
-</script>
+        });
+        $(document).on('change', '#is_rating_checked', function () {
+
+            if ($(this).is(':checked') == true) {
+                var store_id = $('.js-data-example-ajax').val();
+                if (store_id) {
+                    check_review_and_rating(store_id)
+                }
+            }
+        });
+
+
+
+
+
+
+        function check_review_and_rating(store_id) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: "{{route('admin.store.get-store-ratings')}}",
+                method: 'get',
+                data: {
+                    store_id: store_id,
+                },
+                beforeSend: function () {
+
+                },
+                success: function (response) {
+                    $('#rating_data').html(response.rating);
+                    $('#review_data').html(' (' + response.review + '+)');
+
+                },
+                complete: function () {
+                },
+            });
+        }
+
+    </script>
 @endpush

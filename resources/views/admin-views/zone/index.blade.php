@@ -83,6 +83,19 @@
                                                 placeholder="{{translate('messages.Write_a_New_Display_Zone_Name')}}"
                                                 maxlength="191">
                                         </div>
+                                        <div class="form-group col-12 mb-0">
+                                            <label class="input-label" for="max_delivery_radius">
+                                                {{translate('messages.max_delivery_radius')}} (km) *
+                                                <span class="form-label-secondary" data-toggle="tooltip"
+                                                    data-placement="right"
+                                                    data-original-title="{{translate('messages.maximum_distance_for_restaurant_visibility')}}">
+                                                    <i class="tio-info-outined"></i>
+                                                </span>
+                                            </label>
+                                            <input type="number" step="0.1" min="0.1" name="max_delivery_radius"
+                                                class="form-control" required
+                                                placeholder="{{translate('messages.enter_radius_in_km')}}" value="5">
+                                        </div>
                                         <input type="hidden" name="lang[]" value="default">
                                     </div>
                                     @foreach($language as $lang)
@@ -223,8 +236,7 @@
                             {{ translate('If you don’t finish the setup the Zone you created won’t function properly.') }}
                         </span>
                     </div>
-                    <img src="{{asset('assets/admin/img/zone-settings-popup-arro.gif')}}" alt="admin/img"
-                        class="w-100">
+                    <img src="{{asset('assets/admin/img/zone-settings-popup-arro.gif')}}" alt="admin/img" class="w-100">
                     <div class="mt-3 d-flex flex-wrap align-items-center justify-content-between">
                         <label class="form-check form--check m-0">
                             <input type="checkbox" class="form-check-input rounded redirect-url"

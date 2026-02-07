@@ -25,14 +25,14 @@ class AdvertisementStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'store_id' => 'required',
+            'store_id' => 'required_if:advertisement_type,store_promotion',
             'title.*' => 'max:255',
             'description.*' => 'nullable|max:65000',
             'dates' => 'required',
             'advertisement_type' => 'required|in:video_promotion,store_promotion',
             'cover_image' => 'required_if:advertisement_type,store_promotion|image|mimes:jpg,png,jpeg,webp|max:2048',
             'profile_image' => 'required_if:advertisement_type,store_promotion|image|mimes:jpg,png,jpeg,webp|max:2048',
-            'video_attachment' => 'required_if:advertisement_type,video_promotion|file|mimes:mp4,mkv,webm|max:5120',
+            'video_attachment' => 'required_if:advertisement_type,video_promotion|file|mimes:mp4,mkv,webm|max:102400',
             'title.0' => 'required',
         ];
     }
@@ -44,7 +44,7 @@ class AdvertisementStoreRequest extends FormRequest
             'video_attachment.required_if' => translate('Your_video_attachment_is_missing'),
             'cover_image.required_if' => translate('Your_cover_image_is_missing'),
             'profile_image.required_if' => translate('Your_profile_image_is_missing'),
-            'title.0.required'=>translate('default_title_is_required'),
+            'title.0.required' => translate('default_title_is_required'),
         ];
     }
 

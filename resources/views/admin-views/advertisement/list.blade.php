@@ -112,6 +112,7 @@ active
                             <td> <a href="{{ route('admin.advertisement.show',$add->id) }}"> {{ $add->id }}</a></td>
                             <td>{{ Str::limit($add->title, 20) }}</td>
                             <td>
+                                @if($add->store)
                                 <a class="media align-items-center text-body" href="{{route('admin.store.view', $add?->store_id)}}">
                                     <img class="avatar avatar-lg mr-3" src="{{ $add->store['logo_full_url'] ?? asset('assets/admin/img/100x100/food-default-image.png') }}" alt="">
                                     <div class="media-body">
@@ -119,6 +120,9 @@ active
                                         <small class="text-body">{{ $add?->store?->email }}</small>
                                     </div>
                                 </a>
+                                @else
+                                    <span class="badge badge-soft-info">{{ translate('Global_Advertisement') }}</span>
+                                @endif
                             </td>
 
                             <td>{{ translate($add?->add_type) }}</td>

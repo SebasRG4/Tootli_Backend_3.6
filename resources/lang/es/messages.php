@@ -9364,7 +9364,4 @@ Smartly or Earn. ',
   'max_delivery_radius' => 'Max delivery radius',
   'Setup your business information' => 'Setup your business information',
   'Setup your all business general settings' => 'Setup your all business general settings',
-  'The pause note field is required when status is paused.' => 'The pause note field is required when status is paused.',
-  'Global_Advertisement' => 'Global Advertisement',
-  'If_you_want_to_create_video_advertisement_then_you_can_skip_this_field' => 'If you want to create video advertisement then you can skip this field',
 );

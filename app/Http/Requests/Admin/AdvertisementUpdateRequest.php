@@ -28,12 +28,12 @@ class AdvertisementUpdateRequest extends FormRequest
             'title.*' => 'max:255',
             'title.0' => 'required',
             'description.*' => 'nullable|max:65000',
-            'store_id' => 'required',
+            'store_id' => 'required_if:advertisement_type,store_promotion',
             'dates' => 'required',
             'advertisement_type' => 'required|in:video_promotion,store_promotion',
             'cover_image' => 'nullable|image|mimes:jpg,png,jpeg,webp|max:2048',
             'profile_image' => 'nullable|image|mimes:jpg,png,jpeg,webp|max:2048',
-            'video_attachment' => 'nullable|file|mimes:mp4,mkv,webm|max:5120',
+            'video_attachment' => 'nullable|file|mimes:mp4,mkv,webm|max:102400',
 
 
         ];
@@ -43,7 +43,7 @@ class AdvertisementUpdateRequest extends FormRequest
     {
         return [
             'store_id.required' => translate('messages.Please_select_a_store'),
-            'title.0.required'=>translate('default_title_is_required'),
+            'title.0.required' => translate('default_title_is_required'),
         ];
     }
 

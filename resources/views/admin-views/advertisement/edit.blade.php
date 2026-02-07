@@ -142,7 +142,7 @@ active
 
 
 
-                        <label class="form-label" for="exampleFormControlSelect1">{{ translate('messages.Select_Store') }} </label>
+                            <label class="input-label" for="store_id">{{ translate('messages.select_store') }} <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.If_you_want_to_create_video_advertisement_then_you_can_skip_this_field') }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt=""></span></label>
                         <div class="mb-20">
                             <select name="store_id" id="store_id"  data-placeholder="{{ translate('messages.select_store') }}"
                             class="js-data-example-ajax form-control">
@@ -628,7 +628,9 @@ active
 
                                 return $request;
                             }
-                        }
+                        },
+                        allowClear: true,
+                         placeholder: "{{ translate('messages.select_store') }}"
                     });
 
 

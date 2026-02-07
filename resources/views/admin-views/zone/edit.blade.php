@@ -84,6 +84,19 @@
                                     <label class="input-label" for="exampleFormControlInput1">{{translate('messages.display_name')}} ({{ translate('messages.default') }})</label>
                                     <input type="text" name="display_name[]" class="form-control" placeholder="{{translate('messages.display_name')}}" maxlength="191" value="{{$zone?->getRawOriginal('display_name')}}"  >
                                 </div>
+                                <div class="form-group col-6">
+                                    <label class="input-label" for="max_delivery_radius">
+                                        {{translate('messages.max_delivery_radius')}} (km) *
+                                        <span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{translate('messages.maximum_distance_for_restaurant_visibility')}}">
+                                            <i class="tio-info-outined"></i>
+                                        </span>
+                                    </label>
+                                    <input type="number" step="0.1" min="0.1" name="max_delivery_radius"
+                                        class="form-control" required
+                                        placeholder="{{translate('messages.enter_radius_in_km')}}"
+                                        value="{{$zone->max_delivery_radius ?? 5}}">
+                                </div>
                                 <input type="hidden" name="lang[]" value="default">
                             </div>
                                 @foreach($language as $lang)

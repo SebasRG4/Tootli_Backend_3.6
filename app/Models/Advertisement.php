@@ -19,7 +19,6 @@ class Advertisement extends Model
         'is_rating_active' => 'integer',
         'is_review_active' => 'integer',
         'priority' => 'integer',
-        'store_id' => 'integer',
         'created_by_id' => 'integer',
         'is_updated' => 'integer',
     ];
@@ -27,63 +26,67 @@ class Advertisement extends Model
     {
         return $this->morphTo(__FUNCTION__, 'created_by_type', 'created_by_id');
     }
-    protected $appends = ['cover_image_full_url','profile_image_full_url' ,'video_attachment_full_url','active'];
-    public function getCoverImageFullUrlAttribute(){
+    protected $appends = ['cover_image_full_url', 'profile_image_full_url', 'video_attachment_full_url', 'active'];
+    public function getCoverImageFullUrlAttribute()
+    {
         $value = $this->cover_image;
         if (count($this->storage) > 0) {
             foreach ($this->storage as $storage) {
                 if ($storage['key'] == 'cover_image') {
-                    return Helpers::get_full_url('advertisement',$value,$storage['value'],'ad_cover');
+                    return Helpers::get_full_url('advertisement', $value, $storage['value'], 'ad_cover');
                 }
             }
         }
 
-        return Helpers::get_full_url('advertisement',$value,'public');
+        return Helpers::get_full_url('advertisement', $value, 'public');
     }
-    public function getProfileImageFullUrlAttribute(){
+    public function getProfileImageFullUrlAttribute()
+    {
         $value = $this->profile_image;
         if (count($this->storage) > 0) {
             foreach ($this->storage as $storage) {
                 if ($storage['key'] == 'profile_image') {
-                    return Helpers::get_full_url('advertisement',$value,$storage['value']);
+                    return Helpers::get_full_url('advertisement', $value, $storage['value']);
                 }
             }
         }
 
-        return Helpers::get_full_url('advertisement',$value,'public');
+        return Helpers::get_full_url('advertisement', $value, 'public');
     }
-    public function getVideoAttachmentFullUrlAttribute(){
+    public function getVideoAttachmentFullUrlAttribute()
+    {
         $value = $this->video_attachment;
         if (count($this->storage) > 0) {
             foreach ($this->storage as $storage) {
                 if ($storage['key'] == 'video_attachment') {
-                    return Helpers::get_full_url('advertisement',$value,$storage['value']);
+                    return Helpers::get_full_url('advertisement', $value, $storage['value']);
                 }
             }
         }
 
-        return Helpers::get_full_url('advertisement',$value,'public');
+        return Helpers::get_full_url('advertisement', $value, 'public');
     }
-    public function getActiveAttribute(){
+    public function getActiveAttribute()
+    {
 
-    $today = date('Y-m-d');
+        $today = date('Y-m-d');
 
-    $todayDate = new DateTime($today);
-    $startDate = new DateTime($this->start_date);
-    $endDate = new DateTime($this->end_date);
+        $todayDate = new DateTime($today);
+        $startDate = new DateTime($this->start_date);
+        $endDate = new DateTime($this->end_date);
         if ($todayDate >= $startDate && $todayDate <= $endDate) {
-            return  1;
-        } elseif($todayDate < $startDate && $todayDate <= $endDate){
+            return 1;
+        } elseif ($todayDate < $startDate && $todayDate <= $endDate) {
             return 2;
-        }
-        else {
-            return  0;
+        } else {
+            return 0;
         }
     }
 
 
 
-    public function getTitleAttribute($value){
+    public function getTitleAttribute($value)
+    {
         if (count($this->translations) > 0) {
             foreach ($this->translations as $translation) {
                 if ($translation['key'] == 'title') {
@@ -93,7 +96,8 @@ class Advertisement extends Model
         }
         return $value;
     }
-    public function getDescriptionAttribute($value){
+    public function getDescriptionAttribute($value)
+    {
         if (count($this->translations) > 0) {
             foreach ($this->translations as $translation) {
                 if ($translation['key'] == 'description') {
@@ -107,15 +111,15 @@ class Advertisement extends Model
 
     public function scopeValid($query)
     {
-        return $query->where('status','approved')->whereDate('end_date', '>=', date('Y-m-d'))->whereDate('start_date', '<=', date('Y-m-d'));
+        return $query->where('status', 'approved')->whereDate('end_date', '>=', date('Y-m-d'))->whereDate('start_date', '<=', date('Y-m-d'));
     }
     public function scopeApproved($query)
     {
-        return $query->where('status','approved')->whereDate('end_date', '>=', date('Y-m-d'))->whereDate('start_date', '>', date('Y-m-d'));
+        return $query->where('status', 'approved')->whereDate('end_date', '>=', date('Y-m-d'))->whereDate('start_date', '>', date('Y-m-d'));
     }
     public function scopeExpired($query)
     {
-        return $query->where('status','approved')->whereDate('end_date', '<', date('Y-m-d'));
+        return $query->where('status', 'approved')->whereDate('end_date', '<', date('Y-m-d'));
     }
 
     public function store()
@@ -138,7 +142,7 @@ class Advertisement extends Model
         static::saved(function ($model) {
             Helpers::deleteCacheData('advertisement_');
 
-            if($model->isDirty('video_attachment')){
+            if ($model->isDirty('video_attachment')) {
                 $value = Helpers::getDisk();
 
                 DB::table('storages')->updateOrInsert([
@@ -151,7 +155,7 @@ class Advertisement extends Model
                     'updated_at' => now(),
                 ]);
             }
-            if($model->isDirty('cover_image')){
+            if ($model->isDirty('cover_image')) {
                 $value = Helpers::getDisk();
 
                 DB::table('storages')->updateOrInsert([
@@ -164,7 +168,7 @@ class Advertisement extends Model
                     'updated_at' => now(),
                 ]);
             }
-            if($model->isDirty('profile_image')){
+            if ($model->isDirty('profile_image')) {
                 $value = Helpers::getDisk();
 
                 DB::table('storages')->updateOrInsert([
@@ -181,11 +185,11 @@ class Advertisement extends Model
         static::created(function () {
             Helpers::deleteCacheData('advertisement_');
         });
-        static::deleted(function(){
+        static::deleted(function () {
             Helpers::deleteCacheData('advertisement_');
         });
 
-        static::updated(function(){
+        static::updated(function () {
             Helpers::deleteCacheData('advertisement_');
         });
     }
@@ -197,9 +201,11 @@ class Advertisement extends Model
         // });
 
         static::addGlobalScope('translate', function (Builder $builder) {
-            $builder->with(['translations' => function($query){
-                return $query->where('locale', app()->getLocale());
-            }]);
+            $builder->with([
+                'translations' => function ($query) {
+                    return $query->where('locale', app()->getLocale());
+                }
+            ]);
         });
 
     }
