@@ -12,7 +12,7 @@ use Modules\TaxModule\Entities\OrderTax;
 
 class Order extends Model
 {
-    use HasFactory , ReportFilter;
+    use HasFactory, ReportFilter;
 
     protected $casts = [
         'order_amount' => 'float',
@@ -45,39 +45,47 @@ class Order extends Model
         'cutlery' => 'boolean',
         'is_guest' => 'boolean',
         'ref_bonus_amount' => 'float',
-        'bring_change_amount'=>'integer',
+        'bring_change_amount' => 'integer',
+        'parcel_pickup_at' => 'string',
+        'parcel_delivery_at' => 'string',
+        'parcel_item_estimated_price' => 'float',
+        'actual_parcel_item_price' => 'float',
+        'proposed_parcel_item_price' => 'float',
+        'adjustment_status' => 'string',
     ];
 
-    protected $appends = ['module_type','order_attachment_full_url','order_proof_full_url'];
+    protected $appends = ['module_type', 'order_attachment_full_url', 'order_proof_full_url'];
 
-    public function getOrderAttachmentFullUrlAttribute(){
+    public function getOrderAttachmentFullUrlAttribute()
+    {
         $images = [];
         $value = is_array($this->order_attachment)
             ? $this->order_attachment
             : ($this->order_attachment && is_string($this->order_attachment) && $this->isValidJson($this->order_attachment)
                 ? json_decode($this->order_attachment, true)
                 : []);
-        if ($value){
-            foreach ($value as $item){
-                $item = is_array($item)?$item:(is_object($item) && get_class($item) == 'stdClass' ? json_decode(json_encode($item), true):['img' => $item, 'storage' => 'public']);
-                $images[] = Helpers::get_full_url('order',$item['img'],$item['storage']);
+        if ($value) {
+            foreach ($value as $item) {
+                $item = is_array($item) ? $item : (is_object($item) && get_class($item) == 'stdClass' ? json_decode(json_encode($item), true) : ['img' => $item, 'storage' => 'public']);
+                $images[] = Helpers::get_full_url('order', $item['img'], $item['storage']);
             }
         }
 
         return $images;
     }
 
-    public function getOrderProofFullUrlAttribute(){
+    public function getOrderProofFullUrlAttribute()
+    {
         $images = [];
         $value = is_array($this->order_proof)
             ? $this->order_proof
             : ($this->order_proof && is_string($this->order_proof) && $this->isValidJson($this->order_proof)
                 ? json_decode($this->order_proof, true)
                 : []);
-        if ($value){
-            foreach ($value as $item){
-                $item = is_array($item)?$item:(is_object($item) && get_class($item) == 'stdClass' ? json_decode(json_encode($item), true):['img' => $item, 'storage' => 'public']);
-                $images[] = Helpers::get_full_url('order',$item['img'],$item['storage']);
+        if ($value) {
+            foreach ($value as $item) {
+                $item = is_array($item) ? $item : (is_object($item) && get_class($item) == 'stdClass' ? json_decode(json_encode($item), true) : ['img' => $item, 'storage' => 'public']);
+                $images[] = Helpers::get_full_url('order', $item['img'], $item['storage']);
             }
         }
 
@@ -107,7 +115,7 @@ class Order extends Model
 
     public function offline_payments()
     {
-        return $this->belongsTo(OfflinePayments::class,'id','order_id');
+        return $this->belongsTo(OfflinePayments::class, 'id', 'order_id');
     }
 
     public function details()
@@ -116,7 +124,7 @@ class Order extends Model
     }
     public function reviews()
     {
-        return $this->hasMany(Review::class , 'order_id');
+        return $this->hasMany(Review::class, 'order_id');
     }
 
     public function payments()
@@ -136,7 +144,7 @@ class Order extends Model
 
     public function guest()
     {
-        return $this->belongsTo(Guest::class, 'user_id','id');
+        return $this->belongsTo(Guest::class, 'user_id', 'id');
     }
 
     public function coupon()
@@ -316,8 +324,8 @@ class Order extends Model
 
     public function scopeNotDigitalOrder($query)
     {
-        return $query->where(function ($q){
-            $q->whereNotIn('payment_method', ['digital_payment','offline_payment'])->orwhereNot('order_status' , 'pending');
+        return $query->where(function ($q) {
+            $q->whereNotIn('payment_method', ['digital_payment', 'offline_payment'])->orwhereNot('order_status', 'pending');
         });
     }
 

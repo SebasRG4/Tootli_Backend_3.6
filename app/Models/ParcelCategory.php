@@ -14,9 +14,13 @@ class ParcelCategory extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['image', 'status', 'buy_and_deliver', 'parcel_per_km_shipping_charge', 'parcel_minimum_shipping_charge', 'name', 'description'];
+
     protected $casts = [
-        'parcel_per_km_shipping_charge'=>'float',
-        'parcel_minimum_shipping_charge'=>'float',
+        'status' => 'integer',
+        'buy_and_deliver' => 'integer',
+        'parcel_per_km_shipping_charge' => 'float',
+        'parcel_minimum_shipping_charge' => 'float',
     ];
 
     protected $appends = ['image_full_url'];
@@ -31,7 +35,8 @@ class ParcelCategory extends Model
         return $this->morphMany(Translation::class, 'translationable');
     }
 
-    public function getNameAttribute($value){
+    public function getNameAttribute($value)
+    {
         if (count($this->translations) > 0) {
             foreach ($this->translations as $translation) {
                 if ($translation['key'] == 'name') {
@@ -43,7 +48,8 @@ class ParcelCategory extends Model
         return $value;
     }
 
-    public function getDescriptionAttribute($value){
+    public function getDescriptionAttribute($value)
+    {
         if (count($this->translations) > 0) {
             foreach ($this->translations as $translation) {
                 if ($translation['key'] == 'description') {
@@ -65,17 +71,18 @@ class ParcelCategory extends Model
         return $query->where('status', 1);
     }
 
-    public function getImageFullUrlAttribute(){
+    public function getImageFullUrlAttribute()
+    {
         $value = $this->image;
         if (count($this->storage) > 0) {
             foreach ($this->storage as $storage) {
                 if ($storage['key'] == 'image') {
-                    return Helpers::get_full_url('parcel_category',$value,$storage['value']);
+                    return Helpers::get_full_url('parcel_category', $value, $storage['value']);
                 }
             }
         }
 
-        return Helpers::get_full_url('parcel_category',$value,'public');
+        return Helpers::get_full_url('parcel_category', $value, 'public');
     }
 
     public function storage()
@@ -88,16 +95,18 @@ class ParcelCategory extends Model
             $builder->with('storage');
         });
         static::addGlobalScope('translate', function (Builder $builder) {
-            $builder->with(['translations' => function($query){
-                return $query->where('locale', app()->getLocale());
-            }]);
+            $builder->with([
+                'translations' => function ($query) {
+                    return $query->where('locale', app()->getLocale());
+                }
+            ]);
         });
     }
     protected static function boot()
     {
         parent::boot();
         static::saved(function ($model) {
-            if($model->isDirty('image')){
+            if ($model->isDirty('image')) {
                 $value = Helpers::getDisk();
 
                 DB::table('storages')->updateOrInsert([
@@ -116,5 +125,10 @@ class ParcelCategory extends Model
     public function taxVats()
     {
         return $this->morphMany(Taxable::class, 'taxable');
+    }
+
+    public function options()
+    {
+        return $this->hasMany(ParcelUserOption::class);
     }
 }

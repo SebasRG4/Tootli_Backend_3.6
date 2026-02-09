@@ -470,6 +470,7 @@ class DeliverymanController extends Controller
             'status' => 'required|in:confirmed,canceled,picked_up,delivered,handover',
             'reason' => 'required_if:status,canceled',
             'order_proof' => 'array|max:5',
+            'actual_price' => 'nullable|numeric',
         ]);
 
         $validator->sometimes('otp', 'required', function ($request) {
@@ -536,6 +537,19 @@ class DeliverymanController extends Controller
             ], 406);
         }
         if ($request->status == 'delivered') {
+            $unpaid_digital_payment = OrderPayment::where('order_id', $order->id)
+                ->where('payment_status', 'unpaid')
+                ->where('payment_method', '!=', 'cash_on_delivery')
+                ->exists();
+
+            if ($unpaid_digital_payment) {
+                return response()->json([
+                    'errors' => [
+                        ['code' => 'payment_pending', 'message' => translate('messages.payment_is_pending_for_this_order')],
+                    ],
+                ], 403);
+            }
+
             if ($order->transaction == null) {
                 $unpaid_payment = OrderPayment::where('payment_status', 'unpaid')->where('order_id', $order->id)->first();
                 $pay_method = 'digital_payment';
@@ -605,6 +619,10 @@ class DeliverymanController extends Controller
         } elseif ($order->order_type == 'parcel' && $request->status == 'handover') {
             $order->confirmed = now();
             $order->processing = now();
+        } elseif ($order->order_type == 'parcel' && $request->status == 'picked_up') {
+            if ($request->has('actual_price')) {
+                OrderLogic::apply_price_adjustment($order, $request->actual_price);
+            }
         } elseif ($order->order_type != 'parcel' && in_array($request->status, ['picked_up'])) {
             Helpers::sendOrderDeliveryVerificationOtp($order);
         }
@@ -1718,6 +1736,32 @@ class DeliverymanController extends Controller
         ], 200);
     }
 
+    public function propose_parcel_price(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required',
+            'proposed_price' => 'required|numeric'
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+        if (!$dm) {
+            return response()->json(['message' => translate('Deliveryman not found')], 404);
+        }
+
+        $order = Order::where(['id' => $request->order_id, 'delivery_man_id' => $dm->id])->first();
+        if (!$order) {
+            return response()->json(['message' => translate('Order not found')], 404);
+        }
+
+        if (OrderLogic::propose_parcel_price($order, $request->proposed_price)) {
+            return response()->json(['message' => translate('Price proposal sent successfully')], 200);
+        }
+
+        return response()->json(['message' => translate('Failed to send price proposal')], 400);
+    }
 }
 

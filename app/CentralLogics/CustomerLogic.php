@@ -15,7 +15,8 @@ class CustomerLogic
 
     public static function create_wallet_transaction($user_id, float $amount, $transaction_type, $reference)
     {
-        if (BusinessSetting::where('key', 'wallet_status')->first()->value != 1) return false;
+        if (BusinessSetting::where('key', 'wallet_status')->first()->value != 1)
+            return false;
         $user = User::find($user_id);
         $current_balance = $user->wallet_balance;
 
@@ -29,7 +30,7 @@ class CustomerLogic
         $credit = 0.0;
         $admin_bonus = 0.0;
 
-        if (in_array($transaction_type, ['add_fund_by_admin', 'add_fund', 'order_refund', 'loyalty_point', 'referrer','CashBack','subscription_refund'])) {
+        if (in_array($transaction_type, ['add_fund_by_admin', 'add_fund', 'order_refund', 'loyalty_point', 'referrer', 'CashBack', 'subscription_refund'])) {
             $credit = $amount;
             if ($transaction_type == 'add_fund') {
                 $admin_bonus = self::calculate_wallet_bonus($amount);
@@ -38,15 +39,14 @@ class CustomerLogic
 
                 $check_loyalty_point_exchange_rate = (int) BusinessSetting::where('key', 'loyalty_point_exchange_rate')->first()->value;
 
-                if($check_loyalty_point_exchange_rate == 0){
+                if ($check_loyalty_point_exchange_rate == 0) {
 
-                    $credit = (int)($amount / 1);
-                }
-                else{
-                    $credit = (int)($amount / BusinessSetting::where('key', 'loyalty_point_exchange_rate')->first()->value);
+                    $credit = (int) ($amount / 1);
+                } else {
+                    $credit = (int) ($amount / BusinessSetting::where('key', 'loyalty_point_exchange_rate')->first()->value);
                 }
             }
-        } else if (in_array($transaction_type, ['order_place','trip_booking'])) {
+        } else if (in_array($transaction_type, ['order_place', 'trip_booking', 'order_charge'])) {
             $debit = $amount;
         } else if ($transaction_type == 'partial_payment') {
             $debit = $amount;
@@ -64,11 +64,12 @@ class CustomerLogic
             DB::beginTransaction();
             $user->save();
             $wallet_transaction->save();
-            if ($admin_bonus>0) {
-                Helpers::expenseCreate(amount:$admin_bonus,type:'add_fund_bonus',created_by:'admin',user_id:$user->id,datetime:now());
+            if ($admin_bonus > 0) {
+                Helpers::expenseCreate(amount: $admin_bonus, type: 'add_fund_bonus', created_by: 'admin', user_id: $user->id, datetime: now());
             }
             DB::commit();
-            if (in_array($transaction_type, ['loyalty_point', 'trip_booking', 'order_place', 'add_fund_by_admin', 'referrer','partial_payment'])) return $wallet_transaction;
+            if (in_array($transaction_type, ['loyalty_point', 'trip_booking', 'order_place', 'add_fund_by_admin', 'referrer', 'partial_payment']))
+                return $wallet_transaction;
             return true;
         } catch (\Exception $ex) {
             info($ex->getMessage());
@@ -96,8 +97,8 @@ class CustomerLogic
         $loyalty_point_transaction->reference = $reference;
         $loyalty_point_transaction->transaction_type = $transaction_type;
 
-        if ( in_array($transaction_type, ['order_place','trip_booking']) ) {
-            $credit = (int)($amount * $settings['loyalty_point_item_purchase_point'] / 100);
+        if (in_array($transaction_type, ['order_place', 'trip_booking'])) {
+            $credit = (int) ($amount * $settings['loyalty_point_item_purchase_point'] / 100);
         } else if ($transaction_type == 'point_to_wallet') {
             $debit = $amount;
         }
@@ -127,25 +128,25 @@ class CustomerLogic
 
     public static function calculate_wallet_bonus($add_amount)
     {
-        $percent_bonus = WalletBonus::active()->where('bonus_type','percentage')
-        ->whereDate('end_date', '>=', date('Y-m-d'))->whereDate('start_date', '<=', date('Y-m-d'))->where('minimum_add_amount','<=',$add_amount)->orderBy('bonus_amount','desc')->first();
-        $amount_bonus = WalletBonus::active()->where('bonus_type','amount')
-        ->whereDate('end_date', '>=', date('Y-m-d'))->whereDate('start_date', '<=', date('Y-m-d'))->where('minimum_add_amount','<=',$add_amount)->orderBy('bonus_amount','desc')->first();
+        $percent_bonus = WalletBonus::active()->where('bonus_type', 'percentage')
+            ->whereDate('end_date', '>=', date('Y-m-d'))->whereDate('start_date', '<=', date('Y-m-d'))->where('minimum_add_amount', '<=', $add_amount)->orderBy('bonus_amount', 'desc')->first();
+        $amount_bonus = WalletBonus::active()->where('bonus_type', 'amount')
+            ->whereDate('end_date', '>=', date('Y-m-d'))->whereDate('start_date', '<=', date('Y-m-d'))->where('minimum_add_amount', '<=', $add_amount)->orderBy('bonus_amount', 'desc')->first();
 
-        if($percent_bonus && ($add_amount>=$percent_bonus->minimum_add_amount)){
-            $p_bonus = ($add_amount * $percent_bonus->bonus_amount)/100;
+        if ($percent_bonus && ($add_amount >= $percent_bonus->minimum_add_amount)) {
+            $p_bonus = ($add_amount * $percent_bonus->bonus_amount) / 100;
             $p_bonus = $p_bonus > $percent_bonus->maximum_bonus_amount ? $percent_bonus->maximum_bonus_amount : $p_bonus;
-        }else{
+        } else {
             $p_bonus = 0;
         }
 
-        if($amount_bonus && ($add_amount>=$amount_bonus->minimum_add_amount)){
-            $a_bonus = $amount_bonus?$amount_bonus->bonus_amount: 0;
-        }else{
+        if ($amount_bonus && ($add_amount >= $amount_bonus->minimum_add_amount)) {
+            $a_bonus = $amount_bonus ? $amount_bonus->bonus_amount : 0;
+        } else {
             $a_bonus = 0;
         }
 
-        $bonus_amount = max([$p_bonus,$a_bonus]);
+        $bonus_amount = max([$p_bonus, $a_bonus]);
 
         return $bonus_amount;
     }

@@ -103,19 +103,19 @@ class OrderLogic
             $dm_tips = $dm_tips_manage_status ? $order->dm_tips : 0;
             // $order_amount = $order->order_amount - $order->delivery_charge - $order->total_tax_amount - $dm_tips;
 
-            if ($order->store_discount_amount > 0  && $order->discount_on_product_by == 'vendor') {
+            if ($order->store_discount_amount > 0 && $order->discount_on_product_by == 'vendor') {
                 if ($store->store_business_model == 'subscription' && isset($store_sub)) {
-                    $store_d_amount =  $order->store_discount_amount;
+                    $store_d_amount = $order->store_discount_amount;
                     Helpers::expenseCreate(amount: $store_d_amount, type: 'discount_on_product', datetime: now(), created_by: 'vendor', order_id: $order->id, store_id: $order->store->id);
                 } else {
                     $amount_admin = $comission ? ($order->store_discount_amount / 100) * $comission : 0;
-                    $store_d_amount =  $order->store_discount_amount - $amount_admin;
+                    $store_d_amount = $order->store_discount_amount - $amount_admin;
                     Helpers::expenseCreate(amount: $store_d_amount, type: 'discount_on_product', datetime: now(), created_by: 'vendor', order_id: $order->id, store_id: $order->store->id);
                     Helpers::expenseCreate(amount: $amount_admin, type: 'discount_on_product', datetime: now(), created_by: 'admin', order_id: $order->id);
                 }
             }
 
-            if ($order->store_discount_amount > 0  && $order->discount_on_product_by == 'admin') {
+            if ($order->store_discount_amount > 0 && $order->discount_on_product_by == 'admin') {
                 $store_discount_amount = $order->store_discount_amount;
                 Helpers::expenseCreate(amount: $store_discount_amount, type: 'discount_on_product', datetime: now(), created_by: 'admin', order_id: $order->id);
             }
@@ -239,13 +239,13 @@ class OrderLogic
                 if ($received_by == 'admin') {
                     $adminWallet->digital_received = $adminWallet->digital_received + ($order->order_amount - $order->partially_paid_amount);
                 } else if ($received_by == 'store' && $type != 'parcel' && ($order->payment_method == "cash_on_delivery" || $unpaid_pay_method == 'cash_on_delivery')) {
-                    $store_over_flow =  true;
+                    $store_over_flow = true;
                     $vendorWallet->collected_cash = $vendorWallet->collected_cash + ($order->order_amount - $order->partially_paid_amount);
                 } else if ($received_by == false) {
                     $adminWallet->manual_received = $adminWallet->manual_received + ($order->order_amount - $order->partially_paid_amount);
                 } else if ($received_by == 'deliveryman' && $order->delivery_man && $order->delivery_man->type == 'zone_wise') {
                     $dmWallet->collected_cash = $dmWallet->collected_cash + ($order->order_amount - $order->partially_paid_amount);
-                    $dm_over_flow =  true;
+                    $dm_over_flow = true;
                 }
 
                 $adminWallet->save();
@@ -268,16 +268,16 @@ class OrderLogic
 
                 DB::commit();
 
-                if($order->delivery_man_id && $order->delivery_man->earning == 1){
-                   $deliveryMan = $order->delivery_man;
-                   if($deliveryMan->ref_by &&  $deliveryMan->orders()->whereIn('order_status', ['delivered'])->count() == 0 ){
-                    self::deliverymanReferalTransaction(deliveryManId: $order->delivery_man_id, referType:'referrerBonus', reference: $order->id, referrerId : $deliveryMan->ref_by);
-                    self::deliverymanReferalTransaction(deliveryManId: $deliveryMan->ref_by, referType:'referral', reference: $order->id, referrerId : $order->delivery_man_id);
-                  }
+                if ($order->delivery_man_id && $order->delivery_man->earning == 1) {
+                    $deliveryMan = $order->delivery_man;
+                    if ($deliveryMan->ref_by && $deliveryMan->orders()->whereIn('order_status', ['delivered'])->count() == 0) {
+                        self::deliverymanReferalTransaction(deliveryManId: $order->delivery_man_id, referType: 'referrerBonus', reference: $order->id, referrerId: $deliveryMan->ref_by);
+                        self::deliverymanReferalTransaction(deliveryManId: $deliveryMan->ref_by, referType: 'referral', reference: $order->id, referrerId: $order->delivery_man_id);
+                    }
                 }
-                if ($order->is_guest  == 0) {
+                if ($order->is_guest == 0) {
                     $ref_status = BusinessSetting::where('key', 'ref_earning_status')->first()->value;
-                    if (isset($order->customer->ref_by) && $order->customer->order_count == 0  && $ref_status == 1) {
+                    if (isset($order->customer->ref_by) && $order->customer->order_count == 0 && $ref_status == 1) {
                         $ref_code_exchange_amt = BusinessSetting::where('key', 'ref_earning_exchange_rate')->first()->value;
                         $referar_user = User::where('id', $order->customer->ref_by)->first();
                         $refer_wallet_transaction = CustomerLogic::create_wallet_transaction($referar_user->id, $ref_code_exchange_amt, 'referrer', $order->customer->phone);
@@ -414,12 +414,12 @@ class OrderLogic
                 $adminWallet->manual_received = $adminWallet->manual_received + ($order->order_amount - $order->partially_paid_amount);
             } else if ($received_by == 'deliveryman' && $order->delivery_man && $order->delivery_man->type == 'zone_wise') {
                 $dmWallet->collected_cash = $dmWallet->collected_cash + ($order->order_amount - $order->partially_paid_amount);
-                $dm_over_flow =  true;
+                $dm_over_flow = true;
             }
 
             $adminWallet->save();
 
-              OrderTransaction::insert([
+            OrderTransaction::insert([
                 'vendor_id' => null,
                 'delivery_man_id' => $order->delivery_man_id,
                 'order_id' => $order->id,
@@ -432,7 +432,7 @@ class OrderLogic
                 'received_by' => $received_by ? $received_by : 'admin',
                 'zone_id' => $order->zone_id,
                 'module_id' => $order->module_id,
-                'admin_expense' => $admin_subsidy + $admin_coupon_discount_subsidy + $store_discount_amount + $flash_admin_discount_amount  + $ref_bonus_amount,
+                'admin_expense' => $admin_subsidy + $admin_coupon_discount_subsidy + $store_discount_amount + $flash_admin_discount_amount + $ref_bonus_amount,
                 'store_expense' => 0,
                 'status' => null,
                 'dm_tips' => $dm_tips,
@@ -450,10 +450,10 @@ class OrderLogic
 
 
 
-            if($order->parcelCancellation->return_date){
+            if ($order->parcelCancellation->return_date) {
                 $returnDate = Carbon::parse($order->parcelCancellation->return_date);
                 if ($returnDate->isPast() && isset($dmWallet)) {
-                     $dmWallet->collected_cash = $dmWallet->collected_cash + $order->parcelCancellation->dm_penalty_fee??0;
+                    $dmWallet->collected_cash = $dmWallet->collected_cash + $order->parcelCancellation->dm_penalty_fee ?? 0;
                 }
             }
 
@@ -491,14 +491,14 @@ class OrderLogic
 
             $adminWallet->digital_received = $adminWallet->digital_received - $order->order_amount;
             $adminWallet->save();
-            if (BusinessSetting::where('key', 'wallet_add_refund')->first()->value == 1 && $order->is_guest  == 0) {
+            if (BusinessSetting::where('key', 'wallet_add_refund')->first()->value == 1 && $order->is_guest == 0) {
                 CustomerLogic::create_wallet_transaction($order->user_id, $order->order_amount, 'order_refund', $order->id);
             }
         } elseif (($order->payment_status == "partially_paid")) {
 
             $adminWallet->digital_received = $adminWallet->digital_received - $order->partially_paid_amount;
             $adminWallet->save();
-            if (BusinessSetting::where('key', 'wallet_add_refund')->first()->value == 1  &&  $order->is_guest  == 0) {
+            if (BusinessSetting::where('key', 'wallet_add_refund')->first()->value == 1 && $order->is_guest == 0) {
                 CustomerLogic::create_wallet_transaction($order->user_id, $order->partially_paid_amount, 'order_refund', $order->id);
             }
         }
@@ -624,27 +624,27 @@ class OrderLogic
         $account_transaction->save();
 
 
-        if ($from_type  ==  'store') {
+        if ($from_type == 'store') {
             $vendor = Vendor::find($from_id);
-            $Payable_Balance = $vendor?->wallet?->collected_cash   > 0 ? 1 : 0;
+            $Payable_Balance = $vendor?->wallet?->collected_cash > 0 ? 1 : 0;
             $cash_in_hand_overflow = BusinessSetting::where('key', 'cash_in_hand_overflow_store')->first()?->value;
             $cash_in_hand_overflow_store_amount = BusinessSetting::where('key', 'cash_in_hand_overflow_store_amount')->first()?->value;
 
-            if ($Payable_Balance == 1 &&  $cash_in_hand_overflow && $vendor?->wallet?->balance < 0 &&  $cash_in_hand_overflow_store_amount <= abs($vendor?->wallet?->collected_cash)) {
+            if ($Payable_Balance == 1 && $cash_in_hand_overflow && $vendor?->wallet?->balance < 0 && $cash_in_hand_overflow_store_amount <= abs($vendor?->wallet?->collected_cash)) {
                 $rest = Store::where('vendor_id', $vendor->id)->first();
                 $rest->status = 0;
                 $rest->save();
             }
-        } elseif ($from_type  ==  'deliveryman') {
+        } elseif ($from_type == 'deliveryman') {
             $cash_in_hand_overflow = BusinessSetting::where('key', 'cash_in_hand_overflow_delivery_man')->first()?->value;
             $cash_in_hand_overflow_delivery_man = BusinessSetting::where('key', 'dm_max_cash_in_hand')->first()?->value;
             // $val=  $cash_in_hand_overflow_delivery_man - (($cash_in_hand_overflow_delivery_man * 10)/100);
 
             $dm = DeliveryMan::find($from_id);
             $wallet_balance = $dm?->wallet?->total_earning - ($dm?->wallet?->total_withdrawn + $dm?->wallet?->pending_withdraw + $dm?->wallet?->collected_cash);
-            $over_flow_balance =  $dm?->wallet?->collected_cash;
-            $Payable_Balance =  $over_flow_balance   > 0 ? 1 : 0;
-            if ($Payable_Balance == 1 &&  $cash_in_hand_overflow  && $wallet_balance < 0 &&  $cash_in_hand_overflow_delivery_man < abs($over_flow_balance)) {
+            $over_flow_balance = $dm?->wallet?->collected_cash;
+            $Payable_Balance = $over_flow_balance > 0 ? 1 : 0;
+            if ($Payable_Balance == 1 && $cash_in_hand_overflow && $wallet_balance < 0 && $cash_in_hand_overflow_delivery_man < abs($over_flow_balance)) {
                 $dm->status = 0;
                 // $dm->auth_token = null;
                 $dm->save();
@@ -684,30 +684,31 @@ class OrderLogic
         return true;
     }
 
-    public static function makeValidationForParcelReturn($request , $order) {
+    public static function makeValidationForParcelReturn($request, $order)
+    {
         $validationError = match (true) {
             !$order => [
-                'code'    => 'order',
+                'code' => 'order',
                 'message' => translate('messages.order_not_found'),
                 'status_code' => 403,
             ],
             $order->order_type != 'parcel' => [
-                'code'    => 'parcel',
+                'code' => 'parcel',
                 'message' => translate('messages.Only_parcel_order_can_be_returned'),
                 'status_code' => 403,
             ],
             $order->order_status != 'canceled' => [
-                'code'    => 'parcel',
+                'code' => 'parcel',
                 'message' => translate('messages.You_can_return_only_canceled_parcel_orders'),
                 'status_code' => 403,
             ],
-           !$order->parcelCancellation => [
-                'code'    => 'order',
+            !$order->parcelCancellation => [
+                'code' => 'order',
                 'message' => translate('messages.You_have_not_requested_for_parcel_return'),
                 'status_code' => 403,
             ],
-           $order->parcelCancellation->return_otp && $order->parcelCancellation->return_otp != $request->return_otp => [
-                'code'    => 'order',
+            $order->parcelCancellation->return_otp && $order->parcelCancellation->return_otp != $request->return_otp => [
+                'code' => 'order',
                 'message' => translate('messages.Invalid_return_otp'),
                 'status_code' => 403,
             ],
@@ -725,11 +726,11 @@ class OrderLogic
 
     public static function cancelParcelOrder($order, $cancel_by, $request)
     {
-        if (in_array($order->order_status, ['canceled', 'delivered','returned'])) {
+        if (in_array($order->order_status, ['canceled', 'delivered', 'returned'])) {
             return ['status_code' => 403, 'code' => 'complete_order', 'message' => translate('messages.you_can_not_cancel_a_completed_order')];
         }
         $code = 'success';
-        $msg= translate('Parcel_canceled_successfully');
+        $msg = translate('Parcel_canceled_successfully');
         $parcel_cancellation_basic_setup = Helpers::get_business_settings('parcel_cancellation_basic_setup');
 
         $return_fee_status = $parcel_cancellation_basic_setup['return_fee_status'] ?? 0;
@@ -748,42 +749,42 @@ class OrderLogic
         $parcelCancellation->note = $request->note ?? null;
         $parcelCancellation->reason = json_encode($request->reason);
 
-        if (in_array($orderOldStatus, ['picked_up']) ) {
+        if (in_array($orderOldStatus, ['picked_up'])) {
             $parcelCancellation->before_pickup = 0;
             $parcelCancellation->return_otp = random_int(1000, 9999);
 
-            if($return_fee_status == 1 && $return_fee > 0 ){
-                if((in_array($cancel_by,['deliveryman', 'admin_for_deliveryman']) && $do_not_charge_return_fee_on_deliveryman_cancel == 1)){
+            if ($return_fee_status == 1 && $return_fee > 0) {
+                if ((in_array($cancel_by, ['deliveryman', 'admin_for_deliveryman']) && $do_not_charge_return_fee_on_deliveryman_cancel == 1)) {
                     $parcelCancellation->return_fee = 0;
-                }else{
+                } else {
                     $chargeAmount = $order['delivery_charge'] + $order['total_tax_amount'] + $order['additional_charge'] - $order['coupon_discount_amount'] - $order['ref_bonus_amount'];
                     $parcelCancellation->return_fee = ($chargeAmount * $return_fee) / 100;
                 }
             }
 
             $parcel_return_time_fee = Helpers::get_business_settings('parcel_return_time_fee');
-            $parcel_return_time_fee_status = $parcel_return_time_fee['status']?? 0;
-            $return_fee_for_dm= $parcel_return_time_fee['return_fee_for_dm'] ?? 0;
+            $parcel_return_time_fee_status = $parcel_return_time_fee['status'] ?? 0;
+            $return_fee_for_dm = $parcel_return_time_fee['return_fee_for_dm'] ?? 0;
 
-            if($parcel_return_time_fee_status == 1 && $return_fee_for_dm > 0){
+            if ($parcel_return_time_fee_status == 1 && $return_fee_for_dm > 0) {
                 $parcelCancellation->dm_penalty_fee = $return_fee_for_dm;
                 $parcelCancellation->return_date = now()->addDays((int) $parcel_return_time_fee['parcel_return_time'] ?? 1);
             }
-        } else{
-            if($order->payment_status == 'paid' && $order->is_guest  == 0){
-                if(Helpers::get_business_settings('wallet_status') == 1 && Helpers::get_business_settings('wallet_add_refund') == 1){
-                   $refunded=  self::refund_before_delivered($order);
-                    if($refunded){
-                        self::parcelRefundNotification($order,true);
+        } else {
+            if ($order->payment_status == 'paid' && $order->is_guest == 0) {
+                if (Helpers::get_business_settings('wallet_status') == 1 && Helpers::get_business_settings('wallet_add_refund') == 1) {
+                    $refunded = self::refund_before_delivered($order);
+                    if ($refunded) {
+                        self::parcelRefundNotification($order, true);
                     }
                 } else {
                     $parcelCancellation->is_delivery_charge_refundable = 1;
                     $code = 'wallet_failed';
-                    $msg= translate('messages.Parcel_canceled_successfully_contact_admin_for_refund');
+                    $msg = translate('messages.Parcel_canceled_successfully_contact_admin_for_refund');
                 }
-            } elseif($order->payment_status == 'paid' && $order->is_guest  == 1){
+            } elseif ($order->payment_status == 'paid' && $order->is_guest == 1) {
                 $code = 'wallet_failed';
-                $msg= translate('messages.Parcel_canceled_successfully_contact_admin_for_refund');
+                $msg = translate('messages.Parcel_canceled_successfully_contact_admin_for_refund');
                 $parcelCancellation->is_delivery_charge_refundable = 1;
             }
         }
@@ -794,7 +795,8 @@ class OrderLogic
         return ['status_code' => 200, 'code' => $code, 'message' => $msg];
     }
 
-    public static function deliveryManCancelParcelTransaction($order){
+    public static function deliveryManCancelParcelTransaction($order)
+    {
 
         $return_fee = $order?->parcelCancellation?->return_fee ?? 0;
         DB::beginTransaction();
@@ -804,18 +806,18 @@ class OrderLogic
 
         $order->parcelCancellation->return_fee_payment_status = 'paid';
 
-            if($order->payment_status == 'paid' && $order->is_guest  == 0){
-                if(Helpers::get_business_settings('wallet_status') == 1 && Helpers::get_business_settings('wallet_add_refund') == 1){
-                   $refunded= self::refund_before_delivered($order);
-                    if($refunded){
-                        self::parcelRefundNotification($order,true);
-                    }
-                } else {
-                    $order->parcelCancellation->is_delivery_charge_refundable = 1;
+        if ($order->payment_status == 'paid' && $order->is_guest == 0) {
+            if (Helpers::get_business_settings('wallet_status') == 1 && Helpers::get_business_settings('wallet_add_refund') == 1) {
+                $refunded = self::refund_before_delivered($order);
+                if ($refunded) {
+                    self::parcelRefundNotification($order, true);
                 }
-            } elseif($order->payment_status == 'paid' && $order->is_guest  == 1){
+            } else {
                 $order->parcelCancellation->is_delivery_charge_refundable = 1;
             }
+        } elseif ($order->payment_status == 'paid' && $order->is_guest == 1) {
+            $order->parcelCancellation->is_delivery_charge_refundable = 1;
+        }
 
         $order->parcelCancellation->save();
 
@@ -832,7 +834,7 @@ class OrderLogic
                 if ($order->delivery_man->earning == 1) {
                     $dmWallet->total_earning = $dmWallet->total_earning + $return_fee;
                 } else {
-                    $adminWallet->total_commission_earning = $adminWallet->total_commission_earning  + $return_fee;
+                    $adminWallet->total_commission_earning = $adminWallet->total_commission_earning + $return_fee;
                 }
             } else {
                 $adminWallet->total_commission_earning = $adminWallet->total_commission_earning + $return_fee;
@@ -840,10 +842,10 @@ class OrderLogic
 
             $adminWallet->save();
 
-            if($order->parcelCancellation->return_date){
+            if ($order->parcelCancellation->return_date) {
                 $returnDate = Carbon::parse($order->parcelCancellation->return_date);
                 if ($returnDate->isPast() && isset($dmWallet)) {
-                     $dmWallet->collected_cash = $dmWallet->collected_cash + $order->parcelCancellation->dm_penalty_fee??0;
+                    $dmWallet->collected_cash = $dmWallet->collected_cash + $order->parcelCancellation->dm_penalty_fee ?? 0;
                 }
             }
 
@@ -864,9 +866,10 @@ class OrderLogic
 
     }
 
-    public static function parcelRefundNotification($order,$wallet=true){
+    public static function parcelRefundNotification($order, $wallet = true)
+    {
         try {
-            if(Helpers::getNotificationStatusData('customer','customer_refund_request_approval','push_notification_status') && $order?->customer?->cm_firebase_token){
+            if (Helpers::getNotificationStatusData('customer', 'customer_refund_request_approval', 'push_notification_status') && $order?->customer?->cm_firebase_token) {
                 $data = [
                     'title' => translate('messages.order_refunded'),
                     'description' => $wallet ? translate('Your Parcel\'s delivery charge has been refunded to your wallet') : translate('Your Parcel\'s delivery charge has been marked as Refunded'),
@@ -886,39 +889,39 @@ class OrderLogic
             // if(config('mail.status') && $order?->customer?->email && Helpers::get_mail_status('refund_order_mail_status_user') == '1'  &&  Helpers::getNotificationStatusData('customer','customer_refund_request_approval','mail_status') ){
             //     Mail::to($order->customer->email)->send(new \App\Mail\RefundedOrderMail($order->id));
             // }
-            } catch (\Throwable $th) {
-                info($th->getMessage());
-            }
-            return true;
+        } catch (\Throwable $th) {
+            info($th->getMessage());
+        }
+        return true;
     }
 
 
     public static function deliverymanReferalTransaction($deliveryManId, $referType, $referrerId, $reference)
     {
 
-        $settings = array_column(BusinessSetting::whereIn('key', ['dm_referal_status', 'dm_referal_amount','dm_referal_bonus'])->get()->toArray(), 'value', 'key');
+        $settings = array_column(BusinessSetting::whereIn('key', ['dm_referal_status', 'dm_referal_amount', 'dm_referal_bonus'])->get()->toArray(), 'value', 'key');
 
-        if (data_get($settings, 'dm_referal_status')  != 1 ) {
-             return ['status_code' => 403, 'code' =>  'Referal', 'message' => translate('referal_option_is_not_enabled')];
-        } elseif (  $referType  == 'referral' && data_get($settings, 'dm_referal_amount')  <= 0 ) {
-             return ['status_code' => 403, 'code' =>  'Referal', 'message' => translate('referal_option_is_not_enabled')];
-        } elseif ( $referType  == 'referrerBonus' && data_get($settings, 'dm_referal_bonus')  <= 0 ) {
-             return ['status_code' => 403, 'code' =>  'Referal', 'message' => translate('referal_option_is_not_enabled')];
+        if (data_get($settings, 'dm_referal_status') != 1) {
+            return ['status_code' => 403, 'code' => 'Referal', 'message' => translate('referal_option_is_not_enabled')];
+        } elseif ($referType == 'referral' && data_get($settings, 'dm_referal_amount') <= 0) {
+            return ['status_code' => 403, 'code' => 'Referal', 'message' => translate('referal_option_is_not_enabled')];
+        } elseif ($referType == 'referrerBonus' && data_get($settings, 'dm_referal_bonus') <= 0) {
+            return ['status_code' => 403, 'code' => 'Referal', 'message' => translate('referal_option_is_not_enabled')];
         }
 
 
         $deliveryMan = DeliveryMan::find($deliveryManId);
-        if(!$deliveryMan){
-            return ['status_code' => 403, 'code' =>  'wallet', 'message' => translate('delivery_man_not_found')];
-        } elseif($deliveryMan->earning != 1){
-              return ['status_code' => 403, 'code' =>  'Referal', 'message' => translate('wallet_not_enabled')];
+        if (!$deliveryMan) {
+            return ['status_code' => 403, 'code' => 'wallet', 'message' => translate('delivery_man_not_found')];
+        } elseif ($deliveryMan->earning != 1) {
+            return ['status_code' => 403, 'code' => 'Referal', 'message' => translate('wallet_not_enabled')];
         }
 
-        $referralHistory =  new DeliverymanReferralHistory();
+        $referralHistory = new DeliverymanReferralHistory();
         $referralHistory->delivery_man_id = $deliveryMan->id;
 
 
-        $amount = $referType  == 'referrerBonus' ? data_get($settings, 'dm_referal_bonus', 0) : data_get($settings, 'dm_referal_amount', 0);
+        $amount = $referType == 'referrerBonus' ? data_get($settings, 'dm_referal_bonus', 0) : data_get($settings, 'dm_referal_amount', 0);
 
         $referralHistory->amount = $amount;
 
@@ -941,31 +944,202 @@ class OrderLogic
         } catch (\Exception $exception) {
             info(["line___{$exception->getLine()}", $exception->getMessage()]);
             DB::rollback();
-             return ['status_code' => 403, 'code' =>  'loyalty_point', 'message' => translate('messages.something_went_wrong')];
+            return ['status_code' => 403, 'code' => 'loyalty_point', 'message' => translate('messages.something_went_wrong')];
         }
 
-            try {
+        try {
             $data = [
                 'title' => translate('Referal Bonus'),
-                'description' =>  translate('Congratulations! You have received a referal bonus of ') . Helpers::format_currency($amount) ,
+                'description' => translate('Congratulations! You have received a referal bonus of ') . Helpers::format_currency($amount),
                 'data_id' => $referralHistory->id,
                 'image' => '',
                 'type' => 'deliveryman_referral',
             ];
-                if(Helpers::getNotificationStatusData('deliveryman','deliveryman_referral_bonus','push_notification_status') && $deliveryMan->fcm_token ){
-                    Helpers::send_push_notif_to_device($deliveryMan->fcm_token, $data);
+            if (Helpers::getNotificationStatusData('deliveryman', 'deliveryman_referral_bonus', 'push_notification_status') && $deliveryMan->fcm_token) {
+                Helpers::send_push_notif_to_device($deliveryMan->fcm_token, $data);
+                DB::table('user_notifications')->insert([
+                    'data' => json_encode($data),
+                    'delivery_man_id' => $deliveryMan->id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
+
+        } catch (\Exception $exception) {
+            info(["line___{$exception->getLine()}", $exception->getMessage()]);
+        }
+        return true;
+    }
+
+    public static function apply_price_adjustment(Order $order, $actual_price)
+    {
+        if ($order->order_type != 'parcel' || !in_array($order->adjustment_status, ['none', 'approved'])) {
+            return false;
+        }
+
+        $estimated_price = $order->parcel_item_estimated_price;
+        $diff = $actual_price - $estimated_price;
+
+        $order->actual_parcel_item_price = $actual_price;
+        $order->order_amount = $order->order_amount + $diff;
+        $order->adjustment_status = 'adjusted';
+        $order->save();
+
+        if ($diff < 0) {
+            // Refund to wallet
+            if ($order->is_guest == 0 && $order->user_id) {
+                CustomerLogic::create_wallet_transaction($order->user_id, abs($diff), 'order_refund', $order->id);
+
+                // Send notification
+                $notification_data = [
+                    'title' => translate('messages.price_adjustment_refund'),
+                    'description' => translate('An amount of') . ' ' . Helpers::format_currency(abs($diff)) . ' ' . translate('has been refunded to your wallet due to price difference in your parcel order.'),
+                    'order_id' => $order->id,
+                    'image' => '',
+                    'type' => 'order_status',
+                ];
+
+                if ($order->customer->cm_firebase_token && Helpers::getNotificationStatusData('customer', 'customer_order_notification', 'push_notification_status')) {
+                    Helpers::send_push_notif_to_device($order->customer->cm_firebase_token, $notification_data);
                     DB::table('user_notifications')->insert([
-                        'data' => json_encode($data),
-                        'delivery_man_id' => $deliveryMan->id,
+                        'data' => json_encode($notification_data),
+                        'user_id' => $order->customer->id,
                         'created_at' => now(),
                         'updated_at' => now()
                     ]);
                 }
-
-            } catch (\Exception $exception) {
-                info(["line___{$exception->getLine()}", $exception->getMessage()]);
             }
+        } elseif ($diff > 0) {
+            $user = $order->customer;
+            $msg = "";
+            if ($user && $user->wallet_balance >= $diff) {
+                // Deduct from wallet
+                CustomerLogic::create_wallet_transaction($order->user_id, $diff, 'order_charge', $order->id);
+                $msg = translate('Your parcel order cost more than estimated. An extra charge of') . ' ' . Helpers::format_currency($diff) . ' ' . translate('has been deducted from your wallet.');
+            } else {
+                // Create unpaid payment for the difference
+                $unpaid_payment = new OrderPayment();
+                $unpaid_payment->order_id = $order->id;
+                $unpaid_payment->amount = $diff;
+                $unpaid_payment->payment_status = 'unpaid';
+                $unpaid_payment->payment_method = $order->payment_method == 'wallet' ? 'digital_payment' : $order->payment_method;
+                $unpaid_payment->save();
+
+                $msg = translate('Your parcel order cost more than estimated. Please pay the difference of') . ' ' . Helpers::format_currency($diff) . ' ' . translate('via digital payment.');
+            }
+
+            // Send notification for extra charge
+            if ($order->is_guest == 0 && $order->user_id) {
+                $notification_data = [
+                    'title' => translate('messages.price_adjustment_extra_charge'),
+                    'description' => $msg,
+                    'order_id' => $order->id,
+                    'image' => '',
+                    'type' => 'order_status',
+                ];
+
+                if ($order->customer->cm_firebase_token && Helpers::getNotificationStatusData('customer', 'customer_order_notification', 'push_notification_status')) {
+                    Helpers::send_push_notif_to_device($order->customer->cm_firebase_token, $notification_data);
+                    DB::table('user_notifications')->insert([
+                        'data' => json_encode($notification_data),
+                        'user_id' => $order->customer->id,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
+            }
+        }
+
         return true;
     }
 
+    public static function propose_parcel_price(Order $order, $price)
+    {
+        if ($order->order_type != 'parcel' || !in_array($order->order_status, ['accepted', 'confirmed', 'processing', 'handover'])) {
+            return false;
+        }
+
+        $order->proposed_parcel_item_price = $price;
+        $order->adjustment_status = 'pending_approval';
+        $order->save();
+
+        // Notify customer
+        $notification_data = [
+            'title' => translate('messages.price_proposal_for_your_parcel'),
+            'description' => translate('Delivery man has proposed a price of') . ' ' . Helpers::format_currency($price) . ' ' . translate('for the items in your parcel order. Please approve or reject.'),
+            'order_id' => $order->id,
+            'image' => '',
+            'type' => 'order_status',
+        ];
+
+        if ($order->customer->cm_firebase_token && Helpers::getNotificationStatusData('customer', 'customer_order_notification', 'push_notification_status')) {
+            Helpers::send_push_notif_to_device($order->customer->cm_firebase_token, $notification_data);
+            DB::table('user_notifications')->insert([
+                'data' => json_encode($notification_data),
+                'user_id' => $order->customer->id,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+        }
+
+        return true;
+    }
+
+    public static function update_parcel_price_approval(Order $order, $status)
+    {
+        if ($order->adjustment_status != 'pending_approval') {
+            return false;
+        }
+
+        if ($status == 'approved') {
+            $order->adjustment_status = 'approved';
+            $order->save();
+
+            // Apply price adjustment logic
+            self::apply_price_adjustment($order, $order->proposed_parcel_item_price);
+
+            // Notify DM
+            if ($order?->delivery_man?->fcm_token) {
+                $notification_data = [
+                    'title' => translate('messages.price_approved'),
+                    'description' => translate('Customer has approved the proposed price for order') . ' #' . $order->id . '. You can proceed to buy and pick up.',
+                    'order_id' => $order->id,
+                    'image' => '',
+                    'type' => 'order_status',
+                ];
+                Helpers::send_push_notif_to_device($order->delivery_man->fcm_token, $notification_data);
+            }
+        } elseif ($status == 'rejected') {
+            $order->adjustment_status = 'rejected';
+
+            // Charge cancellation fee (Total Delivery Charge)
+            $fee = $order->delivery_charge;
+            $refund_amount = $order->order_amount - $fee;
+
+            if ($order->payment_status == 'paid' && $order->is_guest == 0) {
+                // Refund order_amount - fee to wallet
+                CustomerLogic::create_wallet_transaction($order->user_id, $refund_amount, 'order_refund', $order->id);
+            }
+
+            $order->order_status = 'canceled';
+            $order->canceled = now();
+            $order->canceled_by = 'customer';
+            $order->cancellation_reason = 'Price rejected by customer';
+            $order->save();
+
+            // Notify DM
+            if ($order?->delivery_man?->fcm_token) {
+                $notification_data = [
+                    'title' => translate('messages.price_rejected'),
+                    'description' => translate('Customer has rejected the proposed price for order') . ' #' . $order->id . '. The order has been canceled.',
+                    'order_id' => $order->id,
+                    'image' => '',
+                    'type' => 'order_status',
+                ];
+                Helpers::send_push_notif_to_device($order->delivery_man->fcm_token, $notification_data);
+            }
+        }
+
+        return true;
+    }
 }

@@ -153,6 +153,20 @@
                                     value="{{ $parcel_category->parcel_minimum_shipping_charge }}">
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="toggle-switch toggle-switch-sm mr-2" for="buy_and_deliver">
+                                    <input type="checkbox" class="toggle-switch-input" name="buy_and_deliver" id="buy_and_deliver" value="1" {{$parcel_category->buy_and_deliver?'checked':''}}>
+                                    <span class="toggle-switch-label">
+                                        <span class="toggle-switch-indicator"></span>
+                                    </span>
+                                    <span class="toggle-switch-content">
+                                        {{ translate('messages.buy_and_deliver') }}
+                                        <small class="text-danger"> * ( {{ translate('messages.activate_if_you_want_to_buy_and_deliver') }} )</small>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
                         @if ($categoryWiseTax)
                                 <div class="col-6">
                                     <span
@@ -170,6 +184,108 @@
                                 </div>
 
                         @endif
+                        <div class="col-12">
+                            <hr>
+                            <h5 class="mb-3">{{ translate('messages.service_options') }}</h5>
+                            <div id="options-container">
+                                @if($parcel_category->options)
+                                    @foreach($parcel_category->options as $key => $option)
+                                        <div class="card mb-3 option-row" id="option-row-{{$key}}">
+                                            <div class="card-header d-flex justify-content-between">
+                                                <h6>{{ translate('Option') }} #{{$key+1}}</h6>
+                                                <button type="button" class="btn btn-danger btn-sm remove-option" data-id="{{$key}}"><i class="tio-delete"></i></button>
+                                            </div>
+                                            <div class="card-body">
+                                                <input type="hidden" name="options[{{$key}}][id]" value="{{$option->id}}">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        @if ($language)
+                                                            <div class="lang_form" id="default-form-{{$key}}">
+                                                                <div class="form-group">
+                                                                    <label class="input-label">{{ translate('messages.title') }} ({{ translate('messages.default') }})</label>
+                                                                    <input type="text" name="options[{{$key}}][title][]" class="form-control" value="{{$option->getRawOriginal('title')}}" placeholder="{{ translate('messages.title') }}">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="input-label">{{ translate('messages.description') }} ({{ translate('messages.default') }})</label>
+                                                                    <input type="text" name="options[{{$key}}][description][]" class="form-control" value="{{$option->getRawOriginal('description')}}" placeholder="{{ translate('messages.description') }}">
+                                                                </div>
+                                                            </div>
+                                                            @foreach (json_decode($language) as $lang)
+                                                                <?php
+                                                                if (count($option['translations'])) {
+                                                                    $translate = [];
+                                                                    foreach ($option['translations'] as $t) {
+                                                                        if ($t->locale == $lang && $t->key == 'title') {
+                                                                            $translate[$lang]['title'] = $t->value;
+                                                                        }
+                                                                        if ($t->locale == $lang && $t->key == 'description') {
+                                                                            $translate[$lang]['description'] = $t->value;
+                                                                        }
+                                                                    }
+                                                                }
+                                                                ?>
+                                                                <div class="d-none lang_form" id="{{ $lang }}-form-{{$key}}">
+                                                                    <div class="form-group">
+                                                                        <label class="input-label">{{ translate('messages.title') }} ({{ strtoupper($lang) }})</label>
+                                                                        <input type="text" name="options[{{$key}}][title][]" class="form-control" value="{{ $translate[$lang]['title'] ?? '' }}" placeholder="{{ translate('messages.title') }}">
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="input-label">{{ translate('messages.description') }} ({{ strtoupper($lang) }})</label>
+                                                                        <input type="text" name="options[{{$key}}][description][]" class="form-control" value="{{ $translate[$lang]['description'] ?? '' }}" placeholder="{{ translate('messages.description') }}">
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        @else
+                                                            <div id="default-form-{{$key}}">
+                                                                <div class="form-group">
+                                                                    <label class="input-label">{{ translate('messages.title') }} (EN)</label>
+                                                                    <input type="text" name="options[{{$key}}][title][]" class="form-control" value="{{$option->title}}" placeholder="{{ translate('messages.title') }}">
+                                                                </div>
+                                                                <input type="hidden" name="lang[]" value="en">
+                                                                <div class="form-group">
+                                                                    <label class="input-label">{{ translate('messages.description') }} (EN)</label>
+                                                                    <input type="text" name="options[{{$key}}][description][]" class="form-control" value="{{$option->description}}" placeholder="{{ translate('messages.description') }}">
+                                                                </div>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="input-label">{{ translate('messages.charge_multiplier') }}</label>
+                                                            <input type="number" step="0.1" name="options[{{$key}}][charge_multiplier]" class="form-control" value="{{$option->charge_multiplier}}">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="input-label">{{ translate('messages.base_price') }} <small class="text-muted">(Hybrid Pricing)</small></label>
+                                                            <input type="number" step="0.01" name="options[{{$key}}][base_price]" class="form-control" value="{{$option->base_price ?? 0}}" placeholder="0.00">
+                                                            <small class="text-info">Base price + (Distance × Per Km Rate). Leave 0 for distance-only pricing.</small>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="input-label">{{ translate('messages.service_type') }}</label>
+                                                            <select name="options[{{$key}}][service_type]" class="form-control">
+                                                                <option value="custom" {{$option->service_type=='custom'?'selected':''}}>{{ translate('messages.custom') }}</option>
+                                                                <option value="deliver_now" {{$option->service_type=='deliver_now'?'selected':''}}>{{ translate('messages.deliver_now') }}</option>
+                                                                <option value="schedule" {{$option->service_type=='schedule'?'selected':''}}>{{ translate('messages.schedule') }}</option>
+                                                                <option value="truck" {{$option->service_type=='truck'?'selected':''}}>{{ translate('messages.truck') }}</option>
+                                                                <option value="end_of_day" {{$option->service_type=='end_of_day'?'selected':''}}>{{ translate('messages.end_of_day') }}</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="input-label">{{ translate('messages.tag') }}</label>
+                                                            <input type="text" name="options[{{$key}}][tag]" class="form-control" value="{{$option->tag}}" placeholder="e.g. Save 40%">
+                                                        </div>
+                                                         <div class="form-group">
+                                                            <label class="input-label">{{ translate('messages.icon') }}</label>
+                                                            <input type="file" name="options[{{$key}}][icon]" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                            <button type="button" class="btn btn-success" id="add-option-btn"><i class="tio-add"></i> {{ translate('messages.add_option') }}</button>
+                        </div>
                         <div class="col-12">
                             <div class="btn--container justify-content-end">
                                 <button type="reset" id="reset_btn"
@@ -207,6 +323,110 @@
             readURL(this);
         });
 
+        let optionCount = {{ $parcel_category->options ? count($parcel_category->options) : 0 }};
+
+        $('#add-option-btn').click(function() {
+            let html = `
+                <div class="card mb-3 option-row" id="option-row-${optionCount}">
+                    <div class="card-header d-flex justify-content-between">
+                        <h6>{{ translate('Option') }} #${optionCount+1}</h6>
+                        <button type="button" class="btn btn-danger btn-sm remove-option" data-id="${optionCount}"><i class="tio-delete"></i></button>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @if ($language)
+                                    <div class="lang_form" id="default-form-${optionCount}">
+                                        <div class="form-group">
+                                            <label class="input-label">{{ translate('messages.title') }} ({{ translate('messages.default') }})</label>
+                                            <input type="text" name="options[${optionCount}][title][]" class="form-control" placeholder="{{ translate('messages.title') }}">
+                                        </div>
+                                        <input type="hidden" name="lang[]" value="default">
+                                        <div class="form-group">
+                                            <label class="input-label">{{ translate('messages.description') }} ({{ translate('messages.default') }})</label>
+                                            <input type="text" name="options[${optionCount}][description][]" class="form-control" placeholder="{{ translate('messages.description') }}">
+                                        </div>
+                                    </div>
+                                    @foreach (json_decode($language) as $lang)
+                                        <div class="d-none lang_form" id="{{ $lang }}-form-${optionCount}">
+                                            <div class="form-group">
+                                                <label class="input-label">{{ translate('messages.title') }} ({{ strtoupper($lang) }})</label>
+                                                <input type="text" name="options[${optionCount}][title][]" class="form-control" placeholder="{{ translate('messages.title') }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="input-label">{{ translate('messages.description') }} ({{ strtoupper($lang) }})</label>
+                                                <input type="text" name="options[${optionCount}][description][]" class="form-control" placeholder="{{ translate('messages.description') }}">
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div id="default-form-${optionCount}">
+                                        <div class="form-group">
+                                            <label class="input-label">{{ translate('messages.title') }} (EN)</label>
+                                            <input type="text" name="options[${optionCount}][title][]" class="form-control" placeholder="{{ translate('messages.title') }}">
+                                        </div>
+                                        <input type="hidden" name="lang[]" value="en">
+                                        <div class="form-group">
+                                            <label class="input-label">{{ translate('messages.description') }} (EN)</label>
+                                            <input type="text" name="options[${optionCount}][description][]" class="form-control" placeholder="{{ translate('messages.description') }}">
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="input-label">{{ translate('messages.charge_multiplier') }}</label>
+                                    <input type="number" step="0.1" name="options[${optionCount}][charge_multiplier]" class="form-control" value="1.0">
+                                </div>
+                                <div class="form-group">
+                                    <label class="input-label">{{ translate('messages.base_price') }} <small class="text-muted">(Hybrid Pricing)</small></label>
+                                    <input type="number" step="0.01" name="options[${optionCount}][base_price]" class="form-control" value="0.00" placeholder="0.00">
+                                    <small class="text-info">Base price + (Distance × Per Km Rate). Leave 0 for distance-only pricing.</small>
+                                </div>
+                                <div class="form-group">
+                                    <label class="input-label">{{ translate('messages.service_type') }}</label>
+                                    <select name="options[${optionCount}][service_type]" class="form-control">
+                                        <option value="custom">{{ translate('messages.custom') }}</option>
+                                        <option value="deliver_now">{{ translate('messages.deliver_now') }}</option>
+                                        <option value="schedule">{{ translate('messages.schedule') }}</option>
+                                        <option value="truck">{{ translate('messages.truck') }}</option>
+                                        <option value="end_of_day">{{ translate('messages.end_of_day') }}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="input-label">{{ translate('messages.tag') }}</label>
+                                    <input type="text" name="options[${optionCount}][tag]" class="form-control" placeholder="e.g. Save 40%">
+                                </div>
+                                <div class="form-group">
+                                    <label class="input-label">{{ translate('messages.icon') }}</label>
+                                    <input type="file" name="options[${optionCount}][icon]" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            $('#options-container').append(html);
+            
+            // Sync current language view for new row
+            let activeLang = $(".lang_link.active").attr('id');
+            if(activeLang){
+                let lang = activeLang.substring(0, activeLang.length - 5);
+                $("#" + lang + "-form-" + optionCount).removeClass('d-none');
+                if(lang !== 'default'){
+                     $("#default-form-" + optionCount).addClass('d-none');
+                }
+            }
+            
+            optionCount++;
+        });
+
+        $(document).on('click', '.remove-option', function() {
+            let id = $(this).data('id');
+            $('#option-row-' + id).remove();
+        });
+
+        // Update existing logic to handle dynamic forms translation switching
         $(".lang_link").click(function(e) {
             e.preventDefault();
             $(".lang_link").removeClass('active');
@@ -215,8 +435,12 @@
 
             let form_id = this.id;
             let lang = form_id.substring(0, form_id.length - 5);
-            console.log(lang);
+            
+            // Show main form
             $("#" + lang + "-form").removeClass('d-none');
+            
+            // Show option forms
+            $('[id^="' + lang + '-form-"]').removeClass('d-none');
         });
 
         $('#reset_btn').click(function() {

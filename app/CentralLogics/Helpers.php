@@ -800,22 +800,52 @@ class Helpers
         $storage = [];
         if ($multi_data == true) {
             foreach ($data as $item) {
-                // if (count($item['translations']) > 0) {
-                //     $translate = array_column($item['translations']->toArray(), 'value', 'key');
-                //     $item['name'] = $translate['name'];
-                //     $item['description'] = $translate['description'];
-                //     unset($item['translations']);
-                // }
+                if (count($item['translations']) > 0) {
+                    $translate = array_column($item['translations']->toArray(), 'value', 'key');
+                    $item['name'] = $translate['name'] ?? $item['name'];
+                    $item['description'] = $translate['description'] ?? $item['description'];
+                }
+
+                // Format Options
+                if ($item->relationLoaded('options')) {
+                    $options = [];
+                    foreach ($item->options as $option) {
+                        if (count($option['translations']) > 0) {
+                            $translate = array_column($option['translations']->toArray(), 'value', 'key');
+                            $option['title'] = $translate['title'] ?? $option['title'];
+                            $option['description'] = $translate['description'] ?? $option['description'];
+                        }
+                        unset($option['translations']);
+                        $options[] = $option;
+                    }
+                    $item['options'] = $options;
+                }
+
+                unset($item['translations']);
                 array_push($storage, $item);
             }
             $data = $storage;
         } else {
-            // if (count($data['translations']) > 0) {
-            //     $translate = array_column($data['translations']->toArray(), 'value', 'key');
-            //     $data['title'] = $translate['title'];
-            //     $data['description'] = $translate['description'];
-            //     unset($data['translations']);
-            // }
+            if (count($data['translations']) > 0) {
+                $translate = array_column($data['translations']->toArray(), 'value', 'key');
+                $data['name'] = $translate['name'] ?? $data['name'];
+                $data['description'] = $translate['description'] ?? $data['description'];
+            }
+            // Format Options for single item
+            if ($data->relationLoaded('options')) {
+                $options = [];
+                foreach ($data->options as $option) {
+                    if (count($option['translations']) > 0) {
+                        $translate = array_column($option['translations']->toArray(), 'value', 'key');
+                        $option['title'] = $translate['title'] ?? $option['title'];
+                        $option['description'] = $translate['description'] ?? $option['description'];
+                    }
+                    unset($option['translations']);
+                    $options[] = $option;
+                }
+                $data['options'] = $options;
+            }
+            unset($data['translations']);
         }
         return $data;
     }

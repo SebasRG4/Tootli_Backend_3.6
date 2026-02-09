@@ -111,6 +111,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::get('order-delivery-history', 'DeliverymanController@get_order_history');
             Route::put('accept-order', 'DeliverymanController@accept_order');
             Route::put('update-order-status', 'DeliverymanController@update_order_status');
+            Route::post('propose-parcel-price', 'DeliverymanController@propose_parcel_price');
             Route::put('update-payment-status', 'DeliverymanController@order_payment_status_update');
             Route::get('order-details', 'DeliverymanController@get_order_details');
             Route::get('order', 'DeliverymanController@get_order');
@@ -415,6 +416,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
                 Route::post('get-Tax', 'OrderController@getTaxFromCart');
                 Route::post('prescription/place', 'OrderController@prescription_place_order');
                 Route::put('cancel', 'OrderController@cancel_order');
+                Route::post('update-parcel-price-approval', 'OrderController@update_parcel_price_approval');
                 Route::post('refund-request', 'OrderController@refund_request');
                 Route::get('refund-reasons', 'OrderController@refund_reasons');
                 Route::get('track', 'OrderController@track_order')->withoutMiddleware('auth:apiGuestCheck');
@@ -538,11 +540,12 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
 
         Route::get('parcel-category', 'ParcelCategoryController@index');
         Route::get('advertisement/list', 'AdvertisementController@get_adds');
+        Route::get('vehicle/extra_charge', 'ConfigController@extra_charge');
+        Route::get('get-vehicles', 'ConfigController@get_vehicles');
+        Route::get('get-parcel-cancellation-reasons', 'ConfigController@parcel_cancellation_reason');
+        Route::get('parcel/suggestions', 'ParcelController@suggestions');
 
     });
-    Route::get('vehicle/extra_charge', 'ConfigController@extra_charge');
-    Route::get('get-vehicles', 'ConfigController@get_vehicles');
-    Route::get('get-parcel-cancellation-reasons', 'ConfigController@parcel_cancellation_reason');
 
     // Taxi module routes moved to Modules/Taxi/routes/api.php
 
