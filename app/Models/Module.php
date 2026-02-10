@@ -47,6 +47,7 @@ class Module extends Model
         'theme_id',
         'description',
         'all_zone_service',
+        'order',
     ];
 
 
@@ -58,7 +59,8 @@ class Module extends Model
         'stores_count' => 'integer',
         'theme_id' => 'integer',
         'status' => 'string',
-        'all_zone_service' => 'integer'
+        'all_zone_service' => 'integer',
+        'order' => 'integer',
     ];
 
     protected $appends = ['icon_full_url', 'thumbnail_full_url'];

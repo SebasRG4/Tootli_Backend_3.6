@@ -42,13 +42,14 @@ class ModuleRepository implements ModuleRepositoryInterface
         $key = explode(' ', $searchValue);
 
         return $this->module->withCount($relations)->where($filters)
-            ->when(isset($key) , function($q) use($key){
+            ->when(isset($key), function ($q) use ($key) {
                 $q->where(function ($q) use ($key) {
                     foreach ($key as $value) {
                         $q->orWhere('module_name', 'like', "%{$value}%");
                     }
                 });
             })
+            ->orderBy('order', 'asc')
             ->latest()->paginate($dataLimit);
     }
 
@@ -65,11 +66,10 @@ class ModuleRepository implements ModuleRepositoryInterface
     public function delete(string $id): bool
     {
         $module = $this->module->find($id);
-        if($module->thumbnail)
-        {
-       
-            Helpers::check_and_delete('module/' , $module['thumbnail']);
-            
+        if ($module->thumbnail) {
+
+            Helpers::check_and_delete('module/', $module['thumbnail']);
+
         }
         $module->translations()->delete();
         $module->delete();
@@ -81,14 +81,14 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         $key = explode(' ', $request['search']);
         return $this->module->withCount('stores')->
-        when(isset($key) , function($q) use($key){
-            $q->where(function ($q) use ($key) {
-                foreach ($key as $value) {
-                    $q->orWhere('module_name', 'like', "%{$value}%");
-                }
-            });
-        })
-        ->get();
+            when(isset($key), function ($q) use ($key) {
+                $q->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('module_name', 'like', "%{$value}%");
+                    }
+                });
+            })
+            ->get();
     }
 
     public function getFirstWithoutGlobalScopeWhere(array $params, array $relations = []): ?Model
@@ -100,13 +100,14 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         $key = explode(' ', $searchValue);
 
-        return $this->module->when(isset($key) , function($q) use($key){
-                $q->where(function ($q) use ($key) {
-                    foreach ($key as $value) {
-                        $q->orWhere('module_name', 'like', "%{$value}%");
-                    }
-                });
-            })
+        return $this->module->when(isset($key), function ($q) use ($key) {
+            $q->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->orWhere('module_name', 'like', "%{$value}%");
+                }
+            });
+        })
+            ->orderBy('order', 'asc')
             ->latest()->get($dataLimit);
     }
 }

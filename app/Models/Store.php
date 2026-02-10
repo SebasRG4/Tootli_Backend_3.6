@@ -151,6 +151,8 @@ class Store extends Model
         'serves_alcohol',
         'cuisine_names',
         'menu_images',
+        'category_ids',
+        'reviews_comments_count',
     ];
 
     /**

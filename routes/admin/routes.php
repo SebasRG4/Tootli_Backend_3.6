@@ -268,6 +268,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get(Module::TYPE[URI], [ModuleController::class, 'getType'])->name('type');
                 Route::post(Module::SEARCH[URI], [ModuleController::class, 'search'])->name('search');
                 Route::get(Module::EXPORT[URI], [ModuleController::class, 'exportList'])->name('export');
+                Route::post('update-order', [ModuleController::class, 'updateOrder'])->name('update-order');
                 Route::get(Module::SHOW[URI] . '/{id}', [ModuleController::class, 'show'])->name('show')->withoutMiddleware('module:module');
             });
         });

@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Schema;
 
 use Illuminate\Support\Str;
 use App\Models\VisitedStore;
@@ -678,9 +679,14 @@ class SaboresCiudadController extends Controller
         // Calculate Rank: fetch siblings in same category to compare scores
         $categoryId = null;
         if ($store->category_ids) {
-            $decoded = json_decode($store->category_ids);
-            if (is_array($decoded) && isset($decoded[0]->id)) {
-                $categoryId = $decoded[0]->id;
+            $decoded = is_array($store->category_ids) ? $store->category_ids : json_decode($store->category_ids);
+            if (is_array($decoded)) {
+                if (isset($decoded[0]->id)) {
+                    $categoryId = $decoded[0]->id;
+                } elseif (isset($decoded[0]) && is_numeric($decoded[0])) {
+                    // Handle the array of IDs set at line 624
+                    $categoryId = $decoded[0];
+                }
             }
         }
 
@@ -695,8 +701,9 @@ class SaboresCiudadController extends Controller
             $siblings = Store::where('module_id', $store->module_id)
                 ->where('id', '!=', $store->id) // Exclude self
                 ->where('status', 1)
-                ->select('id', 'avg_rating', 'reviews_comments_count', 'category_ids')
+                ->select('stores.id', 'stores.reviews_comments_count', 'stores.category_ids')
                 ->withCount(['wishlists', 'userListStores'])
+                ->withAvg('reviews', 'rating')
                 ->get();
 
             $higher_scores = 0;
@@ -711,7 +718,7 @@ class SaboresCiudadController extends Controller
                 }
 
                 if ($sib_cat_id == $categoryId) {
-                    $sib_score = ($sibling->avg_rating * 10) + (($sibling->wishlists_count + $sibling->user_list_stores_count) * 5) + ($sibling->reviews_comments_count ?? 0);
+                    $sib_score = (($sibling->reviews_avg_rating ?? 0) * 10) + (($sibling->wishlists_count + $sibling->user_list_stores_count) * 5) + ($sibling->reviews_comments_count ?? 0);
                     if ($sib_score > $popularity_score) {
                         $higher_scores++;
                     }

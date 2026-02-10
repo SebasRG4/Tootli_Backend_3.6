@@ -115,6 +115,9 @@ class ParcelController extends Controller
             ->when(isset($request->payment_by) && $request->payment_by == 'receiver', function ($query) {
                 return $query->where('charge_payer', 'receiver');
             })
+            ->when(isset($request->payment_approval), function ($query) use ($request) {
+                return $query->where('payment_approval', $request->payment_approval);
+            })
             ->with('parcel_category')
             ->ParcelOrder()
             ->module(Config::get('module.current_module_id'))
@@ -130,9 +133,24 @@ class ParcelController extends Controller
         $order_type = isset($request->order_type) ? $request->order_type : null;
         $payment_status = isset($request->payment_status) ? $request->payment_status : null;
         $payment_by = isset($request->payment_by) ? $request->payment_by : null;
+        $payment_approval = isset($request->payment_approval) ? $request->payment_approval : null;
         $total = $orders->total();
 
-        return view('admin-views.order.parcel-list', compact('orders', 'status', 'orderstatus', 'scheduled', 'vendor_ids', 'zone_ids', 'from_date', 'to_date', 'total', 'payment_by', 'payment_status', 'order_type'));
+        return view('admin-views.order.parcel-list', compact('orders', 'status', 'orderstatus', 'scheduled', 'vendor_ids', 'zone_ids', 'from_date', 'to_date', 'total', 'payment_by', 'payment_status', 'order_type', 'payment_approval'));
+    }
+
+    public function update_payment_approval(Request $request, $id, $status)
+    {
+        $order = Order::findOrFail($id);
+        $order->payment_approval = $status;
+        $order->save();
+
+        if ($status == 'approved') {
+            Toastr::success(translate('messages.payment_approved_successfully'));
+        } else {
+            Toastr::success(translate('messages.payment_rejected_successfully'));
+        }
+        return back();
     }
 
 
@@ -259,17 +277,21 @@ class ParcelController extends Controller
 
     public function order_details(Request $request, $id)
     {
-        $order = Order::withOutGlobalScope(ZoneScope::class)->with(['customer' => function ($query) {
-            return $query->withCount('orders');
-        }, 'delivery_man' => function ($query) {
-            return $query->withCount('orders');
-        },'parcelCancellation'])->where(['id' => $id])->ParcelOrder()->first();
+        $order = Order::withOutGlobalScope(ZoneScope::class)->with([
+            'customer' => function ($query) {
+                return $query->withCount('orders');
+            },
+            'delivery_man' => function ($query) {
+                return $query->withCount('orders');
+            },
+            'parcelCancellation'
+        ])->where(['id' => $id])->ParcelOrder()->first();
         if (isset($order)) {
 
             $isUnpaid = false;
 
             if (
-                in_array($order->order_status, ['pending','failed']) &&
+                in_array($order->order_status, ['pending', 'failed']) &&
                 !in_array($order->payment_method, ['cash_on_delivery', 'wallet'])
             ) {
                 // CASE 1: partial payment
@@ -288,9 +310,7 @@ class ParcelController extends Controller
                     if ($order?->offline_payments?->count() == 0) {
                         $isUnpaid = true;
                     }
-                }
-
-                else {
+                } else {
                     $isUnpaid = true;
                 }
             }
@@ -591,7 +611,7 @@ class ParcelController extends Controller
 
     public function cancellationSettings(Request $request)
     {
-        $parcel_cancellation_status =1?? Helpers::get_business_settings('parcel_cancellation_status');
+        $parcel_cancellation_status = 1 ?? Helpers::get_business_settings('parcel_cancellation_status');
         $parcel_cancellation_basic_setup = Helpers::get_business_settings('parcel_cancellation_basic_setup');
         $parcel_return_time_fee = Helpers::get_business_settings('parcel_return_time_fee');
         $language = Helpers::get_business_settings('language') ?? [];
@@ -629,14 +649,14 @@ class ParcelController extends Controller
         $configs = [
             'parcel_cancellation_basic_setup' => [
                 'return_fee_status' => $request->input('return_fee_status', 0),
-                'return_fee'        => $request->input('return_fee', 0),
-                'do_not_charge_return_fee_on_deliveryman_cancel'=> $request->input('do_not_charge_return_fee_on_deliveryman_cancel', 0),
+                'return_fee' => $request->input('return_fee', 0),
+                'do_not_charge_return_fee_on_deliveryman_cancel' => $request->input('do_not_charge_return_fee_on_deliveryman_cancel', 0),
             ],
             'parcel_return_time_fee' => [
-                'status'             => $request->input('status', 0),
+                'status' => $request->input('status', 0),
                 'parcel_return_time' => $request->input('parcel_return_time', 0),
-                'return_time_type'   => $request->input('return_time_type', 'day'),
-                'return_fee_for_dm'  => $request->input('return_fee_for_dm', 0),
+                'return_time_type' => $request->input('return_time_type', 'day'),
+                'return_fee_for_dm' => $request->input('return_fee_for_dm', 0),
             ],
         ];
 

@@ -260,6 +260,10 @@
                             <th class="text-center border-0">{{translate('messages.order_status')}}</th>
                         @endif
                         <th class="text-center border-0">{{translate('messages.actions')}}</th>
+                         @if(request()->get('payment_approval') == 'pending')
+                            <th class="text-center border-0">{{translate('messages.purchase_amount')}}</th>
+                            <th class="text-center border-0">{{translate('messages.verification')}}</th>
+                        @endif
                     </tr>
                     </thead>
 
@@ -398,18 +402,38 @@
                                 @endif
 
                             </td>
-                            <td>
-                                <div class="btn--container justify-content-center">
-                                    <a class="ml-2 btn btn-sm btn--warning btn-outline-warning action-btn"
-                                       href="{{route('admin.parcel.order.details',['id'=>$order['id']])}}">
-                                        <i class="tio-invisible"></i>
-                                    </a>
-                                    <a class="ml-2 btn btn-sm btn--primary btn-outline-primary action-btn"
-                                       href="{{route('admin.order.generate-invoice',['id'=>$order['id']])}}">
-                                        <i class="tio-print"></i>
-                                    </a>
                                 </div>
                             </td>
+                            @if(request()->get('payment_approval') == 'pending')
+                                <td class="text-center">
+                                    <strong>{{Helpers::format_currency($order['actual_parcel_item_price'] ?? 0)}}</strong>
+                                </td>
+                                <td>
+                                    <div class="btn--container justify-content-center">
+                                        <a class="btn btn-sm btn--primary btn-outline-primary action-btn"
+                                            href="javascript:"
+                                            onclick="form_alert('order-{{$order['id']}}-approve','{{translate('messages.approve_this_order_amount')}}')"
+                                            title="{{translate('messages.approve')}}">
+                                            <i class="tio-checkmark"></i>
+                                        </a>
+                                        <form action="{{route('admin.update_payment_approval',[$order['id'],'approved'])}}"
+                                                method="get" id="order-{{$order['id']}}-approve">
+                                            @csrf @method('get')
+                                        </form>
+
+                                        <a class="btn btn-sm btn--danger btn-outline-danger action-btn"
+                                            href="javascript:"
+                                            onclick="form_alert('order-{{$order['id']}}-reject','{{translate('messages.reject_this_order_amount')}}')"
+                                            title="{{translate('messages.reject')}}">
+                                            <i class="tio-clear"></i>
+                                        </a>
+                                        <form action="{{route('admin.update_payment_approval',[$order['id'],'rejected'])}}"
+                                                method="get" id="order-{{$order['id']}}-reject">
+                                            @csrf @method('get')
+                                        </form>
+                                    </div>
+                                </td>
+                            @endif
                         </tr>
 
                     @endforeach

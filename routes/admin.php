@@ -57,6 +57,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('orders/{status}', 'ParcelController@orders')->name('orders');
             Route::get('orders/export/{status}/{file_type}', 'ParcelController@parcel_orders_export')->name('parcel_orders_export');
             Route::get('details/{id}', 'ParcelController@order_details')->name('order.details');
+            Route::get('update-payment-approval/{id}/{status}', 'ParcelController@update_payment_approval')->name('update_payment_approval');
             Route::get('settings', 'ParcelController@settings')->name('settings');
             Route::post('settings', 'ParcelController@update_settings')->name('update.settings');
             Route::get('dispatch/{status}', 'ParcelController@dispatch_list')->name('list');

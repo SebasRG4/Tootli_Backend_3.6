@@ -322,6 +322,11 @@ class Order extends Model
         return $query->where('order_type', '<>', 'pos');
     }
 
+    public function scopePaymentApproval($query, $status)
+    {
+        return $query->where('payment_approval', $status);
+    }
+
     public function scopeNotDigitalOrder($query)
     {
         return $query->where(function ($q) {

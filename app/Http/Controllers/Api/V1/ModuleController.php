@@ -29,6 +29,7 @@ class ModuleController extends Controller
                     $query->whereIn('zone_id', $zone_id);
                 })
                 ->active()
+                ->orderBy('order', 'asc')
                 ->get();
         } else {
             $modules = Module::withCount([
@@ -39,18 +40,19 @@ class ModuleController extends Controller
                     });
                 }
             ])
-            ->when($request->zone_id, function ($query) use ($request) {
-                $query->whereHas('zones', function ($query) use ($request) {
-                    $query->where('zone_id', $request->zone_id);
-                })->notParcel();
-            })
-            ->active()
-            ->get();
+                ->when($request->zone_id, function ($query) use ($request) {
+                    $query->whereHas('zones', function ($query) use ($request) {
+                        $query->where('zone_id', $request->zone_id);
+                    })->notParcel();
+                })
+                ->active()
+                ->orderBy('order', 'asc')
+                ->get();
         }
 
-        $modules = array_map(function($item){
+        $modules = array_map(function ($item) {
             return $item;
-        },$modules->toArray());
+        }, $modules->toArray());
         return response()->json($modules);
     }
 

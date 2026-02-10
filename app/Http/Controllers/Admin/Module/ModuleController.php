@@ -27,8 +27,7 @@ class ModuleController extends BaseController
         protected ModuleRepositoryInterface $moduleRepo,
         protected ModuleService $moduleService,
         protected TranslationRepositoryInterface $translationRepo
-    )
-    {
+    ) {
     }
 
     public function index(?Request $request): View|Collection|LengthAwarePaginator|null
@@ -40,7 +39,7 @@ class ModuleController extends BaseController
     {
         $modules = $this->moduleRepo->getListWhere(
             searchValue: $request['search'],
-            filters: ($request['module_type'] && $request['module_type'] != 'all')?['module_type' => $request['module_type']]:[],
+            filters: ($request['module_type'] && $request['module_type'] != 'all') ? ['module_type' => $request['module_type']] : [],
             relations: ['stores'],
             dataLimit: config('default_pagination')
         );
@@ -61,13 +60,12 @@ class ModuleController extends BaseController
     {
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
-        return view(ModuleViewPath::ADD[VIEW], compact('language','defaultLang'));
+        return view(ModuleViewPath::ADD[VIEW], compact('language', 'defaultLang'));
     }
 
     public function getUpdateView(string|int $id): View|RedirectResponse
     {
-        if(env('APP_MODE')=='demo' && in_array($id, [1,2,3,4,5]))
-        {
+        if (env('APP_MODE') == 'demo' && in_array($id, [1, 2, 3, 4, 5])) {
             Toastr::warning(translate('messages.you_can_not_edit_this_module_please_add_a_new_module_to_edit'));
             return back();
         }
@@ -75,18 +73,17 @@ class ModuleController extends BaseController
         $module = $this->moduleRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
-        return view(ModuleViewPath::UPDATE[VIEW], compact('module','language','defaultLang'));
+        return view(ModuleViewPath::UPDATE[VIEW], compact('module', 'language', 'defaultLang'));
     }
 
     public function update(ModuleUpdateRequest $request, $id): RedirectResponse
     {
-        if(env('APP_MODE')=='demo' && in_array($id, [1,2,3,4,5]))
-        {
+        if (env('APP_MODE') == 'demo' && in_array($id, [1, 2, 3, 4, 5])) {
             Toastr::warning(translate('messages.you_can_not_edit_this_module_please_add_a_new_module_to_edit'));
             return back();
         }
         $module = $this->moduleRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
-        $module = $this->moduleRepo->update(id: $id ,data: $this->moduleService->getUpdateData(request: $request,module: $module));
+        $module = $this->moduleRepo->update(id: $id, data: $this->moduleService->getUpdateData(request: $request, module: $module));
         $this->translationRepo->updateByModel(request: $request, model: $module, modelPath: 'App\Models\Module', attribute: 'module_name');
         $this->translationRepo->updateByModel(request: $request, model: $module, modelPath: 'App\Models\Module', attribute: 'description');
 
@@ -96,7 +93,7 @@ class ModuleController extends BaseController
 
     public function updateStatus(Request $request): RedirectResponse
     {
-        $this->moduleRepo->update(id: $request['id'] ,data: ['status'=>$request['status']]);
+        $this->moduleRepo->update(id: $request['id'], data: ['status' => $request['status']]);
         Toastr::success(translate('messages.module_status_updated'));
         return back();
     }
@@ -111,12 +108,12 @@ class ModuleController extends BaseController
     public function show($id): JsonResponse
     {
         $module = $this->moduleRepo->getFirstWhere(params: ['id' => $id]);
-        return response()->json(['data'=>config('module.'.$module['module_type']),'type'=>$module['module_type']]);
+        return response()->json(['data' => config('module.' . $module['module_type']), 'type' => $module['module_type']]);
     }
 
     public function getType(Request $request): JsonResponse
     {
-        return response()->json(['data'=>config('module.'.$request['module_type'])]);
+        return response()->json(['data' => config('module.' . $request['module_type'])]);
     }
 
     public function search(Request $request): JsonResponse
@@ -127,8 +124,8 @@ class ModuleController extends BaseController
             dataLimit: 50
         );
         return response()->json([
-            'view'=>view(ModuleViewPath::SEARCH[VIEW],compact('modules'))->render(),
-            'count'=>$modules->count()
+            'view' => view(ModuleViewPath::SEARCH[VIEW], compact('modules'))->render(),
+            'count' => $modules->count()
         ]);
     }
 
@@ -136,14 +133,22 @@ class ModuleController extends BaseController
     {
         $collection = $this->moduleRepo->getExportList($request);
 
-        $data=[
-            'data' =>$collection,
-            'search' =>$request['search'] ?? null,
+        $data = [
+            'data' => $collection,
+            'search' => $request['search'] ?? null,
         ];
-        if($request['type'] == 'csv'){
+        if ($request['type'] == 'csv') {
             return Excel::download(new ModuleExport($data), Module::EXPORT_CSV);
         }
         return Excel::download(new ModuleExport($data), Module::EXPORT_XLSX);
+    }
+
+    public function updateOrder(Request $request): JsonResponse
+    {
+        $id = $request->id;
+        $order = $request->order;
+        $this->moduleRepo->update(id: $id, data: ['order' => $order]);
+        return response()->json(['status' => 'success']);
     }
 
 }

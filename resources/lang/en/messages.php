@@ -9379,4 +9379,8 @@ Smartly or Earn. ',
   'base_price' => 'Base price',
   'activate_if_you_want_to_buy_and_deliver' => 'Activate if you want to buy and deliver',
   'buy_and_deliver' => 'Buy and deliver',
+  'update_failed' => 'Update failed',
+  'Purchases' => 'Purchases',
+  'Purchases_Verification' => 'Purchases Verification',
+  'verification' => 'Verification',
 );
