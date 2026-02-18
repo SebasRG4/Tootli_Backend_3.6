@@ -27,22 +27,16 @@ class DynamicSectionController extends Controller
             ->byModule($moduleId)
             ->with([
                 'items' => function ($query) {
-                    $query->where('status', 1)
-                        ->select([
-                            'items.id',
-                            'items.name',
-                            'items.image',
-                            'items.price',
-                            'items.discount',
-                            'items.discount_type',
-                            'items.avg_rating',
-                            'items.rating_count',
-                            'items.store_id'
-                        ]);
+                    $query->where('status', 1)->with(['store', 'store.locations']);
                 }
             ])
             ->orderBy('priority')
             ->get();
+
+        $sections->map(function ($section) {
+            $section->items = \App\CentralLogics\Helpers::product_data_formatting($section->items, true);
+            return $section;
+        });
 
         return response()->json($sections);
     }
@@ -54,7 +48,7 @@ class DynamicSectionController extends Controller
     {
         $section = DynamicSection::with([
             'items' => function ($query) {
-                $query->where('status', 1);
+                $query->where('status', 1)->with(['store', 'store.locations']);
             }
         ])->find($id);
 
@@ -63,6 +57,8 @@ class DynamicSectionController extends Controller
                 'message' => 'Section not found'
             ], 404);
         }
+
+        $section->items = \App\CentralLogics\Helpers::product_data_formatting($section->items, true);
 
         return response()->json($section);
     }

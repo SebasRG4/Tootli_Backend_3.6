@@ -219,7 +219,7 @@ class Order extends Model
 
     public function scopeOngoing($query)
     {
-        return $query->whereIn('order_status', ['accepted', 'confirmed', 'processing', 'handover', 'picked_up']);
+        return $query->whereIn('order_status', ['accepted', 'confirmed', 'processing', 'handover', 'picked_up', 'partial_delivered']);
     }
 
     public function scopeItemOnTheWay($query)
@@ -245,6 +245,11 @@ class Order extends Model
     public function scopeDelivered($query)
     {
         return $query->where('order_status', 'delivered');
+    }
+
+    public function scopePartialDelivered($query)
+    {
+        return $query->where('order_status', 'partial_delivered');
     }
 
     public function scopeNotRefunded($query)

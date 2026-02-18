@@ -20,6 +20,7 @@ use App\Models\Translation;
 use App\Models\Tag;
 use Illuminate\Support\Str;
 use App\Models\Conversation;
+use App\Models\StoreLocation;
 use Illuminate\Http\Request;
 use App\Models\StoreSchedule;
 use App\CentralLogics\Helpers;
@@ -146,6 +147,9 @@ class VendorController extends Controller
         $store->tin_certificate_image = Helpers::upload('store/', $extension, $request->file('tin_certificate_image'));
         $store->delivery_time = $request->minimum_delivery_time . '-' . $request->maximum_delivery_time . ' ' . $request->delivery_time_type;
         $store->module_id = Config::get('module.current_module_id');
+        $store->allow_minutes = $request->has('allow_minutes');
+        $store->allow_standard = $request->has('allow_standard');
+        $store->allow_next_day = $request->has('allow_next_day');
         try {
             $store->save();
             // $store->module->increment('stores_count');
@@ -165,6 +169,19 @@ class VendorController extends Controller
                 $store->tags()->sync($tagIds);
             }
 
+            if ($request->has('locations')) {
+                foreach ($request->locations as $locData) {
+                    $store->locations()->create([
+                        'address' => $locData['address'],
+                        'latitude' => $locData['latitude'],
+                        'longitude' => $locData['longitude'],
+                        'allow_minutes' => isset($locData['allow_minutes']),
+                        'allow_standard' => isset($locData['allow_standard']),
+                        'allow_next_day' => isset($locData['allow_next_day']),
+                    ]);
+                }
+            }
+
         } catch (\Exception $ex) {
             info($ex->getMessage());
             $validator->getMessageBag()->add('store_add', $ex->getMessage());
@@ -179,12 +196,22 @@ class VendorController extends Controller
             Toastr::warning(translate('messages.you_can_not_edit_this_store_please_add_a_new_store_to_edit'));
             return back();
         }
-        $store = Store::withoutGlobalScope('translate')->findOrFail($id);
+        $store = Store::withoutGlobalScope('translate')->with('locations')->findOrFail($id);
         return view('admin-views.vendor.edit', compact('store'));
     }
 
     public function update(Request $request, Store $store)
     {
+        if (!$request->filled('phone')) {
+            if ($request->has('contact')) {
+                $request->merge(['phone' => $request->contact]);
+            } elseif ($request->has('contact_number')) {
+                $request->merge(['phone' => $request->contact_number]);
+            } elseif ($request->has('mobile')) {
+                $request->merge(['phone' => $request->mobile]);
+            }
+        }
+
         $validator = Validator::make($request->all(), [
             'f_name' => 'required|max:100',
             'l_name' => 'nullable|max:100',
@@ -259,6 +286,9 @@ class VendorController extends Controller
         $store->address = $request->address[array_search('default', $request->lang)];
         $store->latitude = $request->latitude;
         $store->longitude = $request->longitude;
+        $store->allow_minutes = $request->has('allow_minutes');
+        $store->allow_standard = $request->has('allow_standard');
+        $store->allow_next_day = $request->has('allow_next_day');
         $store->zone_id = $request->zone_id;
         $store->tin = $request->tin;
         $store->tin_expire_date = $request->tin_expire_date;
@@ -304,6 +334,39 @@ class VendorController extends Controller
             }
             $store->tags()->sync($tagIds);
         }
+
+        // Handle Store Locations (Multi-location)
+        $locationIds = [];
+        if ($request->has('locations')) {
+            foreach ($request->locations as $locData) {
+                if (isset($locData['id'])) {
+                    $location = StoreLocation::find($locData['id']);
+                    if ($location) {
+                        $location->update([
+                            'address' => $locData['address'],
+                            'latitude' => $locData['latitude'],
+                            'longitude' => $locData['longitude'],
+                            'allow_minutes' => isset($locData['allow_minutes']),
+                            'allow_standard' => isset($locData['allow_standard']),
+                            'allow_next_day' => isset($locData['allow_next_day']),
+                        ]);
+                        $locationIds[] = $location->id;
+                    }
+                } else {
+                    $location = $store->locations()->create([
+                        'address' => $locData['address'],
+                        'latitude' => $locData['latitude'],
+                        'longitude' => $locData['longitude'],
+                        'allow_minutes' => isset($locData['allow_minutes']),
+                        'allow_standard' => isset($locData['allow_standard']),
+                        'allow_next_day' => isset($locData['allow_next_day']),
+                    ]);
+                    $locationIds[] = $location->id;
+                }
+            }
+        }
+        // Delete locations that were removed from the UI
+        $store->locations()->whereNotIn('id', $locationIds)->delete();
 
         if ($vendor->userinfo) {
             $userinfo = $vendor->userinfo;
@@ -2060,5 +2123,75 @@ class VendorController extends Controller
         $data = ['review' => round($review, 1), 'rating' => round($rating, 1)];
 
         return response()->json($data);
+    }
+
+    public function location_store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'store_id' => 'required|exists:stores,id',
+            'address' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $location = StoreLocation::create([
+            'store_id' => $request->store_id,
+            'address' => $request->address,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'allow_minutes' => $request->has('allow_minutes'),
+            'allow_standard' => $request->has('allow_standard'),
+            'allow_next_day' => $request->has('allow_next_day'),
+            'is_active' => 1,
+        ]);
+
+        return response()->json([
+            'message' => translate('messages.location_added_successfully'),
+            'id' => $location->id
+        ], 200);
+    }
+
+    public function location_update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'address' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $location = StoreLocation::find($id);
+        if (!$location) {
+            return response()->json(['message' => translate('messages.location_not_found')], 404);
+        }
+
+        $location->update([
+            'address' => $request->address,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'allow_minutes' => $request->has('allow_minutes'),
+            'allow_standard' => $request->has('allow_standard'),
+            'allow_next_day' => $request->has('allow_next_day'),
+        ]);
+
+        return response()->json(['message' => translate('messages.location_updated_successfully')], 200);
+    }
+
+    public function location_delete($id)
+    {
+        $location = StoreLocation::find($id);
+        if (!$location) {
+            return response()->json(['message' => translate('messages.location_not_found')], 404);
+        }
+
+        $location->delete();
+        return response()->json(['message' => translate('messages.location_deleted_successfully')], 200);
     }
 }

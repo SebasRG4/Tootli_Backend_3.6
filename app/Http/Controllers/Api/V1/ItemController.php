@@ -470,6 +470,50 @@ class ItemController extends Controller
         return response()->json($items, 200);
     }
 
+    public function get_delivery_wise_products(Request $request)
+    {
+        \Log::info('get_delivery_wise_products called', [
+            'delivery_time_type' => $request->query('delivery_time_type'),
+            'zoneId' => $request->header('zoneId'),
+            'moduleId' => $request->header('moduleId'),
+        ]);
+
+        if (!$request->hasHeader('zoneId')) {
+            $errors = [];
+            array_push($errors, ['code' => 'zoneId', 'message' => translate('messages.zone_id_required')]);
+            return response()->json([
+                'errors' => $errors
+            ], 403);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'delivery_time_type' => 'required|in:minutes,next_day',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $type = $request->query('type', 'all');
+        $zone_id = $request->header('zoneId');
+        $longitude = $request->header('longitude');
+        $latitude = $request->header('latitude');
+        $longitude = $longitude ? (float) str_replace('"', '', (string) $longitude) : null;
+        $latitude = $latitude ? (float) str_replace('"', '', (string) $latitude) : null;
+
+        $items = ProductLogic::get_delivery_wise_products(
+            $zone_id,
+            $type,
+            $request->query('delivery_time_type'),
+            $request['limit'] ?? 25,
+            $request['offset'] ?? 1,
+            $longitude,
+            $latitude
+        );
+        $items['products'] = Helpers::productListDataFormatting($items['products']);
+        return response()->json($items, 200);
+    }
+
     public function get_cart_suggest_products(Request $request)
     {
         $validator = Validator::make($request->all(), [

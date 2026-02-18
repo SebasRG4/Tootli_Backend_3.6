@@ -310,6 +310,13 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 //Store shcedule
                 Route::post('add-schedule', 'VendorController@add_schedule')->name('add-schedule');
                 Route::get('remove-schedule/{store_schedule}', 'VendorController@remove_schedule')->name('remove-schedule');
+
+                // AJAX Store Locations
+                Route::group(['prefix' => 'location', 'as' => 'location.'], function () {
+                    Route::post('store', 'VendorController@location_store')->name('store');
+                    Route::post('update/{id}', 'VendorController@location_update')->name('update');
+                    Route::delete('delete/{id}', 'VendorController@location_delete')->name('delete');
+                });
             });
 
             Route::group(['middleware' => ['module:withdraw_list']], function () {
@@ -364,6 +371,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('quick-view', 'OrderController@quick_view')->name('quick-view');
             Route::get('quick-view-cart-item', 'OrderController@quick_view_cart_item')->name('quick-view-cart-item');
             Route::get('export-orders/{file_type}/{status}/{type}', 'OrderController@export_orders')->name('export');
+            Route::post('partial-delivery/{id}', 'OrderController@partial_delivery')->name('partial-delivery');
             Route::post('switch-to-cod/{order}', 'OrderController@switch_to_cod')->name('switch_to_cod');
 
             Route::get('offline/payment/list/{status}', 'OrderController@offline_verification_list')->name('offline_verification_list');
@@ -923,6 +931,16 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get('status', 'DeliveryManDisbursementController@status')->name('status');
                 Route::get('change-status/{id}/{status}', 'DeliveryManDisbursementController@statusById')->name('change-status');
                 Route::get('export/{id}/{type?}', 'DeliveryManDisbursementController@export')->name('export');
+            });
+
+            // Cache Management Routes
+            Route::group(['prefix' => 'system/cache', 'as' => 'cache.'], function () {
+                Route::get('stats', 'System\\CacheController@stats')->name('stats');
+                Route::delete('clear/all', 'System\\CacheController@clearAll')->name('clear.all');
+                Route::delete('clear/hexagonal', 'System\\CacheController@clearHexagonal')->name('clear.hexagonal');
+                Route::delete('clear/modules', 'System\\CacheController@clearModules')->name('clear.modules');
+                Route::delete('clear/stores', 'System\\CacheController@clearStores')->name('clear.stores');
+                Route::delete('clear/zone/{zoneId}', 'System\\CacheController@clearZone')->name('clear.zone');
             });
         });
     });

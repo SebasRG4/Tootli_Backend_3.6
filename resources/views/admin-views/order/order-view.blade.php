@@ -205,12 +205,36 @@
                                         <span class="badge badge-soft-danger ml-2 ml-sm-3 text-capitalize">
                                             {{ translate('messages.payment_failed') }}
                                         </span>
+                                    @elseif($order['order_status'] == 'partial_delivered')
+                                        <span class="badge badge-soft-primary ml-2 ml-sm-3 text-capitalize">
+                                            {{ translate('messages.partial_delivered') }}
+                                        </span>
                                     @else
                                         <span class="badge badge-soft-danger ml-2 ml-sm-3 text-capitalize">
                                             {{ translate(str_replace('_', ' ', $order['order_status'])) }}
                                         </span>
                                     @endif
                                 </h6>
+                                @php
+                                    $has_pending_minutes_items = false;
+                                    foreach($order->details as $detail) {
+                                        $item_details = json_decode($detail->item_details, true);
+                                        if(isset($item_details['delivery_time_type']) && $item_details['delivery_time_type'] == 'minutes' && $detail->delivery_status == 'pending') {
+                                            $has_pending_minutes_items = true;
+                                            break;
+                                        }
+                                    }
+                                @endphp
+                                @if($has_pending_minutes_items && in_array($order->order_status, ['processing', 'picked_up', 'handover', 'confirmed']))
+                                    <div class="mt-2 text-right">
+                                        <form action="{{ route('admin.order.partial-delivery', [$order['id']]) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn--primary">
+                                                {{ translate('messages.deliver_minutes_items') }}
+                                            </button>
+                                        </form>
+                                    </div>
+                                @endif
                                 <h6 class="text-capitalize">
                                     <span>{{ translate('messages.payment_method') }}</span> <span>:</span>
                                     <span>{{ translate(str_replace('_', ' ', $order['payment_method'])) }}</span>
@@ -571,6 +595,19 @@
                                                                     @endif
                                                                 @endif
 
+                                                                @if(isset($detail->item['delivery_time_type']))
+                                                                    <div class="mt-1 d-flex gap-1 align-items-center">
+                                                                        <span class="badge badge-soft-info text-capitalize">
+                                                                            {{ translate('messages.delivery_type') }}: {{ translate('messages.'.$detail->item['delivery_time_type']) }}
+                                                                        </span>
+                                                                        @if(isset($detail->item['store_delivery_time']))
+                                                                            <span class="text-muted fs-12">
+                                                                                ({{ $detail->item['store_delivery_time'] }} {{ $detail->item['delivery_time_type'] == 'minutes' ? translate('messages.min') : '' }})
+                                                                            </span>
+                                                                        @endif
+                                                                    </div>
+                                                                @endif
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -597,10 +634,16 @@
                                                     </td>
                                                 @endif
                                                 <td class="text-right">
-                                                    <div>
+                                                    <div class="text-right">
                                                         @php($amount = $detail['price'] * $detail['quantity'])
-                                                        <h5>{{ \App\CentralLogics\Helpers::format_currency($amount) }}
-                                                        </h5>
+                                                        <h5>{{ \App\CentralLogics\Helpers::format_currency($amount) }}</h5>
+                                                    </div>
+                                                    <div class="text-right mt-1">
+                                                        @if($detail->delivery_status == 'delivered')
+                                                            <span class="badge badge-soft-success">{{ translate('messages.delivered') }}</span>
+                                                        @else
+                                                            <span class="badge badge-soft-warning">{{ translate('messages.pending') }}</span>
+                                                        @endif
                                                     </div>
                                                 </td>
                                             </tr>

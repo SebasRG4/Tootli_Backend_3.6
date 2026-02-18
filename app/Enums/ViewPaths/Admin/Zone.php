@@ -93,4 +93,14 @@ enum Zone
         URI => 'get-all-zone-coordinates',
         VIEW => ''
     ];
+
+    const GRID_CONFIG = [
+        URI => 'grid-config',
+        VIEW => 'admin-views.zone.grid-config'
+    ];
+
+    const GRID_CONFIG_UPDATE = [
+        URI => 'grid-config-update',
+        VIEW => ''
+    ];
 }

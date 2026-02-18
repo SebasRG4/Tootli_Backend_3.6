@@ -18,6 +18,12 @@ class StoreObserver
         if ($store->wasChanged(['name', 'address', 'footer_text', 'meta_description', 'cuisine_names'])) {
             $this->updateEmbedding($store);
         }
+
+        // Invalidate caches when store data changes
+        \App\Services\CacheService::invalidateStore($store->id, $store->zone_id);
+        if ($store->wasChanged(['status', 'active', 'zone_id', 'module_id'])) {
+            \App\Services\CacheService::invalidateActiveStores($store->zone_id);
+        }
     }
 
     protected function updateEmbedding(Store $store)
@@ -67,5 +73,7 @@ class StoreObserver
     public function deleted(Store $store)
     {
         DB::table('store_embeddings')->where('store_id', $store->id)->delete();
+        \App\Services\CacheService::invalidateStore($store->id, $store->zone_id);
+        \App\Services\CacheService::invalidateActiveStores($store->zone_id);
     }
 }

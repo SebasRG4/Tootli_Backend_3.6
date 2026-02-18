@@ -303,6 +303,28 @@
                                                        value="{{ $pivot?->maximum_cod_order_amount }}">
                                             </div>
                                         </div>
+                                        <div class="col-md-6 col-lg-4 ">
+                                            <div class="form-group mb-0">
+                                                <label
+                                                    class="input-label text-capitalize fs-14 d-flex alig-items-center line--limit-1">
+                                                    {{ translate('messages.max_delivery_radius') }} (km)
+                                                </label>
+                                                <input type="number" step=".01" min="0" class="form-control"
+                                                       name="module_data[{{ $module->id }}][max_delivery_radius]"
+                                                       placeholder="{{ translate('messages.Ex:10') }}"
+                                                       value="{{ $pivot?->max_delivery_radius }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-4">
+                                            <div class="form-group mb-0">
+                                                <label class="input-label text-capitalize fs-14 d-flex alig-items-center line--limit-1">
+                                                    {{ translate('Delivery Grid') }}
+                                                </label>
+                                                <a href="{{ route('admin.business-settings.zone.grid-config', [$zone->id, $module->id]) }}" class="btn btn-outline-primary btn-sm btn-block h-cus-456px d-flex align-items-center justify-content-center">
+                                                    <i class="tio-map mr-1"></i> {{ translate('Configure_Grid') }}
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

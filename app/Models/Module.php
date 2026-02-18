@@ -63,7 +63,26 @@ class Module extends Model
         'order' => 'integer',
     ];
 
-    protected $appends = ['icon_full_url', 'thumbnail_full_url'];
+    protected $appends = ['icon_full_url', 'thumbnail_full_url', 'has_coverage', 'detected_hexagon', 'is_minutes_delivery'];
+
+    public $has_coverage_status = true;
+    public $current_hexagon_id = null;
+    public $fast_delivery_status = false;
+
+    public function getHasCoverageAttribute()
+    {
+        return $this->has_coverage_status;
+    }
+
+    public function getDetectedHexagonAttribute()
+    {
+        return $this->current_hexagon_id;
+    }
+
+    public function getIsMinutesDeliveryAttribute()
+    {
+        return $this->fast_delivery_status;
+    }
 
     /**
      * @return HasMany
@@ -165,10 +184,47 @@ class Module extends Model
         return $query->where('status', '=', 1);
     }
 
+    /**
+     * Get cached module configuration
+     * 
+     * @param int $moduleId
+     * @return Module|null
+     */
+    public static function getCached($moduleId)
+    {
+        return \App\Services\CacheService::getModuleConfig($moduleId, function () use ($moduleId) {
+            return self::with(['zones', 'translations', 'storage'])->find($moduleId);
+        });
+    }
+
+    /**
+     * Get all active modules (cached)
+     * 
+     * @return \Illuminate\Support\Collection
+     */
+    public static function getActiveCached()
+    {
+        return \App\Services\CacheService::getActiveModules(function () {
+            return self::active()->with(['zones', 'translations', 'storage'])->get();
+        });
+    }
+
+    /**
+     * Get all modules (cached)
+     * 
+     * @return \Illuminate\Support\Collection
+     */
+    public static function getAllCached()
+    {
+        return \App\Services\CacheService::getAllModules(function () {
+            return self::with(['zones', 'translations', 'storage'])->get();
+        });
+    }
+
     public function getIconFullUrlAttribute()
     {
         $value = $this->icon;
-        if (count($this->storage) > 0) {
+        if ($this->storage->count() > 0) {
             foreach ($this->storage as $storage) {
                 if ($storage['key'] == 'icon') {
                     return Helpers::get_full_url('module', $value, $storage['value']);
@@ -181,7 +237,7 @@ class Module extends Model
     public function getThumbnailFullUrlAttribute()
     {
         $value = $this->thumbnail;
-        if (count($this->storage) > 0) {
+        if ($this->storage->count() > 0) {
             foreach ($this->storage as $storage) {
                 if ($storage['key'] == 'thumbnail') {
                     return Helpers::get_full_url('module', $value, $storage['value']);

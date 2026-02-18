@@ -36,9 +36,10 @@ class ConfigController extends Controller
 
     public function __construct()
     {
-        $map_api_key_server = BusinessSetting::where(['key' => 'map_api_key_server'])->first();
-        $map_api_key_server = $map_api_key_server ? $map_api_key_server->value : null;
-        $this->map_api_key = $map_api_key_server;
+        $this->map_api_key = Cache::rememberForever('map_api_key_server', function () {
+            $setting = BusinessSetting::where(['key' => 'map_api_key_server'])->first();
+            return $setting ? $setting->value : null;
+        });
     }
 
     public function configuration()
@@ -360,7 +361,9 @@ class ConfigController extends Controller
             'module' => $module,
             'parcel_per_km_shipping_charge' => (float) $settings['parcel_per_km_shipping_charge'],
             'parcel_minimum_shipping_charge' => (float) $settings['parcel_minimum_shipping_charge'],
-            'social_media' => SocialMedia::active()->get()->toArray(),
+            'social_media' => Cache::remember('social_media_active', now()->addMinutes(30), function () {
+                return SocialMedia::active()->get()->toArray();
+            }),
             'footer_text' => isset($settings['footer_text']) ? $settings['footer_text'] : '',
             'cookies_text' => isset($settings['cookies_text']) ? $settings['cookies_text'] : '',
             'fav_icon' => $settings['icon'],

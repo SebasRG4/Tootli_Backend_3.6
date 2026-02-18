@@ -246,6 +246,8 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get(Zone::DIGITAL_PAYMENT[URI] . '/{id}/{digital_payment}', [ZoneController::class, 'updateDigitalPayment'])->name('digital-payment');
                 Route::get(Zone::CASH_ON_DELIVERY[URI] . '/{id}/{cash_on_delivery}', [ZoneController::class, 'updateCashOnDelivery'])->name('cash-on-delivery');
                 Route::get(Zone::OFFLINE_PAYMENT[URI] . '/{id}/{offline_payment}', [ZoneController::class, 'updateOfflinePayment'])->name('offline-payment');
+                Route::get(Zone::GRID_CONFIG[URI] . '/{zone_id}/{module_id}', [ZoneController::class, 'getGridConfigView'])->name('grid-config');
+                Route::post(Zone::GRID_CONFIG_UPDATE[URI], [ZoneController::class, 'updateGridConfig'])->name('grid-config-update');
 
                 Route::group(['prefix' => 'surge-price', 'as' => 'surge-price.', 'middleware' => ['module:zone']], function () {
                     Route::get('/{zone_id}', [SurgePriceController::class, 'index'])->name('list');

@@ -26,14 +26,17 @@ class RestaurantController extends Controller
 
     public function update(Request $request)
     {
+        if ($request->has('phone') && !$request->has('contact')) {
+            $request->merge(['contact' => $request->phone]);
+        }
         $request->validate([
             'name' => 'required',
             'name.0' => 'required',
             'address' => 'nullable|max:1000',
-            'contact' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:20|unique:stores,phone,'.Helpers::get_store_id(),
+            'contact' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:20|unique:stores,phone,' . Helpers::get_store_id(),
         ], [
             'f_name.required' => translate('messages.first_name_is_required'),
-            'name.0.required'=>translate('default_name_is_required'),
+            'name.0.required' => translate('default_name_is_required'),
         ]);
         $shop = Store::findOrFail(Helpers::get_store_id());
         $shop->name = $request->name[array_search('default', $request->lang)];
@@ -47,9 +50,8 @@ class RestaurantController extends Controller
         $shop->save();
 
         $default_lang = str_replace('_', '-', app()->getLocale());
-        foreach($request->lang as $index=>$key)
-        {
-            if($default_lang == $key && !($request->name[$index])){
+        foreach ($request->lang as $index => $key) {
+            if ($default_lang == $key && !($request->name[$index])) {
                 if ($key != 'default') {
                     Translation::updateOrInsert(
                         [
@@ -61,19 +63,21 @@ class RestaurantController extends Controller
                         ['value' => $shop->name]
                     );
                 }
-            }else{
+            } else {
 
                 if ($request->name[$index] && $key != 'default') {
                     Translation::updateOrInsert(
-                        ['translationable_type'  => 'App\Models\Store',
-                            'translationable_id'    => $shop->id,
-                            'locale'                => $key,
-                            'key'                   => 'name'],
-                        ['value'                 => $request->name[$index]]
+                        [
+                            'translationable_type' => 'App\Models\Store',
+                            'translationable_id' => $shop->id,
+                            'locale' => $key,
+                            'key' => 'name'
+                        ],
+                        ['value' => $request->name[$index]]
                     );
                 }
             }
-            if($default_lang == $key && !($request->address[$index])){
+            if ($default_lang == $key && !($request->address[$index])) {
                 if ($key != 'default') {
                     Translation::updateOrInsert(
                         [
@@ -85,21 +89,23 @@ class RestaurantController extends Controller
                         ['value' => $shop->address]
                     );
                 }
-            }else{
+            } else {
 
                 if ($request->address[$index] && $key != 'default') {
                     Translation::updateOrInsert(
-                        ['translationable_type'  => 'App\Models\Store',
-                            'translationable_id'    => $shop->id,
-                            'locale'                => $key,
-                            'key'                   => 'address'],
-                        ['value'                 => $request->address[$index]]
+                        [
+                            'translationable_type' => 'App\Models\Store',
+                            'translationable_id' => $shop->id,
+                            'locale' => $key,
+                            'key' => 'address'
+                        ],
+                        ['value' => $request->address[$index]]
                     );
                 }
             }
         }
 
-        if($shop->vendor->userinfo) {
+        if ($shop->vendor->userinfo) {
             $userinfo = $shop->vendor->userinfo;
             $userinfo->f_name = $shop->name;
             $userinfo->image = $shop->logo;

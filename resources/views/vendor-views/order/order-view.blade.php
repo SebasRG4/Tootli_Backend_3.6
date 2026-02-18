@@ -386,6 +386,20 @@
                                                                         @endforeach
                                                                     @endif
                                                                 @endif
+
+                                                                @if(isset($detail->item['delivery_time_type']))
+                                                                    <div class="mt-1 d-flex gap-1 align-items-center">
+                                                                        <span class="badge badge-soft-info text-capitalize">
+                                                                            {{ translate('messages.delivery_type') }}: {{ translate('messages.'.$detail->item['delivery_time_type']) }}
+                                                                        </span>
+                                                                        @if(isset($detail->item['store_delivery_time']))
+                                                                            <span class="text-muted fs-12">
+                                                                                ({{ $detail->item['store_delivery_time'] }} {{ $detail->item['delivery_time_type'] == 'minutes' ? translate('messages.min') : '' }})
+                                                                            </span>
+                                                                        @endif
+                                                                    </div>
+                                                                @endif
+
                                                             </div>
                                                         </div>
                                                     </div>

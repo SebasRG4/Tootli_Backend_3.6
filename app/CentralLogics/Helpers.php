@@ -129,6 +129,67 @@ class Helpers
         return $result;
     }
 
+    public static function productListDataFormatting($data)
+    {
+        $latitude = request()->header('latitude');
+        $longitude = request()->header('longitude');
+        $latitude = $latitude ? (float) str_replace('"', '', (string) $latitude) : null;
+        $longitude = $longitude ? (float) str_replace('"', '', (string) $longitude) : null;
+
+        return collect($data)->map(function ($item) use ($latitude, $longitude) {
+            $discount = self::product_discount_calculate($item, $item->price, $item->store, true);
+            $module_type = $item->store?->module_type;
+            $has_variant = $module_type == 'food' ? $item->food_variations : $item->variations;
+            $has_variant = is_string($has_variant) ? json_decode($has_variant, true) : $has_variant;
+            $has_variant = is_array($has_variant) ? count($has_variant) : 0;
+
+            $delivery_time_type = $item->delivery_time_type;
+            if ($delivery_time_type == 'minutes' && $latitude && $longitude && $item->store) {
+                $travel_time = self::get_travel_time($item->store->latitude, $item->store->longitude, $latitude, $longitude);
+                if ($travel_time === null || $travel_time > 23) {
+                    $delivery_time_type = 'standard';
+                }
+            }
+
+            $delivery_info = self::calculate_delivery_info($item->store, $item->delivery_time_type, $latitude, $longitude);
+            $delivery_time_type = $delivery_info['delivery_time_type'];
+            $travel_time = $delivery_info['travel_time'];
+
+            return [
+                'id' => (int) $item->id,
+                'name' => $item->title ?? $item->name,
+                'image_full_url' => $item->image_full_url,
+                'price' => $item->price,
+                'veg' => $item->veg,
+                'unit_type' => $item->unit_type,
+                'recommended' => $item->recommended,
+                'organic' => $item->organic,
+                'is_halal' => (int) $item->is_halal ?? 0,
+                'stock' => (int) $item->stock ?? 0,
+                'maximum_cart_quantity' => (int) $item->maximum_cart_quantity ?? 0,
+                'discount' => $discount['discount_percentage'],
+                'discount_type' => $discount['original_discount_type'],
+                'rating_count' => (int) ($item->rating ? array_sum(json_decode($item->rating, true)) : 0),
+                'avg_rating' => (float) ($item->avg_rating ?? 0),
+
+                'has_variant' => (int) $has_variant,
+                'available_time_starts' => ($item->start_time instanceof \Carbon\Carbon) ? $item->start_time->format('H:i') : ($item->available_time_starts ?? null),
+                'available_time_ends' => ($item->end_time instanceof \Carbon\Carbon) ? $item->end_time->format('H:i') : ($item->available_time_ends ?? null),
+
+                'store_name' => $item->store?->name,
+                'store_id' => $item->store?->id,
+                'store_delivery_time' => $delivery_info['store_delivery_time'],
+                'module_type' => $module_type,
+                'halal_tag_status' => (int) ($item->store->storeConfig->halal_tag_status ?? 0),
+                'free_delivery' => $item->store?->free_delivery,
+                'delivery_time_type' => $delivery_time_type,
+                'brand_id' => (int) $item->ecommerce_item_details?->brand_id ?? 0,
+                'brand_name' => $item->ecommerce_item_details?->brand?->name,
+                'brand_image_full_url' => $item->ecommerce_item_details?->brand?->image_full_url,
+                'is_new' => $item->created_at >= now()->subDays(14) ? 1 : 0,
+            ];
+        })->toArray();
+    }
     public static function address_data_formatting($data)
     {
         foreach ($data as $key => $item) {
@@ -145,6 +206,11 @@ class Helpers
         $trans = false,
         $local = 'en'
     ) {
+        $latitude = request()->header('latitude');
+        $longitude = request()->header('longitude');
+        $latitude = $latitude ? (float) str_replace('"', '', (string) $latitude) : null;
+        $longitude = $longitude ? (float) str_replace('"', '', (string) $longitude) : null;
+
         $variations = [];
         $categories = [];
         $category_ids = gettype($data['category_ids']) == 'array' ? $data['category_ids'] : json_decode($data['category_ids'], true);
@@ -236,6 +302,11 @@ class Helpers
 
         $data['store_discount'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? 0 : (self::get_store_discount($data->store) ? $data->store?->discount->discount : 0);
         $data['schedule_order'] = $data->store->schedule_order;
+
+        $delivery_info = self::calculate_delivery_info($data->store, $data->delivery_time_type, $latitude, $longitude);
+        $data['delivery_time_type'] = $delivery_info['delivery_time_type'];
+        $data['store_delivery_time'] = $delivery_info['store_delivery_time'];
+
         $data['rating_count'] = (int) ($data->rating ? array_sum(json_decode($data->rating, true)) : 0);
         $data['avg_rating'] = (float) ($data->avg_rating ? $data->avg_rating : 0);
         $data['min_delivery_time'] = (int) explode('-', $data->store->delivery_time)[0] ?? 0;
@@ -259,51 +330,183 @@ class Helpers
         unset($data['rating']);
 
 
-        return $data;
     }
 
-    public static function productListDataFormatting($data)
+    public static function calculate_delivery_info($store, $preferred_type, $latitude, $longitude)
     {
-        return collect($data)->map(function ($item) {
-            $discount = self::product_discount_calculate($item, $item->price, $item->store, true);
-            $module_type = $item->store?->module_type;
-            $has_variant = $module_type == 'food' ? $item->food_variations : $item->variations;
-            $has_variant = is_string($has_variant) ? json_decode($has_variant, true) : $has_variant;
-            $has_variant = is_array($has_variant) ? count($has_variant) : 0;
+        $travel_time = null;
+        $delivery_time_type = $preferred_type;
+        $max_radius = self::get_max_radius($store?->zone_id, $store?->module_id);
 
+        // 1. Check Hexagonal Grid (H3-like) with caching
+        if ($latitude && $longitude && $store) {
+            $hexagon_id = H3Helper::latLngToHex($latitude, $longitude);
+
+            // Cache the grid rule lookup
+            $cacheKey = "hex:grid:{$store->zone_id}:{$store->module_id}:{$hexagon_id}";
+            $grid_rule = \App\Services\CacheService::getHexZone($cacheKey, function () use ($store, $hexagon_id) {
+                return \DB::table('delivery_grids')
+                    ->where('zone_id', $store->zone_id)
+                    ->where('module_id', $store->module_id)
+                    ->where('hexagon_id', $hexagon_id)
+                    ->where('is_active', true)
+                    ->first();
+            });
+
+            // Cache whether grids exist for this zone/module combination
+            $gridExistsCacheKey = "hex:grid_exists:{$store->zone_id}:{$store->module_id}";
+            $grid_exists = \App\Services\CacheService::getHexZone($gridExistsCacheKey, function () use ($store) {
+                return \DB::table('delivery_grids')
+                    ->where('zone_id', $store->zone_id)
+                    ->where('module_id', $store->module_id)
+                    ->exists();
+            });
+
+            if ($grid_exists) {
+                if (!$grid_rule) {
+                    // Outside the "painted" area but inside the zone
+                    $delivery_time_type = 'next_day';
+                } else {
+                    if ($grid_rule->delivery_type == 'no_coverage') {
+                        return [
+                            'delivery_time_type' => 'no_coverage',
+                            'travel_time' => null,
+                            'store_delivery_time' => translate('messages.no_coverage')
+                        ];
+                    }
+                    if ($grid_rule->delivery_type == 'next_day') {
+                        $delivery_time_type = 'next_day';
+                    } elseif ($grid_rule->delivery_type == 'standard' && $delivery_time_type == 'minutes') {
+                        $delivery_time_type = 'standard';
+                    }
+                    // If grid says 'minutes', we keep the preferred type (unless it was already something slower)
+                }
+            }
+        }
+
+        if ($delivery_time_type == 'minutes' && $latitude && $longitude && $store) {
+            if ($store->allow_minutes) {
+                $dist = self::get_distance($store->latitude, $store->longitude, $latitude, $longitude);
+                if ($dist <= $max_radius || ($grid_exists && $grid_rule)) {
+                    $travel_time = self::get_travel_time($store->latitude, $store->longitude, $latitude, $longitude);
+                }
+            }
+            foreach ($store->locations as $location) {
+                if (!$location->is_active || !$location->allow_minutes)
+                    continue;
+
+                $dist = self::get_distance($location->latitude, $location->longitude, $latitude, $longitude);
+                if ($dist > $max_radius && !($grid_exists && $grid_rule))
+                    continue;
+
+                $t_time = self::get_travel_time($location->latitude, $location->longitude, $latitude, $longitude);
+                if ($t_time !== null && ($travel_time === null || $t_time < $travel_time)) {
+                    $travel_time = $t_time;
+                }
+            }
+
+            if ($travel_time === null || ($travel_time > 23 && !($grid_exists && $grid_rule && $grid_rule->delivery_type == 'minutes'))) {
+                $delivery_time_type = 'standard';
+                $travel_time = null;
+            }
+        }
+
+        if ($delivery_time_type == 'standard' && $latitude && $longitude && $store) {
+            if ($store->allow_standard) {
+                $dist = self::get_distance($store->latitude, $store->longitude, $latitude, $longitude);
+                if ($dist <= $max_radius || ($grid_exists && $grid_rule)) {
+                    $travel_time = self::get_travel_time($store->latitude, $store->longitude, $latitude, $longitude);
+                }
+            }
+            foreach ($store->locations as $location) {
+                if (!$location->is_active || !$location->allow_standard)
+                    continue;
+
+                $dist = self::get_distance($location->latitude, $location->longitude, $latitude, $longitude);
+                if ($dist > $max_radius && !($grid_exists && $grid_rule))
+                    continue;
+
+                $t_time = self::get_travel_time($location->latitude, $location->longitude, $latitude, $longitude);
+                if ($t_time !== null && ($travel_time === null || $t_time < $travel_time)) {
+                    $travel_time = $t_time;
+                }
+            }
+
+            if ($travel_time === null) {
+                $delivery_time_type = 'next_day';
+            }
+        }
+
+        if ($delivery_time_type == 'next_day') {
             return [
-                'id' => (int) $item->id,
-                'name' => $item->title ?? $item->name,
-                'image_full_url' => $item->image_full_url,
-                'price' => $item->price,
-                'veg' => $item->veg,
-                'unit_type' => $item->unit_type,
-                'recommended' => $item->recommended,
-                'organic' => $item->organic,
-                'is_halal' => (int) $item->is_halal ?? 0,
-                'stock' => (int) $item->stock ?? 0,
-                'maximum_cart_quantity' => (int) $item->maximum_cart_quantity ?? 0,
-                'discount' => $discount['discount_percentage'],
-                'discount_type' => $discount['original_discount_type'],
-                'rating_count' => (int) ($item->rating ? array_sum(json_decode($item->rating, true)) : 0),
-                'avg_rating' => (float) ($item->avg_rating ?? 0),
-
-                'has_variant' => (int) $has_variant,
-                'available_time_starts' => ($item->start_time instanceof \Carbon\Carbon) ? $item->start_time->format('H:i') : ($item->available_time_starts ?? null),
-                'available_time_ends' => ($item->end_time instanceof \Carbon\Carbon) ? $item->end_time->format('H:i') : ($item->available_time_ends ?? null),
-
-                'halal_tag_status' => (int) $item->store->storeConfig?->halal_tag_status ?? 0,
-                'store_name' => $item->store?->name,
-                'store_id' => $item->store?->id,
-                'module_type' => $module_type,
-                'halal_tag_status' => (int) ($item->store->storeConfig->halal_tag_status ?? 0),
-                'free_delivery' => $item->store?->free_delivery,
+                'delivery_time_type' => 'next_day',
+                'travel_time' => null,
+                'store_delivery_time' => translate('messages.next_day')
             ];
-        })->toArray();
+        }
+
+        return [
+            'delivery_time_type' => $delivery_time_type,
+            'travel_time' => $travel_time,
+            'store_delivery_time' => ($delivery_time_type == 'minutes' && isset($travel_time)) ? (string) ($travel_time + 7) : ($store->delivery_time ?? '30-40')
+        ];
+    }
+
+    public static function get_distance($origin_lat, $origin_lng, $destination_lat, $destination_lng)
+    {
+        $earthRadius = 6371; // km
+        $latFrom = deg2rad($origin_lat);
+        $lonFrom = deg2rad($origin_lng);
+        $latTo = deg2rad($destination_lat);
+        $lonTo = deg2rad($destination_lng);
+
+        $latDelta = $latTo - $latFrom;
+        $lonDelta = $lonTo - $lonFrom;
+
+        $angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) +
+            cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
+        return $angle * $earthRadius;
+    }
+
+    public static function get_max_radius($zone_id, $module_id = null): ?float
+    {
+        if (!$zone_id) {
+            return 5.0;
+        }
+
+        $zone_ids = is_array($zone_id) ? $zone_id : json_decode($zone_id, true);
+        if (is_array($zone_ids) && count($zone_ids) > 0) {
+            $zone_id_val = $zone_ids[0];
+        } else {
+            $zone_id_val = $zone_id;
+        }
+
+        if ($module_id) {
+            $module_zone = DB::table('module_zone')
+                ->where('zone_id', $zone_id_val)
+                ->where('module_id', $module_id)
+                ->first();
+
+            if ($module_zone && isset($module_zone->max_delivery_radius) && $module_zone->max_delivery_radius > 0) {
+                return (float) $module_zone->max_delivery_radius;
+            }
+        }
+
+        $zone = Zone::find($zone_id_val);
+        if ($zone && isset($zone->max_delivery_radius) && $zone->max_delivery_radius > 0) {
+            return (float) $zone->max_delivery_radius;
+        }
+
+        return 5.0; // Default 5km
     }
 
     public static function product_data_formatting($data, $multi_data = false, $trans = false, $local = 'en', $temp_product = false)
     {
+        $latitude = request()->header('latitude');
+        $longitude = request()->header('longitude');
+        $latitude = $latitude ? (float) str_replace('"', '', (string) $latitude) : null;
+        $longitude = $longitude ? (float) str_replace('"', '', (string) $longitude) : null;
+
         $storage = [];
         if ($multi_data == true) {
             foreach ($data as $item) {
@@ -366,6 +569,10 @@ class Helpers
                 $item['store_discount'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? 0 : (self::get_store_discount($item->store) ? $item->store?->discount->discount : 0);
                 $item['schedule_order'] = $item->store?->schedule_order;
                 $item['delivery_time'] = $item->store?->delivery_time;
+                $item['delivery_time_type'] = $item->delivery_time_type;
+                $delivery_info = self::calculate_delivery_info($item->store, $item->delivery_time_type, $latitude, $longitude);
+                $item['delivery_time_type'] = $delivery_info['delivery_time_type'];
+                $item['store_delivery_time'] = $delivery_info['store_delivery_time'];
                 $item['free_delivery'] = $item->store?->free_delivery;
                 $item['tax'] = 0;
                 $item['unit'] = $item->unit;
@@ -376,9 +583,11 @@ class Helpers
                 $item['max_delivery_time'] = (int) explode('-', $item?->store?->delivery_time)[1] ?? 0;
                 $item['common_condition_id'] = (int) $item->pharmacy_item_details?->common_condition_id ?? 0;
                 $item['brand_id'] = (int) $item->ecommerce_item_details?->brand_id ?? 0;
-                $item['is_basic'] = (int) $item->pharmacy_item_details?->is_basic ?? 0;
-                $item['is_prescription_required'] = (int) $item->pharmacy_item_details?->is_prescription_required ?? 0;
+                $item['brand_name'] = $item->ecommerce_item_details?->brand?->name;
+                $item['brand_image_full_url'] = $item->ecommerce_item_details?->brand?->image_full_url;
+                $item['is_new'] = $item->created_at >= now()->subDays(14) ? 1 : 0;
                 $item['halal_tag_status'] = (int) $item->store->storeConfig?->halal_tag_status ?? 0;
+                $item['is_halal'] = (int) ($item->is_halal ?? 0);
 
                 $item->store['self_delivery_system'] = (int) $item->store->sub_self_delivery;
 
@@ -464,6 +673,10 @@ class Helpers
 
             $data['store_discount'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? 0 : (self::get_store_discount($data->store) ? $data->store?->discount->discount : 0);
             $data['schedule_order'] = $data->store->schedule_order;
+            $data['delivery_time_type'] = $data->delivery_time_type;
+            $delivery_info = self::calculate_delivery_info($data->store, $data->delivery_time_type, $latitude, $longitude);
+            $data['delivery_time_type'] = $delivery_info['delivery_time_type'];
+            $data['store_delivery_time'] = $delivery_info['store_delivery_time'];
             $data['rating_count'] = (int) ($data->rating ? array_sum(json_decode($data->rating, true)) : 0);
             $data['avg_rating'] = (float) ($data->avg_rating ? $data->avg_rating : 0);
             $data['min_delivery_time'] = (int) explode('-', $data->store->delivery_time)[0] ?? 0;
@@ -473,6 +686,7 @@ class Helpers
             $data['is_basic'] = (int) $data->pharmacy_item_details?->is_basic ?? 0;
             $data['is_prescription_required'] = (int) $data->pharmacy_item_details?->is_prescription_required ?? 0;
             $data['halal_tag_status'] = (int) $data->store->storeConfig?->halal_tag_status ?? 0;
+            $data['is_halal'] = (int) ($data->is_halal ?? 0);
 
             $data['nutritions_name'] = $data?->nutritions ? Nutrition::whereIn('id', $data?->nutritions->pluck('id'))->pluck('nutrition') : null;
             $data['allergies_name'] = $data?->allergies ? Allergy::whereIn('id', $data?->allergies->pluck('id'))->pluck('allergy') : null;
@@ -506,6 +720,11 @@ class Helpers
 
     public static function product_data_formatting_translate($data, $multi_data = false, $trans = false, $local = 'en')
     {
+        $latitude = request()->header('latitude');
+        $longitude = request()->header('longitude');
+        $latitude = $latitude ? (float) str_replace('"', '', (string) $latitude) : null;
+        $longitude = $longitude ? (float) str_replace('"', '', (string) $longitude) : null;
+
         $storage = [];
         if ($multi_data == true) {
             foreach ($data as $item) {
@@ -562,10 +781,15 @@ class Helpers
                 $item['discount_type'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->discount_type : $item['discount_type'];
                 $item['store_discount'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? 0 : (self::get_store_discount($item->store) ? $item->store?->discount->discount : 0);
                 $item['schedule_order'] = $item->store->schedule_order;
+                $delivery_info = self::calculate_delivery_info($item->store, $item->delivery_time_type, $latitude, $longitude);
+                $item['delivery_time_type'] = $delivery_info['delivery_time_type'];
+                $item['store_delivery_time'] = $delivery_info['store_delivery_time'];
                 $item['tax'] = 0;
                 $item['rating_count'] = (int) ($item->rating ? array_sum(json_decode($item->rating, true)) : 0);
                 $item['avg_rating'] = (float) ($item->avg_rating ? $item->avg_rating : 0);
                 $item['recommended'] = (int) $item->recommended;
+                $item['halal_tag_status'] = (int) $item->store->storeConfig?->halal_tag_status ?? 0;
+                $item['is_halal'] = (int) ($item->is_halal ?? 0);
 
                 $item['common_condition_id'] = (int) $item->pharmacy_item_details?->common_condition_id ?? 0;
                 $item['brand_id'] = (int) $item->ecommerce_item_details?->brand_id ?? 0;
@@ -687,8 +911,9 @@ class Helpers
 
             $data['common_condition_id'] = (int) $data->pharmacy_item_details?->common_condition_id ?? 0;
             $data['brand_id'] = (int) $data->ecommerce_item_details?->brand_id ?? 0;
-            $data['is_basic'] = (int) $data->pharmacy_item_details?->is_basic ?? 0;
-            $data['is_prescription_required'] = (int) $data->pharmacy_item_details?->is_prescription_required ?? 0;
+            $data['brand_name'] = $data->ecommerce_item_details?->brand?->name;
+            $data['brand_image_full_url'] = $data->ecommerce_item_details?->brand?->image_full_url;
+            $data['is_new'] = $data->created_at >= now()->subDays(14) ? 1 : 0;
             $data['halal_tag_status'] = (int) $data->store->storeConfig?->halal_tag_status ?? 0;
 
             if ($trans) {
@@ -885,6 +1110,10 @@ class Helpers
 
     public static function store_data_formatting($data, $multi_data = false)
     {
+        $latitude = request()->header('latitude');
+        $longitude = request()->header('longitude');
+        $latitude = $latitude ? (float) str_replace('"', '', (string) $latitude) : null;
+        $longitude = $longitude ? (float) str_replace('"', '', (string) $longitude) : null;
         $storage = [];
         if ($multi_data == true) {
             foreach ($data as $item) {
@@ -915,6 +1144,9 @@ class Helpers
                     $item['is_recommended'] = $item->storeConfig->is_recommended;
                 }
                 $item['self_delivery_system'] = (int) $item->sub_self_delivery;
+                $delivery_info = self::calculate_delivery_info($item, $item->delivery_time_type, $latitude, $longitude);
+                $item['delivery_time_type'] = $delivery_info['delivery_time_type'];
+                $item['delivery_time'] = $delivery_info['store_delivery_time'];
                 $item['current_opening_time'] = self::getNextOpeningTime($item['schedules']) ?? 'closed';
                 unset($item['items_count']);
                 unset($item['campaigns_count']);
@@ -937,6 +1169,9 @@ class Helpers
                 $data['is_recommended'] = $data->storeConfig->is_recommended;
             }
             $data['self_delivery_system'] = (int) $data->sub_self_delivery;
+            $delivery_info = self::calculate_delivery_info($data, $data->delivery_time_type, $latitude, $longitude);
+            $data['delivery_time_type'] = $delivery_info['delivery_time_type'];
+            $data['delivery_time'] = $delivery_info['store_delivery_time'];
             $ratings = StoreLogic::calculate_store_rating($data['rating']);
             $data['ratings'] = $data?->rating ?? [];
             unset($data['rating']);
@@ -1744,7 +1979,8 @@ class Helpers
             if ($data['status'] == 0) {
                 return 0;
             }
-            return count($data->translations) > 0 ? $data->translations[0]->value : $data['message'];
+            $translations = is_array($data) ? ($data['translations'] ?? []) : ($data->translations ?? []);
+            return count($translations) > 0 ? (is_array($translations[0]) ? $translations[0]['value'] : $translations[0]->value) : $data['message'];
         } else {
             return false;
         }
@@ -2594,7 +2830,6 @@ class Helpers
     {
         if ($n < 900) {
             // 0 - 900
-            $n = $n;
             $suffix = '';
         } else if ($n < 900000) {
             // 0.9k-850k
@@ -2732,7 +2967,7 @@ class Helpers
 
     public static function auto_translator($q, $sl, $tl)
     {
-        $res = file_get_contents("https://translate.googleapis.com/translate_a/single?client=gtx&ie=UTF-8&oe=UTF-8&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&dt=at&sl=" . $sl . "&tl=" . $tl . "&hl=hl&q=" . urlencode($q), $_SERVER['DOCUMENT_ROOT'] . "/transes.html");
+        $res = file_get_contents("https://translate.googleapis.com/translate_a/single?client=gtx&ie=UTF-8&oe=UTF-8&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&dt=at&sl=" . $sl . "&tl=" . $tl . "&hl=hl&q=" . urlencode($q));
         $res = json_decode($res);
         return str_replace('_', ' ', $res[0][0][0]);
     }
@@ -4117,7 +4352,7 @@ class Helpers
             return [];
         }
 
-        $digital_payment = \App\CentralLogics\Helpers::get_business_settings('digital_payment');
+        $digital_payment = self::get_business_settings('digital_payment');
         if ($digital_payment && $digital_payment['status'] == 0) {
             return [];
         }
@@ -4847,8 +5082,33 @@ class Helpers
         return explode('/', $mimeType)[1] ?? '';
     }
 
+    public static function get_travel_time($origin_lat, $origin_lng, $destination_lat, $destination_lng)
+    {
+        $cache_key = "travel_time_" . round($origin_lat, 4) . "_" . round($origin_lng, 4) . "_" . round($destination_lat, 4) . "_" . round($destination_lng, 4);
+
+        return Cache::remember($cache_key, 900, function () use ($origin_lat, $origin_lng, $destination_lat, $destination_lng) {
+            $api_key = self::get_business_settings('map_api_key_server');
+            if (!$api_key) {
+                return null;
+            }
+
+            $response = Http::get('https://maps.googleapis.com/maps/api/distancematrix/json', [
+                'origins' => $origin_lat . ',' . $origin_lng,
+                'destinations' => $destination_lat . ',' . $destination_lng,
+                'mode' => 'driving',
+                'key' => $api_key,
+            ]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                if (isset($data['rows'][0]['elements'][0]['duration']['value'])) {
+                    return (int) ($data['rows'][0]['elements'][0]['duration']['value'] / 60); // In minutes
+                }
+            }
+
+            return null;
+        });
+    }
+
 }
-
-
-
 

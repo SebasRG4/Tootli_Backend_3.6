@@ -362,7 +362,7 @@ class ZoneController extends BaseController
 
     public function checkLocation(Request $request): JsonResponse
     {
-        if (! $request->filled(['latitude', 'longitude', 'zone_id'])) {
+        if (!$request->filled(['latitude', 'longitude', 'zone_id'])) {
             return response()->json([
                 'errors' => [
                     ['code' => 'validation', 'message' => translate('messages.Please_select_a_location_within_the_selected_zone.')]
@@ -378,7 +378,7 @@ class ZoneController extends BaseController
             )
             ->first();
 
-        if (! $zone) {
+        if (!$zone) {
             return response()->json([
                 'errors' => [
                     [
@@ -390,6 +390,74 @@ class ZoneController extends BaseController
         }
 
         return response()->json(['status' => 'ok'], 200);
+    }
+
+    public function getGridConfigView($zone_id, $module_id): View
+    {
+        $zone = ZoneModel::findOrFail($zone_id);
+        $module = Module::findOrFail($module_id);
+        $grids = \DB::table('delivery_grids')
+            ->where('zone_id', $zone_id)
+            ->where('module_id', $module_id)
+            ->get();
+
+        $formatted_coords = [];
+        if ($zone->coordinates) {
+            foreach ($zone->coordinates->getGeometries()[0]->getGeometries() as $coord) {
+                $formatted_coords[] = ['lat' => $coord->latitude, 'lng' => $coord->longitude];
+            }
+        }
+
+        return view(ZoneViewPath::GRID_CONFIG[VIEW], compact('zone', 'module', 'grids', 'formatted_coords'));
+    }
+
+    public function updateGridConfig(Request $request): JsonResponse
+    {
+        info('Grid Update Request:', $request->all());
+        $request->validate([
+            'zone_id' => 'required',
+            'module_id' => 'required',
+            'grids' => 'nullable',
+        ]);
+
+        try {
+            $zoneId = (int) $request->zone_id;
+            $moduleId = (int) $request->module_id;
+            $grids = $request->get('grids', []);
+            $gridsCount = is_array($grids) ? count($grids) : 0;
+            info("Saving $gridsCount grids for Zone $zoneId and Module $moduleId");
+
+            \DB::transaction(function () use ($grids, $zoneId, $moduleId) {
+                \DB::table('delivery_grids')
+                    ->where('zone_id', $zoneId)
+                    ->where('module_id', $moduleId)
+                    ->delete();
+
+                if (is_array($grids)) {
+                    foreach ($grids as $hex_id => $type) {
+                        if ($type && $type !== 'none') {
+                            \DB::table('delivery_grids')->insert([
+                                'zone_id' => $zoneId,
+                                'module_id' => $moduleId,
+                                'hexagon_id' => (string) $hex_id,
+                                'delivery_type' => (string) $type,
+                                'is_active' => true,
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]);
+                        }
+                    }
+                }
+            });
+
+            return response()->json(['message' => translate('Grid updated successfully')]);
+        } catch (\Exception $e) {
+            info($e->getMessage());
+            return response()->json([
+                'message' => translate('messages.error_saving_grid'),
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
 }

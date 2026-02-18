@@ -10,6 +10,7 @@ use App\Models\Store;
 use App\Models\PriorityList;
 use App\Models\FlashSaleItem;
 use App\Models\BusinessSetting;
+use Illuminate\Support\Facades\DB;
 
 
 class ProductLogic
@@ -17,16 +18,33 @@ class ProductLogic
     /**
      * Get the maximum delivery radius for a zone.
      */
-    private static function getMaxDeliveryRadius($zone_id): float
+    private static function getMaxDeliveryRadius($zone_id, $module_id = null): float
     {
         if (!$zone_id) {
             return 5; // Default 5km if no zone
         }
 
-        $zone_ids = json_decode($zone_id, true);
+        $zone_ids = is_array($zone_id) ? $zone_id : json_decode($zone_id, true);
         if (is_array($zone_ids) && count($zone_ids) > 0) {
             $zone = Zone::find($zone_ids[0]);
-            return $zone?->max_delivery_radius ?? 5;
+            if ($zone) {
+                // 1. Check module-specific radius
+                if ($module_id) {
+                    $module_zone = DB::table('module_zone')
+                        ->where('zone_id', $zone->id)
+                        ->where('module_id', $module_id)
+                        ->first();
+
+                    if ($module_zone && isset($module_zone->max_delivery_radius) && $module_zone->max_delivery_radius > 0) {
+                        return (float) $module_zone->max_delivery_radius;
+                    }
+                }
+
+                // 2. Fallback to Zone global radius
+                if (isset($zone->max_delivery_radius) && $zone->max_delivery_radius > 0) {
+                    return (float) $zone->max_delivery_radius;
+                }
+            }
         }
 
         return 5;
@@ -65,8 +83,8 @@ class ProductLogic
             $min = 0.00000001;
         }
 
-        $query = Item::
-            when($category_id != 0, function ($q) use ($category_id) {
+        $query = Item::with(['ecommerce_item_details.brand'])
+            ->when($category_id != 0, function ($q) use ($category_id) {
                 $q->whereHas('category', function ($q) use ($category_id) {
                     return $q->whereIn('id', $category_id)->orWhereIn('parent_id', $category_id);
                 });
@@ -163,8 +181,8 @@ class ProductLogic
         $paginator = $query->paginate($limit, ['*'], 'page', $offset);
 
 
-        $query = Item::
-            when($category_id != 0, function ($q) use ($category_id) {
+        $query = Item::with(['ecommerce_item_details.brand'])
+            ->when($category_id != 0, function ($q) use ($category_id) {
                 $q->whereHas('category', function ($q) use ($category_id) {
                     return $q->whereId($category_id)->orWhere('parent_id', $category_id);
                 });
@@ -272,8 +290,8 @@ class ProductLogic
         $category_ids = isset($category_ids) ? (is_array($category_ids) ? $category_ids : json_decode($category_ids)) : [];
         $brand_ids = isset($brand_ids) ? (is_array($brand_ids) ? $brand_ids : json_decode($brand_ids)) : [];
         $filter = $filter ? (is_array($filter) ? $filter : str_getcsv(trim($filter, "[]"), ',')) : '';
-        $query = Item::
-            when(isset($product_id), function ($q) use ($product_id) {
+        $query = Item::with(['ecommerce_item_details.brand'])
+            ->when(isset($product_id), function ($q) use ($product_id) {
                 $q->where('id', '!=', $product_id);
             })
             ->when(isset($category_ids) && (count($category_ids) > 0), function ($query) use ($category_ids) {
@@ -524,7 +542,7 @@ class ProductLogic
                 $query->whereIn('zone_id', json_decode($zone_id, true));
                 // Filter by radius if coordinates are provided
                 if ($longitude && $latitude) {
-                    $maxRadius = self::getMaxDeliveryRadius($zone_id); // Ensure maxRadius is available here
+                    $maxRadius = self::getMaxDeliveryRadius($zone_id, config("module.current_module_data")["id"] ?? null); // Ensure maxRadius is available here
                     $nearbyStoreIds = Store::whereIn('zone_id', json_decode($zone_id, true))
                         ->withOpen($longitude, $latitude)
                         ->get()
@@ -675,7 +693,7 @@ class ProductLogic
         $category_ids = isset($category_ids) ? (is_array($category_ids) ? $category_ids : json_decode($category_ids)) : [];
         $brand_ids = isset($brand_ids) ? (is_array($brand_ids) ? $brand_ids : json_decode($brand_ids)) : [];
 
-        $query = Item::with('store')
+        $query = Item::with(['store', 'ecommerce_item_details.brand'])
             ->when(config('module.current_module_data'), function ($query) {
                 $query->where('module_id', config('module.current_module_data')['id']);
             })
@@ -1286,6 +1304,168 @@ class ProductLogic
             'offset' => $offset,
             'products' => $paginator->items(),
             'categories' => $categories
+        ];
+    }
+
+    public static function get_delivery_wise_products($zone_id, $type, $delivery_time_type, $limit = null, $offset = null, $longitude = null, $latitude = null)
+    {
+        $module_id = config('module.current_module_data')['id'] ?? null;
+        $maxRadiusKm = self::getMaxDeliveryRadius($zone_id, $module_id);
+
+        $query = Item::active()
+            ->whereHas('module.zones', function ($query) use ($zone_id) {
+                $query->whereIn('zones.id', json_decode($zone_id, true));
+            })
+            ->whereHas('store', function ($query) use ($zone_id) {
+                $query->when(config('module.current_module_data'), function ($query) {
+                    $query->where('module_id', config('module.current_module_data')['id'])->whereHas('zone.modules', function ($query) {
+                        $query->where('modules.id', config('module.current_module_data')['id']);
+                    });
+                })->whereIn('zone_id', json_decode($zone_id, true));
+            })
+            ->type($type);
+
+        if ($longitude && $latitude) {
+            if ($delivery_time_type == 'minutes') {
+                $query->where('delivery_time_type', 'minutes')
+                    ->whereHas('store', function ($q) use ($longitude, $latitude, $maxRadiusKm) {
+                        $q->where(function ($q) use ($longitude, $latitude, $maxRadiusKm) {
+                            $q->where(function ($q) use ($longitude, $latitude, $maxRadiusKm) {
+                                $q->where('allow_minutes', 1)
+                                    ->whereRaw("ST_Distance_Sphere(point(longitude, latitude), point(?, ?)) <= ?", [$longitude, $latitude, $maxRadiusKm * 1000]);
+                            })
+                                ->orWhereExists(function ($query) use ($longitude, $latitude, $maxRadiusKm) {
+                                    $query->select(DB::raw(1))
+                                        ->from('store_locations')
+                                        ->whereColumn('store_locations.store_id', 'stores.id')
+                                        ->where('store_locations.is_active', 1)
+                                        ->where('store_locations.allow_minutes', 1)
+                                        ->whereRaw("ST_Distance_Sphere(point(store_locations.longitude, store_locations.latitude), point(?, ?)) <= ?", [$longitude, $latitude, $maxRadiusKm * 1000]);
+                                });
+                        });
+                    });
+
+                // Real-time travel time validation (checks all locations allowing minutes)
+                $items = $query->clone()->with(['store', 'store.locations'])->get();
+                $valid_ids = $items->filter(function ($item) use ($latitude, $longitude) {
+                    $min_travel_time = null;
+                    if ($item->store->allow_minutes) {
+                        $min_travel_time = Helpers::get_travel_time($item->store->latitude, $item->store->longitude, $latitude, $longitude);
+                    }
+
+                    foreach ($item->store->locations as $location) {
+                        if (!$location->is_active || !$location->allow_minutes)
+                            continue;
+                        $travel_time = Helpers::get_travel_time($location->latitude, $location->longitude, $latitude, $longitude);
+                        if ($travel_time !== null && ($min_travel_time === null || $travel_time < $min_travel_time)) {
+                            $min_travel_time = $travel_time;
+                        }
+                    }
+
+                    return $min_travel_time !== null && $min_travel_time <= 23;
+                })->pluck('id')->toArray();
+
+                $query->whereIn('id', $valid_ids);
+
+            } elseif ($delivery_time_type == 'next_day') {
+                $query->where('delivery_time_type', 'next_day')
+                    ->whereHas('store', function ($q) use ($longitude, $latitude, $maxRadiusKm) {
+                        $q->where(function ($q) use ($longitude, $latitude, $maxRadiusKm) {
+                            $q->where(function ($q) use ($longitude, $latitude, $maxRadiusKm) {
+                                $q->where('allow_next_day', 1)
+                                    ->whereRaw("ST_Distance_Sphere(point(longitude, latitude), point(?, ?)) <= ?", [$longitude, $latitude, $maxRadiusKm * 1000]);
+                            })
+                                ->orWhereExists(function ($query) use ($longitude, $latitude, $maxRadiusKm) {
+                                    $query->select(DB::raw(1))
+                                        ->from('store_locations')
+                                        ->whereColumn('store_locations.store_id', 'stores.id')
+                                        ->where('store_locations.is_active', 1)
+                                        ->where('store_locations.allow_next_day', 1)
+                                        ->whereRaw("ST_Distance_Sphere(point(store_locations.longitude, store_locations.latitude), point(?, ?)) <= ?", [$longitude, $latitude, $maxRadiusKm * 1000]);
+                                });
+                        });
+                    });
+            } elseif ($delivery_time_type == 'standard') {
+                $query->where(function ($q) use ($longitude, $latitude, $maxRadiusKm) {
+                    $q->where('delivery_time_type', 'standard')
+                        ->orWhere('delivery_time_type', 'minutes'); // Minutes can degrade to standard
+                })
+                    ->whereHas('store', function ($q) use ($longitude, $latitude, $maxRadiusKm) {
+                        $q->where(function ($q) use ($longitude, $latitude, $maxRadiusKm) {
+                            $q->where(function ($q) use ($longitude, $latitude, $maxRadiusKm) {
+                                $q->where('allow_standard', 1)
+                                    ->whereRaw("ST_Distance_Sphere(point(longitude, latitude), point(?, ?)) <= ?", [$longitude, $latitude, $maxRadiusKm * 1000]);
+                            })
+                                ->orWhereExists(function ($query) use ($longitude, $latitude, $maxRadiusKm) {
+                                    $query->select(DB::raw(1))
+                                        ->from('store_locations')
+                                        ->whereColumn('store_locations.store_id', 'stores.id')
+                                        ->where('store_locations.is_active', 1)
+                                        ->where('store_locations.allow_standard', 1)
+                                        ->whereRaw("ST_Distance_Sphere(point(store_locations.longitude, store_locations.latitude), point(?, ?)) <= ?", [$longitude, $latitude, $maxRadiusKm * 1000]);
+                                });
+                        });
+                    });
+
+                // Real-time travel time validation for "degraded" items
+                $items = $query->clone()->with(['store', 'store.locations'])->get();
+                $valid_ids = $items->filter(function ($item) use ($latitude, $longitude) {
+                    if ($item->delivery_time_type == 'standard') {
+                        return true;
+                    }
+                    // For 'minutes' items, they are in 'standard' list if they are > 23 mins to all 'allow_minutes' locations
+                    $min_minutes_travel_time = null;
+                    if ($item->store->allow_minutes) {
+                        $min_minutes_travel_time = Helpers::get_travel_time($item->store->latitude, $item->store->longitude, $latitude, $longitude);
+                    }
+                    foreach ($item->store->locations as $location) {
+                        if (!$location->is_active || !$location->allow_minutes)
+                            continue;
+                        $travel_time = Helpers::get_travel_time($location->latitude, $location->longitude, $latitude, $longitude);
+                        if ($travel_time !== null && ($min_minutes_travel_time === null || $travel_time < $min_minutes_travel_time)) {
+                            $min_minutes_travel_time = $travel_time;
+                        }
+                    }
+                    return $min_minutes_travel_time === null || $min_minutes_travel_time > 23;
+                })->pluck('id')->toArray();
+
+                $query->whereIn('id', $valid_ids);
+            }
+        } else {
+            $query->where('delivery_time_type', $delivery_time_type);
+        }
+
+        $query->latest();
+
+        $paginator = $query->paginate($limit, ['*'], 'page', $offset);
+
+        $paginator->getCollection()->transform(function ($item) use ($latitude, $longitude) {
+            if ($item->delivery_time_type == 'minutes' && $latitude && $longitude) {
+                $min_minutes_travel_time = null;
+                if ($item->store->allow_minutes) {
+                    $min_minutes_travel_time = Helpers::get_travel_time($item->store->latitude, $item->store->longitude, (float) $latitude, (float) $longitude);
+                }
+                foreach ($item->store->locations as $location) {
+                    if (!$location->is_active || !$location->allow_minutes)
+                        continue;
+                    $travel_time = Helpers::get_travel_time($location->latitude, $location->longitude, (float) $latitude, (float) $longitude);
+                    if ($travel_time !== null && ($min_minutes_travel_time === null || $travel_time < $min_minutes_travel_time)) {
+                        $min_minutes_travel_time = $travel_time;
+                    }
+                }
+
+                if ($min_minutes_travel_time === null || $min_minutes_travel_time > 23) {
+                    $item->delivery_time_type = 'standard';
+                }
+            }
+            return $item;
+        });
+
+        return [
+            'total_size' => $paginator->total(),
+            'limit' => $limit,
+            'offset' => $offset,
+            'products' => $paginator->items()
         ];
     }
 }

@@ -16,25 +16,38 @@ use Illuminate\Support\Facades\DB;
 
 class StoreLogic
 {
-    /**
-     * Get the max delivery radius from the first zone in the zone_id array.
-     *
-     * @param string|null $zone_id JSON encoded array of zone IDs
-     * @return float|null The max delivery radius in kilometers, or null if not found
-     */
-    private static function getMaxDeliveryRadius($zone_id): ?float
+    private static function getMaxDeliveryRadius($zone_id, $module_id = null): ?float
     {
         if (!$zone_id) {
             return null;
         }
 
-        $zones = json_decode($zone_id, true);
-        if (empty($zones)) {
+        $zone_ids = is_array($zone_id) ? $zone_id : json_decode($zone_id, true);
+        if (empty($zone_ids)) {
             return null;
         }
 
-        $zone = Zone::find($zones[0]);
-        return $zone?->max_delivery_radius;
+        $zone = Zone::find($zone_ids[0]);
+        if ($zone) {
+            // 1. Check module-specific radius
+            if ($module_id) {
+                $module_zone = DB::table('module_zone')
+                    ->where('zone_id', $zone->id)
+                    ->where('module_id', $module_id)
+                    ->first();
+
+                if ($module_zone && isset($module_zone->max_delivery_radius) && $module_zone->max_delivery_radius > 0) {
+                    return (float) $module_zone->max_delivery_radius;
+                }
+            }
+
+            // 2. Fallback to Zone global radius
+            if (isset($zone->max_delivery_radius) && $zone->max_delivery_radius > 0) {
+                return (float) $zone->max_delivery_radius;
+            }
+        }
+
+        return 5.0; // Default 5km
     }
 
     public static function get_stores($zone_id, $filter_data, $type, $store_type, $limit = 10, $offset = 1, $featured = false, $longitude = 0, $latitude = 0, $filter = null, $rating_count = null)
@@ -64,8 +77,10 @@ class StoreLogic
                 ->when(!config('module.current_module_data')['all_zone_service'], function ($query) use ($zone_id) {
                     return $query->whereIn('zone_id', json_decode($zone_id, true));
                 });
+            $module_id = config('module.current_module_data')['id'];
         } else {
             $query = $query->whereIn('zone_id', json_decode($zone_id, true));
+            $module_id = null;
         }
 
         if ($all_stores_default_status != '1') {
@@ -166,7 +181,7 @@ class StoreLogic
         }
 
         // Apply radius filter based on zone configuration
-        $maxRadius = self::getMaxDeliveryRadius($zone_id);
+        $maxRadius = self::getMaxDeliveryRadius($zone_id, $module_id);
         $query = $query->withinRadius($maxRadius);
 
         $paginator = $query->paginate($limit ?? 50, ['*'], 'page', $offset ?? 1);
@@ -286,7 +301,7 @@ class StoreLogic
 
 
         // Apply radius filter based on zone configuration
-        $maxRadius = self::getMaxDeliveryRadius($zone_id);
+        $maxRadius = self::getMaxDeliveryRadius($zone_id, config("module.current_module_data")["id"] ?? null);
         $query = $query->withinRadius($maxRadius);
 
         $paginator = $query->paginate($limit ?? 50, ['*'], 'page', $offset ?? 1);
@@ -383,7 +398,7 @@ class StoreLogic
         }
 
         // Apply radius filter based on zone configuration
-        $maxRadius = self::getMaxDeliveryRadius($zone_id);
+        $maxRadius = self::getMaxDeliveryRadius($zone_id, config("module.current_module_data")["id"] ?? null);
         $query = $query->withinRadius($maxRadius);
 
         $paginator = $query->paginate($limit ?? 50, ['*'], 'page', $offset ?? 1);
@@ -454,7 +469,7 @@ class StoreLogic
             });
 
         // Apply radius filter based on zone configuration
-        $maxRadius = self::getMaxDeliveryRadius($zone_id);
+        $maxRadius = self::getMaxDeliveryRadius($zone_id, config("module.current_module_data")["id"] ?? null);
         $query = $query->withinRadius($maxRadius);
 
         $paginator = $query->paginate($limit ?? 50, ['*'], 'page', $offset ?? 1);
@@ -522,7 +537,7 @@ class StoreLogic
             ->whereRaw("LENGTH(rating) > 0");
 
         // Apply radius filter based on zone configuration
-        $maxRadius = self::getMaxDeliveryRadius($zone_id);
+        $maxRadius = self::getMaxDeliveryRadius($zone_id, config("module.current_module_data")["id"] ?? null);
         $query = $query->withinRadius($maxRadius);
 
         $paginator = $query->paginate($limit ?? 50, ['*'], 'page', $offset ?? 1);
@@ -669,7 +684,7 @@ class StoreLogic
             ->type($type);
 
         // Apply radius filter based on zone configuration
-        $maxRadius = self::getMaxDeliveryRadius($zone_id);
+        $maxRadius = self::getMaxDeliveryRadius($zone_id, config("module.current_module_data")["id"] ?? null);
         $query = $query->withinRadius($maxRadius);
 
         $paginator = $query->paginate($limit, ['*'], 'page', $offset);
@@ -926,7 +941,7 @@ class StoreLogic
         }
 
         // Apply radius filter based on zone configuration
-        $maxRadius = self::getMaxDeliveryRadius($zone_id);
+        $maxRadius = self::getMaxDeliveryRadius($zone_id, config("module.current_module_data")["id"] ?? null);
         $query = $query->withinRadius($maxRadius);
 
         $paginator = $query->paginate($limit ?? 50, ['*'], 'page', $offset ?? 1);
@@ -1034,7 +1049,7 @@ class StoreLogic
         }
 
         // Apply radius filter based on zone configuration
-        $maxRadius = self::getMaxDeliveryRadius($zone_id);
+        $maxRadius = self::getMaxDeliveryRadius($zone_id, config("module.current_module_data")["id"] ?? null);
         $query = $query->withinRadius($maxRadius);
 
         $paginator = $query->paginate($limit ?? 50, ['*'], 'page', $offset ?? 1);

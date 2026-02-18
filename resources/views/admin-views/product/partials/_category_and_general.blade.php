@@ -344,6 +344,17 @@
                                     </label>
                                 </div>
                             </div>
+
+                            <div class="col-sm-6 col-lg-4 error-wrapper">
+                                <div class="form-group mb-0">
+                                    <label class="input-label" for="delivery_time_type">{{ translate('messages.delivery_time_type') }}</label>
+                                    <select name="delivery_time_type" id="delivery_time_type" class="form-control js-select2-custom">
+                                        <option value="standard" {{ isset($product) && $product->delivery_time_type == 'standard' ? 'selected' : '' }}>{{ translate('messages.standard') }}</option>
+                                        <option value="minutes" {{ isset($product) && $product->delivery_time_type == 'minutes' ? 'selected' : '' }}>{{ translate('messages.minutes') }}</option>
+                                        <option value="next_day" {{ isset($product) && $product->delivery_time_type == 'next_day' ? 'selected' : '' }}>{{ translate('messages.next_day') }}</option>
+                                    </select>
+                                </div>
+                            </div>
                         @endif
 
 

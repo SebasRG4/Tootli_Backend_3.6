@@ -17,7 +17,7 @@ class Item extends Model
 {
     use HasFactory, ReportFilter;
     protected $guarded = ['id'];
-    protected $with = ['translations','storage'];
+    protected $with = ['translations', 'storage'];
     protected $casts = [
         'tax' => 'float',
         'price' => 'float',
@@ -209,7 +209,10 @@ class Item extends Model
         if ($value) {
             foreach ($value as $item) {
                 $item = is_array($item) ? $item : (is_object($item) && get_class($item) == 'stdClass' ? json_decode(json_encode($item), true) : ['img' => $item, 'storage' => 'public']);
-                $images[] = Helpers::get_full_url('product', $item['img'], $item['storage']);
+                $url = Helpers::get_full_url('product', $item['img'], $item['storage']);
+                if ($url && $url !== 'null' && !empty($item['img'])) {
+                    $images[] = $url;
+                }
             }
         }
 
@@ -259,9 +262,11 @@ class Item extends Model
         });
 
         static::addGlobalScope('translate', function (Builder $builder) {
-            $builder->with(['translations' => function ($query) {
-                return $query->where('locale', app()->getLocale());
-            }]);
+            $builder->with([
+                'translations' => function ($query) {
+                    return $query->where('locale', app()->getLocale());
+                }
+            ]);
         });
     }
 
@@ -350,7 +355,8 @@ class Item extends Model
         $slug = Str::slug($name);
         if ($max_slug = static::where('slug', 'like', "{$slug}%")->latest('id')->value('slug')) {
 
-            if ($max_slug == $slug) return "{$slug}-2";
+            if ($max_slug == $slug)
+                return "{$slug}-2";
 
             $max_slug = explode('-', $max_slug);
             $count = array_pop($max_slug);

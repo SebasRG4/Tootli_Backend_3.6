@@ -199,7 +199,7 @@
                                    <div id="map"></div>
 
 
-                                   <div class="d-flex bg-white align-items-center gap-1 laglng-controller">
+                                    <div class="d-flex bg-white align-items-center gap-1 laglng-controller">
                                                 <div id="latlng" class="d-flex">
                                                     <input type="text" id="latitude" name="latitude" class="border-0 p-0 m-0 text-center outline-0"
                                                 placeholder="{{ translate('messages.Ex:') }} -94.22213"
@@ -210,11 +210,105 @@
                                                 value="{{ old('longitude') }}" readonly>
                                                 </div>
                                     </div>
+                                    <div class="d-flex bg-white align-items-center gap-1 laglng-controller mt-2">
+                                        <div class="d-flex gap-3 px-3 py-2 border rounded">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <label class="toggle-switch toggle-switch-sm mb-0">
+                                                    <input type="checkbox" name="allow_minutes" class="toggle-switch-input" checked>
+                                                    <span class="toggle-switch-label">
+                                                        <span class="toggle-switch-indicator"></span>
+                                                    </span>
+                                                </label>
+                                                <span class="fs-12">{{ translate('Minutes') }}</span>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <label class="toggle-switch toggle-switch-sm mb-0">
+                                                    <input type="checkbox" name="allow_standard" class="toggle-switch-input" checked>
+                                                    <span class="toggle-switch-label">
+                                                        <span class="toggle-switch-indicator"></span>
+                                                    </span>
+                                                </label>
+                                                <span class="fs-12">{{ translate('Normal') }}</span>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <label class="toggle-switch toggle-switch-sm mb-0">
+                                                    <input type="checkbox" name="allow_next_day" class="toggle-switch-input" checked>
+                                                    <span class="toggle-switch-label">
+                                                        <span class="toggle-switch-indicator"></span>
+                                                    </span>
+                                                </label>
+                                                <span class="fs-12">{{ translate('Next Day') }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                    <div id="outOfZone" class="map-alert bg-dark d-flex align-items-center rounded-8 py-2 px-2 fs-12 text-white mb-2">
                                         <img class="" src="{{asset('assets/admin/img/icons/warning-cus.png')}}" alt="img"> {{ translate('Please place the marker inside the available zones.') }}
                                    </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-20">
+                <div class="card-header">
+                    <div class="mb-0">
+                        <h3 class="mb-1">
+                            {{ translate("Store Locations (Multi-location)") }}
+                        </h3>
+                        <p class="mb-0 fs-12">
+                            {{ translate("Add multiple physical locations for this store.") }}
+                        </p>
+                    </div>
+                </div>
+                <div class="card-body p-xxl-20 p-3">
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>{{ translate("messages.address") }}</th>
+                                    <th>{{ translate("messages.latitude") }}</th>
+                                    <th>{{ translate("messages.longitude") }}</th>
+                                    <th class="text-center">{{ translate("Minutes") }}</th>
+                                    <th class="text-center">{{ translate("Normal") }}</th>
+                                    <th class="text-center">{{ translate("Next Day") }}</th>
+                                    <th class="text-center">{{ translate("messages.action") }}</th>
+                                </tr>
+                            </thead>
+                            <tbody id="location_table_body">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-3">
+                        <button type="button" class="btn btn--primary" onclick="add_location_row()">
+                            <i class="tio-add"></i> {{ translate("Add New Location") }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Location Map Modal -->
+            <div class="modal fade" id="locationMapModal" tabindex="-1" role="dialog" aria-labelledby="locationMapModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="locationMapModalLabel">{{ translate("Pick Location") }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <input id="location-pac-input" class="form-control" type="text" placeholder="{{translate("messages.search_here")}}"/>
+                                </div>
+                                <div class="col-12">
+                                    <div id="location_map_canvas" style="height: 400px; width: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ translate("Close") }}</button>
+                            <button type="button" class="btn btn-primary" onclick="confirm_location_selection()">{{ translate("Confirm Location") }}</button>
                         </div>
                     </div>
                 </div>
@@ -627,6 +721,147 @@
             $('#latitude').val(null);
             $('#longitude').val(null);
         })
+
+        let location_row_count = 0;
+        function add_location_row() {
+            let html = `
+                <tr>
+                    <td>
+                        <input type="text" name="locations[${location_row_count}][address]" id="location_address_${location_row_count}" class="form-control" placeholder="{{ translate('messages.address') }}" required>
+                    </td>
+                    <td>
+                        <input type="number" step="any" name="locations[${location_row_count}][latitude]" id="location_lat_${location_row_count}" class="form-control" placeholder="{{ translate('messages.latitude') }}" required>
+                    </td>
+                    <td>
+                        <input type="number" step="any" name="locations[${location_row_count}][longitude]" id="location_lng_${location_row_count}" class="form-control" placeholder="{{ translate('messages.longitude') }}" required>
+                    </td>
+                    <td class="text-center">
+                        <label class="toggle-switch toggle-switch-sm">
+                            <input type="checkbox" name="locations[${location_row_count}][allow_minutes]" class="toggle-switch-input" checked>
+                            <span class="toggle-switch-label">
+                                <span class="toggle-switch-indicator"></span>
+                            </span>
+                        </label>
+                    </td>
+                    <td class="text-center">
+                        <label class="toggle-switch toggle-switch-sm">
+                            <input type="checkbox" name="locations[${location_row_count}][allow_standard]" class="toggle-switch-input" checked>
+                            <span class="toggle-switch-label">
+                                <span class="toggle-switch-indicator"></span>
+                            </span>
+                        </label>
+                    </td>
+                    <td class="text-center">
+                        <label class="toggle-switch toggle-switch-sm">
+                            <input type="checkbox" name="locations[${location_row_count}][allow_next_day]" class="toggle-switch-input" checked>
+                            <span class="toggle-switch-label">
+                                <span class="toggle-switch-indicator"></span>
+                            </span>
+                        </label>
+                    </td>
+                    <td>
+                        <div class="btn--container justify-content-center">
+                            <button type="button" class="btn btn-outline-primary icon-btn" onclick="open_location_map(${location_row_count})">
+                                <i class="tio-map"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-danger icon-btn" onclick="remove_location_row(this)">
+                                <i class="tio-delete-outlined"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            $('#location_table_body').append(html);
+            location_row_count++;
+        }
+
+        function remove_location_row(button) {
+            $(button).closest('tr').remove();
+        }
+
+        let subLocationMap = null;
+        let subLocationMarker = null;
+        let subLocationCurrentIndex = null;
+        let subLocationGeocoder = null;
+
+        function open_location_map(index) {
+            subLocationCurrentIndex = index;
+            $('#locationMapModal').modal('show');
+            
+            setTimeout(function() {
+                if (subLocationMap === null) {
+                    initSubLocationMap();
+                } else {
+                    google.maps.event.trigger(subLocationMap, "resize");
+                    resetSubLocationMarker();
+                }
+            }, 500);
+        }
+
+        function initSubLocationMap() {
+            const { defaultLocation } = window.mapConfig;
+            let center = {
+                lat: Number(defaultLocation ? defaultLocation.lat : 23.757989),
+                lng: Number(defaultLocation ? defaultLocation.lng : 90.360587)
+            };
+
+            subLocationMap = new google.maps.Map(document.getElementById("location_map_canvas"), {
+                zoom: 13,
+                center: center,
+            });
+
+            subLocationGeocoder = new google.maps.Geocoder();
+
+            subLocationMarker = new google.maps.Marker({
+                position: center,
+                map: subLocationMap,
+                draggable: true
+            });
+
+            const input = document.getElementById("location-pac-input");
+            const searchBox = new google.maps.places.SearchBox(input);
+
+            searchBox.addListener("places_changed", () => {
+                const places = searchBox.getPlaces();
+                if (places.length == 0) return;
+                
+                const place = places[0];
+                if (!place.geometry || !place.geometry.location) return;
+
+                subLocationMarker.setPosition(place.geometry.location);
+                subLocationMap.setCenter(place.geometry.location);
+            });
+
+            subLocationMap.addListener("click", (e) => {
+                subLocationMarker.setPosition(e.latLng);
+            });
+
+            resetSubLocationMarker();
+        }
+
+        function resetSubLocationMarker() {
+            let lat = $(`#location_lat_${subLocationCurrentIndex}`).val();
+            let lng = $(`#location_lng_${subLocationCurrentIndex}`).val();
+
+            if (lat && lng) {
+                let pos = { lat: parseFloat(lat), lng: parseFloat(lng) };
+                subLocationMarker.setPosition(pos);
+                subLocationMap.setCenter(pos);
+            }
+        }
+
+        function confirm_location_selection() {
+            let pos = subLocationMarker.getPosition();
+            $(`#location_lat_${subLocationCurrentIndex}`).val(pos.lat());
+            $(`#location_lng_${subLocationCurrentIndex}`).val(pos.lng());
+
+            subLocationGeocoder.geocode({ location: pos }, function (results, status) {
+                if (status === 'OK' && results[0]) {
+                    $(`#location_address_${subLocationCurrentIndex}`).val(results[0].formatted_address);
+                }
+                $('#locationMapModal').modal('hide');
+            });
+        }
     </script>
 
 @endpush

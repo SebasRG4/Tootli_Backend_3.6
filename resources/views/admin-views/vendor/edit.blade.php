@@ -222,35 +222,7 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- <div class="col-lg-5">
-                            <div class="bg-light2 rounded p-xxl-20 p-3">
-                                <div class="mb-15">
-                                    <h4 class="mb-1">
-                                        {{ translate('Set Business Location on Map') }}
-                                    </h4>
-                                    <p class="mb-0 fs-12">
-                                        {{ translate('Please mark the exact business location to help customers find it easily.') }}
-                                    </p>
-                                </div>
-                                <div class="map-for-vndor map_custom-controls position-relative">
-                                    <input id="pac-input" class="controls rounded initial-8" title="{{translate('messages.search_your_location_here')}}" type="text" placeholder="{{translate('messages.search_here')}}"/>
-                                   <div id="map"></div>
-
-
-                                   <div class="d-flex bg-white align-items-center gap-1 laglng-controller">
-                                                <div id="latlng" class="d-flex">
-                                                    <input type="text" id="latitude" name="latitude" class="border-0 p-0 m-0 text-center outline-0"
-                                                placeholder="{{ translate('messages.Ex:') }} -94.22213"
-                                                value="{{ $store->latitude }}" required readonly>
-                                                    <span class="text-gray1">|</span>
-                                                    <input type="text" name="longitude" class="border-0 p-0 m-0 text-center outline-0"
-                                                placeholder="{{ translate('messages.Ex:') }} 103.344322" id="longitude"
-                                                value="{{ $store->longitude }}" required readonly>
-                                                </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> --}}
+                        </div>
 
 
 
@@ -270,7 +242,7 @@
                                    <div id="map"></div>
 
 
-                                   <div class="d-flex bg-white align-items-center gap-1 laglng-controller">
+                                    <div class="d-flex bg-white align-items-center gap-1 laglng-controller">
                                                 <div id="latlng" class="d-flex">
                                                     <input type="text" id="latitude" name="latitude" class="border-0 p-0 m-0 text-center outline-0"
                                                 placeholder="{{ translate('messages.Ex:') }} -94.22213"
@@ -280,6 +252,37 @@
                                                 placeholder="{{ translate('messages.Ex:') }} 103.344322" id="longitude"
                                                 value="{{ $store->longitude }}" readonly>
                                                 </div>
+                                    </div>
+                                    <div class="d-flex bg-white align-items-center gap-1 laglng-controller mt-2">
+                                        <div class="d-flex gap-3 px-3 py-2 border rounded">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <label class="toggle-switch toggle-switch-sm mb-0">
+                                                    <input type="checkbox" name="allow_minutes" class="toggle-switch-input" {{ $store->allow_minutes ? 'checked' : '' }}>
+                                                    <span class="toggle-switch-label">
+                                                        <span class="toggle-switch-indicator"></span>
+                                                    </span>
+                                                </label>
+                                                <span class="fs-12">{{ translate('Minutes') }}</span>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <label class="toggle-switch toggle-switch-sm mb-0">
+                                                    <input type="checkbox" name="allow_standard" class="toggle-switch-input" {{ $store->allow_standard ? 'checked' : '' }}>
+                                                    <span class="toggle-switch-label">
+                                                        <span class="toggle-switch-indicator"></span>
+                                                    </span>
+                                                </label>
+                                                <span class="fs-12">{{ translate('Normal') }}</span>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <label class="toggle-switch toggle-switch-sm mb-0">
+                                                    <input type="checkbox" name="allow_next_day" class="toggle-switch-input" {{ $store->allow_next_day ? 'checked' : '' }}>
+                                                    <span class="toggle-switch-label">
+                                                        <span class="toggle-switch-indicator"></span>
+                                                    </span>
+                                                </label>
+                                                <span class="fs-12">{{ translate('Next Day') }}</span>
+                                            </div>
+                                        </div>
                                     </div>
                                    <div id="outOfZone" class="map-alert bg-dark d-flex align-items-center rounded-8 py-2 px-2 fs-12 text-white mb-2">
                                         <img class="" src="{{asset('assets/admin/img/icons/warning-cus.png')}}" alt="img"> {{ translate('Please place the marker inside the available zones.') }}
@@ -338,6 +341,121 @@
                 </div>
             </div>
 
+            <div class="card mb-20">
+                <div class="card-header">
+                    <div class="mb-0">
+                        <h3 class="mb-1">
+                            {{ translate("Store Locations (Multi-location)") }}
+                        </h3>
+                        <p class="mb-0 fs-12">
+                            {{ translate("Add multiple physical locations for this store.") }}
+                        </p>
+                    </div>
+                </div>
+                <div class="card-body p-xxl-20 p-3">
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>{{ translate("messages.address") }}</th>
+                                    <th>{{ translate("messages.latitude") }}</th>
+                                    <th>{{ translate("messages.longitude") }}</th>
+                                    <th class="text-center">{{ translate("Minutes") }}</th>
+                                    <th class="text-center">{{ translate("Normal") }}</th>
+                                    <th class="text-center">{{ translate("Next Day") }}</th>
+                                    <th class="text-center">{{ translate("messages.action") }}</th>
+                                </tr>
+                            </thead>
+                            <tbody id="location_table_body">
+                                @foreach($store->locations as $key => $location)
+                                    <tr>
+                                        <td>
+                                            <input type="text" name="locations[{{ $key }}][address]" id="location_address_{{ $key }}" class="form-control" value="{{ $location->address }}" required>
+                                            <input type="hidden" name="locations[{{ $key }}][id]" value="{{ $location->id }}">
+                                        </td>
+                                        <td>
+                                            <input type="number" step="any" name="locations[{{ $key }}][latitude]" id="location_lat_{{ $key }}" class="form-control" value="{{ $location->latitude }}" required>
+                                        </td>
+                                        <td>
+                                            <input type="number" step="any" name="locations[{{ $key }}][longitude]" id="location_lng_{{ $key }}" class="form-control" value="{{ $location->longitude }}" required>
+                                        </td>
+                                        <td class="text-center">
+                                            <label class="toggle-switch toggle-switch-sm">
+                                                <input type="checkbox" name="locations[{{ $key }}][allow_minutes]" class="toggle-switch-input" {{ $location->allow_minutes ? 'checked' : '' }}>
+                                                <span class="toggle-switch-label">
+                                                    <span class="toggle-switch-indicator"></span>
+                                                </span>
+                                            </label>
+                                        </td>
+                                        <td class="text-center">
+                                            <label class="toggle-switch toggle-switch-sm">
+                                                <input type="checkbox" name="locations[{{ $key }}][allow_standard]" class="toggle-switch-input" {{ $location->allow_standard ? 'checked' : '' }}>
+                                                <span class="toggle-switch-label">
+                                                    <span class="toggle-switch-indicator"></span>
+                                                </span>
+                                            </label>
+                                        </td>
+                                        <td class="text-center">
+                                            <label class="toggle-switch toggle-switch-sm">
+                                                <input type="checkbox" name="locations[{{ $key }}][allow_next_day]" class="toggle-switch-input" {{ $location->allow_next_day ? 'checked' : '' }}>
+                                                <span class="toggle-switch-label">
+                                                    <span class="toggle-switch-indicator"></span>
+                                                </span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <div class="btn--container justify-content-center">
+                                                <button type="button" class="btn btn-outline-success icon-btn" onclick="save_location(this)" title="{{ translate('Save Location') }}">
+                                                    <i class="tio-save"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-outline-primary icon-btn" onclick="open_location_map({{ $key }})">
+                                                    <i class="tio-map"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-outline-danger icon-btn" onclick="remove_location_row(this)">
+                                                    <i class="tio-delete-outlined"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-3">
+                        <button type="button" class="btn btn--primary" onclick="add_location_row()">
+                            <i class="tio-add"></i> {{ translate("Add New Location") }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Location Map Modal -->
+            <div class="modal fade" id="locationMapModal" tabindex="-1" role="dialog" aria-labelledby="locationMapModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="locationMapModalLabel">{{ translate('Pick Location') }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <input id="location-pac-input" class="form-control" type="text" placeholder="{{translate('messages.search_here')}}"/>
+                                </div>
+                                <div class="col-12">
+                                    <div id="location_map_canvas" style="height: 400px; width: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ translate('Close') }}</button>
+                            <button type="button" class="btn btn-primary" onclick="confirm_location_selection()">{{ translate('Confirm Location') }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="card mb-20">
                 <div class="card-header">
                     <div class="mb-0">
@@ -483,7 +601,7 @@
                                     <div class="form-group mb-0">
                                         <label class="input-label"
                                             for="phone">{{ translate('messages.phone') }}  <span class="text-danger">*</span></label>
-                                        <input type="tel" id="phone" name="phone" class="form-control"
+                                        <input type="text" id="phone" name="phone" class="form-control"
                                             placeholder="{{ translate('messages.Ex:') }} 017********"
                                             value="{{ $store->vendor->phone }}" required>
 
@@ -796,5 +914,236 @@
             $('#latitude').val(null);
             $('#longitude').val(null);
         })
+
+        function save_location(btn) {
+        let row = $(btn).closest('tr');
+        let id = row.find('input[name*="[id]"]').val();
+        let address = row.find('input[name*="[address]"]').val();
+        let latitude = row.find('input[name*="[latitude]"]').val();
+        let longitude = row.find('input[name*="[longitude]"]').val();
+        let allow_minutes = row.find('input[name*="[allow_minutes]"]').is(':checked') ? 1 : 0;
+        let allow_standard = row.find('input[name*="[allow_standard]"]').is(':checked') ? 1 : 0;
+        let allow_next_day = row.find('input[name*="[allow_next_day]"]').is(':checked') ? 1 : 0;
+
+        if (!address || !latitude || !longitude) {
+            toastr.error('{{ translate("messages.fill_all_required_fields") }}');
+            return;
+        }
+
+        let url = id ? '{{ route("admin.store.location.update", ["id" => ":id"]) }}'.replace(':id', id) : '{{ route("admin.store.location.store") }}';
+        let formData = {
+            _token: '{{ csrf_token() }}',
+            store_id: '{{ $store->id }}',
+            address: address,
+            latitude: latitude,
+            longitude: longitude,
+            allow_minutes: allow_minutes,
+            allow_standard: allow_standard,
+            allow_next_day: allow_next_day
+        };
+
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: formData,
+            beforeSend: function() {
+                $(btn).attr('disabled', true);
+            },
+            success: function(data) {
+                if (data.id) {
+                    row.find('input[name*="[id]"]').val(data.id);
+                }
+                toastr.success(data.message);
+            },
+            error: function(data) {
+                if (data.responseJSON && data.responseJSON.errors) {
+                    data.responseJSON.errors.forEach(err => toastr.error(err.message));
+                } else {
+                    toastr.error(data.responseJSON.message || '{{ translate("messages.error") }}');
+                }
+            },
+            complete: function() {
+                $(btn).attr('disabled', false);
+            }
+        });
+    }
+
+    function remove_location_row(btn) {
+        let row = $(btn).closest('tr');
+        let id = row.find('input[name*="[id]"]').val();
+
+        Swal.fire({
+            title: '{{translate('messages.are_you_sure')}}',
+            text: '{{translate('messages.you_want_to_delete_this_location')}}',
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonColor: 'default',
+            confirmButtonColor: '#FC6A57',
+            cancelButtonText: '{{translate('messages.no')}}',
+            confirmButtonText: '{{translate('messages.yes')}}',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.value) {
+                if (id) {
+                    $.ajax({
+                        url: '{{ route("admin.store.location.delete", ["id" => ":id"]) }}'.replace(':id', id),
+                        method: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(data) {
+                            row.remove();
+                            toastr.success(data.message);
+                        },
+                        error: function(data) {
+                            toastr.error(data.responseJSON.message || '{{ translate("messages.error") }}');
+                        }
+                    });
+                } else {
+                    row.remove();
+                }
+            }
+        });
+    }
+
+    function add_location_row() {
+        let key = $('#location_table_body tr').length;
+        let html = `
+            <tr>
+                <td>
+                    <input type="text" name="locations[${key}][address]" id="location_address_${key}" class="form-control" placeholder="{{ translate('Address') }}" required>
+                    <input type="hidden" name="locations[${key}][id]" value="">
+                </td>
+                <td>
+                    <input type="number" step="any" name="locations[${key}][latitude]" id="location_lat_${key}" class="form-control" placeholder="{{ translate('Latitude') }}" required>
+                </td>
+                <td>
+                    <input type="number" step="any" name="locations[${key}][longitude]" id="location_lng_${key}" class="form-control" placeholder="{{ translate('Longitude') }}" required>
+                </td>
+                <td class="text-center">
+                    <label class="toggle-switch toggle-switch-sm">
+                        <input type="checkbox" name="locations[${key}][allow_minutes]" class="toggle-switch-input" checked>
+                        <span class="toggle-switch-label">
+                            <span class="toggle-switch-indicator"></span>
+                        </span>
+                    </label>
+                </td>
+                <td class="text-center">
+                    <label class="toggle-switch toggle-switch-sm">
+                        <input type="checkbox" name="locations[${key}][allow_standard]" class="toggle-switch-input" checked>
+                        <span class="toggle-switch-label">
+                            <span class="toggle-switch-indicator"></span>
+                        </span>
+                    </label>
+                </td>
+                <td class="text-center">
+                    <label class="toggle-switch toggle-switch-sm">
+                        <input type="checkbox" name="locations[${key}][allow_next_day]" class="toggle-switch-input" checked>
+                        <span class="toggle-switch-label">
+                            <span class="toggle-switch-indicator"></span>
+                        </span>
+                    </label>
+                </td>
+                <td>
+                    <div class="btn--container justify-content-center">
+                        <button type="button" class="btn btn-outline-success icon-btn" onclick="save_location(this)" title="{{ translate('Save Location') }}">
+                            <i class="tio-save"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-primary icon-btn" onclick="open_location_map(${key})">
+                            <i class="tio-map"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-danger icon-btn" onclick="remove_location_row(this)">
+                            <i class="tio-delete-outlined"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+        $('#location_table_body').append(html);
+    }
+
+        let subLocationMap = null;
+        let subLocationMarker = null;
+        let subLocationCurrentIndex = null;
+        let subLocationGeocoder = null;
+
+        function open_location_map(index) {
+            subLocationCurrentIndex = index;
+            $('#locationMapModal').modal('show');
+            
+            setTimeout(function() {
+                if (subLocationMap === null) {
+                    initSubLocationMap();
+                } else {
+                    google.maps.event.trigger(subLocationMap, "resize");
+                    resetSubLocationMarker();
+                }
+            }, 500);
+        }
+
+        function initSubLocationMap() {
+            const { defaultLocation } = window.mapConfig;
+            let center = {
+                lat: Number(defaultLocation ? defaultLocation.lat : 23.757989),
+                lng: Number(defaultLocation ? defaultLocation.lng : 90.360587)
+            };
+
+            subLocationMap = new google.maps.Map(document.getElementById("location_map_canvas"), {
+                zoom: 13,
+                center: center,
+            });
+
+            subLocationGeocoder = new google.maps.Geocoder();
+
+            subLocationMarker = new google.maps.Marker({
+                position: center,
+                map: subLocationMap,
+                draggable: true
+            });
+
+            const input = document.getElementById("location-pac-input");
+            const searchBox = new google.maps.places.SearchBox(input);
+
+            searchBox.addListener("places_changed", () => {
+                const places = searchBox.getPlaces();
+                if (places.length == 0) return;
+                
+                const place = places[0];
+                if (!place.geometry || !place.geometry.location) return;
+
+                subLocationMarker.setPosition(place.geometry.location);
+                subLocationMap.setCenter(place.geometry.location);
+            });
+
+            subLocationMap.addListener("click", (e) => {
+                subLocationMarker.setPosition(e.latLng);
+            });
+
+            resetSubLocationMarker();
+        }
+
+        function resetSubLocationMarker() {
+            let lat = $(`#location_lat_${subLocationCurrentIndex}`).val();
+            let lng = $(`#location_lng_${subLocationCurrentIndex}`).val();
+
+            if (lat && lng) {
+                let pos = { lat: parseFloat(lat), lng: parseFloat(lng) };
+                subLocationMarker.setPosition(pos);
+                subLocationMap.setCenter(pos);
+            }
+        }
+
+        function confirm_location_selection() {
+            let pos = subLocationMarker.getPosition();
+            $(`#location_lat_${subLocationCurrentIndex}`).val(pos.lat());
+            $(`#location_lng_${subLocationCurrentIndex}`).val(pos.lng());
+
+            subLocationGeocoder.geocode({ location: pos }, function (results, status) {
+                if (status === 'OK' && results[0]) {
+                    $(`#location_address_${subLocationCurrentIndex}`).val(results[0].formatted_address);
+                }
+                $('#locationMapModal').modal('hide');
+            });
+        }
     </script>
 @endpush

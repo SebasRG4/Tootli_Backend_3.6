@@ -591,6 +591,57 @@ class DeliverymanController extends Controller
                 $order->parcel_category->increment('orders_count');
             }
 
+            $is_partial = $order->details->where('delivery_status', 'pending')->count() > 0;
+
+            if ($order->module->module_type == 'food') {
+                /// logic for food module not changes
+            } else {
+                // Logic for grocery and other modules with potential partial delivery
+
+                // Refined Logic based on user request:
+                // 1. Identify items to mark as delivered.
+                //    - Current assumption: The driver delivers items with 'minutes' delivery type first.
+                //    - Or, if the order is mixed, we process 'minutes' items.
+
+                $minutes_items = $order->details->filter(function ($detail) {
+                    $item_details = json_decode($detail->item_details, true);
+                    return isset($item_details['delivery_time_type']) && $item_details['delivery_time_type'] == 'minutes' && $detail->delivery_status == 'pending';
+                });
+
+                $other_items = $order->details->filter(function ($detail) {
+                    $item_details = json_decode($detail->item_details, true);
+                    return isset($item_details['delivery_time_type']) && $item_details['delivery_time_type'] != 'minutes' && $detail->delivery_status == 'pending';
+                });
+
+                // If we have minutes items pending, we assume this delivery is for them.
+                if ($minutes_items->count() > 0) {
+                    foreach ($minutes_items as $detail) {
+                        $detail->delivery_status = 'delivered';
+                        $detail->save();
+                    }
+                } elseif ($other_items->count() > 0) {
+                    // If no minutes items, deliver the rest
+                    foreach ($other_items as $detail) {
+                        $detail->delivery_status = 'delivered';
+                        $detail->save();
+                    }
+                }
+
+                // Re-evaluate partial status
+                $pending_items = $order->details()->where('delivery_status', 'pending')->count();
+
+                if ($pending_items > 0) {
+                    // PARTIAL DELIVERY
+                    $order->order_status = 'partial_delivered';
+                    $order->delivery_man_id = null; // Release driver
+                    $order->save();
+
+                    // Respond with partial delivery message
+                    return response()->json(['message' => translate('messages.partial_delivery_successful_driver_released')], 200);
+                }
+            }
+
+            // Standard full delivery logic (existing or if no pending items left)
             $img_names = [];
             $images = [];
             if (!empty($request->file('order_proof'))) {
@@ -598,6 +649,7 @@ class DeliverymanController extends Controller
                     $image_name = Helpers::upload('order/', 'png', $img);
                     array_push($img_names, ['img' => $image_name, 'storage' => Helpers::getDisk()]);
                 }
+
                 $images = $img_names;
             }
             if (count($images) > 0) {

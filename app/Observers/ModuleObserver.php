@@ -15,6 +15,7 @@ class ModuleObserver
     public function created(Module $module): void
     {
         $this->refreshBusinessSettingsCache();
+        \App\Services\CacheService::invalidateModuleConfig();
     }
 
     /**
@@ -23,6 +24,7 @@ class ModuleObserver
     public function updated(Module $module): void
     {
         $this->refreshBusinessSettingsCache();
+        \App\Services\CacheService::invalidateModuleConfig($module->id);
     }
 
     /**
@@ -31,6 +33,7 @@ class ModuleObserver
     public function deleted(Module $module): void
     {
         $this->refreshBusinessSettingsCache();
+        \App\Services\CacheService::invalidateModuleConfig($module->id);
     }
 
     /**
@@ -55,7 +58,7 @@ class ModuleObserver
         $cacheKeys = DB::table('cache')
             ->where('key', 'like', "%" . $prefix . "%")
             ->pluck('key');
-        $appName = env('APP_NAME').'_cache';
+        $appName = env('APP_NAME') . '_cache';
         $remove_prefix = strtolower(str_replace('=', '', $appName));
         $sanitizedKeys = $cacheKeys->map(function ($key) use ($remove_prefix) {
             $key = str_replace($remove_prefix, '', $key);

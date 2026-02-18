@@ -66,6 +66,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->group('api', [
             SubstituteBindings::class,
+            \App\Http\Middleware\CompressResponse::class,
         ]);
 
         $middleware->alias([
