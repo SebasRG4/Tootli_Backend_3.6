@@ -32,6 +32,7 @@ class Cart extends Model
         'price',
         'quantity',
         'variation',
+        'request_note',
     ];
 
     public function item()

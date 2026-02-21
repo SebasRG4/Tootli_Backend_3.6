@@ -1,4 +1,4 @@
-<?php return array(
+<?php return array (
   'no_coverage' => 'Sin cobertura',
   'No Coverage' => 'Sin cobertura',
   'attributes' => 'Attributes',
@@ -9368,4 +9368,6 @@ Smartly or Earn. ',
   'Setup your all business general settings' => 'Setup your all business general settings',
   'next_day' => 'Día Siguiente',
   'added_to_visited_successfully' => 'Added to visited successfully',
+  'The interest field is required.' => 'The interest field is required.',
+  'review_submitted_successfully' => 'Review submitted successfully',
 );

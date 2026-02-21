@@ -691,6 +691,13 @@ class ItemController extends Controller
         return response()->json($data, 200);
     }
 
+    public function get_reviews(Request $request)
+    {
+        $response = $this->get_product_reviews($request, $request->item_id);
+        $data = $response->getData(true);
+        return response()->json($data['reviews'] ?? [], 200);
+    }
+
     public function get_product_rating($id)
     {
         try {
@@ -1101,7 +1108,23 @@ class ItemController extends Controller
         }
 
         $zone = \App\Models\Zone::find($zone_ids[0]);
-        return $zone?->max_delivery_radius;
+        if (!$zone) {
+            return null;
+        }
+
+        // Priority to module-specific radius in the zone
+        $module_data = config('module.current_module_data');
+        if ($module_data) {
+            $module_zone = \App\Models\ModuleZone::where('zone_id', $zone->id)
+                ->where('module_id', $module_data['id'])
+                ->first();
+
+            if ($module_zone && $module_zone->max_delivery_radius !== null) {
+                return (float) $module_zone->max_delivery_radius;
+            }
+        }
+
+        return $zone->max_delivery_radius;
     }
 
     /**

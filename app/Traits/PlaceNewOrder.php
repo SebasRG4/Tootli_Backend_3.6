@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Models\Cart;
 use App\Models\Item;
+use App\Models\Module;
 use App\Models\User;
 use App\Models\Zone;
 use App\Models\Order;
@@ -708,6 +709,12 @@ trait PlaceNewOrder
                 'message' => translate('messages.digital_payment_for_the_order_not_available_at_this_time'),
                 'status_code' => 403,
             ],
+            $request->payment_method === 'cash_on_delivery' && (Module::where('id', $request->header('moduleId'))->first()?->module_type === 'ecommerce') => [
+                'code' => 'payment_method',
+                'message' => translate('messages.Cash_on_delivery_for_the_order_not_available_at_this_time'),
+                'status_code' => 403,
+            ],
+
             $request->payment_method === 'cash_on_delivery' && !Helpers::get_business_settings('cash_on_delivery')['status'] => [
                 'code' => 'digital_payment',
                 'message' => translate('messages.Cash_on_delivery_for_the_order_not_available_at_this_time'),
@@ -1149,6 +1156,7 @@ trait PlaceNewOrder
                     'variant' => json_encode($c['variant']),
                     'variation' => $foodVariation ? json_encode($variations) : json_encode($c['variation']),
                     'add_ons' => json_encode($addon_data['addons']),
+                    'request_note' => $c['request_note'] ?? null,
 
                     'total_add_on_price' => round($addon_data['total_add_on_price'], config('round_up_to_digit')),
                     'addon_discount' => 0,

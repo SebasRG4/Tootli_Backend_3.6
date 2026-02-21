@@ -91,6 +91,7 @@ class CartController extends Controller
         $cart->price = $request->price;
         $cart->quantity = $request->quantity;
         $cart->variation = isset($request->variation) ? json_encode($request->variation) : json_encode([]);
+        $cart->request_note = $request->request_note;
         $cart->save();
 
         $item->carts()->save($cart);
@@ -146,6 +147,7 @@ class CartController extends Controller
         $cart->price = $request->price;
         $cart->quantity = $request->quantity;
         $cart->variation = isset($request->variation) ? json_encode($request->variation) : $cart->variation;
+        $cart->request_note = $request->request_note;
         $cart->save();
 
         $carts = Cart::with(['item.store'])->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->get()

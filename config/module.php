@@ -9,7 +9,8 @@ return [
         'parcel',
         'rental',
         'taxi',
-        'sabores'
+        'sabores',
+        'services'
     ],
 
     'grocery' => [
@@ -229,5 +230,32 @@ return [
         'reservations' => true,
         'average_ticket' => true,
         'infrastructure_images' => true,
+    ],
+
+    'services' => [
+        'order_status' => ['accepted' => false],
+        'order_place_to_schedule_interval' => false,
+        'add_on' => false,
+        'stock' => false,
+        'veg_non_veg' => false,
+        'unit' => false,
+        'order_attachment' => true,
+        'always_open' => true,
+        'all_zone_service' => true,
+        'item_available_time' => false,
+        'show_restaurant_text' => false,
+        'is_parcel' => false,
+        'organic' => false,
+        'cutlery' => false,
+        'common_condition' => false,
+        'nutrition' => false,
+        'allergy' => false,
+        'basic' => false,
+        'halal' => false,
+        'brand' => false,
+        'generic_name' => false,
+        'description' => 'Pagos / Servicios - Secure payments and professional hiring platform.',
+        'is_rental' => false,
+        'is_taxi' => false,
     ],
 ];

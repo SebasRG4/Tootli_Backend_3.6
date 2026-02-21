@@ -328,8 +328,7 @@ class Helpers
         unset($data['pharmacy_item_details']);
         unset($data['store']);
         unset($data['rating']);
-
-
+        return $data;
     }
 
     public static function calculate_delivery_info($store, $preferred_type, $latitude, $longitude)

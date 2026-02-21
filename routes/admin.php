@@ -165,6 +165,16 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('priority', 'DynamicSectionController@priority')->name('priority');
         });
 
+        Route::group(['prefix' => 'dynamic-section-ecommerce', 'as' => 'dynamic-section-ecommerce.'], function () {
+            Route::get('/', 'DynamicSectionEcommerceController@index')->name('index');
+            Route::get('create', 'DynamicSectionEcommerceController@create')->name('create');
+            Route::post('store', 'DynamicSectionEcommerceController@store')->name('store');
+            Route::get('edit/{id}', 'DynamicSectionEcommerceController@edit')->name('edit');
+            Route::put('update/{id}', 'DynamicSectionEcommerceController@update')->name('update');
+            Route::get('status/{id}', 'DynamicSectionEcommerceController@status')->name('status');
+            Route::delete('delete/{id}', 'DynamicSectionEcommerceController@destroy')->name('delete');
+        });
+
         // Taxi Management Routes moved to Modules/Taxi/routes/web.php
 
         // Sabores de la Ciudad Management Routes

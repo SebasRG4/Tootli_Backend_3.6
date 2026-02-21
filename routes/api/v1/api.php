@@ -459,6 +459,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::get('suggested', 'ItemController@get_cart_suggest_products');
             Route::get('item-or-store-search', 'ItemController@item_or_store_search');
             Route::post('reviews/submit', 'ItemController@submit_product_review')->middleware('auth:api');
+            Route::get('reviews', 'ItemController@get_reviews');
             Route::get('common-conditions', 'ItemController@get_store_condition_products');
             Route::get('get-products', 'ItemController@get_products');
             Route::get('get-delivery-wise', 'ItemController@get_delivery_wise_products');
@@ -527,6 +528,10 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         Route::group(['prefix' => 'dynamic-sections'], function () {
             Route::get('/', 'DynamicSectionController@index');
             Route::get('/{id}', 'DynamicSectionController@show');
+        });
+
+        Route::group(['prefix' => 'dynamic-section-ecommerce'], function () {
+            Route::get('/', 'DynamicSectionEcommerceController@index');
         });
 
         Route::get('coupon/list/all', 'CouponController@list');
