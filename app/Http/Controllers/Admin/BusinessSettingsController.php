@@ -109,7 +109,58 @@ class BusinessSettingsController extends Controller
             $language = getWebConfig('language');
 
             return view('admin-views.business-settings.automated_message', compact('messages', 'language'));
+        } elseif ($tab == 'dynamic-pricing') {
+            $config = BusinessSetting::where(['key' => 'surge_pricing_config'])->first();
+            $config = $config ? json_decode($config->value, true) : [
+                'status' => 0,
+                'mode' => 'automatic',
+                'thresholds' => [
+                    ['ratio' => 1.5, 'multiplier' => 1.15],
+                    ['ratio' => 2.0, 'multiplier' => 1.3],
+                    ['ratio' => 3.0, 'multiplier' => 1.5]
+                ]
+            ];
+            return view('admin-views.business-settings.dynamic-pricing-index', compact('config'));
         }
+    }
+
+    public function update_dynamic_pricing(Request $request)
+    {
+        if (getEnvMode() === 'demo') {
+            Toastr::info(translate('messages.update_option_is_disable_for_demo'));
+            return back();
+        }
+
+        $thresholds = [];
+        if ($request->has('ratio')) {
+            foreach ($request->ratio as $key => $ratio) {
+                if (isset($request->multiplier[$key])) {
+                    $thresholds[] = [
+                        'ratio' => (float) $ratio,
+                        'multiplier' => (float) $request->multiplier[$key]
+                    ];
+                }
+            }
+        }
+
+        // Ordenar umbrales por ratio para consistencia
+        usort($thresholds, function ($a, $b) {
+            return $a['ratio'] <=> $b['ratio'];
+        });
+
+        $config = [
+            'status' => $request->status ? 1 : 0,
+            'mode' => $request->mode ?? 'automatic',
+            'thresholds' => $thresholds
+        ];
+
+        BusinessSetting::updateOrCreate(['key' => 'surge_pricing_config'], [
+            'value' => json_encode($config),
+            'updated_at' => now(),
+        ]);
+
+        Toastr::success(translate('messages.dynamic_pricing_updated_successfully'));
+        return back();
     }
 
     public function update_priority(Request $request)

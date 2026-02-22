@@ -1024,8 +1024,26 @@ trait PlaceNewOrder
                 if ($store?->is_valid_subscription == 1 && $store?->store_sub?->max_order != "unlimited" && $store?->store_sub?->max_order > 0) {
                     $store?->store_sub?->decrement('max_order', 1);
                 }
+
+                // 1. Send typical Store/Admin notifications using original helper
                 Helpers::send_order_notification($order);
 
+                // 2. Offload Delivery Assignment to Go Worker via Redis
+                if ($order->order_status == 'pending' && $order->order_type == 'delivery') {
+                    $goPayload = json_encode([
+                        'type' => 'assign_delivery',
+                        'data' => [
+                            'order_id' => $order->id,
+                            'store_id' => $order->store_id,
+                            'zone_id' => $order->zone_id,
+                            'attempt' => 1
+                        ]
+                    ]);
+                    \Illuminate\Support\Facades\Redis::rpush('tootli:go_jobs', $goPayload);
+                    info("[GoWorker] Dispatched assign_delivery job to Redis for order #{$order->id}");
+                }
+
+                // 3. Send Customer Emails
                 $email = $order->is_guest == 1 ? $request->contact_person_email : $request->user?->email;
                 $name = $order->is_guest == 1 ? $request->contact_person_name : $request->user?->f_name;
                 if (config('mail.status') && $email && $order->order_status == 'pending') {
@@ -1904,6 +1922,32 @@ trait PlaceNewOrder
 
     private function getSurgePriceValue($zoneId, $moduleId, $datetime)
     {
+        // 1. Consultar Motor Go Worker (Surge Pricing Engine)
+        try {
+            $goSurgeResponse = \Illuminate\Support\Facades\Http::timeout(1)->get('http://127.0.0.1:8080/api/v1/surge/calculate', [
+                'zone_id' => $zoneId
+            ]);
+
+            if ($goSurgeResponse->successful()) {
+                $surgeData = $goSurgeResponse->json();
+                if (isset($surgeData['surge_multiplier']) && (float) $surgeData['surge_multiplier'] > 1.0) {
+                    $multiplier = (float) $surgeData['surge_multiplier'];
+                    $percent = ($multiplier - 1.0) * 100;
+
+                    return [
+                        'title' => 'Alta Demanda',
+                        'customer_note' => 'Tarifa dinámica aplicada por alta demanda en tu zona.',
+                        'customer_note_status' => 1,
+                        'price' => $percent,
+                        'price_type' => 'percent',
+                    ];
+                }
+            }
+        } catch (\Exception $e) {
+            info("[GoWorker Surge Error] " . $e->getMessage());
+        }
+
+        // 2. Lógica Original de Laravel (Fallback)
         $carbon = Carbon::parse($datetime);
         $dateStr = $carbon->format('Y-m-d');
         $timeStr = $carbon->format('H:i:s');

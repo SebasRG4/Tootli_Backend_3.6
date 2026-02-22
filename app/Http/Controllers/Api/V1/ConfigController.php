@@ -473,7 +473,8 @@ class ConfigController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
         $zones = Zone::with('modules')->whereContains('coordinates', new Point($request->lat, $request->lng, POINT_SRID))
-            ->selectRaw('zones.*, ABS(ST_Area(coordinates)) as area')->orderBy('area', 'asc')->latest()->get(['id', 'status', 'cash_on_delivery', 'digital_payment', 'offline_payment']);
+            ->selectRaw('zones.*, ABS(ST_Area(coordinates)) as area')->orderBy('area', 'asc')->latest()
+            ->get(['id', 'status', 'cash_on_delivery', 'digital_payment', 'offline_payment', 'increased_delivery_fee', 'increased_delivery_fee_status', 'increase_delivery_charge_message']);
         if (count($zones) < 1) {
             return response()->json([
                 'errors' => [
@@ -483,6 +484,26 @@ class ConfigController extends Controller
         }
         $data = array_filter($zones->toArray(), function ($zone) {
             if ($zone['status'] == 1) {
+                // Inyectar Surge Pricing de Go Worker
+                try {
+                    $goSurgeResponse = \Illuminate\Support\Facades\Http::timeout(0.5)->get('http://127.0.0.1:8080/api/v1/surge/calculate', [
+                        'zone_id' => $zone['id']
+                    ]);
+
+                    if ($goSurgeResponse->successful()) {
+                        $surgeData = $goSurgeResponse->json();
+                        if (isset($surgeData['surge_multiplier']) && (float) $surgeData['surge_multiplier'] > 1.0) {
+                            $multiplier = (float) $surgeData['surge_multiplier'];
+                            $percent = ($multiplier - 1.0) * 100;
+
+                            $zone['increased_delivery_fee_status'] = 1;
+                            $zone['increased_delivery_fee'] = $percent;
+                            $zone['increase_delivery_charge_message'] = 'Tarifa dinámica aplicada por alta demanda en tu zona.';
+                        }
+                    }
+                } catch (\Exception $e) {
+                    // Fallback silencioso
+                }
                 return $zone;
             }
         });

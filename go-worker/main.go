@@ -8,8 +8,11 @@ import (
 	"syscall"
 
 	"github.com/redis/go-redis/v9"
+	"tootli.mx/worker/api"
 	"tootli.mx/worker/config"
+	"tootli.mx/worker/cron"
 	_ "tootli.mx/worker/jobs" // registers all job handlers via init()
+	"tootli.mx/worker/notifications"
 	"tootli.mx/worker/worker"
 )
 
@@ -18,6 +21,14 @@ func main() {
 
 	log.Println("[main] Tootli Go Worker starting...")
 	log.Printf("[main] Connecting to Redis at %s\n", cfg.RedisAddr)
+
+	if err := cfg.ConnectDB(); err != nil {
+		log.Fatalf("[main] Failed to connect to DB: %v\n", err)
+	}
+
+	if err := notifications.InitFirebase(cfg.FirebaseSAPath); err != nil {
+		log.Fatalf("[main] Failed to initialize Firebase: %v\n", err)
+	}
 
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     cfg.RedisAddr,
@@ -39,6 +50,16 @@ func main() {
 		<-quit
 		log.Println("[main] Signal received, shutting down...")
 		cancel()
+	}()
+
+	// Start the Order Monitor Cron Job
+	go cron.StartOrderMonitor(ctx)
+
+	// Start the high-performance HTTP API for GPS Tracking
+	go func() {
+		if err := api.StartServer("8080"); err != nil {
+			log.Fatalf("[main] API Server failed: %v\n", err)
+		}
 	}()
 
 	w := worker.New(rdb, cfg.WorkerConcurrency)

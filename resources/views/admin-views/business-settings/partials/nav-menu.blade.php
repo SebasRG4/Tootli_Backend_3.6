@@ -3,40 +3,69 @@
         <!-- Nav -->
         <ul class="nav nav-tabs border-0 nav--tabs nav--pills">
             <li class="nav-item">
-                <a class="nav-link  {{ Request::is('admin/business-settings/business-setup') ?'active':'' }}" href="{{ route('admin.business-settings.business-setup') }}"   aria-disabled="true">{{translate('messages.business_information')}}</a>
+                <a class="nav-link  {{ Request::is('admin/business-settings/business-setup') ? 'active' : '' }}"
+                    href="{{ route('admin.business-settings.business-setup') }}"
+                    aria-disabled="true">{{translate('messages.business_information')}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/order') ?'active':'' }}" href="{{ route('admin.business-settings.business-setup',  ['tab' => 'order']) }}"  aria-disabled="true">{{translate('messages.order_settings')}}</a>
+                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/order') ? 'active' : '' }}"
+                    href="{{ route('admin.business-settings.business-setup', ['tab' => 'order']) }}"
+                    aria-disabled="true">{{translate('messages.order_settings')}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/refund-settings') ?'active':'' }}" href="{{ route('admin.business-settings.business-setup',  ['tab' => 'refund-settings']) }}"  aria-disabled="true">{{translate('messages.refund_settings')}}</a>
+                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/refund-settings') ? 'active' : '' }}"
+                    href="{{ route('admin.business-settings.business-setup', ['tab' => 'refund-settings']) }}"
+                    aria-disabled="true">{{translate('messages.refund_settings')}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/store') ?'active':'' }}" href="{{ route('admin.business-settings.business-setup',  ['tab' => 'store']) }}"  aria-disabled="true">{{translate('messages.Vendor')}}</a>
+                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/store') ? 'active' : '' }}"
+                    href="{{ route('admin.business-settings.business-setup', ['tab' => 'store']) }}"
+                    aria-disabled="true">{{translate('messages.Vendor')}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/deliveryman') ?'active':'' }}" href="{{ route('admin.business-settings.business-setup',  ['tab' => 'deliveryman']) }}"  aria-disabled="true">{{translate('messages.deliveryman')}}</a>
+                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/deliveryman') ? 'active' : '' }}"
+                    href="{{ route('admin.business-settings.business-setup', ['tab' => 'deliveryman']) }}"
+                    aria-disabled="true">{{translate('messages.deliveryman')}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/customer') ?'active':'' }}" href="{{ route('admin.business-settings.business-setup',  ['tab' => 'customer']) }}"  aria-disabled="true">{{translate('messages.customers')}}</a>
+                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/customer') ? 'active' : '' }}"
+                    href="{{ route('admin.business-settings.business-setup', ['tab' => 'customer']) }}"
+                    aria-disabled="true">{{translate('messages.customers')}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/priority') ?'active':'' }}" href="{{ route('admin.business-settings.business-setup',  ['tab' => 'priority']) }}"  aria-disabled="true">{{translate('messages.priority_setup')}}</a>
+                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/priority') ? 'active' : '' }}"
+                    href="{{ route('admin.business-settings.business-setup', ['tab' => 'priority']) }}"
+                    aria-disabled="true">{{translate('messages.priority_setup')}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/language') ?'active':'' }}" href="{{route('admin.business-settings.language.index')}}"  aria-disabled="true">{{translate('messages.Languages')}}</a>
+                <a class="nav-link {{ Request::is('admin/business-settings/language') ? 'active' : '' }}"
+                    href="{{route('admin.business-settings.language.index')}}"
+                    aria-disabled="true">{{translate('messages.Languages')}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/landing-page') ?'active':'' }}" href="{{ route('admin.business-settings.business-setup',  ['tab' => 'landing-page']) }}"  aria-disabled="true">{{translate('messages.landing_page')}}</a>
+                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/landing-page') ? 'active' : '' }}"
+                    href="{{ route('admin.business-settings.business-setup', ['tab' => 'landing-page']) }}"
+                    aria-disabled="true">{{translate('messages.landing_page')}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/websocket') ?'active':'' }}" href="{{ route('admin.business-settings.business-setup',  ['tab' => 'websocket']) }}"  aria-disabled="true">{{translate('messages.websocket')}}</a>
+                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/websocket') ? 'active' : '' }}"
+                    href="{{ route('admin.business-settings.business-setup', ['tab' => 'websocket']) }}"
+                    aria-disabled="true">{{translate('messages.websocket')}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/disbursement') ?'active':'' }}" href="{{ route('admin.business-settings.business-setup',  ['tab' => 'disbursement']) }}"  aria-disabled="true">{{translate('messages.disbursement')}}</a>
+                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/disbursement') ? 'active' : '' }}"
+                    href="{{ route('admin.business-settings.business-setup', ['tab' => 'disbursement']) }}"
+                    aria-disabled="true">{{translate('messages.disbursement')}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/automated-message') ?'active':'' }}" href="{{ route('admin.business-settings.business-setup',  ['tab' => 'automated-message']) }}"  aria-disabled="true">{{translate('messages.Automated_Message')}}</a>
+                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/automated-message') ? 'active' : '' }}"
+                    href="{{ route('admin.business-settings.business-setup', ['tab' => 'automated-message']) }}"
+                    aria-disabled="true">{{translate('messages.Automated_Message')}}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/dynamic-pricing') ? 'active' : '' }}"
+                    href="{{ route('admin.business-settings.business-setup', ['tab' => 'dynamic-pricing']) }}"
+                    aria-disabled="true">Tarifa dinámica</a>
             </li>
         </ul>
         <!-- End Nav -->

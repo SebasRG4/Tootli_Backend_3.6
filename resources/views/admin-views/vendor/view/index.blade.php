@@ -148,6 +148,30 @@
                     </div>
                 </div>
             </div>
+
+            @if(in_array($store->module->module_type, ['food', 'ecommerce']))
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="card-title m-0 d-flex align-items-center">
+                        <span class="card-header-icon mr-2">
+                            <i class="tio-qr-code"></i>
+                        </span>
+                        <span class="ml-1">{{ translate('messages.store_qr_code') }}</span>
+                    </h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="mb-3">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={{ $store->id }}" alt="QR Code" class="img-fluid border" style="max-width: 200px;">
+                        </div>
+                        <p class="text-muted">{{translate('messages.scan_this_qr_to_pay_to_this_store')}}</p>
+                        <a href="https://api.qrserver.com/v1/create-qr-code/?size=500x500&data={{ $store->id }}" download="qr_code_{{$store->id}}.png" target="_blank" class="btn btn--primary">
+                            <i class="tio-download"></i> {{translate('messages.download_qr')}}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @endif
             <div class="row pt-3 g-3">
                 <div class="col-lg-6">
                     <div class="card h-100">

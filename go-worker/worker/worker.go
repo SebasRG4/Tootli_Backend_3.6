@@ -10,7 +10,7 @@ import (
 	"tootli.mx/worker/jobs"
 )
 
-const queueKey = "tootli:go_jobs"
+const queueKey = "6ammart1767732708app_envlive_database_tootli:go_jobs"
 
 // Worker listens to a Redis list queue and processes jobs concurrently
 type Worker struct {
