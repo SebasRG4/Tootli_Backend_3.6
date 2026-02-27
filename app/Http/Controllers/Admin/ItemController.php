@@ -69,6 +69,7 @@ class ItemController extends Controller
             'description.*' => 'max:1000',
             'name.0' => 'required',
             'description.0' => 'required',
+            'weight' => 'required|numeric|max:10',
         ], [
             'description.*.max' => translate('messages.description_length_warning'),
             'name.0.required' => translate('messages.item_name_required'),
@@ -76,6 +77,8 @@ class ItemController extends Controller
             'image.required' => translate('messages.thumbnail image is required'),
             'name.0.required' => translate('default_name_is_required'),
             'description.0.required' => translate('default_description_is_required'),
+            'weight.required' => translate('messages.weight_is_required'),
+            'weight.max' => translate('messages.weight_limit_exceeded'),
         ]);
         if ($request['discount_type'] == 'percent') {
             $dis = ($request['price'] / 100) * $request['discount'];
@@ -348,6 +351,7 @@ class ItemController extends Controller
         $item->stock = $request->current_stock ?? 0;
         $item->images = $images;
         $item->is_halal = $request->is_halal ?? 0;
+        $item->weight = $request->weight ?? 0;
         $item->save();
         $item->tags()->sync($tag_ids);
         $item->nutritions()->sync($nutrition_ids);
@@ -454,11 +458,14 @@ class ItemController extends Controller
             'discount' => 'required|numeric|min:0',
             'name.0' => 'required',
             'description.0' => 'required',
+            'weight' => 'required|numeric|max:10',
         ], [
             'description.*.max' => translate('messages.description_length_warning'),
             'category_id.required' => translate('messages.category_required'),
             'name.0.required' => translate('default_name_is_required'),
             'description.0.required' => translate('default_description_is_required'),
+            'weight.required' => translate('messages.weight_is_required'),
+            'weight.max' => translate('messages.weight_limit_exceeded'),
         ]);
 
         if ($request['discount_type'] == 'percent') {
@@ -764,6 +771,7 @@ class ItemController extends Controller
                 info($e->getMessage());
             }
         }
+        $item->weight = $request->weight ?? 0;
         $item->save();
         $item->tags()->sync($tag_ids);
         $item->nutritions()->sync($nutrition_ids);

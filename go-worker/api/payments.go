@@ -1,9 +1,11 @@
 package api
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/google/uuid"
@@ -13,12 +15,19 @@ import (
 )
 
 type QrPayPayload struct {
-	Token   string  `json:"token"`
+	UserID  uint    `json:"user_id"`
 	StoreID uint    `json:"store_id"`
 	Amount  float64 `json:"amount"`
 }
 
 func HandleQrPay(w http.ResponseWriter, r *http.Request) {
+	// Verify internal secret
+	secret := r.Header.Get("X-Internal-Secret")
+	if secret == "" || secret != config.InternalSecret {
+		http.Error(w, "Unauthorized Internal Access", http.StatusUnauthorized)
+		return
+	}
+
 	var payload QrPayPayload
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
 		http.Error(w, "Invalid Payload", http.StatusBadRequest)
@@ -35,10 +44,10 @@ func HandleQrPay(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 1. Authenticate user by token
+	// 1. Authenticate user by ID
 	var user models.User
-	if err := config.DB.Where("auth_token = ?", payload.Token).First(&user).Error; err != nil {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	if err := config.DB.First(&user, payload.UserID).Error; err != nil {
+		http.Error(w, "User not found", http.StatusNotFound)
 		return
 	}
 
@@ -67,7 +76,20 @@ func HandleQrPay(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 4. Atomic Transaction
+	// 4. Calculate Commission
+	var globalCommissionStr models.BusinessSetting
+	commissionPercentage := 0.0
+	if err := config.DB.Where("`key` = ?", "admin_commission").First(&globalCommissionStr).Error; err == nil {
+		fmt.Sscanf(globalCommissionStr.Value, "%f", &commissionPercentage)
+	}
+	if store.Comission != nil {
+		commissionPercentage = *store.Comission
+	}
+
+	adminCommission := (payload.Amount * commissionPercentage) / 100
+	storeAmount := payload.Amount - adminCommission
+
+	// 5. Atomic Transaction
 	err := config.DB.Transaction(func(tx *gorm.DB) error {
 		now := time.Now()
 		transactionID := uuid.New().String()
@@ -93,12 +115,62 @@ func HandleQrPay(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// C. Add to store wallet (total_earning)
-		if err := tx.Model(&storeWallet).Update("total_earning", gorm.Expr("total_earning + ?", payload.Amount)).Error; err != nil {
+		if err := tx.Model(&storeWallet).Update("total_earning", gorm.Expr("total_earning + ?", storeAmount)).Error; err != nil {
 			return err
 		}
 
-		// Optional: Create a store transaction record if the schema exists/requirements change
-		// For now, we update total_earning which is what Laravel uses for disbursements.
+		// D. Update Admin Wallet
+		var adminWallet models.AdminWallet
+		if err := tx.Where("admin_id = ?", 1).FirstOrCreate(&adminWallet, models.AdminWallet{AdminID: 1}).Error; err != nil {
+			return err
+		}
+		if err := tx.Model(&adminWallet).Updates(map[string]interface{}{
+			"total_commission_earning": gorm.Expr("total_commission_earning + ?", adminCommission),
+			"digital_received":         gorm.Expr("digital_received + ?", payload.Amount),
+		}).Error; err != nil {
+			return err
+		}
+
+		// E. Create Order Transaction for History
+		orderTransaction := models.OrderTransaction{
+			VendorID:              &store.VendorID,
+			OrderAmount:           payload.Amount,
+			StoreAmount:           storeAmount,
+			AdminCommission:       adminCommission,
+			ReceivedBy:            "admin",
+			Status:                nil,
+			DeliveryCharge:        0,
+			Tax:                   0,
+			ZoneID:                store.ZoneID,
+			ModuleID:              store.ModuleID,
+			CreatedAt:             now,
+			UpdatedAt:             now,
+			AdminExpense:          0,
+			StoreExpense:          0,
+			DiscountAmountByStore: 0,
+			CommissionPercentage:  commissionPercentage,
+			OrderID:               0, // QR payments don't have a specific order number
+		}
+		if err := tx.Create(&orderTransaction).Error; err != nil {
+			return err
+		}
+
+		// F. Create Account Transaction for Vendor Balance History
+		accountTransaction := models.AccountTransaction{
+			FromType:       "store",
+			FromID:         store.VendorID,
+			CurrentBalance: storeWallet.TotalEarning,
+			Amount:         storeAmount,
+			Method:         "qr_payment",
+			Ref:            transactionID,
+			Type:           "earning",
+			CreatedBy:      "admin",
+			CreatedAt:      now,
+			UpdatedAt:      now,
+		}
+		if err := tx.Create(&accountTransaction).Error; err != nil {
+			return err
+		}
 
 		return nil
 	})
@@ -108,11 +180,64 @@ func HandleQrPay(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 5. Success response
+	// 6. Success response
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"status":  "success",
 		"message": "Payment successful",
 		"balance": user.WalletBalance - payload.Amount,
 	})
+
+	// 7. Send WhatsApp Notification
+	go sendWhatsAppNotification(store.Phone, payload.Amount)
+}
+
+// sendWhatsAppNotification sends a WhatsApp message to the given phone number asynchronously.
+// It relies on environment variables WHATSAPP_API_URL and WHATSAPP_API_TOKEN.
+func sendWhatsAppNotification(phone string, amount float64) {
+	if phone == "" {
+		fmt.Println("[WhatsApp] Store phone number is empty. Skipping notification.")
+		return
+	}
+
+	apiURL := os.Getenv("WHATSAPP_API_URL")
+	if apiURL == "" {
+		fmt.Println("[WhatsApp] Missing WHATSAPP_API_URL environment variable. Skipping notification.")
+		return
+	}
+
+	msg := fmt.Sprintf("Pago exitoso por $%.2f cantidad de dinero pagado", amount)
+
+	// Build generic JSON payload
+	payload := map[string]string{
+		"number": phone,
+		"text":   msg,
+	}
+	bodyData, _ := json.Marshal(payload)
+
+	req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(bodyData))
+	if err != nil {
+		fmt.Printf("[WhatsApp] Failed to create request: %v\n", err)
+		return
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	token := os.Getenv("WHATSAPP_API_TOKEN")
+	if token != "" {
+		req.Header.Set("Authorization", "Bearer "+token)
+	}
+
+	client := &http.Client{Timeout: 10 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Printf("[WhatsApp] Request failed: %v\n", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
+		fmt.Printf("[WhatsApp] Successfully sent message to %s\n", phone)
+	} else {
+		fmt.Printf("[WhatsApp] Error sending message, status code: %d\n", resp.StatusCode)
+	}
 }

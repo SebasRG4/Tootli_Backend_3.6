@@ -734,6 +734,8 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         Route::group(['prefix' => 'customer', 'as' => 'customer.', 'middleware' => ['module:customer_management']], function () {
             Route::get('list', 'CustomerController@customer_list')->name('list');
             Route::get('view/{user_id}', 'CustomerController@view')->name('view');
+            Route::get('edit/{id}', 'CustomerController@edit')->name('edit');
+            Route::post('update/{id}', 'CustomerController@update')->name('update');
             Route::post('search', 'CustomerController@search')->name('search');
             Route::get('status/{customer}/{status}', 'CustomerController@status')->name('status');
         });

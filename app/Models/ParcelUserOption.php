@@ -49,6 +49,20 @@ class ParcelUserOption extends Model
         return $value;
     }
 
+    protected $appends = ['image_full_url'];
+
+    public function getImageFullUrlAttribute()
+    {
+        $value = $this->icon;
+        if ($value && (substr($value, 0, 7) == 'http://' || substr($value, 0, 8) == 'https://')) {
+            return $value;
+        }
+        if ($value) {
+            return asset('storage/parcel_category') . '/' . $value;
+        }
+        return asset('assets/admin/img/160x160/img2.jpg');
+    }
+
     protected static function booted()
     {
         static::addGlobalScope('translate', function (Builder $builder) {

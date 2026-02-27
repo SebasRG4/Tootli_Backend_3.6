@@ -51,10 +51,15 @@ class WalletController extends Controller
             })
             ->latest()->paginate($request->limit, ['*'], 'page', $request->offset);
 
+        $total_qr_payment = WalletTransaction::where('user_id', $request->user()->id)
+            ->where('transaction_type', 'qr_payment')
+            ->sum('debit');
+
         $data = [
             'total_size' => $paginator->total(),
             'limit' => $request->limit,
             'offset' => $request->offset,
+            'total_qr_payment' => (float) $total_qr_payment,
             'data' => $paginator->items()
         ];
         return response()->json($data, 200);
@@ -168,7 +173,8 @@ class WalletController extends Controller
             $driveMondBaseUrl = ExternalConfiguration::where('key', 'drivemond_base_url')->first()?->value;
             $driveMondToken = ExternalConfiguration::where('key', 'drivemond_token')->first()?->value;
             $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()?->value;
-            $response = Http::post($driveMondBaseUrl . '/api/customer/wallet/transfer-drivemond-from-mart',
+            $response = Http::post(
+                $driveMondBaseUrl . '/api/customer/wallet/transfer-drivemond-from-mart',
                 [
                     'bearer_token' => $request->bearerToken(),
                     'currency' => $currencyCode,
@@ -176,10 +182,11 @@ class WalletController extends Controller
                     'token' => $driveMondToken,
                     'external_base_url' => url('/'),
                     'external_token' => $systemSelfToken,
-                ]);
+                ]
+            );
             if ($response->successful()) {
                 $drivemondCustomerResponse = $response->json();
-                if (array_key_exists('status',$drivemondCustomerResponse) && $drivemondCustomerResponse['status']) {
+                if (array_key_exists('status', $drivemondCustomerResponse) && $drivemondCustomerResponse['status']) {
                     $drivemondCustomer = $drivemondCustomerResponse['data'];
                     $user = User::where(['phone' => $drivemondCustomer['phone']])->first();
                     if ($user) {
@@ -203,7 +210,7 @@ class WalletController extends Controller
                     }
                 }
                 $drivemondCustomer = $drivemondCustomerResponse['data'];
-                if (array_key_exists('error_code',$drivemondCustomer) && $drivemondCustomer['error_code'] == 405) {
+                if (array_key_exists('error_code', $drivemondCustomer) && $drivemondCustomer['error_code'] == 405) {
                     $errors = [];
                     array_push($errors, ['code' => 'currency_not_match_403', 'message' => translate('messages.Currency not matched, Please contact support')]);
                     return response()->json([
@@ -241,7 +248,7 @@ class WalletController extends Controller
         if ($validator->fails()) {
             $data = [
                 'status' => false,
-                'data' =>Helpers::error_processor($validator),
+                'data' => Helpers::error_processor($validator),
             ];
             return response()->json($data);
         }
@@ -256,12 +263,14 @@ class WalletController extends Controller
             $driveMondBaseUrl = ExternalConfiguration::where('key', 'drivemond_base_url')->first()?->value;
             $driveMondToken = ExternalConfiguration::where('key', 'drivemond_token')->first()?->value;
             $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()?->value;
-            $response = Http::withToken($request->bearer_token)->post($driveMondBaseUrl . '/api/customer/get-data',
+            $response = Http::withToken($request->bearer_token)->post(
+                $driveMondBaseUrl . '/api/customer/get-data',
                 [
                     'token' => $driveMondToken,
                     'external_base_url' => url('/'),
                     'external_token' => $systemSelfToken,
-                ]);
+                ]
+            );
             if ($response->successful()) {
                 $drivemondCustomerResponse = $response->json();
                 if ($drivemondCustomerResponse['status']) {
@@ -285,7 +294,7 @@ class WalletController extends Controller
                             'description' => translate('you_transfer_your_wallet_balance_mart_from_drivemond'),
                             'order_id' => '',
                             'image' => '',
-                            'type'=> 'wallet_transfer'
+                            'type' => 'wallet_transfer'
                         ];
                         Helpers::send_push_notif_to_device($user->cm_firebase_token, $notificationData);
 
@@ -314,5 +323,46 @@ class WalletController extends Controller
         return response()->json($data);
 
 
+    }
+
+    public function qr_pay(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'store_id' => 'required',
+            'amount' => 'required|numeric|min:0.01',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $user = $request->user();
+
+        // Prepare the payload for the Go worker
+        $payload = [
+            'user_id' => $user->id,
+            'store_id' => (int) $request->store_id,
+            'amount' => (float) $request->amount,
+        ];
+
+        try {
+            // Forward to Go worker on port 8080 with internal secret header
+            $response = Http::withHeaders([
+                'X-Internal-Secret' => env('INTERNAL_SECRET', 'tootli_internal_secret_key'),
+            ])->post('http://localhost:8080/api/v1/user/wallet/qr-pay', $payload);
+
+            if ($response->successful()) {
+                return response()->json($response->json(), 200);
+            }
+
+            // Return the error from Go worker
+            return response()->json($response->json() ?? ['message' => 'Payment failed'], $response->status());
+        } catch (\Exception $e) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'server_error', 'message' => 'Failed to connect to payment worker: ' . $e->getMessage()]
+                ]
+            ], 500);
+        }
     }
 }

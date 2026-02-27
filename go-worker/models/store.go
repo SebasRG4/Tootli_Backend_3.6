@@ -1,19 +1,21 @@
 package models
 
 type Store struct {
-	ID              uint   `gorm:"primaryKey"`
-	Name            string `gorm:"column:name"`
-	Latitude        string `gorm:"column:latitude"`
-	Longitude       string `gorm:"column:longitude"`
-	ZoneID          uint   `gorm:"column:zone_id"`
-	ModuleID        uint   `gorm:"column:module_id"`
-	VendorID        uint   `gorm:"column:vendor_id"`
-	Status          int    `gorm:"column:status"`
-	Active          int    `gorm:"column:active"`
-	CuisineNames    string `gorm:"column:cuisine_names"` // Puede estar como arr json en BD
-	Address         string `gorm:"column:address"`
-	FooterText      string `gorm:"column:footer_text"`
-	MetaDescription string `gorm:"column:meta_description"`
+	ID              uint     `gorm:"primaryKey"`
+	Name            string   `gorm:"column:name"`
+	Phone           string   `gorm:"column:phone"`
+	Latitude        string   `gorm:"column:latitude"`
+	Longitude       string   `gorm:"column:longitude"`
+	ZoneID          uint     `gorm:"column:zone_id"`
+	ModuleID        uint     `gorm:"column:module_id"`
+	VendorID        uint     `gorm:"column:vendor_id"`
+	Status          int      `gorm:"column:status"`
+	Active          int      `gorm:"column:active"`
+	CuisineNames    string   `gorm:"column:cuisine_names"` // Puede estar como arr json en BD
+	Address         string   `gorm:"column:address"`
+	FooterText      string   `gorm:"column:footer_text"`
+	MetaDescription string   `gorm:"column:meta_description"`
+	Comission       *float64 `gorm:"column:comission"` // Note: misspelled as 'comission' in DB
 
 	// Relaciones
 	Module            Module            `gorm:"foreignKey:ModuleID"`

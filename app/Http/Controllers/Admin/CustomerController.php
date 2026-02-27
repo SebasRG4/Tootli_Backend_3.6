@@ -642,4 +642,35 @@ class CustomerController extends Controller
             return Excel::download(new CustomerListExport($data), 'Customers.csv');
         }
     }
+
+    public function edit($id)
+    {
+        $customer = User::find($id);
+        return view('admin-views.customer.edit', compact('customer'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $customer = User::find($id);
+        $request->validate([
+            'f_name' => 'required',
+            'l_name' => 'required',
+            'email' => 'required|unique:users,email,' . $customer->id,
+            'phone' => 'required|unique:users,phone,' . $customer->id,
+            'ref_code' => 'required|unique:users,ref_code,' . $customer->id,
+        ], [
+            'f_name.required' => translate('messages.first_name_is_required'),
+            'l_name.required' => translate('messages.last_name_is_required'),
+        ]);
+
+        $customer->f_name = $request->f_name;
+        $customer->l_name = $request->l_name;
+        $customer->email = $request->email;
+        $customer->phone = $request->phone;
+        $customer->ref_code = $request->ref_code;
+        $customer->save();
+
+        Toastr::success(translate('messages.customer_updated_successfully'));
+        return back();
+    }
 }

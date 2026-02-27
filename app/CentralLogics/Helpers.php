@@ -187,6 +187,7 @@ class Helpers
                 'brand_name' => $item->ecommerce_item_details?->brand?->name,
                 'brand_image_full_url' => $item->ecommerce_item_details?->brand?->image_full_url,
                 'is_new' => $item->created_at >= now()->subDays(14) ? 1 : 0,
+                'weight' => (float) $item->weight,
             ];
         })->toArray();
     }
@@ -316,6 +317,7 @@ class Helpers
         $data['is_basic'] = (int) $data->pharmacy_item_details?->is_basic ?? 0;
         $data['is_prescription_required'] = (int) $data->pharmacy_item_details?->is_prescription_required ?? 0;
         $data['halal_tag_status'] = (int) $data->store->storeConfig?->halal_tag_status ?? 0;
+        $data['weight'] = (float) $data->weight;
 
         $data['nutritions_name'] = $data?->nutritions ? Nutrition::whereIn('id', $data?->nutritions->pluck('id'))->pluck('nutrition') : null;
         $data['allergies_name'] = $data?->allergies ? Allergy::whereIn('id', $data?->allergies->pluck('id'))->pluck('allergy') : null;
@@ -686,6 +688,7 @@ class Helpers
             $data['is_prescription_required'] = (int) $data->pharmacy_item_details?->is_prescription_required ?? 0;
             $data['halal_tag_status'] = (int) $data->store->storeConfig?->halal_tag_status ?? 0;
             $data['is_halal'] = (int) ($data->is_halal ?? 0);
+            $data['weight'] = (float) $data->weight;
 
             $data['nutritions_name'] = $data?->nutritions ? Nutrition::whereIn('id', $data?->nutritions->pluck('id'))->pluck('nutrition') : null;
             $data['allergies_name'] = $data?->allergies ? Allergy::whereIn('id', $data?->allergies->pluck('id'))->pluck('allergy') : null;

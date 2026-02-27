@@ -220,11 +220,18 @@
                                         </label>
                                     </td>
                                     <td>
-                                        <a class="btn action-btn btn--warning btn-outline-warning"
-                                            href="{{ route('admin.users.customer.view', [$customer['id']]) }}"
-                                            title="{{ translate('messages.view_customer') }}"><i
-                                                class="tio-visible-outlined"></i>
-                                        </a>
+                                        <div class="btn--container justify-content-center">
+                                            <a class="btn action-btn btn--warning btn-outline-warning"
+                                                href="{{ route('admin.users.customer.view', [$customer['id']]) }}"
+                                                title="{{ translate('messages.view_customer') }}"><i
+                                                    class="tio-visible-outlined"></i>
+                                            </a>
+                                            <a class="btn action-btn btn--primary btn-outline-primary"
+                                                href="{{ route('admin.customer.edit', [$customer['id']]) }}"
+                                                title="{{ translate('messages.edit_customer') }}"><i
+                                                    class="tio-edit"></i>
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

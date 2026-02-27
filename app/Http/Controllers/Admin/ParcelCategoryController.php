@@ -364,7 +364,7 @@ class ParcelCategoryController extends Controller
                 // We need to check $request->file("options.$key.icon")
                 if ($request->hasFile("options.$key.icon")) {
                     \Illuminate\Support\Facades\Log::info("Uploading icon for key: $key");
-                    $option->icon = Helpers::upload('parcel_category/', 'png', $request->file("options.$key.icon"));
+                    $option->icon = Helpers::update('parcel_category/', $option->icon, 'png', $request->file("options.$key.icon"));
                 }
 
                 // Handle Translations (Title & Description) - Primary (default) language
@@ -373,7 +373,11 @@ class ParcelCategoryController extends Controller
                 // So $optionData['title'] is an array [0 => default, 1 => other...]
                 // We need to match defaults.
 
-                $defaultLangIndex = array_search('default', $request->lang);
+                $langArray = $request->lang;
+                // Remove duplicates if any (though we fixed the view, let's be safe)
+                $langArray = array_unique($langArray);
+
+                $defaultLangIndex = array_search('default', $langArray);
                 if ($defaultLangIndex !== false && isset($optionData['title'][$defaultLangIndex])) {
                     $option->title = $optionData['title'][$defaultLangIndex];
                 }
@@ -386,31 +390,22 @@ class ParcelCategoryController extends Controller
                 $currentOptionsIds[] = $option->id;
 
                 // Save Translations
-                $data = [];
-                $default_lang = str_replace('_', '-', app()->getLocale());
-
-                foreach ($request->lang as $index => $langKey) {
-                    if (!isset($optionData['title'][$index]) && !isset($optionData['description'][$index]))
+                foreach ($langArray as $index => $langKey) {
+                    if ($langKey == 'default')
                         continue;
 
-                    // Title
                     if (isset($optionData['title'][$index]) && $optionData['title'][$index]) {
-                        if ($langKey != 'default') {
-                            Translation::updateOrInsert(
-                                ['translationable_type' => 'App\Models\ParcelUserOption', 'translationable_id' => $option->id, 'locale' => $langKey, 'key' => 'title'],
-                                ['value' => $optionData['title'][$index]]
-                            );
-                        }
+                        Translation::updateOrInsert(
+                            ['translationable_type' => 'App\Models\ParcelUserOption', 'translationable_id' => $option->id, 'locale' => $langKey, 'key' => 'title'],
+                            ['value' => $optionData['title'][$index]]
+                        );
                     }
 
-                    // Description
                     if (isset($optionData['description'][$index]) && $optionData['description'][$index]) {
-                        if ($langKey != 'default') {
-                            Translation::updateOrInsert(
-                                ['translationable_type' => 'App\Models\ParcelUserOption', 'translationable_id' => $option->id, 'locale' => $langKey, 'key' => 'description'],
-                                ['value' => $optionData['description'][$index]]
-                            );
-                        }
+                        Translation::updateOrInsert(
+                            ['translationable_type' => 'App\Models\ParcelUserOption', 'translationable_id' => $option->id, 'locale' => $langKey, 'key' => 'description'],
+                            ['value' => $optionData['description'][$index]]
+                        );
                     }
                 }
             }

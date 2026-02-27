@@ -596,5 +596,12 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         Route::get('coupons/global', 'SaboresCiudadController@getGlobalCoupons');
         Route::get('campaigns', 'SaboresCiudadController@getSpecializedCampaigns');
     });
+
+    // User routes (matching app request)
+    Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
+        Route::group(['prefix' => 'wallet'], function () {
+            Route::post('qr-pay', 'WalletController@qr_pay');
+        });
+    });
 });
 

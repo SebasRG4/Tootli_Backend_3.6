@@ -323,6 +323,10 @@
                             </div>
                             <span class="badge badge-soft-info">{{ translate('total_order') }}: {{ $orders->total() }}</span>
                         </h4>
+                        <a href="{{route('admin.customer.edit',[$customer['id']])}}" class="btn btn-sm btn--primary">
+                            <i class="tio-edit"></i>
+                            {{translate('messages.edit')}}
+                        </a>
                     </div>
                     <!-- End Header -->
 

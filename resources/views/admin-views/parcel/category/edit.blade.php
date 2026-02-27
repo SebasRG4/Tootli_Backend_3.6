@@ -237,11 +237,10 @@
                                                             @endforeach
                                                         @else
                                                             <div id="default-form-{{$key}}">
-                                                                <div class="form-group">
+                                                                 <div class="form-group">
                                                                     <label class="input-label">{{ translate('messages.title') }} (EN)</label>
                                                                     <input type="text" name="options[{{$key}}][title][]" class="form-control" value="{{$option->title}}" placeholder="{{ translate('messages.title') }}">
                                                                 </div>
-                                                                <input type="hidden" name="lang[]" value="en">
                                                                 <div class="form-group">
                                                                     <label class="input-label">{{ translate('messages.description') }} (EN)</label>
                                                                     <input type="text" name="options[{{$key}}][description][]" class="form-control" value="{{$option->description}}" placeholder="{{ translate('messages.description') }}">
@@ -275,7 +274,19 @@
                                                         </div>
                                                          <div class="form-group">
                                                             <label class="input-label">{{ translate('messages.icon') }}</label>
-                                                            <input type="file" name="options[{{$key}}][icon]" class="form-control">
+                                                            <div class="custom-file">
+                                                                <input type="file" name="options[{{$key}}][icon]" 
+                                                                    id="option-icon-{{$key}}"
+                                                                    class="custom-file-input option-icon-input" 
+                                                                    data-preview="viewer-option-{{$key}}"
+                                                                    accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                                                <label class="custom-file-label" for="option-icon-{{$key}}">{{ translate('messages.choose_file') }}</label>
+                                                            </div>
+                                                            <div class="text-center mt-2">
+                                                                <img class="img--100 onerror-image" id="viewer-option-{{$key}}"
+                                                                    src="{{ $option->image_full_url }}"
+                                                                    data-onerror-image="{{ asset('assets/admin/img/160x160/img2.jpg') }}" />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -341,7 +352,6 @@
                                             <label class="input-label">{{ translate('messages.title') }} ({{ translate('messages.default') }})</label>
                                             <input type="text" name="options[${optionCount}][title][]" class="form-control" placeholder="{{ translate('messages.title') }}">
                                         </div>
-                                        <input type="hidden" name="lang[]" value="default">
                                         <div class="form-group">
                                             <label class="input-label">{{ translate('messages.description') }} ({{ translate('messages.default') }})</label>
                                             <input type="text" name="options[${optionCount}][description][]" class="form-control" placeholder="{{ translate('messages.description') }}">
@@ -365,7 +375,6 @@
                                             <label class="input-label">{{ translate('messages.title') }} (EN)</label>
                                             <input type="text" name="options[${optionCount}][title][]" class="form-control" placeholder="{{ translate('messages.title') }}">
                                         </div>
-                                        <input type="hidden" name="lang[]" value="en">
                                         <div class="form-group">
                                             <label class="input-label">{{ translate('messages.description') }} (EN)</label>
                                             <input type="text" name="options[${optionCount}][description][]" class="form-control" placeholder="{{ translate('messages.description') }}">
@@ -399,7 +408,19 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="input-label">{{ translate('messages.icon') }}</label>
-                                    <input type="file" name="options[${optionCount}][icon]" class="form-control">
+                                    <div class="custom-file">
+                                        <input type="file" name="options[${optionCount}][icon]" 
+                                            id="option-icon-${optionCount}"
+                                            class="custom-file-input option-icon-input" 
+                                            data-preview="viewer-option-${optionCount}"
+                                            accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                        <label class="custom-file-label" for="option-icon-${optionCount}">{{ translate('messages.choose_file') }}</label>
+                                    </div>
+                                    <div class="text-center mt-2">
+                                        <img class="img--100 onerror-image" id="viewer-option-${optionCount}"
+                                            src="{{ asset('assets/admin/img/160x160/img2.jpg') }}"
+                                            data-onerror-image="{{ asset('assets/admin/img/160x160/img2.jpg') }}" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -424,6 +445,18 @@
         $(document).on('click', '.remove-option', function() {
             let id = $(this).data('id');
             $('#option-row-' + id).remove();
+        });
+
+        $(document).on('change', '.option-icon-input', function() {
+            let input = this;
+            let previewId = $(this).data('preview');
+            if (input.files && input.files[0]) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#' + previewId).attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
         });
 
         // Update existing logic to handle dynamic forms translation switching

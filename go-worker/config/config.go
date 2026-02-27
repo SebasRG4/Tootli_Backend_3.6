@@ -23,14 +23,16 @@ type Config struct {
 	DBName     string
 
 	FirebaseSAPath string
+	InternalSecret string
 }
 
 // Global DB instance
 var DB *gorm.DB
+var InternalSecret string
 
 // Load reads configuration from environment variables with sensible defaults
 func Load() *Config {
-	return &Config{
+	cfg := &Config{
 		RedisAddr:         getEnv("REDIS_HOST", "127.0.0.1") + ":" + getEnv("REDIS_PORT", "6379"),
 		RedisPassword:     getEnv("REDIS_PASSWORD", ""),
 		RedisDB:           0,
@@ -43,7 +45,10 @@ func Load() *Config {
 		DBName:     getEnv("DB_DATABASE", "tootli_local"),
 
 		FirebaseSAPath: getEnv("FIREBASE_CREDENTIALS", "firebase-service-account.json"),
+		InternalSecret: getEnv("INTERNAL_SECRET", "tootli_internal_secret_key"),
 	}
+	InternalSecret = cfg.InternalSecret
+	return cfg
 }
 
 // ConnectDB establishes the connection to MySQL via GORM
