@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use App\Traits\ReportFilter;
+use Laravel\Scout\Searchable;
 use Modules\Rental\Entities\Trips;
 use Modules\Rental\Entities\TripTransaction;
 use Modules\Rental\Entities\Vehicle;
@@ -85,7 +86,62 @@ use Modules\TaxModule\Entities\OrderTax;
 
 class Store extends Model
 {
-    use ReportFilter;
+    use ReportFilter, Searchable;
+
+    /**
+     * Get the name of the Algolia index for the model.
+     */
+    public function searchableAs(): string
+    {
+        return 'stores';
+    }
+
+    /**
+     * Determine if the model should be searchable.
+     */
+    public function shouldBeSearchable(): bool
+    {
+        return $this->status == 1 && $this->active;
+    }
+
+    /**
+     * Get the indexable data array for the model.
+     */
+    public function toSearchableArray(): array
+    {
+        $cuisines = $this->getRawOriginal('cuisine_names');
+        $cuisineArray = [];
+        if ($cuisines) {
+            $decoded = json_decode($cuisines, true);
+            $cuisineArray = is_array($decoded) ? $decoded : array_filter(array_map('trim', explode(',', $cuisines)));
+        }
+
+        return [
+            'id' => $this->id,
+            'name' => $this->getRawOriginal('name'),
+            'address' => $this->getRawOriginal('address'),
+            'cuisine_names' => $cuisineArray,
+            'module_id' => $this->module_id,
+            'zone_id' => $this->zone_id,
+            'avg_rating' => $this->avg_rating ?? 0,
+            'rating_count' => $this->rating_count ?? 0,
+            'active' => $this->active,
+            'featured' => $this->featured,
+            'delivery' => $this->delivery,
+            'take_away' => $this->take_away,
+            'veg' => $this->veg,
+            'non_veg' => $this->non_veg,
+            'accepts_reservations' => $this->accepts_reservations ?? false,
+            'average_ticket' => $this->average_ticket,
+            'logo_full_url' => $this->logo_full_url,
+            'cover_photo_full_url' => $this->cover_photo_full_url,
+            '_geoloc' => [
+                'lat' => (float) $this->latitude,
+                'lng' => (float) $this->longitude,
+            ],
+        ];
+    }
+
     /**
      * The attributes that are mass assignable.
      *

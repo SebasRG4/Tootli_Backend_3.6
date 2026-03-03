@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('Messages'))
+@section('title', translate('Messages'))
 
 
 @section('content')
@@ -22,9 +22,11 @@
                     <div class="card-header border-0">
                         <div class="input-group input---group">
                             <div class="input-group-prepend border-inline-end-0">
-                                <span class="input-group-text border-inline-end-0" id="basic-addon1"><i class="tio-search"></i></span>
+                                <span class="input-group-text border-inline-end-0" id="basic-addon1"><i
+                                        class="tio-search"></i></span>
                             </div>
-                            <input type="text" class="form-control border-inline-start-0 pl-1" id="serach" placeholder="{{ translate('messages.search') }}" aria-label="Username"
+                            <input type="text" class="form-control border-inline-start-0 pl-1" id="serach"
+                                placeholder="{{ translate('messages.search') }}" aria-label="Username"
                                 aria-describedby="basic-addon1" autocomplete="off">
                         </div>
                     </div>
@@ -50,12 +52,12 @@
 @endsection
 
 @push('script_2')
-<script src="{{ asset('assets/admin/js/spartan-multi-image-picker.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/spartan-multi-image-picker.js') }}"></script>
 
     <script>
         "use strict";
 
-        $('.view-admin-conv').on('click', function (){
+        $('.view-admin-conv').on('click', function () {
             console.log('fiudegfuy')
             let url = $(this).data('url');
             let id_to_active = $(this).data('active-id');
@@ -67,11 +69,11 @@
         function viewAdminConvs(url, id_to_active, conv_id, sender_id) {
             $('.customer-list').removeClass('conv-active');
             $('#' + id_to_active).addClass('conv-active');
-            let new_url= "{{ route('admin.message.list') }}" + '?conversation=' + conv_id+ '&user=' + sender_id;
+            let new_url = "{{ route('admin.message.list') }}" + '?conversation=' + conv_id + '&user=' + sender_id;
             console.log(url);
             $.get({
                 url: url,
-                success: function(data) {
+                success: function (data) {
                     window.history.pushState('', 'New Page Title', new_url);
                     $('#admin-view-conversation').html(data.view);
                     conversationList();
@@ -80,7 +82,7 @@
 
         }
         let page = 1;
-        $('#conversation-list').scroll(function() {
+        $('#conversation-list').scroll(function () {
             if ($('#conversation-list').scrollTop() + $('#conversation-list').height() >= $('#conversation-list')
                 .height()) {
                 page++;
@@ -90,19 +92,19 @@
 
         function loadMoreData(page) {
             $.ajax({
-                    url: "{{ route('admin.message.list') }}" + '?page=' + page,
-                    type: "get",
-                    beforeSend: function() {
+                url: "{{ route('admin.message.list') }}" + '?page=' + page,
+                type: "get",
+                beforeSend: function () {
 
-                    }
-                })
-                .done(function(data) {
+                }
+            })
+                .done(function (data) {
                     if (data.html == " ") {
                         return;
                     }
                     $("#conversation-list").append(data.html);
                 })
-                .fail(function(jqXHR, ajaxOptions, thrownError) {
+                .fail(function (jqXHR, ajaxOptions, thrownError) {
                     alert('server not responding...');
                 });
         }
@@ -110,16 +112,22 @@
         function fetch_data(page, query) {
             $.ajax({
                 url: "{{ route('admin.message.list') }}" + '?page=' + page + "&key=" + query,
-                success: function(data) {
+                success: function (data) {
                     $('#conversation-list').empty();
                     $("#conversation-list").append(data.html);
                 }
             })
         }
 
-        $(document).on('keyup', '#serach', function() {
+        $(document).on('keyup', '#serach', function () {
             let query = $('#serach').val();
             fetch_data(page, query);
         });
+
+        // Real-time polling every 3 seconds — only refresh conversation list
+        // Do NOT call the 'view' endpoint here, as it resets unread_message_count to 0
+        setInterval(function () {
+            conversationList();
+        }, 3000);
     </script>
 @endpush

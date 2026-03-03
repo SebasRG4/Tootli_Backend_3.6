@@ -530,6 +530,8 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::get('/{id}', 'DynamicSectionController@show');
         });
 
+        Route::get('home-screen-sections', 'HomeScreenSectionController@index');
+
         Route::group(['prefix' => 'dynamic-section-ecommerce'], function () {
             Route::get('/', 'DynamicSectionEcommerceController@index');
         });
@@ -595,6 +597,12 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         // New Features (Global Coupons & Specialized Campaigns)
         Route::get('coupons/global', 'SaboresCiudadController@getGlobalCoupons');
         Route::get('campaigns', 'SaboresCiudadController@getSpecializedCampaigns');
+    });
+
+    // Algolia Search
+    Route::group(['prefix' => 'algolia'], function () {
+        Route::get('search', 'AlgoliaController@search');
+        Route::get('credentials', 'AlgoliaController@credentials');
     });
 
     // User routes (matching app request)

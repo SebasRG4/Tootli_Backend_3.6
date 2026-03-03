@@ -173,6 +173,13 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::put('update/{id}', 'DynamicSectionEcommerceController@update')->name('update');
             Route::get('status/{id}', 'DynamicSectionEcommerceController@status')->name('status');
             Route::delete('delete/{id}', 'DynamicSectionEcommerceController@destroy')->name('delete');
+            Route::post('priority', 'DynamicSectionEcommerceController@priority')->name('priority');
+        });
+
+        Route::group(['prefix' => 'home-screen-sections', 'as' => 'home-screen-sections.'], function () {
+            Route::get('/', 'HomeScreenSectionController@index')->name('index');
+            Route::post('priority', 'HomeScreenSectionController@priority')->name('priority');
+            Route::get('status/{id}', 'HomeScreenSectionController@status')->name('status');
         });
 
         // Taxi Management Routes moved to Modules/Taxi/routes/web.php
@@ -264,6 +271,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('list', 'ConversationController@list')->name('list');
             Route::post('store/{user_id}', 'ConversationController@store')->name('store');
             Route::get('view/{conversation_id}/{user_id}', 'ConversationController@view')->name('view');
+            Route::get('unread-count', 'ConversationController@unreadCount')->name('unread-count');
         });
 
 

@@ -4,6 +4,39 @@
 
 @push('css_or_js')
     <link href="{{asset('assets/admin/css/select2.min.css')}}" rel="stylesheet" />
+    <style>
+        .sortable-row {
+            cursor: grab;
+        }
+
+        .sortable-row:active {
+            cursor: grabbing;
+        }
+
+        .drag-handle {
+            cursor: grab;
+            color: #9CA3AF;
+            font-size: 18px;
+            padding: 0 8px;
+        }
+
+        .drag-handle:hover {
+            color: #4B5563;
+        }
+
+        .ui-sortable-helper {
+            background: #fff !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+            border-radius: 6px;
+        }
+
+        .ui-sortable-placeholder {
+            height: 55px;
+            background: #E8F5E9 !important;
+            border: 2px dashed #4CAF50;
+            visibility: visible !important;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -63,7 +96,7 @@
                                     <input type="file" name="background_image" accept="image/*" hidden
                                         onchange="document.getElementById('viewer').src = window.URL.createObjectURL(this.files[0])">
                                 </label>
-                                <p class="text-center mt-2">{{translate('messages.image_ratio_4:1')}}</p>
+                                <p class="text-center mt-2">{{translate('messages.image_ratio_16:9')}}</p>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -88,6 +121,17 @@
                                 </label>
                             </div>
                         </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="toggle-switch toggle-switch-sm">
+                                    <input type="checkbox" class="toggle-switch-input" name="show_title" checked>
+                                    <span class="toggle-switch-label">
+                                        <span class="toggle-switch-indicator"></span>
+                                    </span>
+                                    <span class="ml-2">{{translate('messages.show_title')}}</span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                     <div class="btn--container justify-content-end">
                         <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
@@ -104,12 +148,14 @@
                     {{translate('messages.sections_list')}} <span
                         class="badge badge-soft-dark ml-2">{{$sections->total()}}</span>
                 </h5>
+                <small class="text-muted"><i class="tio-drag"></i> {{translate('messages.drag_to_reorder')}}</small>
             </div>
             <div class="card-body pt-0">
                 <div class="table-responsive">
                     <table class="table table-borderless table-thead-bordered table-align-middle">
                         <thead class="thead-light">
                             <tr>
+                                <th class="border-0" style="width: 50px;"></th>
                                 <th class="border-0">{{translate('messages.sl')}}</th>
                                 <th class="border-0">{{translate('messages.title')}}</th>
                                 <th class="border-0">{{translate('messages.subtitle')}}</th>
@@ -118,9 +164,12 @@
                                 <th class="border-0 text-center">{{translate('messages.action')}}</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="sortable-sections">
                             @forelse($sections as $key => $section)
-                                <tr>
+                                <tr class="sortable-row" data-id="{{$section->id}}">
+                                    <td>
+                                        <span class="drag-handle"><i class="tio-drag"></i></span>
+                                    </td>
                                     <td>{{$sections->firstItem() + $key}}</td>
                                     <td>
                                         <span class="font-weight-semibold">{{$section->title}}</span>
@@ -158,7 +207,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center py-5">
+                                    <td colspan="7" class="text-center py-5">
                                         <img src="{{asset('assets/admin/img/empty-table.png')}}" alt="" class="mb-3"
                                             style="width: 100px;">
                                         <p class="text-muted">{{translate('messages.no_data_found')}}</p>
@@ -179,11 +228,45 @@
 
 @push('script_2')
     <script src="{{asset('assets/admin/js/select2.min.js')}}"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
     <script>
         $(document).ready(function () {
             $('.select2-items').select2({
                 placeholder: "{{translate('messages.select_items')}}",
                 allowClear: true
+            });
+
+            // Drag & drop sortable
+            $('#sortable-sections').sortable({
+                handle: '.drag-handle',
+                placeholder: 'ui-sortable-placeholder',
+                axis: 'y',
+                update: function (event, ui) {
+                    let sections = [];
+                    $('#sortable-sections tr.sortable-row').each(function () {
+                        sections.push($(this).data('id'));
+                    });
+
+                    $.ajax({
+                        url: "{{ route('admin.dynamic-section.priority') }}",
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            sections: sections
+                        },
+                        success: function (response) {
+                            toastr.success("{{translate('messages.order_updated_successfully')}}");
+                            // Update SL numbers
+                            $('#sortable-sections tr.sortable-row').each(function (index) {
+                                $(this).find('td:nth-child(2)').text(index + 1);
+                            });
+                        },
+                        error: function () {
+                            toastr.error("{{translate('messages.failed_to_update_order')}}");
+                            location.reload();
+                        }
+                    });
+                }
             });
 
             // Status change

@@ -50,12 +50,17 @@ class AiSearchController extends Controller
             'japonesa' => 'Japonesa',
             'hamburguesa' => 'Comida Rápida',
             'burger' => 'Comida Rápida',
+            'comida rapida' => 'Comida Rápida',
+            'comida rápida' => 'Comida Rápida',
+            'rapida' => 'Comida Rápida',
+            'rápida' => 'Comida Rápida',
             'tacos' => 'Mexicana',
             'mexicana' => 'Mexicana',
             'carne' => 'Parrilla',
             'cortes' => 'Parrilla',
             'parrilla' => 'Parrilla',
             'mariscos' => 'Mariscos',
+            'inglés' => 'Inglés',
             'pescado' => 'Mariscos',
             'cafe' => 'Cafés',
             'cafeteria' => 'Cafés',
@@ -180,7 +185,10 @@ class AiSearchController extends Controller
                 });
             } else {
                 if (strlen($message) > 3) {
-                    $stores_query->where('name', 'like', "%$message%");
+                    $stores_query->where(function ($q) use ($message) {
+                        $q->where('name', 'like', "%$message%")
+                            ->orWhere('cuisine_names', 'like', "%$message%");
+                    });
                 }
             }
             $results = $stores_query->take(5)->get();

@@ -162,4 +162,18 @@ class DynamicSectionEcommerceController extends Controller
         Toastr::success(translate('messages.section_deleted_successfully'));
         return back();
     }
+
+    /**
+     * Update priority order.
+     */
+    public function priority(Request $request)
+    {
+        $sections = $request->input('sections', []);
+
+        foreach ($sections as $index => $sectionId) {
+            DynamicSectionEcommerce::where('id', $sectionId)->update(['priority' => $index]);
+        }
+
+        return response()->json(['success' => true]);
+    }
 }

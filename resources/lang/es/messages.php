@@ -1,4 +1,4 @@
-<?php return array (
+<?php return array(
   'no_coverage' => 'Sin cobertura',
   'No Coverage' => 'Sin cobertura',
   'attributes' => 'Attributes',
@@ -9373,6 +9373,8 @@ Smartly or Earn. ',
   'weight_limit_exceeded' => 'El peso de este producto excede los 10kg permitidos.',
   'total_weight_limit_exceeded' => 'El peso total del pedido no puede exceder los 10kg.',
   'weight_is_required' => 'El peso del artículo es obligatorio.',
+  'drag_to_reorder' => 'Arrastra para reordenar',
+  'failed_to_update_order' => 'Error al actualizar el orden',
   'el_pedido_no_puede_exceder_los_10kg_en_total' => 'El pedido no puede exceder los 10kg en total',
   'peso_total_excede_limite_10kg' => 'Peso total excede el límite de 10kg',
 );

@@ -58,6 +58,7 @@ class DynamicSectionController extends Controller
         $section->module_id = Config::get('module.current_module_id');
         $section->priority = DynamicSection::byModule(Config::get('module.current_module_id'))->max('priority') + 1;
         $section->status = $request->has('status') ? 1 : 0;
+        $section->show_title = $request->has('show_title') ? 1 : 0;
 
         if ($request->hasFile('background_image')) {
             $section->background_image = Helpers::upload('dynamic_section/', 'png', $request->file('background_image'));
@@ -111,6 +112,7 @@ class DynamicSectionController extends Controller
         $section = DynamicSection::findOrFail($id);
         $section->title = $request->title;
         $section->subtitle = $request->subtitle;
+        $section->show_title = $request->has('show_title') ? 1 : 0;
 
         if ($request->hasFile('background_image')) {
             // Delete old image using Storage facade

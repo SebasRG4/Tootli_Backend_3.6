@@ -22,12 +22,14 @@ class DynamicSection extends Model
         'module_id',
         'priority',
         'status',
+        'show_title',
     ];
 
     protected $casts = [
         'module_id' => 'integer',
         'priority' => 'integer',
         'status' => 'boolean',
+        'show_title' => 'boolean',
     ];
 
     protected $appends = ['background_image_full_url'];

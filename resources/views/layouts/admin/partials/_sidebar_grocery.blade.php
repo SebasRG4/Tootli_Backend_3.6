@@ -366,6 +366,16 @@
                                     class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.dynamic_sections') }}</span>
                             </a>
                         </li>
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/home-screen-sections*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                href="{{ route('admin.home-screen-sections.index') }}"
+                                title="{{ translate('messages.home_screen_sections') }}">
+                                <i class="tio-reorder nav-icon"></i>
+                                <span
+                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.home_screen_sections') }}</span>
+                            </a>
+                        </li>
                     @endif
                     <!-- End Banner -->
                     <!-- Coupon -->

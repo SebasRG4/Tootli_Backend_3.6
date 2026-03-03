@@ -700,7 +700,7 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                         $.ajax({
                             url: url,
                             success: function (data) {
-                                $('#view-conversation').html(data.view);
+                                $('#admin-view-conversation').html(data.view);
                             }
                         })
                     }
@@ -708,9 +708,7 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                         CloseButton: true,
                         ProgressBar: true
                     });
-                    if ($('#conversation-list').scrollTop() === 0) {
-                        conversationList();
-                    }
+                    conversationList();
                 }
             });
 
@@ -759,6 +757,30 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                 vendorConversationView();
                 dmConversationView();
             }
+
+            // Global polling for new admin messages (works on all pages)
+            let lastUnreadCount = null;
+            setInterval(function () {
+                $.ajax({
+                    url: '{{ route("admin.message.unread-count") }}',
+                    type: 'GET',
+                    success: function (data) {
+                        if (lastUnreadCount !== null && data.count > lastUnreadCount) {
+                            toastr.info('<a href="{{ route("admin.message.list") }}" style="color:#fff;text-decoration:underline;">{{ translate("messages.view_conversation") }}</a>', '{{ translate("New message received") }}', {
+                                CloseButton: true,
+                                ProgressBar: true,
+                                timeOut: 8000,
+                                allowHtml: true
+                            });
+                            // Also refresh conversation list if on messages page
+                            if ($('#conversation-list').length > 0) {
+                                conversationList();
+                            }
+                        }
+                        lastUnreadCount = data.count;
+                    }
+                });
+            }, 5000);
 
 
             $(document).on('click', '.call-demo', function (e) {

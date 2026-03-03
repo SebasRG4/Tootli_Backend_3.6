@@ -11,11 +11,53 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Scout\Searchable;
 use Modules\TaxModule\Entities\Taxable;
 
 class Item extends Model
 {
-    use HasFactory, ReportFilter;
+    use HasFactory, ReportFilter, Searchable;
+
+    /**
+     * Get the name of the Algolia index for the model.
+     */
+    public function searchableAs(): string
+    {
+        return 'items';
+    }
+
+    /**
+     * Determine if the model should be searchable.
+     */
+    public function shouldBeSearchable(): bool
+    {
+        return $this->status == 1 && $this->is_approved == 1;
+    }
+
+    /**
+     * Get the indexable data array for the model.
+     */
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->getRawOriginal('name'),
+            'description' => $this->getRawOriginal('description'),
+            'price' => $this->price,
+            'discount' => $this->discount,
+            'discount_type' => $this->discount_type,
+            'category_id' => $this->category_id,
+            'store_id' => $this->store_id,
+            'store_name' => $this->store ? $this->store->getRawOriginal('name') : null,
+            'module_id' => $this->module_id,
+            'avg_rating' => $this->avg_rating ?? 0,
+            'veg' => $this->veg,
+            'recommended' => $this->recommended,
+            'organic' => $this->organic,
+            'is_halal' => $this->is_halal,
+            'image_full_url' => $this->image_full_url,
+        ];
+    }
     protected $guarded = ['id'];
     protected $with = ['translations', 'storage'];
     protected $casts = [

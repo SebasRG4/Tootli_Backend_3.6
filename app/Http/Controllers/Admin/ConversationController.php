@@ -18,41 +18,41 @@ class ConversationController extends Controller
     public function list(Request $request)
     {
         $conversations = Conversation::with(['sender', 'receiver', 'last_message'])->WhereUserType('admin');
-        if($request->query('key')) {
+        if ($request->query('key')) {
             $key = explode(' ', $request->get('key'));
-            $conversations = $conversations->where(function($qu)use($key){
-                    $qu->whereHas('sender',function($query)use($key){
+            $conversations = $conversations->where(function ($qu) use ($key) {
+                $qu->whereHas('sender', function ($query) use ($key) {
                     foreach ($key as $value) {
                         $query->where('f_name', 'like', "%{$value}%")->orWhere('l_name', 'like', "%{$value}%")->orWhere('phone', 'like', "%{$value}%");
                     }
                 })
-                ->orWhereHas('receiver',function($query1)use($key){
-                    foreach ($key as $value) {
-                        $query1->where('f_name', 'like', "%{$value}%")->orWhere('l_name', 'like', "%{$value}%")->orWhere('phone', 'like', "%{$value}%");
-                    }
-                });
+                    ->orWhereHas('receiver', function ($query1) use ($key) {
+                        foreach ($key as $value) {
+                            $query1->where('f_name', 'like', "%{$value}%")->orWhere('l_name', 'like', "%{$value}%")->orWhere('phone', 'like', "%{$value}%");
+                        }
+                    });
             });
         }
         $conversations = $conversations->orderBy('last_message_time', 'DESC')
-        ->paginate(8);
+            ->paginate(8);
 
         if ($request->ajax()) {
-            $view = view('admin-views.messages.data',compact('conversations'))->render();
-            return response()->json(['html'=>$view]);
+            $view = view('admin-views.messages.data', compact('conversations'))->render();
+            return response()->json(['html' => $view]);
         }
 
         return view('admin-views.messages.index', compact('conversations'));
     }
 
-    public function view($conversation_id,$user_id)
+    public function view($conversation_id, $user_id)
     {
         $conversation = Conversation::find($conversation_id);
         $lastmessage = $conversation->last_message;
-        if($lastmessage && $lastmessage->sender_id == $user_id ) {
+        if ($lastmessage && $lastmessage->sender_id == $user_id) {
             $conversation->unread_message_count = 0;
             $conversation->save();
         }
-        Message::where(['conversation_id' => $conversation->id])->where('sender_id',$user_id)->update(['is_seen' => 1]);
+        Message::where(['conversation_id' => $conversation->id])->where('sender_id', $user_id)->update(['is_seen' => 1]);
         $convs = Message::where(['conversation_id' => $conversation_id])->get();
         $receiver = UserInfo::find($user_id);
         // $user = User::find($receiver->user_id);
@@ -66,11 +66,10 @@ class ConversationController extends Controller
     {
 
         if ($request->has('images')) {
-            $image_name=[];
-            foreach($request->images as $key=>$img)
-            {
+            $image_name = [];
+            foreach ($request->images as $key => $img) {
                 $name = Helpers::upload('conversation/', 'png', $img);
-                array_push($image_name,['img'=>$name, 'storage'=> Helpers::getDisk()]);
+                array_push($image_name, ['img' => $name, 'storage' => Helpers::getDisk()]);
             }
         } else {
             $image_name = null;
@@ -84,8 +83,8 @@ class ConversationController extends Controller
         }
 
         $admin = Admin::find(auth('admin')->id());
-        $sender = UserInfo::where('admin_id',$admin->id)->first();
-        if(!$sender){
+        $sender = UserInfo::where('admin_id', $admin->id)->first();
+        if (!$sender) {
             $sender = new UserInfo();
             $sender->admin_id = $admin->id;
             $sender->f_name = $admin->f_name;
@@ -97,10 +96,10 @@ class ConversationController extends Controller
         }
 
         $user = User::find($user_id);
-        $fcm_token=$user->cm_firebase_token;
+        $fcm_token = $user->cm_firebase_token;
         $receiver = UserInfo::where('user_id', $user->id)->first();
         $user = $receiver;
-        if(!$receiver){
+        if (!$receiver) {
             $receiver = new UserInfo();
             $receiver->user_id = $user->id;
             $receiver->f_name = $user->f_name;
@@ -111,10 +110,10 @@ class ConversationController extends Controller
             $receiver->save();
         }
 
-        $conversation = Conversation::whereConversation($receiver->id,0)->first();
+        $conversation = Conversation::whereConversation($receiver->id, 0)->first();
 
 
-        if(!$conversation){
+        if (!$conversation) {
             $conversation = new Conversation;
             $conversation->sender_id = 0;
             $conversation->sender_type = 'admin';
@@ -123,32 +122,31 @@ class ConversationController extends Controller
             $conversation->last_message_time = Carbon::now()->toDateTimeString();
             $conversation->save();
 
-            $conversation= Conversation::find($conversation->id);
+            $conversation = Conversation::find($conversation->id);
         }
 
         $message = new Message();
         $message->conversation_id = $conversation->id;
         $message->sender_id = $sender->id;
         $message->message = $request->reply;
-        if($image_name && count($image_name)>0){
+        if ($image_name && count($image_name) > 0) {
             $message->file = json_encode($image_name, JSON_UNESCAPED_SLASHES);
         }
         try {
-            if($message->save())
-            $conversation->unread_message_count = $conversation->unread_message_count? $conversation->unread_message_count+1:1;
-            $conversation->last_message_id=$message->id;
+            if ($message->save())
+                $conversation->unread_message_count = $conversation->unread_message_count ? $conversation->unread_message_count + 1 : 1;
+            $conversation->last_message_id = $message->id;
             $conversation->last_message_time = Carbon::now()->toDateTimeString();
-            $conversation->save();
-            {
+            $conversation->save(); {
                 $data = [
-                    'title' =>translate('messages.message_from_admin'),
+                    'title' => translate('messages.message_from_admin'),
                     'description' => $message->message ?? translate('attachment'),
                     'order_id' => '',
                     'image' => '',
                     'message' => json_encode($message),
-                    'type'=> 'message',
-                    'conversation_id'=> $conversation->id,
-                    'sender_type'=> 'admin'
+                    'type' => 'message',
+                    'conversation_id' => $conversation->id,
+                    'sender_type' => 'admin'
                 ];
                 Helpers::send_push_notif_to_device($fcm_token, $data);
             }
@@ -161,5 +159,14 @@ class ConversationController extends Controller
         return response()->json([
             'view' => view('admin-views.messages.partials._conversations', compact('convs', 'user', 'receiver'))->render()
         ]);
+    }
+
+    public function unreadCount()
+    {
+        $count = Conversation::WhereUserType('admin')
+            ->where('unread_message_count', '>', 0)
+            ->sum('unread_message_count');
+
+        return response()->json(['count' => $count]);
     }
 }

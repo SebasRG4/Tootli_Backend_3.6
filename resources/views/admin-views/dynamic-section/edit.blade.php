@@ -54,7 +54,7 @@
                                 <input type="file" name="background_image" accept="image/*" hidden 
                                     onchange="document.getElementById('viewer').src = window.URL.createObjectURL(this.files[0])">
                             </label>
-                            <p class="text-center mt-2">{{translate('messages.image_ratio_4:1')}}</p>
+                            <p class="text-center mt-2">{{translate('messages.image_ratio_16:9')}}</p>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -65,6 +65,17 @@
                                     <option value="{{$item->id}}" {{in_array($item->id, $selectedItems) ? 'selected' : ''}}>{{$item->name}}</option>
                                 @endforeach
                             </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="toggle-switch toggle-switch-sm">
+                                <input type="checkbox" class="toggle-switch-input" name="show_title" {{$section->show_title ? 'checked' : ''}}>
+                                <span class="toggle-switch-label">
+                                    <span class="toggle-switch-indicator"></span>
+                                </span>
+                                <span class="ml-2">{{translate('messages.show_title')}}</span>
+                            </label>
                         </div>
                     </div>
                 </div>
