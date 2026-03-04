@@ -48,6 +48,7 @@ class BannerUpdateRequest extends FormRequest
             'zone_id' => 'required',
             'store_id' => 'required_if:banner_type,store_wise',
             'item_id' => 'required_if:banner_type,item_wise',
+            'grid_type' => 'nullable|string',
             'title.0' => 'required',
         ];
     }
@@ -56,9 +57,9 @@ class BannerUpdateRequest extends FormRequest
     {
         return [
             'zone_id.required' => translate('messages.select_a_zone'),
-            'store_id.required_if'=> translate('messages.store is required when banner type is store wise'),
-            'item_id.required_if'=> translate('validation.required_if',['attribute'=>translate('messages.item'), 'other'=>translate('messages.banner_type'), 'value'=>translate('messages.item_wise')]),
-            'title.0.required'=>translate('default_data_is_required'),
+            'store_id.required_if' => translate('messages.store is required when banner type is store wise'),
+            'item_id.required_if' => translate('validation.required_if', ['attribute' => translate('messages.item'), 'other' => translate('messages.banner_type'), 'value' => translate('messages.item_wise')]),
+            'title.0.required' => translate('default_data_is_required'),
         ];
     }
 

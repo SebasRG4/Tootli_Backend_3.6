@@ -214,12 +214,29 @@ class AiSearchController extends Controller
         });
 
         // 4. Prepare Candidates for Python Service
-        $candidates = $formatted_results->map(function ($store) {
+        // Get user location for distance calculation
+        // Headers come JSON-encoded from Flutter (e.g., "\"24.123\""), so we need json_decode
+        $raw_lat = $request->header('latitude');
+        $raw_lng = $request->header('longitude');
+        $user_lat = $raw_lat ? (float) json_decode($raw_lat) : null;
+        $user_lng = $raw_lng ? (float) json_decode($raw_lng) : null;
+
+        \Illuminate\Support\Facades\Log::info("📍 User Location: lat=$user_lat, lng=$user_lng (raw: $raw_lat, $raw_lng)");
+
+        $candidates = $formatted_results->map(function ($store) use ($user_lat, $user_lng) {
 
             // Merge Cuisine Names and Dineout Categories for better context
             $categories = $store->dineoutCategories->pluck('name')->toArray();
             $store_tags = $store->tags->pluck('tag')->toArray();
             $tags = array_merge($store->cuisine_names ?? [], $categories, $store_tags);
+
+            // Calculate distance if user location is available
+            $distance_km = null;
+            $store_lat = $store->latitude ? (float) $store->latitude : null;
+            $store_lng = $store->longitude ? (float) $store->longitude : null;
+            if ($user_lat && $user_lng && $store_lat && $store_lng) {
+                $distance_km = round($this->haversineDistance($user_lat, $user_lng, $store_lat, $store_lng), 1);
+            }
 
             return [
                 'id' => $store->id,
@@ -234,6 +251,9 @@ class AiSearchController extends Controller
                 'featured' => (bool) $store->featured,
                 'delivery_time' => $store->delivery_time,
                 'tipo_cocina' => count($categories) > 0 ? implode(', ', $categories) : (isset($store->cuisine_names) && count($store->cuisine_names) > 0 ? $store->cuisine_names[0] : null),
+                'latitude' => $store_lat,
+                'longitude' => $store_lng,
+                'distance_km' => $distance_km,
             ];
         })->toArray();
 
@@ -251,7 +271,8 @@ class AiSearchController extends Controller
                     'context' => $detected_context
                 ],
                 'candidates' => $candidates,
-                'history' => $history
+                'history' => $history,
+                'user_location' => ($user_lat && $user_lng) ? ['latitude' => $user_lat, 'longitude' => $user_lng] : null,
             ]);
 
             if ($response->successful()) {
@@ -359,5 +380,20 @@ class AiSearchController extends Controller
         return response()->json([
             'topics' => $selected_topics
         ]);
+    }
+
+    /**
+     * Calculate distance between two coordinates using Haversine formula
+     */
+    private function haversineDistance($lat1, $lon1, $lat2, $lon2)
+    {
+        $earthRadius = 6371; // km
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLon = deg2rad($lon2 - $lon1);
+        $a = sin($dLat / 2) * sin($dLat / 2) +
+            cos(deg2rad($lat1)) * cos(deg2rad($lat2)) *
+            sin($dLon / 2) * sin($dLon / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        return $earthRadius * $c;
     }
 }

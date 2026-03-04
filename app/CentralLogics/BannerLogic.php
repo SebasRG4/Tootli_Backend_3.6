@@ -15,7 +15,7 @@ class BannerLogic
         $moduleId = isset($moduleData['id']) ? $moduleData['id'] : 'default';
         $cacheKey = 'banners_' . md5($zone_id . '_' . ($featured ? 'featured' : 'non_featured') . '_' . $moduleId);
 
-        $banners = Cache::remember($cacheKey, now()->addMinutes(20), function () use ($zone_id, $featured,$moduleId) {
+        $banners = Cache::remember($cacheKey, now()->addMinutes(20), function () use ($zone_id, $featured, $moduleId) {
             $banners = Banner::active()
                 ->when($featured, function ($query) {
                     $query->featured();
@@ -33,15 +33,15 @@ class BannerLogic
 
             if (config('module.current_module_data')) {
                 $banners = $banners->whereHas('zone.modules', function ($query) use ($moduleId) {
-                    $query->where('modules.id',$moduleId);
-                }) ->module($moduleId);
+                    $query->where('modules.id', $moduleId);
+                })->module($moduleId);
             }
 
-               return  $banners = $banners->get();
+            return $banners = $banners->get();
         });
 
         $data = [];
-        foreach ($banners??[] as $banner) {
+        foreach ($banners ?? [] as $banner) {
             if ($banner->type == 'store_wise') {
                 $store = Store::active()
                     ->when(config('module.current_module_data'), function ($query) {
@@ -59,6 +59,7 @@ class BannerLogic
                         'link' => null,
                         'store' => $store ? Helpers::store_data_formatting($store, false) : null,
                         'item' => null,
+                        'grid_type' => $banner->grid_type,
                         'image_full_url' => $banner->image_full_url
                     ];
                 }
@@ -79,6 +80,7 @@ class BannerLogic
                     'link' => null,
                     'store' => null,
                     'item' => $item ? Helpers::product_data_formatting($item, false, false, app()->getLocale()) : null,
+                    'grid_type' => $banner->grid_type,
                     'image_full_url' => $banner->image_full_url
                 ];
             }
@@ -91,6 +93,7 @@ class BannerLogic
                     'link' => $banner->default_link,
                     'store' => null,
                     'item' => null,
+                    'grid_type' => $banner->grid_type,
                     'image_full_url' => $banner->image_full_url
                 ];
             }
@@ -103,6 +106,7 @@ class BannerLogic
                     'link' => null,
                     'store' => null,
                     'item' => null,
+                    'grid_type' => $banner->grid_type,
                     'image_full_url' => $banner->image_full_url
                 ];
             }

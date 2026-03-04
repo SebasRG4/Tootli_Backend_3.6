@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\DB;
  * @property int $module_id
  * @property bool $featured
  * @property string|null $default_link
+ * @property string|null $grid_type
  * @property string $created_by
  */
 class Banner extends Model
@@ -47,6 +48,7 @@ class Banner extends Model
         'module_id',
         'featured',
         'default_link',
+        'grid_type',
         'created_by',
     ];
 
@@ -141,17 +143,18 @@ class Banner extends Model
         return $query->where('featured', '=', 1);
     }
 
-    public function getImageFullUrlAttribute(){
+    public function getImageFullUrlAttribute()
+    {
         $value = $this->image;
         if (count($this->storage) > 0) {
             foreach ($this->storage as $storage) {
                 if ($storage['key'] == 'image') {
-                    return Helpers::get_full_url('banner',$value,$storage['value']);
+                    return Helpers::get_full_url('banner', $value, $storage['value']);
                 }
             }
         }
 
-        return Helpers::get_full_url('banner',$value,'public');
+        return Helpers::get_full_url('banner', $value, 'public');
     }
 
     /**
@@ -165,9 +168,11 @@ class Banner extends Model
         });
 
         static::addGlobalScope('translate', function (Builder $builder) {
-            $builder->with(['translations' => function ($query) {
-                return $query->where('locale', app()->getLocale());
-            }]);
+            $builder->with([
+                'translations' => function ($query) {
+                    return $query->where('locale', app()->getLocale());
+                }
+            ]);
         });
     }
 
@@ -177,7 +182,7 @@ class Banner extends Model
         static::saved(function ($model) {
             Helpers::deleteCacheData('banners_');
 
-            if($model->isDirty('image')){
+            if ($model->isDirty('image')) {
                 $value = Helpers::getDisk();
 
                 DB::table('storages')->updateOrInsert([
@@ -194,11 +199,11 @@ class Banner extends Model
         static::created(function () {
             Helpers::deleteCacheData('banners_');
         });
-        static::deleted(function(){
+        static::deleted(function () {
             Helpers::deleteCacheData('banners_');
         });
 
-        static::updated(function(){
+        static::updated(function () {
             Helpers::deleteCacheData('banners_');
         });
 

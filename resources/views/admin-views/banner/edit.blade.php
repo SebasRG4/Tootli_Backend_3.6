@@ -97,6 +97,15 @@
                                             <option value="default" {{$banner->type == 'default'? 'selected':'' }}>{{translate('messages.default')}}</option>
                                         </select>
                                     </div>
+                                    <div class="form-group error-wrapper">
+                                        <label class="input-label" for="grid_type">Grid Type (Delivery Type)</label>
+                                        <select name="grid_type" id="grid_type" class="form-control">
+                                            <option value="" {{$banner->grid_type == null ? 'selected' : ''}}>Todos</option>
+                                            <option value="minutes" {{$banner->grid_type == 'minutes' ? 'selected' : ''}}>Minutes (Fast)</option>
+                                            <option value="standard" {{$banner->grid_type == 'standard' ? 'selected' : ''}}>Standard</option>
+                                            <option value="next_day" {{$banner->grid_type == 'next_day' ? 'selected' : ''}}>Next Day</option>
+                                        </select>
+                                    </div>
                                     <div class="form-group mb-0 error-wrapper" id="store_wise">
                                         <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.store')}}<span
                                                 class="input-label-secondary"></span></label>
