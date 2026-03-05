@@ -49,4 +49,24 @@ class H3Helper
         // We use hexadecimal representation for an "H3-like" feel
         return sprintf("hex_%x_%x", (int) $rx + 1000000, (int) $rz + 1000000);
     }
+
+    /**
+     * Converts Hexagon ID back to Latitude and Longitude (Center).
+     */
+    public static function hexToLatLng($hex_id)
+    {
+        $size = self::GRID_SIZE;
+        $parts = explode('_', $hex_id);
+        if (count($parts) != 3)
+            return null;
+
+        $rx = (int) hexdec($parts[1]) - 1000000;
+        $rz = (int) hexdec($parts[2]) - 1000000;
+
+        // Inverse axial conversion
+        $lng = 1.5 * $rx * $size;
+        $lat = ($rz + 0.5 * $rx) * $size * sqrt(3);
+
+        return ['lat' => $lat, 'lng' => $lng];
+    }
 }

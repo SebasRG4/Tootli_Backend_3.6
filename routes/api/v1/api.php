@@ -321,6 +321,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
     Route::group(['prefix' => 'config'], function () {
         Route::get('/', 'ConfigController@configuration');
         Route::get('/get-zone-id', 'ConfigController@get_zone');
+        Route::get('/get-grids', 'ConfigController@get_grids');
         Route::get('place-api-autocomplete', 'ConfigController@place_api_autocomplete');
         Route::get('distance-api', 'ConfigController@distance_api');
         Route::get('direction-api', 'ConfigController@direction_api');

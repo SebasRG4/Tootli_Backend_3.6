@@ -519,6 +519,42 @@ class ConfigController extends Controller
         ], 403);
     }
 
+    public function get_grids(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'zone_id' => 'required',
+            'module_id' => 'nullable',
+        ]);
+
+        if ($validator->errors()->count() > 0) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $zone_ids = is_array($request->zone_id) ? $request->zone_id : json_decode($request->zone_id, true);
+        if (!is_array($zone_ids)) {
+            $zone_ids = [$request->zone_id];
+        }
+
+        $grids = \DB::table('delivery_grids')
+            ->whereIn('zone_id', $zone_ids)
+            ->when($request->module_id, function ($query) use ($request) {
+                return $query->where('module_id', $request->module_id);
+            })
+            ->where('is_active', true)
+            ->get();
+
+        $formatted_grids = $grids->map(function ($grid) {
+            $center = \App\CentralLogics\H3Helper::hexToLatLng($grid->hexagon_id);
+            return [
+                'hexagon_id' => $grid->hexagon_id,
+                'delivery_type' => $grid->delivery_type,
+                'center' => $center,
+            ];
+        });
+
+        return response()->json($formatted_grids, 200);
+    }
+
     public function place_api_autocomplete(Request $request)
     {
         $validator = Validator::make($request->all(), [
