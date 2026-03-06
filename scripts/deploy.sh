@@ -2,7 +2,7 @@
 
 # Configuration
 VPS_USER="sebastian-rivera"
-VPS_HOST="tootli.mx"
+VPS_HOST="15.235.73.88"
 VPS_PORT="5225"
 VPS_PATH="/opt/tootli"
 

@@ -89,11 +89,15 @@ $surgeConfig = [
         ['ratio' => 2.0, 'multiplier' => 2.0],
     ]
 ];
-DB::table('business_settings')->updateOrInsert(
-    ['key' => 'surge_pricing_config'],
-    ['value' => json_encode($surgeConfig)]
+// 6. Ensure Grid Exists
+$hexId = \App\CentralLogics\H3Helper::latLngToHex($store->latitude, $store->longitude);
+DB::table('delivery_grids')->updateOrInsert(
+    ['hexagon_id' => $hexId, 'zone_id' => $zoneId, 'module_id' => $moduleId],
+    ['is_active' => 1, 'delivery_type' => 'minutes']
 );
 
 echo "Test data seeded successfully for Zone $zoneId, Store $storeId.\n";
+echo "Hexagon ID: $hexId\n";
 echo "Active orders in Zone $zoneId: " . DB::table('orders')->where('zone_id', $zoneId)->whereIn('order_status', ['pending', 'accepted', 'processing'])->count() . "\n";
 echo "Available DMs in Zone $zoneId: " . DB::table('delivery_men')->where('active', 1)->where('earning', 1)->where('zone_id', $zoneId)->count() . "\n";
+echo "Grid status: " . (DB::table('delivery_grids')->where('hexagon_id', $hexId)->exists() ? 'OK' : 'MISSING') . "\n";

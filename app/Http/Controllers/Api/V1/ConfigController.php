@@ -486,7 +486,7 @@ class ConfigController extends Controller
             if ($zone['status'] == 1) {
                 // Inyectar Surge Pricing de Go Worker
                 try {
-                    $goSurgeResponse = \Illuminate\Support\Facades\Http::timeout(0.5)->get('http://127.0.0.1:8080/api/v1/surge/calculate', [
+                    $goSurgeResponse = \Illuminate\Support\Facades\Http::timeout(0.5)->get('http://go_worker:8080/api/v1/surge/calculate', [
                         'zone_id' => $zone['id']
                     ]);
 
