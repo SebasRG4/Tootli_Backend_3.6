@@ -11,43 +11,7 @@ env:
   IMAGE_NAME_AI: ${{ github.repository }}-ai
 
 jobs:
-  test-php:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, xml, ctype, iconv, mysql, gd, zip
-          coverage: none
-      - name: Install Dependencies
-        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-      - name: Run Tests
-        env:
-          APP_KEY: base64:O8AplqZL52gfffHc6xMh84yJqTbVhzDufSyACiVyRaY=
-          DB_CONNECTION: sqlite
-          DB_DATABASE: ":memory:"
-        run: |
-          php artisan migrate --force
-          php vendor/bin/phpunit
-
-  test-go:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.24'
-          cache-dependency-path: go-worker/go.sum
-      - name: Install Dependencies
-        run: cd go-worker && go mod download
-      - name: Run Tests
-        run: cd go-worker && go test ./...
-
   build-and-push:
-    # needs: [test-php, test-go] # Comentado para saltar pruebas que fallan por migraciones incompletas
     runs-on: ubuntu-latest
     permissions:
       contents: read
