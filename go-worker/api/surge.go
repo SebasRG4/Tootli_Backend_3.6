@@ -3,7 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"log"
+	"math"
 	"net/http"
 	"strconv"
 	"sync"
@@ -17,6 +17,7 @@ type ZoneHeat struct {
 	AvailableDMs    int
 	ActiveOrders    int
 	SurgeMultiplier float64
+	HotGrids        map[string]float64 // hexagon_id -> incentive_amount
 	LastUpdated     time.Time
 }
 
@@ -45,6 +46,36 @@ type SurgeConfig struct {
 var lastSurgeConfig SurgeConfig
 var configMutex sync.RWMutex
 
+// LatLngToHex converts coordinates to our custom Hex ID (matching PHP H3Helper)
+func LatLngToHex(lat, lng float64) string {
+	const gridSize = 0.005 // Coincide con H3Helper.php
+
+	q := (2.0 / 3.0 * lng) / gridSize
+	r := (-1.0/3.0*lng + math.Sqrt(3.0)/3.0*lat) / gridSize
+
+	x := q
+	z := r
+	y := -x - z
+
+	rx := math.Round(x)
+	ry := math.Round(y)
+	rz := math.Round(z)
+
+	dx := math.Abs(rx - x)
+	dy := math.Abs(ry - y)
+	dz := math.Abs(rz - z)
+
+	if dx > dy && dx > dz {
+		rx = -ry - rz
+	} else if dy > dz {
+		ry = -rx - rz
+	} else {
+		rz = -rx - ry
+	}
+
+	return fmt.Sprintf("hex_%x_%x", int(rx)+1000000, int(rz)+1000000)
+}
+
 // UpdateHeatmapRoutine se ejecuta cada 15 segundos y consulta la métrica global
 func UpdateHeatmapRoutine() {
 	for {
@@ -69,81 +100,102 @@ func UpdateHeatmapRoutine() {
 		currentCfg := lastSurgeConfig
 		configMutex.RUnlock()
 
-		if currentCfg.Status == 0 {
-			// Si está apagado, resetear todos los multiplicadores a 1.0
-			SurgeHeatmap.Lock()
-			for k := range SurgeHeatmap.Data {
-				SurgeHeatmap.Data[k].SurgeMultiplier = 1.0
-			}
-			SurgeHeatmap.Unlock()
-			continue
+		// 1. Obtener Órdenes Activas con información financiera y de tienda
+		type OrderRow struct {
+			ZoneID               uint
+			OrderAmount          float64
+			CouponDiscountAmount float64
+			CouponCreatedBy      string
+			StoreLat             string
+			StoreLng             string
+			StoreCommission      float64
 		}
+		var activeOrders []OrderRow
+		query := `
+			SELECT 
+				o.zone_id, 
+				o.order_amount, 
+				o.coupon_discount_amount, 
+				o.coupon_created_by,
+				s.latitude as store_lat, 
+				s.longitude as store_lng, 
+				s.comission as store_commission
+			FROM orders o
+			JOIN stores s ON o.store_id = s.id
+			WHERE o.order_status IN ('pending', 'accepted', 'processing')
+		`
+		config.DB.Raw(query).Scan(&activeOrders)
 
-		// 1. Contar "Orders" Pendientes por Zona
-		// ... (código previo de oCounts)
-		type OrderCount struct {
-			ZoneID uint
-			Total  int
-		}
-		var oCounts []OrderCount
-		config.DB.Raw(`
-			SELECT zone_id, COUNT(*) as total
-			FROM orders 
-			WHERE order_status IN ('pending', 'accepted', 'processing')
-			GROUP BY zone_id
-		`).Scan(&oCounts)
-
-		// 2. Contar "DMs" Disponibles por Zona
-		// ... (código previo de dmCounts)
+		// 2. Contar \"DMs\" Disponibles por Zona
 		type DMCount struct {
 			ZoneID uint
 			Total  int
 		}
 		var dmCounts []DMCount
-		config.DB.Raw(`
-			SELECT dm.zone_id, COUNT(dm.id) as total
-			FROM delivery_men dm
-			JOIN delivery_histories dh ON dh.delivery_man_id = dm.id
-			WHERE dm.active = 1 
-			  AND dm.earning = 1
-			  AND dh.time > DATE_SUB(NOW(), INTERVAL 15 MINUTE)
-			GROUP BY dm.zone_id
-		`).Scan(&dmCounts)
+		config.DB.Raw("SELECT dm.zone_id, COUNT(dm.id) as total FROM delivery_men dm JOIN delivery_histories dh ON dh.delivery_man_id = dm.id WHERE dm.active = 1 AND dm.earning = 1 AND dh.time > DATE_SUB(NOW(), INTERVAL 15 MINUTE) GROUP BY dm.zone_id").Scan(&dmCounts)
 
 		// Actualizar el Heatmap en Memoria RAM de GO (Lock)
 		SurgeHeatmap.Lock()
 
-		// Reset
+		// Reset previo
 		for k := range SurgeHeatmap.Data {
 			SurgeHeatmap.Data[k].ActiveOrders = 0
 			SurgeHeatmap.Data[k].AvailableDMs = 0
+			SurgeHeatmap.Data[k].HotGrids = make(map[string]float64)
 		}
 
-		for _, oc := range oCounts {
-			if _, exists := SurgeHeatmap.Data[oc.ZoneID]; !exists {
-				SurgeHeatmap.Data[oc.ZoneID] = &ZoneHeat{}
+		// Procesar Órdenes por Hexágono de Tienda e Incentivo Dinámico
+		for _, o := range activeOrders {
+			if _, exists := SurgeHeatmap.Data[o.ZoneID]; !exists {
+				SurgeHeatmap.Data[o.ZoneID] = &ZoneHeat{HotGrids: make(map[string]float64)}
 			}
-			SurgeHeatmap.Data[oc.ZoneID].ActiveOrders = oc.Total
+			SurgeHeatmap.Data[o.ZoneID].ActiveOrders++
+
+			lat, _ := strconv.ParseFloat(o.StoreLat, 64)
+			lng, _ := strconv.ParseFloat(o.StoreLng, 64)
+
+			if lat != 0 && lng != 0 {
+				hexID := LatLngToHex(lat, lng)
+
+				// Lógica de Ganancia Real Sostenible
+				commissionRate := o.StoreCommission / 100.0
+				profit := o.OrderAmount * commissionRate
+
+				// Restar descuento si lo pagó el administrador
+				if o.CouponCreatedBy == "admin" {
+					profit -= o.CouponDiscountAmount
+				}
+
+				// Incentivo: 40% de la ganancia neta de Tootli
+				incentive := profit * 0.40
+
+				// Si el incentivo es muy bajo (ej. < $2), no lo mostramos
+				if incentive < 2.0 {
+					continue
+				}
+
+				// Para el hexágono, guardamos el incentivo acumulado o el promedio
+				// En este caso, sumaremos para detectar "calor" y luego promediaremos o tomaremos el mayor
+				SurgeHeatmap.Data[o.ZoneID].HotGrids[hexID] += incentive
+			}
 		}
 
 		for _, dmc := range dmCounts {
 			if _, exists := SurgeHeatmap.Data[dmc.ZoneID]; !exists {
-				SurgeHeatmap.Data[dmc.ZoneID] = &ZoneHeat{}
+				SurgeHeatmap.Data[dmc.ZoneID] = &ZoneHeat{HotGrids: make(map[string]float64)}
 			}
 			SurgeHeatmap.Data[dmc.ZoneID].AvailableDMs = dmc.Total
 		}
 
-		// Calcular Multiplicador de Surge usando la configuración de Laravel
-		for zoneID, heat := range SurgeHeatmap.Data {
+		// Calcular Multiplicador de Surge y Normalizar Incentivos
+		for _, heat := range SurgeHeatmap.Data {
 			heat.SurgeMultiplier = 1.0
 
+			// Lógica de Zona (Surge Multiplier para el Cliente)
 			if heat.AvailableDMs == 0 && heat.ActiveOrders > 2 {
-				// Fallback si no hay DMs pero hay órdenes
 				heat.SurgeMultiplier = 1.5
 			} else if heat.AvailableDMs > 0 {
 				ratio := float64(heat.ActiveOrders) / float64(heat.AvailableDMs)
-
-				// Buscar el multiplicador más alto según el ratio
 				var bestMultiplier float64 = 1.0
 				for _, t := range currentCfg.Thresholds {
 					if ratio >= t.Ratio {
@@ -153,88 +205,53 @@ func UpdateHeatmapRoutine() {
 				heat.SurgeMultiplier = bestMultiplier
 			}
 
-			heat.LastUpdated = time.Now()
-			SurgeHeatmap.Data[zoneID] = heat
-		}
-
-		// Log de actividad estilo dashboard
-		if len(SurgeHeatmap.Data) > 0 {
-			log.Printf("[Surge] Heatmap updated. Zones monitored: %d\n", len(SurgeHeatmap.Data))
-			for zid, h := range SurgeHeatmap.Data {
-				if h.SurgeMultiplier > 1.0 {
-					log.Printf("  ↳ Zone %d: Ratio %.2f -> Multiplier %.2fx (🔥 SURGE ACTIVE)\n", zid, float64(h.ActiveOrders)/float64(h.AvailableDMs), h.SurgeMultiplier)
-				}
+			// Finalizar Incentivos: Si el hexágono tiene calor, redondeamos el monto acumulado/promediado
+			// Por simplicidad en esta fase, si hay órdenes, mostramos el incentivo calculado
+			for hexID, totalIncentive := range heat.HotGrids {
+				// Podríamos limitar a montos redondos para que se vea mejor en el mapa
+				heat.HotGrids[hexID] = math.Floor(totalIncentive)
 			}
+
+			heat.LastUpdated = time.Now()
 		}
 
 		SurgeHeatmap.Unlock()
 	}
 }
 
-// --- HTTP Endpoint ---
-
-// HandleCalculateSurge responde al API externo con la tarifa instantánea
+// HandleCalculateSurge responde al API externo con la tarifa instantánea e incentivos
 func HandleCalculateSurge(w http.ResponseWriter, r *http.Request) {
-	latStr := r.URL.Query().Get("lat")
-	lngStr := r.URL.Query().Get("lng")
 	zoneIDStr := r.URL.Query().Get("zone_id")
-
 	w.Header().Set("Content-Type", "application/json")
 
-	var zoneID uint
-
-	if zoneIDStr != "" {
-		parsed, _ := strconv.ParseUint(zoneIDStr, 10, 32)
-		zoneID = uint(parsed)
-	} else if latStr != "" && lngStr != "" {
-		lat, _ := strconv.ParseFloat(latStr, 64)
-		lng, _ := strconv.ParseFloat(lngStr, 64)
-
-		// 1. Averiguar en qué Zona de Laravel (Polígono) están estas coordenadas
-		err := config.DB.Raw(`
-			SELECT id 
-			FROM zones 
-			WHERE status = 1 AND ST_Contains(coordinates, ST_GeomFromText(?))
-			LIMIT 1
-		`, fmt.Sprintf("POINT(%f %f)", lng, lat)).Scan(&zoneID).Error
-
-		if err != nil || zoneID == 0 {
-			json.NewEncoder(w).Encode(map[string]interface{}{
-				"zone_id":          nil,
-				"surge_multiplier": 1.0,
-				"status":           "No zone found",
-			})
-			return
-		}
-	} else {
-		http.Error(w, `{"error":"lat/lng or zone_id is required"}`, http.StatusBadRequest)
+	if zoneIDStr == "" {
+		http.Error(w, `{"error":"zone_id is required"}`, http.StatusBadRequest)
 		return
 	}
 
-	// 2. Extraer el multiplicador en RAM O(1)
+	parsed, _ := strconv.ParseUint(zoneIDStr, 10, 32)
+	zoneID := uint(parsed)
+
 	SurgeHeatmap.RLock()
 	heat, exists := SurgeHeatmap.Data[zoneID]
 	SurgeHeatmap.RUnlock()
 
 	multiplier := 1.0
-	reasons := []string{}
+	hotGrids := make(map[string]float64)
 	activeOrders := 0
 	availDms := 0
 
 	if exists {
 		multiplier = heat.SurgeMultiplier
+		hotGrids = heat.HotGrids
 		activeOrders = heat.ActiveOrders
 		availDms = heat.AvailableDMs
-		if multiplier > 1.0 {
-			reasons = append(reasons, "high_demand")
-		}
 	}
 
-	// Responder en microsegundos
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"zone_id":          zoneID,
 		"surge_multiplier": multiplier,
-		"reasons":          reasons,
+		"hot_grids":        hotGrids, // ID -> monto_incentivo
 		"active_orders":    activeOrders,
 		"available_dms":    availDms,
 	})

@@ -24,6 +24,10 @@ jobs:
       - name: Install Dependencies
         run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
       - name: Run Tests
+        env:
+          APP_KEY: base64:V69hQ/M3PzD8X7/K5w1S7vM=
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ":memory:"
         run: php vendor/bin/phpunit
 
   test-go:
