@@ -58,3 +58,4 @@ error_log
 # package-lock.json
 # composer.lock
 Tootli_AI/
+*.sql

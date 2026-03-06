@@ -174,9 +174,10 @@ func UpdateHeatmapRoutine() {
 					continue
 				}
 
-				// Para el hexágono, guardamos el incentivo acumulado o el promedio
-				// En este caso, sumaremos para detectar "calor" y luego promediaremos o tomaremos el mayor
-				SurgeHeatmap.Data[o.ZoneID].HotGrids[hexID] += incentive
+				// Use the maximum incentive found in this hexagon to represent the best potential bonus
+				if currentMax, exists := SurgeHeatmap.Data[o.ZoneID].HotGrids[hexID]; !exists || incentive > currentMax {
+					SurgeHeatmap.Data[o.ZoneID].HotGrids[hexID] = incentive
+				}
 			}
 		}
 

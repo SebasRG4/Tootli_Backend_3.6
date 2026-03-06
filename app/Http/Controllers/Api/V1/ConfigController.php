@@ -545,7 +545,7 @@ class ConfigController extends Controller
 
         $hot_grids = [];
         try {
-            $goResponse = \Illuminate\Support\Facades\Http::timeout(2.0)->get('http://tootli_go_worker_v2:8080/api/v1/surge/calculate', [
+            $goResponse = \Illuminate\Support\Facades\Http::timeout(2.0)->get('http://go_worker:8080/api/v1/surge/calculate', [
                 'zone_id' => $zone_ids[0] ?? 0
             ]);
             if ($goResponse->successful()) {
