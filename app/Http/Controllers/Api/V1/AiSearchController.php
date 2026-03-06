@@ -98,7 +98,8 @@ class AiSearchController extends Controller
         $user_vector = [];
         try {
             // Get vector for the user's query from Python service
-            $emb_response = \Illuminate\Support\Facades\Http::post('http://127.0.0.1:8000/get-embedding', [
+            $aiUrl = env('AI_SERVICE_URL', 'http://127.0.0.1:8000');
+            $emb_response = \Illuminate\Support\Facades\Http::post($aiUrl . '/get-embedding', [
                 'text' => $message
             ]);
 
@@ -262,7 +263,8 @@ class AiSearchController extends Controller
         $history = $request->history ?? []; // Expecting [{'role': 'user', 'content': '...'}, ...] from frontend
 
         try {
-            $response = \Illuminate\Support\Facades\Http::post('http://127.0.0.1:8000/recommend', [
+            $aiUrl = env('AI_SERVICE_URL', 'http://127.0.0.1:8000');
+            $response = \Illuminate\Support\Facades\Http::post($aiUrl . '/recommend', [
                 'user_query' => $message,
                 'user_name' => $user_name,
                 'filters' => [
