@@ -7,6 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"time"
+
 	"github.com/redis/go-redis/v9"
 	"tootli.mx/worker/api"
 	"tootli.mx/worker/config"
@@ -17,6 +19,20 @@ import (
 )
 
 func main() {
+	// Set the global timezone if TZ is provided
+	tz := os.Getenv("TZ")
+	if tz == "" {
+		tz = "America/Mexico_City" // Forced default
+	}
+
+	loc, err := time.LoadLocation(tz)
+	if err == nil {
+		time.Local = loc
+		log.Printf("[main] Timezone confirmed: %s (Local time: %s)\n", tz, time.Now().Format("15:04:05"))
+	} else {
+		log.Printf("[main] ERROR: Failed to load timezone %s: %v. Falling back to UTC.\n", tz, err)
+	}
+
 	cfg := config.Load()
 
 	log.Println("[main] Tootli Go Worker starting...")

@@ -122,7 +122,8 @@ func UpdateHeatmapRoutine() {
 				s.comission as store_commission
 			FROM orders o
 			JOIN stores s ON o.store_id = s.id
-			WHERE o.order_status IN ('pending', 'accepted', 'processing')
+			WHERE o.order_status IN ('pending', 'confirmed') 
+			AND o.delivery_man_id IS NULL
 		`
 		config.DB.Raw(query).Scan(&activeOrders)
 

@@ -14,6 +14,9 @@ RUN go build -o main .
 # Imagen final ligera
 FROM alpine:latest
 
+# Instalar tzdata para soporte de zonas horarias
+RUN apk add --no-cache tzdata
+
 WORKDIR /app
 
 # Obtener binario de la etapa anterior
