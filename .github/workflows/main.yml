@@ -28,7 +28,9 @@ jobs:
           APP_KEY: base64:O8AplqZL52gfffHc6xMh84yJqTbVhzDufSyACiVyRaY=
           DB_CONNECTION: sqlite
           DB_DATABASE: ":memory:"
-        run: php vendor/bin/phpunit
+        run: |
+          php artisan migrate --force
+          php vendor/bin/phpunit
 
   test-go:
     runs-on: ubuntu-latest
