@@ -543,12 +543,26 @@ class ConfigController extends Controller
             ->where('is_active', true)
             ->get();
 
-        $formatted_grids = $grids->map(function ($grid) {
+        $hot_grids = [];
+        try {
+            $goResponse = \Illuminate\Support\Facades\Http::timeout(2.0)->get('http://tootli_go_worker_v2:8080/api/v1/surge/calculate', [
+                'zone_id' => $zone_ids[0] ?? 0
+            ]);
+            if ($goResponse->successful()) {
+                $hot_grids = $goResponse->json()['hot_grids'] ?? [];
+            }
+        } catch (\Exception $e) {
+            \Log::error("Surge Service Error: " . $e->getMessage());
+        }
+
+        $formatted_grids = $grids->map(function ($grid) use ($hot_grids) {
             $center = \App\CentralLogics\H3Helper::hexToLatLng($grid->hexagon_id);
+            $surge_amount = (float) ($hot_grids[$grid->hexagon_id] ?? 0);
             return [
                 'hexagon_id' => $grid->hexagon_id,
                 'delivery_type' => $grid->delivery_type,
                 'center' => $center,
+                'surge_amount' => $surge_amount,
             ];
         });
 
