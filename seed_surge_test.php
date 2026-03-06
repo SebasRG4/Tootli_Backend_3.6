@@ -30,24 +30,26 @@ DB::table('stores')->where('id', $storeId)->update([
 // Clear existing test orders to avoid noise
 DB::table('orders')->where('order_status', 'pending')->delete();
 
-// 2. Insert Active Order
-DB::table('orders')->insert([
-    'zone_id' => $zoneId,
-    'store_id' => $storeId,
-    'module_id' => $moduleId,
-    'order_amount' => 500, // $500
-    'order_status' => 'pending',
-    'coupon_discount_amount' => 0,
-    'coupon_created_by' => 'admin',
-    'created_at' => now(),
-    'updated_at' => now(),
-    'payment_status' => 'unpaid',
-    'order_type' => 'delivery',
-    'user_id' => DB::table('users')->first()->id ?? 1,
-    'payment_method' => 'cash_on_delivery',
-    'delivery_address_id' => 1,
-    'delivery_man_id' => null
-]);
+// 2. Insert Active Orders (5 orders to make surge persistent)
+for ($i = 0; $i < 5; $i++) {
+    DB::table('orders')->insert([
+        'zone_id' => $zoneId,
+        'store_id' => $storeId,
+        'module_id' => $moduleId,
+        'order_amount' => 500, // $500
+        'order_status' => 'pending',
+        'coupon_discount_amount' => 0,
+        'coupon_created_by' => 'admin',
+        'created_at' => now(),
+        'updated_at' => now(),
+        'payment_status' => 'unpaid',
+        'order_type' => 'delivery',
+        'user_id' => DB::table('users')->first()->id ?? 1,
+        'payment_method' => 'cash_on_delivery',
+        'delivery_address_id' => 1,
+        'delivery_man_id' => null
+    ]);
+}
 
 // 3. Setup Delivery Man
 $dm = DB::table('delivery_men')->where('active', 1)->first();
