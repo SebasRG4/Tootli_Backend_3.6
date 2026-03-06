@@ -12,14 +12,18 @@ use Illuminate\Support\Facades\DB;
 echo "Seeding test data...\n";
 
 // 1. Setup Zone and Store
-$zoneId = 1;
-$storeId = 5; // Tootli Home
-$moduleId = 1; // grocery
+$store = DB::table('stores')->first();
+if (!$store) {
+    die("No stores found in database. Please add a store first.\n");
+}
+$storeId = $store->id;
+$zoneId = $store->zone_id;
+$moduleId = $store->module_id;
+
+echo "Selected Store: {$store->name} (ID: $storeId) in Zone: $zoneId\n";
 
 DB::table('stores')->where('id', $storeId)->update([
     'comission' => 20, // 20%
-    'latitude' => '19.2545522',
-    'longitude' => '-99.5722350',
     'module_id' => $moduleId
 ]);
 
@@ -39,13 +43,23 @@ DB::table('orders')->insert([
     'updated_at' => now(),
     'payment_status' => 'unpaid',
     'order_type' => 'delivery',
-    'user_id' => 1,
+    'user_id' => DB::table('users')->first()->id ?? 1,
     'payment_method' => 'cash_on_delivery',
-    'delivery_address_id' => 1
+    'delivery_address_id' => 1,
+    'delivery_man_id' => null
 ]);
 
 // 3. Setup Delivery Man
-$dmId = 4; // Found active DM with this ID
+$dm = DB::table('delivery_men')->where('active', 1)->first();
+if (!$dm) {
+    echo "No active DM found, creating/activating one...\n";
+    $dm = DB::table('delivery_men')->first();
+    if (!$dm) {
+        die("No delivery men found in database.\n");
+    }
+}
+$dmId = $dm->id;
+
 DB::table('delivery_men')->where('id', $dmId)->update([
     'active' => 1,
     'earning' => 1,
@@ -56,8 +70,8 @@ DB::table('delivery_men')->where('id', $dmId)->update([
 DB::table('delivery_histories')->updateOrInsert(
     ['delivery_man_id' => $dmId],
     [
-        'latitude' => '19.2545522',
-        'longitude' => '-99.5722350',
+        'latitude' => $store->latitude,
+        'longitude' => $store->longitude,
         'time' => now(),
         'location' => 'Test Location'
     ]
@@ -78,6 +92,6 @@ DB::table('business_settings')->updateOrInsert(
     ['value' => json_encode($surgeConfig)]
 );
 
-echo "Test data seeded successfully for Zone 1, Store 5.\n";
-echo "Active orders in Zone 1: " . DB::table('orders')->where('zone_id', 1)->whereIn('order_status', ['pending', 'accepted', 'processing'])->count() . "\n";
-echo "Available DMs: " . DB::table('delivery_men')->where('active', 1)->where('earning', 1)->count() . "\n";
+echo "Test data seeded successfully for Zone $zoneId, Store $storeId.\n";
+echo "Active orders in Zone $zoneId: " . DB::table('orders')->where('zone_id', $zoneId)->whereIn('order_status', ['pending', 'accepted', 'processing'])->count() . "\n";
+echo "Available DMs in Zone $zoneId: " . DB::table('delivery_men')->where('active', 1)->where('earning', 1)->where('zone_id', $zoneId)->count() . "\n";
