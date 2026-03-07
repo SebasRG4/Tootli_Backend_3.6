@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/redis/go-redis/v9"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -26,8 +27,9 @@ type Config struct {
 	InternalSecret string
 }
 
-// Global DB instance
+// Global instances
 var DB *gorm.DB
+var Redis *redis.Client
 var InternalSecret string
 
 // Load reads configuration from environment variables with sensible defaults

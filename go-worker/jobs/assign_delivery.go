@@ -7,8 +7,10 @@ import (
 	"log"
 	"math"
 	"strconv"
+	"time"
 
 	geo "github.com/kellydunn/golang-geo"
+	"github.com/redis/go-redis/v9"
 	"tootli.mx/worker/config"
 	"tootli.mx/worker/models"
 	"tootli.mx/worker/notifications"
@@ -67,12 +69,18 @@ func handleAssignDelivery(ctx context.Context, raw json.RawMessage) error {
 		return fmt.Errorf("could not fetch delivery men for zone %d: %w", payload.ZoneID, err)
 	}
 
-	// TODO: Blacklist check (Delivery men who rejected or cancelled this order)
-	// We will query Redis for the blacklist of this order later.
+	// 3. Redis Blacklist check (Delivery men who rejected or cancelled this order)
+	blacklistKey := fmt.Sprintf("order:%d:rejected", order.ID)
+	rejectedIDs, _ := config.Redis.SMembers(ctx, blacklistKey).Result()
+	rejectedMap := make(map[uint]bool)
+	for _, idStr := range rejectedIDs {
+		if id, err := strconv.ParseUint(idStr, 10, 32); err == nil {
+			rejectedMap[uint(id)] = true
+		}
+	}
 
 	if len(deliveryMen) == 0 {
 		log.Printf("[assign_delivery] No active delivery men found in zone %d for Order #%d\n", payload.ZoneID, order.ID)
-		// Fallback: Re-queue after 60 seconds? Broadcast to everyone?
 		return nil
 	}
 
@@ -86,8 +94,7 @@ func handleAssignDelivery(ctx context.Context, raw json.RawMessage) error {
 	var candidates []ScoredDM
 
 	for _, dm := range deliveryMen {
-		// Basic check: is the DM overloaded?
-		if dm.CurrentOrders >= 3 { // Example config threshold
+		if rejectedMap[dm.ID] {
 			continue
 		}
 
@@ -102,20 +109,39 @@ func handleAssignDelivery(ctx context.Context, raw json.RawMessage) error {
 		dmLng, _ := strconv.ParseFloat(loc.Longitude, 64)
 		dmPoint := geo.NewPoint(dmLat, dmLng)
 
-		// Calculate Distance (in km)
+		// Calculate Distance (in km) to the NEW order's store
 		dist := storePoint.GreatCircleDistance(dmPoint)
 
-		// Max distance filter (e.g. 15 km)
-		if dist > 15.0 {
+		// Max distance filter (5 km)
+		if dist > 5.0 {
+			continue
+		}
+
+		// Calculate Real Load Time (minutes) from active orders
+		var activeOrders []models.Order
+		config.DB.Where("delivery_man_id = ? AND order_status IN ('accepted', 'processing')", dm.ID).Find(&activeOrders)
+
+		totalPendingTime := 0.0
+		for _, ao := range activeOrders {
+			if ao.StoreID != nil {
+				var s models.Store
+				if err := config.DB.First(&s, *ao.StoreID).Error; err == nil {
+					slat, _ := strconv.ParseFloat(s.Latitude, 64)
+					slng, _ := strconv.ParseFloat(s.Longitude, 64)
+					sp := geo.NewPoint(slat, slng)
+					distToStore := dmPoint.GreatCircleDistance(sp)
+					totalPendingTime += distToStore * 3.0 // roughly 3 min per km in city traffic
+				}
+			}
+		}
+
+		// Discard if overload is too high (est > 25 mins pending)
+		if totalPendingTime > 25.0 {
 			continue
 		}
 
 		// Calculate Score (lower is better)
-		// Simplest score: Just distance
-		score := dist + float64(dm.CurrentOrders)*2.0 // Penalize 2km per active order
-
-		// Hard penalty if they already have orders and we want to prioritize empty drivers
-		// (you can tweak this algorithm)
+		score := dist + (totalPendingTime * 0.5) + float64(dm.CurrentOrders)*1.5
 
 		candidates = append(candidates, ScoredDM{
 			DM:       dm,
@@ -165,8 +191,13 @@ func handleAssignDelivery(ctx context.Context, raw json.RawMessage) error {
 		log.Printf("[assign_delivery] Warning: None of the selected candidates have FCM tokens for Order #%d\n", payload.OrderID)
 	}
 
-	// We set a marker in Redis giving them X seconds to respond.
-	// If none respond, we trigger the next wave (Attempt + 1).
+	// 6. Set a marker in Redis for Wave Requeue (30 seconds)
+	expireTime := time.Now().Add(30 * time.Second).Unix()
+	waveData, _ := json.Marshal(payload)
+	config.Redis.ZAdd(ctx, "wave_queue", redis.Z{
+		Score:  float64(expireTime),
+		Member: waveData,
+	})
 
 	return nil
 }

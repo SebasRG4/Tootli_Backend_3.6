@@ -57,6 +57,7 @@ func main() {
 	if _, err := rdb.Ping(ctx).Result(); err != nil {
 		log.Fatalf("[main] Cannot connect to Redis: %v\n", err)
 	}
+	config.Redis = rdb
 	log.Println("[main] Redis connected ✓")
 
 	// Graceful shutdown on SIGINT / SIGTERM
@@ -70,6 +71,9 @@ func main() {
 
 	// Start the Order Monitor Cron Job
 	go cron.StartOrderMonitor(ctx)
+
+	// Start the Wave Requeue Cron Job
+	go cron.StartWaveRequeueMonitor(ctx)
 
 	// Start the high-performance HTTP API for GPS Tracking
 	go func() {
