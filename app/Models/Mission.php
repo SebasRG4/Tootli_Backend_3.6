@@ -14,6 +14,8 @@ class Mission extends Model
         'reward_amount' => 'float',
         'status' => 'boolean',
         'zone_id' => 'integer',
+        'start_date' => 'date',
+        'end_date' => 'date',
     ];
 
     protected $fillable = [

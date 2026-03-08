@@ -96,7 +96,7 @@ class MissionController extends Controller
         $mission->status = $request->status;
         $mission->save();
 
-        Toastr::success(translate('messages.mission_status_updated'));
+        Toastr::success(translate('messages.mission_status_updated_successfully'));
         return back();
     }
 
