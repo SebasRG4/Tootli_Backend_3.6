@@ -64,7 +64,7 @@ if ($dm) {
     DB::table('delivery_men')->where('id', $dm->id)->update([
         'active' => 1,
         'earning' => 1,
-        'online' => 1
+        'application_status' => 'approved'
     ]);
 
     // Set position near store
