@@ -6,6 +6,7 @@ use App\Models\Mission;
 use App\Models\DeliveryMan;
 use App\Models\DeliveryManWallet;
 use App\Models\AccountTransaction;
+use App\CentralLogics\Helpers;
 use Illuminate\Support\Facades\DB;
 
 class MissionLogic
@@ -105,7 +106,7 @@ class MissionLogic
             DB::commit();
 
             // Send Push Notification
-            $fcm_token = $dm->cm_firebase_token;
+            $fcm_token = $dm->fcm_token;
             if ($fcm_token) {
                 $notification_data = [
                     'title' => '¡Misión Completada!',
@@ -141,8 +142,8 @@ class MissionLogic
                 ->where('delivery_man_id', $dm_id)
                 ->first();
 
-            $mission->current_progress = $progress ? $progress->current_count : 0;
-            $mission->is_completed = $progress ? (bool) $progress->is_completed : false;
+            $mission->setAttribute('current_progress', $progress ? (int) $progress->current_count : 0);
+            $mission->setAttribute('is_completed', $progress ? (bool) $progress->is_completed : false);
             return $mission;
         });
     }

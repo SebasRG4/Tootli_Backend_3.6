@@ -18,6 +18,11 @@ class DmTokenIsValid
      */
     public function handle(Request $request, Closure $next)
     {
+        if (!$request->has('token') && $request->hasHeader('Authorization')) {
+            $token = str_replace('Bearer ', '', $request->header('Authorization'));
+            $request->merge(['token' => $token]);
+        }
+
         $validator = Validator::make($request->all(), [
             'token' => 'required|exists:delivery_men,auth_token'
         ]);

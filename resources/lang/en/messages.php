@@ -1,4 +1,4 @@
-<?php return array (
+<?php return array(
   'no_coverage' => 'No coverage',
   'No Coverage' => 'No Coverage',
   'attributes' => 'Attributes',
@@ -468,7 +468,15 @@
   'vehicles_category' => 'Vehicles category',
   'add_delivery_man' => 'Add delivery man',
   'new_delivery_man' => 'New delivery man',
-  'deliveryman_list' => 'Deliveryman list',
+  'deliveryman_list' => 'Deliveryman List',
+  'driver_missions' => 'Driver Missions',
+  'mission_list' => 'Mission List',
+  'add_mission' => 'Add Mission',
+  'edit_mission' => 'Edit Mission',
+  'mission_added_successfully' => 'Mission added successfully',
+  'mission_updated_successfully' => 'Mission updated successfully',
+  'mission_status_updated_successfully' => 'Mission status updated successfully',
+  'mission_deleted_successfully' => 'Mission deleted successfully',
   'reviews' => 'Reviews',
   'customer_section' => 'Customer section',
   'customer_management' => 'Customer management',
