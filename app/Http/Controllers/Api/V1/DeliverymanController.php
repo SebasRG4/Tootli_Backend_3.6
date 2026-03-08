@@ -29,6 +29,8 @@ use App\Models\OrderPayment;
 use App\Models\OrderTransaction;
 use App\Models\ParcelCancellation;
 use App\Models\ProvideDMEarning;
+use App\Models\Mission;
+use App\CentralLogics\MissionLogic;
 use App\Models\UserNotification;
 use App\Models\WithdrawalMethod;
 use App\Models\WithdrawRequest;
@@ -144,6 +146,18 @@ class DeliverymanController extends Controller
         unset($dm['wallet']);
 
         return response()->json($dm, 200);
+    }
+
+    public function get_missions(Request $request)
+    {
+        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+        if (!$dm) {
+            return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
+        }
+
+        $missions = MissionLogic::get_dm_missions($dm->id, $dm->zone_id);
+
+        return response()->json($missions, 200);
     }
 
     public function update_profile(Request $request)
@@ -571,6 +585,13 @@ class DeliverymanController extends Controller
             }
             if ($order->transaction) {
                 $order->transaction->update(['delivery_man_id' => $dm->id]);
+            }
+
+            // Increment Mission Progress
+            try {
+                MissionLogic::increment_mission_progress($order);
+            } catch (\Exception $e) {
+                info("Mission progress err: " . $e->getMessage());
             }
 
             $order->details->each(function ($item, $key) {
@@ -1510,16 +1531,16 @@ class DeliverymanController extends Controller
             2 => 'Denied',
         ];
         foreach ($withdraw_req as $item) {
-            $item['status'] = $status[$item->approved];
-            $item['requested_at'] = $item->created_at->format('Y-m-d H:i:s');
+            $item->status = $status[$item->approved];
+            $item->requested_at = $item->created_at->format('Y-m-d H:i:s');
 
             if ($item->type == 'disbursement') {
 
-                $item['bank_name'] = $item->disbursementMethod ? $item->disbursementMethod->method_name : translate('Account');
+                $item->bank_name = $item->disbursementMethod ? $item->disbursementMethod->method_name : translate('Account');
             } else {
-                $item['bank_name'] = $item->method ? $item->method->method_name : translate('Account');
+                $item->bank_name = $item->method ? $item->method->method_name : translate('Account');
             }
-            $item['detail'] = json_decode($item->withdrawal_method_fields, true);
+            $item->detail = json_decode($item->withdrawal_method_fields, true);
 
             unset($item['created_at']);
             unset($item['approved']);
@@ -1644,7 +1665,7 @@ class DeliverymanController extends Controller
         }
 
         if (in_array($order->parcelCancellation->cancel_by, ['deliveryman', 'admin_for_deliveryman'])) {
-            OrderLogic::deliveryManCancelParcelTransaction($order, 'deliveryman');
+            OrderLogic::deliveryManCancelParcelTransaction($order);
         } else {
             OrderLogic::create_transaction_parcel_cancel($order, $order->payment_status == 'paid' ? 'admin' : 'deliveryman');
         }

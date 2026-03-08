@@ -267,6 +267,16 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('status/{id}/{status}', 'FlashSaleController@status_product')->name('status-product');
         });
 
+        Route::group(['prefix' => 'mission', 'as' => 'mission.'], function () {
+            Route::get('list', 'MissionController@index')->name('list');
+            Route::get('add', 'MissionController@create')->name('add');
+            Route::post('store', 'MissionController@store')->name('store');
+            Route::get('edit/{id}', 'MissionController@edit')->name('edit');
+            Route::post('update/{id}', 'MissionController@update')->name('update');
+            Route::get('status/{id}/{status}', 'MissionController@status')->name('status');
+            Route::delete('delete/{id}', 'MissionController@delete')->name('delete');
+        });
+
         Route::group(['prefix' => 'message', 'as' => 'message.'], function () {
             Route::get('list', 'ConversationController@list')->name('list');
             Route::post('store/{user_id}', 'ConversationController@store')->name('store');

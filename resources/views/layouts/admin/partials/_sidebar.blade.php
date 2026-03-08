@@ -854,6 +854,16 @@
                                 </span>
                             </a>
                         </li>
+
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/mission*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.mission.list') }}"
+                                title="{{ translate('messages.driver_missions') }}">
+                                <i class="tio-medal nav-icon"></i>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                    {{ translate('messages.driver_missions') }}
+                                </span>
+                            </a>
+                        </li>
                     @endif
                     <!-- End DeliveryMan -->
 

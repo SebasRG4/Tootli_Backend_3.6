@@ -100,6 +100,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         });
         Route::group(['middleware' => ['dm.api']], function () {
             Route::get('profile', 'DeliverymanController@get_profile');
+            Route::get('missions', 'DeliverymanController@get_missions');
             Route::get('convert-loyalty-points', 'DeliverymanController@convertLoyaltyPoints');
             Route::get('notifications', 'DeliverymanController@get_notifications');
             Route::put('update-profile', 'DeliverymanController@update_profile');
