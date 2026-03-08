@@ -96,6 +96,29 @@ func UpdateHeatmapRoutine() {
 			}
 		}
 
+		// Cargar Configuración de Incentivos
+		var incentiveStatus int
+		var incentiveRatio float64 = 25.0
+		var minBonus float64 = 2.0
+		
+		var statusVal string
+		config.DB.Raw("SELECT value FROM business_settings WHERE `key` = 'incentive_status' LIMIT 1").Scan(&statusVal)
+		if statusVal == "1" {
+			incentiveStatus = 1
+		}
+		
+		var ratioVal string
+		config.DB.Raw("SELECT value FROM business_settings WHERE `key` = 'incentive_profit_share_ratio' LIMIT 1").Scan(&ratioVal)
+		if r, err := strconv.ParseFloat(ratioVal, 64); err == nil && r > 0 {
+			incentiveRatio = r
+		}
+		
+		var minVal string
+		config.DB.Raw("SELECT value FROM business_settings WHERE `key` = 'incentive_min_bonus_value' LIMIT 1").Scan(&minVal)
+		if m, err := strconv.ParseFloat(minVal, 64); err == nil {
+			minBonus = m
+		}
+
 		configMutex.RLock()
 		currentCfg := lastSurgeConfig
 		configMutex.RUnlock()
@@ -127,7 +150,7 @@ func UpdateHeatmapRoutine() {
 		`
 		config.DB.Raw(query).Scan(&activeOrders)
 
-		// 2. Contar \"DMs\" Disponibles por Zona
+		// 2. Contar "DMs" Disponibles por Zona
 		type DMCount struct {
 			ZoneID uint
 			Total  int
@@ -152,6 +175,10 @@ func UpdateHeatmapRoutine() {
 			}
 			SurgeHeatmap.Data[o.ZoneID].ActiveOrders++
 
+			if incentiveStatus == 0 {
+				continue
+			}
+
 			lat, _ := strconv.ParseFloat(o.StoreLat, 64)
 			lng, _ := strconv.ParseFloat(o.StoreLng, 64)
 
@@ -167,11 +194,11 @@ func UpdateHeatmapRoutine() {
 					profit -= o.CouponDiscountAmount
 				}
 
-				// Incentivo: 40% de la ganancia neta de Tootli
-				incentive := profit * 0.40
+				// Incentivo: Dinámico según ratio configurado (default 25%)
+				incentive := profit * (incentiveRatio / 100.0)
 
-				// Si el incentivo es muy bajo (ej. < $2), no lo mostramos
-				if incentive < 2.0 {
+				// Si el incentivo es muy bajo (ej. < minBonus), no lo mostramos
+				if incentive < minBonus {
 					continue
 				}
 

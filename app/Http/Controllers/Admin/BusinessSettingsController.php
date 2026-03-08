@@ -231,6 +231,9 @@ class BusinessSettingsController extends Controller
             'dm_referal_amount',
             'dm_referal_bonus',
             'toggle_dm_registration',
+            'incentive_status',
+            'incentive_profit_share_ratio',
+            'incentive_min_bonus_value',
         ];
 
 

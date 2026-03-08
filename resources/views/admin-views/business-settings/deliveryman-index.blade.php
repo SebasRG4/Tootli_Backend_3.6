@@ -471,7 +471,67 @@
                                 </div>
                             </div>
                         </div>
-                </div>
+                        @php($incentive_status = Helpers::get_business_settings('incentive_status'))
+                        @php($incentive_profit_share_ratio = Helpers::get_business_settings('incentive_profit_share_ratio'))
+                        @php($incentive_min_bonus_value = Helpers::get_business_settings('incentive_min_bonus_value'))
+
+                        <div class="card mt-20 card-container">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between gap-2 flex-sm-nowrap flex-wrap">
+                                    <div>
+                                        <h4 class="mb-1">{{translate('Incentive & Reward Accelerator Settings')}}</h4>
+                                        <p class="fs-12 m-0">{{translate('Manage the profit-sharing ratio for driver bonuses and missions.')}}</p>
+                                    </div>
+                                    <div class="d-flex flex-sm-nowrap flex-wrap justify-content-end justify-content-end align-items-center gap-3">
+                                        <div class="view_toggle_btn fz--14px info-dark cursor-pointer text-decoration-underline font-semibold d-flex align-items-center gap-1">
+                                            {{ translate('messages.view') }}
+                                            <i class="tio-chevron-down fs-22"></i>
+                                        </div>
+                                        <div class="mb-0">
+                                            <label class="toggle-switch toggle-switch-sm mb-0">
+                                                <input type="checkbox" data-type="toggle" class="status toggle-switch-input" name="incentive_status" id="incentive_status" value="1" {{ $incentive_status == 1 ? 'checked' : '' }}>
+                                                <span class="toggle-switch-label text mb-0">
+                                                    <span class="toggle-switch-indicator"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-details-body {{ !$incentive_status ? 'd-none' : '' }}">
+                                    <div class="bg-light2 rounded p-xxl-20 p-3 mt-20">
+                                        <div class="row g-3">
+                                            <div class="col-sm-6 col-lg-6">
+                                                <div class="form-group mb-0">
+                                                    <label class="form-label text-capitalize" for="incentive_profit_share_ratio">
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="line--limit-1 flex-grow pr-1">{{ translate('Profit Share Ratio (%)') }} </span>
+                                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Percentage of net profit (Commissions - Discounts) allocated to driver incentives. Recommended: 25%.') }}">
+                                                                <i class="tio-info text-light-gray"></i>
+                                                            </span>
+                                                        </div>
+                                                    </label>
+                                                    <input type="number" name="incentive_profit_share_ratio" class="form-control" min="1" max="100" id="incentive_profit_share_ratio" placeholder="25" value="{{ $incentive_profit_share_ratio ?? 25 }}" {{ $incentive_status == 1 ? 'required' : 'readonly' }}>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-lg-6">
+                                                <div class="form-group mb-0">
+                                                    <label class="form-label text-capitalize" for="incentive_min_bonus_value">
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="line--limit-1 flex-grow pr-1">{{ translate('Minimum Bonus Value') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }}) </span>
+                                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('The minimum amount an incentive must reach to be displayed to the driver.') }}">
+                                                                <i class="tio-info text-light-gray"></i>
+                                                            </span>
+                                                        </div>
+                                                    </label>
+                                                    <input type="number" name="incentive_min_bonus_value" class="form-control" min="0" step="0.01" id="incentive_min_bonus_value" placeholder="2.00" value="{{ $incentive_min_bonus_value ?? 2.00 }}" {{ $incentive_status == 1 ? 'required' : 'readonly' }}>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="mt-0 footer-sticky">
@@ -506,6 +566,10 @@
 
             $('#dm_loyality_point_status').on('change', function () {
                 toggleFields(this, '#dm_loyality_point_per_order, #dm_loyality_point_conversion_rate, #dm_min_loyality_point_to_convert');
+            }).trigger('change');
+
+            $('#incentive_status').on('change', function () {
+                toggleFields(this, '#incentive_profit_share_ratio, #incentive_min_bonus_value');
             }).trigger('change');
 
         });
