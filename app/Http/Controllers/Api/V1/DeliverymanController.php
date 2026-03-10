@@ -1812,8 +1812,8 @@ class DeliverymanController extends Controller
     public function propose_parcel_price(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'order_id' => 'required',
-            'proposed_price' => 'required|numeric'
+            'order_id' => 'required|exists:orders,id',
+            'price' => 'required|numeric|min:0',
         ]);
 
         if ($validator->fails()) {
@@ -1821,20 +1821,32 @@ class DeliverymanController extends Controller
         }
 
         $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
-        if (!$dm) {
-            return response()->json(['message' => translate('Deliveryman not found')], 404);
-        }
+        $order = Order::where('id', $request['order_id'])->where('delivery_man_id', $dm->id)->first();
 
-        $order = Order::where(['id' => $request->order_id, 'delivery_man_id' => $dm->id])->first();
         if (!$order) {
             return response()->json(['message' => translate('Order not found')], 404);
         }
 
-        if (OrderLogic::propose_parcel_price($order, $request->proposed_price)) {
+        $order->proposed_delivery_charge = $request->price;
+        if ($order->save()) {
             return response()->json(['message' => translate('Price proposal sent successfully')], 200);
         }
 
         return response()->json(['message' => translate('Failed to send price proposal')], 400);
     }
-}
 
+    public function get_orders_count(Request $request)
+    {
+        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+        if (!$dm) {
+            return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
+        }
+
+        $count = Order::where(['delivery_man_id' => $dm['id']])
+            ->whereIn('order_status', ['accepted', 'confirmed', 'pending', 'processing', 'picked_up', 'handover'])
+            ->dmOrder()
+            ->count();
+
+        return response()->json([['key' => $request->type, 'count' => $count]], 200);
+    }
+}
