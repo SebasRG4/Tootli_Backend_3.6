@@ -53,6 +53,13 @@ func SendDeliveryOffer(ctx context.Context, tokens []string, orderID uint) error
 			Title: "New Delivery Offer!",
 			Body:  "You have a new order request. Tap to View!",
 		},
+		APNS: &messaging.APNSConfig{
+			Payload: &messaging.APNSPayload{
+				Aps: &messaging.Aps{
+					Sound: "alert_new_delivery.mp3",
+				},
+			},
+		},
 		Tokens: tokens,
 	}
 

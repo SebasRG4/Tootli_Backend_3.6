@@ -30,6 +30,7 @@ use App\CentralLogics\CouponLogic;
 use Illuminate\Support\Facades\DB;
 use App\CentralLogics\ProductLogic;
 use App\CentralLogics\CustomerLogic;
+use App\CentralLogics\MissionLogic;
 use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Mail;
@@ -573,6 +574,13 @@ class OrderController extends Controller
 
             OrderLogic::update_unpaid_order_payment(order_id: $order->id, payment_method: $order->payment_method);
 
+            // Increment Mission Progress
+            try {
+                MissionLogic::increment_mission_progress($order);
+            } catch (\Exception $e) {
+                info("Mission progress err (Admin): " . $e->getMessage());
+            }
+
         } else if ($request->order_status == 'refunded' && BusinessSetting::where('key', 'refund_active_status')->first()->value == 1) {
             if ($order->payment_status == "unpaid") {
                 Toastr::warning(translate('messages.you_can_not_refund_a_cod_order'));
@@ -726,6 +734,14 @@ class OrderController extends Controller
                 $order->order_status = 'delivered';
                 // ... additional delivered logic if needed
                 $order->save();
+
+                // Increment Mission Progress
+                try {
+                    MissionLogic::increment_mission_progress($order);
+                } catch (\Exception $e) {
+                    info("Mission progress err (Partial Admin): " . $e->getMessage());
+                }
+
                 Toastr::success(translate('messages.order_delivered'));
             }
         } else {
