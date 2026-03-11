@@ -112,6 +112,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::get('order-delivery-history', 'DeliverymanController@get_order_history');
             Route::put('accept-order', 'DeliverymanController@accept_order');
             Route::put('update-order-status', 'DeliverymanController@update_order_status');
+            Route::post('ignore-order', 'DeliverymanController@ignore_order');
             Route::post('propose-parcel-price', 'DeliverymanController@propose_parcel_price');
             Route::put('update-payment-status', 'DeliverymanController@order_payment_status_update');
             Route::get('order-details', 'DeliverymanController@get_order_details');

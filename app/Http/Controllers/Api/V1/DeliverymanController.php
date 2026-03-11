@@ -41,6 +41,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use MatanYadaev\EloquentSpatial\Objects\Point;
@@ -286,6 +287,62 @@ class DeliverymanController extends Controller
         $orders = Helpers::order_data_formatting($orders, true);
 
         return response()->json($orders, 200);
+    }
+
+    public function ignore_order(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required|exists:orders,id',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+        $order = Order::where('id', $request['order_id'])
+            ->where(function($query) use ($dm) {
+                $query->where('delivery_man_id', $dm->id)
+                      ->orWhereNull('delivery_man_id');
+            })
+            ->first();
+
+        if (!$order) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'order', 'message' => translate('messages.not_found')],
+                ],
+            ], 404);
+        }
+
+        // Add to Redis blacklist so the worker doesn't assign it to this dm again
+        if ($dm) {
+            Redis::sadd('order:' . $order->id . ':rejected', $dm->id);
+            // Decrease current_orders if it was already accepted
+            if ($order->delivery_man_id == $dm->id && $order->order_status == 'accepted') {
+                $dm->current_orders = $dm->current_orders > 1 ? $dm->current_orders - 1 : 0;
+                $dm->save();
+            }
+        }
+
+        // Return order to pending
+        $order->delivery_man_id = null;
+        if($order->order_status != 'canceled' && $order->order_status != 'delivered') {
+            $order->order_status = 'pending';
+        }
+        $order->save();
+
+        // Requeue to worker wave_queue
+        $payload = [
+            'order_id' => $order->id,
+            'store_id' => $order->store_id ?? 0,
+            'zone_id' => $order->zone_id,
+            'attempt' => 2
+        ];
+        
+        $expireTime = now()->addSeconds(5)->timestamp;
+        Redis::zadd('wave_queue', $expireTime, json_encode($payload));
+
+        return response()->json(['message' => translate('messages.order_ignored_successfully')], 200);
     }
 
     public function accept_order(Request $request)
