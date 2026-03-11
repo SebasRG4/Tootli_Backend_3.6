@@ -509,6 +509,8 @@ class ConversationController extends Controller
                 }elseif($receiver->user_id){
                     $user = User::find($receiver->user_id);
                     $fcm_token=$user->cm_firebase_token;
+                }elseif(isset($receiver->admin_id)){
+                    $fcm_token_web = 'admin_message';
                 }
             }else{
                 $receiver_id =$conversation->sender_id;
@@ -520,6 +522,8 @@ class ConversationController extends Controller
                 }elseif($receiver->user_id){
                     $user = User::find($receiver->user_id);
                     $fcm_token=$user->cm_firebase_token;
+                }elseif(isset($receiver->admin_id)){
+                    $fcm_token_web = 'admin_message';
                 }
             }
         }else{
@@ -818,8 +822,9 @@ class ConversationController extends Controller
             }else if($conversation->receiver_type == 'customer' && $conversation->receiver){
                 $user = User::find($conversation->receiver->user_id);
                 $order = Order::where('delivery_man_id',$dm->id)->where('user_id', $user->id)->whereIn('order_status', ['pending','accepted','confirmed','processing','handover','picked_up'])->count();
-            }
-            else{
+            }else if($conversation->sender_type == 'admin' || $conversation->receiver_type == 'admin'){
+                $order = 1;
+            }else{
                 $order=0;
             }
 
