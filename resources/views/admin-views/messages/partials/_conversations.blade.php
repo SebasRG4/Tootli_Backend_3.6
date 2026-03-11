@@ -20,7 +20,13 @@
             </button>
             <ul class="dropdown-menu conv-dropdown-menu">
                 <li>
-                    <a href="{{ route('admin.users.customer.view', [$user->user->id]) }}">{{ translate('View_Details') }}</a>
+                    @if ($user->user_id)
+                        <a href="{{ route('admin.customer.view', [$user->user_id]) }}">{{ translate('View_Details') }}</a>
+                    @elseif($user->deliveryman_id)
+                        <a href="{{ route('admin.delivery-man.preview', [$user->deliveryman_id]) }}">{{ translate('View_Details') }}</a>
+                    @elseif($user->vendor_id && isset($user->vendor->stores[0]))
+                        <a href="{{ route('admin.store.view', [$user->vendor->stores[0]->id]) }}">{{ translate('View_Details') }}</a>
+                    @endif
                 </li>
             </ul>
         </div>
@@ -168,7 +174,7 @@
     </div>
 </div>
 
-<script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>
+
 <!-- Emoji Conv -->
 <script>
     "use strict";

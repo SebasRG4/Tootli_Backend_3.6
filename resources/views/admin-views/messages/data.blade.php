@@ -41,4 +41,4 @@
     @endif
 @endforeach
 
-<script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>
+

@@ -54,7 +54,7 @@ class ConversationController extends Controller
         }
         Message::where(['conversation_id' => $conversation->id])->where('sender_id', $user_id)->update(['is_seen' => 1]);
         $convs = Message::where(['conversation_id' => $conversation_id])->get();
-        $receiver = UserInfo::find($user_id);
+        $receiver = UserInfo::with(['user', 'delivery_man', 'vendor'])->find($user_id);
         // $user = User::find($receiver->user_id);
         $user = $receiver;
         return response()->json([
@@ -133,23 +133,33 @@ class ConversationController extends Controller
             $message->file = json_encode($image_name, JSON_UNESCAPED_SLASHES);
         }
         try {
-            if ($message->save())
-                $conversation->unread_message_count = $conversation->unread_message_count ? $conversation->unread_message_count + 1 : 1;
-            $conversation->last_message_id = $message->id;
-            $conversation->last_message_time = Carbon::now()->toDateTimeString();
-            $conversation->save(); {
-                $data = [
-                    'title' => translate('messages.message_from_admin'),
-                    'description' => $message->message ?? translate('attachment'),
-                    'order_id' => '',
-                    'image' => '',
-                    'message' => json_encode($message),
-                    'type' => 'message',
-                    'conversation_id' => $conversation->id,
-                    'sender_type' => 'admin'
-                ];
-                Helpers::send_push_notif_to_device($fcm_token, $data);
-            }
+                if ($message->save()) {
+                    $conversation->unread_message_count = $conversation->unread_message_count ? $conversation->unread_message_count + 1 : 1;
+                    $conversation->last_message_id = $message->id;
+                    $conversation->last_message_time = Carbon::now()->toDateTimeString();
+                    $conversation->save();
+                }
+
+                if ($receiver->deliveryman_id) {
+                    $fcm_token = $receiver->delivery_man?->fcm_token;
+                } elseif ($receiver->vendor_id) {
+                    $fcm_token = $receiver->vendor?->auth_token;
+                } else {
+                    $fcm_token = $receiver->user?->cm_firebase_token;
+                }
+
+                if ($fcm_token) {
+                    $data = [
+                        'title' => translate('messages.new_message'),
+                        'description' => $request->reply,
+                        'order_id' => '',
+                        'image' => '',
+                        'type' => 'messages',
+                        'conversation_id' => $conversation->id,
+                        'sender_type' => 'admin'
+                    ];
+                    Helpers::send_push_notif_to_device($fcm_token, $data);
+                }
 
         } catch (\Exception $e) {
             info($e->getMessage());
