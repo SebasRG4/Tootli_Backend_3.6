@@ -523,7 +523,19 @@ class ConversationController extends Controller
                 }
             }
         }else{
-            if($request->receiver_type == 'vendor'){
+            if($request->receiver_type == 'admin'){
+                $receiver = UserInfo::where('admin_id', 0)->first();
+                if(!$receiver){
+                    $receiver = new UserInfo();
+                    $receiver->admin_id = 0;
+                    $receiver->f_name = 'Admin';
+                    $receiver->l_name = '';
+                    $receiver->save();
+                }
+                $receiver_id = $receiver->id;
+                $fcm_token = null;
+                $fcm_token_web = 'admin_message';
+            }else if($request->receiver_type == 'vendor'){
                 $receiver = UserInfo::where('vendor_id',$request->receiver_id)->first();
                 $vendor = Vendor::find($request->receiver_id);
 
@@ -751,6 +763,16 @@ class ConversationController extends Controller
 
         if($request->conversation_id){
             $conversation = Conversation::with(['sender','receiver','last_message'])->find($request->conversation_id);
+        }else if($request->has('admin_id')){
+            $receiver = UserInfo::where('admin_id', 0)->first();
+            if(!$receiver){
+                $receiver = new UserInfo();
+                $receiver->admin_id = 0;
+                $receiver->f_name = 'Admin';
+                $receiver->l_name = '';
+                $receiver->save();
+            }
+            $conversation = Conversation::with(['sender','receiver','last_message'])->WhereConversation($delivery_man->id, $receiver->id)->first();
         }else if($request->vendor_id){
             $vendor = UserInfo::where('vendor_id', $request->vendor_id)->first();
             if(!$vendor){
