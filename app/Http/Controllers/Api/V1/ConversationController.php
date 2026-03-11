@@ -151,8 +151,8 @@ class ConversationController extends Controller
             {
                 if($request->receiver_type == 'admin' || $receiver_id == 0){
                     $data = [
-                        'title' =>translate('messages.message'),
-                        'description' =>translate('messages.message_description'),
+                        'title' => translate('messages.message_from') . ' ' . $sender->f_name . ' ' . $sender->l_name,
+                        'description' => $message->message ?? translate('messages.attachment'),
                         'order_id' => '',
                         'image' => '',
                         'message' => json_encode($message) ,
@@ -161,8 +161,8 @@ class ConversationController extends Controller
                     Helpers::send_push_notif_to_topic($data,'admin_message','message');
                 }else if($request->receiver_type == 'vendor' || $request->receiver_type == 'delivery_man'){
                     $data = [
-                        'title' =>translate('messages.message'),
-                        'description' =>translate('messages.message_description'),
+                        'title' => translate('messages.message_from') . ' ' . $sender->f_name . ' ' . $sender->l_name,
+                        'description' => $message->message ?? translate('messages.attachment'),
                         'order_id' => '',
                         'image' => '',
                         'message' => json_encode($message) ,
