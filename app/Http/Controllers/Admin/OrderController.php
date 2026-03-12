@@ -276,8 +276,10 @@ class OrderController extends Controller
 
             if (isset($order->store)) {
                 $deliveryMen = DeliveryMan::where('zone_id', $order->store->zone_id)
-                    ->where(function ($query) use ($order) {
-                        $query->where('vehicle_id', $order->dm_vehicle_id)->orWhereNull('vehicle_id');
+                    ->when($order->dm_vehicle_id, function ($query) use ($order) {
+                        $query->where(function ($q) use ($order) {
+                            $q->where('vehicle_id', $order->dm_vehicle_id)->orWhereNull('vehicle_id');
+                        });
                     })
                     ->where('id', '!=', $excludeDm)
                     ->available()
@@ -285,10 +287,12 @@ class OrderController extends Controller
                     ->get();
             } else {
                 if ($order->store !== null) {
-                    $deliveryMen = isset($order->zone_id) ? DeliveryMan::where('zone_id', $order->store->zone_id)->where(function ($query) use ($order) {
-                        $query->where('vehicle_id', $order->dm_vehicle_id)
-                            ->orWhereNull('vehicle_id');
-                    })
+                    $deliveryMen = isset($order->zone_id) ? DeliveryMan::where('zone_id', $order->store->zone_id)
+                        ->when($order->dm_vehicle_id, function ($query) use ($order) {
+                            $query->where(function ($q) use ($order) {
+                                $q->where('vehicle_id', $order->dm_vehicle_id)->orWhereNull('vehicle_id');
+                            });
+                        })
                         ->where('id', '!=', $excludeDm)
                         ->available()
                         ->active()

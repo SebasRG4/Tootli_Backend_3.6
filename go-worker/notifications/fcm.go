@@ -45,7 +45,7 @@ func SendDeliveryOffer(ctx context.Context, tokens []string, orderID uint) error
 
 	message := &messaging.MulticastMessage{
 		Data: map[string]string{
-			"type":     "order_status", // Matches App's expected string
+			"type":     "order_request", // Triggers bottom sheet in Flutter app
 			"title":    "New Delivery Offer!",
 			"body":     "You have a new order offer. Act fast!",
 			"order_id": fmt.Sprintf("%d", orderID),
