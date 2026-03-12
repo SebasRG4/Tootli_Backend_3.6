@@ -2,6 +2,7 @@ package notifications
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 
@@ -62,6 +63,10 @@ func SendDeliveryOffer(ctx context.Context, tokens []string, orderID uint) error
 		},
 		Tokens: tokens,
 	}
+
+	log.Printf("[Firebase] Sending to tokens: %v", tokens)
+	bodyJSON, _ := json.Marshal(message)
+	log.Printf("[Firebase] Payload: %s", string(bodyJSON))
 
 	response, err := FCMClient.SendEachForMulticast(ctx, message)
 	if err != nil {

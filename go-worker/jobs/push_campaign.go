@@ -53,6 +53,9 @@ func handlePushCampaign(ctx context.Context, rawData json.RawMessage) error {
 		Data: msgStruct.Data,
 	}
 
+	bodyJSON, _ := json.Marshal(msg)
+	log.Printf("[Firebase] Payload: %s", string(bodyJSON))
+
 	response, err := notifications.FCMClient.Send(ctx, msg)
 	if err != nil {
 		return fmt.Errorf("failed to send FCM campaign to topic %s: %w", msgStruct.Topic, err)
