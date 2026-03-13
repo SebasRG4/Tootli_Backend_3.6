@@ -74,24 +74,5 @@ func SendDeliveryOffer(ctx context.Context, tokens []string, orderID uint) error
 	}
 
 	log.Printf("[Firebase] Successfully sent offer to %d devices. Failed: %d\n", response.SuccessCount, response.FailureCount)
-
-	// Log detailed per-token errors for debugging
-	if response.FailureCount > 0 {
-		for i, resp := range response.Responses {
-			if resp.Error != nil {
-				tokenPreview := "unknown"
-				if i < len(tokens) {
-					t := tokens[i]
-					if len(t) > 20 {
-						tokenPreview = t[:20] + "..."
-					} else {
-						tokenPreview = t
-					}
-				}
-				log.Printf("[Firebase] ERROR for token[%d] (%s): %v", i, tokenPreview, resp.Error)
-			}
-		}
-	}
-
 	return nil
 }

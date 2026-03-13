@@ -174,12 +174,15 @@ func handleAssignDelivery(ctx context.Context, raw json.RawMessage) error {
 		log.Printf("  -> Rank %d: DM ID %d (Distance: %.2f km, Score: %.2f) Fcm: %s\n", i+1, c.DM.ID, c.Distance, c.Score, c.DM.FcmToken)
 	}
 
-	// 5. Send FCM Push Notification to the selected Delivery Men
+	// 5. Send notifications (FCM & WebSocket) to the selected Delivery Men
 	var fcmTokens []string
 	for _, c := range selected {
 		if c.DM.FcmToken != "" {
 			fcmTokens = append(fcmTokens, c.DM.FcmToken)
 		}
+		
+		// Fire WebSocket event for instant delivery
+		go notifications.SendPusherDeliveryOffer(c.DM.ID, payload.OrderID)
 	}
 
 	if len(fcmTokens) > 0 {

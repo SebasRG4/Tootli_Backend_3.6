@@ -46,6 +46,8 @@ func main() {
 		log.Fatalf("[main] Failed to initialize Firebase: %v\n", err)
 	}
 
+	notifications.InitPusher()
+
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     cfg.RedisAddr,
 		Password: cfg.RedisPassword,
