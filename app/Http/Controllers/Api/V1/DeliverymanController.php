@@ -353,101 +353,130 @@ class DeliverymanController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
-        $order = Order::where('id', $request['order_id'])
-            // ->whereIn('order_status', ['pending', 'confirmed'])
-            ->whereNull('delivery_man_id')
-            ->dmOrder()
-            ->first();
-        if (!$order) {
+
+        // --- Redis Lock to prevent Race Condition ---
+        $lockKey = 'order_accept_lock:' . $request['order_id'];
+        // Try to acquire lock using SETNX (set if not exists) with 10s expiration
+        $lockAcquired = Redis::set($lockKey, $request['token'], 'EX', 10, 'NX');
+
+        if (!$lockAcquired) {
+            // Another delivery man is currently accepting this order, or already accepted it
             return response()->json([
                 'errors' => [
-                    ['code' => 'order', 'message' => translate('messages.can_not_accept')],
+                    ['code' => 'order', 'message' => translate('messages.Another delivery man is accepting this order, please wait or try again.')],
                 ],
-            ], 404);
+            ], 409); // Conflict
         }
-
-        if ($request->has('lat') && $request->has('lng') && $dm && $order->order_type != 'parcel') {
-            try {
-                $zoneIds = Zone::whereContains('coordinates', new Point($request->lat, $request->lng, POINT_SRID))->pluck('id')->toArray();
-                if (($dm->zone_id && !in_array($dm->zone_id, $zoneIds))) {
-                    return response()->json([
-                        'errors' => [
-                            ['code' => 'dm_out_of_zone', 'message' => translate('messages.You are outside the service area. Move closer to accept this order.')]
-                        ]
-                    ], 403);
-                }
-            } catch (\Throwable $th) {
-            }
-        }
-
-
-
-        if ($dm->active != 1) {
-            return response()->json([
-                'errors' => [
-                    ['code' => 'active_status', 'message' => translate('messages.You_can_not_accept_order_on_offline')],
-                ],
-            ], 404);
-        }
-        if ($dm->current_orders >= config('dm_maximum_orders')) {
-            return response()->json([
-                'errors' => [
-                    ['code' => 'dm_maximum_order_exceed', 'message' => translate('messages.dm_maximum_order_exceed_warning')],
-                ],
-            ], 405);
-        }
-
-        $payments = $order->payments()->where('payment_method', 'cash_on_delivery')->exists();
-        $cash_in_hand = $dm?->wallet?->collected_cash ?? 0;
-        $dm_max_cash = BusinessSetting::where('key', 'dm_max_cash_in_hand')->first();
-        $value = $dm_max_cash?->value ?? 0;
-
-        if (($order->payment_method == 'cash_on_delivery' || $payments) && (($cash_in_hand + $order->order_amount) >= $value)) {
-
-            return response()->json([
-                'errors' => [
-                    ['code' => 'dm_maximum_hand_in_cash', 'message' => \App\CentralLogics\Helpers::format_currency($value) . ' ' . translate('max_cash_in_hand_exceeds')],
-                ],
-            ], 405);
-        }
-
-        if ($order->order_type == 'parcel' && $order->order_status == 'confirmed') {
-            $order->order_status = 'handover';
-            $order->handover = now();
-            $order->processing = now();
-        } else {
-            $order->order_status = in_array($order->order_status, ['pending', 'confirmed']) ? 'accepted' : $order->order_status;
-        }
-
-        $order->delivery_man_id = $dm->id;
-        $order->accepted = now();
-        $order->save();
-
-        $dm->current_orders = $dm->current_orders + 1;
-        $dm->save();
-
-        $dm->increment('assigned_order_count');
-
-        $fcm_token = $order->is_guest == 0 ? $order?->customer?->cm_firebase_token : $order?->guest?->fcm_token;
-
-        $value = Helpers::order_status_update_message('accepted', $order->module->module_type);
-        $value = Helpers::text_variable_data_format(value: $value, store_name: $order->store?->name, order_id: $order->id, user_name: "{$order?->customer?->f_name} {$order?->customer?->l_name}", delivery_man_name: "{$order->delivery_man?->f_name} {$order->delivery_man?->l_name}");
+        
+        $shouldReleaseLock = true;
+        
         try {
-            if ($value && $fcm_token && Helpers::getNotificationStatusData('customer', 'customer_order_notification', 'push_notification_status')) {
-                $data = [
-                    'title' => translate('Order_Notification'),
-                    'description' => $value,
-                    'order_id' => $order['id'],
-                    'image' => '',
-                    'type' => 'order_status',
-                ];
-                Helpers::send_push_notif_to_device($fcm_token, $data);
+            $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+            $order = Order::where('id', $request['order_id'])
+                // ->whereIn('order_status', ['pending', 'confirmed'])
+                ->whereNull('delivery_man_id')
+                ->dmOrder()
+                ->first();
+            if (!$order) {
+                return response()->json([
+                    'errors' => [
+                        ['code' => 'order', 'message' => translate('messages.can_not_accept')],
+                    ],
+                ], 404);
             }
-        } catch (\Exception $e) {
-        }
 
-        return response()->json(['message' => 'Order accepted successfully'], 200);
+            if ($request->has('lat') && $request->has('lng') && $dm && $order->order_type != 'parcel') {
+                try {
+                    $zoneIds = Zone::whereContains('coordinates', new Point($request->lat, $request->lng, POINT_SRID))->pluck('id')->toArray();
+                    if (($dm->zone_id && !in_array($dm->zone_id, $zoneIds))) {
+                        return response()->json([
+                            'errors' => [
+                                ['code' => 'dm_out_of_zone', 'message' => translate('messages.You are outside the service area. Move closer to accept this order.')]
+                            ]
+                        ], 403);
+                    }
+                } catch (\Throwable $th) {
+                }
+            }
+
+
+
+            if ($dm->active != 1) {
+                return response()->json([
+                    'errors' => [
+                        ['code' => 'active_status', 'message' => translate('messages.You_can_not_accept_order_on_offline')],
+                    ],
+                ], 404);
+            }
+            if ($dm->current_orders >= config('dm_maximum_orders')) {
+                return response()->json([
+                    'errors' => [
+                        ['code' => 'dm_maximum_order_exceed', 'message' => translate('messages.dm_maximum_order_exceed_warning')],
+                    ],
+                ], 405);
+            }
+
+            $payments = $order->payments()->where('payment_method', 'cash_on_delivery')->exists();
+            $cash_in_hand = $dm?->wallet?->collected_cash ?? 0;
+            $dm_max_cash = BusinessSetting::where('key', 'dm_max_cash_in_hand')->first();
+            $value = $dm_max_cash?->value ?? 0;
+
+            if (($order->payment_method == 'cash_on_delivery' || $payments) && (($cash_in_hand + $order->order_amount) >= $value)) {
+
+                return response()->json([
+                    'errors' => [
+                        ['code' => 'dm_maximum_hand_in_cash', 'message' => \App\CentralLogics\Helpers::format_currency($value) . ' ' . translate('max_cash_in_hand_exceeds')],
+                    ],
+                ], 405);
+            }
+
+            if ($order->order_type == 'parcel' && $order->order_status == 'confirmed') {
+                $order->order_status = 'handover';
+                $order->handover = now();
+                $order->processing = now();
+            } else {
+                $order->order_status = in_array($order->order_status, ['pending', 'confirmed']) ? 'accepted' : $order->order_status;
+            }
+
+            $order->delivery_man_id = $dm->id;
+            $order->accepted = now();
+            $order->save();
+
+            $dm->current_orders = $dm->current_orders + 1;
+            $dm->save();
+
+            $dm->increment('assigned_order_count');
+
+            $fcm_token = $order->is_guest == 0 ? $order?->customer?->cm_firebase_token : $order?->guest?->fcm_token;
+
+            $value = Helpers::order_status_update_message('accepted', $order->module->module_type);
+            $value = Helpers::text_variable_data_format(value: $value, store_name: $order->store?->name, order_id: $order->id, user_name: "{$order?->customer?->f_name} {$order?->customer?->l_name}", delivery_man_name: "{$order->delivery_man?->f_name} {$order->delivery_man?->l_name}");
+            try {
+                if ($value && $fcm_token && Helpers::getNotificationStatusData('customer', 'customer_order_notification', 'push_notification_status')) {
+                    $data = [
+                        'title' => translate('Order_Notification'),
+                        'description' => $value,
+                        'order_id' => $order['id'],
+                        'image' => '',
+                        'type' => 'order_status',
+                    ];
+                    Helpers::send_push_notif_to_device($fcm_token, $data);
+                }
+            } catch (\Exception $e) {
+            }
+
+            // Success, we don't want to release the lock immediately, let it expire organically
+            $shouldReleaseLock = false;
+            return response()->json(['message' => 'Order accepted successfully'], 200);
+
+        } catch (\Exception $e) {
+            info("Order Accept Error: " . $e->getMessage());
+            return response()->json(['errors' => [['code' => 'server_error', 'message' => 'Server correctly stopped by exception']]], 500);
+        } finally {
+            if ($shouldReleaseLock) {
+                Redis::del($lockKey);
+            }
+        }
     }
 
     public function record_location_data(Request $request)
