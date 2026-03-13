@@ -820,7 +820,14 @@ class DeliverymanController extends Controller
         }
         $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
 
-        $order = Order::with(['customer', 'store', 'details', 'parcel_category', 'payments', 'ParcelCancellation'])->where(['delivery_man_id' => $dm['id'], 'id' => $request['order_id']])->Notpos()->first();
+        $order = Order::with(['customer', 'store', 'details', 'parcel_category', 'payments', 'ParcelCancellation'])
+            ->where('id', $request['order_id'])
+            ->where(function ($query) use ($dm) {
+                $query->whereNull('delivery_man_id')
+                    ->orWhere('delivery_man_id', $dm['id']);
+            })
+            ->Notpos()
+            ->first();
         if (!$order) {
             return response()->json([
                 'errors' => [
