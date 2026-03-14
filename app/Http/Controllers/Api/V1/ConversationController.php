@@ -144,6 +144,7 @@ class ConversationController extends Controller
         }
         try {
             $message->save();
+            event(new \App\Events\MessageReceived($message, $request->receiver_type, $receiver_id));
             $conversation->unread_message_count = $conversation->unread_message_count? $conversation->unread_message_count+1:1;
             $conversation->last_message_id=$message->id;
             $conversation->last_message_time = Carbon::now()->toDateTimeString();
@@ -599,8 +600,10 @@ class ConversationController extends Controller
             $message->file = json_encode($image_name, JSON_UNESCAPED_SLASHES);
         }
         try {
-            if($message->save())
-            $conversation->unread_message_count = $conversation->unread_message_count? $conversation->unread_message_count+1:1;
+            if($message->save()) {
+                event(new \App\Events\MessageReceived($message, $request->receiver_type, $receiver_id));
+                $conversation->unread_message_count = $conversation->unread_message_count? $conversation->unread_message_count+1:1;
+            }
             $conversation->last_message_id=$message->id;
             $conversation->last_message_time = Carbon::now()->toDateTimeString();
             $conversation->save();
