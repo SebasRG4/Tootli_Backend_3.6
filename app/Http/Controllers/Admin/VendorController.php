@@ -273,11 +273,15 @@ class VendorController extends Controller
         $vendor->l_name = $request->l_name;
         $vendor->email = $request->email;
         $vendor->phone = $request->phone;
-        $vendor->password = strlen($request->password) > 1 ? bcrypt($request->password) : $store->vendor->password;
+        // Only update password if a new one is provided
+        if (!empty($request->password) && strlen($request->password) >= 8) {
+            $vendor->password = bcrypt($request->password);
+        }
         $vendor->save();
 
         $slug = Str::slug($request->name[array_search('default', $request->lang)]);
         $store->slug = $store->slug ? $store->slug : "{$slug}{$store->id}";
+        // Update store email and phone to match vendor credentials
         $store->email = $request->email;
         $store->phone = $request->phone;
         $store->logo = $request->has('logo') ? Helpers::update('store/', $store->logo, 'png', $request->file('logo')) : $store->logo;
