@@ -1988,6 +1988,21 @@ class Helpers
         }
     }
 
+    /**
+     * WebSocket/Soketi: aviso inmediato en canal vendor-{id} (complementa FCM).
+     */
+    public static function broadcastVendorNewOrderRealtime($order): void
+    {
+        try {
+            if (! $order || ! $order->store || ! $order->store->vendor_id || ! $order->id) {
+                return;
+            }
+            broadcast(new \App\Events\VendorNewOrder((int) $order->id, (int) $order->store->vendor_id));
+        } catch (\Throwable $e) {
+            \Log::warning('broadcastVendorNewOrderRealtime: '.$e->getMessage());
+        }
+    }
+
     public static function send_order_notification($order)
     {
         $push_notification_status = self::getNotificationStatusData('store', 'store_order_notification', 'push_notification_status', $order?->store?->id);
@@ -2094,6 +2109,9 @@ class Helpers
 
                         self::sendStoreEmployeeNotification($order, $data);
                     }
+                    if ($order->store && $order->store->vendor) {
+                        self::broadcastVendorNewOrderRealtime($order);
+                    }
                 } else {
                     $data = [
                         'title' => translate('Order_Notification'),
@@ -2162,6 +2180,9 @@ class Helpers
 
                     self::sendStoreEmployeeNotification($order, $data);
                 }
+                if ($order->store && $order->store->vendor) {
+                    self::broadcastVendorNewOrderRealtime($order);
+                }
             }
 
             if (!$order->scheduled && (($order->order_type == 'take_away' && $order->order_status == 'pending') || ($order->payment_method != 'cash_on_delivery' && $order->order_status == 'confirmed'))) {
@@ -2185,6 +2206,9 @@ class Helpers
 
                     self::sendStoreEmployeeNotification($order, $data);
                 }
+                if ($order->store && $order->store->vendor) {
+                    self::broadcastVendorNewOrderRealtime($order);
+                }
             }
 
             if ($order->order_status == 'confirmed' && $order->order_type != 'take_away' && config('order_confirmation_model') == 'deliveryman' && $order->payment_method == 'cash_on_delivery') {
@@ -2199,6 +2223,9 @@ class Helpers
                     ];
 
                     self::send_push_notif_to_topic($data, "restaurant_dm_" . $order->store_id, 'new_order', null);
+                    if ($order->store && $order->store->vendor) {
+                        self::broadcastVendorNewOrderRealtime($order);
+                    }
                 } else {
                     $data = [
                         'title' => translate('Order_Notification'),
@@ -2221,6 +2248,9 @@ class Helpers
                         ]);
 
                         self::sendStoreEmployeeNotification($order, $data);
+                    }
+                    if ($order->store && $order->store->vendor) {
+                        self::broadcastVendorNewOrderRealtime($order);
                     }
                 }
             }
