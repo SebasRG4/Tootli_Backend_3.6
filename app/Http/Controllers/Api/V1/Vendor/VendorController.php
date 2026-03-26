@@ -366,7 +366,15 @@ class VendorController extends Controller
         ->Notpos()
         ->first();
 
-        if($request['order_status']=='canceled')
+        if (!$order) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'order', 'message' => translate('messages.not_found')]
+                ]
+            ], 404);
+        }
+
+        if($request['status']=='canceled') // fix order_status typo here as well just in case
         {
             if(!config('canceled_by_store'))
             {
