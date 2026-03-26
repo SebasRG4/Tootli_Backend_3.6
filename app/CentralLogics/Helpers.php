@@ -2123,13 +2123,32 @@ class Helpers
                     ];
                     if ($order->zone && self::getNotificationStatusData('deliveryman', 'deliveryman_order_notification', 'push_notification_status')) {
                         if ($order->dm_vehicle_id) {
-
                             $topic = 'delivery_man_' . $order->zone_id . '_' . $order->dm_vehicle_id;
                             self::send_push_notif_to_topic($data, $topic, 'order_request');
                         }
                         self::send_push_notif_to_topic($data, $order->zone->deliveryman_wise_topic, 'order_request');
+                    }
 
-
+                    // Notificar a la tienda simultáneamente con el repartidor
+                    $storeData = [
+                        'title'       => translate('Order_Notification'),
+                        'description' => translate('New order alert, confirm to proceed'),
+                        'order_id'    => $order->id,
+                        'image'       => '',
+                        'type'        => 'new_order',
+                    ];
+                    if ($order->store && $order->store->vendor && $push_notification_status) {
+                        self::send_push_notif_to_device($order->store->vendor->firebase_token, $storeData);
+                        DB::table('user_notifications')->insert([
+                            'data'       => json_encode($storeData),
+                            'vendor_id'  => $order->store->vendor_id,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                        self::sendStoreEmployeeNotification($order, $storeData);
+                    }
+                    if ($order->store && $order->store->vendor) {
+                        self::broadcastVendorNewOrderRealtime($order);
                     }
                 }
                 // self::send_push_notif_to_topic($data, 'admin_message', 'order_request', url('/').'/admin/order/list/all');
