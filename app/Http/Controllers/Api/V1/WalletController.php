@@ -338,6 +338,15 @@ class WalletController extends Controller
 
         $user = $request->user();
 
+        // DEBT BARRIER
+        if ($user->wallet_balance < 0) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'debt_unpaid', 'message' => 'Tienes un saldo negativo por ' . \App\CentralLogics\Helpers::format_currency($user->wallet_balance) . '. Ingresa a la sección de Billetera para recargarlo y poder volver a pedir.']
+                ]
+            ], 403);
+        }
+
         // 1. Double tap prevention (30 seconds Lock) to avoid network-error retries from getting double charged
         $lockKey = "qr_pay_lock_{$user->id}_{$request->store_id}_{$request->amount}";
         if (!\Illuminate\Support\Facades\Cache::add($lockKey, true, 30)) {

@@ -91,6 +91,15 @@ trait PlaceNewOrder
                 ], data_get($createNewUser, 'status_code'));
             }
 
+            if ($request->user && $request->user->wallet_balance < 0) {
+                DB::rollBack();
+                return response()->json([
+                    'errors' => [
+                        ['code' => 'debt_unpaid', 'message' => 'Tienes un saldo negativo por ' . \App\CentralLogics\Helpers::format_currency($request->user->wallet_balance) . '. Ingresa a la sección de Billetera para recargarlo y poder volver a pedir.']
+                    ]
+                ], 403);
+            }
+
             $validationCheck = $this->validationCheck($request);
             if (data_get($validationCheck, 'status_code') === 403) {
                 DB::rollBack();

@@ -456,6 +456,42 @@ class OrderController extends Controller
         }
     }
 
+    public function applyDebt(Request $request, $id)
+    {
+        $order = Order::find($id);
+        if (!$order) {
+            Toastr::error(translate('messages.order_not_found'));
+            return back();
+        }
+
+        $amount = 0;
+        if ($request->type == 'full') {
+            $amount = $order->order_amount;
+        } else if ($request->type == 'custom') {
+            $amount = $request->custom_amount;
+        }
+
+        if ($amount <= 0) {
+            Toastr::error('El monto de la deuda debe ser mayor a 0');
+            return back();
+        }
+
+        $user = $order->customer;
+        if ($user) {
+            $user->wallet_balance -= $amount;
+            $user->save();
+
+            // Register minus transaction to reflect it in the wallet history
+            CustomerLogic::create_wallet_transaction($user->id, $amount, 'debt_applied', $order->id);
+
+            Toastr::success('Deuda de ' . \App\CentralLogics\Helpers::format_currency($amount) . ' aplicada al usuario exitosamente');
+        } else {
+            Toastr::error('Usuario no encontrado');
+        }
+
+        return back();
+    }
+
     public function search(Request $request)
     {
         $key = explode(' ', $request['search']);

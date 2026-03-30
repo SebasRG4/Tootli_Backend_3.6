@@ -173,7 +173,19 @@
                                         <i class="tio-edit"></i> {{ translate('messages.edit') }}
                                     </button>
                                 @endif
-                                <a class="btn btn--primary print--btn font-regular d-none d-sm-block"
+
+                                <form action="{{ route('admin.order.apply-debt', ['id' => $order['id']]) }}" method="POST" class="d-none d-sm-block">
+                                    @csrf
+                                    <input type="hidden" name="type" value="full">
+                                    <button type="submit" class="btn btn-sm btn--danger font-regular" onclick="return confirm('¿Confirmas aplicar la deuda por el monto COMPLETO al usuario?');">
+                                        🚨 Monto completo
+                                    </button>
+                                </form>
+                                <button type="button" class="btn btn-sm btn--warning font-regular d-none d-sm-block ml-2" data-toggle="modal" data-target="#customDebtModal">
+                                    🚨 Monto personalizado
+                                </button>
+
+                                <a class="btn btn--primary print--btn font-regular d-none d-sm-block ml-2"
                                    href={{ route('admin.order.generate-invoice', [$order['id']]) }}>
                                     <i class="tio-print mr-sm-1"></i> <span>{{ translate('messages.print_invoice') }}</span>
                                 </a>
@@ -2201,6 +2213,34 @@
                         <div class="modal-footer d-flex gap-3 flex-nowrap pb-4 mb-2 justify-content-center border-0 pt-2">
                             <button type="button" class="btn btn--reset h-40px min-w-120px w-100 py-2 fs-14" data-dismiss="modal">{{  translate('Keep Order') }}</button>
                             <button type="submit" class="btn btn-primary h-40px min-w-120px w-100 py-2 fs-14">{{ translate('messages.Yes, Cancel Order') }} </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Custom Debt Modal -->
+        <div class="modal fade" id="customDebtModal" tabindex="-1" role="dialog" aria-labelledby="customDebtModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form action="{{ route('admin.order.apply-debt', ['id' => $order['id']]) }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="type" value="custom">
+                        <div class="modal-header border-0 pb-1">
+                            <h5 class="modal-title" id="customDebtModalLabel">Aplicar monto de deuda personalizado</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body text-center py-3">
+                            <i class="tio-money-vs text-warning" style="font-size: 52px;"></i>
+                            <p class="mb-3 mt-2 text-dark">
+                                Ingresa el monto exacto de deuda que deseas aplicar a la billetera de este usuario. El saldo del usuario se reducirá en esta cantidad.
+                            </p>
+                            <input type="number" step="0.01" min="0.01" name="custom_amount" class="form-control text-center" placeholder="Ej. 150.50" required>
+                        </div>
+                        <div class="modal-footer pb-4 pt-0 border-0 justify-content-center">
+                            <button type="button" class="btn btn-secondary min-w-120px" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary min-w-120px">Aplicar Deuda</button>
                         </div>
                     </form>
                 </div>
