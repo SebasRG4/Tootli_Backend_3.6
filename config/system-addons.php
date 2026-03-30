@@ -1,7 +1,7 @@
 <?php return array (
   'admin_panel' =>
   array (
-    'active' => '0',
+    'active' => '1',
     'username' => '1',
     'purchase_key' => '1',
     'software_id' => 'MzY3NzIxMTI=',
