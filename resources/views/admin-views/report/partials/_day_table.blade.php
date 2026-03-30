@@ -1,7 +1,9 @@
 @foreach ($order_transactions as $k => $ot)
 <tr scope="row">
     <td>{{ $k + 1 }}</td>
-    @if ($ot->order->order_type == 'parcel')
+    @if ($ot->order_id == 0)
+        <td><span class="badge badge-soft-success">{{ translate('Pago QR') }}</span></td>
+    @elseif (isset($ot->order) && $ot->order->order_type == 'parcel')
         <td><a
                 href="{{ route('admin.transactions.parcel.order.details', $ot->order_id) }}">{{ $ot->order_id }}</a>
         </td>

@@ -94,8 +94,17 @@ func HandleQrPay(w http.ResponseWriter, r *http.Request) {
 		now := time.Now()
 		transactionID := uuid.New().String()
 
-		// A. Deduct from user wallet
-		if err := tx.Model(&user).Update("wallet_balance", gorm.Expr("wallet_balance - ?", payload.Amount)).Error; err != nil {
+		// A. Deduct from user wallet safely by checking balance in the UPDATE statement directly
+		result := tx.Model(&user).Where("wallet_balance >= ?", payload.Amount).Update("wallet_balance", gorm.Expr("wallet_balance - ?", payload.Amount))
+		if result.Error != nil {
+			return result.Error
+		}
+		if result.RowsAffected == 0 {
+			return fmt.Errorf("insufficient balance during deduction")
+		}
+
+		// Reload user to get the exact updated wallet_balance for the transaction record
+		if err := tx.First(&user, payload.UserID).Error; err != nil {
 			return err
 		}
 
@@ -104,7 +113,7 @@ func HandleQrPay(w http.ResponseWriter, r *http.Request) {
 			UserID:          user.ID,
 			TransactionID:   transactionID,
 			Debit:           payload.Amount,
-			Balance:         user.WalletBalance - payload.Amount,
+			Balance:         user.WalletBalance, // Uses the fresh real-time balance
 			TransactionType: "qr_payment",
 			Reference:       fmt.Sprintf("Store ID: %d", store.ID),
 			CreatedAt:       now,

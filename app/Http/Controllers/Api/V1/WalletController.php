@@ -338,27 +338,74 @@ class WalletController extends Controller
 
         $user = $request->user();
 
-        // Prepare the payload for the Go worker
-        $payload = [
-            'user_id' => $user->id,
-            'store_id' => (int) $request->store_id,
-            'amount' => (float) $request->amount,
-        ];
+        // 1. Double tap prevention (30 seconds Lock) to avoid network-error retries from getting double charged
+        $lockKey = "qr_pay_lock_{$user->id}_{$request->store_id}_{$request->amount}";
+        if (!\Illuminate\Support\Facades\Cache::add($lockKey, true, 30)) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'payment_processing', 'message' => 'Transacción en proceso. Por favor, espera unos segundos, o verifica tus movimientos si la red falló.']
+                ]
+            ], 429);
+        }
 
         try {
-            // Forward to Go worker using configurable URL (use service name in Docker, localhost for local dev)
+            // Find store to get name for notification
+            $store = \App\Models\Store::find($request->store_id);
+            if (!$store) {
+                \Illuminate\Support\Facades\Cache::forget($lockKey);
+                return response()->json([
+                    'errors' => [
+                        ['code' => 'store_not_found', 'message' => 'Restaurante no encontrado']
+                    ]
+                ], 404);
+            }
+
+            // Prepare the payload for the Go worker
+            $payload = [
+                'user_id' => $user->id,
+                'store_id' => (int) $request->store_id,
+                'amount' => (float) $request->amount,
+            ];
+
+            // Forward to Go worker using configurable URL
             $goWorkerUrl = env('GO_WORKER_URL', 'http://go_worker:8080');
             $response = Http::withHeaders([
                 'X-Internal-Secret' => env('INTERNAL_SECRET', 'tootli_internal_secret_key'),
-            ])->post($goWorkerUrl . '/api/v1/user/wallet/qr-pay', $payload);
+            ])->timeout(20)->post($goWorkerUrl . '/api/v1/user/wallet/qr-pay', $payload);
 
             if ($response->successful()) {
+                // 2. Send Push Notification to USER (Client)
+                if ($user->cm_firebase_token) {
+                    $push_data = [
+                        'title' => 'Pago exitoso',
+                        'description' => 'Pagaste ' . \App\CentralLogics\Helpers::format_currency($request->amount) . ' a ' . $store->name,
+                        'order_id' => 0,
+                        'image' => '',
+                        'type' => 'qr_payment'
+                    ];
+                    \App\CentralLogics\Helpers::send_push_notif_to_device($user->cm_firebase_token, $push_data);
+                }
+
+                // 3. Send Push Notification to STORE VENDOR
+                if ($store->vendor && $store->vendor->firebase_token) {
+                    $vendor_push_data = [
+                        'title' => '¡Nuevo Pago Recibido! 💸',
+                        'description' => 'Recibiste ' . \App\CentralLogics\Helpers::format_currency($request->amount) . ' de ' . $user->f_name . ' mediante Scan & Pay.',
+                        'order_id' => 0,
+                        'image' => '',
+                        'type' => 'qr_payment'
+                    ];
+                    \App\CentralLogics\Helpers::send_push_notif_to_device($store->vendor->firebase_token, $vendor_push_data);
+                }
+
                 return response()->json($response->json(), 200);
             }
 
-            // Return the error from Go worker
+            // If the Go worker fails gracefully (e.g. insufficient funds), we forget the cache so they can top up and retry immediately
+            \Illuminate\Support\Facades\Cache::forget($lockKey);
             return response()->json($response->json() ?? ['message' => 'Payment failed'], $response->status());
         } catch (\Exception $e) {
+            // Keep the cache lock active if there's a timeout, to prevent the user from rapidly retrying and getting charged twice if Go is actually processing it slowly.
             return response()->json([
                 'errors' => [
                     ['code' => 'server_error', 'message' => 'Failed to connect to payment worker: ' . $e->getMessage()]
