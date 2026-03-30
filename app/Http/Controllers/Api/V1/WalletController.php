@@ -346,10 +346,11 @@ class WalletController extends Controller
         ];
 
         try {
-            // Forward to Go worker on port 8080 with internal secret header
+            // Forward to Go worker using configurable URL (use service name in Docker, localhost for local dev)
+            $goWorkerUrl = env('GO_WORKER_URL', 'http://go_worker:8080');
             $response = Http::withHeaders([
                 'X-Internal-Secret' => env('INTERNAL_SECRET', 'tootli_internal_secret_key'),
-            ])->post('http://localhost:8080/api/v1/user/wallet/qr-pay', $payload);
+            ])->post($goWorkerUrl . '/api/v1/user/wallet/qr-pay', $payload);
 
             if ($response->successful()) {
                 return response()->json($response->json(), 200);
