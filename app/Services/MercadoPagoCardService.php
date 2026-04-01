@@ -60,7 +60,12 @@ class MercadoPagoCardService
         if ($searchResponse->successful()) {
             $results = $searchResponse->json('results', []);
             if (count($results) > 0) {
-                return $results[0]['id'];
+                $foundId = $results[0]['id'];
+                Log::info('[MercadoPago] Customer encontrado por search', [
+                    'email' => $user->email,
+                    'customer_id' => $foundId,
+                ]);
+                return $foundId;
             }
         }
 
@@ -198,14 +203,29 @@ class MercadoPagoCardService
         ]);
 
         try {
+            $payerData = [
+                'email' => $email,
+                'type'  => 'customer',
+                'id'    => $savedCard->mp_customer_id,
+            ];
+
+            Log::info('[MercadoPago] Intentando cobro', [
+                'token'             => $cardToken,
+                'payment_method_id' => $savedCard->payment_method_id,
+                'transaction_amount'=> (float) $amount,
+                'payer'             => $payerData,
+            ]);
+
             $payment = $client->create([
-                'token'              => $cardToken,           // token re-generado (incluye CVV)
+                'token'              => $cardToken,
+                'description'        => 'Pago de pedido Tootli Order #' . $externalRef,
                 'issuer_id'          => null,
                 'payment_method_id'  => $savedCard->payment_method_id,
                 'transaction_amount' => (float) $amount,
                 'installments'       => 1,
                 'external_reference' => $externalRef,
                 'payer'              => [
+                    'id'    => $savedCard->mp_customer_id,
                     'email' => $email,
                 ],
             ], $requestOptions);
