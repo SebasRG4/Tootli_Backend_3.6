@@ -123,10 +123,10 @@ class MercadoPagoCardService
         $savedCard = UserSavedCard::create([
             'user_id'          => $user->id,
             'mp_customer_id'   => $customerId,
-            'mp_card_id'       => $card->id,
-            'last_four_digits' => $card->last_four_digits,
-            'payment_method_id'=> $card->payment_method_id ?? '',
-            'payment_type_id'  => $card->payment_type_id ?? null,
+            'mp_card_id'       => (string)$card->id,
+            'last_four_digits' => (string)$card->last_four_digits,
+            'payment_method_id'=> $card->payment_method->id ?? ($card->payment_method_id ?? ''),
+            'payment_type_id'  => $card->payment_method->payment_type_id ?? ($card->payment_type_id ?? null),
             'cardholder_name'  => $card->cardholder->name ?? null,
             'expiration_month' => $card->expiration_month,
             'expiration_year'  => $card->expiration_year,
@@ -211,6 +211,13 @@ class MercadoPagoCardService
                     'id'          => $savedCard->mp_customer_id,
                 ],
             ], $requestOptions);
+        } catch (\MercadoPago\Exceptions\MPApiException $e) {
+            $content = $e->getApiResponse() ? $e->getApiResponse()->getContent() : $e->getMessage();
+            Log::error('[MercadoPago] Error al cobrar API', [
+                'card_id' => $savedCard->id,
+                'response' => $content,
+            ]);
+            throw new Exception('Error MPApiException: ' . json_encode($content));
         } catch (Exception $e) {
             Log::error('[MercadoPago] Error al cobrar', [
                 'card_id' => $savedCard->id,
