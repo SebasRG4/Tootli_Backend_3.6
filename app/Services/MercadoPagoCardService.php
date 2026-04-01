@@ -203,29 +203,24 @@ class MercadoPagoCardService
         ]);
 
         try {
-            $payerData = [
-                'email' => $email,
-                'type'  => 'customer',
-                'id'    => $savedCard->mp_customer_id,
-            ];
-
             Log::info('[MercadoPago] Intentando cobro', [
                 'token'             => $cardToken,
                 'payment_method_id' => $savedCard->payment_method_id,
                 'transaction_amount'=> (float) $amount,
-                'payer'             => $payerData,
+                'payer_email'       => $email,
             ]);
 
+            // NOTA: Al usar un card_token generado con card_id (re-tokenización),
+            // MercadoPago ya vincula el token al customer. Enviar payer.id explícito
+            // en Sandbox MX causa error 2010 "Card not found". Solo se envía email.
             $payment = $client->create([
                 'token'              => $cardToken,
                 'description'        => 'Pago de pedido Tootli Order #' . $externalRef,
-                'issuer_id'          => null,
                 'payment_method_id'  => $savedCard->payment_method_id,
                 'transaction_amount' => (float) $amount,
                 'installments'       => 1,
                 'external_reference' => $externalRef,
                 'payer'              => [
-                    'id'    => $savedCard->mp_customer_id,
                     'email' => $email,
                 ],
             ], $requestOptions);
