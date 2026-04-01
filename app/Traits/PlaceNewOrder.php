@@ -40,7 +40,9 @@ trait PlaceNewOrder
     {
         $validator = Validator::make($request->all(), [
             // 'order_amount' => 'required',
-            'payment_method' => 'required|in:cash_on_delivery,digital_payment,wallet,offline_payment',
+            'payment_method' => 'required|in:cash_on_delivery,digital_payment,wallet,offline_payment,saved_card',
+            'saved_card_id'  => 'required_if:payment_method,saved_card',
+            'mp_card_token'  => 'required_if:payment_method,saved_card',
             'order_type' => 'required|in:take_away,delivery,parcel',
             'store_id' => 'required_unless:order_type,parcel',
             'distance' => 'required_unless:order_type,take_away',
@@ -198,7 +200,7 @@ trait PlaceNewOrder
 
 
             $order_status = 'pending';
-            if (($request->partial_payment && $request->payment_method != 'offline_payment') || $request->payment_method == 'wallet') {
+            if (($request->partial_payment && $request->payment_method != 'offline_payment') || $request->payment_method == 'wallet' || $request->payment_method == 'saved_card') {
                 $order_status = 'confirmed';
             }
             if (in_array($request->payment_method, ['digital_payment', 'offline_payment'])) {
@@ -209,7 +211,7 @@ trait PlaceNewOrder
 
             $order->user_id = $request->user ? $request->user->id : $request['guest_id'];
             $order->order_amount = $request['order_amount'] ?? 0;
-            $order->payment_status = ($request->partial_payment ? 'partially_paid' : ($request['payment_method'] == 'wallet' ? 'paid' : 'unpaid'));
+            $order->payment_status = ($request->partial_payment ? 'partially_paid' : (in_array($request['payment_method'], ['wallet', 'saved_card']) ? 'paid' : 'unpaid'));
             $order->order_status = $order_status;
             $order->coupon_code = $request['coupon_code'];
             $order->payment_method = $request->partial_payment ? 'partial_payment' : $request->payment_method;
@@ -517,6 +519,45 @@ trait PlaceNewOrder
 
 
             $order->save();
+
+            // Procesar el cargo si es payed_card
+            if ($request->payment_method === 'saved_card' && $order->order_amount > 0) {
+                try {
+                    $savedCard = \App\Models\UserSavedCard::where('user_id', $order->user_id)
+                        ->where('id', $request->saved_card_id)
+                        ->first();
+                        
+                    if (!$savedCard) {
+                        throw new \Exception('Tarjeta guardada no encontrada o no pertenece al usuario.');
+                    }
+
+                    $mpService = new \App\Services\MercadoPagoCardService();
+                    $chargeResult = $mpService->chargeWithSavedCard(
+                        savedCard: $savedCard,
+                        cardToken: $request->mp_card_token,
+                        amount: $order->order_amount,
+                        email: $request->user ? $request->user->email : ($request->contact_person_email ?? 'guest@tootli.com'),
+                        externalRef: (string)$order->id
+                    );
+
+                    if ($chargeResult['status'] === 'approved') {
+                        $order->payment_status = 'paid';
+                        $order->order_status = 'confirmed';
+                        $order->transaction_reference = $chargeResult['payment_id'];
+                        $order->save();
+                    } else {
+                        throw new \Exception('El pago fue rechazado. Estado: ' . $chargeResult['status_detail']);
+                    }
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    return response()->json([
+                        'errors' => [
+                            ['code' => 'payment_failed', 'message' => $e->getMessage()]
+                        ]
+                    ], 203);
+                }
+            }
+
             if ($request->order_type !== 'parcel') {
                 $taxMapCollection = collect($taxMap);
                 foreach ($order_details as $key => $item) {
