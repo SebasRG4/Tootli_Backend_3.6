@@ -206,9 +206,7 @@ class MercadoPagoCardService
                 'installments'       => 1,
                 'external_reference' => $externalRef,
                 'payer'              => [
-                    'email'       => $email,
-                    'type'        => 'customer',
-                    'id'          => $savedCard->mp_customer_id,
+                    'email' => $email,
                 ],
             ], $requestOptions);
         } catch (\MercadoPago\Exceptions\MPApiException $e) {
