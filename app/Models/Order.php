@@ -52,6 +52,8 @@ class Order extends Model
         'actual_parcel_item_price' => 'float',
         'proposed_parcel_item_price' => 'float',
         'adjustment_status' => 'string',
+        'ecartpay_gateway_fee' => 'float',
+        'ecartpay_card_international' => 'boolean',
     ];
 
     protected $appends = ['module_type', 'order_attachment_full_url', 'order_proof_full_url'];

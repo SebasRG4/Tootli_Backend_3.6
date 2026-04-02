@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 
 class StoreLogic
 {
-    private static function getMaxDeliveryRadius($zone_id, $module_id = null): ?float
+    public static function getMaxDeliveryRadius($zone_id, $module_id = null): ?float
     {
         if (!$zone_id) {
             return null;

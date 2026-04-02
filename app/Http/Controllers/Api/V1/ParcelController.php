@@ -3,14 +3,22 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Store;
-use App\Models\BusinessSetting;
-use Illuminate\Support\Facades\Http;
+use App\CentralLogics\StoreLogic;
 use App\CentralLogics\Helpers;
+use App\Models\BusinessSetting;
+use App\Models\Module;
+use App\Models\Store;
+use App\Models\Zone;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
 
 class ParcelController extends Controller
 {
+    /** Tope de km para sugerencias Google en compra y entrega (la zona puede ser más amplia). */
+    private const PARCEL_BUY_PLACES_MAX_KM = 5.0;
+
     public function suggestions(Request $request)
     {
         $lat = $request->input('lat');
@@ -171,5 +179,162 @@ class ParcelController extends Controller
         }
 
         return response()->json($suggestions, 200);
+    }
+
+    /**
+     * Búsqueda unificada para "compra y entrega": tiendas food/grocery dentro del radio de la zona/módulo
+     * y sugerencias de Google Places acotadas al mismo radio (metros).
+     */
+    public function buyLocationSearch(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'search_text' => 'required|string|min:1',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $zoneRaw = $request->input('zone_id') ?: $request->header('zoneId');
+        $zone_ids = [];
+        if ($zoneRaw) {
+            $zone_ids = is_array($zoneRaw) ? $zoneRaw : json_decode($zoneRaw, true);
+        }
+        if (empty($zone_ids) || ! is_array($zone_ids)) {
+            return response()->json(['errors' => [['code' => 'zone_id', 'message' => translate('messages.zone_id_required')]]], 403);
+        }
+
+        $lat = (float) $request->latitude;
+        $lng = (float) $request->longitude;
+        $search = $request->search_text;
+        $like = '%' . addcslashes($search, '%_\\') . '%';
+
+        $zoneEncoded = json_encode($zone_ids);
+
+        $modules = Module::active()->whereIn('module_type', ['food', 'grocery'])->get();
+
+        $storePayload = [];
+        $seen = [];
+
+        foreach ($modules as $module) {
+            $maxR = StoreLogic::getMaxDeliveryRadius($zoneEncoded, $module->id);
+            if ($maxR === null || $maxR <= 0) {
+                $maxR = 5.0;
+            }
+
+            $rows = Store::query()
+                ->Active()
+                ->where('module_id', $module->id)
+                ->whereIn('zone_id', $zone_ids)
+                ->whereHas('module', function ($q2) {
+                    $q2->active();
+                })
+                ->WithOpenWithDeliveryTime($lng, $lat)
+                ->delivery()
+                ->where('name', 'like', $like)
+                ->withinRadius($maxR)
+                ->orderBy('open', 'desc')
+                ->orderBy('distance')
+                ->limit(10)
+                ->get();
+
+            foreach ($rows as $store) {
+                if (isset($seen[$store->id])) {
+                    continue;
+                }
+                $seen[$store->id] = true;
+                $storePayload[] = [
+                    'store_id' => $store->id,
+                    'module_id' => (int) $store->module_id,
+                    'description' => $store->name,
+                ];
+            }
+        }
+
+        $maxForPlaces = 0.0;
+        foreach ($modules as $module) {
+            $r = StoreLogic::getMaxDeliveryRadius($zoneEncoded, $module->id);
+            if ($r !== null && $r > $maxForPlaces) {
+                $maxForPlaces = $r;
+            }
+        }
+        if ($maxForPlaces <= 0) {
+            $zone = Zone::find($zone_ids[0] ?? null);
+            if ($zone && isset($zone->max_delivery_radius) && $zone->max_delivery_radius > 0) {
+                $maxForPlaces = (float) $zone->max_delivery_radius;
+            } else {
+                $maxForPlaces = 5.0;
+            }
+        }
+
+        // Direcciones Google: no más lejos que el radio de zona/módulo ni que el tope de compra y entrega.
+        $placesRadiusKm = min($maxForPlaces, self::PARCEL_BUY_PLACES_MAX_KM);
+        $radiusMeters = min(50000, max(200, (int) round($placesRadiusKm * 1000)));
+
+        $apiKey = Cache::rememberForever('map_api_key_server', function () {
+            $setting = BusinessSetting::where(['key' => 'map_api_key_server'])->first();
+
+            return $setting ? $setting->value : null;
+        });
+
+        $placeSuggestions = [];
+        if ($apiKey) {
+            // origin: sin esto Google no devuelve distanceMeters y el círculo a veces deja pasar resultados lejanos.
+            $data = [
+                'input' => $search,
+                'languageCode' => app()->getLocale(),
+                'includeQueryPredictions' => false,
+                'origin' => [
+                    'latitude' => $lat,
+                    'longitude' => $lng,
+                ],
+                'locationRestriction' => [
+                    'circle' => [
+                        'center' => [
+                            'latitude' => $lat,
+                            'longitude' => $lng,
+                        ],
+                        'radius' => (float) $radiusMeters,
+                    ],
+                ],
+            ];
+
+            $url = 'https://places.googleapis.com/v1/places:autocomplete';
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'X-Goog-Api-Key: ' . $apiKey,
+            ]);
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+            $decoded = json_decode($response, true);
+            $rawSuggestions = is_array($decoded) ? ($decoded['suggestions'] ?? []) : [];
+
+            foreach ($rawSuggestions as $suggestion) {
+                if (! is_array($suggestion)) {
+                    continue;
+                }
+                $pp = $suggestion['placePrediction'] ?? null;
+                if (! is_array($pp)) {
+                    continue;
+                }
+                $distanceMeters = $pp['distanceMeters'] ?? null;
+                if ($distanceMeters !== null && (int) $distanceMeters > $radiusMeters) {
+                    continue;
+                }
+                $placeSuggestions[] = $suggestion;
+            }
+        }
+
+        return response()->json([
+            'stores' => $storePayload,
+            'suggestions' => $placeSuggestions,
+        ], 200);
     }
 }

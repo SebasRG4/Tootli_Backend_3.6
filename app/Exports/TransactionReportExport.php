@@ -42,8 +42,8 @@ class TransactionReportExport implements  FromView, ShouldAutoSize, WithStyles,W
     }
 
     public function styles(Worksheet $sheet) {
-        $sheet->getStyle('A2:W4')->getFont()->setBold(true);
-        $sheet->getStyle('A5:W5')->getFill()->applyFromArray([
+        $sheet->getStyle('A2:W5')->getFont()->setBold(true);
+        $sheet->getStyle('A6:W6')->getFill()->applyFromArray([
             'fillType' => 'solid',
             'rotation' => 0,
             'color' => ['rgb' => '9F9F9F'],
@@ -61,9 +61,11 @@ class TransactionReportExport implements  FromView, ShouldAutoSize, WithStyles,W
             'rotation' => 0,
         ];
         $sheet->getStyle('A1:C1')->applyFromArray($styleArray);
+        $lastRow = $this->data['order_transactions']->count() + 6;
+
         return [
             // Define the style for cells with data
-            'A1:W'.$this->data['order_transactions']->count() +5 => [
+            'A1:W'.$lastRow => [
                 'borders' => [
                     'allBorders' => [
                         'borderStyle' => Border::BORDER_THIN,
@@ -79,6 +81,8 @@ class TransactionReportExport implements  FromView, ShouldAutoSize, WithStyles,W
     {
         return [
             AfterSheet::class => function(AfterSheet $event) {
+                $lastRow = $this->data['order_transactions']->count() + 6;
+
                 $event->sheet->getStyle('A1:W1') // Adjust the range as per your needs
                     ->getAlignment()
                     ->setHorizontal(Alignment::HORIZONTAL_CENTER)
@@ -95,8 +99,12 @@ class TransactionReportExport implements  FromView, ShouldAutoSize, WithStyles,W
                     ->getAlignment()
                     ->setHorizontal(Alignment::HORIZONTAL_CENTER)
                     ->setVertical(Alignment::VERTICAL_CENTER);
+                $event->sheet->getStyle('A5:C5')
+                    ->getAlignment()
+                    ->setHorizontal(Alignment::HORIZONTAL_CENTER)
+                    ->setVertical(Alignment::VERTICAL_CENTER);
 
-                $event->sheet->getStyle('A4:W'.$this->data['order_transactions']->count() +5)
+                $event->sheet->getStyle('A4:W'.$lastRow)
                     ->getAlignment()
                     ->setHorizontal(Alignment::HORIZONTAL_CENTER)
                     ->setVertical(Alignment::VERTICAL_CENTER);
@@ -112,6 +120,10 @@ class TransactionReportExport implements  FromView, ShouldAutoSize, WithStyles,W
                     ->getAlignment()
                     ->setHorizontal(Alignment::HORIZONTAL_LEFT)
                     ->setVertical(Alignment::VERTICAL_CENTER);
+                $event->sheet->getStyle('D5:W5')
+                    ->getAlignment()
+                    ->setHorizontal(Alignment::HORIZONTAL_LEFT)
+                    ->setVertical(Alignment::VERTICAL_CENTER);
 
 
                     $event->sheet->mergeCells('A1:W1');
@@ -121,12 +133,15 @@ class TransactionReportExport implements  FromView, ShouldAutoSize, WithStyles,W
                     $event->sheet->mergeCells('D3:W3');
                     $event->sheet->mergeCells('A4:C4');
                     $event->sheet->mergeCells('D4:W4');
+                    $event->sheet->mergeCells('A5:C5');
+                    $event->sheet->mergeCells('D5:W5');
 
                     $event->sheet->getDefaultRowDimension()->setRowHeight(30);
                     $event->sheet->getRowDimension(1)->setRowHeight(50);
                     $event->sheet->getRowDimension(2)->setRowHeight(100);
                     $event->sheet->getRowDimension(3)->setRowHeight(80);
                     $event->sheet->getRowDimension(4)->setRowHeight(80);
+                    $event->sheet->getRowDimension(5)->setRowHeight(100);
                 },
         ];
     }

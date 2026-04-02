@@ -65,6 +65,32 @@
                 <th></th>
                 <th></th>
             </tr>
+            <tr>
+                <th>{{ translate('messages.ecartpay_gateway_report_title') }}</th>
+                <th></th>
+                <th></th>
+                <th>
+                    {{ translate('messages.ecartpay_saved_card_heading') }}:
+                    {{ translate('messages.ecartpay_total_gateway_fees') }}
+                    — {{ \App\CentralLogics\Helpers::format_currency($data['ecartpayFeesCardTotal'] ?? 0) }}
+                    <br>
+                    {{ translate('messages.ecartpay_saved_card_heading') }}:
+                    {{ translate('messages.ecartpay_admin_net_after_gateway') }}
+                    — {{ \App\CentralLogics\Helpers::format_currency($data['adminNetAfterEcartpayCard'] ?? 0) }}
+                    <br>
+                    {{ translate('messages.ecartpay_spei_heading') }}:
+                    {{ translate('messages.ecartpay_total_gateway_fees') }}
+                    — {{ \App\CentralLogics\Helpers::format_currency($data['ecartpayFeesSpeiTotal'] ?? 0) }}
+                    <br>
+                    {{ translate('messages.ecartpay_spei_heading') }}:
+                    {{ translate('messages.ecartpay_admin_net_after_gateway') }}
+                    — {{ \App\CentralLogics\Helpers::format_currency($data['adminNetAfterEcartpaySpei'] ?? 0) }}
+                </th>
+                <th> </th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
         <tr>
             <th>{{ translate('sl') }}</th>
             <th>{{ translate('messages.order_id') }}</th>

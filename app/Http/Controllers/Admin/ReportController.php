@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\Models\BusinessSetting;
 use App\Models\OrderTransaction;
+use App\Services\EcartPayGatewayFeeCalculator;
 use App\CentralLogics\OrderLogic;
 use App\CentralLogics\StoreLogic;
 use App\Exports\ExpenseReportExport;
@@ -257,7 +258,112 @@ class ReportController extends Controller
                 return $query->whereBetween('created_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
             })->orderBy('created_at', 'desc')
             ->sum(DB::raw('original_delivery_charge + dm_tips'));
-        return view('admin-views.report.day-wise-report', compact('order_transactions', 'zone', 'store', 'filter', 'admin_earned', 'admin_earned_delivery_commission', 'store_earned', 'deliveryman_earned','key','from','to'));
+
+        $ecartpayStats = $this->aggregateEcartpayAdminNetByPaymentMethod($zone, $store, $key, $filter, $from, $to);
+
+        return view('admin-views.report.day-wise-report', array_merge(
+            compact('order_transactions', 'zone', 'store', 'filter', 'admin_earned', 'admin_earned_delivery_commission', 'store_earned', 'deliveryman_earned', 'key', 'from', 'to'),
+            $ecartpayStats
+        ));
+    }
+
+    /**
+     * Totales de comisión EcartPay y ganancia neta admin (tras comisión) por tarjeta y SPEI.
+     *
+     * @return array<string, float>
+     */
+    protected function aggregateEcartpayAdminNetByPaymentMethod($zone, $store, $key, $filter, $from, $to): array
+    {
+        $base = OrderTransaction::query()
+            ->with(['order' => function ($q) {
+                $q->select(
+                    'id',
+                    'payment_method',
+                    'flash_admin_discount_amount',
+                    'ecartpay_gateway_fee',
+                    'order_amount',
+                    'ecartpay_card_brand',
+                    'ecartpay_card_international'
+                );
+            }])
+            ->notRefunded();
+
+        $base = $this->applyDayWiseReportFiltersToOrderTransactions($base, $zone, $store, $key, $filter, $from, $to);
+
+        $sumForMethod = function (string $paymentMethod) use ($base) {
+            $rows = (clone $base)->whereHas('order', function ($q) use ($paymentMethod) {
+                $q->where('payment_method', $paymentMethod);
+            })->get();
+
+            $fees = 0.0;
+            $net = 0.0;
+            foreach ($rows as $ot) {
+                if (! $ot->order) {
+                    continue;
+                }
+                $flash = (float) ($ot->order->flash_admin_discount_amount ?? 0);
+                $fee = EcartPayGatewayFeeCalculator::effectiveFee($ot->order);
+                $fees += $fee;
+                $net += (float) $ot->admin_commission - $flash - $fee;
+            }
+
+            return [$fees, $net];
+        };
+
+        [$ecartpayFeesCardTotal, $adminNetAfterEcartpayCard] = $sumForMethod('saved_card');
+        [$ecartpayFeesSpeiTotal, $adminNetAfterEcartpaySpei] = $sumForMethod('spei');
+
+        return compact(
+            'ecartpayFeesCardTotal',
+            'adminNetAfterEcartpayCard',
+            'ecartpayFeesSpeiTotal',
+            'adminNetAfterEcartpaySpei'
+        );
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder<\App\Models\OrderTransaction>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\OrderTransaction>
+     */
+    protected function applyDayWiseReportFiltersToOrderTransactions($query, $zone, $store, $key, $filter, $from, $to)
+    {
+        return $query
+            ->when(isset($zone), function ($q) use ($zone) {
+                return $q->where('zone_id', $zone->id);
+            })
+            ->when(isset($key), function ($q) use ($key) {
+                return $q->where(function ($sub) use ($key) {
+                    foreach ($key as $value) {
+                        $sub->orWhere('order_id', 'like', "%{$value}%");
+                    }
+                });
+            })
+            ->when(isset($store), function ($q) use ($store) {
+                return $q->whereHas('order', function ($sub) use ($store) {
+                    $sub->where('store_id', $store->id);
+                });
+            })
+            ->when(request('module_id'), function ($q) {
+                return $q->module(request('module_id'));
+            })
+            ->when(isset($from) && isset($to) && $from != null && $to != null && $filter == 'custom', function ($q) use ($from, $to) {
+                return $q->whereBetween('created_at', [$from . ' 00:00:00', $to . ' 23:59:59']);
+            })
+            ->when(isset($filter) && $filter == 'this_year', function ($q) {
+                return $q->whereYear('created_at', now()->format('Y'));
+            })
+            ->when(isset($filter) && $filter == 'this_month', function ($q) {
+                return $q->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
+            })
+            ->when(isset($filter) && $filter == 'previous_year', function ($q) {
+                return $q->whereYear('created_at', date('Y') - 1);
+            })
+            ->when(isset($filter) && $filter == 'this_week', function ($q) {
+                return $q->whereBetween('created_at', [
+                    now()->startOfWeek()->format('Y-m-d H:i:s'),
+                    now()->endOfWeek()->format('Y-m-d H:i:s'),
+                ]);
+            });
     }
 
     public function day_wise_export(Request $request)
@@ -560,7 +666,9 @@ class ReportController extends Controller
                     // ->sum(DB::raw('order_amount - original_delivery_charge'));
                     ->sum(DB::raw('order_amount - delivery_charge - dm_tips'));
 
-            $data = [
+            $ecartpayStats = $this->aggregateEcartpayAdminNetByPaymentMethod($zone, $store, $key, $filter, $from, $to);
+
+            $data = array_merge([
                 'order_transactions'=>$order_transactions,
                 'search'=>$request->search??null,
                 'from'=>(($filter == 'custom') && $from)?$from:null,
@@ -574,7 +682,7 @@ class ReportController extends Controller
                 'delivered'=>$delivered,
                 'canceled'=>$canceled,
                 'filter'=>$filter,
-            ];
+            ], $ecartpayStats);
 
         if ($request->type == 'excel') {
             return Excel::download(new TransactionReportExport($data), 'TransactionReport.xlsx');

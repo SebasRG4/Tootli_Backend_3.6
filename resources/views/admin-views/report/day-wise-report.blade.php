@@ -339,6 +339,42 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-12 mt-2">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body py-3">
+                            <h5 class="card-title mb-3">{{ translate('messages.ecartpay_gateway_report_title') }}</h5>
+                            <p class="text-muted small mb-3">{{ translate('messages.ecartpay_gateway_report_subtitle') }}</p>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="p-3 rounded bg-light h-100">
+                                        <h6 class="text-dark mb-3">{{ translate('messages.ecartpay_saved_card_heading') }}</h6>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span class="text-muted">{{ translate('messages.ecartpay_total_gateway_fees') }}</span>
+                                            <strong>{{ \App\CentralLogics\Helpers::format_currency($ecartpayFeesCardTotal) }}</strong>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span class="text-muted">{{ translate('messages.ecartpay_admin_net_after_gateway') }}</span>
+                                            <strong class="text-0661CB">{{ \App\CentralLogics\Helpers::format_currency($adminNetAfterEcartpayCard) }}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="p-3 rounded bg-light h-100">
+                                        <h6 class="text-dark mb-3">{{ translate('messages.ecartpay_spei_heading') }}</h6>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span class="text-muted">{{ translate('messages.ecartpay_total_gateway_fees') }}</span>
+                                            <strong>{{ \App\CentralLogics\Helpers::format_currency($ecartpayFeesSpeiTotal) }}</strong>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span class="text-muted">{{ translate('messages.ecartpay_admin_net_after_gateway') }}</span>
+                                            <strong class="text-0661CB">{{ \App\CentralLogics\Helpers::format_currency($adminNetAfterEcartpaySpei) }}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 

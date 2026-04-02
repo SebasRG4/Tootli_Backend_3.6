@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\CentralLogics\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Services\EcartPayGatewayFeeCalculator;
 use App\Services\EcartPayService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -82,6 +83,9 @@ class EcartPayWebhookController extends Controller
 
         $order->payment_status = 'paid';
         $order->order_status = 'confirmed';
+        if ($order->payment_method === 'spei' && $order->ecartpay_gateway_fee === null) {
+            $order->ecartpay_gateway_fee = EcartPayGatewayFeeCalculator::forSpei()['fee'];
+        }
         $order->save();
 
         try {
@@ -122,6 +126,9 @@ class EcartPayWebhookController extends Controller
 
             $order->payment_status = 'paid';
             $order->order_status = 'confirmed';
+            if ($order->payment_method === 'spei' && $order->ecartpay_gateway_fee === null) {
+                $order->ecartpay_gateway_fee = EcartPayGatewayFeeCalculator::forSpei()['fee'];
+            }
             $order->save();
 
             try {

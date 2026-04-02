@@ -204,6 +204,7 @@
                             <th class="border-0">{{ translate('messages.SL') }}</th>
                             <th class="border-0">{{translate('messages.id')}}</th>
                             <th class="border-0">{{translate('messages.name')}}</th>
+                            <th class="border-0">{{ translate('messages.parcel_service_type') }}</th>
                             <th class="border-0">{{translate('messages.module')}}</th>
                             <th class="border-0">{{translate('messages.status')}}</th>
                             <th class="border-0 text-center">{{translate('messages.orders_count')}}</th>
@@ -225,6 +226,13 @@
                                     <span class="d-block font-size-sm text-body">
                                         {{Str::limit($category['name'], 20, '...')}}
                                     </span>
+                                </td>
+                                <td>
+                                    @if($category->buy_and_deliver)
+                                        <span class="badge badge-soft-info">{{ translate('messages.parcel_type_buy_and_deliver') }}</span>
+                                    @else
+                                        <span class="badge badge-soft-primary">{{ translate('messages.parcel_type_pickup_and_deliver') }}</span>
+                                    @endif
                                 </td>
                                 <td>
                                     <span class="d-block font-size-sm text-body">

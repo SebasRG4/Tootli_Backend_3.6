@@ -561,6 +561,15 @@ trait PlaceNewOrder
                         $order->payment_status = 'paid';
                         $order->order_status = 'confirmed';
                         $order->transaction_reference = $chargeResult['payment_id'];
+                        $international = $request->boolean('international_card');
+                        $cardCalc = \App\Services\EcartPayGatewayFeeCalculator::forCard(
+                            (float) $order->order_amount,
+                            $savedCard->payment_method_id,
+                            $international
+                        );
+                        $order->ecartpay_card_brand = $savedCard->payment_method_id;
+                        $order->ecartpay_card_international = $international;
+                        $order->ecartpay_gateway_fee = $cardCalc['fee'];
                         $order->save();
                     } else {
                         throw new \Exception('El pago fue rechazado. Estado: ' . $chargeResult['status_detail']);
@@ -589,6 +598,10 @@ trait PlaceNewOrder
                     );
 
                     $order->transaction_reference = $speiResult['ecartpay_order_id'];
+                    $speiCalc = \App\Services\EcartPayGatewayFeeCalculator::forSpei();
+                    $order->ecartpay_gateway_fee = $speiCalc['fee'];
+                    $order->ecartpay_card_brand = null;
+                    $order->ecartpay_card_international = false;
                     $order->save();
 
                     $speiData = [

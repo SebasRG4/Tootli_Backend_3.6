@@ -40,6 +40,21 @@ return [
         'base_url'    => env('ECARTPAY_BASE_URL', 'https://sandbox.ecartpay.com'),
         'bank_transfer_method_id' => env('ECARTPAY_BANK_TRANSFER_METHOD_ID', '66c397dafd263a538b8312a1'),
         'webhook_secret' => env('ECARTPAY_WEBHOOK_SECRET'),
+        /*
+         * Comisiones pasarela (MXN). Subtotal = % × monto + fijo; fee final = subtotal × (1 + IVA).
+         * Tarjetas nacionales (Visa/Mastercard): 2.9% + $3.70 + IVA
+         * Amex nacional: 3.5% + $3.70 + IVA
+         * Internacional (Visa/Master/Amex): 3.5% + $3.70 + IVA
+         * SPEI: $12.50 + IVA
+         */
+        'gateway_fees' => [
+            'iva_rate' => (float) env('ECARTPAY_GATEWAY_IVA_RATE', 0.16),
+            'fixed_mxn' => (float) env('ECARTPAY_GATEWAY_FIXED_MXN', 3.70),
+            'national_card_percent' => (float) env('ECARTPAY_GATEWAY_NATIONAL_CARD_PERCENT', 0.029),
+            'amex_national_percent' => (float) env('ECARTPAY_GATEWAY_AMEX_NATIONAL_PERCENT', 0.035),
+            'international_percent' => (float) env('ECARTPAY_GATEWAY_INTERNATIONAL_PERCENT', 0.035),
+            'spei_fixed_mxn' => (float) env('ECARTPAY_GATEWAY_SPEI_FIXED_MXN', 12.50),
+        ],
     ],
 
 ];
