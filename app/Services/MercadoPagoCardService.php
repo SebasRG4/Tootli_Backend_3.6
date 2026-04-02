@@ -48,10 +48,24 @@ class MercadoPagoCardService
         // 1. ¿Ya tenemos el customer_id guardado de alguna tarjeta anterior?
         $existing = UserSavedCard::where('user_id', $user->id)->first();
         if ($existing) {
-            return $existing->mp_customer_id;
+            // Verificar que el customer aún existe en MP antes de reutilizarlo
+            $verifyResponse = Http::withToken($this->accessToken)
+                ->get("https://api.mercadopago.com/v1/customers/{$existing->mp_customer_id}");
+
+            if ($verifyResponse->successful()) {
+                return $existing->mp_customer_id;
+            }
+
+            // El customer ya no existe en MP (limpieza de sandbox u otro motivo).
+            // Eliminamos las tarjetas guardadas del usuario para forzar recreación.
+            Log::warning('[MercadoPago] Customer no encontrado en MP, eliminando tarjetas y recreando', [
+                'user_id'        => $user->id,
+                'mp_customer_id' => $existing->mp_customer_id,
+            ]);
+            UserSavedCard::where('user_id', $user->id)->delete();
         }
 
-        // 2. Buscar en MP por email
+        // 2. Buscar en MP por email (puede existir en MP aunque no esté en nuestra DB)
         $searchResponse = Http::withToken($this->accessToken)
             ->get('https://api.mercadopago.com/v1/customers/search', [
                 'email' => $user->email,
@@ -59,13 +73,17 @@ class MercadoPagoCardService
 
         if ($searchResponse->successful()) {
             $results = $searchResponse->json('results', []);
-            if (count($results) > 0) {
-                $foundId = $results[0]['id'];
-                Log::info('[MercadoPago] Customer encontrado por search', [
-                    'email' => $user->email,
-                    'customer_id' => $foundId,
-                ]);
-                return $foundId;
+            foreach ($results as $result) {
+                // Verificar que el customer encontrado realmente sea accesible
+                $verifyFound = Http::withToken($this->accessToken)
+                    ->get("https://api.mercadopago.com/v1/customers/{$result['id']}");
+                if ($verifyFound->successful()) {
+                    Log::info('[MercadoPago] Customer encontrado y verificado por search', [
+                        'email'       => $user->email,
+                        'customer_id' => $result['id'],
+                    ]);
+                    return $result['id'];
+                }
             }
         }
 
@@ -75,7 +93,6 @@ class MercadoPagoCardService
                 'email'      => $user->email,
                 'first_name' => $user->f_name ?? '',
                 'last_name'  => $user->l_name  ?? '',
-                // Para México, identification NO es obligatorio
             ]);
 
         if (!$createResponse->successful()) {
@@ -86,7 +103,13 @@ class MercadoPagoCardService
             throw new Exception('No se pudo crear el customer en MercadoPago: ' . $createResponse->body());
         }
 
-        return $createResponse->json('id');
+        $newCustomerId = $createResponse->json('id');
+        Log::info('[MercadoPago] Nuevo customer creado', [
+            'user_id'     => $user->id,
+            'customer_id' => $newCustomerId,
+        ]);
+
+        return $newCustomerId;
     }
 
     // -------------------------------------------------------------------------
@@ -274,6 +297,21 @@ class MercadoPagoCardService
                 'card_id' => $savedCard->id,
                 'response' => $content,
             ]);
+
+            // Si el customer ya no existe en MP, eliminar la tarjeta de la DB
+            // para que el usuario la vuelva a agregar con un customer válido.
+            $causes = $content['cause'] ?? [];
+            foreach ($causes as $cause) {
+                if (($cause['code'] ?? null) === 2002) {
+                    Log::warning('[MercadoPago] Customer inválido detectado al cobrar, eliminando tarjeta de DB', [
+                        'card_id'        => $savedCard->id,
+                        'mp_customer_id' => $savedCard->mp_customer_id,
+                    ]);
+                    UserSavedCard::where('user_id', $savedCard->user_id)->delete();
+                    throw new Exception('Tu tarjeta guardada ha expirado. Por favor agrégala de nuevo.');
+                }
+            }
+
             throw new Exception('Error MPApiException: ' . json_encode($content));
         } catch (Exception $e) {
             Log::error('[MercadoPago] Error al cobrar', [
