@@ -268,9 +268,9 @@ class MercadoPagoCardService
             // - payer.type = 'customer' (indica que es un cliente registrado en MP)
             // - payer.id = mp_customer_id del cliente
             // El token (generado con card_id) ya está vinculado al customer en MP.
-            // El email del payer debe coincidir con el email usado al crear el customer en MP.
-            // Usamos el mismo formato tootli_user_{id}@tootli.mx para evitar colisión
-            // con cuentas reales de MP del usuario.
+            // Usar el email del customer de MP (no el email real del usuario)
+            // para evitar colisión con cuentas reales de MP.
+            // Sin payer.type=customer para no forzar la validación card-in-customer-list.
             $mpPayerEmail = 'tootli_user_' . $savedCard->user_id . '@tootli.mx';
 
             $payment = $client->create([
@@ -281,8 +281,6 @@ class MercadoPagoCardService
                 'payment_method_id'  => $savedCard->payment_method_id,
                 'external_reference' => $externalRef,
                 'payer'              => [
-                    'type'  => 'customer',
-                    'id'    => $savedCard->mp_customer_id,
                     'email' => $mpPayerEmail,
                 ],
             ], $requestOptions);
