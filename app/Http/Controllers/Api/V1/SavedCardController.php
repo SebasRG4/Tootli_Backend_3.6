@@ -5,49 +5,24 @@ namespace App\Http\Controllers\Api\V1;
 use App\CentralLogics\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\UserSavedCard;
-use App\Services\MercadoPagoCardService;
+use App\Services\EcartPayService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-/**
- * Gestión de tarjetas guardadas de MercadoPago para el usuario autenticado.
- *
- * Rutas:
- *   GET    /api/v1/customer/cards/mp-public-key   → getPublicKey
- *   GET    /api/v1/customer/cards                  → index
- *   POST   /api/v1/customer/cards/{id}/set-default → setDefault
- *   GET    /api/v1/customer/cards/debug-cards      → debugCards
- */
 class SavedCardController extends Controller
 {
-    private MercadoPagoCardService $mpService;
+    private EcartPayService $ecartpay;
 
-    public function __construct(MercadoPagoCardService $mpService)
+    public function __construct(EcartPayService $ecartpay)
     {
-        $this->mpService = $mpService;
-    }
-
-    // -------------------------------------------------------------------------
-    // GET /customer/cards/mp-public-key
-    // -------------------------------------------------------------------------
-    /**
-     * Devuelve la Public Key de MercadoPago para que Flutter pueda inicializar el SDK.
-     */
-    public function getPublicKey(Request $request): JsonResponse
-    {
-        return response()->json([
-            'public_key' => $this->mpService->getPublicKey(),
-        ], 200);
+        $this->ecartpay = $ecartpay;
     }
 
     // -------------------------------------------------------------------------
     // GET /customer/cards
     // -------------------------------------------------------------------------
-    /**
-     * Lista todas las tarjetas guardadas del usuario.
-     */
     public function index(Request $request): JsonResponse
     {
         $cards = UserSavedCard::where('user_id', $request->user()->id)
@@ -65,16 +40,14 @@ class SavedCardController extends Controller
     // -------------------------------------------------------------------------
     // POST /customer/cards/add
     // -------------------------------------------------------------------------
-    /**
-     * Agrega una nueva tarjeta al usuario.
-     *
-     * Body JSON:
-     *   - card_token: string  (token generado por SDK de MercadoPago en Flutter)
-     */
     public function store(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'card_token' => 'required|string',
+            'card_number' => 'required|string|min:13|max:19',
+            'card_name'   => 'required|string|max:100',
+            'exp_month'   => 'required|string|min:1|max:2',
+            'exp_year'    => 'required|string|min:2|max:4',
+            'cvc'         => 'required|string|min:3|max:4',
         ]);
 
         if ($validator->fails()) {
@@ -82,9 +55,15 @@ class SavedCardController extends Controller
         }
 
         try {
-            $savedCard = $this->mpService->saveCard(
-                user:      $request->user(),
-                cardToken: $request->card_token
+            $savedCard = $this->ecartpay->saveCard(
+                user: $request->user(),
+                cardData: [
+                    'number'    => $request->card_number,
+                    'name'      => $request->card_name,
+                    'exp_month' => $request->exp_month,
+                    'exp_year'  => $request->exp_year,
+                    'cvc'       => $request->cvc,
+                ]
             );
 
             return response()->json([
@@ -94,7 +73,7 @@ class SavedCardController extends Controller
 
         } catch (Exception $e) {
             return response()->json([
-                'errors' => [['code' => 'mp_card_error', 'message' => $e->getMessage()]],
+                'errors' => [['code' => 'card_error', 'message' => $e->getMessage()]],
             ], 422);
         }
     }
@@ -102,9 +81,6 @@ class SavedCardController extends Controller
     // -------------------------------------------------------------------------
     // DELETE /customer/cards/{id}
     // -------------------------------------------------------------------------
-    /**
-     * Elimina una tarjeta guardada (del usuario autenticado).
-     */
     public function destroy(Request $request, int $id): JsonResponse
     {
         $card = UserSavedCard::where('id', $id)
@@ -118,11 +94,11 @@ class SavedCardController extends Controller
         }
 
         try {
-            $this->mpService->deleteCard($card);
+            $this->ecartpay->deleteCard($card);
             return response()->json(['message' => 'Tarjeta eliminada.'], 200);
         } catch (Exception $e) {
             return response()->json([
-                'errors' => [['code' => 'mp_delete_error', 'message' => $e->getMessage()]],
+                'errors' => [['code' => 'delete_error', 'message' => $e->getMessage()]],
             ], 422);
         }
     }
@@ -130,9 +106,6 @@ class SavedCardController extends Controller
     // -------------------------------------------------------------------------
     // POST /customer/cards/{id}/set-default
     // -------------------------------------------------------------------------
-    /**
-     * Marca una tarjeta como predeterminada y quita ese atributo a las demás.
-     */
     public function setDefault(Request $request, int $id): JsonResponse
     {
         $card = UserSavedCard::where('id', $id)
@@ -145,7 +118,6 @@ class SavedCardController extends Controller
             ], 404);
         }
 
-        // Quitar default a todas las otras
         UserSavedCard::where('user_id', $request->user()->id)
             ->where('id', '!=', $id)
             ->update(['is_default' => false]);
@@ -159,51 +131,10 @@ class SavedCardController extends Controller
     }
 
     // -------------------------------------------------------------------------
-    // Helpers
-    // -------------------------------------------------------------------------
-
-    /**
-     * Formatea la tarjeta para la respuesta JSON (oculta datos sensibles).
-     */
-    private function formatCard(UserSavedCard $card): array
-    {
-        return [
-            'id'                => $card->id,
-            'last_four_digits'  => $card->last_four_digits,
-            'payment_method_id' => $card->payment_method_id,
-            'brand_label'       => $card->brand_label,           // "Visa", "Mastercard"...
-            'expiration_month'  => $card->expiration_month,
-            'expiration_year'   => $card->expiration_year,
-            'expiration_display'=> $card->expiration_display,    // "05/28"
-            'cardholder_name'   => $card->cardholder_name,
-            'payment_type_id'   => $card->payment_type_id,       // credit_card / debit_card
-            'is_default'        => $card->is_default,
-            'mp_card_id'        => $card->mp_card_id,            // necesario para re-tokenizar en Flutter
-            'mp_customer_id'    => $card->mp_customer_id,
-        ];
-    }
-
-    // -------------------------------------------------------------------------
     // POST /customer/cards/{id}/create-token
     // -------------------------------------------------------------------------
-    /**
-     * Crea un token de un solo uso server-side para pagar con una tarjeta guardada.
-     * El token se genera usando el ACCESS_TOKEN del backend (mismo contexto del cobro),
-     * lo que evita el error "Card not found" (2010) de MercadoPago.
-     *
-     * Body JSON:
-     *   - security_code: string  (CVV ingresado por el usuario)
-     */
     public function createToken(Request $request, int $id): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'security_code' => 'required|string|min:3|max:4',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
-        }
-
         $card = UserSavedCard::where('id', $id)
             ->where('user_id', $request->user()->id)
             ->first();
@@ -215,7 +146,7 @@ class SavedCardController extends Controller
         }
 
         try {
-            $token = $this->mpService->createCardToken($card, $request->security_code);
+            $token = $this->ecartpay->createCardToken($card, $request->security_code ?? null);
             return response()->json(['token' => $token], 200);
         } catch (Exception $e) {
             return response()->json([
@@ -224,24 +155,24 @@ class SavedCardController extends Controller
         }
     }
 
-    /**
-     * Endpoint temporal para debug: lista tarjetas reales de MP del cliente.
-     */
-    public function debugCards(Request $request): JsonResponse
+    // -------------------------------------------------------------------------
+    // Helpers
+    // -------------------------------------------------------------------------
+    private function formatCard(UserSavedCard $card): array
     {
-        // Primero obtener las tarjetas guardadas en nuestra DB para sacar el mp_customer_id
-        $anyCard = UserSavedCard::where('user_id', $request->user()->id)->first();
-        
-        if (!$anyCard || !$anyCard->mp_customer_id) {
-            return response()->json(['error' => 'No se encontró mp_customer_id para este usuario.'], 404);
-        }
-
-        $realMpCards = $this->mpService->getCustomerCards($anyCard->mp_customer_id);
-
-        return response()->json([
-            'mp_customer_id' => $anyCard->mp_customer_id,
-            'real_mp_cards'  => $realMpCards,
-            'db_cards'       => UserSavedCard::where('user_id', $request->user()->id)->get()
-        ], 200);
+        return [
+            'id'                    => $card->id,
+            'last_four_digits'      => $card->last_four_digits,
+            'payment_method_id'     => $card->payment_method_id,
+            'brand_label'           => $card->brand_label,
+            'expiration_month'      => $card->expiration_month,
+            'expiration_year'       => $card->expiration_year,
+            'expiration_display'    => $card->expiration_display,
+            'cardholder_name'       => $card->cardholder_name,
+            'payment_type_id'       => $card->payment_type_id,
+            'is_default'            => $card->is_default,
+            'ecartpay_card_id'      => $card->ecartpay_card_id,
+            'ecartpay_customer_id'  => $card->ecartpay_customer_id,
+        ];
     }
 }

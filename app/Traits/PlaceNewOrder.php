@@ -55,7 +55,6 @@ trait PlaceNewOrder
             // 'order_amount' => 'required',
             'payment_method' => 'required|in:cash_on_delivery,digital_payment,wallet,offline_payment,saved_card',
             'saved_card_id'  => 'required_if:payment_method,saved_card',
-            'mp_card_token'  => 'required_if:payment_method,saved_card',
             'order_type' => 'required|in:take_away,delivery,parcel',
             'store_id' => 'required_unless:order_type,parcel',
             'distance' => 'required_unless:order_type,take_away',
@@ -533,24 +532,29 @@ trait PlaceNewOrder
 
             $order->save();
 
-            // Procesar el cargo si es payed_card
             if ($request->payment_method === 'saved_card' && $order->order_amount > 0) {
                 try {
                     $savedCard = \App\Models\UserSavedCard::where('user_id', $order->user_id)
                         ->where('id', $request->saved_card_id)
                         ->first();
-                        
+
                     if (!$savedCard) {
                         throw new \Exception('Tarjeta guardada no encontrada o no pertenece al usuario.');
                     }
 
-                    $mpService = new \App\Services\MercadoPagoCardService();
-                    $chargeResult = $mpService->chargeWithSavedCard(
+                    $ecartpay = new \App\Services\EcartPayService();
+
+                    $token = $request->ecartpay_token;
+                    if (empty($token)) {
+                        $token = $ecartpay->createCardToken($savedCard);
+                    }
+
+                    $chargeResult = $ecartpay->chargeWithSavedCard(
                         savedCard: $savedCard,
-                        cardToken: $request->mp_card_token,
+                        token: $token,
                         amount: $order->order_amount,
-                        email: $request->user ? $request->user->email : ($request->contact_person_email ?? 'guest@tootli.com'),
-                        externalRef: (string)$order->id
+                        orderDescription: 'Pedido Tootli #' . $order->id,
+                        externalRef: (string) $order->id,
                     );
 
                     if ($chargeResult['status'] === 'approved') {

@@ -34,9 +34,10 @@ return [
         'server_key' => env('FIREBASE_SERVER_KEY'),
     ],
 
-    'mercadopago' => [
-        'access_token' => env('MERCADOPAGO_ACCESS_TOKEN'),
-        'public_key'   => env('MERCADOPAGO_PUBLIC_KEY'),
+    'ecartpay' => [
+        'public_key'  => env('ECARTPAY_PUBLIC_KEY'),
+        'private_key' => env('ECARTPAY_PRIVATE_KEY'),
+        'base_url'    => env('ECARTPAY_BASE_URL', 'https://sandbox.ecartpay.com'),
     ],
 
 ];

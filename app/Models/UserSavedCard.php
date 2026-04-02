@@ -20,9 +20,6 @@ class UserSavedCard extends Model
         'expiration_year'  => 'integer',
     ];
 
-    /**
-     * El usuario dueño de esta tarjeta.
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -30,15 +27,14 @@ class UserSavedCard extends Model
 
     /**
      * Retorna el nombre de la marca para mostrar en UI.
-     * Ej: "visa" → "Visa"
      */
     public function getBrandLabelAttribute(): string
     {
         return match(strtolower($this->payment_method_id)) {
-            'visa'                    => 'Visa',
-            'master', 'mastercard'   => 'Mastercard',
-            'amex', 'american_express' => 'American Express',
-            default                   => ucfirst($this->payment_method_id),
+            'visa'                             => 'Visa',
+            'master', 'mastercard'             => 'Mastercard',
+            'amex', 'american_express'         => 'American Express',
+            default                            => ucfirst($this->payment_method_id),
         };
     }
 
