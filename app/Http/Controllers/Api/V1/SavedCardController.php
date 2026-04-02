@@ -180,6 +180,7 @@ class SavedCardController extends Controller
             'payment_type_id'   => $card->payment_type_id,       // credit_card / debit_card
             'is_default'        => $card->is_default,
             'mp_card_id'        => $card->mp_card_id,            // necesario para re-tokenizar en Flutter
+            'mp_customer_id'    => $card->mp_customer_id,
         ];
     }
 }
