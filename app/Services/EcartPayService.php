@@ -177,7 +177,11 @@ class EcartPayService
                     'status'   => $response->status(),
                     'response' => $response->json(),
                 ]);
-                throw new Exception('No se pudo guardar la tarjeta: ' . ($response->json('message') ?? $response->body()));
+                throw new Exception($this->translateCardError(
+                    $response->json('code'),
+                    $response->json('message'),
+                    'guardar'
+                ));
             }
 
             $data = $response->json();
@@ -255,7 +259,11 @@ class EcartPayService
                     'status'           => $response->status(),
                     'body'             => $response->json(),
                 ]);
-                throw new Exception($response->json('message') ?? 'Error al tokenizar la tarjeta');
+                throw new Exception($this->translateCardError(
+                    $response->json('code'),
+                    $response->json('message'),
+                    'tokenizar'
+                ));
             }
 
             $token = $response->json('token');
@@ -310,12 +318,17 @@ class EcartPayService
             ]);
 
             if (!$response->successful()) {
+                $code = $response->json('code');
+                $message = $response->json('message');
+
                 Log::error('[EcartPay] Error al crear orden/cobrar', [
                     'card_id'  => $savedCard->id,
                     'status'   => $response->status(),
+                    'code'     => $code,
                     'response' => $response->json(),
                 ]);
-                throw new Exception('Error al procesar el pago: ' . ($response->json('message') ?? $response->body()));
+
+                throw new Exception($this->translatePaymentError($code, $message));
             }
 
             $data = $response->json();
@@ -326,6 +339,16 @@ class EcartPayService
                 'order_number' => $data['number'] ?? null,
                 'status'       => $status,
             ]);
+
+            if ($status === 'declined' || $status === 'failed') {
+                $declineReason = $data['decline_reason'] ?? $data['activity'][0]['decline_reason'] ?? null;
+                Log::warning('[EcartPay] Pago rechazado', [
+                    'order_id'       => $data['id'] ?? null,
+                    'status'         => $status,
+                    'decline_reason' => $declineReason,
+                ]);
+                throw new Exception($this->translateDeclineReason($declineReason, $status));
+            }
 
             $isPaid = $status === 'paid'
                 || !empty($data['payments'])
@@ -360,5 +383,65 @@ class EcartPayService
     {
         $y = (int) $year;
         return $y < 100 ? 2000 + $y : $y;
+    }
+
+    private function translateCardError(?int $code, ?string $apiMessage, string $action): string
+    {
+        $mapped = match ($code) {
+            200     => 'El número de tarjeta no es válido. Verifica e intenta de nuevo.',
+            201     => 'La fecha de vencimiento no es válida.',
+            202     => 'El código de seguridad (CVV) no es válido.',
+            210     => 'Esta tarjeta no es válida para el entorno actual.',
+            301     => 'La tarjeta está vencida. Usa otra tarjeta.',
+            302     => 'Tarjeta reportada como robada. Contacta a tu banco.',
+            303     => 'Tarjeta restringida. Contacta a tu banco.',
+            default => null,
+        };
+
+        return $mapped ?? ('No se pudo ' . $action . ' la tarjeta: ' . ($apiMessage ?? 'Error desconocido'));
+    }
+
+    private function translatePaymentError(?int $code, ?string $apiMessage): string
+    {
+        $mapped = match ($code) {
+            200     => 'El número de tarjeta no es válido.',
+            201     => 'La fecha de vencimiento de la tarjeta no es válida.',
+            202     => 'El código de seguridad (CVV) es incorrecto.',
+            210     => 'Esta tarjeta no se puede procesar en este momento. Intenta con otra.',
+            301     => 'Tu tarjeta está vencida. Por favor usa otra tarjeta.',
+            302     => 'Tu tarjeta fue reportada. Contacta a tu banco.',
+            303     => 'Tu tarjeta tiene restricciones. Contacta a tu banco.',
+            401     => 'Fondos insuficientes. Verifica tu saldo e intenta de nuevo.',
+            402     => 'El monto excede el límite de tu tarjeta.',
+            501     => 'Tu tarjeta fue rechazada por el banco. Contacta a tu banco para más información.',
+            502     => 'Error de comunicación con el banco. Intenta de nuevo en unos minutos.',
+            default => null,
+        };
+
+        return $mapped ?? ('Error al procesar el pago: ' . ($apiMessage ?? 'Error desconocido. Intenta de nuevo.'));
+    }
+
+    private function translateDeclineReason(?string $reason, string $status): string
+    {
+        if (!$reason) {
+            return $status === 'declined'
+                ? 'Tu pago fue rechazado. Verifica los datos de tu tarjeta o intenta con otra.'
+                : 'No se pudo procesar el pago. Intenta de nuevo.';
+        }
+
+        $reason = strtolower($reason);
+
+        return match (true) {
+            str_contains($reason, 'insufficient') => 'Fondos insuficientes. Verifica tu saldo e intenta de nuevo.',
+            str_contains($reason, 'expired')      => 'Tu tarjeta está vencida. Usa otra tarjeta.',
+            str_contains($reason, 'stolen')       => 'Tarjeta reportada. Contacta a tu banco.',
+            str_contains($reason, 'restricted')   => 'Tu tarjeta tiene restricciones. Contacta a tu banco.',
+            str_contains($reason, 'limit')        => 'Excediste el límite de tu tarjeta. Contacta a tu banco.',
+            str_contains($reason, 'cvv') || str_contains($reason, 'cvc') || str_contains($reason, 'security')
+                                                   => 'El código de seguridad (CVV) es incorrecto.',
+            str_contains($reason, 'fraud')        => 'Tu banco rechazó la transacción por seguridad. Contacta a tu banco.',
+            str_contains($reason, 'do not honor') => 'Tu banco rechazó la transacción. Contacta a tu banco para más información.',
+            default                                => 'Pago rechazado: ' . $reason . '. Intenta con otra tarjeta.',
+        };
     }
 }
