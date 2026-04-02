@@ -196,6 +196,14 @@ class SavedCardController extends Controller
      */
     public function createToken(Request $request, int $id): JsonResponse
     {
+        $validator = Validator::make($request->all(), [
+            'security_code' => 'required|string|min:3|max:4',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
         $card = UserSavedCard::where('id', $id)
             ->where('user_id', $request->user()->id)
             ->first();
@@ -207,7 +215,7 @@ class SavedCardController extends Controller
         }
 
         try {
-            $token = $this->mpService->createCardToken($card, $request->security_code ?? null);
+            $token = $this->mpService->createCardToken($card, $request->security_code);
             return response()->json(['token' => $token], 200);
         } catch (Exception $e) {
             return response()->json([
