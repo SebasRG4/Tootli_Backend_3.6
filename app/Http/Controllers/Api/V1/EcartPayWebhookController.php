@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\CentralLogics\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Services\EcartPayService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -17,8 +18,24 @@ class EcartPayWebhookController extends Controller
 
         Log::info('[EcartPay Webhook] Evento recibido', [
             'event'   => $event,
-            'payload' => $payload,
+            'ip'      => $request->ip(),
         ]);
+
+        $webhookSecret = config('services.ecartpay.webhook_secret');
+        if ($webhookSecret) {
+            $signature = $request->header('x-webhook-secret')
+                ?? $request->header('x-hook-secret')
+                ?? $request->header('authorization');
+
+            if ($signature !== $webhookSecret) {
+                Log::warning('[EcartPay Webhook] Firma inválida', [
+                    'expected' => substr($webhookSecret, 0, 10) . '...',
+                    'received' => $signature ? substr($signature, 0, 10) . '...' : 'null',
+                    'ip'       => $request->ip(),
+                ]);
+                return response()->json(['status' => 'unauthorized'], 401);
+            }
+        }
 
         if ($event === 'transfer.created') {
             return $this->handleTransferCreated($payload);
@@ -55,6 +72,14 @@ class EcartPayWebhookController extends Controller
             return response()->json(['status' => 'already_paid'], 200);
         }
 
+        if (!$this->verifyPaymentWithEcartPay($ecartpayOrderId)) {
+            Log::warning('[EcartPay Webhook] Verificación con EcartPay falló - posible intento fraudulento', [
+                'order_id'          => $order->id,
+                'ecartpay_order_id' => $ecartpayOrderId,
+            ]);
+            return response()->json(['status' => 'verification_failed'], 403);
+        }
+
         $order->payment_status = 'paid';
         $order->order_status = 'confirmed';
         $order->save();
@@ -68,7 +93,7 @@ class EcartPayWebhookController extends Controller
             ]);
         }
 
-        Log::info('[EcartPay Webhook] Orden actualizada a paid', [
+        Log::info('[EcartPay Webhook] Orden verificada y actualizada a paid', [
             'order_id'          => $order->id,
             'ecartpay_order_id' => $ecartpayOrderId,
         ]);
@@ -80,30 +105,59 @@ class EcartPayWebhookController extends Controller
     {
         $data = $payload['data'] ?? $payload;
         $ecartpayOrderId = $data['order'] ?? $data['order_id'] ?? $data['id'] ?? null;
-        $status = $data['status'] ?? null;
 
         if (!$ecartpayOrderId) {
             return response()->json(['status' => 'ignored'], 200);
         }
 
-        if ($status === 'paid') {
-            $order = Order::where('transaction_reference', $ecartpayOrderId)->first();
+        $order = Order::where('transaction_reference', $ecartpayOrderId)->first();
 
-            if ($order && $order->payment_status !== 'paid') {
-                $order->payment_status = 'paid';
-                $order->order_status = 'confirmed';
-                $order->save();
-
-                try {
-                    Helpers::send_order_notification($order);
-                } catch (\Exception $e) {
-                    Log::warning('[EcartPay Webhook] Error notificación', ['error' => $e->getMessage()]);
-                }
-
-                Log::info('[EcartPay Webhook] Orden actualizada vía order update', ['order_id' => $order->id]);
+        if ($order && $order->payment_status !== 'paid') {
+            if (!$this->verifyPaymentWithEcartPay($ecartpayOrderId)) {
+                Log::warning('[EcartPay Webhook] Verificación falló en order update', [
+                    'ecartpay_order_id' => $ecartpayOrderId,
+                ]);
+                return response()->json(['status' => 'verification_failed'], 403);
             }
+
+            $order->payment_status = 'paid';
+            $order->order_status = 'confirmed';
+            $order->save();
+
+            try {
+                Helpers::send_order_notification($order);
+            } catch (\Exception $e) {
+                Log::warning('[EcartPay Webhook] Error notificación', ['error' => $e->getMessage()]);
+            }
+
+            Log::info('[EcartPay Webhook] Orden verificada y actualizada vía order update', ['order_id' => $order->id]);
         }
 
         return response()->json(['status' => 'ok'], 200);
+    }
+
+    /**
+     * Verifica directamente con la API de EcartPay que la orden realmente esté pagada.
+     * Esto previene que alguien envíe un webhook falso para marcar pedidos como pagados.
+     */
+    private function verifyPaymentWithEcartPay(string $ecartpayOrderId): bool
+    {
+        try {
+            $ecartpay = new EcartPayService();
+            $status = $ecartpay->getOrderStatus($ecartpayOrderId);
+
+            Log::info('[EcartPay Webhook] Verificación de pago con API', [
+                'ecartpay_order_id' => $ecartpayOrderId,
+                'status_real'       => $status,
+            ]);
+
+            return $status === 'paid';
+        } catch (\Exception $e) {
+            Log::error('[EcartPay Webhook] Error verificando pago con API', [
+                'ecartpay_order_id' => $ecartpayOrderId,
+                'error'             => $e->getMessage(),
+            ]);
+            return false;
+        }
     }
 }

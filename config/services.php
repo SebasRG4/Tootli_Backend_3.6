@@ -39,6 +39,7 @@ return [
         'private_key' => env('ECARTPAY_PRIVATE_KEY'),
         'base_url'    => env('ECARTPAY_BASE_URL', 'https://sandbox.ecartpay.com'),
         'bank_transfer_method_id' => env('ECARTPAY_BANK_TRANSFER_METHOD_ID', '66c397dafd263a538b8312a1'),
+        'webhook_secret' => env('ECARTPAY_WEBHOOK_SECRET'),
     ],
 
 ];
