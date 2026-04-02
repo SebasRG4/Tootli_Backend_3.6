@@ -226,6 +226,7 @@ class MercadoPagoCardService
                 'payer'              => [
                     'type'  => 'customer',
                     'id'    => $savedCard->mp_customer_id,
+                    'email' => $email, // <--- REQUERIDO para vincular bien al cliente
                 ],
             ], $requestOptions);
         } catch (\MercadoPago\Exceptions\MPApiException $e) {
@@ -248,5 +249,31 @@ class MercadoPagoCardService
             'status_detail' => $payment->status_detail,
             'payment_id'    => $payment->id,
         ];
+    }
+    /**
+     * Obtiene la lista REAL de tarjetas de un cliente directamente de MercadoPago (para debug).
+     */
+    public function getCustomerCards(string $customerId): array
+    {
+        $client         = new \MercadoPago\Client\Customer\CustomerCardClient();
+        $requestOptions = new RequestOptions();
+        $requestOptions->setAccessToken($this->accessToken);
+
+        try {
+            $cards = $client->list($customerId, $requestOptions);
+            $result = [];
+            foreach ($cards->data as $card) {
+                $result[] = [
+                    'id'                => $card->id,
+                    'payment_method'    => $card->payment_method->id,
+                    'last_four_digits'  => $card->last_four_digits,
+                    'customer_id'       => $card->customer_id,
+                ];
+            }
+            return $result;
+        } catch (Exception $e) {
+            Log::error('[MercadoPago] Error consultando tarjetas para debug', ['customer_id' => $customerId, 'error' => $e->getMessage()]);
+            return ['error' => $e->getMessage()];
+        }
     }
 }

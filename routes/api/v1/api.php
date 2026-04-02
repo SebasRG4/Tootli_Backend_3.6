@@ -620,6 +620,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
     Route::group(['prefix' => 'customer/cards', 'middleware' => 'auth:api'], function () {
         Route::get('mp-public-key', 'SavedCardController@getPublicKey');
         Route::get('/', 'SavedCardController@index');
+        Route::get('debug-cards', 'SavedCardController@debugCards');
         Route::post('add', 'SavedCardController@store');
         Route::delete('{id}', 'SavedCardController@destroy');
         Route::post('{id}/set-default', 'SavedCardController@setDefault');

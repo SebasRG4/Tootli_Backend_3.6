@@ -17,9 +17,8 @@ use Illuminate\Support\Facades\Validator;
  * Rutas:
  *   GET    /api/v1/customer/cards/mp-public-key   → getPublicKey
  *   GET    /api/v1/customer/cards                  → index
- *   POST   /api/v1/customer/cards/add              → store
- *   DELETE /api/v1/customer/cards/{id}             → destroy
  *   POST   /api/v1/customer/cards/{id}/set-default → setDefault
+ *   GET    /api/v1/customer/cards/debug-cards      → debugCards
  */
 class SavedCardController extends Controller
 {
@@ -182,5 +181,26 @@ class SavedCardController extends Controller
             'mp_card_id'        => $card->mp_card_id,            // necesario para re-tokenizar en Flutter
             'mp_customer_id'    => $card->mp_customer_id,
         ];
+    }
+
+    /**
+     * Endpoint temporal para debug: lista tarjetas reales de MP del cliente.
+     */
+    public function debugCards(Request $request): JsonResponse
+    {
+        // Primero obtener las tarjetas guardadas en nuestra DB para sacar el mp_customer_id
+        $anyCard = UserSavedCard::where('user_id', $request->user()->id)->first();
+        
+        if (!$anyCard || !$anyCard->mp_customer_id) {
+            return response()->json(['error' => 'No se encontró mp_customer_id para este usuario.'], 404);
+        }
+
+        $realMpCards = $this->mpService->getCustomerCards($anyCard->mp_customer_id);
+
+        return response()->json([
+            'mp_customer_id' => $anyCard->mp_customer_id,
+            'real_mp_cards'  => $realMpCards,
+            'db_cards'       => UserSavedCard::where('user_id', $request->user()->id)->get()
+        ], 200);
     }
 }
