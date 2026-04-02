@@ -217,16 +217,24 @@ class MercadoPagoCardService
      */
     public function createCardToken(UserSavedCard $savedCard, ?string $securityCode = null): string
     {
-        $body = ['card_id' => $savedCard->mp_card_id];
+        // customer_id es obligatorio para que MP vincule el token a la tarjeta
+        // guardada del customer. Sin él, el token es "anónimo" y el cobro con
+        // payer.type=customer falla con 2010 "Card not found".
+        $body = [
+            'card_id'     => $savedCard->mp_card_id,
+            'customer_id' => $savedCard->mp_customer_id,
+        ];
         if (!empty($securityCode)) {
             $body['security_code'] = $securityCode;
         }
 
-        // Usar ACCESS_TOKEN (Bearer) para que el token quede vinculado al customer
-        // en el contexto correcto de nuestra cuenta MP. Con PUBLIC_KEY el token
-        // se crea sin la asociación al customer y MP devuelve "Card not found" (2010).
-        $response = Http::withToken($this->accessToken)
-            ->post('https://api.mercadopago.com/v1/card_tokens', $body);
+        // PUBLIC_KEY para tokenizar en el contexto del vendedor (server-side).
+        // El customer_id en el body vincula el token al customer correcto,
+        // permitiendo que el cobro con payer.type=customer lo valide correctamente.
+        $response = Http::post(
+            'https://api.mercadopago.com/v1/card_tokens?public_key=' . $this->publicKey,
+            $body
+        );
 
         if (!$response->successful()) {
             Log::error('[MercadoPago] Error creando token de tarjeta guardada', [
@@ -242,6 +250,13 @@ class MercadoPagoCardService
         if (!$tokenId) {
             throw new Exception('MercadoPago no devolvió un token válido');
         }
+
+        Log::info('[MercadoPago] Token creado para tarjeta guardada', [
+            'token_id'      => $tokenId,
+            'mp_card_id'    => $savedCard->mp_card_id,
+            'mp_customer_id'=> $savedCard->mp_customer_id,
+            'token_status'  => $response->json('status'),
+        ]);
 
         return $tokenId;
     }
