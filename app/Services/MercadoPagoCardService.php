@@ -210,11 +210,16 @@ class MercadoPagoCardService
      */
     public function createCardToken(UserSavedCard $savedCard, string $securityCode): string
     {
-        $response = Http::withToken($this->accessToken)
-            ->post('https://api.mercadopago.com/v1/card_tokens', [
+        // Usar PUBLIC_KEY (no ACCESS_TOKEN) para que el token NO embeba el customer_id.
+        // Con ACCESS_TOKEN, MP incrusta el customer en el token y luego falla la validación
+        // del customer en el sandbox al cobrar ("Customer not found" 2002).
+        $response = Http::post(
+            'https://api.mercadopago.com/v1/card_tokens?public_key=' . $this->publicKey,
+            [
                 'card_id'       => $savedCard->mp_card_id,
                 'security_code' => $securityCode,
-            ]);
+            ]
+        );
 
         if (!$response->successful()) {
             Log::error('[MercadoPago] Error creando token de tarjeta guardada', [
