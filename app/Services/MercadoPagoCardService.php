@@ -278,6 +278,7 @@ class MercadoPagoCardService
         ]);
 
         try {
+            $mpPayerEmailLog = 'tootli_user_' . $savedCard->user_id . '@tootli.mx';
             Log::info('[MercadoPago] Intentando cobro con tarjeta guardada', [
                 'saved_card_db_id'  => $savedCard->id,
                 'mp_card_id'        => $savedCard->mp_card_id,
@@ -285,16 +286,18 @@ class MercadoPagoCardService
                 'card_token'        => $cardToken,
                 'payment_method_id' => $savedCard->payment_method_id,
                 'transaction_amount'=> (float) $amount,
-                'payer_email'       => $email,
+                'payer_type'        => 'customer',
+                'payer_id'          => $savedCard->mp_customer_id,
+                'payer_email'       => $mpPayerEmailLog,
             ]);
 
-            // Para cobros con tarjeta guardada en MercadoPago, se requiere:
-            // - payer.type = 'customer' (indica que es un cliente registrado en MP)
-            // - payer.id = mp_customer_id del cliente
-            // El token (generado con card_id) ya está vinculado al customer en MP.
-            // Usar el email del customer de MP (no el email real del usuario)
-            // para evitar colisión con cuentas reales de MP.
-            // Sin payer.type=customer para no forzar la validación card-in-customer-list.
+            // Para cobros con tarjeta guardada en MP se necesitan los tres campos del payer:
+            // - type  = 'customer'   → indica que es un cliente registrado
+            // - id    = customer_id  → el ID del customer al que pertenece la tarjeta
+            // - email = email con el que fue creado el customer en MP
+            // El token fue creado con ACCESS_TOKEN + card_id, garantizando
+            // que está vinculado al mismo customer. Sin type+id MP devuelve
+            // error 2002 "Customer not found" al intentar validar la tarjeta.
             $mpPayerEmail = 'tootli_user_' . $savedCard->user_id . '@tootli.mx';
 
             $payment = $client->create([
@@ -305,6 +308,8 @@ class MercadoPagoCardService
                 'payment_method_id'  => $savedCard->payment_method_id,
                 'external_reference' => $externalRef,
                 'payer'              => [
+                    'type'  => 'customer',
+                    'id'    => $savedCard->mp_customer_id,
                     'email' => $mpPayerEmail,
                 ],
             ], $requestOptions);
