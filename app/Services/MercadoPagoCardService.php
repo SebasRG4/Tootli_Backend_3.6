@@ -198,10 +198,11 @@ class MercadoPagoCardService
             $body['security_code'] = $securityCode;
         }
 
-        $response = Http::post(
-            'https://api.mercadopago.com/v1/card_tokens?public_key=' . $this->publicKey,
-            $body
-        );
+        // Usar ACCESS_TOKEN (Bearer) para que el token quede vinculado al customer
+        // en el contexto correcto de nuestra cuenta MP. Con PUBLIC_KEY el token
+        // se crea sin la asociación al customer y MP devuelve "Card not found" (2010).
+        $response = Http::withToken($this->accessToken)
+            ->post('https://api.mercadopago.com/v1/card_tokens', $body);
 
         if (!$response->successful()) {
             Log::error('[MercadoPago] Error creando token de tarjeta guardada', [
