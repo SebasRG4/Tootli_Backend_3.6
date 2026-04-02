@@ -56,41 +56,23 @@ class MercadoPagoCardService
                 return $existing->mp_customer_id;
             }
 
-            // El customer ya no existe en MP (limpieza de sandbox u otro motivo).
-            // Eliminamos las tarjetas guardadas del usuario para forzar recreación.
-            Log::warning('[MercadoPago] Customer no encontrado en MP, eliminando tarjetas y recreando', [
+            // El customer ya no existe en MP — limpiar y recrear
+            Log::warning('[MercadoPago] Customer no existe en MP, eliminando tarjetas y recreando', [
                 'user_id'        => $user->id,
                 'mp_customer_id' => $existing->mp_customer_id,
             ]);
             UserSavedCard::where('user_id', $user->id)->delete();
         }
 
-        // 2. Buscar en MP por email (puede existir en MP aunque no esté en nuestra DB)
-        $searchResponse = Http::withToken($this->accessToken)
-            ->get('https://api.mercadopago.com/v1/customers/search', [
-                'email' => $user->email,
-            ]);
+        // 2. Crear nuevo Customer en MP.
+        // NO se busca por email para evitar reutilizar cuentas reales de MP
+        // del usuario que causarían "Customer not found" (2002) al cobrar
+        // en el entorno de pruebas.
+        $mpEmail = 'tootli_user_' . $user->id . '@tootli.mx';
 
-        if ($searchResponse->successful()) {
-            $results = $searchResponse->json('results', []);
-            foreach ($results as $result) {
-                // Verificar que el customer encontrado realmente sea accesible
-                $verifyFound = Http::withToken($this->accessToken)
-                    ->get("https://api.mercadopago.com/v1/customers/{$result['id']}");
-                if ($verifyFound->successful()) {
-                    Log::info('[MercadoPago] Customer encontrado y verificado por search', [
-                        'email'       => $user->email,
-                        'customer_id' => $result['id'],
-                    ]);
-                    return $result['id'];
-                }
-            }
-        }
-
-        // 3. Crear nuevo Customer en MP
         $createResponse = Http::withToken($this->accessToken)
             ->post('https://api.mercadopago.com/v1/customers', [
-                'email'      => $user->email,
+                'email'      => $mpEmail,
                 'first_name' => $user->f_name ?? '',
                 'last_name'  => $user->l_name  ?? '',
             ]);
@@ -106,6 +88,7 @@ class MercadoPagoCardService
         $newCustomerId = $createResponse->json('id');
         Log::info('[MercadoPago] Nuevo customer creado', [
             'user_id'     => $user->id,
+            'mp_email'    => $mpEmail,
             'customer_id' => $newCustomerId,
         ]);
 
@@ -284,6 +267,11 @@ class MercadoPagoCardService
             // - payer.type = 'customer' (indica que es un cliente registrado en MP)
             // - payer.id = mp_customer_id del cliente
             // El token (generado con card_id) ya está vinculado al customer en MP.
+            // El email del payer debe coincidir con el email usado al crear el customer en MP.
+            // Usamos el mismo formato tootli_user_{id}@tootli.mx para evitar colisión
+            // con cuentas reales de MP del usuario.
+            $mpPayerEmail = 'tootli_user_' . $savedCard->user_id . '@tootli.mx';
+
             $payment = $client->create([
                 'token'              => $cardToken,
                 'description'        => 'Pago de pedido Tootli Order #' . $externalRef,
@@ -292,7 +280,9 @@ class MercadoPagoCardService
                 'payment_method_id'  => $savedCard->payment_method_id,
                 'external_reference' => $externalRef,
                 'payer'              => [
-                    'email' => $email,
+                    'type'  => 'customer',
+                    'id'    => $savedCard->mp_customer_id,
+                    'email' => $mpPayerEmail,
                 ],
             ], $requestOptions);
         } catch (\MercadoPago\Exceptions\MPApiException $e) {
