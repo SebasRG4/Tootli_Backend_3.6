@@ -86,8 +86,10 @@ class EcartPayService
 
     public function getOrCreateCustomer(User $user): string
     {
-        $existing = UserSavedCard::where('user_id', $user->id)->first();
-        if ($existing && $existing->ecartpay_customer_id) {
+        $existing = UserSavedCard::where('user_id', $user->id)
+            ->whereNotNull('ecartpay_customer_id')
+            ->first();
+        if ($existing) {
             return $existing->ecartpay_customer_id;
         }
 
@@ -99,6 +101,11 @@ class EcartPayService
                 'user_id'    => (string) $user->id,
                 'email'      => $user->email ?? '',
             ]);
+
+            if ($response->status() === 409) {
+                Log::info('[EcartPay] Customer ya existe, buscando por user_id', ['user_id' => $user->id]);
+                return $this->findExistingCustomer($user);
+            }
 
             if (!$response->successful()) {
                 Log::error('[EcartPay] Error creando customer', [
@@ -117,6 +124,41 @@ class EcartPayService
 
             return $customerId;
         });
+    }
+
+    private function findExistingCustomer(User $user): string
+    {
+        $response = $this->api()->get('/api/customers', [
+            'user_id' => (string) $user->id,
+        ]);
+
+        if ($response->successful()) {
+            $customers = $response->json();
+
+            if (is_array($customers)) {
+                $list = isset($customers['data']) ? $customers['data'] : $customers;
+
+                if (!empty($list)) {
+                    $customer = is_array($list[0] ?? null) ? $list[0] : $list;
+                    $customerId = $customer['id'] ?? $customer['_id'] ?? null;
+
+                    if ($customerId) {
+                        Log::info('[EcartPay] Customer existente encontrado', [
+                            'user_id'     => $user->id,
+                            'customer_id' => $customerId,
+                        ]);
+                        return (string) $customerId;
+                    }
+                }
+            }
+        }
+
+        Log::error('[EcartPay] No se pudo encontrar el customer existente', [
+            'user_id'  => $user->id,
+            'status'   => $response->status(),
+            'response' => $response->json(),
+        ]);
+        throw new Exception('El customer ya existe en EcartPay pero no se pudo recuperar su ID');
     }
 
     // -------------------------------------------------------------------------
