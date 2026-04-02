@@ -172,6 +172,46 @@ class MercadoPagoCardService
     }
 
     // -------------------------------------------------------------------------
+    // Token de un solo uso para pago con tarjeta guardada
+    // -------------------------------------------------------------------------
+
+    /**
+     * Crea un token de un solo uso para una tarjeta guardada del customer.
+     * Se hace server-side con el ACCESS_TOKEN para garantizar que el token
+     * y el cobro usen las mismas credenciales y MP no devuelva "Card not found".
+     *
+     * @param  UserSavedCard $savedCard
+     * @param  string        $securityCode  CVV ingresado por el usuario
+     * @return string  Token de un solo uso listo para enviar al pago
+     * @throws Exception
+     */
+    public function createCardToken(UserSavedCard $savedCard, string $securityCode): string
+    {
+        $response = Http::withToken($this->accessToken)
+            ->post('https://api.mercadopago.com/v1/card_tokens', [
+                'card_id'       => $savedCard->mp_card_id,
+                'security_code' => $securityCode,
+            ]);
+
+        if (!$response->successful()) {
+            Log::error('[MercadoPago] Error creando token de tarjeta guardada', [
+                'mp_card_id' => $savedCard->mp_card_id,
+                'status'     => $response->status(),
+                'body'       => $response->json(),
+            ]);
+            $msg = $response->json('message') ?? 'Error al tokenizar la tarjeta';
+            throw new Exception($msg);
+        }
+
+        $tokenId = $response->json('id');
+        if (!$tokenId) {
+            throw new Exception('MercadoPago no devolvió un token válido');
+        }
+
+        return $tokenId;
+    }
+
+    // -------------------------------------------------------------------------
     // Payment
     // -------------------------------------------------------------------------
 
@@ -222,11 +262,12 @@ class MercadoPagoCardService
                 'description'        => 'Pago de pedido Tootli Order #' . $externalRef,
                 'transaction_amount' => (float) $amount,
                 'installments'       => 1,
+                'payment_method_id'  => $savedCard->payment_method_id,
                 'external_reference' => $externalRef,
                 'payer'              => [
-                    'type'  => 'customer',
-                    'id'    => $savedCard->mp_customer_id,
-                    'email' => $email, // <--- REQUERIDO para vincular bien al cliente
+                    'type'    => 'customer',
+                    'id'      => $savedCard->mp_customer_id,
+                    'email'   => $email,
                 ],
             ], $requestOptions);
         } catch (\MercadoPago\Exceptions\MPApiException $e) {

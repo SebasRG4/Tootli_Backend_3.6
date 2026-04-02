@@ -183,6 +183,47 @@ class SavedCardController extends Controller
         ];
     }
 
+    // -------------------------------------------------------------------------
+    // POST /customer/cards/{id}/create-token
+    // -------------------------------------------------------------------------
+    /**
+     * Crea un token de un solo uso server-side para pagar con una tarjeta guardada.
+     * El token se genera usando el ACCESS_TOKEN del backend (mismo contexto del cobro),
+     * lo que evita el error "Card not found" (2010) de MercadoPago.
+     *
+     * Body JSON:
+     *   - security_code: string  (CVV ingresado por el usuario)
+     */
+    public function createToken(Request $request, int $id): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'security_code' => 'required|string|min:3|max:4',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $card = UserSavedCard::where('id', $id)
+            ->where('user_id', $request->user()->id)
+            ->first();
+
+        if (!$card) {
+            return response()->json([
+                'errors' => [['code' => 'not_found', 'message' => 'Tarjeta no encontrada.']],
+            ], 404);
+        }
+
+        try {
+            $token = $this->mpService->createCardToken($card, $request->security_code);
+            return response()->json(['token' => $token], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'errors' => [['code' => 'token_error', 'message' => $e->getMessage()]],
+            ], 422);
+        }
+    }
+
     /**
      * Endpoint temporal para debug: lista tarjetas reales de MP del cliente.
      */

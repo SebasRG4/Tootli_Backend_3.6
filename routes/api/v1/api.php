@@ -624,6 +624,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         Route::post('add', 'SavedCardController@store');
         Route::delete('{id}', 'SavedCardController@destroy');
         Route::post('{id}/set-default', 'SavedCardController@setDefault');
+        Route::post('{id}/create-token', 'SavedCardController@createToken');
     });
 });
 
