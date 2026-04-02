@@ -616,6 +616,9 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         });
     });
 
+    // EcartPay Webhook (público, sin auth)
+    Route::post('ecartpay/webhook', 'EcartPayWebhookController@handle');
+
     // Tarjetas guardadas – EcartPay
     Route::group(['prefix' => 'customer/cards', 'middleware' => 'auth:api'], function () {
         Route::get('/', 'SavedCardController@index');

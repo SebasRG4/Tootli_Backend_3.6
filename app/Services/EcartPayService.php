@@ -363,6 +363,117 @@ class EcartPayService
     }
 
     // -------------------------------------------------------------------------
+    // SPEI / Bank Transfer
+    // -------------------------------------------------------------------------
+
+    public function createSpeiOrder(
+        User $user,
+        float $amount,
+        string $orderDescription,
+        string $notifyUrl = ''
+    ): array {
+        $customerId = $this->getOrCreateCustomer($user);
+
+        return $this->apiWithRetry(function () use ($user, $customerId, $amount, $orderDescription, $notifyUrl) {
+            $response = $this->api()->post('/api/orders', [
+                'customer_id' => $customerId,
+                'currency'    => 'MXN',
+                'items'       => [
+                    [
+                        'name'       => $orderDescription,
+                        'quantity'   => 1,
+                        'price'      => $amount,
+                        'is_service' => true,
+                    ],
+                ],
+                'notify_url' => $notifyUrl ?: (config('app.url') . '/api/v1/ecartpay/webhook'),
+                'send_email' => false,
+            ]);
+
+            if (!$response->successful()) {
+                Log::error('[EcartPay] Error creando orden SPEI', [
+                    'user_id'  => $user->id,
+                    'status'   => $response->status(),
+                    'response' => $response->json(),
+                ]);
+                throw new Exception('No se pudo crear la orden para SPEI: ' . ($response->json('message') ?? $response->body()));
+            }
+
+            $orderData = $response->json();
+            $ecartpayOrderId = $orderData['id'];
+            $orderNumber = $orderData['number'] ?? $ecartpayOrderId;
+
+            Log::info('[EcartPay] Orden SPEI creada', [
+                'ecartpay_order_id' => $ecartpayOrderId,
+                'order_number'      => $orderNumber,
+            ]);
+
+            $methodId = config('services.ecartpay.bank_transfer_method_id');
+            $processResponse = $this->api()->post("/api/orders/{$ecartpayOrderId}/process", [
+                'method_id' => $methodId,
+            ]);
+
+            if (!$processResponse->successful()) {
+                Log::error('[EcartPay] Error configurando orden para SPEI', [
+                    'ecartpay_order_id' => $ecartpayOrderId,
+                    'status'            => $processResponse->status(),
+                    'response'          => $processResponse->json(),
+                ]);
+                throw new Exception('No se pudo configurar la orden para transferencia bancaria.');
+            }
+
+            Log::info('[EcartPay] Orden configurada para SPEI', ['ecartpay_order_id' => $ecartpayOrderId]);
+
+            $publicResponse = Http::get($this->baseUrl . "/api/orders/public/{$ecartpayOrderId}");
+
+            $clabe = null;
+            $expiresAt = null;
+
+            if ($publicResponse->successful()) {
+                $publicData = $publicResponse->json();
+                $payments = $publicData['payments'] ?? [];
+
+                if (!empty($payments)) {
+                    $clabe = $payments[0]['id'] ?? $payments[0]['method']['reference'] ?? null;
+                    $expiresAt = $payments[0]['method']['expires_at'] ?? null;
+                }
+            }
+
+            if (!$clabe) {
+                Log::warning('[EcartPay] No se pudo obtener CLABE de la orden pública', [
+                    'ecartpay_order_id' => $ecartpayOrderId,
+                    'public_response'   => $publicResponse->json(),
+                ]);
+                throw new Exception('No se pudo obtener la CLABE para la transferencia.');
+            }
+
+            Log::info('[EcartPay] CLABE obtenida para SPEI', [
+                'ecartpay_order_id' => $ecartpayOrderId,
+                'clabe'             => $clabe,
+            ]);
+
+            return [
+                'ecartpay_order_id' => $ecartpayOrderId,
+                'order_number'      => $orderNumber,
+                'clabe'             => $clabe,
+                'amount'            => $amount,
+                'expires_at'        => $expiresAt,
+            ];
+        });
+    }
+
+    public function getOrderStatus(string $ecartpayOrderId): string
+    {
+        $response = Http::get($this->baseUrl . "/api/orders/public/{$ecartpayOrderId}");
+
+        if ($response->successful()) {
+            return $response->json('status') ?? 'unknown';
+        }
+
+        return 'unknown';
+    }
+
+    // -------------------------------------------------------------------------
     // Helpers
     // -------------------------------------------------------------------------
 

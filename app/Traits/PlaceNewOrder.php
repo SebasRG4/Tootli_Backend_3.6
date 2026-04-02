@@ -53,7 +53,7 @@ trait PlaceNewOrder
 
         $validator = Validator::make($request->all(), [
             // 'order_amount' => 'required',
-            'payment_method' => 'required|in:cash_on_delivery,digital_payment,wallet,offline_payment,saved_card',
+            'payment_method' => 'required|in:cash_on_delivery,digital_payment,wallet,offline_payment,saved_card,spei',
             'saved_card_id'  => 'required_if:payment_method,saved_card',
             'order_type' => 'required|in:take_away,delivery,parcel',
             'store_id' => 'required_unless:order_type,parcel',
@@ -575,6 +575,38 @@ trait PlaceNewOrder
                 }
             }
 
+            $speiData = null;
+            if ($request->payment_method === 'spei' && $order->order_amount > 0) {
+                try {
+                    $ecartpay = new \App\Services\EcartPayService();
+                    $user = $request->user;
+
+                    $speiResult = $ecartpay->createSpeiOrder(
+                        user: $user,
+                        amount: $order->order_amount,
+                        orderDescription: 'Pedido Tootli #' . $order->id,
+                        notifyUrl: config('app.url') . '/api/v1/ecartpay/webhook',
+                    );
+
+                    $order->transaction_reference = $speiResult['ecartpay_order_id'];
+                    $order->save();
+
+                    $speiData = [
+                        'clabe'     => $speiResult['clabe'],
+                        'amount'    => $speiResult['amount'],
+                        'reference' => $speiResult['order_number'],
+                        'expires_at' => now()->addMinutes(5)->toIso8601String(),
+                    ];
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    return response()->json([
+                        'errors' => [
+                            ['code' => 'spei_failed', 'message' => $e->getMessage()]
+                        ]
+                    ], 203);
+                }
+            }
+
             if ($request->order_type !== 'parcel') {
                 $taxMapCollection = collect($taxMap);
                 foreach ($order_details as $key => $item) {
@@ -649,14 +681,20 @@ trait PlaceNewOrder
 
             $this->sentOrderPlaceNotification($request, $order, $store);
 
-            return response()->json([
+            $responseData = [
                 'message' => translate('messages.order_placed_successfully'),
                 'order_id' => $order->id,
                 'total_ammount' => $order->order_amount,
                 'status' => $order->order_status,
                 'created_at' => $order->created_at,
                 'user_id' => (int) $order->user_id,
-            ], 200);
+            ];
+
+            if ($speiData) {
+                $responseData['spei_data'] = $speiData;
+            }
+
+            return response()->json($responseData, 200);
         } catch (\Exception $exception) {
 
             info('Error placing order', [$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
