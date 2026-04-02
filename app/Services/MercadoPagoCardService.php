@@ -220,7 +220,6 @@ class MercadoPagoCardService
             $payment = $client->create([
                 'token'              => $cardToken,
                 'description'        => 'Pago de pedido Tootli Order #' . $externalRef,
-                'payment_method_id'  => $savedCard->payment_method_id,
                 'transaction_amount' => (float) $amount,
                 'installments'       => 1,
                 'external_reference' => $externalRef,
