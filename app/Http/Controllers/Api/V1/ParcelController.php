@@ -306,9 +306,20 @@ class ParcelController extends Controller
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            // Sin X-Goog-FieldMask Google suele omitir distanceMeters → el filtro por km no hace nada.
+            $fieldMask = implode(',', [
+                'suggestions.placePrediction.place',
+                'suggestions.placePrediction.placeId',
+                'suggestions.placePrediction.text',
+                'suggestions.placePrediction.structuredFormat',
+                'suggestions.placePrediction.types',
+                'suggestions.placePrediction.distanceMeters',
+            ]);
+
             curl_setopt($ch, CURLOPT_HTTPHEADER, [
                 'Content-Type: application/json',
                 'X-Goog-Api-Key: ' . $apiKey,
+                'X-Goog-FieldMask: ' . $fieldMask,
             ]);
 
             $response = curl_exec($ch);
