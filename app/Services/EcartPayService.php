@@ -133,23 +133,16 @@ class EcartPayService
         ]);
 
         if ($response->successful()) {
-            $customers = $response->json();
+            $data = $response->json();
+            $docs = $data['docs'] ?? [];
 
-            if (is_array($customers)) {
-                $list = isset($customers['data']) ? $customers['data'] : $customers;
-
-                if (!empty($list)) {
-                    $customer = is_array($list[0] ?? null) ? $list[0] : $list;
-                    $customerId = $customer['id'] ?? $customer['_id'] ?? null;
-
-                    if ($customerId) {
-                        Log::info('[EcartPay] Customer existente encontrado', [
-                            'user_id'     => $user->id,
-                            'customer_id' => $customerId,
-                        ]);
-                        return (string) $customerId;
-                    }
-                }
+            if (!empty($docs) && isset($docs[0]['id'])) {
+                $customerId = $docs[0]['id'];
+                Log::info('[EcartPay] Customer existente encontrado', [
+                    'user_id'     => $user->id,
+                    'customer_id' => $customerId,
+                ]);
+                return (string) $customerId;
             }
         }
 
