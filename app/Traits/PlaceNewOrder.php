@@ -38,6 +38,19 @@ trait PlaceNewOrder
 
     public function new_place_order(Request $request, $is_prescription = false)
     {
+        // Prevención de Pagos Dobles e Idempotencia
+        if ($request->unique_id && \Illuminate\Support\Facades\Cache::has('order_lock_' . $request->unique_id)) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'duplicate_request', 'message' => 'Tu pedido ya está siendo procesado o fue enviado recientemente. Por favor, verifica en Mis Pedidos antes de intentar de nuevo.']
+                ]
+            ], 403);
+        }
+
+        if ($request->unique_id) {
+            \Illuminate\Support\Facades\Cache::put('order_lock_' . $request->unique_id, true, 60); // Bloqueo por 60 segundos
+        }
+
         $validator = Validator::make($request->all(), [
             // 'order_amount' => 'required',
             'payment_method' => 'required|in:cash_on_delivery,digital_payment,wallet,offline_payment,saved_card',

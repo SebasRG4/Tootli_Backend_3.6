@@ -20,10 +20,6 @@ class UserSavedCard extends Model
         'expiration_year'  => 'integer',
     ];
 
-    protected $hidden = [
-        'mp_customer_id', // No exponer IDs internos de MP en la API
-    ];
-
     /**
      * El usuario dueño de esta tarjeta.
      */

@@ -203,8 +203,11 @@ class MercadoPagoCardService
         ]);
 
         try {
-            Log::info('[MercadoPago] Intentando cobro', [
-                'token'             => $cardToken,
+            Log::info('[MercadoPago] Intentando cobro con tarjeta guardada', [
+                'saved_card_db_id'  => $savedCard->id,
+                'mp_card_id'        => $savedCard->mp_card_id,
+                'mp_customer_id'    => $savedCard->mp_customer_id,
+                'card_token'        => $cardToken,
                 'payment_method_id' => $savedCard->payment_method_id,
                 'transaction_amount'=> (float) $amount,
                 'payer_email'       => $email,
