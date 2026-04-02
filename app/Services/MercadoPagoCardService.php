@@ -77,7 +77,31 @@ class MercadoPagoCardService
                 'last_name'  => $user->l_name  ?? '',
             ]);
 
+        // Si el customer ya existía en MP (código 101), recuperar su ID por email
         if (!$createResponse->successful()) {
+            $causeCode = $createResponse->json('cause.0.code') ?? $createResponse->json('cause.0.code');
+            $causes = $createResponse->json('cause') ?? [];
+            $alreadyExists = collect($causes)->contains(fn($c) => ($c['code'] ?? '') == '101');
+
+            if ($alreadyExists) {
+                Log::info('[MercadoPago] Customer ya existe en MP, recuperando por email', [
+                    'user_id' => $user->id,
+                    'mp_email' => $mpEmail,
+                ]);
+                $searchResponse = Http::withToken($this->accessToken)
+                    ->get('https://api.mercadopago.com/v1/customers/search', ['email' => $mpEmail]);
+
+                $results = $searchResponse->json('results') ?? [];
+                if (!empty($results)) {
+                    $existingCustomerId = $results[0]['id'];
+                    Log::info('[MercadoPago] Customer recuperado de MP', [
+                        'user_id'     => $user->id,
+                        'customer_id' => $existingCustomerId,
+                    ]);
+                    return $existingCustomerId;
+                }
+            }
+
             Log::error('[MercadoPago] Error creando customer', [
                 'user_id'  => $user->id,
                 'response' => $createResponse->json(),
