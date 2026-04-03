@@ -206,6 +206,7 @@ class Store extends Model
         'google_place_id',
         'serves_alcohol',
         'cuisine_names',
+        'sabores_map_emoji',
         'menu_images',
         'category_ids',
         'reviews_comments_count',

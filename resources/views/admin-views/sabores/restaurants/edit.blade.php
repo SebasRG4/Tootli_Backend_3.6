@@ -115,6 +115,22 @@
                                     </script>
                                     @endpush
 
+                                <!-- Icono del pin en mapa (app Sabores) -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="input-label" for="sabores_map_emoji">{{ translate('Map marker emoji (Sabores)') }}</label>
+                                    <select name="sabores_map_emoji" id="sabores_map_emoji" class="form-control"
+                                            style="font-size: 1.35rem; line-height: 2rem;">
+                                        <option value="">{{ translate('Automatic by cuisine or name') }}</option>
+                                        @foreach(config('sabores.map_marker_emojis', []) as $mapEmoji)
+                                            <option value="{{ $mapEmoji }}"
+                                                @selected(old('sabores_map_emoji', $restaurant->sabores_map_emoji) === $mapEmoji)>
+                                                {{ $mapEmoji }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <small class="text-muted d-block mt-1">{{ translate('Shown on the city map pin for this restaurant.') }}</small>
+                                </div>
+
                                 <!-- Average Ticket -->
                                 <div class="col-md-6 mb-3">
                                     <label class="input-label" for="average_ticket">

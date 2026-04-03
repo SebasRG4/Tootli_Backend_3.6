@@ -7,6 +7,7 @@ use App\Models\Reservation;
 use App\Models\Store;
 use App\Models\Coupon;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 
 class SaboresController extends Controller
@@ -183,9 +184,12 @@ class SaboresController extends Controller
      */
     public function updateRestaurant(Request $request, $id)
     {
+        $allowedMapEmojis = array_merge([''], config('sabores.map_marker_emojis', []));
+
         $request->validate([
             'average_ticket' => 'nullable|numeric|min:0',
             'cuisine_names' => 'nullable|string|max:255',
+            'sabores_map_emoji' => ['nullable', 'string', 'max:32', Rule::in($allowedMapEmojis)],
             'accepts_reservations' => 'nullable|boolean',
             'serves_alcohol' => 'nullable|boolean',
             'infrastructure_images' => 'nullable|array',
@@ -199,6 +203,8 @@ class SaboresController extends Controller
         // Update restaurant-specific fields
         $restaurant->average_ticket = $request->average_ticket;
         $restaurant->cuisine_names = $request->cuisine_names;
+        $emoji = $request->input('sabores_map_emoji');
+        $restaurant->sabores_map_emoji = ($emoji !== null && $emoji !== '') ? $emoji : null;
         $restaurant->accepts_reservations = $request->has('accepts_reservations');
         $restaurant->serves_alcohol = $request->has('serves_alcohol');
         $restaurant->google_address = $request->google_address;

@@ -11,7 +11,6 @@ use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Schema;
 
 use Illuminate\Support\Str;
@@ -487,6 +486,7 @@ class SaboresCiudadController extends Controller
             $review_images = [];
             $recent_reviews = Review::with('customer:id,f_name')
                 ->where('store_id', $store->id)
+                ->active()
                 ->whereNotNull('attachment')
                 ->where('attachment', '!=', '[]')
                 ->latest()
@@ -739,6 +739,7 @@ class SaboresCiudadController extends Controller
         $review_images = [];
         $recent_reviews = Review::with('customer:id,f_name')
             ->where('store_id', $store->id)
+            ->active()
             ->whereNotNull('attachment')
             ->where('attachment', '!=', '[]')
             ->latest()
@@ -1042,11 +1043,12 @@ class SaboresCiudadController extends Controller
                 $attachments = json_decode($attachments, true);
             }
 
-            if (is_array($attachments)) {
+            // Reseñas bloqueadas (status != 1): no exponer texto ni fotos en la app
+            $isActive = (int) $review->status === 1;
+
+            if ($isActive && is_array($attachments)) {
                 foreach ($attachments as $img) {
                     $url = Helpers::get_full_url('review', $img, 'public');
-                    $exists = Storage::disk('public')->exists('review/' . $img);
-                    info("DEBUG REVIEW IMAGE: ID={$review->id} IMG={$img} EXISTS=" . ($exists ? 'YES' : 'NO') . " URL={$url}");
                     $formatted_attachments[] = $url;
                 }
             }
@@ -1055,6 +1057,9 @@ class SaboresCiudadController extends Controller
             // Providing BOTH for compatibility
             $review->attachment = $formatted_attachments;
             $review->attachment_full_url = $formatted_attachments;
+            if (!$isActive) {
+                $review->comment = null;
+            }
 
             unset($review->customer);
             return $review;
