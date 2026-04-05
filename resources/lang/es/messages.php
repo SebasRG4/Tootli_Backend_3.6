@@ -3010,6 +3010,8 @@
   'want_to_activate_this_ Payment & Sms gateways' => 'Want to activate this  Payment & Sms gateways',
   'Your_current_sms_settings_are_disabled,_because_you_have_enabled_sms_gateway_addon,_To_visit_your_currently_active_sms_gateway_settings_please_follow_the_link.' => 'Your current sms settings are disabled  because you have enabled sms gateway addon  To visit your currently active sms gateway settings please follow the link.',
   'twilio' => 'Twilio',
+  'labsmobile' => 'LabsMobile',
+  'tpoa' => 'Remitente (tpoa)',
   'messaging_service_sid' => 'Messaging service sid',
   '2factor' => '2factor',
   'msg91' => 'Msg91',

@@ -26,7 +26,7 @@ class SMSModuleController extends Controller
                 }
             }
         }
-        $data_values=  Setting::where('settings_type','sms_config')->whereIn('key_name', ['twilio','nexmo','2factor','msg91','alphanet_sms'])->get() ?? [];
+        $data_values=  Setting::where('settings_type','sms_config')->whereIn('key_name', ['twilio','nexmo','2factor','msg91','alphanet_sms','labsmobile'])->get() ?? [];
         return view('admin-views.business-settings.sms-index',compact('data_values','published_status','payment_url'));
     }
 
@@ -82,6 +82,14 @@ class SMSModuleController extends Controller
                 'sender_id' =>$request['sender_id'] ?? null,
                 'otp_template' =>$request['otp_template'],
             ];
+        } elseif ($module == 'labsmobile') {
+            $additional_data = [
+                'status' => $request['status'],
+                'username' => $request['username'],
+                'token' => $request['token'],
+                'tpoa' => $request['tpoa'] ?? '',
+                'otp_template' => $request['otp_template'] ?? 'Tu codigo Tootli es #OTP#',
+            ];
         }
 
         $data= ['gateway' => $module ,
@@ -99,7 +107,7 @@ class SMSModuleController extends Controller
     ]);
 
     if ($request['status'] == 1) {
-        foreach (['twilio','nexmo','2factor','msg91','alphanet_sms'] as $gateway) {
+        foreach (['twilio','nexmo','2factor','msg91','alphanet_sms','labsmobile'] as $gateway) {
             if ($module != $gateway) {
                 $keep = Setting::where(['key_name' => $gateway, 'settings_type' => 'sms_config'])->first();
                 if (isset($keep)) {

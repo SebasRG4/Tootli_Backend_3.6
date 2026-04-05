@@ -82,7 +82,10 @@ trait  SmsGateway
             return self::alphanet_sms($receiver, $otp);
         }
 
-
+        $config = self::get_settings('labsmobile');
+        if (isset($config) && $config['status'] == 1) {
+            return self::labsmobile($receiver, $otp);
+        }
 
         return 'not_found';
     }
@@ -609,8 +612,59 @@ trait  SmsGateway
         return $response;
     }
 
+    /**
+     * LabsMobile JSON API: https://api.labsmobile.com/json/send
+     * Auth: Basic base64(username:token)
+     */
+    public static function labsmobile($receiver, $otp): string
+    {
+        $config = self::get_settings('labsmobile');
+        $response = 'error';
+        if (!isset($config) || (int) ($config['status'] ?? 0) !== 1) {
+            return $response;
+        }
 
+        $username = trim((string) ($config['username'] ?? ''));
+        $token = trim((string) ($config['token'] ?? ''));
+        if ($username === '' || $token === '') {
+            return $response;
+        }
 
+        $template = $config['otp_template'] ?? 'Tu codigo es #OTP#';
+        $message = str_replace('#OTP#', $otp, $template);
+        $msisdn = preg_replace('/\D/', '', (string) $receiver);
+        if ($msisdn === '') {
+            return $response;
+        }
+
+        $payload = [
+            'message' => $message,
+            'recipient' => [['msisdn' => $msisdn]],
+        ];
+        $tpoa = trim((string) ($config['tpoa'] ?? ''));
+        if ($tpoa !== '') {
+            $payload['tpoa'] = $tpoa;
+        }
+
+        try {
+            $auth = base64_encode($username . ':' . $token);
+            $httpResponse = Http::withHeaders([
+                'Authorization' => 'Basic ' . $auth,
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ])->timeout(30)->post('https://api.labsmobile.com/json/send', $payload);
+
+            $body = $httpResponse->json();
+            $code = $body['code'] ?? null;
+            if ($httpResponse->successful() && ($code === 0 || $code === '0')) {
+                $response = 'success';
+            }
+        } catch (\Exception $e) {
+            $response = 'error';
+        }
+
+        return $response;
+    }
 
     public static function get_settings($name)
     {
