@@ -51,7 +51,7 @@ class SocialAuthController extends Controller
 
                 $data = json_decode($res->getBody()->getContents(), true);
             } elseif ($request['medium'] == 'facebook') {
-                $res = $client->request('GET', 'https://graph.facebook.com/' . $unique_id . '?access_token=' . $token . '&&fields=name,email');
+                $res = $client->request('GET', 'https://graph.facebook.com/' . $unique_id . '?access_token=' . urlencode($token) . '&fields=name,email');
                 $data = json_decode($res->getBody()->getContents(), true);
             } elseif ($request['medium'] == 'apple') {
                 $user = User::where('temp_token', $unique_id)->first();
@@ -472,7 +472,7 @@ class SocialAuthController extends Controller
                 }
                 $data = json_decode($res->getBody()->getContents(), true);
             } elseif ($request['medium'] == 'facebook') {
-                $res = $client->request('GET', 'https://graph.facebook.com/' . $unique_id . '?access_token=' . $token . '&&fields=name,email');
+                $res = $client->request('GET', 'https://graph.facebook.com/' . $unique_id . '?access_token=' . urlencode($token) . '&fields=name,email');
                 $data = json_decode($res->getBody()->getContents(), true);
             } elseif ($request['medium'] == 'apple') {
                 $apple_login_data=\App\Models\BusinessSetting::where(['key'=>'apple_login'])->first();

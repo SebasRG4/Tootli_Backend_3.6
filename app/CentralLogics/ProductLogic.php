@@ -533,7 +533,7 @@ class ProductLogic
             $withCount[] = 'reviews';
         }
 
-        $query = Item::with('store')
+        $query = Item::with(['store.schedules', 'store.module', 'store.storeConfig'])
             ->when(config('module.current_module_data'), function ($query) {
                 $query->where('module_id', config('module.current_module_data')['id']);
             })
@@ -621,8 +621,8 @@ class ProductLogic
         }
 
 
-        $query = Item::with('store')->
-            whereHas('store', function ($query) use ($zone_id) {
+        $query = Item::with(['store.schedules', 'store.module', 'store.storeConfig'])
+            ->whereHas('store', function ($query) use ($zone_id) {
                 $query->whereIn('zone_id', json_decode($zone_id, true));
             })
             ->when(config('module.current_module_data'), function ($query) {
@@ -693,7 +693,7 @@ class ProductLogic
         $category_ids = isset($category_ids) ? (is_array($category_ids) ? $category_ids : json_decode($category_ids)) : [];
         $brand_ids = isset($brand_ids) ? (is_array($brand_ids) ? $brand_ids : json_decode($brand_ids)) : [];
 
-        $query = Item::with(['store', 'ecommerce_item_details.brand'])
+        $query = Item::with(['store.schedules', 'store.module', 'store.storeConfig', 'ecommerce_item_details.brand'])
             ->when(config('module.current_module_data'), function ($query) {
                 $query->where('module_id', config('module.current_module_data')['id']);
             })

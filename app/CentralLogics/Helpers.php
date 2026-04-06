@@ -180,7 +180,7 @@ class Helpers
                 'store_id' => $item->store?->id,
                 'store_delivery_time' => $delivery_info['store_delivery_time'],
                 'module_type' => $module_type,
-                'halal_tag_status' => (int) ($item->store->storeConfig->halal_tag_status ?? 0),
+                'halal_tag_status' => (int) ($item->store?->storeConfig?->halal_tag_status ?? 0),
                 'free_delivery' => $item->store?->free_delivery,
                 'delivery_time_type' => $delivery_time_type,
                 'brand_id' => (int) $item->ecommerce_item_details?->brand_id ?? 0,
@@ -188,6 +188,14 @@ class Helpers
                 'brand_image_full_url' => $item->ecommerce_item_details?->brand?->image_full_url,
                 'is_new' => $item->created_at >= now()->subDays(14) ? 1 : 0,
                 'weight' => (float) $item->weight,
+
+                // Full store (schedules, open, active, …) so the app can compute
+                // open/closed on item cards — list endpoints used to omit this.
+                'store' => $item->store
+                    ? self::store_data_formatting(
+                        $item->store->loadMissing(['schedules', 'module', 'storeConfig'])
+                    )->toArray()
+                    : null,
             ];
         })->toArray();
     }

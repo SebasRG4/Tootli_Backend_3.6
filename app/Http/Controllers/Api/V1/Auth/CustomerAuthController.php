@@ -699,7 +699,7 @@ class CustomerAuthController extends Controller
                     }
                     $data = json_decode($res->getBody()->getContents(), true);
                 } elseif ($request['medium'] == 'facebook') {
-                    $res = $client->request('GET', 'https://graph.facebook.com/' . $unique_id . '?access_token=' . $token . '&&fields=name,email');
+                    $res = $client->request('GET', 'https://graph.facebook.com/' . $unique_id . '?access_token=' . urlencode($token) . '&fields=name,email');
                     $data = json_decode($res->getBody()->getContents(), true);
                 } elseif ($request['medium'] == 'apple') {
                     if($request->has('verified')){
