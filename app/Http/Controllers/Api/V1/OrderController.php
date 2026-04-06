@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\CentralLogics\CustomerLogic;
 use App\Models\Admin;
 use App\Models\Order;
+use App\Models\DeliveryMan;
 use App\Models\Store;
 use App\Models\Refund;
 use App\Mail\PlaceOrder;
@@ -252,6 +253,13 @@ class OrderController extends Controller
             $order->cancellation_reason = $request->reason;
             $order->cancellation_note = $request->note;
             $order->canceled_by = 'customer';
+            if ($order->delivery_man_id) {
+                $dm = DeliveryMan::find($order->delivery_man_id);
+                if ($dm) {
+                    $dm->current_orders = $dm->current_orders > 1 ? $dm->current_orders - 1 : 0;
+                    $dm->save();
+                }
+            }
             $order->save();
             $order?->store ?
                 Helpers::increment_order_count($order?->store) : '';

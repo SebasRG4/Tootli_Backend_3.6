@@ -738,10 +738,19 @@ class OrderLogic
         $do_not_charge_return_fee_on_deliveryman_cancel = $parcel_cancellation_basic_setup['do_not_charge_return_fee_on_deliveryman_cancel'] ?? 0;
 
         $orderOldStatus = $order->order_status;
+        $deliveryManId = $order->delivery_man_id;
         $order->order_status = 'canceled';
         $order->canceled = now();
         $order->canceled_by = $cancel_by;
         $order->save();
+
+        if ($deliveryManId) {
+            $dm = DeliveryMan::find($deliveryManId);
+            if ($dm) {
+                $dm->current_orders = $dm->current_orders > 1 ? $dm->current_orders - 1 : 0;
+                $dm->save();
+            }
+        }
 
         $parcelCancellation = ParcelCancellation::where('order_id', $order->id)->firstOrNew();
         $parcelCancellation->order_id = $order->id;
