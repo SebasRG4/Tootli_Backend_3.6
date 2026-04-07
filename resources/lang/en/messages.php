@@ -1322,6 +1322,7 @@
   'tootli_direct_pos_requires_address_and_customer' => 'Tootli Direct requires a delivery address and a selected customer.',
   'tootli_direct_customer_pays_delivery' => 'Amount customer pays for delivery',
   'tootli_direct_full_fee_stored_hint' => 'Full Tootli delivery fee is saved for settlement; you can charge the customer less and absorb the difference.',
+  'tootli_direct_pos_delivery_hint' => 'Tootli Direct: tap the pencil to set delivery address on the map, contact name/phone, then save. Customer must be selected from the list (not walk-in).',
   'Set_a_default_‘Commission_Rate’_for_freelance_deliverymen_(under_admin)_on_every_deliveryman. ' => 'Set a default ‘Commission Rate’ for freelance deliverymen (under admin) on every deliveryman.',
   'Who_Will_Confirm_Order?' => 'Who Will Confirm Order',
   'After_a_customer_order_placement,_Admin_can_define_who_will_confirm_the_order_first-_Deliveryman_or_Store?_For_example,_if_you_choose_‘Delivery_man’,_the_deliveryman_nearby_will_confirm_the_order_and_forward_it_to_the_related_store_to_process_the_order._It_works_vice-versa_if_you_choose_‘Store’.' => 'After a customer order placement  Admin can define who will confirm the order first- Deliveryman or Store  For example  if you choose ‘Delivery man’  the deliveryman nearby will confirm the order and forward it to the related store to process the order. It works vice-versa if you choose ‘Store’.',

@@ -113,7 +113,7 @@
                                 <button class="btn btn--primary" data-toggle="modal"
                                     data-target="#add-customer">{{ translate('messages.add_new_customer') }}</button>
                             </div>
-                            @if ($store_data->sub_self_delivery == 1)
+                            @if ($store_data->sub_self_delivery == 1 || session('pos_tootli_direct'))
                                 <div class="pos--delivery-options">
                                     <div class="d-flex justify-content-between">
                                         <h5 class="card-title">
@@ -125,6 +125,9 @@
                                         <span class="delivery--edit-icon text-primary" id="delivery_address"
                                             data-toggle="modal" data-target="#paymentModal"><i class="tio-edit"></i></span>
                                     </div>
+                                    @if (session('pos_tootli_direct') && $store_data->sub_self_delivery != 1)
+                                        <p class="small text-muted mb-2">{{ translate('messages.tootli_direct_pos_delivery_hint') }}</p>
+                                    @endif
                                     <div class="pos--delivery-options-info d-flex flex-wrap" id="del-add">
                                         @include('vendor-views.pos._address')
                                     </div>
