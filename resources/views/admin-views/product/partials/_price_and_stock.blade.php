@@ -35,6 +35,11 @@
                                         class="form-label-secondary text-danger" data-toggle="tooltip"
                                         data-placement="right"
                                         data-original-title="{{ translate('messages.Required.') }}"> *
+                                    </span>
+                                    <span class="form-label-secondary" data-toggle="tooltip"
+                                        data-placement="right"
+                                        data-original-title="{{ translate('messages.app_unit_price_hint') }}">
+                                        <i class="tio-info-outined"></i>
                                     </span></label>
                                 <input type="number" id="unit_price" min="0" max="999999999999.999"
                                     step="0.001" value="{{ $product?->price ?? (old('price') ?? 0) }}" name="price"
@@ -42,6 +47,25 @@
                             </div>
                         </div>
 
+                        <div class="col-md-3">
+                            <div class="form-group mb-0 error-wrapper">
+                                <label class="input-label" for="menu_price">
+                                    {{ translate('messages.tootli_direct_menu_price') }}
+                                    {{ \App\CentralLogics\Helpers::currency_symbol() }}
+                                    <span class="form-label-secondary" data-toggle="tooltip"
+                                        data-placement="right"
+                                        data-original-title="{{ translate('messages.tootli_direct_menu_price_hint') }}">
+                                        <i class="tio-info-outined"></i>
+                                    </span>
+                                </label>
+                                <input type="number" id="menu_price" min="0" max="999999999999.999"
+                                    step="0.001"
+                                    value="{{ $product?->menu_price ?? old('menu_price') }}"
+                                    name="menu_price"
+                                    class="form-control"
+                                    placeholder="{{ translate('messages.optional') }}">
+                            </div>
+                        </div>
 
                         @if ($productWiseTax)
                             <div class="col-md-3">

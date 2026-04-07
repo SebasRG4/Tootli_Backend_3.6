@@ -811,6 +811,44 @@
                                                             value="{{ $delivery_charge_comission ? $delivery_charge_comission->value : 0 }}">
                                                     </div>
                                                 </div>
+                                                <div class="col-sm-6 col-lg-6">
+                                                    @php($tootli_direct_food_commission = \App\Models\BusinessSetting::where('key', 'tootli_direct_food_commission')->first())
+                                                    <div class="form-group mb-0">
+                                                        <label class="input-label text-capitalize d-flex alig-items-center"
+                                                            for="tootli_direct_food_commission">
+                                                            {{ translate('messages.tootli_direct_food_commission') }} (%)
+                                                            <span class="form-label-secondary ml-1" data-toggle="tooltip"
+                                                                data-placement="right"
+                                                                data-original-title="{{ translate('messages.tootli_direct_food_commission_hint') }}">
+                                                                <i class="tio-info text-muted"></i>
+                                                            </span>
+                                                        </label>
+                                                        <input type="number" name="tootli_direct_food_commission"
+                                                            class="form-control" id="tootli_direct_food_commission"
+                                                            placeholder="{{ translate('messages.Ex:_10') }}" min="0"
+                                                            max="100" step="0.01"
+                                                            value="{{ $tootli_direct_food_commission ? $tootli_direct_food_commission->value : 0 }}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-lg-6">
+                                                    @php($tootli_direct_delivery_commission = \App\Models\BusinessSetting::where('key', 'tootli_direct_delivery_commission')->first())
+                                                    <div class="form-group mb-0">
+                                                        <label class="input-label text-capitalize d-flex alig-items-center"
+                                                            for="tootli_direct_delivery_commission">
+                                                            {{ translate('messages.tootli_direct_delivery_commission') }} (%)
+                                                            <span class="form-label-secondary ml-1" data-toggle="tooltip"
+                                                                data-placement="right"
+                                                                data-original-title="{{ translate('messages.tootli_direct_delivery_commission_hint') }}">
+                                                                <i class="tio-info text-muted"></i>
+                                                            </span>
+                                                        </label>
+                                                        <input type="number" name="tootli_direct_delivery_commission"
+                                                            class="form-control" id="tootli_direct_delivery_commission"
+                                                            placeholder="{{ translate('messages.Ex:_10') }}" min="0"
+                                                            max="100" step="0.01"
+                                                            value="{{ $tootli_direct_delivery_commission ? $tootli_direct_delivery_commission->value : 0 }}">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

@@ -99,7 +99,12 @@ class OrderLogic
             $dm_commission = $comission ? ($order_amount / 100) * $comission : 0;
             $comission_amount = $order_amount - $dm_commission;
         } else {
+            $is_tootli_direct = ($order->order_type === 'direct');
             $comission = isset($order->store->comission) == null ? \App\Models\BusinessSetting::where('key', 'admin_commission')->first()->value : $order->store->comission;
+            if ($is_tootli_direct) {
+                $direct_food = BusinessSetting::where('key', 'tootli_direct_food_commission')->first();
+                $comission = $direct_food !== null ? (float) $direct_food->value : 0;
+            }
             $dm_tips = $dm_tips_manage_status ? $order->dm_tips : 0;
             // $order_amount = $order->order_amount - $order->delivery_charge - $order->total_tax_amount - $dm_tips;
 
@@ -132,9 +137,14 @@ class OrderLogic
 
 
             $order_amount = $order->order_amount - $order->additional_charge - $order->extra_packaging_amount - $order->delivery_charge - $order->total_tax_amount - $dm_tips + $flash_admin_discount_amount + $order->coupon_discount_amount + $store_discount_amount + $flash_store_discount_amount + $ref_bonus_amount;
-            // comission in delivery charge
-            $delivery_charge_comission = BusinessSetting::where('key', 'delivery_charge_comission')->first();
-            $delivery_charge_comission_percentage = $delivery_charge_comission ? $delivery_charge_comission->value : 0;
+            // comission in delivery charge (Tootli Directo usa porcentaje propio)
+            if ($is_tootli_direct) {
+                $direct_del = BusinessSetting::where('key', 'tootli_direct_delivery_commission')->first();
+                $delivery_charge_comission_percentage = $direct_del !== null ? (float) $direct_del->value : 0;
+            } else {
+                $delivery_charge_comission = BusinessSetting::where('key', 'delivery_charge_comission')->first();
+                $delivery_charge_comission_percentage = $delivery_charge_comission ? $delivery_charge_comission->value : 0;
+            }
             $comission_on_delivery = $delivery_charge_comission_percentage * ($order->original_delivery_charge / 100);
 
             if ($order->store->sub_self_delivery) {
@@ -153,8 +163,8 @@ class OrderLogic
                 }
             }
 
-            //final comission
-            if ($store->store_business_model == 'subscription' && isset($store_sub)) {
+            //final comission (Directo: comisión comida según admin aunque la tienda sea suscripción)
+            if ($store->store_business_model == 'subscription' && isset($store_sub) && ! $is_tootli_direct) {
                 $comission_on_store_amount = 0;
                 $subscription_mode = 1;
                 $commission_percentage = 0;

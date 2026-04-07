@@ -129,6 +129,22 @@ class Helpers
         return $result;
     }
 
+    /**
+     * @param  \App\Models\Item|array  $item
+     * @param  string  $context  app | direct
+     */
+    public static function item_price_for_context($item, string $context = 'app'): float
+    {
+        $menu = is_array($item) ? ($item['menu_price'] ?? null) : ($item->menu_price ?? null);
+        $price = is_array($item) ? (float) ($item['price'] ?? 0) : (float) $item->price;
+
+        if ($context === 'direct' && $menu !== null && (float) $menu > 0) {
+            return round((float) $menu, 3);
+        }
+
+        return round($price, 3);
+    }
+
     public static function productListDataFormatting($data)
     {
         $latitude = request()->header('latitude');

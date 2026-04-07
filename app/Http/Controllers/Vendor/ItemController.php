@@ -383,6 +383,7 @@ class ItemController extends Controller
 
         $food->variations = json_encode($variations);
         $food->price = $request->price;
+        $food->menu_price = $request->filled('menu_price') ? $request->menu_price : null;
         $food->veg = $request->veg ?? 0;
         $food->image = $request->has('image') ? Helpers::upload('product/', 'png', $request->file('image')) : $newFileNamethumb ?? null;
         $food->available_time_starts = $request->available_time_starts ?? '00:00:00';
@@ -755,6 +756,7 @@ class ItemController extends Controller
         $p->food_variations = json_encode($food_variations);
         $p->variations = json_encode($variations);
         $p->price = $request->price;
+        $p->menu_price = $request->filled('menu_price') ? $request->menu_price : null;
         $p->veg = $request->veg ?? 0;
         $p->available_time_starts = $request->available_time_starts ?? '00:00:00';
         $p->available_time_ends = $request->available_time_ends ?? '23:59:59';

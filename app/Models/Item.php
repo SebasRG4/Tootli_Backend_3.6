@@ -44,6 +44,7 @@ class Item extends Model
             'name' => $this->getRawOriginal('name'),
             'description' => $this->getRawOriginal('description'),
             'price' => $this->price,
+            'menu_price' => $this->menu_price,
             'discount' => $this->discount,
             'discount_type' => $this->discount_type,
             'category_id' => $this->category_id,
@@ -63,6 +64,7 @@ class Item extends Model
     protected $casts = [
         'tax' => 'float',
         'price' => 'float',
+        'menu_price' => 'float',
         'status' => 'integer',
         'discount' => 'float',
         'avg_rating' => 'float',
