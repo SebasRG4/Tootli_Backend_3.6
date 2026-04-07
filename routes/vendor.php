@@ -29,6 +29,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
         Route::group(['prefix' => 'pos', 'as' => 'pos.'], function () {
             Route::post('variant_price', 'POSController@variant_price')->name('variant_price');
             Route::group(['middleware' => ['module:pos','subscription:pos' ]], function () {
+                Route::post('direct-mode', 'POSController@setDirectMode')->name('direct-mode');
                 Route::get('/', 'POSController@index')->name('index');
                 Route::get('quick-view', 'POSController@quick_view')->name('quick-view');
                 Route::get('quick-view-cart-item', 'POSController@quick_view_card_item')->name('quick-view-cart-item');

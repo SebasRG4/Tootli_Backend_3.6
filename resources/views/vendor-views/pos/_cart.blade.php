@@ -382,6 +382,19 @@
                             <textarea name="address" id="address" class="form-control" cols="30" rows="3"
                                 placeholder="{{ translate('Ex: address') }}">{{ $old ? $old['address'] : '' }}</textarea>
                         </div>
+                        @if (session('pos_tootli_direct'))
+                            <input type="hidden" name="original_delivery_fee" id="original_delivery_fee"
+                                value="{{ $old ? ($old['original_delivery_fee'] ?? $old['delivery_fee']) : '' }}">
+                            <div class="col-md-12 mb-2">
+                                <label class="input-label"
+                                    for="customer_delivery_fee">{{ translate('messages.tootli_direct_customer_pays_delivery') }}</label>
+                                <input type="number" step="0.01" min="0" class="form-control" id="customer_delivery_fee"
+                                    value="{{ $old ? $old['delivery_fee'] : '' }}"
+                                    placeholder="{{ translate('messages.Ex:_100') }}">
+                                <small
+                                    class="text-muted">{{ translate('messages.tootli_direct_full_fee_stored_hint') }}</small>
+                            </div>
+                        @endif
                         <div class="col-12">
                             <div class="d-flex justify-content-between">
                                 <span class="text-primary">
@@ -416,4 +429,15 @@
     </div>
 </div>
 
+@if (session('pos_tootli_direct'))
+    <script>
+        $(function() {
+            $('#customer_delivery_fee').on('input change', function() {
+                var v = $(this).val();
+                $('#delivery_fee').val(v);
+                $('#delivery_fee').siblings('strong').html(v + '{{ \App\CentralLogics\Helpers::currency_symbol() }}');
+            });
+        });
+    </script>
+@endif
 <script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>

@@ -54,6 +54,7 @@ class Order extends Model
         'adjustment_status' => 'string',
         'ecartpay_gateway_fee' => 'float',
         'ecartpay_card_international' => 'boolean',
+        'tootli_direct' => 'boolean',
     ];
 
     protected $appends = ['module_type', 'order_attachment_full_url', 'order_proof_full_url'];

@@ -1364,6 +1364,7 @@ trait PlaceNewOrder
         $order_details = [];
         $discount_on_product_by = 'vendor';
         $discount_type = '';
+        $pos_tootli_direct = (bool) session('pos_tootli_direct', false);
         foreach ($carts as $c) {
             $variations = [];
             if (is_array($c)) {
@@ -1409,18 +1410,28 @@ trait PlaceNewOrder
 
                         if ($product_variations && count($product_variations)) {
                             $variation_data = Helpers::get_varient($product_variations, $c['variations']);
-                            $price = $product['price'] + $variation_data['price'];
+                            $base_unit = $pos_tootli_direct
+                                ? Helpers::item_price_for_context($product, 'direct')
+                                : (float) $product['price'];
+                            $price = $base_unit + $variation_data['price'];
                             $variations = $variation_data['variations'];
                         } else {
-                            $price = $product['price'];
+                            $price = $pos_tootli_direct
+                                ? Helpers::item_price_for_context($product, 'direct')
+                                : (float) $product['price'];
                         }
                     } else {
                         if (count(json_decode($product['variations'], true)) > 0 && count($c['variations']) > 0) {
                             $variant_data = Helpers::pos_variation_price($product, json_encode($c['variations']));
-                            $price = $variant_data['price'];
+                            $variant_price = $variant_data['price'];
+                            $price = $pos_tootli_direct
+                                ? ($variant_price - (float) $product['price'] + Helpers::item_price_for_context($product, 'direct'))
+                                : $variant_price;
                             $stock = $variant_data['stock'];
                         } else {
-                            $price = $product['price'];
+                            $price = $pos_tootli_direct
+                                ? Helpers::item_price_for_context($product, 'direct')
+                                : (float) $product['price'];
                             $stock = $product?->stock;
                         }
 

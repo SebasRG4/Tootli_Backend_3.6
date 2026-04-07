@@ -89,12 +89,21 @@
                 </div>
                 <div class="order--pos-right">
                     <div class="card">
-                        <div class="card-header bg-light border-0 m-1">
-                            <h5 class="card-title">
+                        <div class="card-header bg-light border-0 m-1 d-flex flex-wrap align-items-center justify-content-between gap-2">
+                            <h5 class="card-title mb-0">
                                 <span>
                                     {{ translate('messages.Billing Section') }}
                                 </span>
                             </h5>
+                            <form method="post" action="{{ route('vendor.pos.direct-mode') }}" class="mb-0">
+                                @csrf
+                                <input type="hidden" name="enabled" value="{{ session('pos_tootli_direct') ? '0' : '1' }}">
+                                <button type="submit"
+                                    class="btn btn-sm {{ session('pos_tootli_direct') ? 'btn--primary' : 'btn-outline-secondary' }}">
+                                    {{ translate('messages.tootli_direct_pos_toggle') }}:
+                                    {{ session('pos_tootli_direct') ? translate('messages.on') : translate('messages.off') }}
+                                </button>
+                            </form>
                         </div>
                         <div class="w-100">
                             <div class="d-flex flex-wrap flex-row p-2 add--customer-btn">
@@ -476,6 +485,10 @@
                                                     let delivery_charge =Math.round(( delivery_amount + Number.EPSILON) * 100) / 100;
                                                 document.getElementById('delivery_fee').value = delivery_charge;
                                                 $('#delivery_fee').siblings('strong').html(delivery_charge + '{{ \App\CentralLogics\Helpers::currency_symbol() }}');
+                                                var _odf = document.getElementById('original_delivery_fee');
+                                                if (_odf) { _odf.value = delivery_charge; }
+                                                var _cdf = document.getElementById('customer_delivery_fee');
+                                                if (_cdf) { _cdf.value = delivery_charge; }
 
                                                 },
                                                 error:function(){
@@ -486,6 +499,10 @@
                                                 + Number.EPSILON) * 100) / 100;
                                                 document.getElementById('delivery_fee').value = delivery_charge;
                                                 $('#delivery_fee').siblings('strong').html(delivery_charge + '{{ \App\CentralLogics\Helpers::currency_symbol() }}');
+                                                var _odf2 = document.getElementById('original_delivery_fee');
+                                                if (_odf2) { _odf2.value = delivery_charge; }
+                                                var _cdf2 = document.getElementById('customer_delivery_fee');
+                                                if (_cdf2) { _cdf2.value = delivery_charge; }
                                                 }
                                             });
                                         });

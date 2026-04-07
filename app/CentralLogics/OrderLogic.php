@@ -99,7 +99,8 @@ class OrderLogic
             $dm_commission = $comission ? ($order_amount / 100) * $comission : 0;
             $comission_amount = $order_amount - $dm_commission;
         } else {
-            $is_tootli_direct = ($order->order_type === 'direct');
+            $is_tootli_direct = ($order->order_type === 'direct')
+                || (bool) ($order->tootli_direct ?? false);
             $comission = isset($order->store->comission) == null ? \App\Models\BusinessSetting::where('key', 'admin_commission')->first()->value : $order->store->comission;
             if ($is_tootli_direct) {
                 $direct_food = BusinessSetting::where('key', 'tootli_direct_food_commission')->first();

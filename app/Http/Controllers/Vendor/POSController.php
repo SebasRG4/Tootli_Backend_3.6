@@ -73,11 +73,31 @@ class POSController extends Controller
         ]);
     }
 
+    public function setDirectMode(Request $request)
+    {
+        $on = filter_var($request->input('enabled', false), FILTER_VALIDATE_BOOLEAN);
+        session(['pos_tootli_direct' => $on]);
+        session()->forget('cart');
+        session()->forget('tax_amount');
+        session()->forget('tax_included');
+        session()->forget('address');
+
+        Toastr::success($on
+            ? translate('messages.tootli_direct_pos_enabled')
+            : translate('messages.tootli_direct_pos_disabled'));
+
+        return back();
+    }
+
     public function variant_price(Request $request)
     {
         $product = Item::find($request->id);
+        $pos_direct = (bool) session('pos_tootli_direct', false);
+        $base_app = (float) $product->price;
+        $base_unit = $pos_direct ? Helpers::item_price_for_context($product, 'direct') : $base_app;
+
         if($product->module->module_type == 'food' && $product->food_variations){
-            $price = $product->price;
+            $price = $base_unit;
             $addon_price = 0;
             if ($request['addon_id']) {
                 foreach ($request['addon_id'] as $id) {
@@ -90,7 +110,7 @@ class POSController extends Controller
                 $price_total =  $price + Helpers::food_variation_price($product_variations, $request->variations);
                 $price= $price_total - Helpers::product_discount_calculate($product, $price_total, $product->store)['discount_amount'];
             } else {
-                $price = $product->price - Helpers::product_discount_calculate($product, $product->price, $product->store)['discount_amount'];
+                $price = $base_unit - Helpers::product_discount_calculate($product, $base_unit, $product->store)['discount_amount'];
             }
         }else{
 
@@ -119,11 +139,15 @@ class POSController extends Controller
                 $count = count(json_decode($product->variations));
                 for ($i = 0; $i < $count; $i++) {
                     if (json_decode($product->variations)[$i]->type == $str) {
-                        $price = json_decode($product->variations)[$i]->price - Helpers::product_discount_calculate($product, json_decode($product->variations)[$i]->price,Helpers::get_store_data())['discount_amount'];
+                        $vp = (float) json_decode($product->variations)[$i]->price;
+                        $line = $pos_direct
+                            ? ($vp - $base_app + Helpers::item_price_for_context($product, 'direct'))
+                            : $vp;
+                        $price = $line - Helpers::product_discount_calculate($product, $line, Helpers::get_store_data())['discount_amount'];
                     }
                 }
             } else {
-                $price = $product->price - Helpers::product_discount_calculate($product, $product->price,Helpers::get_store_data())['discount_amount'];
+                $price = $base_unit - Helpers::product_discount_calculate($product, $base_unit, Helpers::get_store_data())['discount_amount'];
             }
         }
 
@@ -156,6 +180,7 @@ class POSController extends Controller
             'house' => $request->house,
             'distance' => $request->distance??0,
             'delivery_fee' => $request->delivery_fee?:0,
+            'original_delivery_fee' => $request->filled('original_delivery_fee') ? $request->original_delivery_fee : ($request->delivery_fee ?: 0),
             'longitude' => (string)$request->longitude,
             'latitude' => (string)$request->latitude,
         ];
@@ -200,6 +225,8 @@ class POSController extends Controller
     public function addToCart(Request $request)
     {
         $product = Item::find($request->id);
+        $pos_direct = (bool) session('pos_tootli_direct', false);
+        $base_app = (float) $product->price;
 
         if($product->module->module_type == 'food' && $product->food_variations){
         $data = array();
@@ -241,7 +268,8 @@ class POSController extends Controller
         $data['variations'] = $variations;
         $data['variant'] = $str;
 
-        $price = $product->price + $variation_price;
+        $unit_base = $pos_direct ? Helpers::item_price_for_context($product, 'direct') : $base_app;
+        $price = $unit_base + $variation_price;
         $data['variation_price'] = $variation_price;
 
         $data['quantity'] = $request['quantity'];
@@ -333,12 +361,15 @@ class POSController extends Controller
             $count = count(json_decode($product->variations));
             for ($i = 0; $i < $count; $i++) {
                 if (json_decode($product->variations)[$i]->type == $str) {
-                    $price = json_decode($product->variations)[$i]->price;
+                    $vp = (float) json_decode($product->variations)[$i]->price;
+                    $price = $pos_direct
+                        ? ($vp - $base_app + Helpers::item_price_for_context($product, 'direct'))
+                        : $vp;
                     $data['variations'] = json_decode($product->variations, true)[$i];
                 }
             }
         } else {
-            $price = $product->price;
+            $price = $pos_direct ? Helpers::item_price_for_context($product, 'direct') : $base_app;
         }
 
         $data['quantity'] = $request['quantity'];
@@ -515,6 +546,7 @@ class POSController extends Controller
             Toastr::error(translate('messages.cart_empty_warning'));
             return back();
         }
+        $address = null;
         if ($request->session()->has('address')) {
             if(!$request->user_id){
                 Toastr::error(translate('messages.no_customer_selected'));
@@ -522,6 +554,13 @@ class POSController extends Controller
             }
             $address = $request->session()->get('address');
         }
+
+        $tootli_pos_direct = (bool) session('pos_tootli_direct', false);
+        if ($tootli_pos_direct && (! $address || ! $request->user_id)) {
+            Toastr::error(translate('messages.tootli_direct_pos_requires_address_and_customer'));
+            return back();
+        }
+
         $distance_data = isset($address) ? $address['distance'] : 0;
 
         $store = Helpers::get_store_data();
@@ -576,6 +615,7 @@ class POSController extends Controller
         if (Order::find($order->id)) {
             $order->id = Order::latest()->first()->id + 1;
         }
+        $order->tootli_direct = $tootli_pos_direct;
         $order->payment_status = isset($address)?'unpaid':'paid';
         if($request->user_id){
 
@@ -593,8 +633,18 @@ class POSController extends Controller
         $order->store_id = $store->id;
         $order->module_id = Helpers::get_store_data()->module_id;
         $order->user_id = $request->user_id;
-        $order->delivery_charge = isset($address)?$address['delivery_fee']:0;
-        $order->original_delivery_charge = isset($address)?$address['delivery_fee']:0;
+
+        if ($tootli_pos_direct && $address) {
+            $cust = (float) ($address['delivery_fee'] ?? 0);
+            $orig = isset($address['original_delivery_fee']) && $address['original_delivery_fee'] !== '' && $address['original_delivery_fee'] !== null
+                ? (float) $address['original_delivery_fee']
+                : $cust;
+            $order->delivery_charge = $cust;
+            $order->original_delivery_charge = max($orig, $cust);
+        } else {
+            $order->delivery_charge = isset($address)?$address['delivery_fee']:0;
+            $order->original_delivery_charge = isset($address)?$address['delivery_fee']:0;
+        }
         $order->delivery_address = isset($address)?json_encode($address):null;
         $order->dm_vehicle_id = $vehicle_id;
         $order->checked = 1;
@@ -706,6 +756,7 @@ class POSController extends Controller
             session()->forget('tax_amount');
             session()->forget('tax_include');
             session()->forget('address');
+            session()->forget('pos_tootli_direct');
             session(['last_order' => $order->id]);
             if($order->order_status=='confirmed' && $order->user){
                 Helpers::send_order_notification($order);
