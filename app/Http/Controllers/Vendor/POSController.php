@@ -571,6 +571,14 @@ class POSController extends Controller
             return back();
         }
 
+        $userIdRaw = $request->input('user_id');
+        if (is_string($userIdRaw) && preg_match('/^\s*internal:(\d+)\s*$/', $userIdRaw, $m)) {
+            $request->merge([
+                'user_id' => null,
+                'internal_customer_id' => $m[1],
+            ]);
+        }
+
         $tootli_pos_direct = (bool) session('pos_tootli_direct', false);
         $has_address = $request->session()->has('address') && is_array($request->session()->get('address'))
             && count($request->session()->get('address')) > 0;

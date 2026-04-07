@@ -175,10 +175,31 @@ $("#delivery_address").on("click", function () {
     initMap();
 });
 // initMap();
-$("#customer").change(function () {
-    if ($(this).val()) {
-        $("#customer_id").val($(this).val());
+function syncPosCustomerHiddenFields($select) {
+    var v = $select.val();
+    var $user = $("#customer_id");
+    var $internal = $("#internal_customer_id");
+    if (!$user.length) {
+        return;
     }
+    if ($internal.length) {
+        $user.val("");
+        $internal.val("");
+        if (v && String(v) !== "false") {
+            if (String(v).indexOf("internal:") === 0) {
+                $internal.val(String(v).replace(/^internal:/, ""));
+            } else {
+                $user.val(v);
+            }
+        }
+    } else {
+        if (v) {
+            $user.val(v);
+        }
+    }
+}
+$("#customer").on("change", function () {
+    syncPosCustomerHiddenFields($(this));
 });
 
 $("#payment_card").on("change", function () {
