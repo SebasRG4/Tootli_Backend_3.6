@@ -55,6 +55,7 @@ class Order extends Model
         'ecartpay_gateway_fee' => 'float',
         'ecartpay_card_international' => 'boolean',
         'tootli_direct' => 'boolean',
+        'store_pos_customer_id' => 'integer',
     ];
 
     protected $appends = ['module_type', 'order_attachment_full_url', 'order_proof_full_url'];
@@ -143,6 +144,11 @@ class Order extends Model
     public function customer()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function storePosCustomer()
+    {
+        return $this->belongsTo(StorePosCustomer::class, 'store_pos_customer_id');
     }
 
     public function guest()

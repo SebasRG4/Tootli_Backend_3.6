@@ -112,6 +112,8 @@
                                     class="js-data-example-ajax form-control"></select>
                                 <button class="btn btn--primary" data-toggle="modal"
                                     data-target="#add-customer">{{ translate('messages.add_new_customer') }}</button>
+                                <button class="btn btn-outline--primary" type="button" data-toggle="modal"
+                                    data-target="#add-internal-customer">{{ translate('messages.add_internal_customer') }}</button>
                             </div>
                             @if ($store_data->sub_self_delivery == 1 || session('pos_tootli_direct'))
                                 <div class="pos--delivery-options">
@@ -204,6 +206,41 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="add-internal-customer" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ translate('messages.add_internal_customer') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('vendor.pos.internal-customer-store') }}" method="post">
+                        @csrf
+                        <div class="form-group">
+                            <label class="input-label">{{ translate('first_name') }} <span class="text-danger">*</span></label>
+                            <input type="text" name="f_name" class="form-control" required maxlength="100">
+                        </div>
+                        <div class="form-group">
+                            <label class="input-label">{{ translate('last_name') }}</label>
+                            <input type="text" name="l_name" class="form-control" maxlength="100">
+                        </div>
+                        <div class="form-group">
+                            <label class="input-label">{{ translate('phone') }} <span class="text-danger">*</span></label>
+                            <input type="text" name="phone" class="form-control" required maxlength="20">
+                        </div>
+                        <p class="small text-muted mb-0">{{ translate('messages.internal_customer_help') }}</p>
+                        <div class="btn--container justify-content-end mt-3">
+                            <button type="submit" class="btn btn--primary">{{ translate('submit') }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- End Content -->
     <div class="modal fade" id="quick-view" tabindex="-1">
         <div class="modal-dialog">
@@ -258,13 +295,24 @@
         "use strict";
         $(document).on('click', '.place-order-submit', function (event) {
             event.preventDefault();
-            let customer_id = document.getElementById('customer');
-            if(customer_id.value)
-            {
-                document.getElementById('customer_id').value = customer_id.value;
+            let sel = document.getElementById('customer');
+            let val = (sel && sel.value) ? String(sel.value) : '';
+            let userHidden = document.getElementById('customer_id');
+            let internalHidden = document.getElementById('internal_customer_id');
+            if (userHidden) {
+                userHidden.value = '';
             }
-                let form = document.getElementById('order_place');
-                form.submit();
+            if (internalHidden) {
+                internalHidden.value = '';
+            }
+            if (val && val !== 'false') {
+                if (val.indexOf('internal:') === 0 && internalHidden) {
+                    internalHidden.value = val.replace(/^internal:/, '');
+                } else if (userHidden) {
+                    userHidden.value = val;
+                }
+            }
+            document.getElementById('order_place').submit();
         });
 
 

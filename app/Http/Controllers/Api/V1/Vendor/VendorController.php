@@ -435,7 +435,8 @@ class VendorController extends Controller
             if($unpaid_payment){
                 $unpaid_pay_method = $unpaid_payment;
             }
-            if($order->payment_method == 'cash_on_delivery' || $unpaid_pay_method == 'cash_on_delivery')
+            if(in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true)
+                || in_array($unpaid_pay_method, ['cash_on_delivery', 'card_on_delivery'], true))
             {
                 $ol = OrderLogic::create_transaction($order,'store', null);
             }

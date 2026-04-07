@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Vendor;
 use App\Models\Item;
 use App\Models\User;
 use App\Models\Order;
+use App\Models\StorePosCustomer;
 use App\Models\Store;
 use App\Mail\PlaceOrder;
 use App\Models\Category;
@@ -21,6 +22,7 @@ use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class POSController extends Controller
 {
@@ -503,67 +505,129 @@ class POSController extends Controller
         return back();
     }
 
-    public function get_customers(Request $request){
-        $key = explode(' ', $request['q']);
-        $data = User::
-        where(function ($q) use ($key) {
-            foreach ($key as $value) {
-                $q->orWhere('f_name', 'like', "%{$value}%")
-                ->orWhere('l_name', 'like', "%{$value}%")
-                ->orWhere('phone', 'like', "%{$value}%");
-            }
-        })
-        ->limit(8)
-        ->get([DB::raw('id, CONCAT(f_name, " ", l_name, " (", phone ,")") as text')]);
+    public function get_customers(Request $request)
+    {
+        $store = Helpers::get_store_data();
+        $key = array_values(array_filter(explode(' ', trim((string) $request->input('q', '')))));
 
-        $data[]=(object)['id'=>false, 'text'=>translate('messages.walk_in_customer')];
+        $userQuery = User::query();
+        if (count($key) > 0) {
+            $userQuery->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->orWhere(function ($qq) use ($value) {
+                        $qq->where('f_name', 'like', "%{$value}%")
+                            ->orWhere('l_name', 'like', "%{$value}%")
+                            ->orWhere('phone', 'like', "%{$value}%");
+                    });
+                }
+            });
+        }
+        $users = $userQuery->limit(8)->get([DB::raw('id, CONCAT(f_name, " ", l_name, " (", phone ,")") as text')]);
 
-        $reversed = $data->toArray();
+        $data = collect();
+        foreach ($users as $row) {
+            $data->push((object) ['id' => $row->id, 'text' => $row->text]);
+        }
 
-        $data = array_reverse($reversed);
+        $internalsQuery = StorePosCustomer::where('store_id', $store->id)->latest();
+        if (count($key) > 0) {
+            $internalsQuery->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->orWhere(function ($qq) use ($value) {
+                        $qq->where('f_name', 'like', "%{$value}%")
+                            ->orWhere('l_name', 'like', "%{$value}%")
+                            ->orWhere('phone', 'like', "%{$value}%");
+                    });
+                }
+            });
+        }
+        foreach ($internalsQuery->limit(8)->get() as $ic) {
+            $name = trim($ic->f_name.' '.($ic->l_name ?? ''));
+            $data->push((object) [
+                'id' => 'internal:'.$ic->id,
+                'text' => $name.' ('.$ic->phone.') — '.translate('messages.store_internal_customer'),
+            ]);
+        }
 
+        $data->push((object) ['id' => false, 'text' => translate('messages.walk_in_customer')]);
 
-        return response()->json($data);
+        return response()->json($data->reverse()->values()->all());
     }
 
     public function place_order(Request $request)
     {
-        if(!$request->type){
+        if (! $request->type) {
             Toastr::error(translate('No payment method selected'));
             return back();
         }
 
-        if($request->session()->has('cart'))
-        {
-            if(count($request->session()->get('cart')) < 1)
-            {
+        if ($request->session()->has('cart')) {
+            if (count($request->session()->get('cart')) < 1) {
                 Toastr::error(translate('messages.cart_empty_warning'));
                 return back();
             }
-        }
-        else
-        {
+        } else {
             Toastr::error(translate('messages.cart_empty_warning'));
             return back();
         }
+
+        $tootli_pos_direct = (bool) session('pos_tootli_direct', false);
+        $has_address = $request->session()->has('address') && is_array($request->session()->get('address'))
+            && count($request->session()->get('address')) > 0;
+
+        $allowed_types = $has_address
+            ? ($tootli_pos_direct
+                ? ['cash_on_delivery', 'card_on_delivery', 'paid_at_restaurant']
+                : ['cash_on_delivery'])
+            : ['cash', 'card'];
+
+        if (! in_array($request->type, $allowed_types, true)) {
+            Toastr::error(translate('messages.invalid_payment_method'));
+            return back();
+        }
+
         $address = null;
-        if ($request->session()->has('address')) {
-            if(!$request->user_id){
+        if ($has_address) {
+            if (! $request->user_id && ! $request->internal_customer_id) {
                 Toastr::error(translate('messages.no_customer_selected'));
                 return back();
             }
             $address = $request->session()->get('address');
         }
 
-        $tootli_pos_direct = (bool) session('pos_tootli_direct', false);
-        if ($tootli_pos_direct && (! $address || ! $request->user_id)) {
+        if ($tootli_pos_direct && (! $address || (! $request->user_id && ! $request->internal_customer_id))) {
             Toastr::error(translate('messages.tootli_direct_pos_requires_address_and_customer'));
+            return back();
+        }
+
+        if ($request->filled('user_id') && $request->filled('internal_customer_id')) {
+            Toastr::error(translate('messages.invalid_customer'));
             return back();
         }
 
         $distance_data = isset($address) ? $address['distance'] : 0;
 
         $store = Helpers::get_store_data();
+
+        $internal_customer = null;
+        if ($request->filled('internal_customer_id')) {
+            $internal_customer = StorePosCustomer::where('store_id', $store->id)
+                ->whereKey($request->internal_customer_id)
+                ->first();
+            if (! $internal_customer) {
+                Toastr::error(translate('messages.invalid_customer'));
+                return back();
+            }
+        }
+
+        if ($internal_customer && is_array($address)) {
+            if (empty(trim((string) ($address['contact_person_name'] ?? '')))) {
+                $address['contact_person_name'] = trim($internal_customer->f_name.' '.($internal_customer->l_name ?? ''));
+            }
+            if (empty(trim((string) ($address['contact_person_number'] ?? '')))) {
+                $address['contact_person_number'] = $internal_customer->phone;
+            }
+        }
 
         $self_delivery_status = $store->self_delivery_system;
         $store_sub=$store?->store_sub;
@@ -616,8 +680,12 @@ class POSController extends Controller
             $order->id = Order::latest()->first()->id + 1;
         }
         $order->tootli_direct = $tootli_pos_direct;
-        $order->payment_status = isset($address)?'unpaid':'paid';
-        if($request->user_id){
+        if (isset($address)) {
+            $order->payment_status = $request->type === 'paid_at_restaurant' ? 'paid' : 'unpaid';
+        } else {
+            $order->payment_status = 'paid';
+        }
+        if ($request->user_id || $internal_customer) {
 
             $order->order_status = isset($address)?'confirmed':'delivered';
             $order->order_type = isset($address)?'delivery':'take_away';
@@ -632,7 +700,15 @@ class POSController extends Controller
         $order->payment_method = $request->type;
         $order->store_id = $store->id;
         $order->module_id = Helpers::get_store_data()->module_id;
-        $order->user_id = $request->user_id;
+        if ($internal_customer) {
+            $order->user_id = null;
+            $order->is_guest = true;
+            $order->store_pos_customer_id = $internal_customer->id;
+        } else {
+            $order->user_id = $request->user_id;
+            $order->is_guest = false;
+            $order->store_pos_customer_id = null;
+        }
 
         if ($tootli_pos_direct && $address) {
             $cust = (float) ($address['delivery_fee'] ?? 0);
@@ -706,12 +782,11 @@ class POSController extends Controller
             $order->tax_percentage = 0;
             $order->total_tax_amount = $tax_amount;
             $order->order_amount = $total_price + $tax_amount + $order->delivery_charge;
-            if($request->type == 'card'){
-
+            if ($request->type == 'card') {
                 $order->adjusment = 0;
-            }else{
-                $order->adjusment = $request->amount - ($total_price + $tax_amount + $order->delivery_charge);
-
+            } else {
+                $paid_in = (float) ($request->amount ?? 0);
+                $order->adjusment = $paid_in - ($total_price + $tax_amount + $order->delivery_charge);
             }
             $order->payment_method = $request->type;
             $order->save();
@@ -812,6 +887,24 @@ class POSController extends Controller
             info($ex->getMessage());
         }
         Toastr::success(translate('customer_added_successfully'));
+        return back();
+    }
+
+    public function internal_customer_store(Request $request)
+    {
+        $store = Helpers::get_store_data();
+        $request->validate([
+            'f_name' => 'required|string|max:100',
+            'l_name' => 'nullable|string|max:100',
+            'phone' => ['required', 'string', 'max:20', Rule::unique('store_pos_customers', 'phone')->where('store_id', $store->id)],
+        ]);
+        StorePosCustomer::create([
+            'store_id' => $store->id,
+            'f_name' => $request->f_name,
+            'l_name' => $request->l_name ?? '',
+            'phone' => $request->phone,
+        ]);
+        Toastr::success(translate('messages.internal_customer_added_successfully'));
         return back();
     }
 

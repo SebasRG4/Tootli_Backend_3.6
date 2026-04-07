@@ -2034,9 +2034,9 @@ class Helpers
         try {
 
             if (
-                (in_array($order->payment_method, ['cash_on_delivery', 'offline_payment'])
+                (in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery', 'offline_payment'])
                     && $order->order_status == 'pending') ||
-                (!in_array($order->payment_method, ['cash_on_delivery', 'offline_payment'])
+                (!in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery', 'offline_payment'])
                     && $order->order_status == 'confirmed')
             ) {
 
@@ -2199,7 +2199,7 @@ class Helpers
                 // self::send_push_notif_to_topic($data, 'admin_message', 'order_request');
             }
 
-            if ($order->order_type == 'delivery' && !$order->scheduled && $order->order_status == 'pending' && $order->payment_method == 'cash_on_delivery' && config('order_confirmation_model') == 'store') {
+            if ($order->order_type == 'delivery' && !$order->scheduled && $order->order_status == 'pending' && in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true) && config('order_confirmation_model') == 'store') {
                 $data = [
                     'title' => translate('Order_Notification'),
                     'description' => translate('New order alert, confirm to proceed'),
@@ -2228,7 +2228,7 @@ class Helpers
                 }
             }
 
-            if (!$order->scheduled && (($order->order_type == 'take_away' && $order->order_status == 'pending') || ($order->payment_method != 'cash_on_delivery' && $order->order_status == 'confirmed'))) {
+            if (!$order->scheduled && (($order->order_type == 'take_away' && $order->order_status == 'pending') || (!in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true) && $order->order_status == 'confirmed'))) {
                 $data = [
                     'title' => translate('Order_Notification'),
                     'description' => translate('New order alert, confirm to proceed'),
@@ -2254,7 +2254,7 @@ class Helpers
                 }
             }
 
-            if ($order->order_status == 'confirmed' && $order->order_type != 'take_away' && config('order_confirmation_model') == 'deliveryman' && $order->payment_method == 'cash_on_delivery') {
+            if ($order->order_status == 'confirmed' && $order->order_type != 'take_away' && config('order_confirmation_model') == 'deliveryman' && in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true)) {
                 if ($order->store->sub_self_delivery && $push_notification_status) {
                     $data = [
                         'title' => translate('Order_Notification'),
@@ -2298,7 +2298,7 @@ class Helpers
                 }
             }
 
-            if ($order->order_type == 'delivery' && !$order->scheduled && $order->order_status == 'confirmed' && ($order->payment_method != 'cash_on_delivery' || config('order_confirmation_model') == 'store')) {
+            if ($order->order_type == 'delivery' && !$order->scheduled && $order->order_status == 'confirmed' && (!in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true) || config('order_confirmation_model') == 'store')) {
                 $data = [
                     'title' => translate('Order_Notification'),
                     'description' => translate('New order alert, confirm to proceed'),
@@ -2339,7 +2339,7 @@ class Helpers
             }
 
             try {
-                if ($order->order_status == 'confirmed' && $order->payment_method != 'cash_on_delivery' && config('mail.status') && Helpers::get_mail_status('place_order_mail_status_user') == '1' && $order->is_guest == 0 && Helpers::getNotificationStatusData('customer', 'customer_order_notification', 'mail_status')) {
+                if ($order->order_status == 'confirmed' && !in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true) && config('mail.status') && Helpers::get_mail_status('place_order_mail_status_user') == '1' && $order->is_guest == 0 && Helpers::getNotificationStatusData('customer', 'customer_order_notification', 'mail_status')) {
                     Mail::to($order->customer->email)->send(new PlaceOrder($order->id));
                 }
                 $order_verification_mail_status = Helpers::get_mail_status('order_verification_mail_status_user');

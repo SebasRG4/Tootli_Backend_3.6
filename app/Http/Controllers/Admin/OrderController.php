@@ -557,7 +557,8 @@ class OrderController extends Controller
             return back();
         }
 
-        if ($request->order_status == 'delivered' && $order['transaction_reference'] == null && $order['payment_method'] != 'cash_on_delivery') {
+        if ($request->order_status == 'delivered' && $order['transaction_reference'] == null
+            && ! in_array($order['payment_method'], ['cash_on_delivery', 'card_on_delivery', 'paid_at_restaurant'], true)) {
             Toastr::warning(translate('messages.add_your_paymen_ref_first'));
             return back();
         }
@@ -568,7 +569,8 @@ class OrderController extends Controller
                 if ($unpaid_payment) {
                     $unpaid_pay_method = $unpaid_payment;
                 }
-                if ($order->payment_method == "cash_on_delivery" || $unpaid_pay_method == 'cash_on_delivery') {
+                if (in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true)
+                    || in_array($unpaid_pay_method, ['cash_on_delivery', 'card_on_delivery'], true)) {
                     if ($order->order_type == 'take_away') {
                         $ol = OrderLogic::create_transaction($order, 'store', null);
                     } else if ($order->delivery_man_id) {

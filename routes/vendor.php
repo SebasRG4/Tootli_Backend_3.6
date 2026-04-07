@@ -45,6 +45,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
                 Route::get('customers', 'POSController@get_customers')->name('customers');
                 Route::post('order', 'POSController@place_order')->name('order');
                 Route::post('customer-store', 'POSController@customer_store')->name('customer-store');
+                Route::post('internal-customer-store', 'POSController@internal_customer_store')->name('internal-customer-store');
                 Route::get('data', 'POSController@extra_charge')->name('extra_charge');
             });
         });

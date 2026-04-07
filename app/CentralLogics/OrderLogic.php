@@ -247,16 +247,32 @@ class OrderLogic
                 if ($unpaid_payment) {
                     $unpaid_pay_method = $unpaid_payment;
                 }
-                if ($received_by == 'admin') {
-                    $adminWallet->digital_received = $adminWallet->digital_received + ($order->order_amount - $order->partially_paid_amount);
-                } else if ($received_by == 'store' && $type != 'parcel' && ($order->payment_method == "cash_on_delivery" || $unpaid_pay_method == 'cash_on_delivery')) {
-                    $store_over_flow = true;
-                    $vendorWallet->collected_cash = $vendorWallet->collected_cash + ($order->order_amount - $order->partially_paid_amount);
-                } else if ($received_by == false) {
-                    $adminWallet->manual_received = $adminWallet->manual_received + ($order->order_amount - $order->partially_paid_amount);
-                } else if ($received_by == 'deliveryman' && $order->delivery_man && $order->delivery_man->type == 'zone_wise') {
-                    $dmWallet->collected_cash = $dmWallet->collected_cash + ($order->order_amount - $order->partially_paid_amount);
-                    $dm_over_flow = true;
+                $is_dm_collect = in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true)
+                    || in_array($unpaid_pay_method, ['cash_on_delivery', 'card_on_delivery'], true);
+                // Tootli Direct: comida cobrada en tienda; no registrar cobro digital/efectivo del cliente vía app.
+                $skip_customer_collection_ledgers = $type != 'parcel'
+                    && $order->payment_method === 'paid_at_restaurant'
+                    && (bool) ($order->tootli_direct ?? false);
+
+                if (! $skip_customer_collection_ledgers) {
+                    if ($received_by == 'admin') {
+                        $adminWallet->digital_received = $adminWallet->digital_received + ($order->order_amount - $order->partially_paid_amount);
+                    } else if ($received_by == 'store' && $type != 'parcel' && $is_dm_collect) {
+                        $store_over_flow = true;
+                        $vendorWallet->collected_cash = $vendorWallet->collected_cash + ($order->order_amount - $order->partially_paid_amount);
+                    } else if ($received_by == false) {
+                        $adminWallet->manual_received = $adminWallet->manual_received + ($order->order_amount - $order->partially_paid_amount);
+                    } else if ($received_by == 'deliveryman' && $order->delivery_man && $order->delivery_man->type == 'zone_wise') {
+                        $dmWallet->collected_cash = $dmWallet->collected_cash + ($order->order_amount - $order->partially_paid_amount);
+                        $dm_over_flow = true;
+                    }
+
+                    if (isset($store_over_flow)) {
+                        self::create_account_transaction_for_collect_cash(old_collected_cash: $vendorWallet->collected_cash, from_type: 'store', from_id: $order->store->vendor->id, amount: $order->order_amount - $order->partially_paid_amount, order_id: $order->id);
+                    }
+                    if (isset($dm_over_flow)) {
+                        self::create_account_transaction_for_collect_cash(old_collected_cash: $dmWallet->collected_cash, from_type: 'deliveryman', from_id: $order->delivery_man_id, amount: $order->order_amount - $order->partially_paid_amount, order_id: $order->id);
+                    }
                 }
 
                 $adminWallet->save();
@@ -265,14 +281,6 @@ class OrderLogic
                 }
                 if (isset($dmWallet)) {
                     $dmWallet->save();
-                }
-
-
-                if (isset($store_over_flow)) {
-                    self::create_account_transaction_for_collect_cash(old_collected_cash: $vendorWallet->collected_cash, from_type: 'store', from_id: $order->store->vendor->id, amount: $order->order_amount - $order->partially_paid_amount, order_id: $order->id);
-                }
-                if (isset($dm_over_flow)) {
-                    self::create_account_transaction_for_collect_cash(old_collected_cash: $dmWallet->collected_cash, from_type: 'deliveryman', from_id: $order->delivery_man_id, amount: $order->order_amount - $order->partially_paid_amount, order_id: $order->id);
                 }
 
                 self::update_unpaid_order_payment(order_id: $order->id, payment_method: $order->payment_method);
@@ -495,7 +503,7 @@ class OrderLogic
         $adminWallet = AdminWallet::firstOrNew(
             ['admin_id' => Admin::where('role_id', 1)->first()->id]
         );
-        if ($order->payment_method == 'cash_on_delivery') {
+        if (in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true)) {
             return false;
         }
         if (($order->payment_status == "paid")) {
@@ -547,13 +555,13 @@ class OrderLogic
         }
         try {
             DB::beginTransaction();
-            $partially_paid = OrderPayment::where('payment_method', 'cash_on_delivery')->where('order_id', $order->id)->exists() ?? false;
+            $partially_paid = OrderPayment::whereIn('payment_method', ['cash_on_delivery', 'card_on_delivery'])->where('order_id', $order->id)->exists() ?? false;
 
             if ($partially_paid) {
                 $refund_amount = $refund_amount - $order->partially_paid_amount;
             }
             if ($received_by == 'admin') {
-                if ($order->delivery_man_id && $order->payment_method != "cash_on_delivery") {
+                if ($order->delivery_man_id && ! in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true)) {
                     $adminWallet->digital_received = $adminWallet->digital_received - $refund_amount;
                 } else {
                     $adminWallet->manual_received = $adminWallet->manual_received - $refund_amount;

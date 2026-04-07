@@ -109,6 +109,7 @@
 <form action="{{ route('vendor.pos.order') }}" id='order_place' method="post">
     @csrf
     <input type="hidden" name="user_id" id="customer_id">
+    <input type="hidden" name="internal_customer_id" id="internal_customer_id" value="">
     <div class="box p-3">
         <dl class="row">
 
@@ -157,12 +158,34 @@
                 @if ($add)
                     @php($cod = \App\CentralLogics\Helpers::get_business_settings('cash_on_delivery'))
                     @if ($cod['status'])
-                        <li>
-                            <label>
-                                <input type="radio" name="type" value="cash_on_delivery" hidden checked>
-                                <span>{{ translate('Cash On Delivery') }}</span>
-                            </label>
-                        </li>
+                        @if (session('pos_tootli_direct'))
+                            {{-- TODO(card_on_delivery): cobro con terminal del repartidor; solo opción visual para pruebas --}}
+                            <li>
+                                <label>
+                                    <input type="radio" name="type" value="cash_on_delivery" hidden checked>
+                                    <span>{{ translate('messages.pos_payment_cash_on_delivery') }}</span>
+                                </label>
+                            </li>
+                            <li>
+                                <label>
+                                    <input type="radio" name="type" value="card_on_delivery" hidden>
+                                    <span>{{ translate('messages.pos_payment_card_on_delivery') }}</span>
+                                </label>
+                            </li>
+                            <li>
+                                <label>
+                                    <input type="radio" name="type" value="paid_at_restaurant" hidden>
+                                    <span>{{ translate('messages.pos_payment_paid_at_restaurant') }}</span>
+                                </label>
+                            </li>
+                        @else
+                            <li>
+                                <label>
+                                    <input type="radio" name="type" value="cash_on_delivery" hidden checked>
+                                    <span>{{ translate('Cash On Delivery') }}</span>
+                                </label>
+                            </li>
+                        @endif
                     @endif
                 @else
                     <li id="payment_cash">

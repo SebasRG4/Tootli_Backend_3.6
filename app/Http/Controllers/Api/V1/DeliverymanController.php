@@ -639,7 +639,7 @@ class DeliverymanController extends Controller
         if ($request->status == 'delivered') {
             $unpaid_digital_payment = OrderPayment::where('order_id', $order->id)
                 ->where('payment_status', 'unpaid')
-                ->where('payment_method', '!=', 'cash_on_delivery')
+                ->whereNotIn('payment_method', ['cash_on_delivery', 'card_on_delivery'])
                 ->exists();
 
             if ($unpaid_digital_payment) {
@@ -653,10 +653,12 @@ class DeliverymanController extends Controller
             if ($order->transaction == null) {
                 $unpaid_payment = OrderPayment::where('payment_status', 'unpaid')->where('order_id', $order->id)->first();
                 $pay_method = 'digital_payment';
-                if ($unpaid_payment && $unpaid_payment->payment_method == 'cash_on_delivery') {
-                    $pay_method = 'cash_on_delivery';
+                if ($unpaid_payment && in_array($unpaid_payment->payment_method, ['cash_on_delivery', 'card_on_delivery'], true)) {
+                    $pay_method = $unpaid_payment->payment_method;
                 }
-                $reveived_by = ($order->payment_method == 'cash_on_delivery' || $pay_method == 'cash_on_delivery') ? ($dm->type != 'zone_wise' ? 'store' : 'deliveryman') : 'admin';
+                $is_cod_like = in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true)
+                    || in_array($pay_method, ['cash_on_delivery', 'card_on_delivery'], true);
+                $reveived_by = $is_cod_like ? ($dm->type != 'zone_wise' ? 'store' : 'deliveryman') : 'admin';
 
                 if (OrderLogic::create_transaction($order, $reveived_by, null)) {
                     $order->payment_status = 'paid';
