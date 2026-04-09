@@ -4,6 +4,7 @@
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/vendor-pos-minimal.css') }}?v=1.0">
 @endpush
 
 @section('content')
@@ -43,10 +44,9 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="input-group">
-                                            <select name="category" id="category" class="form-control js-select2-custom set-filter"
+                                            <select name="category" id="category" class="form-control js-select2-custom"
                                                 title="{{ translate('messages.select_category') }}"
-                                                    data-url="{{url()->full()}}"
-                                                    data-filter="category_id">
+                                                data-pos-ajax-category="1">
                                                 <option value="">{{ translate('messages.all_categories') }}</option>
                                                 @foreach ($categories as $item)
                                                     <option value="{{ $item->id }}"
@@ -60,30 +60,7 @@
                             </div>
                         </div>
                         <div class="card-body d-flex flex-column" id="items">
-                            <div class="row g-3 mb-auto">
-                                @foreach ($products as $product)
-                                    <div class="order--item-box item-box">
-                                        @include('vendor-views.pos._single_product', [
-                                            'product' => $product,
-                                            'store' => $store_data,
-                                        ])
-                                    </div>
-                                @endforeach
-                            </div>
-                            @if (count($products) >= 13)
-                                <hr>
-                            @endif
-                            <div class="page-area mt-2">
-                                {!! $products->withQueryString()->links() !!}
-                            </div>
-                            @if (count($products) === 0)
-                                <div class="search--no-found">
-                                    <img src="{{ asset('assets/admin/img/search-icon.png') }}" alt="img">
-                                    <p>
-                                        {{ translate('messages.no_products_on_store_pos_search') }}
-                                    </p>
-                                </div>
-                            @endif
+                            @include('vendor-views.pos._products_grid', ['products' => $products, 'store_data' => $store_data])
                         </div>
                     </div>
                 </div>
@@ -513,12 +490,92 @@
         });
 
 
-        $('#search-form').on('submit', function(e) {
+        const posProductsGridUrl = @json(route('vendor.pos.products-grid'));
+
+        function posBindImageFallback(container) {
+            $(container).find('.onerror-image').each(function () {
+                const $img = $(this);
+                const def = $img.data('onerror-image');
+                $img.off('error.pos').on('error.pos', function () {
+                    if (def) {
+                        $(this).attr('src', def);
+                    }
+                });
+                const src = $img.attr('src');
+                if (src && src.endsWith('/')) {
+                    $img.attr('src', def);
+                }
+            });
+        }
+
+        function loadPosProducts(page) {
+            page = page || 1;
+            const keyword = ($('#datatableSearch').val() || '').trim();
+            const categoryId = $('#category').val() || '';
+            $('#loading').show();
+            $.get(posProductsGridUrl, {
+                keyword: keyword,
+                category_id: categoryId,
+                page: page,
+            }).done(function (res) {
+                if (res.success && res.html) {
+                    $('#items').html(res.html);
+                    posBindImageFallback('#items');
+                    try {
+                        const u = new URL(window.location.href);
+                        if (keyword) {
+                            u.searchParams.set('keyword', keyword);
+                        } else {
+                            u.searchParams.delete('keyword');
+                        }
+                        if (categoryId) {
+                            u.searchParams.set('category_id', categoryId);
+                        } else {
+                            u.searchParams.delete('category_id');
+                        }
+                        if (page > 1) {
+                            u.searchParams.set('page', String(page));
+                        } else {
+                            u.searchParams.delete('page');
+                        }
+                        history.replaceState({}, '', u);
+                    } catch (e) { /* ignore */ }
+                }
+            }).always(function () {
+                $('#loading').hide();
+            });
+        }
+
+        $('#search-form').on('submit', function (e) {
             e.preventDefault();
-            let keyword = $('#datatableSearch').val();
-            let nurl = new URL('{!! url()->full() !!}');
-            nurl.searchParams.set('keyword', keyword);
-            location.href = nurl;
+            loadPosProducts(1);
+        });
+
+        $('#category').on('change', function () {
+            loadPosProducts(1);
+        });
+
+        let posSearchDebounce;
+        $('#datatableSearch').on('input', function () {
+            clearTimeout(posSearchDebounce);
+            posSearchDebounce = setTimeout(function () {
+                loadPosProducts(1);
+            }, 450);
+        });
+
+        $(document).on('click', '#items .page-area a[href]', function (e) {
+            const href = $(this).attr('href');
+            if (!href || href === '#' || href.indexOf('javascript:') === 0) {
+                return;
+            }
+            e.preventDefault();
+            let p = 1;
+            try {
+                p = parseInt(new URL(href, window.location.origin).searchParams.get('page') || '1', 10) || 1;
+            } catch (err) {
+                p = 1;
+            }
+            loadPosProducts(p);
         });
 
 

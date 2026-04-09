@@ -1,0 +1,77 @@
+/* POS vendor — refuerzo minimalista (no sustituye el tema; lo suaviza) */
+.section-content.padding-y-sm.bg-default {
+  background: #f4f6f8 !important;
+  padding-top: 1rem !important;
+  padding-bottom: 1.5rem !important;
+}
+
+.order--pos-left .card,
+.order--pos-right .card {
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.order--pos-left .card-header,
+.order--pos-right .card-header {
+  background: #fff !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+  padding: 0.85rem 1.1rem;
+}
+
+.order--pos-left .card-header .card-title,
+.order--pos-right .card-header .card-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  color: #1a1d21;
+}
+
+.order--pos-left .card-body {
+  background: #fafbfc;
+}
+
+.order--item-box .product-card.card {
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: none;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.order--item-box .product-card.card:hover {
+  border-color: rgba(0, 169, 157, 0.35);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.order--pos-right .btn--primary,
+.order--pos-right .btn.btn--primary {
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.order--pos-right .add--customer-btn .form-control,
+.order--pos-right .js-data-example-ajax + .select2-container .select2-selection--single {
+  border-radius: 8px;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.pos--delivery-options {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.pos--delivery-options .card-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Iconos alineados con texto en cabeceras POS */
+.order--pos-left .card-header-icon .tio-incognito,
+.order--pos-right .card-header-icon i {
+  vertical-align: -0.15em;
+  opacity: 0.85;
+}

@@ -24,30 +24,67 @@ use Illuminate\Support\Facades\Validator;
 class POSController extends Controller
 {
     use PlaceNewOrder;
+
+    /**
+     * Consulta base de productos para el POS (categoría + palabras en nombre).
+     */
+    protected function posProductsBaseQuery(Request $request)
+    {
+        $category = (int) $request->input('category_id', 0);
+        $keywordRaw = $request->input('keyword');
+        $keyword = ($keywordRaw !== null && $keywordRaw !== '') ? $keywordRaw : false;
+        $key = explode(' ', $keyword ?: '');
+
+        return Item::active()
+            ->when($category, function ($query) use ($category) {
+                $query->whereHas('category', function ($q) use ($category) {
+                    return $q->whereId($category)->orWhere('parent_id', $category);
+                });
+            })
+            ->when($keyword, function ($query) use ($key) {
+                return $query->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('name', 'like', "%{$value}%");
+                    }
+                });
+            })
+            ->latest();
+    }
+
     public function index(Request $request)
     {
-        // dd(session('cart'));
-        $category = $request->query('category_id', 0);
-        // $sub_category = $request->query('sub_category', 0);
+        $category = (int) $request->input('category_id', 0);
         $categories = Category::active()->module(Helpers::get_store_data()->module_id)->get();
-        $keyword = $request->query('keyword', false);
+        $keywordRaw = $request->input('keyword');
+        $keyword = ($keywordRaw !== null && $keywordRaw !== '') ? $keywordRaw : false;
         $store = Store::find(Helpers::get_store_data()->module_id);
-        $key = explode(' ', $keyword);
-        $products = Item::active()
-        ->when($category, function($query)use($category){
-            $query->whereHas('category',function($q)use($category){
-                return $q->whereId($category)->orWhere('parent_id', $category);
-            });
-        })
-        ->when($keyword, function($query)use($key){
-            return $query->where(function ($q) use ($key) {
-                foreach ($key as $value) {
-                    $q->orWhere('name', 'like', "%{$value}%");
-                }
-            });
-        })
-        ->latest()->paginate(10);
-        return view('vendor-views.pos.index', compact('categories', 'products','store','category', 'keyword'));
+        $products = $this->posProductsBaseQuery($request)->paginate(10)->withQueryString();
+
+        return view('vendor-views.pos.index', compact('categories', 'products', 'store', 'category', 'keyword'));
+    }
+
+    /**
+     * Fragmento HTML del grid de productos POS (sin recargar la página).
+     */
+    public function products_grid(Request $request)
+    {
+        $store_data = Helpers::get_store_data();
+        $append = [];
+        if ($request->filled('keyword')) {
+            $append['keyword'] = $request->input('keyword');
+        }
+        if ((int) $request->input('category_id', 0) > 0) {
+            $append['category_id'] = (int) $request->input('category_id');
+        }
+
+        $products = $this->posProductsBaseQuery($request)
+            ->paginate(10)
+            ->withPath(route('vendor.pos.products-grid', [], false))
+            ->appends($append);
+
+        $html = view('vendor-views.pos._products_grid', compact('products', 'store_data'))->render();
+
+        return response()->json(['success' => true, 'html' => $html]);
     }
 
     public function quick_view(Request $request)

@@ -14,7 +14,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&amp;display=swap" rel="stylesheet">
     <!-- CSS Implementing Plugins -->
     <link rel="stylesheet" href="{{asset('assets/admin/css/vendor.min.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/admin/vendor/icon-set/style.css')}}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/tio-bootstrap-bridge.css') }}?v=1.1">
     <link rel="stylesheet" href="{{asset('assets/admin/css/custom.css')}}">
     <!-- CSS Front Template -->
     <link rel="stylesheet" href="{{asset('assets/admin/css/bootstrap.min.css')}}">
