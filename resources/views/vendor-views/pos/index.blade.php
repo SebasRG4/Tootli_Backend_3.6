@@ -197,23 +197,7 @@
         "use strict";
         $(document).on('click', '.place-order-submit', function (event) {
             event.preventDefault();
-            let sel = document.getElementById('customer');
-            let val = (sel && sel.value) ? String(sel.value) : '';
-            let userHidden = document.getElementById('customer_id');
-            let internalHidden = document.getElementById('internal_customer_id');
-            if (userHidden) {
-                userHidden.value = '';
-            }
-            if (internalHidden) {
-                internalHidden.value = '';
-            }
-            if (val && val !== 'false') {
-                if (val.indexOf('internal:') === 0 && internalHidden) {
-                    internalHidden.value = val.replace(/^internal:/, '');
-                } else if (userHidden) {
-                    userHidden.value = val;
-                }
-            }
+            syncPosCustomerHiddenFields($('#customer'), null);
             document.getElementById('order_place').submit();
         });
 
@@ -838,7 +822,7 @@
                 _token: '<?php echo e(csrf_token()); ?>'
             }, function(data) {
                 $('#cart').empty().html(data);
-                syncPosCustomerHiddenFields($('#customer'));
+                syncPosCustomerHiddenFields($('#customer'), null);
                 if (window.__posPendingDeliveryForm) {
                     posApplyDeliveryFormValues(window.__posPendingDeliveryForm);
                     window.__posPendingDeliveryForm = null;
@@ -877,7 +861,17 @@
         };
 
         function posCurrentInternalCustomerId() {
-            var v = $('#customer').val();
+            var $c = $('#customer');
+            var v = null;
+            if ($c.length && $c.data('select2')) {
+                var d = $c.select2('data');
+                if (d && d[0] && d[0].id !== undefined && d[0].id !== null && d[0].id !== '') {
+                    v = d[0].id;
+                }
+            }
+            if (v == null) {
+                v = $c.val();
+            }
             if (v && String(v).indexOf('internal:') === 0) {
                 return String(v).replace(/^internal:/, '');
             }
@@ -885,7 +879,12 @@
             return h ? String(h) : '';
         }
 
+        $('#delivery_address').on('click', function () {
+            syncPosCustomerHiddenFields($('#customer'), null);
+        });
+
         $('#paymentModal').on('shown.bs.modal', function () {
+            syncPosCustomerHiddenFields($('#customer'), null);
             var iid = posCurrentInternalCustomerId();
             if (!iid) {
                 return;

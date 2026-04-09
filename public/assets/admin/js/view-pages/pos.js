@@ -175,13 +175,32 @@ $("#delivery_address").on("click", function () {
     initMap();
 });
 // initMap();
-function syncPosCustomerHiddenFields($select) {
-    var v = $select.val();
+function posCustomerSelectRawValue($select, select2Event) {
+    if (
+        select2Event &&
+        select2Event.params &&
+        select2Event.params.data &&
+        select2Event.params.data.id !== undefined &&
+        select2Event.params.data.id !== null
+    ) {
+        return select2Event.params.data.id;
+    }
+    if ($select && $select.length && $select.data("select2")) {
+        var d = $select.select2("data");
+        if (d && d[0] && d[0].id !== undefined && d[0].id !== null && d[0].id !== "") {
+            return d[0].id;
+        }
+    }
+    return $select.val();
+}
+
+function syncPosCustomerHiddenFields($select, select2Event) {
+    var v = posCustomerSelectRawValue($select || $("#customer"), select2Event || null);
     var $user = $("#customer_id");
     var $internal = $("#internal_customer_id");
     var $deliveryInternal = $("#delivery_internal_customer_id");
     if (!$user.length) {
-        return;
+        return v;
     }
     if ($internal.length) {
         $user.val("");
@@ -189,7 +208,7 @@ function syncPosCustomerHiddenFields($select) {
         if ($deliveryInternal.length) {
             $deliveryInternal.val("");
         }
-        if (v && String(v) !== "false") {
+        if (v !== undefined && v !== null && String(v) !== "" && String(v) !== "false") {
             if (String(v).indexOf("internal:") === 0) {
                 var iid = String(v).replace(/^internal:/, "");
                 $internal.val(iid);
@@ -205,19 +224,23 @@ function syncPosCustomerHiddenFields($select) {
             $user.val(v);
         }
     }
+    return v;
 }
 var posCustomerDeliveryLoadTimer = null;
-function schedulePosCustomerDeliveryLoad($select) {
+function schedulePosCustomerDeliveryLoad($select, select2Event) {
     clearTimeout(posCustomerDeliveryLoadTimer);
     posCustomerDeliveryLoadTimer = setTimeout(function () {
-        syncPosCustomerHiddenFields($select);
+        var raw = syncPosCustomerHiddenFields($select, select2Event);
         if (typeof window.posOnCustomerChanged === "function") {
-            window.posOnCustomerChanged($select.val());
+            window.posOnCustomerChanged(raw);
         }
-    }, 30);
+    }, 15);
 }
-$("#customer").on("change select2:select", function () {
-    schedulePosCustomerDeliveryLoad($(this));
+$("#customer").on("select2:select", function (e) {
+    schedulePosCustomerDeliveryLoad($(this), e);
+});
+$("#customer").on("change", function () {
+    schedulePosCustomerDeliveryLoad($(this), null);
 });
 
 $("#payment_card").on("change", function () {
