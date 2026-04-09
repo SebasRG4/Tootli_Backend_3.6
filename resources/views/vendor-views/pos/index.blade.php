@@ -108,11 +108,9 @@
                         <div class="w-100">
                             <div class="d-flex flex-wrap flex-row p-2 add--customer-btn">
                                 <select id='customer' name="customer_id"
-                                    data-placeholder="{{ translate('messages.walk_in_customer') }}"
+                                    data-placeholder="{{ translate('messages.pos_internal_customer_placeholder') }}"
                                     class="js-data-example-ajax form-control"></select>
-                                <button class="btn btn--primary" data-toggle="modal"
-                                    data-target="#add-customer">{{ translate('messages.add_new_customer') }}</button>
-                                <button class="btn btn-outline--primary" type="button" data-toggle="modal"
+                                <button class="btn btn--primary" type="button" data-toggle="modal"
                                     data-target="#add-internal-customer">{{ translate('messages.add_internal_customer') }}</button>
                             </div>
                             @if ($store_data->sub_self_delivery == 1 || session('pos_tootli_direct'))
@@ -146,66 +144,6 @@
             </div>
         </div><!-- container //  -->
     </section>
-
-    <div class="modal fade" id="add-customer" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">{{ translate('messages.add_new_customer') }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{route('vendor.pos.customer-store')}}" method="post" id="product_form">
-                        @csrf
-                        <div class="row">
-                            <div class="col-12 col-lg-6">
-                                <div class="form-group">
-                                    <label for="f_name" class="input-label">{{ translate('first_name') }} <span
-                                            class="input-label-secondary text-danger">*</span></label>
-                                    <input type="text" id="f_name" name="f_name" class="form-control"
-                                        placeholder="{{ translate('first_name') }}" required>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6">
-                                <div class="form-group">
-                                    <label for="l_name" class="input-label">{{ translate('last_name') }} <span
-                                            class="input-label-secondary text-danger">*</span></label>
-                                    <input type="text" id="l_name" name="l_name" class="form-control"
-                                        placeholder="{{ translate('last_name') }}" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 col-lg-6">
-                                <div class="form-group">
-                                    <label for="email" class="input-label">{{ translate('email') }}<span
-                                            class="input-label-secondary text-danger">*</span></label>
-                                    <input type="email" id="email" name="email" class="form-control"
-                                        placeholder="{{ translate('Ex_:_ex@example.com') }}" required>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6">
-                                <div class="form-group">
-                                    <label for="phone" class="input-label">{{ translate('phone') }}
-                                        ({{ translate('with_country_code') }})<span
-                                            class="input-label-secondary text-danger">*</span></label>
-                                    <input id="phone" type="text" name="phone" class="form-control"
-                                        placeholder="{{ translate('phone') }}" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="btn--container justify-content-end">
-                            <button type="reset" class="btn btn--reset">{{ translate('reset') }}</button>
-                            <button type="submit" id="submit_new_customer"
-                                class="btn btn--primary">{{ translate('submit') }}</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div class="modal fade" id="add-internal-customer" tabindex="-1">
         <div class="modal-dialog">
@@ -933,6 +871,24 @@
                 }
             }
         });
+
+        @php($posPreselectInternal = session('pos_preselect_internal_customer'))
+        @if (!empty($posPreselectInternal) && is_array($posPreselectInternal))
+        (function () {
+            var pre = @json($posPreselectInternal);
+            var internalLabel = @json(translate('messages.store_internal_customer'));
+            if (!pre || !pre.id) return;
+            var optId = 'internal:' + pre.id;
+            var name = (pre.f_name || '') + ' ' + (pre.l_name || '');
+            name = name.trim();
+            var text = name + ' (' + (pre.phone || '') + ') — ' + internalLabel;
+            var $sel = $('#customer');
+            if (!$sel.length) return;
+            $sel.find('option').filter(function () { return this.value === optId; }).remove();
+            $sel.append(new Option(text, optId, true, true));
+            $sel.trigger('change');
+        })();
+        @endif
 
     </script>
 

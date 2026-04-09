@@ -285,6 +285,11 @@
                             </td>
                             <td class="table-column-pl-0">
                                 <a href="{{route($parcel_order?'admin.parcel.order.details':'admin.order.details',['id'=>$order['id']])}}">{{$order['id']}}</a>
+                                @if(!empty($order->tootli_direct))
+                                    <div class="mt-1">
+                                        <span class="badge badge-soft-dark">{{ translate('messages.tootli_direct_order_badge') }}</span>
+                                    </div>
+                                @endif
                             </td>
                             <td>
                                 <div>

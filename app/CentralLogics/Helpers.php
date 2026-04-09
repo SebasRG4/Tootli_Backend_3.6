@@ -145,6 +145,55 @@ class Helpers
         return round($price, 3);
     }
 
+    /**
+     * Precio unitario base en POS (tras descuento de producto/tienda), según modo app o menú (Tootli Direct).
+     */
+    public static function pos_base_unit_after_discount($product, bool $posDirect): float
+    {
+        $base = self::item_price_for_context($product, $posDirect ? 'direct' : 'app');
+        $disc = self::product_discount_calculate($product, $base, $product->store)['discount_amount'];
+
+        return round(max(0, $base - $disc), 3);
+    }
+
+    /**
+     * Rango de precios para módulos no-food en POS (variantes), alineado con variant_price del POS.
+     */
+    public static function pos_nonfood_price_range_for_display($product, bool $posDirect, bool $afterDiscount = true): string
+    {
+        $store = $product->store;
+        $baseApp = (float) $product->price;
+        $baseDirect = self::item_price_for_context($product, 'direct');
+        $unit = $posDirect ? $baseDirect : $baseApp;
+
+        $lowest = $unit;
+        $highest = $unit;
+        if ($product->variations && is_array(json_decode($product['variations'], true))) {
+            foreach (json_decode($product->variations) as $variation) {
+                $vp = (float) $variation->price;
+                $line = $posDirect
+                    ? ($vp - $baseApp + $baseDirect)
+                    : $vp;
+                $lowest = min($lowest, $line);
+                $highest = max($highest, $line);
+            }
+        }
+
+        if ($afterDiscount) {
+            $lowest -= self::product_discount_calculate($product, $lowest, $store)['discount_amount'];
+            $highest -= self::product_discount_calculate($product, $highest, $store)['discount_amount'];
+        }
+
+        $lowest = self::format_currency($lowest);
+        $highest = self::format_currency($highest);
+
+        if ($lowest == $highest) {
+            return $lowest;
+        }
+
+        return $lowest.' - '.$highest;
+    }
+
     public static function productListDataFormatting($data)
     {
         $latitude = request()->header('latitude');

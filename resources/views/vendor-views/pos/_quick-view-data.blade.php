@@ -26,26 +26,51 @@
             <a href="{{ route('vendor.item.view', $product->id) }}"
                 class="h3 mb-2 product-title text-capitalize text-break">{{ $product->name }}</a>
 
+                @php($posDirect = (bool) session('pos_tootli_direct'))
                 @if (isset($product->module_id) && $product->module->module_type == 'food')
                 <div class="mb-3 text-dark">
-                    <span class="h3 font-weight-normal text-accent mr-1">
-                        {{ \App\CentralLogics\Helpers::get_food_price_range($product, true) }}
-                    </span>
-                    @if ($product->discount > 0 || \App\CentralLogics\Helpers::get_store_discount($product->store))
-                        <strike class="initial--18">
-                            {{ \App\CentralLogics\Helpers::get_food_price_range($product) }}
-                        </strike>
+                    @if ($posDirect)
+                        @php($b = \App\CentralLogics\Helpers::item_price_for_context($product, 'direct'))
+                        @php($da = \App\CentralLogics\Helpers::product_discount_calculate($product, $b, $product->store)['discount_amount'])
+                        <span class="h3 font-weight-normal text-accent mr-1">
+                            {{ \App\CentralLogics\Helpers::format_currency($b - $da) }}
+                        </span>
+                        @if ($da > 0)
+                            <strike class="initial--18">
+                                {{ \App\CentralLogics\Helpers::format_currency($b) }}
+                            </strike>
+                        @endif
+                    @else
+                        <span class="h3 font-weight-normal text-accent mr-1">
+                            {{ \App\CentralLogics\Helpers::get_food_price_range($product, true) }}
+                        </span>
+                        @if ($product->discount > 0 || \App\CentralLogics\Helpers::get_store_discount($product->store))
+                            <strike class="initial--18">
+                                {{ \App\CentralLogics\Helpers::get_food_price_range($product) }}
+                            </strike>
+                        @endif
                     @endif
                 </div>
                 @else
                 <div class="mb-3 text-dark">
-                    <span class="h3 font-weight-normal text-accent mr-1">
-                        {{ \App\CentralLogics\Helpers::get_price_range($product, true) }}
-                    </span>
-                    @if ($product->discount > 0 || \App\CentralLogics\Helpers::get_store_discount($product->store))
-                        <strike class="initial--18">
-                            {{ \App\CentralLogics\Helpers::get_price_range($product) }}
-                        </strike>
+                    @if ($posDirect)
+                        <span class="h3 font-weight-normal text-accent mr-1">
+                            {{ \App\CentralLogics\Helpers::pos_nonfood_price_range_for_display($product, true, true) }}
+                        </span>
+                        @if ($product->discount > 0 || \App\CentralLogics\Helpers::get_store_discount($product->store))
+                            <strike class="initial--18">
+                                {{ \App\CentralLogics\Helpers::pos_nonfood_price_range_for_display($product, true, false) }}
+                            </strike>
+                        @endif
+                    @else
+                        <span class="h3 font-weight-normal text-accent mr-1">
+                            {{ \App\CentralLogics\Helpers::get_price_range($product, true) }}
+                        </span>
+                        @if ($product->discount > 0 || \App\CentralLogics\Helpers::get_store_discount($product->store))
+                            <strike class="initial--18">
+                                {{ \App\CentralLogics\Helpers::get_price_range($product) }}
+                            </strike>
+                        @endif
                     @endif
                 </div>
                 @endif

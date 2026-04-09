@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Vendor;
 
 use App\Models\Item;
-use App\Models\User;
 use App\Models\Order;
 use App\Models\StorePosCustomer;
 use App\Models\Store;
@@ -22,8 +21,6 @@ use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-
 class POSController extends Controller
 {
     use PlaceNewOrder;
@@ -510,24 +507,7 @@ class POSController extends Controller
         $store = Helpers::get_store_data();
         $key = array_values(array_filter(explode(' ', trim((string) $request->input('q', '')))));
 
-        $userQuery = User::query();
-        if (count($key) > 0) {
-            $userQuery->where(function ($q) use ($key) {
-                foreach ($key as $value) {
-                    $q->orWhere(function ($qq) use ($value) {
-                        $qq->where('f_name', 'like', "%{$value}%")
-                            ->orWhere('l_name', 'like', "%{$value}%")
-                            ->orWhere('phone', 'like', "%{$value}%");
-                    });
-                }
-            });
-        }
-        $users = $userQuery->limit(8)->get([DB::raw('id, CONCAT(f_name, " ", l_name, " (", phone ,")") as text')]);
-
         $data = collect();
-        foreach ($users as $row) {
-            $data->push((object) ['id' => $row->id, 'text' => $row->text]);
-        }
 
         $internalsQuery = StorePosCustomer::where('store_id', $store->id)->latest();
         if (count($key) > 0) {
@@ -541,7 +521,7 @@ class POSController extends Controller
                 }
             });
         }
-        foreach ($internalsQuery->limit(8)->get() as $ic) {
+        foreach ($internalsQuery->limit(16)->get() as $ic) {
             $name = trim($ic->f_name.' '.($ic->l_name ?? ''));
             $data->push((object) [
                 'id' => 'internal:'.$ic->id,
@@ -712,6 +692,11 @@ class POSController extends Controller
             $order->user_id = null;
             $order->is_guest = true;
             $order->store_pos_customer_id = $internal_customer->id;
+        } elseif ($tootli_pos_direct && $request->filled('user_id')) {
+            // Tootli Direct: aunque elijan un usuario de la app en el POS, el pedido va como invitado (sin user_id).
+            $order->user_id = null;
+            $order->is_guest = true;
+            $order->store_pos_customer_id = null;
         } else {
             $order->user_id = $request->user_id;
             $order->is_guest = false;
@@ -872,29 +857,8 @@ class POSController extends Controller
 
     public function customer_store(Request $request)
     {
-        $request->validate([
-            'f_name' => 'required',
-            'l_name' => 'required',
-            'email' => 'required|email|unique:users',
-            'phone' => 'required|unique:users',
-        ]);
-        User::create([
-            'f_name' => $request['f_name'],
-            'l_name' => $request['l_name'],
-            'email' => $request['email'],
-            'phone' => $request['phone'],
-            'password' => bcrypt('password'),
-            'is_from_pos' => 1
-        ]);
-        try {
-            if (config('mail.status') && $request->email && Helpers::get_mail_status('pos_registration_mail_status_user') == '1' && Helpers::getNotificationStatusData('customer','customer_pos_registration','mail_status')) {
-                Mail::to($request->email)->send(new \App\Mail\CustomerRegistrationPOS($request->f_name . ' ' . $request->l_name,$request['email'],'password'));
-                Toastr::success(translate('mail_sent_to_the_user'));
-            }
-        } catch (\Exception $ex) {
-            info($ex->getMessage());
-        }
-        Toastr::success(translate('customer_added_successfully'));
+        Toastr::error(translate('messages.pos_app_customer_disabled'));
+
         return back();
     }
 
@@ -904,15 +868,46 @@ class POSController extends Controller
         $request->validate([
             'f_name' => 'required|string|max:100',
             'l_name' => 'nullable|string|max:100',
-            'phone' => ['required', 'string', 'max:20', Rule::unique('store_pos_customers', 'phone')->where('store_id', $store->id)],
+            'phone' => 'required|string|max:20',
         ]);
-        StorePosCustomer::create([
+
+        $phone = trim($request->phone);
+
+        $existing = StorePosCustomer::where('store_id', $store->id)
+            ->where('phone', $phone)
+            ->first();
+
+        if ($existing) {
+            $existing->update([
+                'f_name' => $request->f_name,
+                'l_name' => $request->filled('l_name') ? $request->l_name : $existing->l_name,
+            ]);
+            $existing->refresh();
+            session()->flash('pos_preselect_internal_customer', [
+                'id' => $existing->id,
+                'f_name' => $existing->f_name,
+                'l_name' => $existing->l_name,
+                'phone' => $existing->phone,
+            ]);
+            Toastr::info(translate('messages.internal_customer_found_by_phone'));
+
+            return back();
+        }
+
+        $created = StorePosCustomer::create([
             'store_id' => $store->id,
             'f_name' => $request->f_name,
             'l_name' => $request->l_name ?? '',
-            'phone' => $request->phone,
+            'phone' => $phone,
+        ]);
+        session()->flash('pos_preselect_internal_customer', [
+            'id' => $created->id,
+            'f_name' => $created->f_name,
+            'l_name' => $created->l_name,
+            'phone' => $created->phone,
         ]);
         Toastr::success(translate('messages.internal_customer_added_successfully'));
+
         return back();
     }
 

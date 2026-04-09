@@ -466,11 +466,40 @@ class EcartPayService
     {
         $response = Http::get($this->baseUrl . "/api/orders/public/{$ecartpayOrderId}");
 
-        if ($response->successful()) {
-            return $response->json('status') ?? 'unknown';
+        if (! $response->successful()) {
+            Log::warning('[EcartPay] getOrderStatus HTTP no OK', [
+                'ecartpay_order_id' => $ecartpayOrderId,
+                'status'            => $response->status(),
+            ]);
+
+            return 'unknown';
         }
 
-        return 'unknown';
+        $json = $response->json();
+        $raw = data_get($json, 'status')
+            ?? data_get($json, 'data.status')
+            ?? data_get($json, 'order.status')
+            ?? data_get($json, 'payment.status');
+
+        if ($raw === null || $raw === '') {
+            $payments = data_get($json, 'payments');
+            if (is_array($payments) && count($payments) > 0) {
+                $raw = data_get($payments[0], 'status')
+                    ?? data_get($payments[0], 'payment_status');
+            }
+        }
+
+        return is_string($raw) ? strtolower(trim($raw)) : 'unknown';
+    }
+
+    /**
+     * true si Ecart Pay reporta la orden como cobrada (varía según versión de API).
+     */
+    public function isPublicOrderPaid(string $ecartpayOrderId): bool
+    {
+        $s = $this->getOrderStatus($ecartpayOrderId);
+
+        return in_array($s, ['paid', 'completed', 'success', 'approved', 'captured'], true);
     }
 
     // -------------------------------------------------------------------------

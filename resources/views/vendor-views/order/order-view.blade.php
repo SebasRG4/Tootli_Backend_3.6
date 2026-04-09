@@ -55,6 +55,9 @@
                             <div>
                                 <h1 class="page-header-title">
                                     {{ translate('messages.order') }} #{{ $order['id'] }}
+                                    @if (!empty($order->tootli_direct))
+                                        <span class="badge badge-soft-dark ml-sm-3">{{ translate('messages.tootli_direct_order_badge') }}</span>
+                                    @endif
                                     @if ($order->edited)
                                         <span class="badge badge-soft-danger ml-sm-3">
                                             {{ translate('messages.edited') }}

@@ -28,10 +28,15 @@ class EcartPayWebhookController extends Controller
                 ?? $request->header('x-hook-secret')
                 ?? $request->header('authorization');
 
-            if ($signature !== $webhookSecret) {
+            if (is_string($signature) && str_starts_with($signature, 'Bearer ')) {
+                $signature = trim(substr($signature, 7));
+            }
+            $signature = $signature !== null ? trim((string) $signature) : '';
+
+            if ($signature !== trim((string) $webhookSecret)) {
                 Log::warning('[EcartPay Webhook] Firma inválida', [
-                    'expected' => substr($webhookSecret, 0, 10) . '...',
-                    'received' => $signature ? substr($signature, 0, 10) . '...' : 'null',
+                    'expected' => substr((string) $webhookSecret, 0, 10) . '...',
+                    'received' => $signature !== '' ? substr($signature, 0, 10) . '...' : 'empty',
                     'ip'       => $request->ip(),
                 ]);
                 return response()->json(['status' => 'unauthorized'], 401);
@@ -52,10 +57,15 @@ class EcartPayWebhookController extends Controller
     private function handleTransferCreated(array $payload): \Illuminate\Http\JsonResponse
     {
         $data = $payload['data'] ?? [];
-        $ecartpayOrderId = $data['order'] ?? $data['order_id'] ?? null;
+        $ecartpayOrderId = $this->normalizeEcartPayOrderId(
+            $data['order'] ?? $data['order_id'] ?? data_get($data, 'order.id') ?? data_get($data, 'order._id')
+        );
 
-        if (!$ecartpayOrderId) {
-            Log::warning('[EcartPay Webhook] transfer.created sin order_id', ['data' => $data]);
+        if (! $ecartpayOrderId) {
+            Log::warning('[EcartPay Webhook] transfer.created sin order_id vinculable', [
+                'data_keys' => array_keys($data),
+            ]);
+
             return response()->json(['status' => 'no_order_id'], 200);
         }
 
@@ -108,9 +118,11 @@ class EcartPayWebhookController extends Controller
     private function handleOrderUpdate(array $payload): \Illuminate\Http\JsonResponse
     {
         $data = $payload['data'] ?? $payload;
-        $ecartpayOrderId = $data['order'] ?? $data['order_id'] ?? $data['id'] ?? null;
+        $ecartpayOrderId = $this->normalizeEcartPayOrderId(
+            $data['order'] ?? $data['order_id'] ?? $data['id'] ?? data_get($data, 'order.id')
+        );
 
-        if (!$ecartpayOrderId) {
+        if (! $ecartpayOrderId) {
             return response()->json(['status' => 'ignored'], 200);
         }
 
@@ -152,13 +164,15 @@ class EcartPayWebhookController extends Controller
         try {
             $ecartpay = new EcartPayService();
             $status = $ecartpay->getOrderStatus($ecartpayOrderId);
+            $ok = in_array($status, ['paid', 'completed', 'success', 'approved', 'captured'], true);
 
             Log::info('[EcartPay Webhook] Verificación de pago con API', [
                 'ecartpay_order_id' => $ecartpayOrderId,
-                'status_real'       => $status,
+                'status_normalized' => $status,
+                'paid'              => $ok,
             ]);
 
-            return $status === 'paid';
+            return $ok;
         } catch (\Exception $e) {
             Log::error('[EcartPay Webhook] Error verificando pago con API', [
                 'ecartpay_order_id' => $ecartpayOrderId,
@@ -166,5 +180,30 @@ class EcartPayWebhookController extends Controller
             ]);
             return false;
         }
+    }
+
+    /**
+     * Ecart Pay puede enviar order como string (ObjectId) o como objeto { id, _id }.
+     */
+    private function normalizeEcartPayOrderId(mixed $raw): ?string
+    {
+        if ($raw === null || $raw === '') {
+            return null;
+        }
+        if (is_string($raw)) {
+            return $raw;
+        }
+        if (is_array($raw)) {
+            $id = $raw['id'] ?? $raw['_id'] ?? null;
+
+            return is_string($id) ? $id : (is_scalar($id) ? (string) $id : null);
+        }
+        if (is_object($raw)) {
+            $id = $raw->id ?? $raw->_id ?? null;
+
+            return is_string($id) ? $id : (is_scalar($id) ? (string) $id : null);
+        }
+
+        return null;
     }
 }

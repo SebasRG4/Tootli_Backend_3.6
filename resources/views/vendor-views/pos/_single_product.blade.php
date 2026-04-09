@@ -16,7 +16,7 @@
         <div class="justify-content-between text-center">
             <div class="product-price text-center">
                 <span class="text-accent text-dark font-weight-bold">
-                    {{\App\CentralLogics\Helpers::format_currency($product['price']-\App\CentralLogics\Helpers::product_discount_calculate($product, $product['price'], $store_data)['discount_amount'])}}
+                    {{ \App\CentralLogics\Helpers::format_currency(\App\CentralLogics\Helpers::pos_base_unit_after_discount($product, (bool) session('pos_tootli_direct'))) }}
                 </span>
             </div>
         </div>
