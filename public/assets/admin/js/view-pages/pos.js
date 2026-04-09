@@ -179,15 +179,23 @@ function syncPosCustomerHiddenFields($select) {
     var v = $select.val();
     var $user = $("#customer_id");
     var $internal = $("#internal_customer_id");
+    var $deliveryInternal = $("#delivery_internal_customer_id");
     if (!$user.length) {
         return;
     }
     if ($internal.length) {
         $user.val("");
         $internal.val("");
+        if ($deliveryInternal.length) {
+            $deliveryInternal.val("");
+        }
         if (v && String(v) !== "false") {
             if (String(v).indexOf("internal:") === 0) {
-                $internal.val(String(v).replace(/^internal:/, ""));
+                var iid = String(v).replace(/^internal:/, "");
+                $internal.val(iid);
+                if ($deliveryInternal.length) {
+                    $deliveryInternal.val(iid);
+                }
             } else {
                 $user.val(v);
             }
@@ -200,6 +208,9 @@ function syncPosCustomerHiddenFields($select) {
 }
 $("#customer").on("change", function () {
     syncPosCustomerHiddenFields($(this));
+    if (typeof window.posOnCustomerChanged === "function") {
+        window.posOnCustomerChanged($(this).val());
+    }
 });
 
 $("#payment_card").on("change", function () {

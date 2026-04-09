@@ -781,13 +781,93 @@
             });
         });
 
+        window.__posPendingDeliveryForm = null;
+
+        function posApplyDeliveryFormValues(f) {
+            if (!f || typeof f !== 'object') {
+                return;
+            }
+            var $f = $('#delivery_address_store');
+            if (!$f.length) {
+                return;
+            }
+            if (f.contact_person_name !== undefined) {
+                $('#contact_person_name').val(f.contact_person_name);
+            }
+            if (f.contact_person_number !== undefined) {
+                $('#contact_person_number').val(f.contact_person_number);
+            }
+            if (f.road !== undefined) {
+                $('#road').val(f.road);
+            }
+            if (f.house !== undefined) {
+                $('#house').val(f.house);
+            }
+            if (f.floor !== undefined) {
+                $('#floor').val(f.floor);
+            }
+            if (f.longitude !== undefined) {
+                $('#longitude').val(f.longitude);
+            }
+            if (f.latitude !== undefined) {
+                $('#latitude').val(f.latitude);
+            }
+            if (f.address !== undefined) {
+                $('#address').val(f.address);
+            }
+            if (f.delivery_fee !== undefined) {
+                $('#delivery_fee').val(f.delivery_fee);
+                var sym = '{{ \App\CentralLogics\Helpers::currency_symbol() }}';
+                $('#delivery_fee').siblings('strong').html(f.delivery_fee + sym);
+            }
+            if (f.original_delivery_fee !== undefined) {
+                $('#original_delivery_fee').val(f.original_delivery_fee);
+            } else if (f.delivery_fee !== undefined) {
+                $('#original_delivery_fee').val(f.delivery_fee);
+            }
+            if (f.distance !== undefined) {
+                $('#distance').val(f.distance);
+            }
+            if (f.delivery_fee !== undefined && $('#customer_delivery_fee').length) {
+                $('#customer_delivery_fee').val(f.delivery_fee);
+            }
+        }
+
         function updateCart() {
             $.post('<?php echo e(route('vendor.pos.cart_items')); ?>', {
                 _token: '<?php echo e(csrf_token()); ?>'
             }, function(data) {
                 $('#cart').empty().html(data);
+                syncPosCustomerHiddenFields($('#customer'));
+                if (window.__posPendingDeliveryForm) {
+                    posApplyDeliveryFormValues(window.__posPendingDeliveryForm);
+                    window.__posPendingDeliveryForm = null;
+                }
             });
         }
+
+        window.posOnCustomerChanged = function (val) {
+            var internalId = '';
+            if (val && String(val).indexOf('internal:') === 0) {
+                internalId = String(val).replace(/^internal:/, '');
+            }
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.post({
+                url: '{{ route('vendor.pos.internal-customer-address') }}',
+                data: { internal_customer_id: internalId },
+                success: function (res) {
+                    if (res.view !== undefined) {
+                        $('#del-add').html(res.view);
+                    }
+                    window.__posPendingDeliveryForm = res.form || null;
+                    updateCart();
+                }
+            });
+        };
 
         $(document).on('click', '.delivery-Address-Store', function () {
             $.ajaxSetup({

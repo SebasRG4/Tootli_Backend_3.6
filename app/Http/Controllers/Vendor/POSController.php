@@ -215,11 +215,87 @@ class POSController extends Controller
 
         $request->session()->put('address', $address);
 
+        if ($request->filled('internal_customer_id')) {
+            $ic = StorePosCustomer::where('store_id', Helpers::get_store_data()->id)
+                ->whereKey($request->internal_customer_id)
+                ->first();
+            if ($ic) {
+                $ic->delivery_address = $address;
+                $ic->save();
+            }
+        }
+
         return response()->json([
             'data' => $address,
             'view' => view('vendor-views.pos._address', compact('address'))->render(),
         ]);
     }
+
+    /**
+     * Carga en sesión la dirección guardada del cliente interno (Tootli Direct POS).
+     */
+    public function loadInternalCustomerAddress(Request $request)
+    {
+        $store = Helpers::get_store_data();
+        $id = $request->input('internal_customer_id');
+
+        if ($id === null || $id === '') {
+            session()->forget('address');
+
+            return response()->json([
+                'view' => view('vendor-views.pos._address')->render(),
+                'form' => null,
+            ]);
+        }
+
+        $customer = StorePosCustomer::where('store_id', $store->id)->whereKey($id)->first();
+        if (! $customer) {
+            session()->forget('address');
+
+            return response()->json([
+                'view' => view('vendor-views.pos._address')->render(),
+                'form' => null,
+            ]);
+        }
+
+        $saved = $customer->delivery_address;
+        if (! is_array($saved) || count($saved) === 0) {
+            session()->forget('address');
+            $name = trim($customer->f_name.' '.($customer->l_name ?? ''));
+
+            return response()->json([
+                'view' => view('vendor-views.pos._address')->render(),
+                'form' => [
+                    'contact_person_name' => $name,
+                    'contact_person_number' => $customer->phone,
+                    'phone' => $customer->phone,
+                ],
+            ]);
+        }
+
+        $address = $this->mergeInternalCustomerContactIntoAddress($customer, $saved);
+        session()->put('address', $address);
+
+        return response()->json([
+            'view' => view('vendor-views.pos._address')->render(),
+            'form' => $address,
+        ]);
+    }
+
+    private function mergeInternalCustomerContactIntoAddress(StorePosCustomer $customer, array $address): array
+    {
+        $name = trim($customer->f_name.' '.($customer->l_name ?? ''));
+        if ($name !== '') {
+            $address['contact_person_name'] = $name;
+        }
+        if ($customer->phone) {
+            $address['contact_person_number'] = $customer->phone;
+            $address['phone'] = $customer->phone;
+        }
+
+        return $address;
+    }
+
     private function get_stocks($product,$selected_item){
         try {
             if($product->module->module_type == 'food'){
@@ -843,6 +919,10 @@ class POSController extends Controller
                 'card_fee_amount' => $card_fee,
                 'card_net_amount' => $card_net,
             ]);
+            if ($order->order_type === 'delivery' && $order->order_status === 'confirmed') {
+                $order->confirmed = now();
+                $order->pending = now();
+            }
             $order->save();
 
             if ($request->order_type !== 'parcel') {
@@ -884,19 +964,34 @@ class POSController extends Controller
             session()->forget('cart');
             session()->forget('tax_amount');
             session()->forget('tax_include');
-            session()->forget('address');
+            if ($internal_customer && isset($address) && is_array($address)) {
+                $internal_customer->delivery_address = $address;
+                $internal_customer->save();
+                $internal_customer->refresh();
+                $saved = $internal_customer->delivery_address;
+                if (is_array($saved) && count($saved) > 0) {
+                    session()->put('address', $this->mergeInternalCustomerContactIntoAddress($internal_customer, $saved));
+                }
+            } else {
+                session()->forget('address');
+            }
             session(['last_order' => $order->id]);
-            if($order->order_status=='confirmed' && $order->user){
-                Helpers::send_order_notification($order);
-                $mail_status = Helpers::get_mail_status('place_order_mail_status_user');
-                //PlaceOrderMail
-                try{
-                    if($order->order_status == 'pending' && config('mail.status') && $mail_status == '1' && Helpers::getNotificationStatusData('customer','customer_order_notification','mail_status'))
-                    {
-                        Mail::to($order->customer->email)->send(new PlaceOrder($order->id));
+            if ($order->order_status === 'confirmed') {
+                $should_notify = (bool) $order->user_id
+                    || ($order->order_type === 'delivery' && $tootli_pos_direct);
+                if ($should_notify) {
+                    $order->load(['store', 'store.vendor', 'zone', 'module', 'delivery_man']);
+                    Helpers::send_order_notification($order);
+                }
+                if ($order->user) {
+                    $mail_status = Helpers::get_mail_status('place_order_mail_status_user');
+                    try {
+                        if ($order->order_status == 'pending' && config('mail.status') && $mail_status == '1' && Helpers::getNotificationStatusData('customer', 'customer_order_notification', 'mail_status')) {
+                            Mail::to($order->customer->email)->send(new PlaceOrder($order->id));
+                        }
+                    } catch (\Exception $ex) {
+                        info($ex->getMessage());
                     }
-                }catch (\Exception $ex) {
-                    info($ex->getMessage());
                 }
             }
 

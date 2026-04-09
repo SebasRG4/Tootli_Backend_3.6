@@ -389,6 +389,7 @@
                 ?>
                 <form id='delivery_address_store'>
                     @csrf
+                    <input type="hidden" name="internal_customer_id" id="delivery_internal_customer_id" value="">
 
                     <div class="row g-2" id="delivery_address">
                         <div class="col-md-6">

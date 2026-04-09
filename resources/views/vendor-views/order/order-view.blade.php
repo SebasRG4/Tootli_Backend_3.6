@@ -187,7 +187,13 @@
                                                 : (!empty($order->tootli_direct) ? translate('Domicilio (Tootli Direct)') : translate('messages.home Delivery'))) }}
                                     </label>
                                 </h6>
-                                @php($posMeta = is_array($order->pos_payment_meta) ? $order->pos_payment_meta : (is_string($order->pos_payment_meta) ? json_decode($order->pos_payment_meta, true) : null))
+                                @php
+                                    $posMeta = is_array($order->pos_payment_meta)
+                                        ? $order->pos_payment_meta
+                                        : (is_string($order->pos_payment_meta)
+                                            ? json_decode($order->pos_payment_meta, true)
+                                            : null);
+                                @endphp
                                 @if (is_array($posMeta) && isset($posMeta['card_gross_amount']) && $posMeta['card_gross_amount'] !== null)
                                     <h6>{{ translate('Monto cobrado') }}:
                                         {{ \App\CentralLogics\Helpers::format_currency((float) $posMeta['card_gross_amount']) }}

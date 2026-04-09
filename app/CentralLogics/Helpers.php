@@ -2347,7 +2347,7 @@ class Helpers
                 }
             }
 
-            if ($order->order_type == 'delivery' && !$order->scheduled && $order->order_status == 'confirmed' && (!in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true) || config('order_confirmation_model') == 'store')) {
+            if ($order->order_type == 'delivery' && !$order->scheduled && $order->order_status == 'confirmed' && (!in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true) || config('order_confirmation_model') == 'store' || !empty($order->tootli_direct))) {
                 $data = [
                     'title' => translate('Order_Notification'),
                     'description' => translate('New order alert, confirm to proceed'),

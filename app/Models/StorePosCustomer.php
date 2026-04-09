@@ -13,6 +13,11 @@ class StorePosCustomer extends Model
         'f_name',
         'l_name',
         'phone',
+        'delivery_address',
+    ];
+
+    protected $casts = [
+        'delivery_address' => 'array',
     ];
 
     public function store(): BelongsTo
