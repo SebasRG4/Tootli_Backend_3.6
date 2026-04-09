@@ -851,23 +851,64 @@
             if (val && String(val).indexOf('internal:') === 0) {
                 internalId = String(val).replace(/^internal:/, '');
             }
+            var csrf =
+                $('meta[name="csrf-token"]').attr('content') ||
+                $('meta[name="_token"]').attr('content') ||
+                '';
             $.ajaxSetup({
                 headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
+                    'X-CSRF-TOKEN': csrf,
+                },
             });
             $.post({
                 url: '{{ route('vendor.pos.internal-customer-address') }}',
-                data: { internal_customer_id: internalId },
+                data: {
+                    _token: '<?php echo e(csrf_token()); ?>',
+                    internal_customer_id: internalId,
+                },
                 success: function (res) {
                     if (res.view !== undefined) {
                         $('#del-add').html(res.view);
                     }
                     window.__posPendingDeliveryForm = res.form || null;
                     updateCart();
-                }
+                },
             });
         };
+
+        function posCurrentInternalCustomerId() {
+            var v = $('#customer').val();
+            if (v && String(v).indexOf('internal:') === 0) {
+                return String(v).replace(/^internal:/, '');
+            }
+            var h = $('#internal_customer_id').val();
+            return h ? String(h) : '';
+        }
+
+        $('#paymentModal').on('shown.bs.modal', function () {
+            var iid = posCurrentInternalCustomerId();
+            if (!iid) {
+                return;
+            }
+            var n = ($('#contact_person_name').val() || '').trim();
+            var p = ($('#contact_person_number').val() || '').trim();
+            if (n !== '' && p !== '') {
+                return;
+            }
+            $.post({
+                url: '{{ route('vendor.pos.internal-customer-address') }}',
+                data: {
+                    _token: '<?php echo e(csrf_token()); ?>',
+                    internal_customer_id: iid,
+                    prefill_contact_only: 1,
+                },
+                success: function (res) {
+                    if (res.form) {
+                        posApplyDeliveryFormValues(res.form);
+                    }
+                },
+            });
+        });
 
         $(document).on('click', '.delivery-Address-Store', function () {
             $.ajaxSetup({

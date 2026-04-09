@@ -239,6 +239,25 @@ class POSController extends Controller
         $store = Helpers::get_store_data();
         $id = $request->input('internal_customer_id');
 
+        if ($request->boolean('prefill_contact_only')) {
+            if ($id === null || $id === '') {
+                return response()->json(['form' => null]);
+            }
+            $customer = StorePosCustomer::where('store_id', $store->id)->whereKey($id)->first();
+            if (! $customer) {
+                return response()->json(['form' => null]);
+            }
+            $name = trim($customer->f_name.' '.($customer->l_name ?? ''));
+
+            return response()->json([
+                'form' => [
+                    'contact_person_name' => $name,
+                    'contact_person_number' => $customer->phone,
+                    'phone' => $customer->phone,
+                ],
+            ]);
+        }
+
         if ($id === null || $id === '') {
             session()->forget('address');
 

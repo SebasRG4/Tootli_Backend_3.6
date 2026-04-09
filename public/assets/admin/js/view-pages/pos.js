@@ -206,11 +206,18 @@ function syncPosCustomerHiddenFields($select) {
         }
     }
 }
-$("#customer").on("change", function () {
-    syncPosCustomerHiddenFields($(this));
-    if (typeof window.posOnCustomerChanged === "function") {
-        window.posOnCustomerChanged($(this).val());
-    }
+var posCustomerDeliveryLoadTimer = null;
+function schedulePosCustomerDeliveryLoad($select) {
+    clearTimeout(posCustomerDeliveryLoadTimer);
+    posCustomerDeliveryLoadTimer = setTimeout(function () {
+        syncPosCustomerHiddenFields($select);
+        if (typeof window.posOnCustomerChanged === "function") {
+            window.posOnCustomerChanged($select.val());
+        }
+    }, 30);
+}
+$("#customer").on("change select2:select", function () {
+    schedulePosCustomerDeliveryLoad($(this));
 });
 
 $("#payment_card").on("change", function () {
