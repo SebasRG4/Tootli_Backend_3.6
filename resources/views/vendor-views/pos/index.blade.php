@@ -4,74 +4,71 @@
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="stylesheet" href="{{ asset('assets/admin/css/vendor-pos-minimal.css') }}?v=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/vendor-pos-minimal.css') }}?v=2.1">
 @endpush
 
 @section('content')
     @php($store_data = \App\CentralLogics\Helpers::get_store_data())
-    <section class="section-content padding-y-sm bg-default mt-1">
-        <div class="content container-fluid">
-            <div class="d-flex flex-wrap">
-                <div class="order--pos-left">
-                    <div class="card h-100">
-                        <div class="card-header bg-light border-0">
-                            <h5 class="card-title">
-                                <span class="card-header-icon">
-                                    <i class="tio-incognito"></i>
-                                </span>
-                                <span>
-                                    {{ translate('products') }}
-                                </span>
-                            </h5>
+    <section class="section-content pos-grill-shell">
+        <div class="content container-fluid pos-grill-fluid">
+            <div class="pos-grill-layout">
+                <div class="pos-grill-main order--pos-left">
+                    <div class="pos-grill-panel">
+                        <header class="pos-grill-main-header">
+                            <div class="pos-grill-brand">
+                                <span class="pos-grill-date">{{ now()->translatedFormat('F j, Y') }}</span>
+                                <h1 class="pos-grill-store-name">{{ Str::limit($store_data->name, 48) }}</h1>
+                            </div>
+                            <form id="search-form" class="pos-grill-search-form search-form m-0" autocomplete="off">
+                                <span class="pos-grill-search-icon" aria-hidden="true"><i class="tio-search"></i></span>
+                                <input id="datatableSearch" type="search" value="{{ $keyword ?? '' }}" name="search"
+                                    class="pos-grill-search-input"
+                                    placeholder="{{ translate('messages.pos_shell_search_placeholder') }}"
+                                    aria-label="{{ translate('messages.search_here') }}">
+                                <button class="pos-grill-search-submit" type="submit" aria-label="{{ translate('messages.search_here') }}">
+                                    <i class="tio-filter-list"></i>
+                                </button>
+                            </form>
+                        </header>
+
+                        <div class="pos-grill-section-head">
+                            <h2 class="pos-grill-section-title">{{ translate('messages.pos_shell_find_food') }}</h2>
                         </div>
-                        <div class="card-header d-flex flex-wrap justify-content-between ">
-                            <div class="w-100">
-                                <div class="row g-2 justify-content-around">
-                                    <div class="col-sm-6">
-                                        <form id="search-form" class="search-form m-0">
-                                            <!-- Search -->
-                                            <div class="input-group input--group">
-                                                <input id="datatableSearch" type="search"
-                                                    value="{{ $keyword ?? '' }}" name="search"
-                                                    class="form-control h--45px"
-                                                    placeholder="{{ translate('messages.ex_:_search_here') }}"
-                                                    aria-label="{{ translate('messages.search_here') }}">
-                                                <button class="btn btn--secondary h--45px" type="submit"><i
-                                                        class="tio-search"></i></button>
-                                            </div>
-                                            <!-- End Search -->
-                                        </form>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="input-group">
-                                            <select name="category" id="category" class="form-control js-select2-custom"
-                                                title="{{ translate('messages.select_category') }}"
-                                                data-pos-ajax-category="1">
-                                                <option value="">{{ translate('messages.all_categories') }}</option>
-                                                @foreach ($categories as $item)
-                                                    <option value="{{ $item->id }}"
-                                                        {{ $category == $item->id ? 'selected' : '' }}>
-                                                        {{ Str::limit($item->name, 20, '...') }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
+
+                        <div class="pos-grill-category-scroll">
+                            <div class="pos-grill-pills" role="tablist" aria-label="{{ translate('messages.select_category') }}">
+                                <button type="button" role="tab"
+                                    class="pos-grill-pill {{ (int) $category === 0 ? 'active' : '' }}"
+                                    data-category-id="">{{ translate('messages.all_categories') }}</button>
+                                @foreach ($categories as $item)
+                                    <button type="button" role="tab"
+                                        class="pos-grill-pill {{ (int) $category === (int) $item->id ? 'active' : '' }}"
+                                        data-category-id="{{ $item->id }}">{{ Str::limit($item->name, 22) }}</button>
+                                @endforeach
                             </div>
                         </div>
-                        <div class="card-body d-flex flex-column" id="items">
+
+                        <select name="category" id="category" class="pos-grill-category-native" title="{{ translate('messages.select_category') }}"
+                            data-pos-ajax-category="1" tabindex="-1" aria-hidden="true">
+                            <option value="">{{ translate('messages.all_categories') }}</option>
+                            @foreach ($categories as $item)
+                                <option value="{{ $item->id }}" {{ (int) $category === (int) $item->id ? 'selected' : '' }}>
+                                    {{ Str::limit($item->name, 40) }}</option>
+                            @endforeach
+                        </select>
+
+                        <div class="pos-grill-products card-body d-flex flex-column" id="items">
                             @include('vendor-views.pos._products_grid', ['products' => $products, 'store_data' => $store_data])
                         </div>
                     </div>
                 </div>
-                <div class="order--pos-right">
-                    <div class="card">
-                        <div class="card-header bg-light border-0 m-1 d-flex flex-wrap align-items-center justify-content-between gap-2">
-                            <h5 class="card-title mb-0">
-                                <span>
-                                    {{ translate('messages.Billing Section') }}
-                                </span>
-                            </h5>
+                <aside class="pos-grill-order-col order--pos-right">
+                    <div class="pos-grill-panel pos-grill-order-panel card">
+                        <div class="pos-grill-order-header card-header border-0 d-flex flex-wrap align-items-center justify-content-between gap-2">
+                            <h2 class="pos-grill-order-title mb-0">{{ translate('messages.pos_shell_my_order') }}</h2>
                             <form method="post" action="{{ route('vendor.pos.direct-mode') }}" class="mb-0">
                                 @csrf
                                 <input type="hidden" name="enabled" value="{{ session('pos_tootli_direct') ? '0' : '1' }}">
@@ -113,13 +110,13 @@
                         </div>
 
 
-                        <div class='w-100' id="cart">
+                        <div class="w-100 pos-grill-cart-host" id="cart">
                             @include('vendor-views.pos._cart')
                         </div>
                     </div>
-                </div>
+                </aside>
             </div>
-        </div><!-- container //  -->
+        </div>
     </section>
 
     <div class="modal fade" id="add-internal-customer" tabindex="-1">
@@ -540,11 +537,44 @@
                         }
                         history.replaceState({}, '', u);
                     } catch (e) { /* ignore */ }
+                    syncPosCategoryPills();
                 }
             }).always(function () {
                 $('#loading').hide();
             });
         }
+
+        function syncPosCategoryPills() {
+            var v = String($('#category').val() || '');
+            $('.pos-grill-pill').removeClass('active');
+            $('.pos-grill-pill').each(function () {
+                var id = String($(this).attr('data-category-id') || '');
+                if (id === v) {
+                    $(this).addClass('active');
+                }
+            });
+        }
+
+        $(document).on('click', '.pos-grill-pill', function () {
+            var id = String($(this).attr('data-category-id') || '');
+            $('#category').val(id).trigger('change');
+        });
+
+        $(document).on('click', '.pos-grill-card-add-btn', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).closest('.quick-View').trigger('click');
+        });
+
+        $(document).on('keydown', '.pos-grill-card-add-btn', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).closest('.quick-View').trigger('click');
+            }
+        });
+
+        syncPosCategoryPills();
 
         $('#search-form').on('submit', function (e) {
             e.preventDefault();

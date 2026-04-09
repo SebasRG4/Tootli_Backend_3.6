@@ -1,4 +1,4 @@
-<div class="row g-3 mb-auto">
+<div class="row g-3 mb-auto pos-grill-product-grid">
     @foreach ($products as $product)
         <div class="order--item-box item-box">
             @include('vendor-views.pos._single_product', [

@@ -1,6 +1,6 @@
-<div class="d-flex flex-row cart--table-scroll">
-    <table class="table table-bordered">
-        <thead class="text-muted thead-light">
+<div class="d-flex flex-row cart--table-scroll pos-grill-cart-scroll">
+    <table class="table table-bordered pos-grill-cart-table">
+        <thead class="text-muted thead-light pos-grill-cart-thead">
             <tr class="text-center">
                 <th class="border-bottom-0" scope="col">{{ translate('messages.item') }}</th>
                 <th class="border-bottom-0" scope="col">{{ translate('messages.qty') }}</th>

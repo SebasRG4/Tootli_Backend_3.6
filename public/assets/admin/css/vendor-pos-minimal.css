@@ -1,77 +1,492 @@
-/* POS vendor — refuerzo minimalista (no sustituye el tema; lo suaviza) */
+/* POS vendor — tema minimalista “Grill” (alcance: .pos-grill-shell) */
+:root {
+  --pos-grill-teal: #149174;
+  --pos-grill-teal-hover: #117a63;
+  --pos-grill-bg: #f8f8f8;
+  --pos-grill-text: #000000;
+  --pos-grill-muted: #666666;
+  --pos-grill-card-radius: 16px;
+  --pos-grill-pill-radius: 999px;
+}
+
+.pos-grill-shell.section-content {
+  background: var(--pos-grill-bg) !important;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--pos-grill-text);
+}
+
+.pos-grill-shell .pos-grill-fluid {
+  max-width: 100%;
+}
+
+.pos-grill-shell .pos-grill-layout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+/* Layout principal ~75% / pedido ~25% */
+.pos-grill-shell .pos-grill-main.order--pos-left {
+  flex: 1 1 auto;
+  width: auto !important;
+  min-width: 0;
+  max-width: calc(100% - 340px);
+  margin-inline-end: 0 !important;
+}
+
+.pos-grill-shell .pos-grill-order-col.order--pos-right {
+  flex: 0 0 320px;
+  width: 320px !important;
+  max-width: 100% !important;
+}
+
+@media screen and (max-width: 1199px) {
+  .pos-grill-shell .pos-grill-main.order--pos-left {
+    max-width: 100%;
+  }
+  .pos-grill-shell .pos-grill-order-col.order--pos-right {
+    flex: 1 1 100%;
+    width: 100% !important;
+  }
+}
+
+.pos-grill-shell .pos-grill-panel {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: var(--pos-grill-card-radius);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.pos-grill-shell .pos-grill-main .pos-grill-panel {
+  padding: 1.25rem 1.35rem 1.5rem;
+}
+
+.pos-grill-shell .pos-grill-order-panel.card {
+  border-radius: var(--pos-grill-card-radius);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.pos-grill-shell .pos-grill-order-panel .card-header {
+  background: #fff !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Cabecera + búsqueda */
+.pos-grill-shell .pos-grill-main-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.pos-grill-shell .pos-grill-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 140px;
+}
+
+.pos-grill-shell .pos-grill-date {
+  font-size: 0.8rem;
+  color: var(--pos-grill-muted);
+  font-weight: 500;
+}
+
+.pos-grill-shell .pos-grill-store-name {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.pos-grill-shell .pos-grill-search-form {
+  flex: 1 1 280px;
+  max-width: 520px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--pos-grill-bg);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: var(--pos-grill-pill-radius);
+  padding: 0.35rem 0.5rem 0.35rem 0.85rem;
+}
+
+.pos-grill-shell .pos-grill-search-icon {
+  color: var(--pos-grill-muted);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.pos-grill-shell .pos-grill-search-input {
+  flex: 1;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-size: 0.95rem;
+  padding: 0.5rem 0.25rem !important;
+  min-height: 42px;
+}
+
+.pos-grill-shell .pos-grill-search-input:focus {
+  outline: none;
+}
+
+.pos-grill-shell .pos-grill-search-submit {
+  border: 0;
+  background: #fff;
+  border-radius: var(--pos-grill-pill-radius);
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pos-grill-muted);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pos-grill-shell .pos-grill-search-submit:hover {
+  color: var(--pos-grill-teal);
+  box-shadow: 0 2px 8px rgba(20, 145, 116, 0.15);
+}
+
+/* Título sección */
+.pos-grill-shell .pos-grill-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.pos-grill-shell .pos-grill-section-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Categorías pills */
+.pos-grill-shell .pos-grill-category-scroll {
+  margin-bottom: 1.1rem;
+  margin-left: -0.25rem;
+  margin-right: -0.25rem;
+}
+
+.pos-grill-shell .pos-grill-pills {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.pos-grill-shell .pos-grill-pill {
+  flex: 0 0 auto;
+  border: 0;
+  background: #eeeeee;
+  color: var(--pos-grill-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.5rem 1.1rem;
+  border-radius: var(--pos-grill-pill-radius);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+
+.pos-grill-shell .pos-grill-pill:hover {
+  background: #e4e4e4;
+}
+
+.pos-grill-shell .pos-grill-pill.active {
+  background: var(--pos-grill-teal);
+  color: #fff;
+}
+
+.pos-grill-shell .pos-grill-pill.active:hover {
+  background: var(--pos-grill-teal-hover);
+  color: #fff;
+}
+
+/* Select nativo oculto (sincronizado con pills) */
+.pos-grill-shell select.pos-grill-category-native {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.pos-grill-shell .pos-grill-main {
+  position: relative;
+}
+
+/* Grid productos: anula anchos fijos del tema */
+.pos-grill-shell .pos-grill-product-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
+/* Sobrescribe .row (flex) del tema */
+.pos-grill-shell .pos-grill-product-grid.row {
+  flex-wrap: unset !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.pos-grill-shell .pos-grill-product-grid > .order--item-box,
+.pos-grill-shell .pos-grill-product-grid > .item-box {
+  width: 100% !important;
+  max-width: none !important;
+  flex: none !important;
+  height: auto !important;
+}
+
+.pos-grill-shell .pos-grill-products.card-body {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+/* Tarjeta producto */
+.pos-grill-shell .pos-grill-card.product-card {
+  border-radius: 18px !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06) !important;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+  overflow: hidden;
+}
+
+.pos-grill-shell .pos-grill-card.product-card:hover {
+  border-color: rgba(20, 145, 116, 0.35) !important;
+  box-shadow: 0 8px 28px rgba(20, 145, 116, 0.12) !important;
+  transform: translateY(-2px);
+}
+
+.pos-grill-shell .pos-grill-card-image-wrap {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: var(--pos-grill-bg);
+  overflow: hidden;
+}
+
+.pos-grill-shell .pos-grill-card-img {
+  object-fit: cover;
+  display: block;
+}
+
+.pos-grill-shell .pos-grill-card-body {
+  padding: 0.85rem 1rem 1rem;
+}
+
+.pos-grill-shell .pos-grill-card-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.pos-grill-shell .pos-grill-card-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.25;
+  flex: 1;
+  min-width: 0;
+}
+
+.pos-grill-shell .pos-grill-card-price {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--pos-grill-teal);
+  white-space: nowrap;
+}
+
+.pos-grill-shell .pos-grill-card-desc {
+  font-size: 0.78rem;
+  color: var(--pos-grill-muted);
+  line-height: 1.4;
+  margin: 0 0 0.75rem;
+  min-height: 2.2em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pos-grill-shell .pos-grill-card-desc--empty {
+  opacity: 0.4;
+}
+
+.pos-grill-shell .pos-grill-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.pos-grill-shell .pos-grill-card-rating {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--pos-grill-text);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.pos-grill-shell .pos-grill-card-rating .tio-star {
+  color: #f5a623;
+  font-size: 1rem;
+}
+
+.pos-grill-shell .pos-grill-card-add-btn {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--pos-grill-teal);
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--pos-grill-pill-radius);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease;
+}
+
+.pos-grill-shell .pos-grill-card-add-btn:hover {
+  background: var(--pos-grill-teal-hover);
+}
+
+/* Sidebar pedido */
+.pos-grill-shell .pos-grill-order-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.pos-grill-shell .pos-grill-cart-host {
+  padding: 0 1rem 1rem;
+}
+
+.pos-grill-shell .pos-grill-cart-scroll {
+  max-height: min(42vh, 360px);
+  overflow: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.pos-grill-shell .pos-grill-cart-table {
+  margin-bottom: 0;
+  font-size: 0.875rem;
+}
+
+.pos-grill-shell .pos-grill-cart-thead th {
+  font-weight: 600;
+  color: var(--pos-grill-muted);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Paginación */
+.pos-grill-shell .pos-grill-products .page-area {
+  margin-top: 1rem !important;
+}
+
+.pos-grill-shell .pos-grill-products .page-area .pagination {
+  margin-bottom: 0;
+}
+
+/* Pagos tipo botones grandes */
+.pos-grill-shell .pos--payment-options h5 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem !important;
+}
+
+.pos-grill-shell .pos--payment-options ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.pos-grill-shell .pos--payment-options li {
+  margin: 0;
+}
+
+.pos-grill-shell .pos--payment-options label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.65rem 1rem;
+  margin: 0;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 14px;
+  background: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.pos-grill-shell .pos--payment-options label:hover {
+  border-color: rgba(20, 145, 116, 0.35);
+}
+
+.pos-grill-shell .pos--payment-options label:has(input:checked) {
+  background: #1a1f2e;
+  color: #fff;
+  border-color: #1a1f2e;
+}
+
+/* Botones primarios sidebar */
+.pos-grill-shell .order--pos-right .btn--primary,
+.pos-grill-shell .order--pos-right .btn.btn--primary {
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.pos-grill-shell .order--pos-right .add--customer-btn .form-control,
+.pos-grill-shell
+  .order--pos-right
+  .js-data-example-ajax
+  + .select2-container
+  .select2-selection--single {
+  border-radius: 12px;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.pos-grill-shell .pos--delivery-options {
+  background: var(--pos-grill-bg);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  margin: 0 1rem 0.75rem;
+}
+
+/* Sin resultados */
+.pos-grill-shell .search--no-found {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+/* Compatibilidad: refuerzo suave fuera del shell (opcional) */
 .section-content.padding-y-sm.bg-default {
   background: #f4f6f8 !important;
   padding-top: 1rem !important;
   padding-bottom: 1.5rem !important;
-}
-
-.order--pos-left .card,
-.order--pos-right .card {
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.order--pos-left .card-header,
-.order--pos-right .card-header {
-  background: #fff !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
-  padding: 0.85rem 1.1rem;
-}
-
-.order--pos-left .card-header .card-title,
-.order--pos-right .card-header .card-title {
-  font-weight: 600;
-  font-size: 0.95rem;
-  letter-spacing: 0.01em;
-  color: #1a1d21;
-}
-
-.order--pos-left .card-body {
-  background: #fafbfc;
-}
-
-.order--item-box .product-card.card {
-  border-radius: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: none;
-  transition: box-shadow 0.15s ease, border-color 0.15s ease;
-}
-
-.order--item-box .product-card.card:hover {
-  border-color: rgba(0, 169, 157, 0.35);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-}
-
-.order--pos-right .btn--primary,
-.order--pos-right .btn.btn--primary {
-  border-radius: 8px;
-  font-weight: 600;
-}
-
-.order--pos-right .add--customer-btn .form-control,
-.order--pos-right .js-data-example-ajax + .select2-container .select2-selection--single {
-  border-radius: 8px;
-  border-color: rgba(0, 0, 0, 0.1);
-}
-
-.pos--delivery-options {
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 10px;
-  padding: 0.75rem 1rem;
-  margin-bottom: 0.75rem;
-}
-
-.pos--delivery-options .card-title {
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-/* Iconos alineados con texto en cabeceras POS */
-.order--pos-left .card-header-icon .tio-incognito,
-.order--pos-right .card-header-icon i {
-  vertical-align: -0.15em;
-  opacity: 0.85;
 }
