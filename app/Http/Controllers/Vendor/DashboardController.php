@@ -85,7 +85,7 @@ class DashboardController extends Controller
             $new_pending_order = DB::table('orders')->where(['checked' => 0])->where('store_id', $store->id)->where('order_status','pending');
             if(config('order_confirmation_model') != 'store' && !$store->sub_self_delivery)
             {
-                $new_pending_order = $new_pending_order->where('order_type', 'take_away');
+                $new_pending_order = $new_pending_order->whereIn('order_type', ['take_away', 'dine_in']);
             }
             $new_pending_order = $new_pending_order->count();
             $new_confirmed_order = DB::table('orders')->where(['checked' => 0])->where('store_id', $store->id)->whereIn('order_status',['confirmed', 'accepted'])->whereNotNull('confirmed')->count();
@@ -168,7 +168,7 @@ class DashboardController extends Controller
             else
             {
                 $q->whereNotIn('order_status',['pending','failed','canceled', 'refund_requested', 'refunded'])->orWhere(function($query){
-                    $query->where('order_status','pending')->where('order_type', 'take_away');
+                    $query->where('order_status','pending')->whereIn('order_type', ['take_away', 'dine_in']);
                 });
             }
 
@@ -182,7 +182,7 @@ class DashboardController extends Controller
         ->where(function($query){
             return $query->whereNotIn('order_status',(config('order_confirmation_model') == 'store'|| \App\CentralLogics\Helpers::get_store_data()->sub_self_delivery)?['failed','canceled', 'refund_requested', 'refunded']:['pending','failed','canceled', 'refund_requested', 'refunded'])
             ->orWhere(function($query){
-                return $query->where('order_status','pending')->where('order_type', 'take_away');
+                return $query->where('order_status','pending')->whereIn('order_type', ['take_away', 'dine_in']);
             });
         })
         ->StoreOrder()->NotDigitalOrder()->count();

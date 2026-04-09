@@ -101,7 +101,7 @@
                                                                     ? ['failed', 'canceled', 'refund_requested', 'refunded']
                                                                     : ['pending', 'failed', 'canceled', 'refund_requested', 'refunded'],
                                                             )->orWhere(function ($query) {
-                                                                return $query->where('order_status', 'pending')->where('order_type', 'take_away');
+                                                                return $query->where('order_status', 'pending')->whereIn('order_type', ['take_away', 'dine_in']);
                                                             });
                                                     })->StoreOrder()->NotDigitalOrder()->count() }}
                                             </span>
@@ -120,7 +120,7 @@
                                                 @if (config('order_confirmation_model') == 'store' || \App\CentralLogics\Helpers::get_store_data()->sub_self_delivery)
                                                     {{ \App\Models\Order::where(['order_status' => 'pending', 'store_id' => \App\CentralLogics\Helpers::get_store_id()])->StoreOrder()->OrderScheduledIn(30)->NotDigitalOrder()->count() }}
                                                 @else
-                                                    {{ \App\Models\Order::where(['order_status' => 'pending', 'store_id' => \App\CentralLogics\Helpers::get_store_id(), 'order_type' => 'take_away'])->StoreOrder()->OrderScheduledIn(30)->NotDigitalOrder()->count() }}
+                                                    {{ \App\Models\Order::where(['order_status' => 'pending', 'store_id' => \App\CentralLogics\Helpers::get_store_id()])->whereIn('order_type', ['take_away', 'dine_in'])->StoreOrder()->OrderScheduledIn(30)->NotDigitalOrder()->count() }}
                                                 @endif
                                             </span>
                                         </span>
@@ -227,7 +227,7 @@
                                                         } else {
                                                             $q->whereNotIn('order_status', ['pending', 'failed', 'canceled', 'refund_requested', 'refunded'])->orWhere(
                                                                 function ($query) {
-                                                                    $query->where('order_status', 'pending')->where('order_type', 'take_away');
+                                                                    $query->where('order_status', 'pending')->whereIn('order_type', ['take_away', 'dine_in']);
                                                                 },
                                                             );
                                                         }

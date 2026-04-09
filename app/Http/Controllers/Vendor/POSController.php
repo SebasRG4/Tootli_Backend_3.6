@@ -610,6 +610,9 @@ class POSController extends Controller
             Toastr::error(translate('messages.invalid_payment_method'));
             return back();
         }
+        $selected_service_type = in_array($request->input('service_type'), ['take_away', 'dine_in'], true)
+            ? $request->input('service_type')
+            : 'take_away';
 
         $address = null;
         if ($has_address) {
@@ -713,12 +716,12 @@ class POSController extends Controller
         if ($request->user_id || $internal_customer) {
 
             $order->order_status = isset($address)?'confirmed':'delivered';
-            $order->order_type = isset($address)?'delivery':'take_away';
+            $order->order_type = isset($address) ? 'delivery' : $selected_service_type;
         }else{
             $order->order_status = 'delivered';
-            $order->order_type = 'take_away';
+            $order->order_type = $selected_service_type;
         }
-        if($order->order_type == 'take_away'){
+        if(in_array($order->order_type, ['take_away', 'dine_in'], true)){
             $order->delivered = now();
         }
         $order->distance = isset($address) ? $address['distance'] : 0;

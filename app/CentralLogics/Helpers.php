@@ -2277,7 +2277,7 @@ class Helpers
                 }
             }
 
-            if (!$order->scheduled && (($order->order_type == 'take_away' && $order->order_status == 'pending') || (!in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true) && $order->order_status == 'confirmed'))) {
+            if (!$order->scheduled && ((in_array($order->order_type, ['take_away', 'dine_in'], true) && $order->order_status == 'pending') || (!in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true) && $order->order_status == 'confirmed'))) {
                 $data = [
                     'title' => translate('Order_Notification'),
                     'description' => translate('New order alert, confirm to proceed'),
@@ -2303,7 +2303,7 @@ class Helpers
                 }
             }
 
-            if ($order->order_status == 'confirmed' && $order->order_type != 'take_away' && config('order_confirmation_model') == 'deliveryman' && in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true)) {
+            if ($order->order_status == 'confirmed' && !in_array($order->order_type, ['take_away', 'dine_in'], true) && config('order_confirmation_model') == 'deliveryman' && in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true)) {
                 if ($order->store->sub_self_delivery && $push_notification_status) {
                     $data = [
                         'title' => translate('Order_Notification'),

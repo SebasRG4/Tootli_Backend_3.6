@@ -259,7 +259,7 @@ class VendorController extends Controller
                     $query->where('payment_status','paid')->where('order_status', 'accepted');
                 })
                 ->orWhere(function($query){
-                    $query->where('order_status','pending')->where('order_type', 'take_away');
+                    $query->where('order_status','pending')->whereIn('order_type', ['take_away', 'dine_in']);
                 });
             }
         })
@@ -394,7 +394,7 @@ class VendorController extends Controller
             }
         }
 
-        if($request['status'] =="confirmed" && !$vendor->stores[0]->sub_self_delivery && config('order_confirmation_model') == 'deliveryman' && $order->order_type != 'take_away')
+        if($request['status'] =="confirmed" && !$vendor->stores[0]->sub_self_delivery && config('order_confirmation_model') == 'deliveryman' && !in_array($order->order_type, ['take_away', 'dine_in'], true))
         {
             return response()->json([
                 'errors' => [
@@ -412,7 +412,7 @@ class VendorController extends Controller
             ], 403);
         }
 
-        if($request['status']=='delivered' && $order->order_type != 'take_away' && !$vendor->stores[0]->sub_self_delivery)
+        if($request['status']=='delivered' && !in_array($order->order_type, ['take_away', 'dine_in'], true) && !$vendor->stores[0]->sub_self_delivery)
         {
             return response()->json([
                 'errors' => [
@@ -1245,7 +1245,7 @@ class VendorController extends Controller
                     $query->where('payment_status','paid')->where('order_status', 'accepted');
                 })
                 ->orWhere(function($query){
-                    $query->where('order_status','pending')->where('order_type', 'take_away');
+                    $query->where('order_status','pending')->whereIn('order_type', ['take_away', 'dine_in']);
                 });
             }
         })

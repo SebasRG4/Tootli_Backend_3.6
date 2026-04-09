@@ -571,7 +571,7 @@ class OrderController extends Controller
                 }
                 if (in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true)
                     || in_array($unpaid_pay_method, ['cash_on_delivery', 'card_on_delivery'], true)) {
-                    if ($order->order_type == 'take_away') {
+                    if (in_array($order->order_type, ['take_away', 'dine_in'], true)) {
                         $ol = OrderLogic::create_transaction($order, 'store', null);
                     } else if ($order->delivery_man_id) {
                         $ol = OrderLogic::create_transaction($order, 'deliveryman', null);
@@ -1458,7 +1458,7 @@ class OrderController extends Controller
             }
         }
 
-        if ($order->store->free_delivery || $order->order_type == 'take_away') {
+        if ($order->store->free_delivery || in_array($order->order_type, ['take_away', 'dine_in'], true)) {
             $order->delivery_charge = 0;
         }
 

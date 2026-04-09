@@ -205,6 +205,24 @@
             </ul>
         </div>
         @if (!$add)
+            <div class="pos--payment-options mt-3 mb-3">
+                <h5 class="mb-3">{{ translate('messages.order_type') }}</h5>
+                <ul>
+                    <li>
+                        <label>
+                            <input type="radio" name="service_type" value="take_away" hidden checked>
+                            <span>{{ translate('messages.take_away') }}</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="service_type" value="dine_in" hidden>
+                            <span>{{ translate('Comer en restaurante') }}</span>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+
             <div id="paid_section">
                 <div class="mt-4 d-flex justify-content-between pos--payable-amount">
                     <label class="m-0">{{ translate('Paid Amount') }} :</label>

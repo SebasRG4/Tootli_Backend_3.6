@@ -42,7 +42,7 @@ class OrderController extends Controller
             }
             else
             {
-                return $query->where('order_status','pending')->where('order_type', 'take_away');
+                return $query->where('order_status','pending')->whereIn('order_type', ['take_away', 'dine_in']);
             }
         })
         ->when($status == 'cooking', function($query){
@@ -72,7 +72,7 @@ class OrderController extends Controller
                 else
                 {
                     $q->whereNotIn('order_status',['pending','failed','canceled', 'refund_requested', 'refunded'])->orWhere(function($query){
-                        $query->where('order_status','pending')->where('order_type', 'take_away');
+                        $query->where('order_status','pending')->whereIn('order_type', ['take_away', 'dine_in']);
                     });
                 }
 
@@ -82,7 +82,7 @@ class OrderController extends Controller
             return $query->where(function($query){
                 $query->whereNotIn('order_status',(config('order_confirmation_model') == 'store'|| Helpers::get_store_data()->sub_self_delivery)?['failed','canceled', 'refund_requested', 'refunded']:[ 'accepted' ,'pending','failed','canceled', 'refund_requested', 'refunded'])
                 ->orWhere(function($query){
-                    return $query->where('order_status','pending')->where('order_type', 'take_away');
+                    return $query->where('order_status','pending')->whereIn('order_type', ['take_away', 'dine_in']);
                 });
             });
         })
@@ -125,7 +125,7 @@ class OrderController extends Controller
             }
             else
             {
-                return $query->where('order_status','pending')->where('order_type', 'take_away');
+                return $query->where('order_status','pending')->whereIn('order_type', ['take_away', 'dine_in']);
             }
         })
         ->when($status == 'cooking', function($query){
@@ -155,7 +155,7 @@ class OrderController extends Controller
                 else
                 {
                     $q->whereNotIn('order_status',['pending','failed','canceled', 'refund_requested', 'refunded'])->orWhere(function($query){
-                        $query->where('order_status','pending')->where('order_type', 'take_away');
+                        $query->where('order_status','pending')->whereIn('order_type', ['take_away', 'dine_in']);
                     });
                 }
 
@@ -165,7 +165,7 @@ class OrderController extends Controller
             return $query->where(function($query){
                 $query->whereNotIn('order_status',(config('order_confirmation_model') == 'store'|| Helpers::get_store_data()->sub_self_delivery)?['failed','canceled', 'refund_requested', 'refunded']:['pending','failed','canceled', 'refund_requested', 'refunded'])
                 ->orWhere(function($query){
-                    return $query->where('order_status','pending')->where('order_type', 'take_away');
+                    return $query->where('order_status','pending')->whereIn('order_type', ['take_away', 'dine_in']);
                 });
             });
         })
@@ -256,7 +256,7 @@ class OrderController extends Controller
 
 
 
-        if($request['order_status']=='delivered' && $order->order_type != 'take_away' && !Helpers::get_store_data()->sub_self_delivery)
+        if($request['order_status']=='delivered' && !in_array($order->order_type, ['take_away', 'dine_in'], true) && !Helpers::get_store_data()->sub_self_delivery)
         {
             Toastr::warning(translate('messages.you_can_not_delivered_delivery_order'));
             return back();
@@ -264,7 +264,7 @@ class OrderController extends Controller
 
         if($request['order_status'] =="confirmed")
         {
-            if(!Helpers::get_store_data()->sub_self_delivery && config('order_confirmation_model') == 'deliveryman' && $order->order_type != 'take_away')
+            if(!Helpers::get_store_data()->sub_self_delivery && config('order_confirmation_model') == 'deliveryman' && !in_array($order->order_type, ['take_away', 'dine_in'], true))
             {
                 Toastr::warning(translate('messages.order_confirmation_warning'));
                 return back();
