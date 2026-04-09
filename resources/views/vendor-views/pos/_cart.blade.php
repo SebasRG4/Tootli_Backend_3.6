@@ -440,6 +440,20 @@
                             <textarea name="address" id="address" class="form-control" cols="30" rows="3"
                                 placeholder="{{ translate('messages.pos_placeholder_address') }}">{{ $old ? $old['address'] : '' }}</textarea>
                         </div>
+                        <div class="col-md-12">
+                            <label class="input-label" for="gmaps_delivery_link">{{ translate('messages.pos_paste_google_maps_link') }}</label>
+                            <div class="input-group">
+                                <input type="url" class="form-control" id="gmaps_delivery_link" autocomplete="off"
+                                    inputmode="url"
+                                    placeholder="https://maps.google.com/... o https://maps.app.goo.gl/...">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-primary" id="pos_apply_gmaps_link">
+                                        {{ translate('messages.pos_apply_google_maps_link') }}
+                                    </button>
+                                </div>
+                            </div>
+                            <small class="text-muted d-block mt-1">{{ translate('messages.pos_google_maps_link_help') }}</small>
+                        </div>
                         <input type="hidden" name="original_delivery_fee" id="original_delivery_fee"
                             value="{{ $old ? ($old['original_delivery_fee'] ?? $old['delivery_fee']) : '' }}">
                         <div class="col-md-12 mb-2">
@@ -465,6 +479,7 @@
                                         {{ \App\CentralLogics\Helpers::currency_symbol() }}</strong>
                                 </div>
                             </div>
+                            <p class="small text-muted mb-2">{{ translate('messages.pos_map_store_reference_hint') }}</p>
                             <input id="pac-input" class="controls rounded initial-8"
                                 title="{{ translate('messages.pos_search_location') }}" type="text"
                                 placeholder="{{ translate('messages.pos_search_location') }}" />

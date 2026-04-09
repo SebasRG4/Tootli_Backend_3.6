@@ -189,7 +189,7 @@
 
 @push('script_2')
     <script
-        src="https://maps.googleapis.com/maps/api/js?key={{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}&libraries=places,marker&callback=initMap&v=3.61">
+        src="https://maps.googleapis.com/maps/api/js?key={{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}&libraries=places,marker,geometry&callback=initMap&v=3.61">
     </script>
 
     <script src="{{asset('assets/admin/js/view-pages/pos.js')}}"></script>
@@ -207,47 +207,49 @@
         function initMap() {
         const mapId = "{{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}"
 
+            const storeLat = parseFloat({{ $store_data ? json_encode((float) $store_data->latitude) : '23.757989' }}, 10) || 23.757989;
+            const storeLng = parseFloat({{ $store_data ? json_encode((float) $store_data->longitude) : '90.360587' }}, 10) || 90.360587;
+            const storeName = @json($store_data?->name ?? '');
+            const storeLabel = @json(translate('messages.pos_map_store_marker_title'));
+
             let map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 13,
+                zoom: 15,
                 center: {
-                    lat: {{ $store_data ? $store_data['latitude'] : '23.757989' }},
-                    lng: {{ $store_data ? $store_data['longitude'] : '90.360587' }}
+                    lat: storeLat,
+                    lng: storeLng
                 },
                 mapId: mapId
             });
 
             let zonePolygon = null;
 
-            //get current location block
             let infoWindow = new google.maps.InfoWindow();
-            // Try HTML5 geolocation.
 
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                      let  myLatlng = {
-                            lat: position.coords.latitude,
-                            lng: position.coords.longitude,
-                        };
-                        infoWindow.setPosition(myLatlng);
-                        infoWindow.setContent("Location found.");
-                        infoWindow.open(map);
-                        map.setCenter(myLatlng);
-                    },
-                    () => {
-                        handleLocationError(true, infoWindow, map.getCenter());
-                    }
-                );
-            } else {
-                // Browser doesn't support Geolocation
-                handleLocationError(false, infoWindow, map.getCenter());
-            }
-            //-----end block------
+            try {
+                const { AdvancedMarkerElement: StorePin } = google.maps.marker;
+                const storeMarker = new StorePin({
+                    map,
+                    position: { lat: storeLat, lng: storeLng },
+                    title: storeLabel || storeName,
+                });
+                storeMarker.addListener('click', function () {
+                    infoWindow.setPosition({ lat: storeLat, lng: storeLng });
+                    infoWindow.setContent('<strong>' + (storeName || '') + '</strong><br><small>' + (storeLabel || '') + '</small>');
+                    infoWindow.open({ map, anchor: storeMarker });
+                });
+            } catch (e) { /* marker lib */ }
+
             const input = document.getElementById("pac-input");
             const searchBox = new google.maps.places.SearchBox(input);
             map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
             let markers = [];
             const bounds = new google.maps.LatLngBounds();
+            map.addListener('bounds_changed', function () {
+                const b = map.getBounds();
+                if (b) {
+                    searchBox.setBounds(b);
+                }
+            });
             searchBox.addListener("places_changed", () => {
                 const places = searchBox.getPlaces();
 
@@ -312,29 +314,22 @@
                             fillOpacity: 0,
                         });
                         zonePolygon.setMap(map);
+                        const zoneBounds = new google.maps.LatLngBounds();
                         zonePolygon.getPaths().forEach(function(path) {
                             path.forEach(function(latlng) {
-                                bounds.extend(latlng);
-                                map.fitBounds(bounds);
+                                zoneBounds.extend(latlng);
                             });
                         });
-                        map.setCenter(data.center);
-                        google.maps.event.addListener(zonePolygon, 'click', function(mapsMouseEvent) {
-                            infoWindow.close();
-                            // Create a new InfoWindow.
-                            infoWindow = new google.maps.InfoWindow({
-                                position: mapsMouseEvent.latLng,
-                                content: JSON.stringify(mapsMouseEvent.latLng.toJSON(), null,
-                                    2),
-                            });
-                            let coordinates;
-                             coordinates = JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
-                             coordinates = JSON.parse(coordinates);
-
+                        if (!zoneBounds.isEmpty()) {
+                            map.fitBounds(zoneBounds);
+                        }
+                        map.setCenter({ lat: storeLat, lng: storeLng });
+                        if (map.getZoom() < 14) {
+                            map.setZoom(14);
+                        }
+                        function posRecalculateDeliveryForCoordinates(coordinates) {
                             document.getElementById('latitude').value = coordinates['lat'];
                             document.getElementById('longitude').value = coordinates['lng'];
-                            infoWindow.open(map);
-
                             let geocoder  = new google.maps.Geocoder();
                             let latlng = new google.maps.LatLng(coordinates['lat'], coordinates['lng']);
 
@@ -447,12 +442,133 @@
                                     }
                                 }
                             });
+                        }
+
+                        google.maps.event.addListener(zonePolygon, 'click', function(mapsMouseEvent) {
+                            infoWindow.close();
+                            infoWindow = new google.maps.InfoWindow({
+                                position: mapsMouseEvent.latLng,
+                                content: JSON.stringify(mapsMouseEvent.latLng.toJSON(), null,
+                                    2),
+                            });
+                            let coordinates = mapsMouseEvent.latLng.toJSON();
+                            infoWindow.open(map);
+                            posRecalculateDeliveryForCoordinates(coordinates);
                         });
+
+                        window.posApplyDeliveryLatLngFromLink = function (lat, lng) {
+                            const latNum = parseFloat(lat);
+                            const lngNum = parseFloat(lng);
+                            if (!isFinite(latNum) || !isFinite(lngNum)) {
+                                toastr.error('{{ translate('messages.maps_link_no_coordinates') }}', {
+                                    CloseButton: true,
+                                    ProgressBar: true
+                                });
+                                return;
+                            }
+                            const pos = new google.maps.LatLng(latNum, lngNum);
+                            if (!google.maps.geometry.poly.containsLocation(pos, zonePolygon)) {
+                                toastr.error('{{ translate('messages.out_of_coverage') }}', {
+                                    CloseButton: true,
+                                    ProgressBar: true
+                                });
+                                return;
+                            }
+                            map.setCenter({ lat: latNum, lng: lngNum });
+                            if (map.getZoom() < 15) {
+                                map.setZoom(17);
+                            }
+                            posRecalculateDeliveryForCoordinates({ lat: latNum, lng: lngNum });
+                        };
                     },
                 });
             @endif
 
         }
+
+        function posTryParseLatLngFromMapsText(text) {
+            if (!text || typeof text !== 'string') {
+                return null;
+            }
+            const s = decodeURIComponent(text.trim());
+            let m = s.match(/@(-?\d+\.?\d*),(-?\d+\.?\d*)/);
+            if (m) {
+                return { lat: parseFloat(m[1]), lng: parseFloat(m[2]) };
+            }
+            m = s.match(/[?&](?:q|query)=(-?\d+\.?\d*),\s*(-?\d+\.?\d*)/);
+            if (m) {
+                return { lat: parseFloat(m[1]), lng: parseFloat(m[2]) };
+            }
+            m = s.match(/[?&]ll=(-?\d+\.?\d*),(-?\d+\.?\d*)/);
+            if (m) {
+                return { lat: parseFloat(m[1]), lng: parseFloat(m[2]) };
+            }
+            m = s.match(/[?&]center=(-?\d+\.?\d*)%2C(-?\d+\.?\d*)/i);
+            if (m) {
+                return { lat: parseFloat(m[1]), lng: parseFloat(m[2]) };
+            }
+            m = s.match(/[?&]center=(-?\d+\.?\d*),(-?\d+\.?\d*)/i);
+            if (m) {
+                return { lat: parseFloat(m[1]), lng: parseFloat(m[2]) };
+            }
+            return null;
+        }
+
+        $(document).on('click', '#pos_apply_gmaps_link', function () {
+            const raw = ($('#gmaps_delivery_link').val() || '').trim();
+            if (!raw) {
+                toastr.warning('{{ translate('messages.maps_paste_link_empty') }}', {
+                    CloseButton: true,
+                    ProgressBar: true
+                });
+                return;
+            }
+            const local = posTryParseLatLngFromMapsText(raw);
+            if (local && isFinite(local.lat) && isFinite(local.lng)) {
+                if (typeof window.posApplyDeliveryLatLngFromLink === 'function') {
+                    window.posApplyDeliveryLatLngFromLink(local.lat, local.lng);
+                } else {
+                    toastr.error('{{ translate('messages.pos_maps_link_map_not_ready') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                }
+                return;
+            }
+            if (!/^https?:\/\//i.test(raw)) {
+                toastr.warning('{{ translate('messages.invalid_maps_link') }}', {
+                    CloseButton: true,
+                    ProgressBar: true
+                });
+                return;
+            }
+            $.ajax({
+                url: @json(route('vendor.pos.resolve-maps-link')),
+                method: 'POST',
+                data: { _token: '{{ csrf_token() }}', url: raw },
+                success: function (res) {
+                    if (res.lat != null && res.lng != null && typeof window.posApplyDeliveryLatLngFromLink === 'function') {
+                        window.posApplyDeliveryLatLngFromLink(parseFloat(res.lat), parseFloat(res.lng));
+                    } else {
+                        toastr.error('{{ translate('messages.pos_maps_link_map_not_ready') }}', {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
+                    }
+                },
+                error: function (xhr) {
+                    let msg = '{{ translate('messages.maps_link_no_coordinates') }}';
+                    const err0 = xhr.responseJSON && xhr.responseJSON.errors && xhr.responseJSON.errors[0];
+                    if (err0 && err0.message) {
+                        msg = err0.message;
+                    }
+                    toastr.error(msg, {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                }
+            });
+        });
 
         $(document).on('ready', function() {
             @if ($order)

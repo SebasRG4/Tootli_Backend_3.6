@@ -36,6 +36,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
                 Route::get('quick-view-cart-item', 'POSController@quick_view_card_item')->name('quick-view-cart-item');
                 Route::post('add-to-cart', 'POSController@addToCart')->name('add-to-cart');
                 Route::post('add-delivery-info', 'POSController@addDeliveryInfo')->name('add-delivery-info');
+                Route::post('resolve-maps-link', 'POSController@resolveGoogleMapsLink')->name('resolve-maps-link');
                 Route::post('internal-customer-address', 'POSController@loadInternalCustomerAddress')->name('internal-customer-address');
                 Route::post('remove-from-cart', 'POSController@removeFromCart')->name('remove-from-cart');
                 Route::post('cart-items', 'POSController@cart_items')->name('cart_items');
