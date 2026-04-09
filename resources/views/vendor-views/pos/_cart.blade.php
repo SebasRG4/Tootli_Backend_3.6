@@ -373,7 +373,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-light border-bottom py-3">
-                <h5 class="modal-title flex-grow-1 text-center">{{ translate('Delivery Information') }}</h5>
+                <h5 class="modal-title flex-grow-1 text-center">{{ translate('messages.pos_delivery_information') }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -394,53 +394,51 @@
                     <div class="row g-2" id="delivery_address">
                         <div class="col-md-6">
                             <label class="input-label"
-                                for="contact_person_name">{{ translate('messages.contact_person_name') }}<span
+                                for="contact_person_name">{{ translate('messages.pos_contact_name') }}<span
                                     class="input-label-secondary text-danger">*</span></label>
                             <input type="text" id="contact_person_name" class="form-control" name="contact_person_name"
                                 value="{{ $old ? $old['contact_person_name'] : '' }}"
-                                placeholder="{{ translate('Ex: Jhone') }}">
+                                placeholder="{{ translate('messages.pos_placeholder_contact_name') }}">
                         </div>
                         <div class="col-md-6">
-                            <label class="input-label" for="contact_person_number">{{ translate('Contact Number') }}<span
+                            <label class="input-label" for="contact_person_number">{{ translate('messages.pos_contact_phone') }}<span
                                     class="input-label-secondary text-danger">*</span></label>
                             <input type="tel" id="contact_person_number" class="form-control" name="contact_person_number"
                                 value="{{ $old ? $old['contact_person_number'] : '' }}"
-                                placeholder="{{ translate('Ex: +3264124565') }}">
+                                placeholder="{{ translate('messages.pos_placeholder_contact_phone') }}">
                         </div>
                         <div class="col-md-4">
-                            <label class="input-label" for="road">{{ translate('messages.Road') }}<span
+                            <label class="input-label" for="road">{{ translate('messages.pos_road') }}<span
                                     class="input-label-secondary text-danger">*</span></label>
                             <input type="text" id="road" class="form-control" name="road"
-                                value="{{ $old ? $old['road'] : '' }}" placeholder="{{ translate('Ex: 4th') }}">
+                                value="{{ $old ? $old['road'] : '' }}" placeholder="{{ translate('messages.pos_placeholder_road') }}">
                         </div>
                         <div class="col-md-4">
-                            <label class="input-label" for="house">{{ translate('messages.House') }}<span
-                                    class="input-label-secondary text-danger">*</span></label>
+                            <label class="input-label" for="house">{{ translate('messages.pos_house') }}</label>
                             <input type="text" id="house" class="form-control" name="house"
-                                value="{{ $old ? $old['house'] : '' }}" placeholder="{{ translate('Ex: 45/C') }}">
+                                value="{{ $old ? $old['house'] : '' }}" placeholder="{{ translate('messages.pos_placeholder_house') }}">
                         </div>
                         <div class="col-md-4">
-                            <label class="input-label" for="floor">{{ translate('messages.Floor') }}<span
-                                    class="input-label-secondary text-danger">*</span></label>
+                            <label class="input-label" for="floor">{{ translate('messages.pos_floor') }}</label>
                             <input type="text" id="floor" class="form-control" name="floor"
-                                value="{{ $old ? $old['floor'] : '' }}" placeholder="{{ translate('Ex: 1A') }}">
+                                value="{{ $old ? $old['floor'] : '' }}" placeholder="{{ translate('messages.pos_placeholder_floor') }}">
                         </div>
                         <div class="col-md-6">
-                            <label class="input-label" for="longitude">{{ translate('messages.longitude') }}<span
+                            <label class="input-label" for="longitude">{{ translate('messages.pos_longitude') }}<span
                                     class="input-label-secondary text-danger">*</span></label>
                             <input type="text" class="form-control" id="longitude" name="longitude"
                                 value="{{ $old ? $old['longitude'] : '' }}" readonly>
                         </div>
                         <div class="col-md-6">
-                            <label class="input-label" for="latitude">{{ translate('messages.latitude') }}<span
+                            <label class="input-label" for="latitude">{{ translate('messages.pos_latitude') }}<span
                                     class="input-label-secondary text-danger">*</span></label>
                             <input type="text" class="form-control" id="latitude" name="latitude"
                                 value="{{ $old ? $old['latitude'] : '' }}" readonly>
                         </div>
                         <div class="col-md-12">
-                            <label class="input-label" for="address">{{ translate('messages.address') }}</label>
+                            <label class="input-label" for="address">{{ translate('messages.pos_address_notes') }}</label>
                             <textarea name="address" id="address" class="form-control" cols="30" rows="3"
-                                placeholder="{{ translate('Ex: address') }}">{{ $old ? $old['address'] : '' }}</textarea>
+                                placeholder="{{ translate('messages.pos_placeholder_address') }}">{{ $old ? $old['address'] : '' }}</textarea>
                         </div>
                         <input type="hidden" name="original_delivery_fee" id="original_delivery_fee"
                             value="{{ $old ? ($old['original_delivery_fee'] ?? $old['delivery_fee']) : '' }}">
@@ -456,10 +454,10 @@
                         <div class="col-12">
                             <div class="d-flex justify-content-between">
                                 <span class="text-primary">
-                                    {{ translate('* pin the address in the map to calculate delivery fee') }}
+                                    {{ translate('messages.pos_map_pin_hint') }}
                                 </span>
                                 <div>
-                                    <span>{{ translate('Delivery fee') }} :</span>
+                                    <span>{{ translate('messages.pos_delivery_fee_label') }} :</span>
                                     <input type="hidden" name="distance" id="distance">
                                     <input type="hidden" name="delivery_fee" id="delivery_fee"
                                         value="{{ $old ? $old['delivery_fee'] : '' }}">
@@ -468,8 +466,8 @@
                                 </div>
                             </div>
                             <input id="pac-input" class="controls rounded initial-8"
-                                title="{{ translate('messages.search_your_location_here') }}" type="text"
-                                placeholder="{{ translate('messages.search_here') }}" />
+                                title="{{ translate('messages.pos_search_location') }}" type="text"
+                                placeholder="{{ translate('messages.pos_search_location') }}" />
                             <div class="mb-2 h-200px" id="map"></div>
                         </div>
                     </div>
@@ -477,7 +475,7 @@
                         <div class="btn--container justify-content-end">
                             <button class="btn btn-sm btn--primary w-100 delivery-Address-Store" type="button"
                                 >
-                                {{ translate('Update_Delivery address') }}
+                                {{ translate('messages.pos_save_delivery') }}
                             </button>
                         </div>
                     </div>

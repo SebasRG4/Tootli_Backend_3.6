@@ -85,7 +85,7 @@
                                         <span class="card-title-icon">
                                             <i class="tio-user"></i>
                                         </span>
-                                        <span>{{ translate('messages.Delivery Information') }}</span>
+                                        <span>{{ translate('messages.pos_delivery_information') }}</span>
                                     </h5>
                                     <span class="delivery--edit-icon text-primary" id="delivery_address"
                                         data-toggle="modal" data-target="#paymentModal"><i class="tio-edit"></i></span>

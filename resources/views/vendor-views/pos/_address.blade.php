@@ -5,11 +5,11 @@
 @endphp
 <ul>
     <li>
-        <span>{{ translate('Name') }}</span>
+        <span>{{ translate('messages.pos_contact_name') }}</span>
         <strong>{{ $address['contact_person_name'] }}</strong>
     </li>
     <li>
-        <span>{{ translate('contact') }}</span>
+        <span>{{ translate('messages.pos_contact_phone') }}</span>
         <strong>{{ $address['contact_person_number'] }}</strong>
     </li>
 </ul>
