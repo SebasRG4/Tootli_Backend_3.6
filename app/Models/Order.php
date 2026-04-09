@@ -56,6 +56,7 @@ class Order extends Model
         'ecartpay_card_international' => 'boolean',
         'tootli_direct' => 'boolean',
         'store_pos_customer_id' => 'integer',
+        'pos_payment_meta' => 'array',
     ];
 
     protected $appends = ['module_type', 'order_attachment_full_url', 'order_proof_full_url'];

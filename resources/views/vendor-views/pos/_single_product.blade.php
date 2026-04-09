@@ -12,7 +12,7 @@
     <div class="pos-grill-card-body">
         <div class="pos-grill-card-title-row">
             <span class="pos-grill-card-title">{{ Str::limit($product['name'], 28) }}</span>
-            <span class="pos-grill-card-price">{{ \App\CentralLogics\Helpers::format_currency(\App\CentralLogics\Helpers::pos_base_unit_after_discount($product, (bool) session('pos_tootli_direct'))) }}</span>
+            <span class="pos-grill-card-price">{{ \App\CentralLogics\Helpers::format_currency(\App\CentralLogics\Helpers::pos_base_unit_after_discount($product, true)) }}</span>
         </div>
         <p class="pos-grill-card-desc {{ $desc === '' ? 'pos-grill-card-desc--empty' : '' }}">{{ $desc !== '' ? $desc : '—' }}</p>
         <div class="pos-grill-card-footer">

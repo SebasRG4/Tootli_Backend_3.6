@@ -312,11 +312,15 @@
                                     @endif
                                     @if($order['order_type']=='take_away')
                                         <div class="text-info mt-1">
-                                            {{translate('messages.take_away')}}
+                                            {{ translate('Llevar') }}
+                                        </div>
+                                    @elseif($order['order_type']=='dine_in')
+                                        <div class="text-info mt-1">
+                                            {{ translate('En restaurante') }}
                                         </div>
                                     @else
                                         <div class="text-title mt-1">
-                                        {{translate('messages.home Delivery')}}
+                                        {{ !empty($order->tootli_direct) ? translate('Domicilio (Tootli Direct)') : translate('messages.home Delivery') }}
                                         </div>
                                     @endif
                                 </td>

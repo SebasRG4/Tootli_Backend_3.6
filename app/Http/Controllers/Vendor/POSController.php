@@ -111,16 +111,8 @@ class POSController extends Controller
 
     public function setDirectMode(Request $request)
     {
-        $on = filter_var($request->input('enabled', false), FILTER_VALIDATE_BOOLEAN);
-        session(['pos_tootli_direct' => $on]);
-        session()->forget('cart');
-        session()->forget('tax_amount');
-        session()->forget('tax_included');
-        session()->forget('address');
-
-        Toastr::success($on
-            ? translate('messages.tootli_direct_pos_enabled')
-            : translate('messages.tootli_direct_pos_disabled'));
+        // POS interno: siempre opera con precio de menu (direct).
+        Toastr::info(translate('messages.tootli_direct_pos_enabled'));
 
         return back();
     }
@@ -128,7 +120,7 @@ class POSController extends Controller
     public function variant_price(Request $request)
     {
         $product = Item::find($request->id);
-        $pos_direct = (bool) session('pos_tootli_direct', false);
+        $pos_direct = true;
         $base_app = (float) $product->price;
         $base_unit = $pos_direct ? Helpers::item_price_for_context($product, 'direct') : $base_app;
 
@@ -261,7 +253,7 @@ class POSController extends Controller
     public function addToCart(Request $request)
     {
         $product = Item::find($request->id);
-        $pos_direct = (bool) session('pos_tootli_direct', false);
+        $pos_direct = true;
         $base_app = (float) $product->price;
 
         if($product->module->module_type == 'food' && $product->food_variations){
@@ -596,19 +588,24 @@ class POSController extends Controller
             ]);
         }
 
-        $tootli_pos_direct = (bool) session('pos_tootli_direct', false);
         $has_address = $request->session()->has('address') && is_array($request->session()->get('address'))
             && count($request->session()->get('address')) > 0;
+        $tootli_pos_direct = $has_address;
 
         $allowed_types = $has_address
-            ? ($tootli_pos_direct
-                ? ['cash_on_delivery', 'card_on_delivery', 'paid_at_restaurant']
-                : ['cash_on_delivery'])
-            : ['cash', 'card'];
+            ? ['cash_on_delivery', 'card_tootli_direct', 'paid_at_restaurant']
+            : ['cash', 'card_in_store', 'bank_transfer_in_store'];
 
         if (! in_array($request->type, $allowed_types, true)) {
             Toastr::error(translate('messages.invalid_payment_method'));
             return back();
+        }
+        if (in_array($request->type, ['card_in_store', 'card_tootli_direct'], true)) {
+            $request->validate([
+                'card_fee_percent' => 'required|numeric|min:0|max:100',
+                'card_fee_vat_percent' => 'required|numeric|min:0|max:100',
+                'card_gross_amount' => 'required|numeric|min:0',
+            ]);
         }
         $selected_service_type = in_array($request->input('service_type'), ['take_away', 'dine_in'], true)
             ? $request->input('service_type')
@@ -815,13 +812,37 @@ class POSController extends Controller
             $order->tax_percentage = 0;
             $order->total_tax_amount = $tax_amount;
             $order->order_amount = $total_price + $tax_amount + $order->delivery_charge;
-            if ($request->type == 'card') {
+            if (in_array($request->type, ['card_in_store', 'bank_transfer_in_store', 'card_tootli_direct', 'paid_at_restaurant'], true)) {
                 $order->adjusment = 0;
             } else {
                 $paid_in = (float) ($request->amount ?? 0);
                 $order->adjusment = $paid_in - ($total_price + $tax_amount + $order->delivery_charge);
             }
             $order->payment_method = $request->type;
+            $card_gross = null;
+            $card_fee = null;
+            $card_net = null;
+            $card_fee_percent = null;
+            $card_fee_vat_percent = null;
+            if (in_array($request->type, ['card_in_store', 'card_tootli_direct'], true)) {
+                $card_fee_percent = (float) $request->input('card_fee_percent', 0);
+                $card_fee_vat_percent = (float) $request->input('card_fee_vat_percent', 0);
+                $card_gross = (float) $request->input('card_gross_amount', $order->order_amount);
+                $base_fee_rate = $card_fee_percent / 100;
+                $vat_rate = $card_fee_vat_percent / 100;
+                $effective_rate = $base_fee_rate + ($base_fee_rate * $vat_rate);
+                $card_fee = round($card_gross * $effective_rate, 2);
+                $card_net = round($card_gross - $card_fee, 2);
+            }
+            $order->pos_payment_meta = json_encode([
+                'type' => $request->type,
+                'receiver' => in_array($request->type, ['card_tootli_direct', 'cash_on_delivery'], true) ? 'tootli' : 'store',
+                'card_fee_percent' => $card_fee_percent,
+                'card_fee_vat_percent' => $card_fee_vat_percent,
+                'card_gross_amount' => $card_gross,
+                'card_fee_amount' => $card_fee,
+                'card_net_amount' => $card_net,
+            ]);
             $order->save();
 
             if ($request->order_type !== 'parcel') {
@@ -864,7 +885,6 @@ class POSController extends Controller
             session()->forget('tax_amount');
             session()->forget('tax_include');
             session()->forget('address');
-            session()->forget('pos_tootli_direct');
             session(['last_order' => $order->id]);
             if($order->order_status=='confirmed' && $order->user){
                 Helpers::send_order_notification($order);

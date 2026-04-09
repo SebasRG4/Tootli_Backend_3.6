@@ -1364,7 +1364,7 @@ trait PlaceNewOrder
         $order_details = [];
         $discount_on_product_by = 'vendor';
         $discount_type = '';
-        $pos_tootli_direct = (bool) session('pos_tootli_direct', false);
+        $pos_tootli_direct = true;
         foreach ($carts as $c) {
             $variations = [];
             if (is_array($c)) {

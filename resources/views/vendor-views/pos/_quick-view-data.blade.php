@@ -26,7 +26,7 @@
             <a href="{{ route('vendor.item.view', $product->id) }}"
                 class="h3 mb-2 product-title text-capitalize text-break">{{ $product->name }}</a>
 
-                @php($posDirect = (bool) session('pos_tootli_direct'))
+                @php($posDirect = true)
                 @if (isset($product->module_id) && $product->module->module_type == 'food')
                 <div class="mb-3 text-dark">
                     @if ($posDirect)

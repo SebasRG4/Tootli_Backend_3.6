@@ -158,51 +158,69 @@
                 @if ($add)
                     @php($cod = \App\CentralLogics\Helpers::get_business_settings('cash_on_delivery'))
                     @if ($cod['status'])
-                        @if (session('pos_tootli_direct'))
-                            {{-- TODO(card_on_delivery): cobro con terminal del repartidor; solo opción visual para pruebas --}}
-                            <li>
-                                <label>
-                                    <input type="radio" name="type" value="cash_on_delivery" hidden checked>
-                                    <span>{{ translate('messages.pos_payment_cash_on_delivery') }}</span>
-                                </label>
-                            </li>
-                            <li>
-                                <label>
-                                    <input type="radio" name="type" value="card_on_delivery" hidden>
-                                    <span>{{ translate('messages.pos_payment_card_on_delivery') }}</span>
-                                </label>
-                            </li>
-                            <li>
-                                <label>
-                                    <input type="radio" name="type" value="paid_at_restaurant" hidden>
-                                    <span>{{ translate('messages.pos_payment_paid_at_restaurant') }}</span>
-                                </label>
-                            </li>
-                        @else
-                            <li>
-                                <label>
-                                    <input type="radio" name="type" value="cash_on_delivery" hidden checked>
-                                    <span>{{ translate('Cash On Delivery') }}</span>
-                                </label>
-                            </li>
-                        @endif
+                        <li>
+                            <label>
+                                <input type="radio" name="type" value="cash_on_delivery" hidden checked>
+                                <span>{{ translate('Efectivo al repartidor') }}</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="radio" name="type" value="card_tootli_direct" hidden>
+                                <span>{{ translate('Tarjeta') }}</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="radio" name="type" value="paid_at_restaurant" hidden>
+                                <span>{{ translate('Pagado al restaurante') }}</span>
+                            </label>
+                        </li>
                     @endif
                 @else
                     <li id="payment_cash">
                         <label>
                             <input type="radio" name="type" value="cash" hidden="" checked>
-                            <span>{{ translate('messages.Cash') }}</span>
+                            <span>{{ translate('Efectivo') }}</span>
                         </label>
                     </li>
                     <li id="payment_card">
                         <label>
-                            <input type="radio" name="type" value="card" hidden="">
-                            <span>{{ translate('messages.Card') }}</span>
+                            <input type="radio" name="type" value="card_in_store" hidden="">
+                            <span>{{ translate('Tarjeta') }}</span>
+                        </label>
+                    </li>
+                    <li id="payment_transfer">
+                        <label>
+                            <input type="radio" name="type" value="bank_transfer_in_store" hidden="">
+                            <span>{{ translate('Transferencia') }}</span>
                         </label>
                     </li>
                 @endif
 
             </ul>
+        </div>
+        <div id="card-fee-box" class="border rounded p-2 mb-3 d-none">
+            <div class="row g-2">
+                <div class="col-md-6">
+                    <label class="input-label">{{ translate('Comisión tarjeta (%)') }}</label>
+                    <input type="number" step="0.01" min="0" class="form-control" name="card_fee_percent" id="card_fee_percent" value="0">
+                </div>
+                <div class="col-md-6">
+                    <label class="input-label">{{ translate('IVA sobre comisión (%)') }}</label>
+                    <input type="number" step="0.01" min="0" class="form-control" name="card_fee_vat_percent" id="card_fee_vat_percent" value="0">
+                </div>
+                <div class="col-md-12">
+                    <label class="input-label">{{ translate('Monto cobrado') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
+                    <input type="number" step="0.01" min="0" class="form-control" name="card_gross_amount" id="card_gross_amount" value="{{ round($total + $tax_amount, 2) }}">
+                </div>
+                <div class="col-md-12">
+                    <small class="text-muted d-block">
+                        {{ translate('Monto después de comisión') }}:
+                        <strong id="card_net_amount">{{ \App\CentralLogics\Helpers::format_currency(round($total + $tax_amount, 2)) }}</strong>
+                    </small>
+                </div>
+            </div>
         </div>
         @if (!$add)
             <div class="pos--payment-options mt-3 mb-3">
@@ -423,19 +441,17 @@
                             <textarea name="address" id="address" class="form-control" cols="30" rows="3"
                                 placeholder="{{ translate('Ex: address') }}">{{ $old ? $old['address'] : '' }}</textarea>
                         </div>
-                        @if (session('pos_tootli_direct'))
-                            <input type="hidden" name="original_delivery_fee" id="original_delivery_fee"
-                                value="{{ $old ? ($old['original_delivery_fee'] ?? $old['delivery_fee']) : '' }}">
-                            <div class="col-md-12 mb-2">
-                                <label class="input-label"
-                                    for="customer_delivery_fee">{{ translate('messages.tootli_direct_customer_pays_delivery') }}</label>
-                                <input type="number" step="0.01" min="0" class="form-control" id="customer_delivery_fee"
-                                    value="{{ $old ? $old['delivery_fee'] : '' }}"
-                                    placeholder="{{ translate('messages.Ex:_100') }}">
-                                <small
-                                    class="text-muted">{{ translate('messages.tootli_direct_full_fee_stored_hint') }}</small>
-                            </div>
-                        @endif
+                        <input type="hidden" name="original_delivery_fee" id="original_delivery_fee"
+                            value="{{ $old ? ($old['original_delivery_fee'] ?? $old['delivery_fee']) : '' }}">
+                        <div class="col-md-12 mb-2">
+                            <label class="input-label"
+                                for="customer_delivery_fee">{{ translate('messages.tootli_direct_customer_pays_delivery') }}</label>
+                            <input type="number" step="0.01" min="0" class="form-control" id="customer_delivery_fee"
+                                value="{{ $old ? $old['delivery_fee'] : '' }}"
+                                placeholder="{{ translate('messages.Ex:_100') }}">
+                            <small
+                                class="text-muted">{{ translate('messages.tootli_direct_full_fee_stored_hint') }}</small>
+                        </div>
                         <div class="col-12">
                             <div class="d-flex justify-content-between">
                                 <span class="text-primary">
@@ -470,15 +486,44 @@
     </div>
 </div>
 
-@if (session('pos_tootli_direct'))
-    <script>
-        $(function() {
-            $('#customer_delivery_fee').on('input change', function() {
-                var v = $(this).val();
-                $('#delivery_fee').val(v);
-                $('#delivery_fee').siblings('strong').html(v + '{{ \App\CentralLogics\Helpers::currency_symbol() }}');
-            });
+<script>
+    $(function() {
+        $('#customer_delivery_fee').on('input change', function() {
+            var v = $(this).val();
+            $('#delivery_fee').val(v);
+            $('#delivery_fee').siblings('strong').html(v + '{{ \App\CentralLogics\Helpers::currency_symbol() }}');
         });
-    </script>
-@endif
+
+        function isCardMethod() {
+            var v = $('input[name="type"]:checked').val();
+            return v === 'card_in_store' || v === 'card_tootli_direct';
+        }
+
+        function recalcCardNet() {
+            var gross = parseFloat($('#card_gross_amount').val() || '0');
+            var fee = parseFloat($('#card_fee_percent').val() || '0');
+            var iva = parseFloat($('#card_fee_vat_percent').val() || '0');
+            var baseRate = fee / 100;
+            var ivaRate = iva / 100;
+            var effectiveRate = baseRate + (baseRate * ivaRate);
+            var feeAmount = gross * effectiveRate;
+            var net = gross - feeAmount;
+            if (net < 0) net = 0;
+            $('#card_net_amount').text(net.toFixed(2) + ' {{ \App\CentralLogics\Helpers::currency_symbol() }}');
+        }
+
+        function toggleCardBox() {
+            if (isCardMethod()) {
+                $('#card-fee-box').removeClass('d-none');
+                recalcCardNet();
+            } else {
+                $('#card-fee-box').addClass('d-none');
+            }
+        }
+
+        $(document).on('change', 'input[name="type"]', toggleCardBox);
+        $('#card_fee_percent, #card_fee_vat_percent, #card_gross_amount').on('input change', recalcCardNet);
+        toggleCardBox();
+    });
+</script>
 <script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>

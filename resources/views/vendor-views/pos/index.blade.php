@@ -69,15 +69,7 @@
                     <div class="pos-grill-panel pos-grill-order-panel card">
                         <div class="pos-grill-order-header card-header border-0 d-flex flex-wrap align-items-center justify-content-between gap-2">
                             <h2 class="pos-grill-order-title mb-0">{{ translate('messages.pos_shell_my_order') }}</h2>
-                            <form method="post" action="{{ route('vendor.pos.direct-mode') }}" class="mb-0">
-                                @csrf
-                                <input type="hidden" name="enabled" value="{{ session('pos_tootli_direct') ? '0' : '1' }}">
-                                <button type="submit"
-                                    class="btn btn-sm {{ session('pos_tootli_direct') ? 'btn--primary' : 'btn-outline-secondary' }}">
-                                    {{ translate('messages.tootli_direct_pos_toggle') }}:
-                                    {{ session('pos_tootli_direct') ? translate('messages.on') : translate('messages.off') }}
-                                </button>
-                            </form>
+                            <span class="badge badge-soft-dark">{{ translate('messages.tootli_direct_order_badge') }}</span>
                         </div>
                         <div class="w-100">
                             <div class="d-flex flex-wrap flex-row p-2 add--customer-btn">
@@ -87,26 +79,24 @@
                                 <button class="btn btn--primary" type="button" data-toggle="modal"
                                     data-target="#add-internal-customer">{{ translate('messages.add_internal_customer') }}</button>
                             </div>
-                            @if ($store_data->sub_self_delivery == 1 || session('pos_tootli_direct'))
-                                <div class="pos--delivery-options">
-                                    <div class="d-flex justify-content-between">
-                                        <h5 class="card-title">
-                                            <span class="card-title-icon">
-                                                <i class="tio-user"></i>
-                                            </span>
-                                            <span>{{ translate('messages.Delivery Information') }}</span>
-                                        </h5>
-                                        <span class="delivery--edit-icon text-primary" id="delivery_address"
-                                            data-toggle="modal" data-target="#paymentModal"><i class="tio-edit"></i></span>
-                                    </div>
-                                    @if (session('pos_tootli_direct') && $store_data->sub_self_delivery != 1)
-                                        <p class="small text-muted mb-2">{{ translate('messages.tootli_direct_pos_delivery_hint') }}</p>
-                                    @endif
-                                    <div class="pos--delivery-options-info d-flex flex-wrap" id="del-add">
-                                        @include('vendor-views.pos._address')
-                                    </div>
+                            <div class="pos--delivery-options">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="card-title">
+                                        <span class="card-title-icon">
+                                            <i class="tio-user"></i>
+                                        </span>
+                                        <span>{{ translate('messages.Delivery Information') }}</span>
+                                    </h5>
+                                    <span class="delivery--edit-icon text-primary" id="delivery_address"
+                                        data-toggle="modal" data-target="#paymentModal"><i class="tio-edit"></i></span>
                                 </div>
-                            @endif
+                                @if ($store_data->sub_self_delivery != 1)
+                                    <p class="small text-muted mb-2">{{ translate('messages.tootli_direct_pos_delivery_hint') }}</p>
+                                @endif
+                                <div class="pos--delivery-options-info d-flex flex-wrap" id="del-add">
+                                    @include('vendor-views.pos._address')
+                                </div>
+                            </div>
                         </div>
 
 

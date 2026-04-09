@@ -179,8 +179,23 @@
                                 @endif
                                 <h6 class="text-capitalize">{{ translate('messages.order_type') }}
                                     : <label
-                                        class="fz--10 badge m-0 badge-soft-primary">{{ translate(str_replace('_', ' ', $order['order_type'])) }}</label>
+                                        class="fz--10 badge m-0 badge-soft-primary">
+                                        {{ $order['order_type'] === 'dine_in'
+                                            ? translate('En restaurante')
+                                            : ($order['order_type'] === 'take_away'
+                                                ? translate('Llevar')
+                                                : (!empty($order->tootli_direct) ? translate('Domicilio (Tootli Direct)') : translate('messages.home Delivery'))) }}
+                                    </label>
                                 </h6>
+                                @php($posMeta = is_array($order->pos_payment_meta) ? $order->pos_payment_meta : (is_string($order->pos_payment_meta) ? json_decode($order->pos_payment_meta, true) : null))
+                                @if (is_array($posMeta) && isset($posMeta['card_gross_amount']) && $posMeta['card_gross_amount'] !== null)
+                                    <h6>{{ translate('Monto cobrado') }}:
+                                        {{ \App\CentralLogics\Helpers::format_currency((float) $posMeta['card_gross_amount']) }}
+                                    </h6>
+                                    <h6>{{ translate('Monto después de comisión') }}:
+                                        {{ \App\CentralLogics\Helpers::format_currency((float) ($posMeta['card_net_amount'] ?? 0)) }}
+                                    </h6>
+                                @endif
                                 <h6>
                                     {{ translate('messages.order_status') }} :
                                     @if ($order['order_status'] == 'pending')
@@ -720,7 +735,7 @@
                                     href="javascript:">{{ translate('messages.make_ready_for_handover') }}</a>
                                  @if($order['order_status'] == 'handover'|| ($order['order_status'] == 'picked_up' && $order->store->sub_self_delivery == 1))
                                     <a class="btn  w-100
-                                    {{ ($order['order_type'] == 'take_away' || $order->store->sub_self_delivery == 1)  ?  'btn--primary order-status-change-alert'  :  'btn--secondary  self-delivery-warning' }} "
+                                    {{ (in_array($order['order_type'], ['take_away', 'dine_in'], true) || $order->store->sub_self_delivery == 1)  ?  'btn--primary order-status-change-alert'  :  'btn--secondary  self-delivery-warning' }} "
                                        data-url="{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'delivered']) }}"
                                        data-message="{{ translate('messages.Change status to delivered (payment status will be paid if not)?') }}"
                                        data-verification="{{ $order_delivery_verification ? 'true' : 'false' }}"
@@ -783,7 +798,7 @@
                 </ul>
                 <hr class="w-100">
             @endif
-                @if ($order['order_type'] != 'take_away')
+                @if (!in_array($order['order_type'], ['take_away', 'dine_in'], true))
                     <!-- Card -->
                     <div class="card mb-2">
                         <!-- Header -->
@@ -827,7 +842,7 @@
                                     </div>
                                 </div>
 
-                                @if ($order['order_type'] != 'take_away')
+                                @if (!in_array($order['order_type'], ['take_away', 'dine_in'], true))
                                     <hr>
                                     @php($address = $order->dm_last_location)
                                     <div class="d-flex justify-content-between align-items-center">
@@ -1002,7 +1017,7 @@
                                             <span
                                                 class="info">{{ isset($address['road']) ? $address['road'] : '' }}</span>
                                         </div>
-                                        @if ($order['order_type'] != 'take_away' && isset($address['address']))
+                                        @if (!in_array($order['order_type'], ['take_away', 'dine_in'], true) && isset($address['address']))
                                             @if (isset($address['latitude']) && isset($address['longitude']))
                                                 <a target="_blank"
                                                     href="http://maps.google.com/maps?z=12&t=m&q=loc:{{ $address['latitude'] }}+{{ $address['longitude'] }}">
@@ -1057,7 +1072,7 @@
                                             class="info">{{ isset($address['road']) ? $address['road'] : '' }}</span>
                                     </div>
 
-                                    @if ($order['order_type'] != 'take_away' && isset($address['address']))
+                                    @if (!in_array($order['order_type'], ['take_away', 'dine_in'], true) && isset($address['address']))
                                     <hr>
                                         @if (isset($address['latitude']) && isset($address['longitude']))
                                             <a target="_blank"
