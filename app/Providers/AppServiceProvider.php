@@ -29,12 +29,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Force HTTPS when behind a proxy (ngrok, load balancer, etc.)
-        if (
-            request()->header('X-Forwarded-Proto') === 'https' ||
-            str_contains(config('app.url', ''), 'https://') ||
-            str_contains(request()->header('Host', ''), 'ngrok')
-        ) {
+        // Evita contenido mixto (CSS/JS bloqueados): asset() y route() deben usar https:// en el sitio público.
+        if (! $this->app->runningInConsole() && $this->shouldForceHttpsUrls()) {
             URL::forceScheme('https');
         }
 
@@ -52,5 +48,39 @@ class AppServiceProvider extends ServiceProvider
 
         }
 
+    }
+
+    /**
+     * Entornos "live" / producción o petición ya en HTTPS (proxy, Cloudflare, ngrok).
+     */
+    private function shouldForceHttpsUrls(): bool
+    {
+        if ($this->app->environment(['production', 'live'])) {
+            return true;
+        }
+
+        $request = request();
+
+        if ($request->secure()) {
+            return true;
+        }
+
+        if (strtolower((string) $request->header('X-Forwarded-Proto', '')) === 'https') {
+            return true;
+        }
+
+        $cfVisitor = $request->header('CF-Visitor');
+        if (is_string($cfVisitor) && $cfVisitor !== '') {
+            $decoded = json_decode($cfVisitor, true);
+            if (is_array($decoded) && ($decoded['scheme'] ?? '') === 'https') {
+                return true;
+            }
+        }
+
+        if (str_contains((string) config('app.url'), 'https://')) {
+            return true;
+        }
+
+        return str_contains($request->header('Host', ''), 'ngrok');
     }
 }
