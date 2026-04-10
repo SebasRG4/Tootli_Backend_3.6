@@ -386,10 +386,46 @@ class SaboresCiudadController extends Controller
 
         \Log::info('📦 Sabores API - Query executed', [
             'stores_found' => $stores->count(),
-            'store_ids' => $stores->pluck('id')->toArray(),
         ]);
 
-        // Calculate average rating for each store
+        $storeIds = $stores->pluck('id')->toArray();
+
+        // 1. Trending Saves count (Last 7 days)
+        $recentWishlistSavesRaw = \App\Models\Wishlist::whereIn('store_id', $storeIds)
+            ->where('created_at', '>=', now()->subDays(7))
+            ->selectRaw('store_id, COUNT(*) as count')
+            ->groupBy('store_id')
+            ->pluck('count', 'store_id')->toArray();
+
+        $recentUserListSavesRaw = \App\Models\UserListStore::whereIn('store_id', $storeIds)
+            ->where('created_at', '>=', now()->subDays(7))
+            ->selectRaw('store_id, COUNT(*) as count')
+            ->groupBy('store_id')
+            ->pluck('count', 'store_id')->toArray();
+
+        // 2. Last saves for Social Badge
+        $latestUserListQuery = \App\Models\UserListStore::select(DB::raw('MAX(id) as id'))
+            ->whereIn('store_id', $storeIds)->groupBy('store_id')->pluck('id');
+        $lastCustomSaves = \App\Models\UserListStore::with(['userList.user'])
+            ->whereIn('id', $latestUserListQuery)->get()->keyBy('store_id');
+
+        $latestWishlistQuery = \App\Models\Wishlist::select(DB::raw('MAX(id) as id'))
+            ->whereIn('store_id', $storeIds)->groupBy('store_id')->pluck('id');
+        $lastWishlistSaves = \App\Models\Wishlist::with('customer')
+            ->whereIn('id', $latestWishlistQuery)->get()->keyBy('store_id');
+
+        // 3. Reviews with Images (Eager Load in bulk)
+        $allRecentReviews = Review::with('customer:id,f_name')
+            ->whereIn('store_id', $storeIds)
+            ->active()
+            ->whereNotNull('attachment')
+            ->where('attachment', '!=', '[]')
+            ->latest()
+            ->take(300)
+            ->get()
+            ->groupBy('store_id');
+
+        // Calculate data for each store using pre-fetched collections
         $stores = $stores->map(function ($store) {
             $ratings = is_string($store->rating) ? json_decode($store->rating, true) : $store->rating;
             $ratings_calculated = \App\CentralLogics\StoreLogic::calculate_store_rating($ratings);
@@ -408,73 +444,27 @@ class SaboresCiudadController extends Controller
             $user_list_stores_count = (int) ($store->user_list_stores_count ?? 0);
             $store->saved_count = $wishlists_count + $user_list_stores_count;
 
-            if ($store->name == 'Deliciosas') {
-                \Log::info('------- DEBUG COUNTS FOR DELICIOSAS -------');
-                \Log::info('Wishlists Count: ' . $wishlists_count);
-                \Log::info('User List Stores Count: ' . $user_list_stores_count);
-                \Log::info('Total Saved Count: ' . $store->saved_count);
-            }
-
-            // cover_photo_full_url is automatically appended via Model $appends, no need to reassign
-            // cuisine_names is handled by accessor returning an array
-            // $store->cuisine_names = $store->cuisine_names ? array_map('trim', explode(',', (string) $store->cuisine_names)) : [];
-
-            // Explicitly assign active_coupons to ensure serialization
-            $store->active_coupons = $store->activeCoupons;
-            $store->active_coupons_count = $store->activeCoupons ? $store->activeCoupons->count() : 0;
-
-            if ($store->name == 'Deliciosas') {
-                \Log::info('------- DEBUG COUPONS FOR DELICIOSAS (MAP) -------');
-                \Log::info('Store ID: ' . $store->id);
-                \Log::info('Active Coupons Relation Count: ' . ($store->activeCoupons ? $store->activeCoupons->count() : 0));
-
-                if ($store->activeCoupons) {
-                    foreach ($store->activeCoupons as $ac) {
-                        \Log::info('Active Coupon: ' . $ac->code . ' | Type: ' . $ac->coupon_type);
-                    }
-                } else {
-                    \Log::info('Active Coupons Relation is NULL or Empty');
-                }
-
-                // Check raw DB
-                $rawCoupons = \App\Models\Coupon::where('store_id', $store->id)->get();
-                \Log::info('Raw DB Coupons for Store ' . $store->id . ': ' . $rawCoupons->count());
-                foreach ($rawCoupons as $rc) {
-                    \Log::info('DB Coupon: ' . $rc->code . ' Type: ' . $rc->coupon_type . ' Status: ' . $rc->status . ' Start: ' . $rc->start_date . ' End: ' . $rc->expire_date);
-                }
-                \Log::info('--------------------------------------------');
-            }
+            // Removed Deliciosas Logging to speed up IO
 
             // ---------------------------------------------------------
-            // DYNAMIC BADGES LOGIC
+            // DYNAMIC BADGES LOGIC (OPTIMIZED O(1))
             // ---------------------------------------------------------
             $badges = [];
 
-            // 1. 🔥 TRENDING (Last 7 days saves)
-            $recent_saves = \App\Models\Wishlist::where('store_id', $store->id)
-                ->where('created_at', '>=', now()->subDays(7))->count()
-                + \App\Models\UserListStore::where('store_id', $store->id)
-                    ->where('created_at', '>=', now()->subDays(7))->count();
+            // 1. 🔥 TRENDING
+            $recent_saves = ($recentWishlistSavesRaw[$store->id] ?? 0) + ($recentUserListSavesRaw[$store->id] ?? 0);
 
-            if ($recent_saves >= 5) { // Threshold for "Trending"
+            if ($recent_saves >= 5) {
                 $badges[] = "🔥 Trending: {$recent_saves} guardados esta semana";
             }
 
-            // 2. 👀 SOCIAL PROOF (Last User who saved)
-            // Try Custom Lists first
-            $last_custom_save = \App\Models\UserListStore::where('store_id', $store->id)
-                ->latest()
-                ->with(['userList.user'])
-                ->first();
+            // 2. 👀 SOCIAL PROOF
+            $last_custom_save = $lastCustomSaves[$store->id] ?? null;
 
             if ($last_custom_save && $last_custom_save->userList && $last_custom_save->userList->user) {
                 $badges[] = "👀 Guardado en '{$last_custom_save->userList->title}' por @{$last_custom_save->userList->user->f_name}";
             } else {
-                // Fallback to regular Wishlist
-                $last_wishlist_save = \App\Models\Wishlist::where('store_id', $store->id)
-                    ->latest()
-                    ->with('customer')
-                    ->first();
+                $last_wishlist_save = $lastWishlistSaves[$store->id] ?? null;
                 if ($last_wishlist_save && $last_wishlist_save->customer) {
                     $badges[] = "❤️ Guardado por @{$last_wishlist_save->customer->f_name}";
                 }
@@ -484,21 +474,13 @@ class SaboresCiudadController extends Controller
             // REVIEW IMAGES LOGIC
             // ---------------------------------------------------------
             $review_images = [];
-            $recent_reviews = Review::with('customer:id,f_name')
-                ->where('store_id', $store->id)
-                ->active()
-                ->whereNotNull('attachment')
-                ->where('attachment', '!=', '[]')
-                ->latest()
-                ->take(10) // Limit query results
-                ->get();
+            $recent_reviews = $allRecentReviews[$store->id] ?? collect([]);
 
             foreach ($recent_reviews as $review) {
                 $attachments = is_array($review->attachment) ? $review->attachment : json_decode($review->attachment, true);
                 if (is_array($attachments)) {
                     foreach ($attachments as $img) {
-                        if (count($review_images) >= 5)
-                            break 2; // Max 5 review images per card
+                        if (count($review_images) >= 5) break 2;
                         $review_images[] = [
                             'image' => Helpers::get_full_url('review', $img, 'public'),
                             'user_first_name' => $review->customer ? $review->customer->f_name : 'Usuario'
