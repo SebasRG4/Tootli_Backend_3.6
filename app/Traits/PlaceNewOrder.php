@@ -712,7 +712,11 @@ trait PlaceNewOrder
 
             info('Error placing order', [$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
             DB::rollBack();
-            return response()->json([$exception], 403);
+            return response()->json([
+                'errors' => [
+                    ['code' => 'order_failed', 'message' => translate('messages.failed_to_place_order')]
+                ]
+            ], 403);
         }
 
         return response()->json([

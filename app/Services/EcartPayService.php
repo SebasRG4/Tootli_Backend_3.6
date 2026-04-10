@@ -31,7 +31,7 @@ class EcartPayService
         return Cache::remember('ecartpay_auth_token', 55 * 60, function () {
             $credentials = base64_encode($this->publicKey . ':' . $this->privateKey);
 
-            $response = Http::withHeaders([
+            $response = Http::timeout(30)->withHeaders([
                 'Authorization' => 'Basic ' . $credentials,
                 'Accept'        => 'application/json',
             ])->post($this->baseUrl . '/api/authorizations/token');
@@ -56,7 +56,7 @@ class EcartPayService
 
     private function api(): \Illuminate\Http\Client\PendingRequest
     {
-        return Http::withHeaders([
+        return Http::timeout(30)->withHeaders([
             'Authorization' => $this->getAuthToken(),
             'Content-Type'  => 'application/json',
             'Accept'        => 'application/json',
@@ -424,7 +424,7 @@ class EcartPayService
 
             Log::info('[EcartPay] Orden configurada para SPEI', ['ecartpay_order_id' => $ecartpayOrderId]);
 
-            $publicResponse = Http::get($this->baseUrl . "/api/orders/public/{$ecartpayOrderId}");
+            $publicResponse = Http::timeout(30)->get($this->baseUrl . "/api/orders/public/{$ecartpayOrderId}");
 
             $clabe = null;
             $expiresAt = null;
@@ -464,7 +464,7 @@ class EcartPayService
 
     public function getOrderStatus(string $ecartpayOrderId): string
     {
-        $response = Http::get($this->baseUrl . "/api/orders/public/{$ecartpayOrderId}");
+        $response = Http::timeout(30)->get($this->baseUrl . "/api/orders/public/{$ecartpayOrderId}");
 
         if (! $response->successful()) {
             Log::warning('[EcartPay] getOrderStatus HTTP no OK', [
