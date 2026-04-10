@@ -35,6 +35,8 @@ class AppServiceProvider extends ServiceProvider
             $root = rtrim((string) config('app.url'), '/');
             if (str_starts_with($root, 'https://')) {
                 URL::forceRootUrl($root);
+                // asset() usa assetRoot aparte; sin esto a veces siguen saliendo http:// o rutas inconsistentes.
+                URL::useAssetOrigin($root);
             }
         }
 
