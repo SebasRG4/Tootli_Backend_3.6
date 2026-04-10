@@ -60,31 +60,78 @@ trait ActivationClass
         return 60 * 60 * 24 * $days;
     }
 
+    /**
+     * La API puede devolver active como bool, int, string "1"/"0" o base64;
+     * base64_decode(1) o base64_decode(true) rompe y guarda activación inválida.
+     */
+    protected function normalizeActivationActiveValue(mixed $value): string
+    {
+        if ($value === true || $value === 1 || $value === '1') {
+            return '1';
+        }
+        if ($value === false || $value === 0 || $value === '0') {
+            return '0';
+        }
+        if ($value === null) {
+            return '0';
+        }
+        if (is_string($value)) {
+            $trim = trim($value);
+            $lower = strtolower($trim);
+            if (in_array($lower, ['true', 'yes', 'on'], true)) {
+                return '1';
+            }
+            if (in_array($lower, ['false', 'no', 'off', ''], true)) {
+                return '0';
+            }
+            $decoded = base64_decode($trim, true);
+            if ($decoded !== false && $decoded !== '') {
+                return $this->normalizeActivationActiveValue($decoded);
+            }
+        }
+
+        return '0';
+    }
+
+    protected function isActivationActiveValue(mixed $active): bool
+    {
+        if ($active === true || $active === 1 || $active === '1') {
+            return true;
+        }
+        if ($active === false || $active === 0 || $active === '0' || $active === null || $active === '') {
+            return false;
+        }
+
+        return filter_var($active, FILTER_VALIDATE_BOOLEAN);
+    }
+
     public function getRequestConfig(string|null $username = null, string|null $purchaseKey = null, string|null $softwareId = null, string|null $softwareType = null): array
     {
-        $activeStatus = base64_encode(1);
-        if(!$this->is_local()) {
+        $rawActive = true;
+        if (! $this->is_local()) {
             try {
                 $response = Http::post(base64_decode('aHR0cHM6Ly9jaGVjay42YW10ZWNoLmNvbS9hcGkvdjIvcmVnaXN0ZXItZG9tYWlu'), [
-                    base64_decode('dXNlcm5hbWU=') => trim($username),
+                    base64_decode('dXNlcm5hbWU=') => trim((string) $username),
                     base64_decode('cHVyY2hhc2Vfa2V5') => $purchaseKey,
                     base64_decode('c29mdHdhcmVfaWQ=') => base64_decode($softwareId ?? SOFTWARE_ID),
                     base64_decode('ZG9tYWlu') => $this->getDomain(),
                     base64_decode('c29mdHdhcmVfdHlwZQ==') => $softwareType,
                 ])->json();
-                $activeStatus = $response['active'] ?? base64_encode(1);
+                // Si no viene la clave, mantener comportamiento previo (tratar como OK).
+                $rawActive = is_array($response) ? ($response['active'] ?? true) : false;
             } catch (\Exception $exception) {
-                $activeStatus = base64_encode(1);
+                info($exception->getMessage());
+                $rawActive = true;
             }
         }
 
         return [
-            "active" => base64_decode($activeStatus),
-            "username" => trim($username),
-            "purchase_key" => $purchaseKey,
-            "software_id" => $softwareId ?? SOFTWARE_ID,
-            "domain" => $this->getDomain(),
-            "software_type" => $softwareType,
+            'active' => $this->normalizeActivationActiveValue($rawActive),
+            'username' => trim((string) $username),
+            'purchase_key' => $purchaseKey,
+            'software_id' => $softwareId ?? SOFTWARE_ID,
+            'domain' => $this->getDomain(),
+            'software_type' => $softwareType,
         ];
     }
 
@@ -105,7 +152,8 @@ trait ActivationClass
             return Cache::remember($cacheKey, $this->getCacheTimeoutByDays(days: 1), function () use ($app, $appConfig) {
                 $response = $this->getRequestConfig(username: $appConfig['username'], purchaseKey: $appConfig['purchase_key'], softwareId: $appConfig['software_id'], softwareType: $appConfig['software_type'] ?? base64_decode('cHJvZHVjdA=='));
                 $this->updateActivationConfig(app: $app, response: $response);
-                return (bool)$response['active'];
+
+                return $this->isActivationActiveValue($response['active']);
             });
         }
     }
