@@ -1,0 +1,94 @@
+# Ejemplo: tootli.mx detrás de Cloudflare (SSL Full) + PHP-FPM vía Nginx.
+# Copiar a sites-available, ajustar rutas de certificado y fastcgi_pass / puerto upstream.
+# Rangos IPv4/IPv6: refrescar con curl -s https://api.cloudflare.com/client/v4/ips | jq .
+
+upstream php_backend {
+    server unix:/run/php/php8.2-fpm.sock;
+    # server 127.0.0.1:9000;
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name tootli.mx www.tootli.mx;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name tootli.mx www.tootli.mx;
+
+    # Origin CA (Cloudflare) o certbot fullchain.pem / privkey.pem
+    ssl_certificate     /etc/ssl/cloudflare/tootli-fullchain.pem;
+    ssl_certificate_key /etc/ssl/cloudflare/tootli-privkey.pem;
+
+    # Logs con IP real del visitante (tras set_real_ip_*)
+    access_log /var/log/nginx/tootli-access.log;
+    error_log  /var/log/nginx/tootli-error.log;
+
+    real_ip_header CF-Connecting-IP;
+    real_ip_recursive on;
+
+    set_real_ip_from 173.245.48.0/20;
+    set_real_ip_from 103.21.244.0/22;
+    set_real_ip_from 103.22.200.0/22;
+    set_real_ip_from 103.31.4.0/22;
+    set_real_ip_from 141.101.64.0/18;
+    set_real_ip_from 108.162.192.0/18;
+    set_real_ip_from 190.93.240.0/20;
+    set_real_ip_from 188.114.96.0/20;
+    set_real_ip_from 197.234.240.0/22;
+    set_real_ip_from 198.41.128.0/17;
+    set_real_ip_from 162.158.0.0/15;
+    set_real_ip_from 104.16.0.0/13;
+    set_real_ip_from 104.24.0.0/14;
+    set_real_ip_from 172.64.0.0/13;
+    set_real_ip_from 131.0.72.0/22;
+    set_real_ip_from 2400:cb00::/32;
+    set_real_ip_from 2606:4700::/32;
+    set_real_ip_from 2803:f800::/32;
+    set_real_ip_from 2405:b500::/32;
+    set_real_ip_from 2405:8100::/32;
+    set_real_ip_from 2a06:98c0::/29;
+    set_real_ip_from 2c0f:f248::/32;
+
+    root /var/www/tootli/public;
+    index index.php;
+
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+        fastcgi_pass php_backend;
+
+        fastcgi_param HTTP_X_FORWARDED_FOR $proxy_add_x_forwarded_for;
+        fastcgi_param HTTP_X_REAL_IP $remote_addr;
+        fastcgi_param HTTP_X_FORWARDED_PROTO $scheme;
+        fastcgi_param HTTPS on;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}
+
+# --- Alternativa: reverse proxy a un proceso en puerto (Laravel Octane, Node, etc.) ---
+# location / {
+#     proxy_pass http://127.0.0.1:8000;
+#     proxy_http_version 1.1;
+#     proxy_set_header Upgrade $http_upgrade;
+#     proxy_set_header Connection "upgrade";
+#     proxy_set_header Host $host;
+#     proxy_set_header X-Real-IP $remote_addr;
+#     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#     proxy_set_header X-Forwarded-Proto $scheme;
+#     proxy_cache_bypass $http_upgrade;
+# }

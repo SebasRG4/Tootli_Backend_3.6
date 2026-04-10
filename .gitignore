@@ -28,6 +28,8 @@ composer.phar
 # Docker
 docker-compose.override.yml
 docker-local/
+docker/nginx/ssl/*.pem
+docker/nginx/ssl/*.key
 
 # IDE
 .idea/

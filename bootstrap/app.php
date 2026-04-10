@@ -46,6 +46,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
     ->withMiddleware(function (Middleware $middleware) {
 
+        // Debe ir antes que el resto: sin esto, X-Forwarded-Proto/Host no aplican (OAuth, URLs, sesiones).
+        $middleware->prepend(\App\Http\Middleware\TrustProxies::class);
+
         $middleware->use([
             \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
             \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
