@@ -392,6 +392,11 @@ class ItemController extends Controller
         Helpers::add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'Item', data_id: $item->id, data_value: $item->name);
         Helpers::add_or_update_translations(request: $request, key_data: 'description', name_field: 'description', model_name: 'Item', data_id: $item->id, data_value: $item->description);
 
+        if (class_exists(\Laravel\Scout\Scout::class)) {
+            $item->refresh();
+            $item->searchable();
+        }
+
         return response()->json(['success' => translate('messages.product_added_successfully')], 200);
     }
 
@@ -827,6 +832,11 @@ class ItemController extends Controller
 
         Helpers::add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'Item', data_id: $item->id, data_value: $item->name);
         Helpers::add_or_update_translations(request: $request, key_data: 'description', name_field: 'description', model_name: 'Item', data_id: $item->id, data_value: $item->description);
+
+        if (class_exists(\Laravel\Scout\Scout::class)) {
+            $item->refresh();
+            $item->searchable();
+        }
 
         return response()->json(['success' => translate('messages.product_updated_successfully')], 200);
     }
