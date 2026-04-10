@@ -29,9 +29,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Evita contenido mixto (CSS/JS bloqueados): asset() y route() deben usar https:// en el sitio público.
+        // HTTPS + raíz canónica: evita mixed content en asset(), imágenes y enlaces detrás de Cloudflare.
         if (! $this->app->runningInConsole() && $this->shouldForceHttpsUrls()) {
             URL::forceScheme('https');
+            $root = rtrim((string) config('app.url'), '/');
+            if (str_starts_with($root, 'https://')) {
+                URL::forceRootUrl($root);
+            }
         }
 
         try {
