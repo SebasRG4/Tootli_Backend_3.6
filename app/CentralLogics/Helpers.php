@@ -401,7 +401,7 @@ class Helpers
         unset($data['generic']);
 
         unset($data['pharmacy_item_details']);
-        unset($data['store']);
+        // unset($data['store']);
         unset($data['rating']);
         return $data;
     }
@@ -681,7 +681,7 @@ class Helpers
                 unset($item['allergies']);
                 unset($item['generic']);
                 unset($item['pharmacy_item_details']);
-                unset($item['store']);
+                // unset($item['store']);
                 unset($item['rating']);
                 array_push($storage, $item);
             }
@@ -784,7 +784,7 @@ class Helpers
 
 
             unset($data['pharmacy_item_details']);
-            unset($data['store']);
+            // unset($data['store']);
             unset($data['rating']);
             unset($data['nutritions']);
             unset($data['allergies']);
@@ -926,7 +926,7 @@ class Helpers
                 unset($item['generic']);
                 unset($item['ecommerce_item_details']);
                 unset($item['pharmacy_item_details']);
-                unset($item['store']);
+                // unset($item['store']);
                 unset($item['rating']);
                 array_push($storage, $item);
             }
@@ -1047,7 +1047,7 @@ class Helpers
             unset($data['generic']);
             unset($data['ecommerce_item_details']);
             unset($data['pharmacy_item_details']);
-            unset($data['store']);
+            // unset($data['store']);
             unset($data['rating']);
         }
 
@@ -1232,6 +1232,7 @@ class Helpers
                 unset($item['storeConfig']);
                 unset($item['campaigns']);
                 unset($item['pivot']);
+                // unset($item['store']);
                 array_push($storage, $item);
             }
             $data = $storage;
@@ -1272,6 +1273,7 @@ class Helpers
             unset($data['campaigns']);
             unset($data['storeConfig']);
             unset($data['pivot']);
+            // unset($data['store']);
         }
 
         return $data;
