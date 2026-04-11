@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Modules\Gateways\Traits\SmsGateway;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
@@ -722,7 +723,8 @@ class CustomerAuthController extends Controller
                         $aud = 'https://appleid.apple.com';
                         $iat = strtotime('now');
                         $exp = strtotime('+60days');
-                        $keyContent = file_get_contents('storage/app/public/apple-login/'.$apple_login->service_file);
+                        $appleKeyPath = 'apple-login/'.$apple_login->service_file;
+                        $keyContent = Storage::disk(Helpers::getDisk())->get($appleKeyPath);
 
                         $token = JWT::encode([
                             'iss' => $teamId,

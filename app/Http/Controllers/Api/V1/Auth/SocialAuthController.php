@@ -18,6 +18,7 @@ use App\Models\WalletTransaction;
 use Illuminate\Support\Facades\DB;
 use Firebase\JWT\JWT;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Modules\Gateways\Traits\SmsGateway;
 
 class SocialAuthController extends Controller
@@ -485,11 +486,8 @@ class SocialAuthController extends Controller
                 $aud = 'https://appleid.apple.com';
                 $iat = strtotime('now');
                 $exp = strtotime('+60days');
-                $awsUrl = config('filesystems.disks.s3.url');
-                $awsBucket = config('filesystems.disks.s3.bucket');
-                $awsBaseURL = rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/');
-                $service_file = (count($apple_login_data?->storage)>0 && $apple_login_data?->storage[0]?->value == 's3') ? $awsBaseURL.'apple-login/'.$apple_login->service_file : 'storage/app/public/apple-login/'.$apple_login->service_file;
-                $keyContent = file_get_contents($service_file);
+                $appleKeyPath = 'apple-login/'.$apple_login->service_file;
+                $keyContent = Storage::disk(Helpers::getDisk())->get($appleKeyPath);
 
                 $token = JWT::encode([
                     'iss' => $teamId,
