@@ -30,6 +30,7 @@ use App\CentralLogics\ProductLogic;
 use App\Models\PharmacyItemDetails;
 use App\Http\Controllers\Controller;
 use App\Models\EcommerceItemDetails;
+use App\Support\AlgoliaItemSync;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
@@ -1411,6 +1412,7 @@ class ItemController extends Controller
                 Toastr::error($e->getMessage());
                 return back();
             }
+            $algoliaItemIds = [];
             try {
                 DB::beginTransaction();
                 $chunkSize = 100;
@@ -1419,6 +1421,7 @@ class ItemController extends Controller
                     //                    DB::table('items')->insert($chunk_item);
                     foreach ($chunk_item as $item) {
                         $insertedId = DB::table('items')->insertGetId($item);
+                        $algoliaItemIds[] = $insertedId;
                         Helpers::updateStorageTable(get_class(new Item), $insertedId, $item['image']);
                     }
                 }
@@ -1429,6 +1432,7 @@ class ItemController extends Controller
                 Toastr::error($e->getMessage());
                 return back();
             }
+            AlgoliaItemSync::dispatchForItemIds($algoliaItemIds);
             Toastr::success(translate('messages.product_imported_successfully', ['count' => count($data)]));
             return back();
         }
@@ -1505,6 +1509,7 @@ class ItemController extends Controller
             Toastr::error($e->getMessage());
             return back();
         }
+        $algoliaItemIds = [];
         try {
             DB::beginTransaction();
             $chunkSize = 100;
@@ -1515,9 +1520,11 @@ class ItemController extends Controller
                     if (isset($item['id']) && DB::table('items')->where('id', $item['id'])->exists()) {
                         DB::table('items')->where('id', $item['id'])->update($item);
                         Helpers::updateStorageTable(get_class(new Item), $item['id'], $item['image']);
+                        $algoliaItemIds[] = (int) $item['id'];
                     } else {
                         $insertedId = DB::table('items')->insertGetId($item);
                         Helpers::updateStorageTable(get_class(new Item), $insertedId, $item['image']);
+                        $algoliaItemIds[] = $insertedId;
                     }
                 }
             }
@@ -1528,6 +1535,7 @@ class ItemController extends Controller
             Toastr::error($e->getMessage());
             return back();
         }
+        AlgoliaItemSync::dispatchForItemIds($algoliaItemIds);
         Toastr::success(translate('messages.product_imported_successfully', ['count' => count($data)]));
         return back();
     }

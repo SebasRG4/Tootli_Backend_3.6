@@ -42,6 +42,7 @@ return [
     |
     */
 
+    // true: la indexación Algolia va a la cola (recomendado en producción con `php artisan queue:work`).
     'queue' => env('SCOUT_QUEUE', false),
 
     /*

@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Modules\Gateways\Traits\SmsGateway;
@@ -537,8 +538,23 @@ class CustomerAuthController extends Controller
                     $response = SMS_module::send($request['phone'],$otp);
                 }
 
+                Log::info('customer_sms_otp', [
+                    'context' => 'register',
+                    'event' => 'dispatch_attempt',
+                    'uses_payment_gateway_sms' => $published_status == 1,
+                    'sms_result' => $response,
+                    'app_mode' => env('APP_MODE'),
+                    'phone_last4' => $this->maskedPhoneLast4($request['phone'] ?? ''),
+                ]);
+
                 $token = null;
                 if(env('APP_MODE') != 'test' && $response !== 'success') {
+                    Log::warning('customer_sms_otp', [
+                        'context' => 'register',
+                        'event' => 'dispatch_failed',
+                        'sms_result' => $response,
+                        'phone_last4' => $this->maskedPhoneLast4($request['phone'] ?? ''),
+                    ]);
                     $errors = [];
                     array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]);
                     return response()->json([
@@ -1013,56 +1029,94 @@ class CustomerAuthController extends Controller
 
     private function verification_check($request_data){
         $firebase_otp_verification = BusinessSetting::where('key', 'firebase_otp_verification')->first()?->value??0;
-        if(!$firebase_otp_verification)
-        {
-            $otp_interval_time= 60; //seconds
+        if ($firebase_otp_verification) {
+            Log::info('customer_sms_otp', [
+                'context' => 'verification_check',
+                'event' => 'skipped_server_sms',
+                'reason' => 'firebase_otp_verification_enabled',
+                'phone_last4' => $this->maskedPhoneLast4($request_data['phone'] ?? ''),
+            ]);
 
-            $verification_data= DB::table('phone_verifications')->where('phone', $request_data['phone'])->first();
-
-            if(isset($verification_data) &&  Carbon::parse($verification_data->updated_at)->DiffInSeconds() < $otp_interval_time){
-
-                $time= $otp_interval_time - Carbon::parse($verification_data->updated_at)->DiffInSeconds();
-                $errors = [];
-                array_push($errors, ['code' => 'otp', 'message' =>  translate('messages.please_try_again_after_').$time.' '.translate('messages.seconds')]);
-
-                return $errors;
-            }
-
-            $otp = rand(100000, 999999);
-            if(env('APP_MODE') == 'test'){
-                $otp = '123456';
-            }
-            DB::table('phone_verifications')->updateOrInsert(['phone' => $request_data['phone']],
-                [
-                    'token' => $otp,
-                    'otp_hit_count' => 0,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-
-            $response= null;
-
-
-            $published_status = 0;
-            $payment_published_status = config('get_payment_publish_status');
-            if (isset($payment_published_status[0]['is_published'])) {
-                $published_status = $payment_published_status[0]['is_published'];
-            }
-
-            if($published_status == 1){
-                $response = SmsGateway::send($request_data['phone'],$otp);
-            }else{
-                $response = SMS_module::send($request_data['phone'],$otp);
-            }
-
-            if((env('APP_MODE') != 'test') && $response !== 'success')
-            {
-                $errors = [];
-                array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]);
-                return $errors;
-            }
+            return true;
         }
+
+        $otp_interval_time= 60; //seconds
+
+        $verification_data= DB::table('phone_verifications')->where('phone', $request_data['phone'])->first();
+
+        if(isset($verification_data) &&  Carbon::parse($verification_data->updated_at)->DiffInSeconds() < $otp_interval_time){
+
+            $time= $otp_interval_time - Carbon::parse($verification_data->updated_at)->DiffInSeconds();
+            $errors = [];
+            array_push($errors, ['code' => 'otp', 'message' =>  translate('messages.please_try_again_after_').$time.' '.translate('messages.seconds')]);
+
+            Log::info('customer_sms_otp', [
+                'context' => 'verification_check',
+                'event' => 'rate_limited',
+                'retry_after_seconds' => $time,
+                'phone_last4' => $this->maskedPhoneLast4($request_data['phone'] ?? ''),
+            ]);
+
+            return $errors;
+        }
+
+        $otp = rand(100000, 999999);
+        if(env('APP_MODE') == 'test'){
+            $otp = '123456';
+        }
+        DB::table('phone_verifications')->updateOrInsert(['phone' => $request_data['phone']],
+            [
+                'token' => $otp,
+                'otp_hit_count' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+        $response= null;
+
+
+        $published_status = 0;
+        $payment_published_status = config('get_payment_publish_status');
+        if (isset($payment_published_status[0]['is_published'])) {
+            $published_status = $payment_published_status[0]['is_published'];
+        }
+
+        if($published_status == 1){
+            $response = SmsGateway::send($request_data['phone'],$otp);
+        }else{
+            $response = SMS_module::send($request_data['phone'],$otp);
+        }
+
+        Log::info('customer_sms_otp', [
+            'context' => 'verification_check',
+            'event' => 'dispatch_attempt',
+            'uses_payment_gateway_sms' => $published_status == 1,
+            'sms_result' => $response,
+            'app_mode' => env('APP_MODE'),
+            'phone_last4' => $this->maskedPhoneLast4($request_data['phone'] ?? ''),
+        ]);
+
+        if((env('APP_MODE') != 'test') && $response !== 'success')
+        {
+            Log::warning('customer_sms_otp', [
+                'context' => 'verification_check',
+                'event' => 'dispatch_failed',
+                'sms_result' => $response,
+                'phone_last4' => $this->maskedPhoneLast4($request_data['phone'] ?? ''),
+            ]);
+            $errors = [];
+            array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]);
+            return $errors;
+        }
+
         return true;
+    }
+
+    private function maskedPhoneLast4(string $phone): ?string
+    {
+        $digits = preg_replace('/\D/', '', $phone);
+
+        return strlen($digits) >= 4 ? substr($digits, -4) : null;
     }
 
     private function refer_code_check($user){

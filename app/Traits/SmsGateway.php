@@ -5,6 +5,7 @@ namespace App\Traits;
 use SimpleXMLElement;
 use Twilio\Rest\Client;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client as HpptClient;
 use App\Models\Setting;
 
@@ -87,6 +88,11 @@ trait  SmsGateway
             return self::labsmobile($receiver, $otp);
         }
 
+        $digits = preg_replace('/\D/', '', (string) $receiver);
+        Log::warning('SmsGateway::send no active provider', [
+            'receiver_last4' => strlen($digits) >= 4 ? substr($digits, -4) : null,
+        ]);
+
         return 'not_found';
     }
 
@@ -109,6 +115,10 @@ trait  SmsGateway
                     );
                 $response = 'success';
             } catch (\Exception $exception) {
+                Log::warning('SmsGateway twilio', [
+                    'message' => $exception->getMessage(),
+                    'receiver_last4' => strlen((string) $receiver) >= 4 ? substr(preg_replace('/\D/', '', (string) $receiver), -4) : null,
+                ]);
                 $response = 'error';
             }
         }

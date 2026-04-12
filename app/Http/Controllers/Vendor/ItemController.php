@@ -24,6 +24,7 @@ use App\CentralLogics\ProductLogic;
 use App\Models\PharmacyItemDetails;
 use App\Http\Controllers\Controller;
 use App\Models\EcommerceItemDetails;
+use App\Support\AlgoliaItemSync;
 use Brian2694\Toastr\Facades\Toastr;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Illuminate\Support\Facades\Storage;
@@ -1272,10 +1273,12 @@ class ItemController extends Controller
 
                 $chunkSize = 100;
                 $chunk_items = array_chunk($data, $chunkSize);
+                $algoliaItemIds = [];
                 foreach ($chunk_items as $key => $chunk_item) {
                     //                    DB::table('items')->insert($chunk_item);
                     foreach ($chunk_item as $item) {
                         $insertedId = DB::table('items')->insertGetId($item);
+                        $algoliaItemIds[] = $insertedId;
                         Helpers::updateStorageTable(get_class(new Item), $insertedId, $item['image']);
                     }
                 }
@@ -1299,6 +1302,7 @@ class ItemController extends Controller
                 Toastr::error($e->getMessage());
                 return back();
             }
+            AlgoliaItemSync::dispatchForItemIds($algoliaItemIds);
 
             Toastr::success(count($data) . ' ' . $message);
             return back();
@@ -1419,51 +1423,55 @@ class ItemController extends Controller
             Toastr::error($e->getMessage());
             return back();
         }
+        $algoliaItemIds = [];
         try {
-            DB::beginTransaction();
+                DB::beginTransaction();
 
-            $chunkSize = 100;
+                $chunkSize = 100;
 
-            if (count($temp_data) > 0) {
-                $message = translate('messages.Products_are_added_for_the_admin_approval');
-                $chunk_items = array_chunk($temp_data, $chunkSize);
+                if (count($temp_data) > 0) {
+                    $message = translate('messages.Products_are_added_for_the_admin_approval');
+                    $chunk_items = array_chunk($temp_data, $chunkSize);
 
-                foreach ($chunk_items as $key => $chunk_item) {
-                    //                    DB::table('temp_products')->upsert($chunk_item,['item_id','module_id'],['name','description','image','images','category_id','category_ids','unit_id','stock','price','discount','discount_type','available_time_starts','available_time_ends','variations','food_variations','add_ons','attributes','store_id','status','veg','recommended' ,'tag_ids','choice_options']);
-                    foreach ($chunk_item as $item) {
-                        if (isset($item['id']) && DB::table('temp_products')->where('id', $item['id'])->exists()) {
-                            DB::table('temp_products')->where('id', $item['id'])->update($item);
-                            Helpers::updateStorageTable(get_class(new TempProduct), $item['id'], $item['image']);
-                        } else {
-                            $insertedId = DB::table('temp_products')->insertGetId($item);
-                            Helpers::updateStorageTable(get_class(new TempProduct), $insertedId, $item['image']);
+                    foreach ($chunk_items as $key => $chunk_item) {
+                        //                    DB::table('temp_products')->upsert($chunk_item,['item_id','module_id'],['name','description','image','images','category_id','category_ids','unit_id','stock','price','discount','discount_type','available_time_starts','available_time_ends','variations','food_variations','add_ons','attributes','store_id','status','veg','recommended' ,'tag_ids','choice_options']);
+                        foreach ($chunk_item as $item) {
+                            if (isset($item['id']) && DB::table('temp_products')->where('id', $item['id'])->exists()) {
+                                DB::table('temp_products')->where('id', $item['id'])->update($item);
+                                Helpers::updateStorageTable(get_class(new TempProduct), $item['id'], $item['image']);
+                            } else {
+                                $insertedId = DB::table('temp_products')->insertGetId($item);
+                                Helpers::updateStorageTable(get_class(new TempProduct), $insertedId, $item['image']);
+                            }
+                        }
+                    }
+                } else {
+                    $chunk_items = array_chunk($data, $chunkSize);
+                    foreach ($chunk_items as $key => $chunk_item) {
+                        //                    DB::table('items')->upsert($chunk_item,['id','module_id'],['name','description','image','images','category_id','category_ids','unit_id','stock','price','discount','discount_type','available_time_starts','available_time_ends','variations','food_variations','add_ons','attributes','store_id','status','veg','recommended', 'updated_at','choice_options']);
+                        foreach ($chunk_item as $item) {
+                            if (isset($item['id']) && DB::table('items')->where('id', $item['id'])->exists()) {
+                                DB::table('items')->where('id', $item['id'])->update($item);
+                                Helpers::updateStorageTable(get_class(new Item), $item['id'], $item['image']);
+                                $algoliaItemIds[] = (int) $item['id'];
+                            } else {
+                                $insertedId = DB::table('items')->insertGetId($item);
+                                Helpers::updateStorageTable(get_class(new Item), $insertedId, $item['image']);
+                                $algoliaItemIds[] = $insertedId;
+                            }
                         }
                     }
                 }
-            } else {
-                $chunk_items = array_chunk($data, $chunkSize);
-                foreach ($chunk_items as $key => $chunk_item) {
-                    //                    DB::table('items')->upsert($chunk_item,['id','module_id'],['name','description','image','images','category_id','category_ids','unit_id','stock','price','discount','discount_type','available_time_starts','available_time_ends','variations','food_variations','add_ons','attributes','store_id','status','veg','recommended', 'updated_at','choice_options']);
-                    foreach ($chunk_item as $item) {
-                        if (isset($item['id']) && DB::table('items')->where('id', $item['id'])->exists()) {
-                            DB::table('items')->where('id', $item['id'])->update($item);
-                            Helpers::updateStorageTable(get_class(new Item), $item['id'], $item['image']);
-                        } else {
-                            $insertedId = DB::table('items')->insertGetId($item);
-                            Helpers::updateStorageTable(get_class(new Item), $insertedId, $item['image']);
-                        }
-                    }
-                }
+
+
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                info(["line___{$e->getLine()}", $e->getMessage()]);
+                Toastr::error($e->getMessage());
+                return back();
             }
-
-
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            info(["line___{$e->getLine()}", $e->getMessage()]);
-            Toastr::error($e->getMessage());
-            return back();
-        }
+        AlgoliaItemSync::dispatchForItemIds($algoliaItemIds);
 
         Toastr::success(count($data) . ' ' . $message);
         return back();

@@ -4,6 +4,7 @@ namespace App\CentralLogics;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Twilio\Rest\Client;
 
 class SMS_module
@@ -39,6 +40,11 @@ class SMS_module
             return self::labsmobile($receiver, $otp);
         }
 
+        $digits = preg_replace('/\D/', '', (string) $receiver);
+        Log::warning('SMS_module::send no active provider', [
+            'receiver_last4' => strlen($digits) >= 4 ? substr($digits, -4) : null,
+        ]);
+
         return 'not_found';
     }
 
@@ -61,6 +67,10 @@ class SMS_module
                     );
                 $response = 'success';
             } catch (\Exception $exception) {
+                Log::warning('SMS_module twilio', [
+                    'message' => $exception->getMessage(),
+                    'receiver_last4' => strlen((string) $receiver) >= 4 ? substr(preg_replace('/\D/', '', (string) $receiver), -4) : null,
+                ]);
                 $response = 'error';
             }
         }
