@@ -24,6 +24,26 @@ services:
     restart: always
     environment:
       TZ: America/Mexico_City
+      SCOUT_QUEUE: "true"
+    volumes:
+      - .:/var/www/html
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /opt/tootli/go-worker/firebase-service-account.json:/app/firebase-service-account.json:ro
+    depends_on:
+      - db
+      - redis
+
+  queue:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    restart: always
+    command: php artisan queue:work redis --sleep=3 --tries=3 --timeout=90 --max-time=3600
+    environment:
+      TZ: America/Mexico_City
+      SCOUT_QUEUE: "true"
     volumes:
       - .:/var/www/html
       - ./docker/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
