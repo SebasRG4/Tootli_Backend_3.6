@@ -700,8 +700,9 @@ class Helpers
                     ]);
                 }
                 $item['variations'] = $variations;
-                $item['food_variations'] = $item['food_variations'] ? json_decode($item['food_variations'], true) : '';
-                self::mark_best_value($item['food_variations']);
+                $food_variations = $item['food_variations'] ? json_decode($item['food_variations'], true) : '';
+                self::mark_best_value($food_variations);
+                $item['food_variations'] = $food_variations;
                 $item['module_type'] = $item->module->module_type;
                 $item['store_name'] = $item->store?->name;
                 $item['store_status'] = (int) $item->store?->status;
@@ -803,8 +804,9 @@ class Helpers
                 unset($data['end_date']);
             }
             $data['variations'] = $variations;
-            $data['food_variations'] = $data['food_variations'] ? json_decode($data['food_variations'], true) : '';
-            self::mark_best_value($data['food_variations']);
+            $food_variations = $data['food_variations'] ? json_decode($data['food_variations'], true) : '';
+            self::mark_best_value($food_variations);
+            $data['food_variations'] = $food_variations;
             $data['store_name'] = $data->store->name;
             $data['store_status'] = (int) $data->store->status;
             $data['is_campaign'] = $data->store?->campaigns_count > 0 ? 1 : 0;
