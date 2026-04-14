@@ -574,6 +574,82 @@ class Helpers
         return 5.0; // Default 5km
     }
 
+    public static function parse_quantity_multiplier($label)
+    {
+        $label = strtolower(trim($label));
+        if (empty($label)) return 1.0;
+
+        if (preg_match('/^([0-9\.]+)\s*([a-zñáéíóú]+)?$/', $label, $matches)) {
+            $value = (float)$matches[1];
+            $unit = $matches[2] ?? '';
+
+            switch ($unit) {
+                case 'kg':
+                case 'kilo':
+                case 'kgs':
+                case 'kilos':
+                    return $value * 1000;
+                case 'g':
+                case 'gr':
+                case 'grs':
+                case 'gramos':
+                    return $value;
+                case 'lb':
+                case 'lbs':
+                case 'libra':
+                case 'libras':
+                    return $value * 453.592;
+                case 'oz':
+                case 'ozs':
+                case 'onza':
+                case 'onzas':
+                    return $value * 28.3495;
+                case 'l':
+                case 'lt':
+                case 'litro':
+                case 'litros':
+                    return $value * 1000;
+                case 'ml':
+                    return $value;
+                default:
+                    return $value;
+            }
+        }
+        return 1.0;
+    }
+
+    public static function mark_best_value(&$food_variations)
+    {
+        if (!$food_variations || !is_array($food_variations)) return;
+
+        foreach ($food_variations as &$variation_group) {
+            if (!isset($variation_group['values']) || !is_array($variation_group['values'])) continue;
+
+            $best_index = -1;
+            $lowest_unit_price = INF;
+
+            foreach ($variation_group['values'] as $index => $option) {
+                $price = (float)($option['optionPrice'] ?? 0);
+                if ($price <= 0) continue;
+
+                $multiplier = self::parse_quantity_multiplier($option['label'] ?? '');
+                if ($multiplier > 0) {
+                    $unit_price = $price / $multiplier;
+                    if ($unit_price < $lowest_unit_price) {
+                        $lowest_unit_price = $unit_price;
+                        $best_index = $index;
+                    }
+                }
+            }
+
+            if ($best_index != -1) {
+                foreach ($variation_group['values'] as $index => &$option) {
+                    $option['is_best_value'] = ($index == $best_index);
+                }
+            }
+        }
+    }
+
     public static function product_data_formatting($data, $multi_data = false, $trans = false, $local = 'en', $temp_product = false)
     {
         $latitude = request()->header('latitude');
@@ -625,6 +701,7 @@ class Helpers
                 }
                 $item['variations'] = $variations;
                 $item['food_variations'] = $item['food_variations'] ? json_decode($item['food_variations'], true) : '';
+                self::mark_best_value($item['food_variations']);
                 $item['module_type'] = $item->module->module_type;
                 $item['store_name'] = $item->store?->name;
                 $item['store_status'] = (int) $item->store?->status;
@@ -727,6 +804,7 @@ class Helpers
             }
             $data['variations'] = $variations;
             $data['food_variations'] = $data['food_variations'] ? json_decode($data['food_variations'], true) : '';
+            self::mark_best_value($data['food_variations']);
             $data['store_name'] = $data->store->name;
             $data['store_status'] = (int) $data->store->status;
             $data['is_campaign'] = $data->store?->campaigns_count > 0 ? 1 : 0;
