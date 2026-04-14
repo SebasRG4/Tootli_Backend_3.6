@@ -1,0 +1,77 @@
+#!/usr/bin/expect -f
+
+set timeout 180
+set password "tHUhl8Ubl#iSafa!r*@h-"
+
+spawn ssh -o StrictHostKeyChecking=no -p 5225 sebastian-rivera@15.235.73.88
+
+expect "password:"
+send "$password\r"
+expect -re "\\\$\\s*$"
+
+send "sudo -i\r"
+expect "password"
+send "$password\r"
+expect "# "
+
+puts "\n===== Buscando PHP en el servidor ====="
+send "which php8.3 || which php8.2 || which php8.1 || find /usr/bin /usr/local/bin -name 'php*' 2>/dev/null | head -5\r"
+expect "# "
+
+send "php8.3 --version 2>/dev/null || php8.2 --version 2>/dev/null\r"
+expect "# "
+
+puts "\n===== Limpiando cache con PHP correcto ====="
+send "cd /opt/tootli && php8.3 artisan config:clear 2>&1 || php8.2 artisan config:clear 2>&1\r"
+expect "# "
+
+send "php8.3 artisan cache:clear 2>&1 || php8.2 artisan cache:clear 2>&1\r"
+expect "# "
+
+send "php8.3 artisan optimize 2>&1 || php8.2 artisan optimize 2>&1\r"
+expect "# "
+
+puts "\n===== Instalando Supervisor ====="
+send "apt-get install -y supervisor 2>&1 | tail -5\r"
+expect "# "
+
+puts "\n===== Creando config de queue worker ====="
+send {cat > /etc/supervisor/conf.d/tootli-queue-worker.conf << 'CONF'
+[program:tootli-queue-worker]
+process_name=%(program_name)s_%(process_num)02d
+command=php8.3 /opt/tootli/artisan queue:work redis --sleep=3 --tries=3 --max-time=3600
+directory=/opt/tootli
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+user=www-data
+numprocs=2
+redirect_stderr=true
+stdout_logfile=/opt/tootli/storage/logs/worker.log
+stopwaitsecs=3600
+CONF
+}
+send "\r"
+expect "# "
+
+puts "\n===== Verificando que php8.3 existe para el worker ====="
+send "which php8.3 && echo 'OK php8.3' || sed -i 's/php8.3/php8.2/g' /etc/supervisor/conf.d/tootli-queue-worker.conf && echo 'Usando php8.2'\r"
+expect "# "
+
+puts "\n===== Iniciando Supervisor ====="
+send "systemctl enable supervisor && systemctl start supervisor && sleep 2\r"
+expect "# "
+
+send "supervisorctl reread && supervisorctl update && supervisorctl start tootli-queue-worker:* 2>&1\r"
+expect "# "
+
+send "supervisorctl status\r"
+expect "# "
+
+puts "\n===== Estado final ====="
+send "supervisorctl status tootli-queue-worker:*\r"
+expect "# "
+
+send "exit\r"
+expect eof

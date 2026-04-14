@@ -344,7 +344,9 @@
                                     </label>
                                 </div>
                             </div>
+                        @endif
 
+                        @if (Config::get('module.current_module_type') == 'grocery' || Config::get('module.current_module_type') == 'ecommerce')
                             <div class="col-sm-6 col-lg-4 error-wrapper">
                                 <div class="form-group mb-0">
                                     <label class="input-label" for="delivery_time_type">{{ translate('messages.delivery_time_type') }}</label>

@@ -399,7 +399,7 @@ class ItemController extends Controller
         $food->images = $images;
         $food->stock = $request->current_stock ?? 0;
         $module_type = Helpers::get_store_data()->module->module_type;
-        if ($module_type == 'grocery') {
+        if ($module_type == 'grocery' || $module_type == 'ecommerce') {
             $food->organic = $request->organic ?? 0;
             $food->delivery_time_type = $request->delivery_time_type ?? 'standard';
         }
@@ -772,7 +772,7 @@ class ItemController extends Controller
         $p->add_ons = $request->has('addon_ids') ? json_encode($request->addon_ids) : json_encode([]);
         $p->stock = $request->current_stock ?? 0;
         $module_type = Helpers::get_store_data()->module->module_type;
-        if ($module_type == 'grocery') {
+        if ($module_type == 'grocery' || $module_type == 'ecommerce') {
             $p->organic = $request->organic ?? 0;
             $p->delivery_time_type = $request->delivery_time_type ?? 'standard';
         }
