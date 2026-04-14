@@ -506,9 +506,6 @@ class Helpers
                 }
             }
 
-            if ($travel_time === null) {
-                $delivery_time_type = 'next_day';
-            }
         }
 
         if ($delivery_time_type == 'next_day') {
