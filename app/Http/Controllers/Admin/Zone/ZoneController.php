@@ -427,6 +427,12 @@ class ZoneController extends BaseController
             $gridsCount = is_array($grids) ? count($grids) : 0;
             info("Saving $gridsCount grids for Zone $zoneId and Module $moduleId");
 
+            $oldHexIds = \DB::table('delivery_grids')
+                ->where('zone_id', $zoneId)
+                ->where('module_id', $moduleId)
+                ->pluck('hexagon_id')
+                ->all();
+
             \DB::transaction(function () use ($grids, $zoneId, $moduleId) {
                 \DB::table('delivery_grids')
                     ->where('zone_id', $zoneId)
@@ -449,6 +455,18 @@ class ZoneController extends BaseController
                     }
                 }
             });
+
+            $hexIdsToFlush = array_unique(array_merge(
+                $oldHexIds,
+                is_array($grids) ? array_map('strval', array_keys($grids)) : []
+            ));
+            foreach ($hexIdsToFlush as $hid) {
+                if ($hid === null || $hid === '') {
+                    continue;
+                }
+                \App\Services\CacheService::invalidateHexZone("hex:grid:{$zoneId}:{$moduleId}:{$hid}");
+            }
+            \App\Services\CacheService::invalidateHexZone("hex:grid_exists:{$zoneId}:{$moduleId}");
 
             return response()->json(['message' => translate('Grid updated successfully')]);
         } catch (\Exception $e) {

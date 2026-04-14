@@ -438,8 +438,11 @@ class Helpers
 
             if ($grid_exists) {
                 if (!$grid_rule) {
-                    // Outside the "painted" area but inside the zone
-                    $delivery_time_type = 'next_day';
+                    // Hex inside zone but not painted on the grid: follow the product's
+                    // delivery_time_type instead of forcing next_day. (Slots / schedule_order
+                    // are unrelated; next_day should only apply when the product or a grid
+                    // cell explicitly requests it.)
+                    $delivery_time_type = $preferred_type;
                 } else {
                     if ($grid_rule->delivery_type == 'no_coverage') {
                         return [
