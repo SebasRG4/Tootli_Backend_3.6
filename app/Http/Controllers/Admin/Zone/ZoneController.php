@@ -26,6 +26,7 @@ use MatanYadaev\EloquentSpatial\Objects\Point;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use App\Contracts\Repositories\TranslationRepositoryInterface;
 use App\Models\Module;
+use App\Models\BusinessSetting;
 use App\Models\Zone as ZoneModel;
 
 class ZoneController extends BaseController
@@ -160,8 +161,17 @@ class ZoneController extends BaseController
         $cash_on_delivery = Helpers::get_business_settings('cash_on_delivery');
         $digital_payment = Helpers::get_business_settings('digital_payment');
         $offline_payment = Helpers::get_business_settings('offline_payment_status');
+        $multi_store_delivery_extra_status = Helpers::get_business_settings('multi_store_delivery_extra_status', false);
+        $multi_store_delivery_extra_amount = Helpers::get_business_settings('multi_store_delivery_extra_amount', false);
 
-        return view(ZoneViewPath::MODULE_SETUP[VIEW], compact('zone', 'cash_on_delivery', 'digital_payment', 'offline_payment'));
+        return view(ZoneViewPath::MODULE_SETUP[VIEW], compact(
+            'zone',
+            'cash_on_delivery',
+            'digital_payment',
+            'offline_payment',
+            'multi_store_delivery_extra_status',
+            'multi_store_delivery_extra_amount'
+        ));
     }
 
     public function getLatestModuleSetupView(): View
@@ -169,7 +179,20 @@ class ZoneController extends BaseController
         $zone = $this->zoneRepo->getLatest(
             relations: ['modules']
         );
-        return view(ZoneViewPath::MODULE_SETUP[VIEW], compact('zone'));
+        $cash_on_delivery = Helpers::get_business_settings('cash_on_delivery');
+        $digital_payment = Helpers::get_business_settings('digital_payment');
+        $offline_payment = Helpers::get_business_settings('offline_payment_status');
+        $multi_store_delivery_extra_status = Helpers::get_business_settings('multi_store_delivery_extra_status', false);
+        $multi_store_delivery_extra_amount = Helpers::get_business_settings('multi_store_delivery_extra_amount', false);
+
+        return view(ZoneViewPath::MODULE_SETUP[VIEW], compact(
+            'zone',
+            'cash_on_delivery',
+            'digital_payment',
+            'offline_payment',
+            'multi_store_delivery_extra_status',
+            'multi_store_delivery_extra_amount'
+        ));
     }
 
     public function updateModuleSetup(ZoneModuleUpdateRequest $request, $id): RedirectResponse
@@ -224,6 +247,15 @@ class ZoneController extends BaseController
             ->only($request->module_id)
             ->toArray();
         $this->zoneRepo->zoneModuleSetupUpdate(id: $id, data: $paymentData, moduleData: $filteredModuleData);
+
+        BusinessSetting::updateOrCreate(
+            ['key' => 'multi_store_delivery_extra_status'],
+            ['value' => $request->boolean('multi_store_delivery_extra_status') ? '1' : '0']
+        );
+        BusinessSetting::updateOrCreate(
+            ['key' => 'multi_store_delivery_extra_amount'],
+            ['value' => (string) max(0, (float) $request->input('multi_store_delivery_extra_amount', 0))]
+        );
 
         Toastr::success(translate('messages.zone_module_updated_successfully'));
         return redirect()->route('admin.business-settings.zone.home');

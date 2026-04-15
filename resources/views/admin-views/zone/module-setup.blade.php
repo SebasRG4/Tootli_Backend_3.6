@@ -120,6 +120,43 @@
                 <div class="col-md-12 mb-2 mt-3">
                     <h4 class="m-0">{{ translate('Delivery_Charge_Setup') }}</h4>
                 </div>
+                <div class="col-md-12 mb-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
+                                <h5 class="m-0">{{ translate('Multi_store_delivery_extra_title') }}</h5>
+                                <span class="badge badge-soft-secondary">{{ translate('Multi_store_delivery_extra_global_badge') }}</span>
+                            </div>
+                            <p class="fs-12 text-muted mb-3">{{ translate('Multi_store_delivery_extra_hint') }}</p>
+                            <div class="row g-3 align-items-end">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-check form--check mb-0">
+                                        <input type="hidden" name="multi_store_delivery_extra_status" value="0">
+                                        <input class="form-check-input" type="checkbox" value="1"
+                                               id="multi_store_delivery_extra_status"
+                                               name="multi_store_delivery_extra_status"
+                                            {{ (string) old('multi_store_delivery_extra_status', $multi_store_delivery_extra_status ?? '0') === '1' ? 'checked' : '' }}>
+                                        <label class="form-check-label"
+                                               for="multi_store_delivery_extra_status">{{ translate('Multi_store_delivery_extra_enable') }}</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group mb-0">
+                                        <label class="input-label text-capitalize fs-14"
+                                               for="multi_store_delivery_extra_amount">
+                                            {{ translate('Multi_store_delivery_extra_amount_label') }}
+                                            ({{ \App\CentralLogics\Helpers::currency_symbol() }})
+                                        </label>
+                                        <input type="number" class="form-control" id="multi_store_delivery_extra_amount"
+                                               name="multi_store_delivery_extra_amount" step=".01" min="0"
+                                               placeholder="{{ translate('messages.Ex:10') }}"
+                                               value="{{ old('multi_store_delivery_extra_amount', $multi_store_delivery_extra_amount ?? '0') }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             @endif
             @if (count($modules) > 0)
                 @foreach ($modules as $module)

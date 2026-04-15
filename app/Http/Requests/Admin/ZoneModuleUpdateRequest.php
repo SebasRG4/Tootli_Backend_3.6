@@ -41,6 +41,7 @@ class ZoneModuleUpdateRequest extends FormRequest
             // 'increased_delivery_fee' => 'nullable|numeric|between:0,999.99|required_if:increased_delivery_fee_status,1',
             'module_data' => 'required',
             'module_data.*.max_delivery_radius' => 'nullable|numeric|min:0',
+            'multi_store_delivery_extra_amount' => 'nullable|numeric|min:0',
         ];
     }
 
