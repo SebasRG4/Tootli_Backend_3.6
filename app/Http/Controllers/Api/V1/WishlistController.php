@@ -110,43 +110,61 @@ class WishlistController extends Controller
         $longitude = $request->header('longitude');
         $latitude = $request->header('latitude');
 
-        \Log::info('📋 Wishlist GET: Start', ['user_id' => $user->id, 'zone_id' => $zone_id, 'module_data' => config('module.current_module_data')]);
+        $zoneIds = json_decode($zone_id, true);
+        if (! is_array($zoneIds) || $zoneIds === []) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'zoneId', 'message' => translate('messages.zone_id_required')],
+                ],
+            ], 403);
+        }
+
+        if (config('app.debug')) {
+            \Log::debug('Wishlist GET', [
+                'user_id' => $user->id,
+                'zone_id' => $zone_id,
+                'module_id' => data_get(config('module.current_module_data'), 'id'),
+            ]);
+        }
 
         $wishlists = Wishlist::where('user_id', $user->id)->with([
-            'item' => function ($q) use ($zone_id) {
-                return $q->whereHas('store', function ($query) use ($zone_id) {
+            'item' => function ($q) use ($zoneIds) {
+                return $q->whereHas('store', function ($query) use ($zoneIds) {
                     $query->when(config('module.current_module_data'), function ($query) {
-                        $query->where('module_id', config('module.current_module_data')['id'])->whereHas('zone.modules', function ($query) {
-                            $query->where('modules.id', config('module.current_module_data')['id']);
+                        $mid = data_get(config('module.current_module_data'), 'id');
+                        $query->where('module_id', $mid)->whereHas('zone.modules', function ($query) use ($mid) {
+                            $query->where('modules.id', $mid);
                         });
                     })->whereHas('module', function ($query) {
                         $query->where('status', 1);
-                    })->whereIn('zone_id', json_decode($zone_id, true));
+                    })->whereIn('zone_id', $zoneIds);
                 });
             },
-            'store' => function ($q) use ($zone_id, $longitude, $latitude) {
-                return $q->when(config('module.current_module_data'), function ($query) use ($zone_id) {
-                    $query->whereHas('zone.modules', function ($query) {
-                        $query->where('modules.id', config('module.current_module_data')['id']);
-                    })->module(config('module.current_module_data')['id']);
+            'store' => function ($q) use ($zoneIds, $longitude, $latitude) {
+                return $q->when(config('module.current_module_data'), function ($query) {
+                    $mid = data_get(config('module.current_module_data'), 'id');
+                    $query->whereHas('zone.modules', function ($query) use ($mid) {
+                        $query->where('modules.id', $mid);
+                    })->module($mid);
                 })->withOpen($longitude ?? 0, $latitude ?? 0)->whereHas('module', function ($query) {
                     $query->where('status', 1);
-                })->whereIn('zone_id', json_decode($zone_id, true));
-            }
+                })->whereIn('zone_id', $zoneIds);
+            },
         ])
             ->when($request->query('list_name'), function ($query) use ($request) {
                 return $query->where('list_name', $request->query('list_name'));
             })
             ->get();
 
-        \Log::info('📋 Wishlist GET: Raw Count: ' . $wishlists->count());
-        foreach ($wishlists as $w) {
-            \Log::info('  - Item ID: ' . $w->item_id . ' | Store ID: ' . $w->store_id . ' | Store Loaded: ' . ($w->store ? 'YES' : 'NO'));
+        if (config('app.debug')) {
+            \Log::debug('Wishlist GET raw count: '.$wishlists->count());
         }
 
         $wishlists = Helpers::wishlist_data_formatting($wishlists, true);
 
-        \Log::info('📋 Wishlist GET: Formatted Count: ' . count($wishlists));
+        if (config('app.debug')) {
+            \Log::debug('Wishlist GET formatted count: '.count($wishlists));
+        }
 
         return response()->json($wishlists, 200);
     }
