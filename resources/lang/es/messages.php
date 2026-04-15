@@ -3251,7 +3251,7 @@
   'Flash_sale_Qty' => 'Flash sale Qty',
   'Qty_Sold' => 'Qty Sold',
   'Sold_Amount' => 'Sold Amount',
-  'zone_id_required' => 'Zone id required',
+  'zone_id_required' => 'Se requiere un identificador de zona válido (zoneId).',
   'running' => 'Running',
   'expired' => 'Expired',
   'This_feature_is_for_sharing_important_information_or_announcements_related_to_the_store.' => 'This feature is for sharing important information or announcements related to the store.',
