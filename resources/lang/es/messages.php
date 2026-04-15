@@ -9459,4 +9459,8 @@ Smartly or Earn. ',
   'failed_to_update_order' => 'Error al actualizar el orden',
   'el_pedido_no_puede_exceder_los_10kg_en_total' => 'El pedido no puede exceder los 10kg en total',
   'peso_total_excede_limite_10kg' => 'Peso total excede el límite de 10kg',
+  'multi_store_distance_api_failed' => 'No pudimos verificar la ruta entre tiendas. Completa el pedido con productos de una sola tienda o inténtalo más tarde.',
+  'multi_store_stores_too_far_apart' => 'Las tiendas de tu pedido están a más de 1 km en ruta entre sí. Para no desviar al repartidor, agrega productos de tiendas más cercanas o pide por separado.',
+  'multi_store_missing_coordinates' => 'Una de las tiendas no tiene ubicación para calcular la ruta. No se puede completar un pedido con varias tiendas.',
+  'multi_store_route_validation_failed' => 'No se puede completar el pedido con varias tiendas. Revisa el carrito o inténtalo más tarde.',
 );

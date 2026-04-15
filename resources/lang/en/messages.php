@@ -9529,4 +9529,8 @@ Smartly or Earn. ',
   'edit_dynamic_section' => 'Edit dynamic section',
   'show_title' => 'Show title',
   'New message received' => 'New message received',
+  'multi_store_distance_api_failed' => 'We could not verify driving distance between stores. Use a single store or try again later.',
+  'multi_store_stores_too_far_apart' => 'Stores in your cart are more than 1 km apart by road. Use closer stores or place separate orders.',
+  'multi_store_missing_coordinates' => 'A store is missing map coordinates. Multi-store checkout is not available.',
+  'multi_store_route_validation_failed' => 'Multi-store checkout is not available. Review your cart or try again later.',
 );

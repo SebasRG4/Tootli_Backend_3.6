@@ -60,6 +60,13 @@ class CartShippingCompatibilityLogic
             }
         }
 
+        if (count($storeIds) >= 2) {
+            $routeCheck = MultiStoreRouteValidationLogic::validateStorePairsForMultiStoreDelivery($storeIds);
+            if (! $routeCheck['ok'] && ! empty($routeCheck['code'])) {
+                $reasonCodes[] = $routeCheck['code'];
+            }
+        }
+
         $lines = $request->input('lines', []);
         $totalWeight = 0.0;
         if (is_array($lines)) {

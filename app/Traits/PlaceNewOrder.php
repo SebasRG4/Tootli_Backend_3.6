@@ -15,6 +15,7 @@ use App\Models\OrderDetail;
 use App\Models\ItemCampaign;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
+use App\CentralLogics\MultiStoreRouteValidationLogic;
 use App\Models\ParcelCategory;
 use App\Models\BusinessSetting;
 use App\CentralLogics\OrderLogic;
@@ -400,6 +401,20 @@ trait PlaceNewOrder
                                     ['code' => 'order_time', 'message' => translate('messages.you_need_to_order_at_least') . $stMin->minimum_order . ' ' . Helpers::currency_code()],
                                 ],
                             ], 406);
+                        }
+                    }
+
+                    if (count($totalsByStore) > 1 && $request->order_type === 'delivery') {
+                        $routeCheck = MultiStoreRouteValidationLogic::validateStorePairsForMultiStoreDelivery(array_keys($totalsByStore));
+                        if (! $routeCheck['ok']) {
+                            DB::rollBack();
+                            $code = $routeCheck['code'] ?? 'multi_store_route_validation_failed';
+
+                            return response()->json([
+                                'errors' => [
+                                    ['code' => $code, 'message' => MultiStoreRouteValidationLogic::translateFailureCode($code)],
+                                ],
+                            ], 403);
                         }
                     }
                 }

@@ -5320,5 +5320,64 @@ class Helpers
         });
     }
 
+    /**
+     * Distancia en ruta (conducción) en metros entre dos puntos (Google Distance Matrix).
+     * No usa Haversine. Solo cachea resultados válidos; si la API falla devuelve null.
+     */
+    public static function getDrivingDistanceMetersBetweenPoints(
+        float $originLat,
+        float $originLng,
+        float $destLat,
+        float $destLng
+    ): ?int {
+        $points = [
+            [round($originLat, 5), round($originLng, 5)],
+            [round($destLat, 5), round($destLng, 5)],
+        ];
+        usort($points, function ($a, $b) {
+            return $a[0] <=> $b[0] ?: $a[1] <=> $b[1];
+        });
+        $cacheKey = 'driving_dist_m_v1_'.$points[0][0].'_'.$points[0][1].'_'.$points[1][0].'_'.$points[1][1];
+
+        if (Cache::has($cacheKey)) {
+            return (int) Cache::get($cacheKey);
+        }
+
+        $api_key = self::get_business_settings('map_api_key_server');
+        if (! $api_key) {
+            return null;
+        }
+
+        $response = Http::get('https://maps.googleapis.com/maps/api/distancematrix/json', [
+            'origins' => $originLat.','.$originLng,
+            'destinations' => $destLat.','.$destLng,
+            'mode' => 'driving',
+            'key' => $api_key,
+        ]);
+
+        if (! $response->successful()) {
+            return null;
+        }
+
+        $data = $response->json();
+        if (($data['status'] ?? '') !== 'OK') {
+            return null;
+        }
+
+        $element = $data['rows'][0]['elements'][0] ?? null;
+        if (! is_array($element) || ($element['status'] ?? '') !== 'OK') {
+            return null;
+        }
+
+        if (! isset($element['distance']['value'])) {
+            return null;
+        }
+
+        $meters = (int) $element['distance']['value'];
+        Cache::put($cacheKey, $meters, now()->addDays(7));
+
+        return $meters;
+    }
+
 }
 

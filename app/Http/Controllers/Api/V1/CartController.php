@@ -7,6 +7,7 @@ use App\Models\Item;
 use Illuminate\Http\Request;
 use App\CentralLogics\CartShippingCompatibilityLogic;
 use App\CentralLogics\Helpers;
+use App\CentralLogics\MultiStoreRouteValidationLogic;
 use App\Http\Controllers\Controller;
 use App\Models\ItemCampaign;
 use Illuminate\Support\Facades\Validator;
@@ -61,6 +62,13 @@ class CartController extends Controller
         $model = $request->model === 'Item' ? 'App\Models\Item' : 'App\Models\ItemCampaign';
         $item = $request->model === 'Item' ? Item::find($request->item_id) : ItemCampaign::find($request->item_id);
 
+        if (! $item) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'item_not_found', 'message' => translate('messages.no_data_found')],
+                ],
+            ], 404);
+        }
 
         $cart = Cart::where('item_id', $request->item_id)->where('item_type', $model)->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->first();
 
@@ -79,6 +87,30 @@ class CartController extends Controller
                     ['code' => 'cart_item_limit', 'message' => translate('messages.maximum_cart_quantity_exceeded')]
                 ]
             ], 403);
+        }
+
+        $moduleId = (int) $request->header('moduleId');
+        $newStoreId = (int) data_get($item, 'store_id');
+        if ($newStoreId > 0) {
+            $prospectiveIds = MultiStoreRouteValidationLogic::collectStoreIdsFromUserCart((int) $user_id, (int) $is_guest, $moduleId);
+            if (! in_array($newStoreId, $prospectiveIds, true)) {
+                $prospectiveIds[] = $newStoreId;
+            }
+            if (count($prospectiveIds) >= 2) {
+                $routeCheck = MultiStoreRouteValidationLogic::validateStorePairsForMultiStoreDelivery($prospectiveIds);
+                if (! $routeCheck['ok']) {
+                    $code = $routeCheck['code'] ?? 'multi_store_route_validation_failed';
+
+                    return response()->json([
+                        'errors' => [
+                            [
+                                'code' => $code,
+                                'message' => MultiStoreRouteValidationLogic::translateFailureCode($code),
+                            ],
+                        ],
+                    ], 403);
+                }
+            }
         }
 
         $cart = new Cart();
