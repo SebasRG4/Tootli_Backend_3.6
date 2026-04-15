@@ -145,6 +145,8 @@ class ConfigController extends Controller
             'admin_free_delivery_option',
             'admin_free_delivery_status',
             'free_delivery_over',
+            'multi_store_delivery_extra_status',
+            'multi_store_delivery_extra_amount',
 
             'parcel_cancellation_status',
             'parcel_cancellation_basic_setup',
@@ -205,6 +207,11 @@ class ConfigController extends Controller
             'status' => (bool) data_get($settings, 'admin_free_delivery_status', 0),
             'type' => data_get($settings, 'admin_free_delivery_option'),
             'free_delivery_over' => (float) data_get($settings, 'free_delivery_over', 0),
+        ];
+
+        $multi_store_delivery_extra = [
+            'status' => (bool) ((int) data_get($settings, 'multi_store_delivery_extra_status', 0) === 1),
+            'amount' => (float) data_get($settings, 'multi_store_delivery_extra_amount', 0),
         ];
 
         $additional_charge = isset($settings['additional_charge']) ? (float) $settings['additional_charge'] : 0;
@@ -437,6 +444,7 @@ class ConfigController extends Controller
             'vehicle_hourly_min' => (float) $vehicle_hourly_min ?? 0,
             'vehicle_day_wise_min' => (float) $vehicle_day_wise_min ?? 0,
             'admin_free_delivery' => $admin_free_delivery,
+            'multi_store_delivery_extra' => $multi_store_delivery_extra,
             'is_sms_active' => (bool) Setting::whereJsonContains('live_values->status', '1')->where('settings_type', 'sms_config')->exists(),
             'is_mail_active' => (bool) config('mail.status'),
             'system_tax_type' => $systemTax?->tax_type ?? null,

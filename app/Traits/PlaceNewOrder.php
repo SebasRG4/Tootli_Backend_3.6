@@ -326,6 +326,7 @@ trait PlaceNewOrder
             }
 
             if ($request->order_type !== 'parcel') {
+                $totalsByStore = [];
                 if ($is_prescription === false) {
 
                     $carts = Cart::where('user_id', $order->user_id)->where('is_guest', $order->is_guest)->where('module_id', $request->header('moduleId'))
@@ -370,6 +371,37 @@ trait PlaceNewOrder
                     $flash_sale_vendor_discount_amount = $order_details['flash_sale_vendor_discount_amount'];
                     $product_data = $order_details['product_data'];
                     $order_details = $order_details['order_details'];
+
+                    foreach ($carts as $cartRow) {
+                        $isRowArray = is_array($cartRow);
+                        $itemId = $isRowArray ? ($cartRow['item_id'] ?? null) : $cartRow->item_id;
+                        $qty = (int) ($isRowArray ? ($cartRow['quantity'] ?? 1) : ($cartRow->quantity ?? 1));
+                        $unitPrice = (float) ($isRowArray ? ($cartRow['price'] ?? 0) : ($cartRow->price ?? 0));
+                        if (! $itemId || $qty < 1) {
+                            continue;
+                        }
+                        $rowType = $isRowArray ? ($cartRow['item_type'] ?? 'App\Models\Item') : ($cartRow->item_type ?? 'App\Models\Item');
+                        $productRow = (is_string($rowType) && str_contains($rowType, 'ItemCampaign'))
+                            ? ItemCampaign::find($itemId)
+                            : Item::find($itemId);
+                        if (! $productRow) {
+                            continue;
+                        }
+                        $sid = (int) $productRow->store_id;
+                        $totalsByStore[$sid] = ($totalsByStore[$sid] ?? 0) + ($unitPrice * $qty);
+                    }
+                    foreach ($totalsByStore as $storeId => $subTotal) {
+                        $stMin = Store::where('id', $storeId)->first();
+                        if ($stMin && (float) $stMin->minimum_order > 0 && (float) $stMin->minimum_order > $subTotal) {
+                            DB::rollBack();
+
+                            return response()->json([
+                                'errors' => [
+                                    ['code' => 'order_time', 'message' => translate('messages.you_need_to_order_at_least') . $stMin->minimum_order . ' ' . Helpers::currency_code()],
+                                ],
+                            ], 406);
+                        }
+                    }
                 }
 
 
@@ -413,16 +445,13 @@ trait PlaceNewOrder
                 $order->tax_status = $tax_status;
                 $order->tax_type = $taxType;
 
-                if (!$is_prescription && $store->minimum_order > $product_price + $total_addon_price) {
-                    DB::rollBack();
-                    return response()->json([
-                        'errors' => [
-                            ['code' => 'order_time', 'message' => translate('messages.you_need_to_order_at_least') . $store->minimum_order . ' ' . Helpers::currency_code()]
-                        ]
-                    ], 406);
-                }
-
-                $businessSettings = BusinessSetting::whereIn('key', ['free_delivery_over', 'admin_free_delivery_status', 'admin_free_delivery_option'])->pluck('value', 'key');
+                $businessSettings = BusinessSetting::whereIn('key', [
+                    'free_delivery_over',
+                    'admin_free_delivery_status',
+                    'admin_free_delivery_option',
+                    'multi_store_delivery_extra_status',
+                    'multi_store_delivery_extra_amount',
+                ])->pluck('value', 'key');
 
                 $free_delivery_over = (float) ($businessSettings['free_delivery_over'] ?? 0);
                 $admin_free_delivery_status = (int) ($businessSettings['admin_free_delivery_status'] ?? 0);
@@ -452,6 +481,24 @@ trait PlaceNewOrder
                     }
                     $coupon->increment('total_uses');
                 }
+
+                $multiStoreDeliveryExtra = 0.0;
+                if (
+                    $is_prescription === false
+                    && $request->order_type === 'delivery'
+                    && count($totalsByStore) > 1
+                    && (int) ($businessSettings['multi_store_delivery_extra_status'] ?? 0) === 1
+                ) {
+                    $perStore = (float) ($businessSettings['multi_store_delivery_extra_amount'] ?? 0);
+                    if ($perStore > 0) {
+                        $multiStoreDeliveryExtra = (count($totalsByStore) - 1) * $perStore;
+                    }
+                }
+                if ($multiStoreDeliveryExtra > 0) {
+                    $order->delivery_charge = round((float) $order->delivery_charge + $multiStoreDeliveryExtra, config('round_up_to_digit'));
+                    $order->original_delivery_charge = round((float) $order->original_delivery_charge + $multiStoreDeliveryExtra, config('round_up_to_digit'));
+                }
+
                 $order->coupon_created_by = $coupon_created_by;
                 $order->coupon_discount_amount = round($coupon_discount_amount, config('round_up_to_digit'));
                 $order->coupon_discount_title = $coupon ? $coupon->title : '';
@@ -1204,14 +1251,6 @@ trait PlaceNewOrder
                 $product = Item::with('module')->active()->find($c['item_id']);
             }
             if ($product) {
-                if ($product->store_id != $order->store_id) {
-                    return [
-                        'status_code' => 403,
-                        'code' => 'different_stores',
-                        'message' => translate('messages.Please_select_items_from_the_same_store'),
-                    ];
-                }
-
                 if ($product?->pharmacy_item_details?->is_prescription_required == '1' && empty($request->file('order_attachment'))) {
                     return [
                         'status_code' => 403,
@@ -1270,7 +1309,17 @@ trait PlaceNewOrder
 
                 $product = Helpers::product_data_formatting($product, false, false, app()->getLocale());
                 $addon_data = Helpers::calculate_addon_price(AddOn::whereIn('id', $c['add_on_ids'])->get(), $c['add_on_qtys']);
-                $product_discount = Helpers::product_discount_calculate($product, $price, $store, false);
+                $itemStore = (int) $product->store_id === (int) $store->id
+                    ? $store
+                    : Store::with(['discount', 'store_sub'])->find($product->store_id);
+                if (! $itemStore) {
+                    return [
+                        'status_code' => 403,
+                        'code' => 'store_not_found',
+                        'message' => translate('messages.store_not_found'),
+                    ];
+                }
+                $product_discount = Helpers::product_discount_calculate($product, $price, $itemStore, false);
 
 
 
@@ -1382,14 +1431,6 @@ trait PlaceNewOrder
                 }
 
                 if ($product) {
-                    if ($product->store_id != $store->id) {
-                        return [
-                            'status_code' => 403,
-                            'code' => 'different_stores',
-                            'message' => translate('messages.Please_select_items_from_the_same_store'),
-                        ];
-                    }
-
                     if ($product?->pharmacy_item_details?->is_prescription_required == '1' && empty($request->file('order_attachment'))) {
                         return [
                             'status_code' => 403,
@@ -1459,7 +1500,17 @@ trait PlaceNewOrder
 
                     $product = Helpers::product_data_formatting($product, false, false, app()->getLocale());
                     $addon_data = Helpers::calculate_addon_price(AddOn::whereIn('id', $c['add_ons'])->get(), $c['add_on_qtys']);
-                    $product_discount = Helpers::product_discount_calculate($product, $price, $store, false);
+                    $itemStore = (int) $product->store_id === (int) $store->id
+                        ? $store
+                        : Store::with(['discount', 'store_sub'])->find($product->store_id);
+                    if (! $itemStore) {
+                        return [
+                            'status_code' => 403,
+                            'code' => 'store_not_found',
+                            'message' => translate('messages.store_not_found'),
+                        ];
+                    }
+                    $product_discount = Helpers::product_discount_calculate($product, $price, $itemStore, false);
 
                     $discount_type = $product_discount['discount_type'];
 
@@ -1567,14 +1618,6 @@ trait PlaceNewOrder
                 }
 
                 if ($product) {
-                    if ($product->store_id != $store->id) {
-                        return [
-                            'status_code' => 403,
-                            'code' => 'different_stores',
-                            'message' => translate('messages.Please_select_items_from_the_same_store'),
-                        ];
-                    }
-
                     if ($product?->pharmacy_item_details?->is_prescription_required == '1' && empty($request->file('order_attachment'))) {
                         return [
                             'status_code' => 403,
@@ -1674,7 +1717,17 @@ trait PlaceNewOrder
                         $addonQuantities
                     );
 
-                    $product_discount = Helpers::product_discount_calculate($product, $price, $store, false);
+                    $itemStore = (int) $product->store_id === (int) $store->id
+                        ? $store
+                        : Store::with(['discount', 'store_sub'])->find($product->store_id);
+                    if (! $itemStore) {
+                        return [
+                            'status_code' => 403,
+                            'code' => 'store_not_found',
+                            'message' => translate('messages.store_not_found'),
+                        ];
+                    }
+                    $product_discount = Helpers::product_discount_calculate($product, $price, $itemStore, false);
 
 
                     $discount_type = $product_discount['discount_type'];

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Models\Cart;
 use App\Models\Item;
 use Illuminate\Http\Request;
+use App\CentralLogics\CartShippingCompatibilityLogic;
 use App\CentralLogics\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\ItemCampaign;
@@ -239,5 +240,26 @@ class CartController extends Controller
                 return $data;
             });
         return response()->json($carts, 200);
+    }
+
+    public function validate_shipping_compatibility(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'guest_id' => $request->user ? 'nullable' : 'required',
+            'store_ids' => 'required|array|min:1',
+            'store_ids.*' => 'integer',
+            'lines' => 'nullable|array',
+            'lines.*.item_id' => 'integer',
+            'lines.*.quantity' => 'integer|min:1',
+            'zone_id' => 'nullable|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $payload = CartShippingCompatibilityLogic::evaluate($request);
+
+        return response()->json($payload, 200);
     }
 }
