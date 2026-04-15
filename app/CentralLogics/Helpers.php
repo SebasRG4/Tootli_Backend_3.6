@@ -1568,6 +1568,46 @@ class Helpers
         return $data;
     }
 
+    public static function parseBusinessSettingBool(mixed $raw): bool
+    {
+        if ($raw === null || $raw === '') {
+            return false;
+        }
+        if (is_bool($raw)) {
+            return $raw;
+        }
+        if (is_int($raw) || is_float($raw)) {
+            return (int) $raw === 1;
+        }
+        $s = trim((string) $raw);
+        if ($s === '1' || strcasecmp($s, 'true') === 0 || strcasecmp($s, 'on') === 0 || strcasecmp($s, 'yes') === 0) {
+            return true;
+        }
+        $decoded = json_decode($s, true);
+        if ($decoded === true || $decoded === 1 || $decoded === '1') {
+            return true;
+        }
+
+        return (bool) filter_var($s, FILTER_VALIDATE_BOOLEAN);
+    }
+
+    public static function parseBusinessSettingFloat(mixed $raw): float
+    {
+        if ($raw === null || $raw === '') {
+            return 0.0;
+        }
+        if (is_numeric($raw)) {
+            return (float) $raw;
+        }
+        $s = trim((string) $raw);
+        $decoded = json_decode($s, true);
+        if (is_numeric($decoded)) {
+            return (float) $decoded;
+        }
+
+        return (float) $s;
+    }
+
     public static function get_business_settings($key, $json_decode = true, $relations = [])
     {
         try {

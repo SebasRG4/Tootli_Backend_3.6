@@ -210,8 +210,8 @@ class ConfigController extends Controller
         ];
 
         $multi_store_delivery_extra = [
-            'status' => (bool) ((int) data_get($settings, 'multi_store_delivery_extra_status', 0) === 1),
-            'amount' => (float) data_get($settings, 'multi_store_delivery_extra_amount', 0),
+            'status' => Helpers::parseBusinessSettingBool(data_get($settings, 'multi_store_delivery_extra_status', 0)),
+            'amount' => Helpers::parseBusinessSettingFloat(data_get($settings, 'multi_store_delivery_extra_amount', 0)),
         ];
 
         $additional_charge = isset($settings['additional_charge']) ? (float) $settings['additional_charge'] : 0;

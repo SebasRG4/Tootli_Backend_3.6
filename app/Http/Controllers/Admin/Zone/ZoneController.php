@@ -28,6 +28,7 @@ use App\Contracts\Repositories\TranslationRepositoryInterface;
 use App\Models\Module;
 use App\Models\BusinessSetting;
 use App\Models\Zone as ZoneModel;
+use Illuminate\Support\Facades\Cache;
 
 class ZoneController extends BaseController
 {
@@ -256,6 +257,7 @@ class ZoneController extends BaseController
             ['key' => 'multi_store_delivery_extra_amount'],
             ['value' => (string) max(0, (float) $request->input('multi_store_delivery_extra_amount', 0))]
         );
+        Cache::forget('business_settings_config_keys');
 
         Toastr::success(translate('messages.zone_module_updated_successfully'));
         return redirect()->route('admin.business-settings.zone.home');

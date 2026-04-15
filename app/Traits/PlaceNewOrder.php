@@ -498,15 +498,17 @@ trait PlaceNewOrder
                 }
 
                 $multiStoreDeliveryExtra = 0.0;
+                $distinctStoresInOrder = $this->distinctStoreCountFromOrderDetails($order_details);
+                $storeCountForMultiFee = $distinctStoresInOrder > 0 ? $distinctStoresInOrder : count($totalsByStore);
                 if (
                     $is_prescription === false
                     && $request->order_type === 'delivery'
-                    && count($totalsByStore) > 1
-                    && (int) ($businessSettings['multi_store_delivery_extra_status'] ?? 0) === 1
+                    && $storeCountForMultiFee > 1
+                    && Helpers::parseBusinessSettingBool($businessSettings['multi_store_delivery_extra_status'] ?? null)
                 ) {
-                    $perStore = (float) ($businessSettings['multi_store_delivery_extra_amount'] ?? 0);
+                    $perStore = Helpers::parseBusinessSettingFloat($businessSettings['multi_store_delivery_extra_amount'] ?? null);
                     if ($perStore > 0) {
-                        $multiStoreDeliveryExtra = (count($totalsByStore) - 1) * $perStore;
+                        $multiStoreDeliveryExtra = ($storeCountForMultiFee - 1) * $perStore;
                     }
                 }
                 if ($multiStoreDeliveryExtra > 0) {
@@ -2219,5 +2221,25 @@ trait PlaceNewOrder
             'price' => 0,
             'price_type' => 'amount',
         ];
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $orderDetailsRows
+     */
+    private function distinctStoreCountFromOrderDetails(array $orderDetailsRows): int
+    {
+        $ids = [];
+        foreach ($orderDetailsRows as $row) {
+            $raw = $row['item_details'] ?? null;
+            if (! is_string($raw) || $raw === '') {
+                continue;
+            }
+            $decoded = json_decode($raw, true);
+            if (is_array($decoded) && isset($decoded['store_id'])) {
+                $ids[(int) $decoded['store_id']] = true;
+            }
+        }
+
+        return count($ids);
     }
 }

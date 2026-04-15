@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\CentralLogics\Helpers;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class BusinessSetting extends Model
@@ -35,6 +36,7 @@ class BusinessSetting extends Model
     {
         parent::boot();
         static::saved(function ($model) {
+            Cache::forget('business_settings_config_keys');
              Helpers::deleteCacheData('business_settings_all_data');
             $value = Helpers::getDisk();
 
