@@ -294,4 +294,31 @@ class CartController extends Controller
 
         return response()->json($payload, 200);
     }
+
+    /**
+     * Tiendas candidatas compatibles con el carrito actual (distancia en ruta &lt; 1 km entre todos los pares).
+     */
+    public function compatible_stores_for_cart(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'guest_id' => $request->user ? 'nullable' : 'required',
+            'candidate_store_ids' => 'required|array|min:1|max:80',
+            'candidate_store_ids.*' => 'integer|min:1',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $user_id = $request->user ? $request->user->id : $request['guest_id'];
+        $is_guest = $request->user ? 0 : 1;
+        $moduleId = (int) $request->header('moduleId');
+
+        $cartStoreIds = MultiStoreRouteValidationLogic::collectStoreIdsFromUserCart((int) $user_id, (int) $is_guest, $moduleId);
+        $candidates = array_map('intval', $request->input('candidate_store_ids', []));
+
+        $payload = MultiStoreRouteValidationLogic::classifyCandidateStoresAgainstCart($cartStoreIds, $candidates);
+
+        return response()->json($payload, 200);
+    }
 }

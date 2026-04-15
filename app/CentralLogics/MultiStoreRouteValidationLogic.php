@@ -107,4 +107,55 @@ class MultiStoreRouteValidationLogic
 
         return ['ok' => true, 'code' => null];
     }
+
+    /**
+     * Para UX: con las tiendas ya en carrito, indica qué tiendas candidatas podrían añadirse cumpliendo la regla de distancia.
+     *
+     * @param  array<int>  $cartStoreIds
+     * @param  array<int>  $candidateStoreIds
+     * @return array{cart_store_ids: array<int>, compatible_store_ids: array<int>, incompatible_store_ids: array<int>}
+     */
+    public static function classifyCandidateStoresAgainstCart(array $cartStoreIds, array $candidateStoreIds): array
+    {
+        $cartStoreIds = array_values(array_unique(array_map('intval', $cartStoreIds)));
+        $candidateStoreIds = array_values(array_unique(array_map('intval', $candidateStoreIds)));
+        $candidateStoreIds = array_slice($candidateStoreIds, 0, 80);
+
+        if ($cartStoreIds === []) {
+            return [
+                'cart_store_ids' => [],
+                'compatible_store_ids' => $candidateStoreIds,
+                'incompatible_store_ids' => [],
+            ];
+        }
+
+        $compatible = [];
+        $incompatible = [];
+
+        foreach ($candidateStoreIds as $cid) {
+            if (in_array($cid, $cartStoreIds, true)) {
+                $compatible[] = $cid;
+
+                continue;
+            }
+            $prospective = array_values(array_unique(array_merge($cartStoreIds, [$cid])));
+            if (count($prospective) < 2) {
+                $compatible[] = $cid;
+
+                continue;
+            }
+            $check = self::validateStorePairsForMultiStoreDelivery($prospective);
+            if ($check['ok']) {
+                $compatible[] = $cid;
+            } else {
+                $incompatible[] = $cid;
+            }
+        }
+
+        return [
+            'cart_store_ids' => $cartStoreIds,
+            'compatible_store_ids' => array_values(array_unique($compatible)),
+            'incompatible_store_ids' => array_values(array_unique($incompatible)),
+        ];
+    }
 }

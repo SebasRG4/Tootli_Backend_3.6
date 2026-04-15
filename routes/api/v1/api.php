@@ -439,6 +439,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
                 Route::post('add', 'CartController@add_to_cart');
                 Route::post('update', 'CartController@update_cart');
                 Route::post('shipping-compatibility', 'CartController@validate_shipping_compatibility');
+                Route::post('compatible-stores', 'CartController@compatible_stores_for_cart');
                 Route::delete('remove-item', 'CartController@remove_cart_item');
                 Route::delete('remove', 'CartController@remove_cart');
             });
