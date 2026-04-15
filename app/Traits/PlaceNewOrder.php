@@ -2125,7 +2125,8 @@ trait PlaceNewOrder
     {
         // 1. Consultar Motor Go Worker (Surge Pricing Engine)
         try {
-            $goSurgeResponse = \Illuminate\Support\Facades\Http::timeout(1)->get('http://127.0.0.1:8080/api/v1/surge/calculate', [
+            $goWorkerBase = config('services.go_worker.url');
+            $goSurgeResponse = \Illuminate\Support\Facades\Http::timeout(1)->get($goWorkerBase . '/api/v1/surge/calculate', [
                 'zone_id' => $zoneId
             ]);
 

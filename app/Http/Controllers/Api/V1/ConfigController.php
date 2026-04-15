@@ -494,7 +494,8 @@ class ConfigController extends Controller
             if ($zone['status'] == 1) {
                 // Inyectar Surge Pricing de Go Worker
                 try {
-                    $goSurgeResponse = \Illuminate\Support\Facades\Http::timeout(0.5)->get('http://go_worker:8080/api/v1/surge/calculate', [
+                    $goWorkerBase = config('services.go_worker.url');
+                    $goSurgeResponse = \Illuminate\Support\Facades\Http::timeout(0.5)->get($goWorkerBase . '/api/v1/surge/calculate', [
                         'zone_id' => $zone['id']
                     ]);
 
@@ -553,7 +554,8 @@ class ConfigController extends Controller
 
         $hot_grids = [];
         try {
-            $goResponse = \Illuminate\Support\Facades\Http::timeout(2.0)->get('http://go_worker:8080/api/v1/surge/calculate', [
+            $goWorkerBase = config('services.go_worker.url');
+            $goResponse = \Illuminate\Support\Facades\Http::timeout(2.0)->get($goWorkerBase . '/api/v1/surge/calculate', [
                 'zone_id' => $zone_ids[0] ?? 0
             ]);
             if ($goResponse->successful()) {

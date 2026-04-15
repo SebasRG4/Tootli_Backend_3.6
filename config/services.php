@@ -57,4 +57,12 @@ return [
         ],
     ],
 
+    /*
+    | Motor Go (surge / asignación). En Docker suele ser http://go_worker:8080;
+    | en Herd/Valet local, http://127.0.0.1:8080 si el binario escucha ahí.
+    */
+    'go_worker' => [
+        'url' => rtrim(env('GO_WORKER_URL', 'http://127.0.0.1:8080'), '/'),
+    ],
+
 ];

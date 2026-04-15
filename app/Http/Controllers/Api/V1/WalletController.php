@@ -377,7 +377,7 @@ class WalletController extends Controller
             ];
 
             // Forward to Go worker using configurable URL
-            $goWorkerUrl = env('GO_WORKER_URL', 'http://go_worker:8080');
+            $goWorkerUrl = config('services.go_worker.url');
             $response = Http::withHeaders([
                 'X-Internal-Secret' => env('INTERNAL_SECRET', 'tootli_internal_secret_key'),
             ])->timeout(20)->post($goWorkerUrl . '/api/v1/user/wallet/qr-pay', $payload);
