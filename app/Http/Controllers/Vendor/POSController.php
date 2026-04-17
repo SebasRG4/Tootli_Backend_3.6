@@ -35,7 +35,10 @@ class POSController extends Controller
         $keyword = ($keywordRaw !== null && $keywordRaw !== '') ? $keywordRaw : false;
         $key = explode(' ', $keyword ?: '');
 
+        $store_id = Helpers::get_store_data()->id;
+
         return Item::active()
+            ->where('store_id', $store_id)
             ->when($category, function ($query) use ($category) {
                 $query->whereHas('category', function ($q) use ($category) {
                     return $q->whereId($category)->orWhere('parent_id', $category);
@@ -54,10 +57,16 @@ class POSController extends Controller
     public function index(Request $request)
     {
         $category = (int) $request->input('category_id', 0);
-        $categories = Category::active()->module(Helpers::get_store_data()->module_id)->get();
+        $store_data = Helpers::get_store_data();
+        $categories = Category::active()
+            ->module($store_data->module_id)
+            ->whereHas('items', function ($q) use ($store_data) {
+                $q->where('store_id', $store_data->id)->active();
+            })
+            ->get();
         $keywordRaw = $request->input('keyword');
         $keyword = ($keywordRaw !== null && $keywordRaw !== '') ? $keywordRaw : false;
-        $store = Store::find(Helpers::get_store_data()->module_id);
+        $store = Store::find($store_data->module_id);
         $products = $this->posProductsBaseQuery($request)->paginate(10)->withQueryString();
 
         return view('vendor-views.pos.index', compact('categories', 'products', 'store', 'category', 'keyword'));
