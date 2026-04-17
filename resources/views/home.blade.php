@@ -8,37 +8,41 @@
     <!-- ==== Banner Section Starts Here ==== -->
     <section class="banner-section position-relative">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-7">
-                    <div class="banner-content wow fadeInUp">
-                        <h1 class="title">{{ $landing_data['fixed_header_title'] }}</h1>
-                        <div class="text">
-                            {{ $landing_data['fixed_header_sub_title'] }}
-                        </div>
-                        @php($hero_links = $landing_data['download_user_app_links'] ?? null)
-                        @if ($hero_links)
-                        <div class="app-btn-grp mt-4">
-                            @if (!empty($hero_links['playstore_url_status']) && $hero_links['playstore_url_status'] == 1)
-                            <a href="{{ $hero_links['playstore_url'] ?? '#' }}" target="_blank">
-                                <img src="{{ asset('assets/landing/img/google.svg') }}" alt="Google Play" style="height:52px">
-                            </a>
-                            @endif
-                            @if (!empty($hero_links['apple_store_url_status']) && $hero_links['apple_store_url_status'] == 1)
-                            <a href="{{ $hero_links['apple_store_url'] ?? '#' }}" target="_blank">
-                                <img src="{{ asset('assets/landing/img/apple.svg') }}" alt="App Store" style="height:52px">
-                            </a>
-                            @endif
-                        </div>
-                        @endif
-                    </div>
-                </div>
-                <div class="col-lg-5 d-none d-lg-flex justify-content-center">
-                    <img src="{{ asset('assets/landing/img/download-app.png') }}"
-                         class="img-fluid"
-                         style="max-height:460px;object-fit:contain;opacity:.9"
-                         alt="">
+            <div class="banner-content wow fadeInUp">
+                <h1 class="title">{{ $landing_data['fixed_header_title'] }}</h1>
+                <div class="text">{{ $landing_data['fixed_header_sub_title'] }}</div>
+
+                @php($hero_links = $landing_data['download_user_app_links'] ?? null)
+                <div class="hero-cta-group">
+                    @if (!empty($hero_links['playstore_url_status']) && $hero_links['playstore_url_status'] == 1)
+                        <a href="{{ $hero_links['playstore_url'] ?? '#' }}" target="_blank" class="btn-primary-cta">
+                            Descargar app
+                        </a>
+                    @elseif(isset($fixed_link) && $fixed_link && !empty($fixed_link['web_app_url_status']))
+                        <a href="{{ $fixed_link['web_app_url'] }}" target="_blank" class="btn-primary-cta">
+                            {{ translate('messages.browse_web') }}
+                        </a>
+                    @endif
+
+                    @if (!empty($hero_links['apple_store_url_status']) && $hero_links['apple_store_url_status'] == 1)
+                        <a href="{{ $hero_links['apple_store_url'] ?? '#' }}" target="_blank" class="btn-secondary-cta">
+                            Descargar en iOS
+                        </a>
+                    @elseif (isset($toggle_store_registration) && $toggle_store_registration)
+                        <a href="{{ route('restaurant.create') }}" class="btn-secondary-cta">
+                            {{ translate('messages.vendor_registration') }}
+                        </a>
+                    @endif
                 </div>
             </div>
+        </div>
+
+        {{-- Foto lifestyle debajo del texto, igual que Bolt --}}
+        <div class="hero-photo-wrapper mt-10">
+            <img src="{{ asset('assets/landing/img/main-banner.svg') }}"
+                 alt="{{ $business_name }}"
+                 class="onerror-image"
+                 data-onerror-image="{{ asset('assets/admin/img/1920x600/1.jpg') }}">
         </div>
     </section>
     <!-- ==== Banner Section Ends Here ==== -->
