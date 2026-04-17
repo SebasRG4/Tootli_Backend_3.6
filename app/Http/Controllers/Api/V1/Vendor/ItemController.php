@@ -225,6 +225,10 @@ class ItemController extends Controller
                     return response()->json(['errors' => Helpers::error_processor($validator)]);
                 }
                 $i['stock'] = abs($request['stock_' . str_replace('.', '_', $str)]);
+                $menuPriceKey = 'menu_price_' . str_replace('.', '_', $str);
+                if ($request->filled($menuPriceKey) && (float)$request->$menuPriceKey > 0) {
+                    $i['menu_price'] = (float)$request->$menuPriceKey;
+                }
                 array_push($variations, $i);
             }
         }
@@ -619,6 +623,10 @@ class ItemController extends Controller
                     return response()->json(['errors' => Helpers::error_processor($validator)]);
                 }
                 $i['stock'] = abs($request['stock_' . str_replace('.', '_', $str)]);
+                $menuPriceKey = 'menu_price_' . str_replace('.', '_', $str);
+                if ($request->filled($menuPriceKey) && (float)$request->$menuPriceKey > 0) {
+                    $i['menu_price'] = (float)$request->$menuPriceKey;
+                }
                 array_push($variations, $i);
             }
         }
