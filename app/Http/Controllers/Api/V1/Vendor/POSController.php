@@ -510,12 +510,20 @@ class POSController extends Controller
     private function formatProduct($product, $store): array
     {
         $menu_price = Helpers::item_price_for_context($product, 'direct');
+        $app_price  = (float) $product->price;
+
+        // Offset para ajustar precios de variantes no-food al precio de menú
+        // Si menu_price = $150 y app_price = $180, offset = -30
+        // Una variante de $250 (app) quedaría en $220 (menú)
+        $price_offset = round($menu_price - $app_price, 3);
 
         return [
             'id'              => $product->id,
             'name'            => $product->name,
             'image'           => $product->image_full_url,
             'price'           => $menu_price,
+            'base_app_price'  => $app_price,
+            'price_offset'    => $price_offset,
             'tax'             => $store->tax,
             'discount'        => $product->discount,
             'discount_type'   => $product->discount_type,
