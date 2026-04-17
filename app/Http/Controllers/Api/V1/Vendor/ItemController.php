@@ -325,6 +325,7 @@ class ItemController extends Controller
         //combinations end
         $item->food_variations = json_encode($food_variations);
         $item->price = $request->price;
+        $item->menu_price = $request->filled('menu_price') && (float)$request->menu_price > 0 ? $request->menu_price : null;
         $item->image =  $request->has('image') ? Helpers::upload('product/', 'png', $request->file('image')) : $newFileNamethumb ?? null;
         $item->available_time_starts = $request->available_time_starts;
         $item->available_time_ends = $request->available_time_ends;
@@ -674,6 +675,7 @@ class ItemController extends Controller
         $p->variations = json_encode($variations);
         $p->food_variations = json_encode($food_variations);
         $p->price = $request->price;
+        $p->menu_price = $request->filled('menu_price') && (float)$request->menu_price > 0 ? $request->menu_price : null;
         $p->available_time_starts = $request->available_time_starts;
         $p->available_time_ends = $request->available_time_ends;
         $p->discount = $request->discount_type == 'amount' ? $request->discount : $request->discount;
