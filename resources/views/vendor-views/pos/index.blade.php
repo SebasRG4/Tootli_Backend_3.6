@@ -1001,21 +1001,24 @@
 
         $('#paymentModal').on('shown.bs.modal', function () {
             syncPosCustomerHiddenFields($('#customer'), null);
+
+            // Si hay datos pendientes de un cliente recién seleccionado, aplicarlos de inmediato
+            if (window.__posPendingDeliveryForm) {
+                posApplyDeliveryFormValues(window.__posPendingDeliveryForm);
+                window.__posPendingDeliveryForm = null;
+                return;
+            }
+
             var iid = posCurrentInternalCustomerId();
             if (!iid) {
                 return;
             }
-            var n = ($('#contact_person_name').val() || '').trim();
-            var p = ($('#contact_person_number').val() || '').trim();
-            if (n !== '' && p !== '') {
-                return;
-            }
+            // Pre-llenar todos los campos (nombre, tel y dirección guardada)
             $.post({
                 url: '{{ route('vendor.pos.internal-customer-address') }}',
                 data: {
                     _token: '<?php echo e(csrf_token()); ?>',
                     internal_customer_id: iid,
-                    prefill_contact_only: 1,
                 },
                 success: function (res) {
                     if (res.form) {

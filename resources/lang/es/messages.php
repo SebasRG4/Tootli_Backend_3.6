@@ -1338,6 +1338,8 @@
   'tootli_direct_full_fee_stored_hint' => 'Se guarda la tarifa completa de envío para liquidación; puedes cobrar menos al cliente y absorber la diferencia.',
   'tootli_direct_pos_delivery_hint' => 'Tootli Direct: toca el lápiz, coloca el pin en el mapa, nombre y teléfono de contacto, y guarda. Elige o crea un cliente interno de la tienda (no uses solo “walk-in”).',
   'pos_delivery_information' => 'Datos de entrega',
+  'pos_new_address' => 'Nueva dirección',
+  'pos_no_address_yet' => 'Sin dirección guardada',
   'pos_contact_name' => 'Nombre de contacto',
   'pos_contact_phone' => 'Teléfono de contacto',
   'pos_road' => 'Calle o vía',
