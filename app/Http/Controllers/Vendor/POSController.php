@@ -60,7 +60,7 @@ class POSController extends Controller
         $store_data = Helpers::get_store_data();
         $categories = Category::active()
             ->module($store_data->module_id)
-            ->whereHas('items', function ($q) use ($store_data) {
+            ->whereHas('products', function ($q) use ($store_data) {
                 $q->where('store_id', $store_data->id)->active();
             })
             ->get();
