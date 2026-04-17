@@ -307,9 +307,14 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
 
         // POS
         Route::group(['prefix' => 'pos'], function () {
-            Route::get('orders', 'POSController@order_list');
-            Route::post('place-order', 'POSController@place_order');
-            Route::get('customers', 'POSController@get_customers');
+            Route::get('products',                  'POSController@products');
+            Route::get('categories',                'POSController@categories');
+            Route::get('internal-customers',        'POSController@internalCustomers');
+            Route::post('internal-customers',       'POSController@storeInternalCustomer');
+            Route::post('internal-customers/address','POSController@saveInternalCustomerAddress');
+            Route::get('customers',                 'POSController@get_customers');
+            Route::get('orders',                    'POSController@order_list');
+            Route::post('place-order',              'POSController@place_order');
         });
 
         // Chatting
