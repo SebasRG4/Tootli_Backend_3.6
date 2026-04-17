@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Vendor;
 
 use App\Models\Item;
 use App\Models\Order;
+use App\Models\Vendor;
+use App\Models\VendorEmployee;
 use App\Models\StorePosCustomer;
 use App\Models\Store;
 use App\Mail\PlaceOrder;
@@ -15,7 +17,9 @@ use App\Traits\PlaceNewOrder;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\Models\BusinessSetting;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use App\CentralLogics\ProductLogic;
 use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
@@ -52,6 +56,43 @@ class POSController extends Controller
                 });
             })
             ->latest();
+    }
+
+    /**
+     * Auto-login desde la app móvil del vendedor usando su API token.
+     * Crea una sesión web y redirige al POS.
+     */
+    public function appLaunch(Request $request)
+    {
+        $token = $request->bearerToken() ?: $request->query('token');
+
+        if (!$token) {
+            return redirect()->route('home')->withErrors(['Acceso no autorizado.']);
+        }
+
+        // Intentar como vendedor principal
+        $vendor = Vendor::where('auth_token', $token)->first();
+        if ($vendor) {
+            Auth::guard('vendor')->login($vendor);
+            $newToken = $vendor->login_remember_token ?? Str::random(60);
+            $vendor->login_remember_token = $newToken;
+            $vendor->save();
+            session(['login_remember_token' => $newToken]);
+            return redirect()->route('vendor.pos.index');
+        }
+
+        // Intentar como empleado de tienda
+        $employee = VendorEmployee::where('auth_token', $token)->first();
+        if ($employee) {
+            Auth::guard('vendor_employee')->login($employee);
+            $newToken = $employee->login_remember_token ?? Str::random(60);
+            $employee->login_remember_token = $newToken;
+            $employee->save();
+            session(['login_remember_token' => $newToken]);
+            return redirect()->route('vendor.pos.index');
+        }
+
+        return redirect()->route('home')->withErrors(['Token inválido.']);
     }
 
     public function index(Request $request)

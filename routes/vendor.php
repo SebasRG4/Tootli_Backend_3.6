@@ -309,4 +309,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
                 });
         });
     });
+
+    // Auto-login desde la app móvil del vendedor — fuera del middleware de sesión web
+    Route::get('pos/app-launch', 'POSController@appLaunch')->name('pos.app-launch');
 });
