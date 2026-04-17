@@ -8,18 +8,37 @@
     <!-- ==== Banner Section Starts Here ==== -->
     <section class="banner-section position-relative">
         <div class="container">
-            <div class="banner-content wow fadeInUp">
-                <h1 class="title">{{ $landing_data['fixed_header_title'] }}</h1>
-                <img class="w-100 onerror-image" data-onerror-image="{{ asset('assets/admin/img/160x160/img2.jpg') }}"
-                    src="{{ \App\CentralLogics\Helpers::logoFullUrl()}}"
-                    alt="">
-                <div class="text">
-                    {{ $landing_data['fixed_header_sub_title'] }}
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <div class="banner-content wow fadeInUp">
+                        <h1 class="title">{{ $landing_data['fixed_header_title'] }}</h1>
+                        <div class="text">
+                            {{ $landing_data['fixed_header_sub_title'] }}
+                        </div>
+                        @php($hero_links = $landing_data['download_user_app_links'] ?? null)
+                        @if ($hero_links)
+                        <div class="app-btn-grp mt-4">
+                            @if (!empty($hero_links['playstore_url_status']) && $hero_links['playstore_url_status'] == 1)
+                            <a href="{{ $hero_links['playstore_url'] ?? '#' }}" target="_blank">
+                                <img src="{{ asset('assets/landing/img/google.svg') }}" alt="Google Play" style="height:52px">
+                            </a>
+                            @endif
+                            @if (!empty($hero_links['apple_store_url_status']) && $hero_links['apple_store_url_status'] == 1)
+                            <a href="{{ $hero_links['apple_store_url'] ?? '#' }}" target="_blank">
+                                <img src="{{ asset('assets/landing/img/apple.svg') }}" alt="App Store" style="height:52px">
+                            </a>
+                            @endif
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                <div class="col-lg-5 d-none d-lg-flex justify-content-center">
+                    <img src="{{ asset('assets/landing/img/download-app.png') }}"
+                         class="img-fluid"
+                         style="max-height:460px;object-fit:contain;opacity:.9"
+                         alt="">
                 </div>
             </div>
-        </div>
-        <div class="px-xl-5 d-flex justify-content-center text-base banner-svg-img">
-            <img src="{{asset('assets/landing/img/main-banner.svg')}}" class="svg" alt="">
         </div>
     </section>
     <!-- ==== Banner Section Ends Here ==== -->

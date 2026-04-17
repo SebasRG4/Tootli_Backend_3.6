@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="{{ asset('assets/landing/css/owl.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/admin/css/toastr.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/landing/css/main.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('assets/landing/css/tootli-theme.css') }}"/>
 
     <link rel="stylesheet" href="{{asset('assets/admin/intltelinput/css/intlTelInput.css')}}">
 
@@ -131,7 +132,7 @@
                             <svg width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M6.00224 5.46105L1.33333 0.415128C1.21002 0.290383 1 0.0787335 1 0.0787335C1 0.0787335 0.708488 -0.0458817 0.584976 0.0788632L0.191805 0.475841C0.0680976 0.600389 7.43292e-08 0.766881 7.22135e-08 0.9443C7.00978e-08 1.12172 0.0680976 1.28801 0.191805 1.41266L5.53678 6.80682C5.66068 6.93196 5.82624 7.00049 6.00224 7C6.17902 7.00049 6.34439 6.93206 6.46839 6.80682L11.8082 1.41768C11.9319 1.29303 12 1.12674 12 0.949223C12 0.771804 11.9319 0.605509 11.8082 0.480765L11.415 0.0838844C11.1591 -0.174368 10.9225 0.222512 10.6667 0.480765L6.00224 5.46105Z"
-                                    fill="#000000" />
+                                    fill="rgba(255,255,255,0.7)" />
                             </svg>
                         </a>
 
