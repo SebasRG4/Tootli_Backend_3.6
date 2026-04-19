@@ -540,4 +540,113 @@ class POSController extends Controller
             ]) : [],
         ];
     }
+
+    // ─── Resolución de enlaces de Google Maps ────────────────────────────────
+
+    /**
+     * Recibe un enlace de Google Maps (incluyendo cortos maps.app.goo.gl)
+     * y devuelve {'lat': ..., 'lng': ...} para rellenar el formulario de dirección.
+     */
+    public function resolveGoogleMapsLink(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'url' => 'required|string|max:2048',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 422);
+        }
+
+        $url       = trim($request->input('url'));
+        $parsedUrl = parse_url($url);
+        $scheme    = strtolower($parsedUrl['scheme'] ?? '');
+
+        if ($scheme !== 'https' && $scheme !== 'http') {
+            return response()->json(['errors' => [['code' => 'url', 'message' => 'Enlace de Google Maps no válido']]], 422);
+        }
+
+        $host = strtolower($parsedUrl['host'] ?? '');
+        if (! $this->_mapsIsAllowedHost($host)) {
+            return response()->json(['errors' => [['code' => 'url', 'message' => 'Enlace de Google Maps no válido']]], 422);
+        }
+
+        $finalUrl = $url;
+        if (preg_match('/(goo\.gl|maps\.app\.goo\.gl)/i', $host)) {
+            $finalUrl = $this->_mapsFollowRedirects($url);
+            if ($finalUrl === $url) {
+                return response()->json(['errors' => [['code' => 'url', 'message' => 'No se pudo resolver el enlace corto']]], 422);
+            }
+            $finalHost = strtolower((string) parse_url($finalUrl, PHP_URL_HOST));
+            if (! preg_match('/(^|\.)google\.[a-z.]{2,}$/i', $finalHost)) {
+                return response()->json(['errors' => [['code' => 'url', 'message' => 'Enlace de Google Maps no válido']]], 422);
+            }
+        }
+
+        $parsed = $this->_mapsParseLatLng($finalUrl);
+        if ($parsed === null && $finalUrl !== $url) {
+            $parsed = $this->_mapsParseLatLng($url);
+        }
+        if ($parsed === null) {
+            return response()->json(['errors' => [['code' => 'url', 'message' => 'No se encontraron coordenadas en el enlace']]], 422);
+        }
+        if ($parsed['lat'] < -90 || $parsed['lat'] > 90 || $parsed['lng'] < -180 || $parsed['lng'] > 180) {
+            return response()->json(['errors' => [['code' => 'url', 'message' => 'No se encontraron coordenadas en el enlace']]], 422);
+        }
+
+        return response()->json(['lat' => $parsed['lat'], 'lng' => $parsed['lng']]);
+    }
+
+    private function _mapsIsAllowedHost(string $host): bool
+    {
+        if ($host === '') {
+            return false;
+        }
+        if (in_array($host, ['maps.app.goo.gl', 'goo.gl', 'www.goo.gl'], true)) {
+            return true;
+        }
+        return (bool) preg_match('/(^|\.)google\.[a-z.]{2,}$/i', $host);
+    }
+
+    private function _mapsFollowRedirects(string $url): string
+    {
+        if (! function_exists('curl_init')) {
+            return $url;
+        }
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS      => 10,
+            CURLOPT_TIMEOUT        => 15,
+            CURLOPT_USERAGENT      => 'Mozilla/5.0 (compatible; POS/1.0)',
+            CURLOPT_HEADER         => false,
+            CURLOPT_WRITEFUNCTION  => static function ($curl, $data) {
+                return strlen($data);
+            },
+        ]);
+        curl_exec($ch);
+        $effective = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+        curl_close($ch);
+        return (is_string($effective) && $effective !== '') ? $effective : $url;
+    }
+
+    private function _mapsParseLatLng(string $url): ?array
+    {
+        $decoded = rawurldecode($url);
+        if (preg_match('/@(-?\d+\.?\d*),(-?\d+\.?\d*)/', $decoded, $m)) {
+            return ['lat' => (float) $m[1], 'lng' => (float) $m[2]];
+        }
+        if (preg_match('/[?&](?:q|query)=(-?\d+\.?\d*),\s*(-?\d+\.?\d*)/', $decoded, $m)) {
+            return ['lat' => (float) $m[1], 'lng' => (float) $m[2]];
+        }
+        if (preg_match('/[?&]ll=(-?\d+\.?\d*),(-?\d+\.?\d*)/', $decoded, $m)) {
+            return ['lat' => (float) $m[1], 'lng' => (float) $m[2]];
+        }
+        if (preg_match('/[?&]center=(-?\d+\.?\d*)%2C(-?\d+\.?\d*)/i', $decoded, $m)) {
+            return ['lat' => (float) $m[1], 'lng' => (float) $m[2]];
+        }
+        if (preg_match('/[?&]center=(-?\d+\.?\d*),(-?\d+\.?\d*)/i', $decoded, $m)) {
+            return ['lat' => (float) $m[1], 'lng' => (float) $m[2]];
+        }
+        return null;
+    }
 }

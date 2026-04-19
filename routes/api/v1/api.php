@@ -315,6 +315,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::get('customers',                 'POSController@get_customers');
             Route::get('orders',                    'POSController@order_list');
             Route::post('place-order',              'POSController@place_order');
+            Route::post('resolve-maps-link',        'POSController@resolveGoogleMapsLink');
         });
 
         // Chatting
