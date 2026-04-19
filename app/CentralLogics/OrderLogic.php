@@ -226,6 +226,18 @@ class OrderLogic
                 }
                 // $vendorWallet->total_earning = $vendorWallet->total_earning+($order_amount + $order->total_tax_amount - $comission_on_store_amount);
                 $vendorWallet->total_earning = $vendorWallet->total_earning + $store_amount;
+
+                // Tootli Direct: el restaurante absorbe el costo de entrega no cubierto por el cliente
+                $tootliNetCost = 0.0;
+                if ($order->tootli_direct && !$order->store->sub_self_delivery) {
+                    $tootliNetCost = max(0.0,
+                        (float)($order->original_delivery_charge ?? 0)
+                        - (float)($order->delivery_charge ?? 0)
+                    );
+                    if ($tootliNetCost > 0) {
+                        $vendorWallet->total_withdrawn = ($vendorWallet->total_withdrawn ?? 0) + $tootliNetCost;
+                    }
+                }
             }
             if ($order->delivery_man && ($type == 'parcel' || ($order->store && !$order->store->sub_self_delivery))) {
                 $dmWallet = DeliveryManWallet::firstOrNew(
@@ -278,6 +290,20 @@ class OrderLogic
                 $adminWallet->save();
                 if ($type != 'parcel') {
                     $vendorWallet->save();
+
+                    // Registrar cobro Tootli Direct absorbido por el restaurante
+                    if (isset($tootliNetCost) && $tootliNetCost > 0) {
+                        $tx = new AccountTransaction();
+                        $tx->from_type       = 'store';
+                        $tx->from_id         = $order->store->vendor->id;
+                        $tx->created_by      = 'admin';
+                        $tx->method          = 'tootli_direct_delivery';
+                        $tx->ref             = $order->id;
+                        $tx->amount          = $tootliNetCost;
+                        $tx->current_balance = $vendorWallet->balance;
+                        $tx->type            = 'tootli_direct_fee';
+                        $tx->save();
+                    }
                 }
                 if (isset($dmWallet)) {
                     $dmWallet->save();

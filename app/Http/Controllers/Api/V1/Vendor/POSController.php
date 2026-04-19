@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AddOn;
 use App\Models\BusinessSetting;
 use App\Models\StoreTootliDirectTrial;
+use App\Models\StoreTootliDirectMembership;
 use App\Models\Category;
 use App\Models\DMVehicle;
 use App\Models\Item;
@@ -205,16 +206,18 @@ class POSController extends Controller
         $has_address     = is_array($address) && !empty($address['latitude']);
         $tootli_direct   = $has_address;
 
-        // ── Verificación de acceso Tootli Direct (sandbox / suscripción / comisión) ──
+        // ── Verificación de acceso Tootli Direct (sandbox / suscripción / membresía / comisión) ──
         if ($has_address) {
             $storeSub        = $store->store_sub;
-            // Suscripción con feature Tootli Direct activada
+            // Suscripción legacy con feature Tootli Direct activada
             $hasSubscription = $storeSub && ($storeSub->tootli_direct ?? 0);
+            // Membresía Tootli Direct activa (sistema dedicado, activada por admin)
+            $activeMembership = StoreTootliDirectMembership::activeForStore($store->id)->first();
             // Tiendas en modelo comisión ya pagan por uso → acceso nativo sin surcharge
             $isCommissionModel = $store->store_business_model === 'commission';
             $activeTrial       = StoreTootliDirectTrial::activeForStore($store->id)->first();
 
-            $isCovered = $hasSubscription || $isCommissionModel || $activeTrial;
+            $isCovered = $hasSubscription || $activeMembership || $isCommissionModel || $activeTrial;
 
             if (! $isCovered) {
                 // Sin ninguna cobertura → aplicar surcharge
@@ -226,7 +229,7 @@ class POSController extends Controller
                         $address['delivery_fee']
                     );
                 }
-            } elseif ($activeTrial && ! $hasSubscription && ! $isCommissionModel) {
+            } elseif ($activeTrial && ! $hasSubscription && ! $activeMembership && ! $isCommissionModel) {
                 // Trial sandbox: descontar una orden (solo si no tiene otra cobertura)
                 $activeTrial->increment('used_orders');
                 if ($activeTrial->fresh()->used_orders >= $activeTrial->granted_orders) {
@@ -662,6 +665,10 @@ class POSController extends Controller
         // ── Estado de acceso Tootli Direct ────────────────────────────────────
         $storeSub          = $store->store_sub;
         $hasSubscription   = $storeSub && ($storeSub->tootli_direct ?? 0);
+        // Membresía Tootli Direct activa (activada manualmente por admin)
+        $activeMembership    = StoreTootliDirectMembership::activeForStore($store->id)->first();
+        $hasMembership       = $activeMembership !== null;
+        $membershipDaysLeft  = $hasMembership ? $activeMembership->days_remaining : 0;
         // Comisión: acceso nativo, paga % por pedido (ya está en OrderLogic)
         $isCommissionModel = $store->store_business_model === 'commission';
 
@@ -670,25 +677,27 @@ class POSController extends Controller
         $hasTrial        = $activeTrial !== null;
         $trialRemaining  = $hasTrial ? $activeTrial->remaining_orders : 0;
 
-        // Cubierto = suscripción con TD + comisión + trial activo
-        $isCovered  = $hasSubscription || $isCommissionModel || $hasTrial;
+        // Cubierto = membresía pagada + suscripción legacy + comisión + trial activo
+        $isCovered  = $hasMembership || $hasSubscription || $isCommissionModel || $hasTrial;
 
-        // Surcharge para sin suscripción (configurable por admin)
+        // Surcharge para sin cobertura (configurable por admin)
         $surcharge  = $isCovered ? 0.0
             : round((float) (BusinessSetting::where('key', 'tootli_direct_no_sub_surcharge')->value('value') ?? 0), 2);
 
         $totalFee = round($tootliFee + $surcharge, 2);
 
         return response()->json([
-            'tootli_fee'         => $tootliFee,
-            'surcharge'          => $surcharge,
-            'total_fee'          => $totalFee,
-            'distance_km'        => $distanceKm,
-            'charge_type'        => $chargeType,
-            'has_subscription'   => $hasSubscription,
-            'has_trial'          => $hasTrial,
-            'trial_remaining'    => $trialRemaining,
-            'is_covered'         => $isCovered,
+            'tootli_fee'           => $tootliFee,
+            'surcharge'            => $surcharge,
+            'total_fee'            => $totalFee,
+            'distance_km'          => $distanceKm,
+            'charge_type'          => $chargeType,
+            'has_membership'       => $hasMembership,
+            'membership_days_left' => $membershipDaysLeft,
+            'has_subscription'     => $hasSubscription,
+            'has_trial'            => $hasTrial,
+            'trial_remaining'      => $trialRemaining,
+            'is_covered'           => $isCovered,
         ]);
     }
 

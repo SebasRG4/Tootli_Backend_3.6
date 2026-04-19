@@ -20,6 +20,7 @@ use App\Enums\ViewPaths\Admin\Notification;
 use App\Enums\ViewPaths\Admin\CommonCondition;
 use App\Http\Controllers\Admin\VendorController;
 use App\Http\Controllers\Admin\TootliDirectTrialController;
+use App\Http\Controllers\Admin\TootliDirectMembershipController;
 use App\Http\Controllers\Admin\Item\UnitController;
 use App\Http\Controllers\Admin\Zone\ZoneController;
 use App\Http\Controllers\Admin\Item\AddonController;
@@ -232,6 +233,12 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post('/tootli-direct-trials/grant',  [TootliDirectTrialController::class, 'grant'])->name('tootli-direct.grant');
                 Route::post('/tootli-direct-trials/{id}/deactivate', [TootliDirectTrialController::class, 'deactivate'])->name('tootli-direct.deactivate');
                 Route::get('/tootli-direct-trials/search-stores', [TootliDirectTrialController::class, 'searchStores'])->name('tootli-direct.search-stores');
+
+                // Tootli Direct — membresías de pago
+                Route::get('/tootli-direct-memberships',                   [TootliDirectMembershipController::class, 'index'])->name('tootli-direct.memberships');
+                Route::post('/tootli-direct-memberships/activate',         [TootliDirectMembershipController::class, 'activate'])->name('tootli-direct.memberships.activate');
+                Route::post('/tootli-direct-memberships/{id}/deactivate',  [TootliDirectMembershipController::class, 'deactivate'])->name('tootli-direct.memberships.deactivate');
+                Route::get('/tootli-direct-memberships/search-stores',     [TootliDirectMembershipController::class, 'searchStores'])->name('tootli-direct.memberships.search-stores');
             });
 
 
