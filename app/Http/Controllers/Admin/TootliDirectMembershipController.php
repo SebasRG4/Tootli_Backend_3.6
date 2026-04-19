@@ -62,7 +62,7 @@ class TootliDirectMembershipController extends Controller
             // Crear nueva membresía
             StoreTootliDirectMembership::create([
                 'store_id'      => $store->id,
-                'activated_by'  => Auth::id(),
+                'activated_by'  => Auth::guard('admin')->id(),
                 'validity_days' => (int) $request->validity_days,
                 'fee'           => $fee,
                 'starts_at'     => $startsAt,

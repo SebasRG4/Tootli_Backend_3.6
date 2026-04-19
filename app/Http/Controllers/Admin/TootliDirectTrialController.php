@@ -46,7 +46,7 @@ class TootliDirectTrialController extends Controller
             'store_id'       => $request->store_id,
             'granted_orders' => $request->granted_orders,
             'used_orders'    => 0,
-            'granted_by'     => Auth::id(),
+            'granted_by'     => Auth::guard('admin')->id(),
             'notes'          => $request->notes,
             'expires_at'     => $request->expires_at ?: null,
             'is_active'      => true,
