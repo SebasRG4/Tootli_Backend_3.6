@@ -70,7 +70,8 @@ class TootliDirectTrialController extends Controller
     public function searchStores(Request $request)
     {
         $q      = $request->input('q', '');
-        $stores = Store::where('name', 'like', "%$q%")
+        $stores = Store::withoutGlobalScopes()
+            ->where('name', 'like', "%$q%")
             ->whereIn('module_type', ['food', 'grocery'])
             ->select('id', 'name', 'address')
             ->limit(15)
