@@ -849,6 +849,28 @@
                                                             value="{{ $tootli_direct_delivery_commission ? $tootli_direct_delivery_commission->value : 0 }}">
                                                     </div>
                                                 </div>
+                                                {{-- Recargo sin suscripción Tootli Direct --}}
+                                                <div class="col-sm-6 col-lg-6">
+                                                    @php($tootli_direct_no_sub_surcharge = \App\Models\BusinessSetting::where('key', 'tootli_direct_no_sub_surcharge')->first())
+                                                    <div class="form-group mb-0">
+                                                        <label class="input-label text-capitalize d-flex align-items-center"
+                                                            for="tootli_direct_no_sub_surcharge">
+                                                            Recargo envío sin suscripción Tootli Direct ($)
+                                                            <span class="form-label-secondary ml-1" data-toggle="tooltip"
+                                                                data-placement="right"
+                                                                data-original-title="Monto fijo extra que se añade a la tarifa de envío cuando el restaurante no tiene suscripción activa a Tootli Direct. Ej: 15">
+                                                                <i class="tio-info text-muted"></i>
+                                                            </span>
+                                                        </label>
+                                                        <input type="number" name="tootli_direct_no_sub_surcharge"
+                                                            class="form-control" id="tootli_direct_no_sub_surcharge"
+                                                            placeholder="Ej: 15" min="0" step="0.01"
+                                                            value="{{ $tootli_direct_no_sub_surcharge ? $tootli_direct_no_sub_surcharge->value : 0 }}">
+                                                        <small class="text-muted">
+                                                            Sin suscripción activa el app mostrará: "tus envíos son más caros y más lentos".
+                                                        </small>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

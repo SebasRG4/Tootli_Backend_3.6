@@ -4115,6 +4115,7 @@ class Helpers
             $store_subscription->chat = $package->chat;
             $store_subscription->review = $package->review;
             $store_subscription->self_delivery = $package->self_delivery;
+            $store_subscription->tootli_direct = $package->tootli_direct ?? 0;
             $store_subscription->is_canceled = 0;
             $store_subscription->canceled_by = 'none';
 

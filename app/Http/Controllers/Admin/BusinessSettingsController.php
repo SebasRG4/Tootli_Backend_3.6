@@ -711,6 +711,9 @@ class BusinessSettingsController extends Controller
         Helpers::businessUpdateOrInsert(['key' => 'tootli_direct_delivery_commission'], [
             'value' => $request->input('tootli_direct_delivery_commission', 0),
         ]);
+        Helpers::businessUpdateOrInsert(['key' => 'tootli_direct_no_sub_surcharge'], [
+            'value' => $request->input('tootli_direct_no_sub_surcharge', 0),
+        ]);
         // dd( $request['commission_business_model']);
 
         if (!isset($request->subscription_business_model) && !isset($request->commission_business_model)) {

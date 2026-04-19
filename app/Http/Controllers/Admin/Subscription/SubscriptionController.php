@@ -121,6 +121,7 @@ class SubscriptionController extends Controller
         $package->pos = $request->pos_system ?? 0;
         $package->mobile_app = $request->mobile_app ?? 0;
         $package->self_delivery = $request->self_delivery ?? 0;
+        $package->tootli_direct = $request->tootli_direct ?? 0;
         $package->chat = $request->chat ?? 0;
         $package->review = $request->review ?? 0;
         $package->colour = $request?->colour;
@@ -187,6 +188,7 @@ class SubscriptionController extends Controller
         $subscriptionackage->pos = $request->pos_system ?? 0;
         $subscriptionackage->mobile_app = $request->mobile_app ?? 0;
         $subscriptionackage->self_delivery = $request->self_delivery ?? 0;
+        $subscriptionackage->tootli_direct = $request->tootli_direct ?? 0;
         $subscriptionackage->chat = $request->chat ?? 0;
         $subscriptionackage->review = $request->review ?? 0;
         $subscriptionackage->colour = $request?->colour;

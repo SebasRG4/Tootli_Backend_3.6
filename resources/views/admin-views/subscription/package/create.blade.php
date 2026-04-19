@@ -164,6 +164,15 @@ active
 
                         <div class="check-item">
                             <label class="form-group form-check form--check">
+                                <input type="checkbox" class="form-check-input package-available-feature" {{ old('tootli_direct') == 1 ? 'checked' : '' }}  name="tootli_direct" value="1">
+                                <span class="form-check-label text-dark">
+                                    Tootli Direct
+                                    <span class="badge badge-soft-primary ml-1" style="font-size: 10px;">Envíos a domicilio POS</span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="check-item">
+                            <label class="form-group form-check form--check">
                                 <input type="checkbox" class="form-check-input package-available-feature" {{ old('mobile_app') == 1 ? 'checked' : '' }}  name="mobile_app" value="1" >
                                 <span class="form-check-label text-dark">{{ translate('messages.Mobile_App') }}</span>
                             </label>
