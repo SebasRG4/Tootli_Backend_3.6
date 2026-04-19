@@ -111,9 +111,10 @@ class TootliDirectMembershipController extends Controller
         $q = $request->input('q', '');
 
         $stores = \DB::table('stores')
-            ->where('name', 'like', "%$q%")
-            ->whereIn('module_type', ['food', 'grocery'])
-            ->select('id', 'name', 'address')
+            ->join('modules', 'stores.module_id', '=', 'modules.id')
+            ->where('stores.name', 'like', "%$q%")
+            ->whereIn('modules.module_type', ['food', 'grocery'])
+            ->select('stores.id', 'stores.name', 'stores.address')
             ->limit(15)
             ->get();
 
