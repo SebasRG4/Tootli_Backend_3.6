@@ -31,7 +31,7 @@
                 </p>
             </div>
             <div class="col-sm-auto">
-                <a href="{{ route('admin.business-settings.subscription.tootli-direct.trials') }}"
+                <a href="{{ route('admin.business-settings.tootli-direct.trials') }}"
                    class="btn btn-outline-secondary btn-sm">
                     <i class="tio-gift mr-1"></i> Ver Trials / Sandbox
                 </a>
@@ -51,7 +51,7 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('admin.business-settings.subscription.tootli-direct.memberships.activate') }}"
+                    <form action="{{ route('admin.business-settings.tootli-direct.memberships.activate') }}"
                           method="POST" id="activateForm">
                         @csrf
 
@@ -127,7 +127,7 @@
                                        placeholder="Buscar tienda..." value="{{ $search }}">
                                 <button class="btn btn-sm btn-outline-primary">Buscar</button>
                                 @if($search)
-                                    <a href="{{ route('admin.business-settings.subscription.tootli-direct.memberships') }}"
+                                    <a href="{{ route('admin.business-settings.tootli-direct.memberships') }}"
                                        class="btn btn-sm btn-outline-secondary">Limpiar</a>
                                 @endif
                             </form>
@@ -187,7 +187,7 @@
                                     <td>
                                         @if($isValid)
                                             <form method="POST"
-                                                  action="{{ route('admin.business-settings.subscription.tootli-direct.memberships.deactivate', $m->id) }}"
+                                                  action="{{ route('admin.business-settings.tootli-direct.memberships.deactivate', $m->id) }}"
                                                   onsubmit="return confirm('¿Desactivar esta membresía?')">
                                                 @csrf
                                                 <button class="btn btn-sm btn-outline-danger">
@@ -229,7 +229,7 @@
     const storeIdInput = document.getElementById('storeId');
     const suggestions  = document.getElementById('store-suggestions');
     const submitBtn    = document.getElementById('submitBtn');
-    const searchUrl    = "{{ route('admin.business-settings.subscription.tootli-direct.memberships.search-stores') }}";
+    const searchUrl    = "{{ route('admin.business-settings.tootli-direct.memberships.search-stores') }}";
 
     let debounceTimer;
 
