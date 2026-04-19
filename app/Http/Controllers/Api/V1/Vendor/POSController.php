@@ -6,6 +6,7 @@ use App\CentralLogics\Helpers;
 use App\CentralLogics\OrderLogic;
 use App\Http\Controllers\Controller;
 use App\Models\AddOn;
+use App\Models\BusinessSetting;
 use App\Models\Category;
 use App\Models\DMVehicle;
 use App\Models\Item;
@@ -393,11 +394,19 @@ class POSController extends Controller
         if (in_array($order->order_type, ['take_away', 'dine_in'], true)) {
             $order->delivery_charge          = 0;
             $order->original_delivery_charge = 0;
+            $order->free_delivery_by         = null;
         } else {
             $cust = (float)($address['delivery_fee'] ?? 0);
             $orig = (float)($address['original_delivery_fee'] ?? $cust);
             $order->delivery_charge          = $cust;
             $order->original_delivery_charge = max($orig, $cust);
+
+            // Si el restaurante absorbe parte o todo el envío, registrarlo para liquidación
+            if ($orig > $cust) {
+                $order->free_delivery_by = 'vendor';
+            } else {
+                $order->free_delivery_by = null;
+            }
         }
 
         $order->delivery_address = $has_address ? json_encode($address) : null;
@@ -539,6 +548,91 @@ class POSController extends Controller
                 'price' => $a->price,
             ]) : [],
         ];
+    }
+
+    // ─── Estimación de tarifa de envío desde coordenadas ────────────────────
+
+    /**
+     * Calcula la tarifa Tootli de envío para unas coordenadas dadas.
+     * Usa la misma lógica que el panel web POS:
+     *   - Si la tienda tiene self-delivery: tarifas propias de la tienda
+     *   - Si hay config por módulo/zona: tarifas del módulo (fija o por km)
+     *   - Fallback: BusinessSetting globales
+     *
+     * GET /api/v1/vendor/pos/delivery-fee-estimate?lat=X&lng=Y
+     */
+    public function deliveryFeeEstimate(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'lat' => 'required|numeric|between:-90,90',
+            'lng' => 'required|numeric|between:-180,180',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 422);
+        }
+
+        $vendor = $request['vendor'];
+        $store  = $vendor->stores[0];
+
+        $customerLat = (float) $request->lat;
+        $customerLng = (float) $request->lng;
+        $storeLat    = (float) $store->latitude;
+        $storeLng    = (float) $store->longitude;
+
+        // Distancia en km (Haversine)
+        $distanceKm = round(Helpers::get_distance($storeLat, $storeLng, $customerLat, $customerLng), 2);
+
+        // Determinar tarifas aplicables
+        $chargeType  = 'distance';
+        $perKm       = 0.0;
+        $minimum     = 0.0;
+        $maximum     = 0.0;
+        $fixed       = 0.0;
+
+        if ($store->sub_self_delivery ?? false) {
+            // Tienda con delivery propio
+            $perKm   = (float) ($store->per_km_shipping_charge   ?? 0);
+            $minimum = (float) ($store->minimum_shipping_charge  ?? 0);
+            $maximum = (float) ($store->maximum_shipping_charge  ?? 0);
+        } else {
+            $moduleZone = $store->zone->modules()
+                ->where('modules.id', $store->module_id)
+                ->first();
+
+            if ($moduleZone) {
+                $chargeType = $moduleZone->pivot->delivery_charge_type ?? 'distance';
+                if ($chargeType === 'fixed') {
+                    $fixed = (float) ($moduleZone->pivot->fixed_shipping_charge ?? 0);
+                } else {
+                    $perKm   = (float) ($moduleZone->pivot->per_km_shipping_charge  ?? 0);
+                    $minimum = (float) ($moduleZone->pivot->minimum_shipping_charge ?? 0);
+                    $maximum = (float) ($moduleZone->pivot->maximum_shipping_charge ?? 0);
+                }
+            } else {
+                // Fallback global
+                $perKm   = (float) (BusinessSetting::where('key', 'per_km_shipping_charge')->value('value')  ?? 0);
+                $minimum = (float) (BusinessSetting::where('key', 'minimum_shipping_charge')->value('value') ?? 0);
+            }
+        }
+
+        // Calcular tarifa
+        if ($chargeType === 'fixed') {
+            $tootliFee = $fixed;
+        } else {
+            $raw = $distanceKm * $perKm;
+            $tootliFee = $raw < $minimum ? $minimum : $raw;
+            if ($maximum > $minimum && $tootliFee > $maximum) {
+                $tootliFee = $maximum;
+            }
+        }
+
+        $tootliFee = round($tootliFee, 2);
+
+        return response()->json([
+            'tootli_fee'  => $tootliFee,
+            'distance_km' => $distanceKm,
+            'charge_type' => $chargeType,
+        ]);
     }
 
     // ─── Resolución de enlaces de Google Maps ────────────────────────────────
