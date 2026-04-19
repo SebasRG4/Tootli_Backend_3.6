@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
 
-            $table->index(['store_id', 'is_active', 'expires_at']);
+            $table->index(['store_id', 'is_active', 'expires_at'], 'idx_td_memberships_store_active_exp');
         });
     }
 
