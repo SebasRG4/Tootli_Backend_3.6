@@ -205,14 +205,19 @@ class POSController extends Controller
         $has_address     = is_array($address) && !empty($address['latitude']);
         $tootli_direct   = $has_address;
 
-        // ── Verificación de acceso Tootli Direct (sandbox / suscripción) ──────
+        // ── Verificación de acceso Tootli Direct (sandbox / suscripción / comisión) ──
         if ($has_address) {
             $storeSub        = $store->store_sub;
+            // Suscripción con feature Tootli Direct activada
             $hasSubscription = $storeSub && ($storeSub->tootli_direct ?? 0);
-            $activeTrial     = StoreTootliDirectTrial::activeForStore($store->id)->first();
+            // Tiendas en modelo comisión ya pagan por uso → acceso nativo sin surcharge
+            $isCommissionModel = $store->store_business_model === 'commission';
+            $activeTrial       = StoreTootliDirectTrial::activeForStore($store->id)->first();
 
-            if (! $hasSubscription && ! $activeTrial) {
-                // Sin suscripción → aplicar surcharge en la dirección
+            $isCovered = $hasSubscription || $isCommissionModel || $activeTrial;
+
+            if (! $isCovered) {
+                // Sin ninguna cobertura → aplicar surcharge
                 $surcharge = (float) (BusinessSetting::where('key', 'tootli_direct_no_sub_surcharge')->value('value') ?? 0);
                 if ($surcharge > 0 && isset($address['delivery_fee'])) {
                     $address['delivery_fee']          = (float)$address['delivery_fee'] + $surcharge;
@@ -221,10 +226,9 @@ class POSController extends Controller
                         $address['delivery_fee']
                     );
                 }
-            } elseif ($activeTrial && ! $hasSubscription) {
-                // Trial sandbox: descontar una orden del trial
+            } elseif ($activeTrial && ! $hasSubscription && ! $isCommissionModel) {
+                // Trial sandbox: descontar una orden (solo si no tiene otra cobertura)
                 $activeTrial->increment('used_orders');
-                // Si se agotó, desactivarlo
                 if ($activeTrial->fresh()->used_orders >= $activeTrial->granted_orders) {
                     $activeTrial->update(['is_active' => false]);
                 }
@@ -655,17 +659,19 @@ class POSController extends Controller
 
         $tootliFee = round($tootliFee, 2);
 
-        // ── Estado de suscripción Tootli Direct ───────────────────────────────
-        $storeSub       = $store->store_sub;
-        $hasSubscription = $storeSub && ($storeSub->tootli_direct ?? 0);
+        // ── Estado de acceso Tootli Direct ────────────────────────────────────
+        $storeSub          = $store->store_sub;
+        $hasSubscription   = $storeSub && ($storeSub->tootli_direct ?? 0);
+        // Comisión: acceso nativo, paga % por pedido (ya está en OrderLogic)
+        $isCommissionModel = $store->store_business_model === 'commission';
 
         // Trial sandbox activo
         $activeTrial     = StoreTootliDirectTrial::activeForStore($store->id)->first();
         $hasTrial        = $activeTrial !== null;
         $trialRemaining  = $hasTrial ? $activeTrial->remaining_orders : 0;
 
-        // Si tiene suscripción o trial activo → no hay recargo
-        $isCovered  = $hasSubscription || $hasTrial;
+        // Cubierto = suscripción con TD + comisión + trial activo
+        $isCovered  = $hasSubscription || $isCommissionModel || $hasTrial;
 
         // Surcharge para sin suscripción (configurable por admin)
         $surcharge  = $isCovered ? 0.0
