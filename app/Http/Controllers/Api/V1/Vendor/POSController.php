@@ -634,13 +634,27 @@ class POSController extends Controller
                 ->first();
 
             if ($moduleZone) {
-                $chargeType = $moduleZone->pivot->delivery_charge_type ?? 'distance';
-                if ($chargeType === 'fixed') {
-                    $fixed = (float) ($moduleZone->pivot->fixed_shipping_charge ?? 0);
+                // Usar tarifas Tootli Direct específicas si están configuradas, si no las regulares
+                $tdType = $moduleZone->pivot->td_delivery_charge_type ?? null;
+
+                if ($tdType === 'fixed') {
+                    $chargeType = 'fixed';
+                    $fixed = (float) ($moduleZone->pivot->td_fixed_shipping_charge ?? 0);
+                } elseif ($tdType === 'distance') {
+                    $chargeType = 'distance';
+                    $perKm   = (float) ($moduleZone->pivot->td_per_km_shipping_charge  ?? 0);
+                    $minimum = (float) ($moduleZone->pivot->td_minimum_shipping_charge ?? 0);
+                    $maximum = (float) ($moduleZone->pivot->td_maximum_shipping_charge ?? 0);
                 } else {
-                    $perKm   = (float) ($moduleZone->pivot->per_km_shipping_charge  ?? 0);
-                    $minimum = (float) ($moduleZone->pivot->minimum_shipping_charge ?? 0);
-                    $maximum = (float) ($moduleZone->pivot->maximum_shipping_charge ?? 0);
+                    // Sin tarifas TD configuradas: usar las tarifas regulares de la zona
+                    $chargeType = $moduleZone->pivot->delivery_charge_type ?? 'distance';
+                    if ($chargeType === 'fixed') {
+                        $fixed = (float) ($moduleZone->pivot->fixed_shipping_charge ?? 0);
+                    } else {
+                        $perKm   = (float) ($moduleZone->pivot->per_km_shipping_charge  ?? 0);
+                        $minimum = (float) ($moduleZone->pivot->minimum_shipping_charge ?? 0);
+                        $maximum = (float) ($moduleZone->pivot->maximum_shipping_charge ?? 0);
+                    }
                 }
             } else {
                 // Fallback global

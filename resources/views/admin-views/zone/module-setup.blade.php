@@ -362,6 +362,101 @@
                                                 </a>
                                             </div>
                                         </div>
+
+                                        {{-- ── Tarifas Tootli Direct (opcionales, sobreescriben las regulares para pedidos POS) ── --}}
+                                        <div class="col-12 mt-3">
+                                            <div class="border rounded p-3" style="border-color: #3ab44a !important; background: rgba(58,180,74,0.04);">
+                                                <div class="d-flex align-items-center gap-2 mb-3">
+                                                    <span class="badge badge-success px-2 py-1" style="font-size:12px;">
+                                                        <i class="tio-delivery-front mr-1"></i> Tootli Direct
+                                                    </span>
+                                                    <span class="text-muted fs-12">
+                                                        Tarifas específicas para envíos POS Tootli Direct.
+                                                        Si se dejan vacías, se usan las tarifas regulares de arriba.
+                                                    </span>
+                                                </div>
+                                                <div class="row gy-2">
+                                                    <div class="col-md-6 col-lg-4">
+                                                        <div class="form-group mb-0">
+                                                            <label class="input-label text-capitalize fs-14">
+                                                                Tipo de tarifa Tootli Direct
+                                                            </label>
+                                                            <div class="d-flex align-items-center rounded py-2 px-3 border h-cus-456px">
+                                                                <label class="form-check form--check mr-2 mr-md-4">
+                                                                    <input class="form-check-input td-type-radio" type="radio"
+                                                                           value="fixed"
+                                                                           name="module_data[{{ $module->id }}][td_delivery_charge_type]"
+                                                                        {{ $pivot?->td_delivery_charge_type == 'fixed' ? 'checked' : '' }}>
+                                                                    <span class="form-check-label">Fija</span>
+                                                                </label>
+                                                                <label class="form-check form--check mr-2 mr-md-4">
+                                                                    <input class="form-check-input td-type-radio" type="radio"
+                                                                           value="distance"
+                                                                           name="module_data[{{ $module->id }}][td_delivery_charge_type]"
+                                                                        {{ $pivot?->td_delivery_charge_type == 'distance' ? 'checked' : '' }}>
+                                                                    <span class="form-check-label">Por km</span>
+                                                                </label>
+                                                                <label class="form-check form--check">
+                                                                    <input class="form-check-input td-type-radio" type="radio"
+                                                                           value=""
+                                                                           name="module_data[{{ $module->id }}][td_delivery_charge_type]"
+                                                                        {{ !$pivot?->td_delivery_charge_type ? 'checked' : '' }}>
+                                                                    <span class="form-check-label text-muted">Usar regular</span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Fija --}}
+                                                    <div class="col-md-6 col-lg-4 td-fixed-field {{ $pivot?->td_delivery_charge_type != 'fixed' ? 'd-none' : '' }}">
+                                                        <div class="form-group mb-0">
+                                                            <label class="input-label text-capitalize fs-14">
+                                                                Monto fijo ({{ \App\CentralLogics\Helpers::currency_symbol() }})
+                                                            </label>
+                                                            <input type="number" step=".01" min="0" class="form-control"
+                                                                   name="module_data[{{ $module->id }}][td_fixed_shipping_charge]"
+                                                                   placeholder="Ej: 40"
+                                                                   value="{{ $pivot?->td_fixed_shipping_charge }}">
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Por km --}}
+                                                    <div class="col-md-6 col-lg-4 td-distance-field {{ $pivot?->td_delivery_charge_type != 'distance' ? 'd-none' : '' }}">
+                                                        <div class="form-group mb-0">
+                                                            <label class="input-label fs-14">
+                                                                Tarifa por km ({{ \App\CentralLogics\Helpers::currency_symbol() }})
+                                                            </label>
+                                                            <input type="number" step=".01" min="0" class="form-control"
+                                                                   name="module_data[{{ $module->id }}][td_per_km_shipping_charge]"
+                                                                   placeholder="Ej: 8"
+                                                                   value="{{ $pivot?->td_per_km_shipping_charge }}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-lg-4 td-distance-field {{ $pivot?->td_delivery_charge_type != 'distance' ? 'd-none' : '' }}">
+                                                        <div class="form-group mb-0">
+                                                            <label class="input-label fs-14">
+                                                                Mínimo ({{ \App\CentralLogics\Helpers::currency_symbol() }})
+                                                            </label>
+                                                            <input type="number" step=".01" min="0" class="form-control"
+                                                                   name="module_data[{{ $module->id }}][td_minimum_shipping_charge]"
+                                                                   placeholder="Ej: 30"
+                                                                   value="{{ $pivot?->td_minimum_shipping_charge }}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-lg-4 td-distance-field {{ $pivot?->td_delivery_charge_type != 'distance' ? 'd-none' : '' }}">
+                                                        <div class="form-group mb-0">
+                                                            <label class="input-label fs-14">
+                                                                Máximo ({{ \App\CentralLogics\Helpers::currency_symbol() }})
+                                                            </label>
+                                                            <input type="number" step=".01" min="0" class="form-control"
+                                                                   name="module_data[{{ $module->id }}][td_maximum_shipping_charge]"
+                                                                   placeholder="Ej: 80"
+                                                                   value="{{ $pivot?->td_maximum_shipping_charge }}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -422,6 +517,29 @@
 
                 moduleContainer.find('input.delivery-type-radio').on('change', function () {
                     toggleChargeFields(moduleContainer);
+                });
+            });
+
+            // Toggle Tootli Direct specific fields
+            function toggleTdChargeFields(moduleContainer) {
+                const selected = moduleContainer.find('input.td-type-radio:checked').val();
+                if (selected === 'fixed') {
+                    moduleContainer.find('.td-fixed-field').removeClass('d-none');
+                    moduleContainer.find('.td-distance-field').addClass('d-none');
+                } else if (selected === 'distance') {
+                    moduleContainer.find('.td-fixed-field').addClass('d-none');
+                    moduleContainer.find('.td-distance-field').removeClass('d-none');
+                } else {
+                    moduleContainer.find('.td-fixed-field').addClass('d-none');
+                    moduleContainer.find('.td-distance-field').addClass('d-none');
+                }
+            }
+
+            $('[id^="module_"]').each(function () {
+                const moduleContainer = $(this);
+                toggleTdChargeFields(moduleContainer);
+                moduleContainer.find('input.td-type-radio').on('change', function () {
+                    toggleTdChargeFields(moduleContainer);
                 });
             });
         });
