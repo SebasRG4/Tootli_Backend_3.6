@@ -151,10 +151,10 @@
                             @forelse($memberships as $m)
                                 @php
                                     $isValid = $m->is_active && $m->expires_at->isFuture();
-                                    $daysLeft = $isValid ? now()->diffInDays($m->expires_at, false) : 0;
+                                    $daysLeft = $isValid ? (int) now()->diffInDays($m->expires_at, false) : 0;
                                     if ($isValid) {
                                         $badgeClass = 'badge-active';
-                                        $badgeLabel = "Activa ({$daysLeft}d restantes)";
+                                        $badgeLabel = "Activa ({$daysLeft} días restantes)";
                                     } elseif (!$m->is_active) {
                                         $badgeClass = 'badge-inactive';
                                         $badgeLabel = 'Desactivada';
