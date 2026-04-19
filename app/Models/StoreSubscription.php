@@ -26,6 +26,7 @@ class StoreSubscription extends Model
         'mobile_app'=>'integer',
         'total_package_renewed'=>'integer',
         'self_delivery'=>'integer',
+        'tootli_direct'=>'integer',
         'store_id'=>'integer',
         'max_order'=>'string',
         'max_product'=>'string',

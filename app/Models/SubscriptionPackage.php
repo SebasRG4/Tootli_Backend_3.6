@@ -24,6 +24,7 @@ class SubscriptionPackage extends Model
         'mobile_app'=>'integer',
         'total_package_renewed'=>'integer',
         'self_delivery'=>'integer',
+        'tootli_direct'=>'integer',
         'store_id'=>'integer',
         'is_trial'=>'integer',
         'max_order'=>'string',

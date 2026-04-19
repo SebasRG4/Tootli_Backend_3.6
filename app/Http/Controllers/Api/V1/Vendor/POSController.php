@@ -7,6 +7,7 @@ use App\CentralLogics\OrderLogic;
 use App\Http\Controllers\Controller;
 use App\Models\AddOn;
 use App\Models\BusinessSetting;
+use App\Models\StoreTootliDirectTrial;
 use App\Models\Category;
 use App\Models\DMVehicle;
 use App\Models\Item;
@@ -203,6 +204,32 @@ class POSController extends Controller
         $address         = $request->input('delivery_address');
         $has_address     = is_array($address) && !empty($address['latitude']);
         $tootli_direct   = $has_address;
+
+        // ── Verificación de acceso Tootli Direct (sandbox / suscripción) ──────
+        if ($has_address) {
+            $storeSub        = $store->store_sub;
+            $hasSubscription = $storeSub && ($storeSub->tootli_direct ?? 0);
+            $activeTrial     = StoreTootliDirectTrial::activeForStore($store->id)->first();
+
+            if (! $hasSubscription && ! $activeTrial) {
+                // Sin suscripción → aplicar surcharge en la dirección
+                $surcharge = (float) (BusinessSetting::where('key', 'tootli_direct_no_sub_surcharge')->value('value') ?? 0);
+                if ($surcharge > 0 && isset($address['delivery_fee'])) {
+                    $address['delivery_fee']          = (float)$address['delivery_fee'] + $surcharge;
+                    $address['original_delivery_fee'] = max(
+                        (float)($address['original_delivery_fee'] ?? $address['delivery_fee']),
+                        $address['delivery_fee']
+                    );
+                }
+            } elseif ($activeTrial && ! $hasSubscription) {
+                // Trial sandbox: descontar una orden del trial
+                $activeTrial->increment('used_orders');
+                // Si se agotó, desactivarlo
+                if ($activeTrial->fresh()->used_orders >= $activeTrial->granted_orders) {
+                    $activeTrial->update(['is_active' => false]);
+                }
+            }
+        }
 
         // ── Tipo de servicio ─────────────────────────────────────────────────
         $service_type = in_array($request->input('service_type'), ['take_away', 'dine_in'], true)
@@ -628,10 +655,34 @@ class POSController extends Controller
 
         $tootliFee = round($tootliFee, 2);
 
+        // ── Estado de suscripción Tootli Direct ───────────────────────────────
+        $storeSub       = $store->store_sub;
+        $hasSubscription = $storeSub && ($storeSub->tootli_direct ?? 0);
+
+        // Trial sandbox activo
+        $activeTrial     = StoreTootliDirectTrial::activeForStore($store->id)->first();
+        $hasTrial        = $activeTrial !== null;
+        $trialRemaining  = $hasTrial ? $activeTrial->remaining_orders : 0;
+
+        // Si tiene suscripción o trial activo → no hay recargo
+        $isCovered  = $hasSubscription || $hasTrial;
+
+        // Surcharge para sin suscripción (configurable por admin)
+        $surcharge  = $isCovered ? 0.0
+            : round((float) (BusinessSetting::where('key', 'tootli_direct_no_sub_surcharge')->value('value') ?? 0), 2);
+
+        $totalFee = round($tootliFee + $surcharge, 2);
+
         return response()->json([
-            'tootli_fee'  => $tootliFee,
-            'distance_km' => $distanceKm,
-            'charge_type' => $chargeType,
+            'tootli_fee'         => $tootliFee,
+            'surcharge'          => $surcharge,
+            'total_fee'          => $totalFee,
+            'distance_km'        => $distanceKm,
+            'charge_type'        => $chargeType,
+            'has_subscription'   => $hasSubscription,
+            'has_trial'          => $hasTrial,
+            'trial_remaining'    => $trialRemaining,
+            'is_covered'         => $isCovered,
         ]);
     }
 

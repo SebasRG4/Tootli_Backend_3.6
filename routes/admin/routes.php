@@ -19,6 +19,7 @@ use App\Enums\ViewPaths\Admin\WalletBonus;
 use App\Enums\ViewPaths\Admin\Notification;
 use App\Enums\ViewPaths\Admin\CommonCondition;
 use App\Http\Controllers\Admin\VendorController;
+use App\Http\Controllers\Admin\TootliDirectTrialController;
 use App\Http\Controllers\Admin\Item\UnitController;
 use App\Http\Controllers\Admin\Zone\ZoneController;
 use App\Http\Controllers\Admin\Item\AddonController;
@@ -225,6 +226,12 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get('/subscriber-wallet-transactions/{id}', [SubscriptionController::class, 'subscriberWalletTransactions'])->name('subscriptionackage.subscriberWalletTransactions');
 
                 Route::post('/package-buy', [SubscriptionController::class, 'packageBuy'])->name('subscriptionackage.packageBuy');
+
+                // Tootli Direct — trials / sandbox
+                Route::get('/tootli-direct-trials',         [TootliDirectTrialController::class, 'index'])->name('tootli-direct.trials');
+                Route::post('/tootli-direct-trials/grant',  [TootliDirectTrialController::class, 'grant'])->name('tootli-direct.grant');
+                Route::post('/tootli-direct-trials/{id}/deactivate', [TootliDirectTrialController::class, 'deactivate'])->name('tootli-direct.deactivate');
+                Route::get('/tootli-direct-trials/search-stores', [TootliDirectTrialController::class, 'searchStores'])->name('tootli-direct.search-stores');
             });
 
 
