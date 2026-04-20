@@ -36,7 +36,8 @@ Route::get('terms-and-conditions', 'HomeController@terms_and_conditions')->name(
 Route::get('about-us', 'HomeController@about_us')->name('about-us');
 Route::get('contact-us', 'HomeController@contact_us')->name('contact-us');
 Route::post('send-message', 'HomeController@send_message')->name('send-message');
-Route::get('privacy-policy', 'HomeController@privacy_policy')->name('privacy-policy');
+Route::get('politicas-privacidad', 'HomeController@privacy_policy')->name('privacy-policy');
+Route::permanentRedirect('privacy-policy', '/politicas-privacidad');
 Route::get('cancelation', 'HomeController@cancelation')->name('cancelation');
 Route::get('refund', 'HomeController@refund_policy')->name('refund');
 Route::get('shipping-policy', 'HomeController@shipping_policy')->name('shipping-policy');

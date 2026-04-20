@@ -1172,7 +1172,7 @@
   'flutter_landing_page' => 'Flutter landing page',
   'business_pages' => 'Business pages',
   'terms_and_condition' => 'Terms and condition',
-  'privacy_policy' => 'Privacy policy',
+  'privacy_policy' => 'Política de privacidad',
   'about_us' => 'About us',
   'Refund Policy' => 'Refund Policy',
   'Cancelation Policy' => 'Cancelation Policy',

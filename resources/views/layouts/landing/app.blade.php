@@ -69,7 +69,7 @@
                             <a href="{{route('about-us')}}" class="{{ Request::is('about-us') ? 'active' : '' }}"><span>{{ translate('messages.about_us') }}</span></a>
                         </li>
                         <li>
-                            <a href="{{route('privacy-policy')}}" class="{{ Request::is('privacy-policy') ? 'active' : '' }}"><span>{{ translate('messages.privacy_policy') }}</span></a>
+                            <a href="{{route('privacy-policy')}}" class="{{ Request::is('politicas-privacidad') ? 'active' : '' }}"><span>{{ translate('messages.privacy_policy') }}</span></a>
                         </li>
                         <li>
                             <a href="{{route('terms-and-conditions')}}" class="{{ Request::is('terms-and-conditions') ? 'active' : '' }}"><span>{{ translate('messages.terms_and_condition') }}</span></a>
