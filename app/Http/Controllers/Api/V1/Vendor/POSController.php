@@ -17,6 +17,7 @@ use App\Models\OrderDetail;
 use App\Models\StorePosCustomer;
 use App\Models\User;
 use App\Scopes\StoreScope;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -520,14 +521,48 @@ class POSController extends Controller
     public function order_list(Request $request)
     {
         $vendor = $request['vendor'];
-        $orders = Order::whereHas('store.vendor', fn($q) => $q->where('id', $vendor->id))
+        $period = $request->input('period');
+        $fromInput = $request->input('from');
+        $toInput = $request->input('to');
+
+        $from = null;
+        $to = null;
+        if ($fromInput && $toInput) {
+            $from = Carbon::parse($fromInput)->startOfDay();
+            $to = Carbon::parse($toInput)->endOfDay();
+        } elseif ($period === 'today') {
+            $from = now()->startOfDay();
+            $to = now()->endOfDay();
+        } elseif ($period === 'week') {
+            $from = now()->startOfWeek();
+            $to = now()->endOfWeek();
+        } elseif ($period === 'month') {
+            $from = now()->startOfMonth();
+            $to = now()->endOfMonth();
+        }
+
+        $base = Order::whereHas('store.vendor', fn($q) => $q->where('id', $vendor->id))
             ->with('customer')
             ->whereIn('order_type', ['take_away', 'dine_in', 'delivery', 'pos'])
             ->where(fn($q) => $q->where('tootli_direct', 1)->orWhereIn('order_type', ['take_away', 'dine_in']))
-            ->latest()
-            ->paginate(20);
+            ->when($from && $to, fn($q) => $q->whereBetween('created_at', [$from, $to]));
 
-        return response()->json($orders, 200);
+        $orderCount = (clone $base)->count();
+        $totalAmount = round((float) (clone $base)->sum('order_amount'), 2);
+
+        $perPage = max(1, min(50, (int) $request->input('per_page', 20)));
+        $orders = $base->latest()->paginate($perPage);
+
+        $payload = $orders->toArray();
+        $payload['summary'] = [
+            'order_count'  => $orderCount,
+            'total_amount' => $totalAmount,
+            'period'       => $period,
+            'from'         => $from?->toIso8601String(),
+            'to'           => $to?->toIso8601String(),
+        ];
+
+        return response()->json($payload, 200);
     }
 
     // ─── Búsqueda de usuarios app (para domicilio con user_id) ────────────────

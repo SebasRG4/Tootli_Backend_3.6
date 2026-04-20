@@ -1,0 +1,68 @@
+================================================================================
+QA MANUAL — Tootli Direct (domicilio) — Tienda Deliciosas + Cliente Sebastian Rivera
+================================================================================
+Referencias de datos (dump real_database.sql):
+  - Tienda: Deliciosas → stores.id = 2 (verificar en tu entorno con SELECT id,name FROM stores).
+  - Cliente app: Sebastian Rivera → users / user_infos (tel. +527297706434 típico en dump).
+
+Pre-requisitos
+  - Panel admin: tootli_direct_food_commission y tootli_direct_delivery_commission acordes (ej. 20% envío).
+  - Tienda con Tootli Direct activo para la zona del cliente.
+  - Repartidor asignable (zona).
+
+Por cada método repetir: crear pedido POS → asignar repartidor → marcar entregado → revisar tablas.
+
+--------------------------------------------------------------------------------
+A) EFECTIVO CONTRA ENTREGA (cash_on_delivery)
+--------------------------------------------------------------------------------
+Pasos (app aliado / POS):
+  1. Cliente: Sebastian Rivera (o interno con dirección).
+  2. Domicilio con dirección válida.
+  3. Método: Efectivo al repartidor.
+  4. Total ejemplo: $400 ($350 producto + $50 envío según tu carrito).
+  5. Entregar pedido (app repartidor: marcar delivered).
+
+Verificaciones SQL (ajustar order_id):
+  - orders.payment_method = 'cash_on_delivery'
+  - orders.tootli_direct = 1
+  - orders.order_amount = total pedido
+  - Tras transacción: order_transactions.store_amount ≈ order_amount - delivery_charge
+  - store_wallets.total_earning del vendor incrementó ≈ ese store_amount
+  - delivery_men_wallets del repartidor: parte envío (dm_commission en lógica)
+
+--------------------------------------------------------------------------------
+B) TARJETA EN ENTREGA (card_tootli_direct)
+--------------------------------------------------------------------------------
+Pasos:
+  1. Mismo cliente y dirección.
+  2. Método: Tarjeta (terminal Tootli).
+  3. Comisión % e IVA en POS como en producción.
+  4. pos_payment_meta en orders debe incluir card_gross_amount, card_net_amount.
+
+Verificaciones:
+  - orders.pos_payment_meta->receiver = 'tootli' (según API POS).
+  - order_transactions.store_amount ≈ card_net_amount − delivery_charge
+    (ej. $400 bruto, 3.5% + IVA sobre fee → neto ~383.76; − envío → ~333.76)
+  - admin digital_received usa neto (no bruto) al cerrar.
+
+--------------------------------------------------------------------------------
+C) PAGADO EN RESTAURANTE (paid_at_restaurant)
+--------------------------------------------------------------------------------
+Pasos:
+  1. Método: Pagado en restaurante.
+  2. Pedido con envío > 0.
+  3. Marcar entregado.
+
+Verificaciones:
+  - orders.payment_status = 'paid' al crear (domicilio).
+  - order_transactions.store_amount = 0 (no abono comida en Tootli).
+  - store_wallets.total_withdrawn aumenta ≈ delivery_charge (paso envío a reparto).
+  - account_transactions: method tootli_direct_paid_at_restaurant_delivery_pass
+  - Repartidor sigue acumulando dm_commission de envío.
+
+--------------------------------------------------------------------------------
+Regresión rápida
+--------------------------------------------------------------------------------
+  php artisan test tests/Unit/TootliDirectSettlementFormulaTest.php
+
+================================================================================

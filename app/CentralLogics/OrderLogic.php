@@ -179,6 +179,61 @@ class OrderLogic
             $dm_commission = $order->original_delivery_charge - $comission_on_actual_delivery_fee;
         }
         $store_amount = $store_amount + $order_amount + $order->total_tax_amount + $order->extra_packaging_amount - $comission_on_store_amount - $store_coupon_discount_subsidy - $flash_store_discount_amount;
+
+        // Tootli Direct + POS: tarjeta en entrega (terminal Tootli). El restaurante absorbe el fee de tarjeta
+        // (card_net ya lo refleja); el neto dispersado menos el envío cobrado al cliente = abono al restaurante.
+        if ($type != 'parcel'
+            && ($order->tootli_direct ?? false)
+            && $order->payment_method === 'card_tootli_direct'
+            && is_array($order->pos_payment_meta)
+            && isset($order->pos_payment_meta['card_net_amount'])
+        ) {
+            $meta = $order->pos_payment_meta;
+            $cardNet = (float) $meta['card_net_amount'];
+            $gross = (float) ($meta['card_gross_amount'] ?? $order->order_amount);
+            $del = (float) ($order->delivery_charge ?? 0);
+            $store_amount = round(max(0.0, $cardNet - $del), 2);
+            $cardProcessingMargin = round(max(0.0, $gross - $cardNet), 2);
+            $delFeeComission = isset($comission_on_actual_delivery_fee) ? (float) $comission_on_actual_delivery_fee : 0.0;
+            // Comisión plataforma: recorte sobre envío + diferencial bruto/neto (pasarela / fee tarjeta). No se suma comisión % comida aparte.
+            $comission_amount = $delFeeComission + $cardProcessingMargin;
+            $comission_on_store_amount = 0.0;
+            $subscription_mode = 0;
+            $commission_percentage = 0;
+        }
+
+        // Tootli Direct + efectivo contra entrega a domicilio: el repartidor cobra el total; el restaurante recibe
+        // comida + impuestos (total del pedido menos el envío). Comisión Tootli solo sobre el envío (p. ej. 20%).
+        if ($type != 'parcel'
+            && ($order->tootli_direct ?? false)
+            && $order->order_type === 'delivery'
+            && $order->payment_method === 'cash_on_delivery'
+        ) {
+            $del = (float) ($order->delivery_charge ?? 0);
+            $store_amount = round(max(0.0, (float) $order->order_amount - $del), 2);
+            $delFeeComission = isset($comission_on_actual_delivery_fee) ? (float) $comission_on_actual_delivery_fee : 0.0;
+            $comission_amount = $delFeeComission;
+            $comission_on_store_amount = 0.0;
+            $subscription_mode = 0;
+            $commission_percentage = 0;
+        }
+
+        // Tootli Direct + pagado en restaurante (domicilio): la comida ya la cobró el local fuera del flujo Tootli.
+        // No abonar total_earning por comida. Solo comisión Tootli sobre envío; el envío se descuenta de la billetera
+        // del restaurante en StoreWallet para que Tootli liquide al repartidor (dm_commission = envío − comisión).
+        if ($type != 'parcel'
+            && ($order->tootli_direct ?? false)
+            && $order->order_type === 'delivery'
+            && $order->payment_method === 'paid_at_restaurant'
+        ) {
+            $store_amount = 0.0;
+            $delFeeComission = isset($comission_on_actual_delivery_fee) ? (float) $comission_on_actual_delivery_fee : 0.0;
+            $comission_amount = $delFeeComission;
+            $comission_on_store_amount = 0.0;
+            $subscription_mode = 0;
+            $commission_percentage = 0;
+        }
+
         try {
             OrderTransaction::insert([
                 'vendor_id' => $type == 'parcel' ? null : $order->store->vendor->id,
@@ -220,7 +275,9 @@ class OrderLogic
                     ['vendor_id' => $order->store->vendor->id]
                 );
                 if ($order->store->sub_self_delivery) {
-                    $vendorWallet->total_earning = $vendorWallet->total_earning + $order->delivery_charge + $dm_tips;
+                    if (! (($order->tootli_direct ?? false) && $order->payment_method === 'paid_at_restaurant' && $order->order_type === 'delivery')) {
+                        $vendorWallet->total_earning = $vendorWallet->total_earning + $order->delivery_charge + $dm_tips;
+                    }
                 } else {
                     $adminWallet->delivery_charge = $adminWallet->delivery_charge + $order->delivery_charge;
                 }
@@ -236,6 +293,18 @@ class OrderLogic
                     );
                     if ($tootliNetCost > 0) {
                         $vendorWallet->total_withdrawn = ($vendorWallet->total_withdrawn ?? 0) + $tootliNetCost;
+                    }
+                }
+
+                // Pagado en restaurante: el envío cobrado en tienda se descuenta de la billetera Tootli del local para liquidar al repartidor (no es “ganancia” en sistema).
+                if (($order->tootli_direct ?? false)
+                    && $order->payment_method === 'paid_at_restaurant'
+                    && $order->order_type === 'delivery'
+                    && ! $order->store->sub_self_delivery
+                ) {
+                    $passDel = (float) ($order->delivery_charge ?? 0);
+                    if ($passDel > 0) {
+                        $vendorWallet->total_withdrawn = ($vendorWallet->total_withdrawn ?? 0) + $passDel;
                     }
                 }
             }
@@ -268,7 +337,13 @@ class OrderLogic
 
                 if (! $skip_customer_collection_ledgers) {
                     if ($received_by == 'admin') {
-                        $adminWallet->digital_received = $adminWallet->digital_received + ($order->order_amount - $order->partially_paid_amount);
+                        $digitalCollected = $order->order_amount - $order->partially_paid_amount;
+                        if ($order->payment_method === 'card_tootli_direct'
+                            && is_array($order->pos_payment_meta)
+                            && isset($order->pos_payment_meta['card_net_amount'])) {
+                            $digitalCollected = (float) $order->pos_payment_meta['card_net_amount'] - (float) ($order->partially_paid_amount ?? 0);
+                        }
+                        $adminWallet->digital_received = $adminWallet->digital_received + $digitalCollected;
                     } else if ($received_by == 'store' && $type != 'parcel' && $is_dm_collect) {
                         $store_over_flow = true;
                         $vendorWallet->collected_cash = $vendorWallet->collected_cash + ($order->order_amount - $order->partially_paid_amount);
@@ -300,6 +375,24 @@ class OrderLogic
                         $tx->method          = 'tootli_direct_delivery';
                         $tx->ref             = $order->id;
                         $tx->amount          = $tootliNetCost;
+                        $tx->current_balance = $vendorWallet->balance;
+                        $tx->type            = 'tootli_direct_fee';
+                        $tx->save();
+                    }
+                    // Envío pagado en tienda: descuento en billetera para fondo repartidor (Tootli Direct)
+                    if (($order->tootli_direct ?? false)
+                        && $order->payment_method === 'paid_at_restaurant'
+                        && $order->order_type === 'delivery'
+                        && ! $order->store->sub_self_delivery
+                        && (float) ($order->delivery_charge ?? 0) > 0
+                    ) {
+                        $tx = new AccountTransaction();
+                        $tx->from_type       = 'store';
+                        $tx->from_id         = $order->store->vendor->id;
+                        $tx->created_by      = 'admin';
+                        $tx->method          = 'tootli_direct_paid_at_restaurant_delivery_pass';
+                        $tx->ref             = $order->id;
+                        $tx->amount          = (float) $order->delivery_charge;
                         $tx->current_balance = $vendorWallet->balance;
                         $tx->type            = 'tootli_direct_fee';
                         $tx->save();
