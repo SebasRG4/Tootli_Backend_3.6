@@ -292,7 +292,7 @@ class POSController extends Controller
 
         // ── Suscripción y auto-entrega ─────────────────────────────────────────
         $store_sub = $store?->store_sub;
-        if ($store->is_valid_subscription) {
+        if ($store->is_valid_subscription && $store_sub) {
             if ($store_sub->max_order != 'unlimited' && $store_sub->max_order <= 0) {
                 return response()->json(['errors' => [['code' => 'subscription', 'message' => translate('messages.you_have_reached_the_maximum_number_of_orders')]]], 422);
             }
@@ -300,17 +300,19 @@ class POSController extends Controller
             return response()->json(['errors' => [['code' => 'subscription', 'message' => translate('messages.you_are_not_subscribed_or_subscription_has_expired')]]], 422);
         }
 
-        $self_delivery = $store->is_valid_subscription ? $store_sub->self_delivery : $store->self_delivery_system;
+        $self_delivery = ($store->is_valid_subscription && $store_sub)
+            ? (int) $store_sub->self_delivery
+            : (int) $store->self_delivery_system;
         $extra_charges = 0;
         $vehicle_id    = null;
 
-        if (!$self_delivery && $has_address) {
+        if (! $self_delivery && $has_address) {
             $vehicle = DMVehicle::where('starting_coverage_area', '<=', $distance)
                 ->where('maximum_coverage_area', '>=', $distance)
                 ->active()->orderBy('starting_coverage_area')->first()
                 ?? DMVehicle::where('starting_coverage_area', '>=', $distance)->active()->orderBy('starting_coverage_area')->first();
-            $extra_charges = (float)($vehicle->extra_charges ?? 0);
-            $vehicle_id    = $vehicle->id ?? null;
+            $extra_charges = (float) ($vehicle?->extra_charges ?? 0);
+            $vehicle_id    = $vehicle?->id;
         }
 
         // ── Procesar carrito ──────────────────────────────────────────────────
@@ -332,7 +334,7 @@ class POSController extends Controller
             // Precio Tootli Direct (menu_price) siempre en POS
             $base_price = Helpers::item_price_for_context($product, 'direct');
 
-            if ($product->module->module_type === 'food' && $product->food_variations) {
+            if (($product->module?->module_type === 'food') && $product->food_variations) {
                 $variations = json_decode($product->food_variations, true);
                 if (!empty($c['variation']) && is_array($variations)) {
                     $base_price += Helpers::food_variation_price($variations, $c['variation']);
@@ -351,23 +353,38 @@ class POSController extends Controller
                 $c['add_on_qtys'] ?? []
             );
 
-            $disc_amount = Helpers::product_discount_calculate($product, $base_price, $store)['discount_amount'];
+            $product_discount = Helpers::product_discount_calculate($product, $base_price, $store);
+            $disc_amount      = $product_discount['discount_amount'];
+            $round             = (int) config('round_up_to_digit', 2);
 
+            $categoryIds = is_string($product->category_ids)
+                ? json_decode($product->category_ids, true)
+                : $product->category_ids;
+            $category_id = collect($categoryIds ?? [])->firstWhere('position', 1)['id'] ?? null;
+
+            // Misma forma que PlaceNewOrder::makeOrderDetails (columna real: item_details)
             $or_d = [
-                'item_id'           => $product->id,
-                'item_campaign_id'  => null,
-                'food_details'      => json_encode($formatted),
-                'quantity'          => $c['quantity'],
-                'price'             => $base_price,
-                'tax_amount'        => Helpers::tax_calculate($product, $base_price),
-                'discount_on_item'  => $disc_amount,
-                'discount_type'     => 'discount_on_product',
-                'variant'           => json_encode($c['variant'] ?? null),
-                'variation'         => json_encode([$c['variation'] ?? null]),
-                'add_ons'           => json_encode($addon_data['addons']),
-                'total_add_on_price'=> $addon_data['total_add_on_price'],
-                'created_at'        => now(),
-                'updated_at'        => now(),
+                'item_id'                => $product->id,
+                'item_campaign_id'       => null,
+                'item_details'           => json_encode($formatted),
+                'quantity'               => $c['quantity'],
+                'price'                  => round($base_price, $round),
+                'tax_amount'             => round(Helpers::tax_calculate($product, $base_price), $round),
+                'tax_status'             => null,
+                'category_id'            => $category_id,
+                'discount_on_product_by' => $product_discount['discount_type'],
+                'discount_type'          => $product_discount['discount_type'],
+                'discount_on_item'       => $disc_amount,
+                'discount_percentage'    => $product_discount['discount_percentage'] ?? 0,
+                'variant'                => json_encode($c['variant'] ?? null),
+                'variation'              => json_encode([$c['variation'] ?? null]),
+                'add_ons'                => json_encode($addon_data['addons']),
+                'total_add_on_price'     => round($addon_data['total_add_on_price'], $round),
+                'addon_discount'         => 0,
+                'request_note'           => null,
+                'delivery_status'        => 'pending',
+                'created_at'             => now(),
+                'updated_at'             => now(),
             ];
 
             $total_addon_price   += $or_d['total_add_on_price'];
@@ -538,7 +555,12 @@ class POSController extends Controller
         } catch (\Throwable $e) {
             DB::rollBack();
             info('[POS API] Error al crear orden: '.$e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            return response()->json(['errors' => [['code' => 'order', 'message' => 'Error al crear la orden. Intenta de nuevo.']]], 500);
+            $err = ['code' => 'order', 'message' => 'Error al crear la orden. Intenta de nuevo.'];
+            if (config('app.debug')) {
+                $err['debug'] = $e->getMessage();
+            }
+
+            return response()->json(['errors' => [$err]], 500);
         }
     }
 
