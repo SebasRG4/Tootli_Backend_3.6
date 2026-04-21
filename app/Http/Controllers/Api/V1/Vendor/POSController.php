@@ -409,12 +409,15 @@ class POSController extends Controller
             $order->payment_status = 'paid';
         }
 
-        // Cliente
-        if ($request->filled('user_id')) {
-            $order->user_id = $request->user_id;
-        }
+        // Cliente (alineado con POS web: interno = invitado sin user_id)
         if ($internal_customer) {
+            $order->user_id = null;
+            $order->is_guest = true;
             $order->store_pos_customer_id = $internal_customer->id;
+        } elseif ($request->filled('user_id')) {
+            $order->user_id = $request->user_id;
+            $order->is_guest = false;
+            $order->store_pos_customer_id = null;
         }
 
         // Estado y tipo de orden
@@ -446,6 +449,15 @@ class POSController extends Controller
 
         $order->delivery_address = $has_address ? json_encode($address) : null;
 
+        // Campos requeridos por el modelo de órdenes (mismo criterio que POS web)
+        $order->module_id   = $store->module_id;
+        $order->zone_id     = $store->zone_id;
+        $order->distance    = $distance;
+        $order->dm_vehicle_id = $vehicle_id;
+        $order->checked     = 1;
+        $order->schedule_at = now();
+        $order->otp         = rand(1000, 9999);
+
         // Monto pagado / cambio
         $paid_in  = (float)$request->input('paid_amount', 0);
         $order->order_amount = $total_price + $total_tax + $order->delivery_charge;
@@ -468,18 +480,26 @@ class POSController extends Controller
             $card_net = round($gross - $fee - $vat, 2);
         }
 
-        $order->pos_payment_meta = json_encode([
-            'method'           => $request->payment_method,
-            'receiver'         => in_array($request->payment_method, ['card_tootli_direct', 'cash_on_delivery'], true) ? 'tootli' : 'store',
-            'card_fee_percent' => $request->input('card_fee_percent'),
-            'card_fee_vat'     => $request->input('card_fee_vat_percent'),
-            'card_gross_amount'=> $request->input('card_gross_amount'),
-            'card_net_amount'  => $card_net,
-        ]);
+        $order->pos_payment_meta = [
+            'method'            => $request->payment_method,
+            'receiver'          => in_array($request->payment_method, ['card_tootli_direct', 'cash_on_delivery'], true) ? 'tootli' : 'store',
+            'card_fee_percent'    => $request->input('card_fee_percent'),
+            'card_fee_vat'        => $request->input('card_fee_vat_percent'),
+            'card_gross_amount'   => $request->input('card_gross_amount'),
+            'card_net_amount'     => $card_net,
+        ];
 
         $order->transaction_reference = Str::random(20);
         $order->created_at = now();
         $order->updated_at = now();
+
+        if ($order->order_type === 'delivery' && $order->order_status === 'confirmed') {
+            $order->confirmed = now();
+            $order->pending = now();
+        }
+        if (in_array($order->order_type, ['take_away', 'dine_in'], true) && $order->order_status === 'delivered') {
+            $order->delivered = now();
+        }
 
         try {
             DB::beginTransaction();
@@ -489,6 +509,8 @@ class POSController extends Controller
             }
             OrderDetail::insert($order_details);
 
+            $store->increment('total_order');
+
             // Guardar dirección en cliente interno
             if ($internal_customer && $has_address) {
                 $internal_customer->delivery_address = $address;
@@ -497,7 +519,11 @@ class POSController extends Controller
 
             // Asignar repartidor si es delivery automático
             if ($order->order_status === 'confirmed' && $order->order_type === 'delivery') {
-                $dm_result = OrderLogic::assign_delivery_man($order->id);
+                OrderLogic::assign_delivery_man($order->id);
+            }
+
+            if ($store->is_valid_subscription && $store_sub && $store_sub->max_order != 'unlimited' && $store_sub->max_order > 0) {
+                $store_sub->decrement('max_order', 1);
             }
 
             DB::commit();
@@ -509,9 +535,9 @@ class POSController extends Controller
                 'order_type'   => $order->order_type,
                 'order_status' => $order->order_status,
             ], 200);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             DB::rollBack();
-            info('[POS API] Error al crear orden: '.$e->getMessage());
+            info('[POS API] Error al crear orden: '.$e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return response()->json(['errors' => [['code' => 'order', 'message' => 'Error al crear la orden. Intenta de nuevo.']]], 500);
         }
     }

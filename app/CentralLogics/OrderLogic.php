@@ -1289,4 +1289,37 @@ class OrderLogic
 
         return true;
     }
+
+    /**
+     * Encola asignación de repartidor para el motor Go (misma cola que PlaceNewOrder).
+     * No lanza excepción: fallos de Redis no deben revertir la orden ya guardada.
+     */
+    public static function assign_delivery_man(int $orderId): bool
+    {
+        try {
+            $order = Order::query()->find($orderId);
+            if (! $order || $order->order_type !== 'delivery') {
+                return false;
+            }
+
+            $payload = json_encode([
+                'type' => 'assign_delivery',
+                'data' => [
+                    'order_id' => $order->id,
+                    'store_id' => $order->store_id,
+                    'zone_id'  => $order->zone_id,
+                    'attempt'  => 1,
+                ],
+            ]);
+
+            \Illuminate\Support\Facades\Redis::rpush('tootli:go_jobs', $payload);
+            info('[GoWorker] assign_delivery encolado desde POS API para orden #'.$order->id);
+
+            return true;
+        } catch (\Throwable $e) {
+            info('[OrderLogic::assign_delivery_man] '.$e->getMessage());
+
+            return false;
+        }
+    }
 }
