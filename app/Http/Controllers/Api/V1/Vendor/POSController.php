@@ -25,6 +25,36 @@ use Illuminate\Support\Str;
 
 class POSController extends Controller
 {
+    /**
+     * La app Tootli Direct (POS) manda selección de comida en `food_variation` (lista de grupos).
+     * Normaliza `values.label` string → array para Helpers::get_varient / food_variation_price.
+     *
+     * @param  mixed  $cartVariation
+     * @return array<int, array<string, mixed>>
+     */
+    private static function normalizePosFoodVariationSelection($cartVariation): array
+    {
+        if ($cartVariation === null || $cartVariation === '' || $cartVariation === []) {
+            return [];
+        }
+        if (!is_array($cartVariation)) {
+            return [];
+        }
+        $groups = array_is_list($cartVariation) ? $cartVariation : [$cartVariation];
+        $out = [];
+        foreach ($groups as $g) {
+            if (!is_array($g) || !isset($g['name'])) {
+                continue;
+            }
+            if (isset($g['values']) && is_array($g['values']) && array_key_exists('label', $g['values']) && !is_array($g['values']['label'])) {
+                $g['values']['label'] = [$g['values']['label']];
+            }
+            $out[] = $g;
+        }
+
+        return $out;
+    }
+
     // ─── Productos ────────────────────────────────────────────────────────────
 
     public function products(Request $request)
@@ -334,16 +364,36 @@ class POSController extends Controller
             // Precio Tootli Direct (menu_price) siempre en POS
             $base_price = Helpers::item_price_for_context($product, 'direct');
 
+            // Cliente final → `variation`. POS / Tootli Direct → `food_variation` para módulo comida.
+            $cartVariation = $c['variation'] ?? null;
+            if ($cartVariation === '' || $cartVariation === []) {
+                $cartVariation = null;
+            }
+            if ($cartVariation === null && !empty($c['food_variation'])) {
+                $fv = $c['food_variation'];
+                $cartVariation = is_string($fv) ? json_decode($fv, true) : $fv;
+            }
+
+            $variationForDb = json_encode([null]);
+
             if (($product->module?->module_type === 'food') && $product->food_variations) {
-                $variations = json_decode($product->food_variations, true);
-                if (!empty($c['variation']) && is_array($variations)) {
-                    $base_price += Helpers::food_variation_price($variations, $c['variation']);
+                $productFoodVariations = json_decode($product->food_variations, true);
+                $cartFoodList = self::normalizePosFoodVariationSelection($cartVariation);
+                if (!empty($cartFoodList) && is_array($productFoodVariations)) {
+                    $base_price += Helpers::food_variation_price($productFoodVariations, $cartFoodList);
+                    $vd = Helpers::get_varient($productFoodVariations, $cartFoodList);
+                    $variationForDb = json_encode($vd['variations'] ?? []);
+                } else {
+                    $variationForDb = json_encode([]);
                 }
             } else {
-                if (!empty($c['variation'])) {
-                    $var_data = Helpers::pos_variation_price($product, is_string($c['variation']) ? $c['variation'] : json_encode($c['variation']));
-                    if ($var_data['price'] > 0) $base_price = $var_data['price'];
+                if (!empty($cartVariation)) {
+                    $var_data = Helpers::pos_variation_price($product, is_string($cartVariation) ? $cartVariation : json_encode($cartVariation));
+                    if ($var_data['price'] > 0) {
+                        $base_price = $var_data['price'];
+                    }
                 }
+                $variationForDb = json_encode([$cartVariation ?? null]);
             }
 
             $product->tax = $store->tax;
@@ -377,7 +427,7 @@ class POSController extends Controller
                 'discount_on_item'       => $disc_amount,
                 'discount_percentage'    => $product_discount['discount_percentage'] ?? 0,
                 'variant'                => json_encode($c['variant'] ?? null),
-                'variation'              => json_encode([$c['variation'] ?? null]),
+                'variation'              => $variationForDb,
                 'add_ons'                => json_encode($addon_data['addons']),
                 'total_add_on_price'     => round($addon_data['total_add_on_price'], $round),
                 'addon_discount'         => 0,

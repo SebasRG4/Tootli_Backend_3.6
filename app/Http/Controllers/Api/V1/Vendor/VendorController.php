@@ -242,7 +242,7 @@ class VendorController extends Controller
         $orders = Order::whereHas('store.vendor', function($query) use($vendor){
             $query->where('id', $vendor->id);
         })
-        ->with('customer')
+        ->with(['customer', 'transaction'])
 
         ->where(function($query)use($vendor){
             if(config('order_confirmation_model') == 'store' || $vendor->stores[0]->sub_self_delivery)
@@ -289,7 +289,7 @@ class VendorController extends Controller
         $paginator = Order::whereHas('store.vendor', function($query) use($vendor){
             $query->where('id', $vendor->id);
         })
-        ->with('customer')
+        ->with(['customer', 'transaction'])
         ->when($request->status == 'all', function($query){
             return $query->whereIn('order_status', ['refunded', 'delivered']);
         })
@@ -325,7 +325,7 @@ class VendorController extends Controller
         $paginator = Order::whereHas('store.vendor', function($query) use($vendor){
             $query->where('id', $vendor->id);
         })
-        ->with('customer')
+        ->with(['customer', 'transaction'])
         ->where('order_status', 'canceled')
         ->Notpos()
         ->latest()
@@ -560,7 +560,7 @@ class VendorController extends Controller
         $order = Order::whereHas('store.vendor', function($query) use($vendor){
             $query->where('id', $vendor->id);
         })
-        ->with(['customer','details','delivery_man','payments'])
+        ->with(['customer', 'details', 'delivery_man', 'payments', 'transaction'])
         ->where('id', $request['order_id'])
         ->first();
         if(!$order){
@@ -576,7 +576,7 @@ class VendorController extends Controller
         $orders = Order::whereHas('store.vendor', function($query) use($vendor){
             $query->where('id', $vendor->id);
         })
-        ->with('customer')
+        ->with(['customer', 'transaction'])
         ->Notpos()
         ->NotDigitalOrder()
 

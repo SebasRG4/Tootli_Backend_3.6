@@ -1393,6 +1393,23 @@ class Helpers
         return ['item' => $items, 'store' => $stores];
     }
 
+    /**
+     * Vendor-facing orders: expose the settled store net from order_transactions (same as wallet total_earning).
+     * Removes the relation from the payload to keep JSON lean.
+     */
+    public static function attach_vendor_store_amount_from_transaction($order): void
+    {
+        if (! $order instanceof \App\Models\Order) {
+            return;
+        }
+        if ($order->relationLoaded('transaction') && $order->transaction) {
+            $order->setAttribute('store_amount', (float) $order->transaction->store_amount);
+        } else {
+            $order->setAttribute('store_amount', null);
+        }
+        $order->unsetRelation('transaction');
+    }
+
     public static function order_data_formatting($data, $multi_data = false)
     {
         $storage = [];
@@ -1443,6 +1460,7 @@ class Helpers
                 $item['max_delivery_time'] = $item->store ? (int) explode('-', $item->store?->delivery_time)[1] ?? 0 : 0;
 
                 unset($item['details']);
+                self::attach_vendor_store_amount_from_transaction($item);
                 array_push($storage, $item);
             }
             $data = $storage;
@@ -1489,6 +1507,7 @@ class Helpers
             $data['details_count'] = (int) $data->details->count();
 
             unset($data['details']);
+            self::attach_vendor_store_amount_from_transaction($data);
         }
         return $data;
     }
