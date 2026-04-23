@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#ffffff">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Seguimiento — Tootli Directo</title>
     @if(!empty($mapboxPublicToken))
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
@@ -200,15 +201,15 @@
             background: linear-gradient(145deg, #334155, #0f172a);
         }
         .map-pin--courier-wrap {
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         .map-pin--courier-wrap--asset {
-            width: 76px;
-            height: 76px;
+            width: 44px;
+            height: 44px;
             animation: courierRing 2.2s ease-out infinite;
             border-radius: 50%;
         }
@@ -230,15 +231,15 @@
             animation: none;
         }
         .map-pin--courier-img {
-            width: 72px;
-            height: 72px;
+            width: 36px;
+            height: 36px;
             object-fit: contain;
             display: block;
-            filter: drop-shadow(0 3px 10px rgba(15, 23, 42, 0.35));
+            filter: drop-shadow(0 2px 6px rgba(15, 23, 42, 0.28));
         }
         @keyframes courierRing {
-            0% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.5); }
-            70% { box-shadow: 0 0 0 12px rgba(5, 150, 105, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.45); }
+            70% { box-shadow: 0 0 0 8px rgba(5, 150, 105, 0); }
             100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); }
         }
         .contact-block {
@@ -266,15 +267,87 @@
             color: var(--ink);
             margin-top: 4px;
         }
-        .chat-hint {
+        .chat-box {
             margin-top: 14px;
-            padding: 12px 14px;
-            border-radius: 12px;
-            background: #f1f5f9;
+            border-radius: 14px;
             border: 1px solid var(--line);
-            font-size: 13px;
+            background: #f8fafc;
+            overflow: hidden;
+        }
+        .chat-box-title {
+            padding: 10px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
             color: var(--muted);
-            line-height: 1.45;
+            background: #fff;
+            border-bottom: 1px solid var(--line);
+        }
+        .chat-log {
+            max-height: 220px;
+            overflow-y: auto;
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .chat-msg {
+            max-width: 92%;
+            padding: 8px 10px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.35;
+        }
+        .chat-msg--customer {
+            align-self: flex-end;
+            background: #dcfce7;
+            color: #14532d;
+        }
+        .chat-msg--store {
+            align-self: flex-start;
+            background: #fff;
+            border: 1px solid var(--line);
+            color: var(--ink);
+        }
+        .chat-msg-who {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+        .chat-form {
+            display: flex;
+            gap: 8px;
+            padding: 10px 12px;
+            background: #fff;
+            border-top: 1px solid var(--line);
+        }
+        .chat-form input {
+            flex: 1;
+            min-width: 0;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--line);
+            font-size: 15px;
+        }
+        .chat-form button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 10px;
+            background: var(--green);
+            color: #fff;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .chat-form button:active { opacity: 0.9; }
+        .chat-note {
+            margin: 0;
+            padding: 8px 12px 10px;
+            font-size: 11px;
+            color: var(--muted);
+            line-height: 1.35;
         }
     </style>
 </head>
@@ -311,6 +384,9 @@
                 <div class="dm-meta">
                     <h2 id="dm-name"></h2>
                     <p id="dm-vehicle"></p>
+                    <p id="dm-phone-row" style="display:none;margin:6px 0 0;font-size:14px;">
+                        <a id="dm-phone" href="#" style="color:#059669;font-weight:600;text-decoration:none;"></a>
+                    </p>
                 </div>
             </div>
             <div id="no-dm" class="dm-meta" style="padding:8px 0;color:var(--muted);font-size:14px;">
@@ -319,8 +395,14 @@
             <div id="otp-wrap" class="otp-box" style="display:none;">
                 Código de entrega: <strong id="otp-val"></strong>
             </div>
-            <div class="chat-hint" id="chat-hint">
-                <strong>Chat:</strong> el mensajero en esta página no está disponible todavía. Para dudas urgentes usa el teléfono de contacto arriba. Más adelante se puede enlazar chat en tiempo real (p. ej. Soketi + Laravel) con acceso seguro por este mismo enlace.
+            <div class="chat-box" id="chat-box">
+                <div class="chat-box-title">Chat con la tienda</div>
+                <div class="chat-log" id="chat-log" aria-live="polite"></div>
+                <form class="chat-form" id="chat-form" action="#" method="post">
+                    <input type="text" id="chat-input" maxlength="2000" placeholder="Escribe un mensaje…" autocomplete="off">
+                    <button type="submit">Enviar</button>
+                </form>
+                <p class="chat-note">Los mensajes los ve la tienda en la app Tootli Aliado. Para urgencias también puedes llamar al teléfono de contacto o al repartidor.</p>
             </div>
         </div>
     </div>
@@ -329,8 +411,10 @@
 <script>
 (function () {
     const pollUrl = @json($pollUrl);
+    const chatUrl = @json($chatUrl ?? '');
     const mapboxToken = @json($mapboxPublicToken ?? '');
     const courierMarkerUrl = @json($courierMarkerUrl ?? '');
+    const csrf = (document.querySelector('meta[name="csrf-token"]') || {}).content || '';
 
     const els = {
         main: document.getElementById('main'),
@@ -351,10 +435,55 @@
         contactBlock: document.getElementById('contact-block'),
         contactPhone: document.getElementById('contact-phone'),
         contactName: document.getElementById('contact-name'),
+        dmPhoneRow: document.getElementById('dm-phone-row'),
+        dmPhone: document.getElementById('dm-phone'),
+        chatLog: document.getElementById('chat-log'),
+        chatForm: document.getElementById('chat-form'),
+        chatInput: document.getElementById('chat-input'),
     };
 
     let map = null;
     let markers = { pickup: null, dropoff: null, courier: null };
+    let lastChatMessageId = 0;
+    let chatPollStarted = false;
+
+    function renderChatMessages(list) {
+        if (!els.chatLog) return;
+        list.forEach(function (m) {
+            if (m.id <= lastChatMessageId) return;
+            var row = document.createElement('div');
+            row.className = 'chat-msg chat-msg--' + (m.sender === 'store' ? 'store' : 'customer');
+            var who = document.createElement('div');
+            who.className = 'chat-msg-who';
+            who.textContent = m.sender === 'store' ? 'Tienda' : 'Tú';
+            var body = document.createElement('div');
+            body.className = 'chat-msg-body';
+            body.textContent = m.body;
+            row.appendChild(who);
+            row.appendChild(body);
+            els.chatLog.appendChild(row);
+            lastChatMessageId = m.id;
+        });
+        els.chatLog.scrollTop = els.chatLog.scrollHeight;
+    }
+
+    async function fetchChat() {
+        if (!chatUrl) return;
+        try {
+            var r = await fetch(chatUrl, { headers: { 'Accept': 'application/json' }, cache: 'no-store' });
+            if (!r.ok) return;
+            var j = await r.json();
+            if (!j.ok || !Array.isArray(j.messages)) return;
+            renderChatMessages(j.messages);
+        } catch (e) { console.warn(e); }
+    }
+
+    function startChatPolling() {
+        if (!chatUrl || chatPollStarted) return;
+        chatPollStarted = true;
+        fetchChat();
+        setInterval(fetchChat, 4000);
+    }
 
     function buildProgress(n) {
         els.progress.innerHTML = '';
@@ -497,6 +626,13 @@
             els.noDm.style.display = 'none';
             els.dmName.textContent = d.delivery_man.name;
             els.dmVehicle.textContent = d.delivery_man.vehicle || 'Repartidor Tootli';
+            if (d.delivery_man.phone) {
+                els.dmPhoneRow.style.display = 'block';
+                els.dmPhone.textContent = d.delivery_man.phone;
+                els.dmPhone.setAttribute('href', 'tel:' + String(d.delivery_man.phone).replace(/[^\d+]/g, ''));
+            } else {
+                els.dmPhoneRow.style.display = 'none';
+            }
             if (d.delivery_man.image) {
                 els.dmImg.src = d.delivery_man.image;
                 els.dmImg.style.display = 'block';
@@ -509,6 +645,8 @@
             els.dmBlock.style.display = 'none';
             els.noDm.style.display = 'block';
         }
+
+        startChatPolling();
 
         if (d.otp) {
             els.otpWrap.style.display = 'block';
@@ -526,6 +664,30 @@
         } catch (e) {
             console.warn(e);
         }
+    }
+
+    if (els.chatForm) {
+        els.chatForm.addEventListener('submit', async function (ev) {
+            ev.preventDefault();
+            var t = (els.chatInput.value || '').trim();
+            if (!t || !chatUrl) return;
+            try {
+                var r = await fetch(chatUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrf,
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: JSON.stringify({ message: t, _token: csrf }),
+                });
+                if (r.ok) {
+                    els.chatInput.value = '';
+                    await fetchChat();
+                }
+            } catch (e) { console.warn(e); }
+        });
     }
 
     tick();

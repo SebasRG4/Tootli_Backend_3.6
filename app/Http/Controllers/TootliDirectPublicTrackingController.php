@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DeliveryMan;
 use App\Models\DMVehicle;
 use App\Models\Order;
 use App\Models\TootliDirectTrackingToken;
@@ -24,6 +25,7 @@ class TootliDirectPublicTrackingController extends Controller
         return response()->view('tootli_direct.track', [
             'token' => $token,
             'pollUrl' => url('/rastreo-orden/tootli-directo/'.$token.'/datos'),
+            'chatUrl' => url('/rastreo-orden/tootli-directo/'.$token.'/chat'),
             'mapboxPublicToken' => $this->mapboxPublicToken(),
             'courierMarkerUrl' => asset('assets/tootli/delivery_man_marker.png'),
         ]);
@@ -96,6 +98,7 @@ class TootliDirectPublicTrackingController extends Controller
 
         $dm = $order->delivery_man;
         $dmName = $dm ? trim(($dm->f_name ?? '').' '.($dm->l_name ?? '')) : null;
+        $dmPhone = $this->deliveryManPhoneForTracking($dm);
 
         $pickLat = $this->parseCoord($order->store?->latitude);
         $pickLng = $this->parseCoord($order->store?->longitude);
@@ -154,6 +157,7 @@ class TootliDirectPublicTrackingController extends Controller
             ] : null,
             'delivery_man' => $dmName ? [
                 'name' => $dmName,
+                'phone' => $dmPhone,
                 'image' => $dm->image_full_url ?? null,
                 'vehicle' => $vehicleLine,
             ] : null,
@@ -278,6 +282,26 @@ class TootliDirectPublicTrackingController extends Controller
         $line = implode(', ', $parts);
 
         return $line !== '' ? $line : null;
+    }
+
+    /**
+     * Teléfono del repartidor para el JSON de seguimiento (lectura explícita por si el modelo en memoria no trae la columna).
+     */
+    private function deliveryManPhoneForTracking(?DeliveryMan $dm): ?string
+    {
+        if (! $dm || ! $dm->id) {
+            return null;
+        }
+        $raw = trim((string) ($dm->getRawOriginal('phone') ?? $dm->phone ?? ''));
+        if ($raw !== '') {
+            return $raw;
+        }
+        $fromDb = DeliveryMan::withoutGlobalScopes()
+            ->where('id', $dm->id)
+            ->value('phone');
+        $p = trim((string) ($fromDb ?? ''));
+
+        return $p !== '' ? $p : null;
     }
 
     private function statusLabelEs(?string $status): string

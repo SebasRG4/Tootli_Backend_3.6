@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1\Vendor;
 use App\Models\Item;
 use App\Models\Admin;
 use App\Models\Order;
+use App\Models\TootliDirectTrackingChatMessage;
 use App\Models\Store;
 use App\Library\Payer;
 use App\Models\Coupon;
@@ -1457,5 +1458,77 @@ class VendorController extends Controller
         ];
 
         return response()->json($data, 200);
+    }
+
+    /**
+     * Mensajes del chat de seguimiento Tootli Directo (público + tienda) para un pedido.
+     */
+    public function get_tootli_direct_tracking_chat(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required|integer',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+        $vendor = $request['vendor'];
+        $order = Order::whereHas('store.vendor', function ($query) use ($vendor) {
+            $query->where('id', $vendor->id);
+        })
+            ->where('id', $request->order_id)
+            ->first();
+        if (! $order || ! $order->isTootliDirectTrackable()) {
+            return response()->json(['errors' => [['code' => 'order_id', 'message' => trans('messages.order_data_not_found')]]], 404);
+        }
+
+        $messages = TootliDirectTrackingChatMessage::query()
+            ->where('order_id', $order->id)
+            ->orderBy('id')
+            ->limit(200)
+            ->get(['id', 'sender', 'body', 'created_at'])
+            ->map(fn ($m) => [
+                'id' => $m->id,
+                'sender' => $m->sender,
+                'body' => $m->body,
+                'created_at' => $m->created_at?->toIso8601String(),
+            ]);
+
+        return response()->json(['messages' => $messages], 200);
+    }
+
+    /**
+     * La tienda envía un mensaje al hilo de chat del enlace de seguimiento.
+     */
+    public function post_tootli_direct_tracking_chat(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required|integer',
+            'message' => 'required|string|max:2000',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+        $vendor = $request['vendor'];
+        $order = Order::whereHas('store.vendor', function ($query) use ($vendor) {
+            $query->where('id', $vendor->id);
+        })
+            ->where('id', $request->order_id)
+            ->first();
+        if (! $order || ! $order->isTootliDirectTrackable()) {
+            return response()->json(['errors' => [['code' => 'order_id', 'message' => trans('messages.order_data_not_found')]]], 404);
+        }
+
+        $body = trim(strip_tags((string) $request->message));
+        if ($body === '') {
+            return response()->json(['errors' => [['code' => 'message', 'message' => 'Mensaje vacío']]], 422);
+        }
+
+        TootliDirectTrackingChatMessage::query()->create([
+            'order_id' => $order->id,
+            'sender' => TootliDirectTrackingChatMessage::SENDER_STORE,
+            'body' => $body,
+        ]);
+
+        return response()->json(['message' => 'ok'], 200);
     }
 }

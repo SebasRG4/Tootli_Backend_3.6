@@ -17,6 +17,7 @@ use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\SslCommerzPaymentController;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\TootliDirectPublicTrackingController;
+use App\Http\Controllers\TootliDirectTrackingChatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +58,10 @@ Route::get('rastreo-orden/tootli-directo/{token}', [TootliDirectPublicTrackingCo
     ->name('tootli-direct.track');
 Route::get('rastreo-orden/tootli-directo/{token}/datos', [TootliDirectPublicTrackingController::class, 'data'])
     ->name('tootli-direct.track.data');
+Route::middleware(['throttle:120,1'])->get('rastreo-orden/tootli-directo/{token}/chat', [TootliDirectTrackingChatController::class, 'index'])
+    ->name('tootli-direct.track.chat');
+Route::middleware(['throttle:40,1'])->post('rastreo-orden/tootli-directo/{token}/chat', [TootliDirectTrackingChatController::class, 'store'])
+    ->name('tootli-direct.track.chat.store');
 // Compatibilidad: URL antigua con typo "ratreo"
 Route::get('ratreo-orden/tootli-directo/{token}', fn (string $token) => redirect("/rastreo-orden/tootli-directo/{$token}", 301));
 Route::get('ratreo-orden/tootli-directo/{token}/datos', fn (string $token) => redirect("/rastreo-orden/tootli-directo/{$token}/datos", 301));

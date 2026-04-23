@@ -184,6 +184,8 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         Route::put('update-order-amount', 'VendorController@edit_order_amount');
         Route::get('order-details', 'VendorController@get_order_details');
         Route::get('order', 'VendorController@get_order');
+        Route::get('tootli-direct-tracking-chat', 'VendorController@get_tootli_direct_tracking_chat');
+        Route::post('tootli-direct-tracking-chat', 'VendorController@post_tootli_direct_tracking_chat');
         Route::put('update-fcm-token', 'VendorController@update_fcm_token');
         Route::get('get-basic-campaigns', 'VendorController@get_basic_campaigns');
         Route::put('campaign-leave', 'VendorController@remove_store');
