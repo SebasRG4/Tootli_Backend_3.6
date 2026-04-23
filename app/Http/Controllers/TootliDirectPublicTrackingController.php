@@ -85,7 +85,7 @@ class TootliDirectPublicTrackingController extends Controller
         }
 
         $order = Order::withoutGlobalScopes()
-            ->with(['store', 'delivery_man.last_location', 'module'])
+            ->with(['store', 'delivery_man.last_location', 'delivery_man.rating', 'module'])
             ->find($row->order_id);
 
         if (! $order || ! $order->isTootliDirectTrackable()) {
@@ -99,6 +99,7 @@ class TootliDirectPublicTrackingController extends Controller
         $dm = $order->delivery_man;
         $dmName = $dm ? trim(($dm->f_name ?? '').' '.($dm->l_name ?? '')) : null;
         $dmPhone = $this->deliveryManPhoneForTracking($dm);
+        $dmRating = $this->deliveryManRatingAvg($dm);
 
         $pickLat = $this->parseCoord($order->store?->latitude);
         $pickLng = $this->parseCoord($order->store?->longitude);
@@ -134,6 +135,7 @@ class TootliDirectPublicTrackingController extends Controller
             'order_status' => $order->order_status,
             'order_status_label' => $this->statusLabelEs($order->order_status),
             'headline' => $this->headlineEs($order->order_status, $dmName),
+            'headline_highlight' => $this->headlineHighlightEs($order->order_status),
             'progress_filled' => $this->progressFilled($order->order_status),
             'payment_status' => $order->payment_status,
             'store_name' => $order->store?->name,
@@ -157,6 +159,7 @@ class TootliDirectPublicTrackingController extends Controller
                 'phone' => $dmPhone,
                 'image' => $dm->image_full_url ?? null,
                 'vehicle' => $vehicleLine,
+                'rating_avg' => $dmRating,
             ] : null,
             'eta_minutes' => $eta,
             'estimated_arrival_clock' => $etaClock,
@@ -208,6 +211,38 @@ class TootliDirectPublicTrackingController extends Controller
             'refunded' => 'Pedido reembolsado.',
             default => 'Seguimiento de tu pedido Tootli Directo.',
         };
+    }
+
+    /**
+     * Palabra o frase corta dentro de {@see headlineEs} para resaltar en verde en la UI.
+     */
+    private function headlineHighlightEs(string $status): ?string
+    {
+        return match ($status) {
+            'pending' => 'confirmando',
+            'accepted', 'confirmed' => 'confirmó',
+            'processing' => 'preparando',
+            'handover' => 'pronto',
+            'picked_up' => 'en camino',
+            'delivered', 'partial_delivered' => 'entregado',
+            'canceled', 'cancelled' => 'cancelado',
+            'failed' => 'inconveniente',
+            'refunded' => 'reembolsado',
+            default => null,
+        };
+    }
+
+    private function deliveryManRatingAvg(?DeliveryMan $dm): ?float
+    {
+        if (! $dm) {
+            return null;
+        }
+        $row = $dm->rating()->first();
+        if (! $row || ! isset($row->average) || (float) $row->average <= 0) {
+            return null;
+        }
+
+        return round((float) $row->average, 1);
     }
 
     private function computeEtaMinutes(
