@@ -85,7 +85,7 @@ class TootliDirectPublicTrackingController extends Controller
             ->with(['store', 'delivery_man.last_location', 'module'])
             ->find($row->order_id);
 
-        if (! $order || ! (int) $order->tootli_direct || $order->order_type !== 'delivery') {
+        if (! $order || ! $order->isTootliDirectTrackable()) {
             return null;
         }
 

@@ -81,18 +81,37 @@ class Order extends Model
     }
 
     /**
+     * Pedido que puede usar la página pública de rastreo Tootli Directo.
+     * Incluye pedidos antiguos POS con domicilio y pago Tootli aunque `tootli_direct` venga en 0 en BD.
+     */
+    public function isTootliDirectTrackable(): bool
+    {
+        if (strtolower((string) ($this->order_type ?? '')) !== 'delivery') {
+            return false;
+        }
+        $rawTd = $this->attributes['tootli_direct'] ?? $this->getRawOriginal('tootli_direct') ?? null;
+        if ($rawTd === 1 || $rawTd === '1' || $rawTd === true || $this->tootli_direct === true) {
+            return true;
+        }
+        if ($this->store_pos_customer_id && in_array((string) ($this->payment_method ?? ''), [
+            'cash_on_delivery',
+            'cash',
+            'card_tootli_direct',
+            'paid_at_restaurant',
+        ], true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * URL pública de rastreo (Tootli Directo + domicilio + token vigente).
      * Expuesto en JSON de la API vendor vía $appends.
      */
     public function getCustomerTrackingUrlAttribute(): ?string
     {
-        if (strtolower((string) ($this->order_type ?? '')) !== 'delivery') {
-            return null;
-        }
-        $rawTd = $this->attributes['tootli_direct'] ?? $this->getRawOriginal('tootli_direct') ?? null;
-        $isTootliDirect = $rawTd === 1 || $rawTd === '1' || $rawTd === true
-            || $this->tootli_direct === true;
-        if (! $isTootliDirect) {
+        if (! $this->isTootliDirectTrackable()) {
             return null;
         }
         $id = $this->getKey();
