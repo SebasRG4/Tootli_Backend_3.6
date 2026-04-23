@@ -13,7 +13,14 @@ use Illuminate\Support\Facades\Log;
 class MapboxDirectionsService
 {
     /**
-     * @return array{distance_km: float, duration_seconds: float, duration_minutes: int}|null
+     * Ruta en carretera (tráfico) con geometría simplificada para dibujar polilínea en el mapa.
+     *
+     * @return array{
+     *     distance_km: float,
+     *     duration_seconds: float,
+     *     duration_minutes: int,
+     *     coordinates: list<array{0: float, 1: float}>|null
+     * }|null
      */
     public function drivingTrafficRoute(
         float $originLng,
@@ -43,7 +50,8 @@ class MapboxDirectionsService
                 ->get($url, [
                     'access_token' => $token,
                     'alternatives' => 'false',
-                    'overview' => 'false',
+                    'geometries' => 'geojson',
+                    'overview' => 'simplified',
                     'steps' => 'false',
                 ]);
         } catch (\Throwable $e) {
@@ -80,11 +88,40 @@ class MapboxDirectionsService
         $distanceKm = round($meters / 1000, 2);
         $minutes = $seconds > 0 ? max(1, (int) ceil($seconds / 60)) : 0;
 
+        $coordinates = $this->parseRouteGeometryCoordinates($first['geometry'] ?? null);
+
         return [
             'distance_km' => $distanceKm,
             'duration_seconds' => round($seconds, 1),
             'duration_minutes' => $minutes,
+            'coordinates' => $coordinates,
         ];
+    }
+
+    /**
+     * @param  mixed  $geometry
+     * @return list<array{0: float, 1: float}>|null
+     */
+    private function parseRouteGeometryCoordinates(mixed $geometry): ?array
+    {
+        if (! is_array($geometry)) {
+            return null;
+        }
+        if (($geometry['type'] ?? '') !== 'LineString') {
+            return null;
+        }
+        $coords = $geometry['coordinates'] ?? null;
+        if (! is_array($coords) || $coords === []) {
+            return null;
+        }
+        $out = [];
+        foreach ($coords as $pt) {
+            if (is_array($pt) && count($pt) >= 2 && is_numeric($pt[0]) && is_numeric($pt[1])) {
+                $out[] = [(float) $pt[0], (float) $pt[1]];
+            }
+        }
+
+        return count($out) >= 2 ? $out : null;
     }
 
     private function coord(float $v): string

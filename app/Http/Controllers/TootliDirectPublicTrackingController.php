@@ -122,7 +122,9 @@ class TootliDirectPublicTrackingController extends Controller
             }
         }
 
-        $eta = $this->computeEtaMinutes($order->order_status, $pickLat, $pickLng, $dropLat, $dropLng, $courierLat, $courierLng);
+        $mapRoute = $this->resolveMapRouteForTracking($order->order_status, $pickLat, $pickLng, $dropLat, $dropLng, $courierLat, $courierLng);
+        $eta = $mapRoute['eta_minutes'];
+        $routeCoordinates = $mapRoute['coordinates'];
         $tz = config('app.timezone') ?: 'UTC';
         $etaClock = null;
         if ($eta !== null && $eta > 0) {
@@ -163,6 +165,8 @@ class TootliDirectPublicTrackingController extends Controller
             ] : null,
             'eta_minutes' => $eta,
             'estimated_arrival_clock' => $etaClock,
+            /** @var list<array{0: float, 1: float}>|null Polilínea [lng,lat]… por calles (Mapbox Directions). */
+            'route_coordinates' => $routeCoordinates,
             'otp' => $order->order_status === 'picked_up' ? (string) ($order->otp ?? '') : null,
             'updated_at' => $order->updated_at?->toIso8601String(),
         ];
@@ -245,7 +249,12 @@ class TootliDirectPublicTrackingController extends Controller
         return round((float) $row->average, 1);
     }
 
-    private function computeEtaMinutes(
+    /**
+     * ETA y geometría de ruta por GPS (misma petición Mapbox).
+     *
+     * @return array{eta_minutes: ?int, coordinates: list<array{0: float, 1: float}>|null}
+     */
+    private function resolveMapRouteForTracking(
         string $status,
         ?float $pickLat,
         ?float $pickLng,
@@ -253,13 +262,13 @@ class TootliDirectPublicTrackingController extends Controller
         ?float $dropLng,
         ?float $courierLat,
         ?float $courierLng
-    ): ?int {
+    ): array {
         if ($dropLat === null || $dropLng === null) {
-            return null;
+            return ['eta_minutes' => null, 'coordinates' => null];
         }
         $token = (string) config('services.mapbox.access_token', '');
         if ($token === '') {
-            return null;
+            return ['eta_minutes' => null, 'coordinates' => null];
         }
 
         $route = null;
@@ -270,7 +279,7 @@ class TootliDirectPublicTrackingController extends Controller
                 $dropLng,
                 $dropLat
             );
-        } elseif ($pickLat !== null && $pickLng !== null && in_array($status, ['pending', 'accepted', 'confirmed', 'processing', 'handover'], true)) {
+        } elseif ($pickLat !== null && $pickLng !== null && in_array($status, ['pending', 'accepted', 'confirmed', 'processing', 'handover', 'picked_up'], true)) {
             $route = app(MapboxDirectionsService::class)->drivingTrafficRoute(
                 $pickLng,
                 $pickLat,
@@ -279,7 +288,19 @@ class TootliDirectPublicTrackingController extends Controller
             );
         }
 
-        return isset($route['duration_minutes']) ? (int) $route['duration_minutes'] : null;
+        if ($route === null) {
+            return ['eta_minutes' => null, 'coordinates' => null];
+        }
+
+        $coords = $route['coordinates'] ?? null;
+        if (! is_array($coords) || count($coords) < 2) {
+            $coords = null;
+        }
+
+        return [
+            'eta_minutes' => isset($route['duration_minutes']) ? (int) $route['duration_minutes'] : null,
+            'coordinates' => $coords,
+        ];
     }
 
     /**

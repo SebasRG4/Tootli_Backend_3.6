@@ -752,19 +752,38 @@
         });
     }
 
+    function normalizeRouteCoords(raw) {
+        if (!Array.isArray(raw) || raw.length < 2) return null;
+        var out = [];
+        for (var i = 0; i < raw.length; i++) {
+            var p = raw[i];
+            if (!Array.isArray(p) || p.length < 2) continue;
+            var lng = Number(p[0]);
+            var lat = Number(p[1]);
+            if (!isFinite(lng) || !isFinite(lat)) continue;
+            out.push([lng, lat]);
+        }
+        return out.length >= 2 ? out : null;
+    }
+
     function updateRouteLine(d) {
         window.__tdRoutePayload = d;
         if (!map || !routeLayerReady || !map.getSource('td-route')) return;
-        const c = d.courier;
-        const drop = d.dropoff;
-        if (c && drop && c.lng != null && c.lat != null && drop.lng != null && drop.lat != null) {
+        var coords = normalizeRouteCoords(d.route_coordinates);
+        var c = d.courier;
+        var drop = d.dropoff;
+        var pick = d.pickup;
+        if (!coords && c && drop && c.lng != null && c.lat != null && drop.lng != null && drop.lat != null) {
+            coords = [[c.lng, c.lat], [drop.lng, drop.lat]];
+        }
+        if (!coords && pick && drop && pick.lng != null && pick.lat != null && drop.lng != null && drop.lat != null) {
+            coords = [[pick.lng, pick.lat], [drop.lng, drop.lat]];
+        }
+        if (coords) {
             map.getSource('td-route').setData({
                 type: 'Feature',
                 properties: {},
-                geometry: {
-                    type: 'LineString',
-                    coordinates: [[c.lng, c.lat], [drop.lng, drop.lat]],
-                },
+                geometry: { type: 'LineString', coordinates: coords },
             });
             try {
                 map.setLayoutProperty('td-route-line', 'visibility', 'visible');
