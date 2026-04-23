@@ -618,7 +618,7 @@ class POSController extends Controller
                     'token' => $trackToken,
                     'expires_at' => now()->addDays(21),
                 ]);
-                $customerTrackingUrl = url('/ratreo-orden/tootli-directo/'.$trackToken);
+                $customerTrackingUrl = url('/rastreo-orden/tootli-directo/'.$trackToken);
             }
 
             DB::commit();

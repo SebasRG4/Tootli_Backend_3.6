@@ -53,12 +53,13 @@ Route::post('activation-check', 'HomeController@activationCheck');
 Route::get('taxi/track/{token}', 'TaxiTrackingController@track')->name('taxi.track');
 
 // Seguimiento público Tootli Directo (enlace para el comensal, sin login)
-Route::get('ratreo-orden/tootli-directo/{token}', [TootliDirectPublicTrackingController::class, 'show'])
+Route::get('rastreo-orden/tootli-directo/{token}', [TootliDirectPublicTrackingController::class, 'show'])
     ->name('tootli-direct.track');
-Route::get('ratreo-orden/tootli-directo/{token}/datos', [TootliDirectPublicTrackingController::class, 'data'])
+Route::get('rastreo-orden/tootli-directo/{token}/datos', [TootliDirectPublicTrackingController::class, 'data'])
     ->name('tootli-direct.track.data');
-Route::get('rastreo-orden/tootli-directo/{token}', fn (string $token) => redirect("/ratreo-orden/tootli-directo/{$token}", 301));
-Route::get('rastreo-orden/tootli-directo/{token}/datos', fn (string $token) => redirect("/ratreo-orden/tootli-directo/{$token}/datos", 301));
+// Compatibilidad: URL antigua con typo "ratreo"
+Route::get('ratreo-orden/tootli-directo/{token}', fn (string $token) => redirect("/rastreo-orden/tootli-directo/{$token}", 301));
+Route::get('ratreo-orden/tootli-directo/{token}/datos', fn (string $token) => redirect("/rastreo-orden/tootli-directo/{$token}/datos", 301));
 
 Route::get('login/{tab}', 'LoginController@login')->name('login');
 Route::post('login_submit', 'LoginController@submit')->name('login_post')->middleware('actch');

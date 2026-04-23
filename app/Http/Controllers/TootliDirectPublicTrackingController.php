@@ -19,7 +19,7 @@ class TootliDirectPublicTrackingController extends Controller
 
         return response()->view('tootli_direct.track', [
             'token' => $token,
-            'pollUrl' => url('/ratreo-orden/tootli-directo/'.$token.'/datos'),
+            'pollUrl' => url('/rastreo-orden/tootli-directo/'.$token.'/datos'),
         ]);
     }
 
