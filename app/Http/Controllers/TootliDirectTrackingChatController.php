@@ -19,6 +19,10 @@ class TootliDirectTrackingChatController extends Controller
 
         $messages = TootliDirectTrackingChatMessage::query()
             ->where('order_id', $orderId)
+            ->whereIn('sender', [
+                TootliDirectTrackingChatMessage::SENDER_CUSTOMER,
+                TootliDirectTrackingChatMessage::SENDER_DELIVERY_MAN,
+            ])
             ->orderBy('id')
             ->limit(200)
             ->get(['id', 'sender', 'body', 'created_at'])

@@ -118,6 +118,8 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::put('update-payment-status', 'DeliverymanController@order_payment_status_update');
             Route::get('order-details', 'DeliverymanController@get_order_details');
             Route::get('order', 'DeliverymanController@get_order');
+            Route::get('tootli-direct-tracking-chat', 'DeliverymanController@get_tootli_direct_tracking_chat');
+            Route::post('tootli-direct-tracking-chat', 'DeliverymanController@post_tootli_direct_tracking_chat');
             Route::get('orders-count', 'DeliverymanController@get_orders_count');
             Route::put('send-order-otp', 'DeliverymanController@send_order_otp');
             Route::put('update-fcm-token', 'DeliverymanController@update_fcm_token');
@@ -184,8 +186,6 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         Route::put('update-order-amount', 'VendorController@edit_order_amount');
         Route::get('order-details', 'VendorController@get_order_details');
         Route::get('order', 'VendorController@get_order');
-        Route::get('tootli-direct-tracking-chat', 'VendorController@get_tootli_direct_tracking_chat');
-        Route::post('tootli-direct-tracking-chat', 'VendorController@post_tootli_direct_tracking_chat');
         Route::put('update-fcm-token', 'VendorController@update_fcm_token');
         Route::get('get-basic-campaigns', 'VendorController@get_basic_campaigns');
         Route::put('campaign-leave', 'VendorController@remove_store');

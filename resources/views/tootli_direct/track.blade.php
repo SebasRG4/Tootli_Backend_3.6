@@ -242,31 +242,6 @@
             70% { box-shadow: 0 0 0 8px rgba(5, 150, 105, 0); }
             100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); }
         }
-        .contact-block {
-            background: #fff;
-            padding: 0 18px 14px;
-            border-bottom: 1px solid var(--line);
-        }
-        .contact-block .label {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            margin-bottom: 6px;
-        }
-        .contact-block a {
-            font-size: 17px;
-            font-weight: 700;
-            color: #059669;
-            text-decoration: none;
-        }
-        .contact-block a:active { opacity: 0.85; }
-        .contact-block .sub {
-            font-size: 13px;
-            color: var(--ink);
-            margin-top: 4px;
-        }
         .chat-box {
             margin-top: 14px;
             border-radius: 14px;
@@ -304,11 +279,11 @@
             background: #dcfce7;
             color: #14532d;
         }
-        .chat-msg--store {
+        .chat-msg--delivery_man {
             align-self: flex-start;
-            background: #fff;
-            border: 1px solid var(--line);
-            color: var(--ink);
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e3a8a;
         }
         .chat-msg-who {
             font-size: 11px;
@@ -366,11 +341,6 @@
             </div>
         </div>
         <div class="headline" id="headline"></div>
-        <div id="contact-block" class="contact-block" style="display:none;">
-            <div class="label">Teléfono de contacto (entrega)</div>
-            <a id="contact-phone" href="#"></a>
-            <div class="sub" id="contact-name" style="display:none;"></div>
-        </div>
         <div class="progress" id="progress"></div>
         <div id="map-wrap">
             <div id="map"></div>
@@ -396,13 +366,13 @@
                 Código de entrega: <strong id="otp-val"></strong>
             </div>
             <div class="chat-box" id="chat-box">
-                <div class="chat-box-title">Chat con la tienda</div>
+                <div class="chat-box-title">Chat con tu repartidor</div>
                 <div class="chat-log" id="chat-log" aria-live="polite"></div>
                 <form class="chat-form" id="chat-form" action="#" method="post">
                     <input type="text" id="chat-input" maxlength="2000" placeholder="Escribe un mensaje…" autocomplete="off">
                     <button type="submit">Enviar</button>
                 </form>
-                <p class="chat-note">Los mensajes los ve la tienda en la app Tootli Aliado. Para urgencias también puedes llamar al teléfono de contacto o al repartidor.</p>
+                <p class="chat-note">El repartidor responde desde la app Tootli Repartidor. Si ya tienes repartidor asignado, también puedes llamarle al número que aparece arriba.</p>
             </div>
         </div>
     </div>
@@ -432,9 +402,6 @@
         dmVehicle: document.getElementById('dm-vehicle'),
         otpWrap: document.getElementById('otp-wrap'),
         otpVal: document.getElementById('otp-val'),
-        contactBlock: document.getElementById('contact-block'),
-        contactPhone: document.getElementById('contact-phone'),
-        contactName: document.getElementById('contact-name'),
         dmPhoneRow: document.getElementById('dm-phone-row'),
         dmPhone: document.getElementById('dm-phone'),
         chatLog: document.getElementById('chat-log'),
@@ -452,10 +419,11 @@
         list.forEach(function (m) {
             if (m.id <= lastChatMessageId) return;
             var row = document.createElement('div');
-            row.className = 'chat-msg chat-msg--' + (m.sender === 'store' ? 'store' : 'customer');
+            var side = m.sender === 'delivery_man' ? 'delivery_man' : 'customer';
+            row.className = 'chat-msg chat-msg--' + side;
             var who = document.createElement('div');
             who.className = 'chat-msg-who';
-            who.textContent = m.sender === 'store' ? 'Tienda' : 'Tú';
+            who.textContent = m.sender === 'delivery_man' ? 'Repartidor' : 'Tú';
             var body = document.createElement('div');
             body.className = 'chat-msg-body';
             body.textContent = m.body;
@@ -589,22 +557,6 @@
         }
         els.headline.textContent = d.headline || '';
         buildProgress(Math.min(5, Math.max(0, d.progress_filled || 0)));
-
-        var c = d.contact || {};
-        if (c.phone) {
-            els.contactBlock.style.display = 'block';
-            els.contactPhone.textContent = c.phone;
-            els.contactPhone.setAttribute('href', 'tel:' + String(c.phone).replace(/[^\d+]/g, ''));
-            if (c.name) {
-                els.contactName.style.display = 'block';
-                els.contactName.textContent = c.name;
-            } else {
-                els.contactName.style.display = 'none';
-                els.contactName.textContent = '';
-            }
-        } else {
-            els.contactBlock.style.display = 'none';
-        }
 
         if (mapboxToken && typeof mapboxgl !== 'undefined') {
             els.mapFb.style.display = 'none';

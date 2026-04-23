@@ -26,6 +26,7 @@ use App\Models\DisbursementWithdrawalMethod;
 use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderPayment;
+use App\Models\TootliDirectTrackingChatMessage;
 use App\Models\OrderTransaction;
 use App\Models\ParcelCancellation;
 use App\Models\ProvideDMEarning;
@@ -41,6 +42,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
@@ -1928,6 +1930,89 @@ class DeliverymanController extends Controller
         }
 
         return response()->json(['message' => translate('Failed to send price proposal')], 400);
+    }
+
+    /**
+     * Chat del enlace de seguimiento Tootli Directo: mensajes cliente ↔ repartidor (mismo hilo que ve el cliente en la web).
+     */
+    public function get_tootli_direct_tracking_chat(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required|integer',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+        if (! $dm) {
+            return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
+        }
+        $order = Order::withoutGlobalScopes()
+            ->where('id', $request->order_id)
+            ->where('delivery_man_id', $dm->id)
+            ->first();
+        if (! $order || ! $order->isTootliDirectTrackable()) {
+            return response()->json(['errors' => [['code' => 'order_id', 'message' => trans('messages.order_data_not_found')]]], 404);
+        }
+
+        $messages = TootliDirectTrackingChatMessage::query()
+            ->where('order_id', $order->id)
+            ->whereIn('sender', [
+                TootliDirectTrackingChatMessage::SENDER_CUSTOMER,
+                TootliDirectTrackingChatMessage::SENDER_DELIVERY_MAN,
+            ])
+            ->orderBy('id')
+            ->limit(200)
+            ->get(['id', 'sender', 'body', 'created_at'])
+            ->map(fn ($m) => [
+                'id' => $m->id,
+                'sender' => $m->sender,
+                'body' => $m->body,
+                'created_at' => $m->created_at?->toIso8601String(),
+            ]);
+
+        return response()->json(['messages' => $messages], 200);
+    }
+
+    public function post_tootli_direct_tracking_chat(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required|integer',
+            'message' => 'required|string|max:2000',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+        if (! $dm) {
+            return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
+        }
+        $order = Order::withoutGlobalScopes()
+            ->where('id', $request->order_id)
+            ->where('delivery_man_id', $dm->id)
+            ->first();
+        if (! $order || ! $order->isTootliDirectTrackable()) {
+            return response()->json(['errors' => [['code' => 'order_id', 'message' => trans('messages.order_data_not_found')]]], 404);
+        }
+
+        $key = 'td-dm-tracking-chat:'.$dm->id.':'.$order->id;
+        if (RateLimiter::tooManyAttempts($key, 30)) {
+            return response()->json(['errors' => [['code' => 'rate_limit', 'message' => 'Too many requests']]], 429);
+        }
+        RateLimiter::hit($key, 60);
+
+        $body = trim(strip_tags((string) $request->message));
+        if ($body === '') {
+            return response()->json(['errors' => [['code' => 'message', 'message' => 'Mensaje vacío']]], 422);
+        }
+
+        TootliDirectTrackingChatMessage::query()->create([
+            'order_id' => $order->id,
+            'sender' => TootliDirectTrackingChatMessage::SENDER_DELIVERY_MAN,
+            'body' => $body,
+        ]);
+
+        return response()->json(['message' => 'ok'], 200);
     }
 
     public function get_orders_count(Request $request)

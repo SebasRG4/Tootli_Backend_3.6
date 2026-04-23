@@ -9,7 +9,10 @@ class TootliDirectTrackingChatMessage extends Model
 {
     public const SENDER_CUSTOMER = 'customer';
 
+    /** @deprecated Mensajes antiguos de la tienda; ya no se crean nuevos. */
     public const SENDER_STORE = 'store';
+
+    public const SENDER_DELIVERY_MAN = 'delivery_man';
 
     protected $fillable = [
         'order_id',
