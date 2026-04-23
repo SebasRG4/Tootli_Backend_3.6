@@ -15,6 +15,7 @@ use App\Models\Item;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\StorePosCustomer;
+use App\Models\TootliDirectTrackingToken;
 use App\Models\User;
 use App\Scopes\StoreScope;
 use App\Services\MapboxDirectionsService;
@@ -609,14 +610,26 @@ class POSController extends Controller
                 $store_sub->decrement('max_order', 1);
             }
 
+            $customerTrackingUrl = null;
+            if ($tootli_direct && $has_address) {
+                $trackToken = Str::random(48);
+                TootliDirectTrackingToken::create([
+                    'order_id' => $order->id,
+                    'token' => $trackToken,
+                    'expires_at' => now()->addDays(21),
+                ]);
+                $customerTrackingUrl = url('/ratreo-orden/tootli-directo/'.$trackToken);
+            }
+
             DB::commit();
 
             return response()->json([
-                'message'      => translate('messages.order_placed_successfully'),
-                'order_id'     => $order->id,
+                'message' => translate('messages.order_placed_successfully'),
+                'order_id' => $order->id,
                 'order_amount' => $order->order_amount,
-                'order_type'   => $order->order_type,
+                'order_type' => $order->order_type,
                 'order_status' => $order->order_status,
+                'customer_tracking_url' => $customerTrackingUrl,
             ], 200);
         } catch (\Throwable $e) {
             DB::rollBack();
