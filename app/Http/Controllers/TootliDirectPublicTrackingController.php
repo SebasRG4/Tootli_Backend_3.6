@@ -25,6 +25,7 @@ class TootliDirectPublicTrackingController extends Controller
             'token' => $token,
             'pollUrl' => url('/rastreo-orden/tootli-directo/'.$token.'/datos'),
             'mapboxPublicToken' => $this->mapboxPublicToken(),
+            'courierMarkerUrl' => asset('assets/tootli/delivery_man_marker.png'),
         ]);
     }
 
@@ -117,6 +118,8 @@ class TootliDirectPublicTrackingController extends Controller
             }
         }
 
+        $contact = $this->contactFromDeliveryAddress($addr);
+
         $eta = $this->computeEtaMinutes($order->order_status, $pickLat, $pickLng, $dropLat, $dropLng, $courierLat, $courierLng);
         $tz = config('app.timezone') ?: 'UTC';
         $etaClock = null;
@@ -135,6 +138,7 @@ class TootliDirectPublicTrackingController extends Controller
             'store_name' => $order->store?->name,
             'module_type' => $order->module?->module_type,
             'address' => $this->formatAddressLine($addr),
+            'contact' => $contact,
             'pickup' => [
                 'lat' => $pickLat,
                 'lng' => $pickLng,
@@ -157,6 +161,21 @@ class TootliDirectPublicTrackingController extends Controller
             'estimated_arrival_clock' => $etaClock,
             'otp' => $order->order_status === 'picked_up' ? (string) ($order->otp ?? '') : null,
             'updated_at' => $order->updated_at?->toIso8601String(),
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $addr
+     * @return array{name: ?string, phone: ?string}
+     */
+    private function contactFromDeliveryAddress(array $addr): array
+    {
+        $phone = trim((string) ($addr['contact_person_number'] ?? $addr['phone'] ?? ''));
+        $name = trim((string) ($addr['contact_person_name'] ?? ''));
+
+        return [
+            'name' => $name !== '' ? $name : null,
+            'phone' => $phone !== '' ? $phone : null,
         ];
     }
 

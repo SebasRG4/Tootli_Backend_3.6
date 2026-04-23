@@ -206,16 +206,75 @@
             align-items: center;
             justify-content: center;
         }
+        .map-pin--courier-wrap--asset {
+            width: 76px;
+            height: 76px;
+            animation: courierRing 2.2s ease-out infinite;
+            border-radius: 50%;
+        }
         .map-pin--courier {
             background: linear-gradient(145deg, #34d399, #059669);
             width: 40px;
             height: 40px;
             animation: courierRing 2.2s ease-out infinite;
         }
+        .map-pin--courier--asset {
+            width: auto;
+            height: auto;
+            min-width: 0;
+            min-height: 0;
+            padding: 0;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            animation: none;
+        }
+        .map-pin--courier-img {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
+            display: block;
+            filter: drop-shadow(0 3px 10px rgba(15, 23, 42, 0.35));
+        }
         @keyframes courierRing {
             0% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.5); }
             70% { box-shadow: 0 0 0 12px rgba(5, 150, 105, 0); }
             100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); }
+        }
+        .contact-block {
+            background: #fff;
+            padding: 0 18px 14px;
+            border-bottom: 1px solid var(--line);
+        }
+        .contact-block .label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 6px;
+        }
+        .contact-block a {
+            font-size: 17px;
+            font-weight: 700;
+            color: #059669;
+            text-decoration: none;
+        }
+        .contact-block a:active { opacity: 0.85; }
+        .contact-block .sub {
+            font-size: 13px;
+            color: var(--ink);
+            margin-top: 4px;
+        }
+        .chat-hint {
+            margin-top: 14px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: #f1f5f9;
+            border: 1px solid var(--line);
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.45;
         }
     </style>
 </head>
@@ -234,6 +293,11 @@
             </div>
         </div>
         <div class="headline" id="headline"></div>
+        <div id="contact-block" class="contact-block" style="display:none;">
+            <div class="label">Teléfono de contacto (entrega)</div>
+            <a id="contact-phone" href="#"></a>
+            <div class="sub" id="contact-name" style="display:none;"></div>
+        </div>
         <div class="progress" id="progress"></div>
         <div id="map-wrap">
             <div id="map"></div>
@@ -255,6 +319,9 @@
             <div id="otp-wrap" class="otp-box" style="display:none;">
                 Código de entrega: <strong id="otp-val"></strong>
             </div>
+            <div class="chat-hint" id="chat-hint">
+                <strong>Chat:</strong> el mensajero en esta página no está disponible todavía. Para dudas urgentes usa el teléfono de contacto arriba. Más adelante se puede enlazar chat en tiempo real (p. ej. Soketi + Laravel) con acceso seguro por este mismo enlace.
+            </div>
         </div>
     </div>
     <div id="err" class="err-page" style="display:none;"></div>
@@ -263,6 +330,7 @@
 (function () {
     const pollUrl = @json($pollUrl);
     const mapboxToken = @json($mapboxPublicToken ?? '');
+    const courierMarkerUrl = @json($courierMarkerUrl ?? '');
 
     const els = {
         main: document.getElementById('main'),
@@ -280,6 +348,9 @@
         dmVehicle: document.getElementById('dm-vehicle'),
         otpWrap: document.getElementById('otp-wrap'),
         otpVal: document.getElementById('otp-val'),
+        contactBlock: document.getElementById('contact-block'),
+        contactPhone: document.getElementById('contact-phone'),
+        contactName: document.getElementById('contact-name'),
     };
 
     let map = null;
@@ -321,10 +392,20 @@
     function buildMarkerElement(kind) {
         if (kind === 'courier') {
             const wrap = document.createElement('div');
-            wrap.className = 'map-pin--courier-wrap';
+            wrap.className = 'map-pin--courier-wrap' + (courierMarkerUrl ? ' map-pin--courier-wrap--asset' : '');
             const inner = document.createElement('div');
-            inner.className = 'map-pin map-pin--courier';
-            inner.innerHTML = markerIconSvg('courier');
+            inner.className = 'map-pin map-pin--courier' + (courierMarkerUrl ? ' map-pin--courier--asset' : '');
+            if (courierMarkerUrl) {
+                const img = document.createElement('img');
+                img.className = 'map-pin--courier-img';
+                img.src = courierMarkerUrl;
+                img.alt = 'Repartidor';
+                img.loading = 'lazy';
+                img.decoding = 'async';
+                inner.appendChild(img);
+            } else {
+                inner.innerHTML = markerIconSvg('courier');
+            }
             wrap.appendChild(inner);
             return wrap;
         }
@@ -379,6 +460,22 @@
         }
         els.headline.textContent = d.headline || '';
         buildProgress(Math.min(5, Math.max(0, d.progress_filled || 0)));
+
+        var c = d.contact || {};
+        if (c.phone) {
+            els.contactBlock.style.display = 'block';
+            els.contactPhone.textContent = c.phone;
+            els.contactPhone.setAttribute('href', 'tel:' + String(c.phone).replace(/[^\d+]/g, ''));
+            if (c.name) {
+                els.contactName.style.display = 'block';
+                els.contactName.textContent = c.name;
+            } else {
+                els.contactName.style.display = 'none';
+                els.contactName.textContent = '';
+            }
+        } else {
+            els.contactBlock.style.display = 'none';
+        }
 
         if (mapboxToken && typeof mapboxgl !== 'undefined') {
             els.mapFb.style.display = 'none';
