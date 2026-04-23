@@ -207,15 +207,15 @@
             justify-content: center;
         }
         .map-pin--courier {
-            background: linear-gradient(145deg, #3b82f6, #1d4ed8);
+            background: linear-gradient(145deg, #34d399, #059669);
             width: 40px;
             height: 40px;
             animation: courierRing 2.2s ease-out infinite;
         }
         @keyframes courierRing {
-            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.45); }
-            70% { box-shadow: 0 0 0 12px rgba(37, 99, 235, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.5); }
+            70% { box-shadow: 0 0 0 12px rgba(5, 150, 105, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); }
         }
     </style>
 </head>
@@ -315,7 +315,7 @@
         if (kind === 'dropoff') {
             return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="' + s + '" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.5" fill="' + s + '" stroke="none"/></svg>';
         }
-        return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="' + s + '" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2.5"/><circle cx="7" cy="18" r="2.5"/></svg>';
+        return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="' + s + '" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="18" r="3"/><circle cx="18" cy="18" r="2.75"/><path d="M10 18v-6.5l4.5-2 2.5 4 1 5"/><path d="M10 11.5H7.5L6.5 15"/><path d="M14.5 9.5 15.8 7.2"/></svg>';
     }
 
     function buildMarkerElement(kind) {
