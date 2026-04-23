@@ -8,6 +8,7 @@ use App\Scopes\ZoneScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Traits\ReportFilter;
+use Illuminate\Support\Str;
 use Modules\TaxModule\Entities\OrderTax;
 
 class Order extends Model
@@ -88,7 +89,7 @@ class Order extends Model
         if (strtolower((string) ($this->order_type ?? '')) !== 'delivery') {
             return null;
         }
-        $rawTd = $this->attributes['tootli_direct'] ?? null;
+        $rawTd = $this->attributes['tootli_direct'] ?? $this->getRawOriginal('tootli_direct') ?? null;
         $isTootliDirect = $rawTd === 1 || $rawTd === '1' || $rawTd === true
             || $this->tootli_direct === true;
         if (! $isTootliDirect) {
@@ -98,9 +99,20 @@ class Order extends Model
         if (! $id) {
             return null;
         }
+
         $row = TootliDirectTrackingToken::where('order_id', $id)->first();
         if (! $row || ($row->expires_at !== null && $row->expires_at->isPast())) {
-            return null;
+            try {
+                $row = TootliDirectTrackingToken::updateOrCreate(
+                    ['order_id' => $id],
+                    [
+                        'token' => Str::random(48),
+                        'expires_at' => now()->addDays(21),
+                    ]
+                );
+            } catch (\Throwable) {
+                return null;
+            }
         }
 
         return url('/rastreo-orden/tootli-directo/'.$row->token);
