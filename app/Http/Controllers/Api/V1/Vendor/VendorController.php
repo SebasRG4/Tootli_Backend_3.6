@@ -345,13 +345,18 @@ class VendorController extends Controller
 
             // Respuesta ligera (sin order_data_formatting) para evitar errores con relaciones/details.
             $ordersList = $orders->map(static function ($o) {
+                $created = $o->created_at;
+                $createdAt = $created instanceof \DateTimeInterface
+                    ? $created->format('Y-m-d H:i:s')
+                    : ($created !== null && $created !== '' ? (string) $created : null);
+
                 return [
                     'id' => $o->id,
                     'order_amount' => (float) $o->order_amount,
                     'order_status' => $o->order_status,
                     'order_type' => $o->order_type,
                     'payment_method' => $o->payment_method,
-                    'created_at' => $o->created_at?->format('Y-m-d H:i:s'),
+                    'created_at' => $createdAt,
                 ];
             })->values()->all();
 
