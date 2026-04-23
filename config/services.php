@@ -71,6 +71,8 @@ return [
     */
     'mapbox' => [
         'access_token' => env('MAPBOX_ACCESS_TOKEN') ?: env('MAPBOX_TOKEN'),
+        // Token público (pk.…) para Mapbox GL en el navegador (seguimiento web). Restringe por URL en Mapbox.
+        'public_token' => env('MAPBOX_PUBLIC_ACCESS_TOKEN'),
     ],
 
 ];
