@@ -181,6 +181,42 @@
             text-align: center;
             color: var(--muted);
         }
+        /* Marcadores mapa (HTML + SVG, sin assets externos) */
+        .map-pin {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.22);
+        }
+        .map-pin svg { display: block; }
+        .map-pin--pickup {
+            background: linear-gradient(145deg, #4ade80, #16a34a);
+        }
+        .map-pin--dropoff {
+            background: linear-gradient(145deg, #334155, #0f172a);
+        }
+        .map-pin--courier-wrap {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .map-pin--courier {
+            background: linear-gradient(145deg, #3b82f6, #1d4ed8);
+            width: 40px;
+            height: 40px;
+            animation: courierRing 2.2s ease-out infinite;
+        }
+        @keyframes courierRing {
+            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.45); }
+            70% { box-shadow: 0 0 0 12px rgba(37, 99, 235, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        }
     </style>
 </head>
 <body>
@@ -271,20 +307,44 @@
         map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
     }
 
-    function setMarker(key, lng, lat, color) {
+    function markerIconSvg(kind) {
+        const s = 'white';
+        if (kind === 'pickup') {
+            return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="' + s + '" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m2 7 4-4 4 4"/><path d="M22 7v11a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7"/><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/></svg>';
+        }
+        if (kind === 'dropoff') {
+            return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="' + s + '" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.5" fill="' + s + '" stroke="none"/></svg>';
+        }
+        return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="' + s + '" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2.5"/><circle cx="7" cy="18" r="2.5"/></svg>';
+    }
+
+    function buildMarkerElement(kind) {
+        if (kind === 'courier') {
+            const wrap = document.createElement('div');
+            wrap.className = 'map-pin--courier-wrap';
+            const inner = document.createElement('div');
+            inner.className = 'map-pin map-pin--courier';
+            inner.innerHTML = markerIconSvg('courier');
+            wrap.appendChild(inner);
+            return wrap;
+        }
+        const el = document.createElement('div');
+        el.className = 'map-pin map-pin--' + (kind === 'pickup' ? 'pickup' : 'dropoff');
+        el.innerHTML = markerIconSvg(kind);
+        return el;
+    }
+
+    function setMarker(key, lng, lat) {
         if (!map || lng == null || lat == null) return;
         if (markers[key]) {
             markers[key].setLngLat([lng, lat]);
             return;
         }
-        const el = document.createElement('div');
-        el.style.width = '18px';
-        el.style.height = '18px';
-        el.style.borderRadius = '50%';
-        el.style.background = color;
-        el.style.border = '2px solid #fff';
-        el.style.boxShadow = '0 1px 4px rgba(0,0,0,.25)';
-        markers[key] = new mapboxgl.Marker({ element: el }).setLngLat([lng, lat]).addTo(map);
+        const kind = key === 'pickup' ? 'pickup' : (key === 'courier' ? 'courier' : 'dropoff');
+        const el = buildMarkerElement(kind);
+        markers[key] = new mapboxgl.Marker({ element: el, anchor: 'center' })
+            .setLngLat([lng, lat])
+            .addTo(map);
     }
 
     function fitMap(pickup, dropoff, courier) {
@@ -324,9 +384,9 @@
             els.mapFb.style.display = 'none';
             els.mapEl.style.display = 'block';
             ensureMap();
-            if (d.pickup) setMarker('pickup', d.pickup.lng, d.pickup.lat, '#16a34a');
-            if (d.dropoff) setMarker('dropoff', d.dropoff.lng, d.dropoff.lat, '#0f172a');
-            if (d.courier) setMarker('courier', d.courier.lng, d.courier.lat, '#2563eb');
+            if (d.pickup) setMarker('pickup', d.pickup.lng, d.pickup.lat);
+            if (d.dropoff) setMarker('dropoff', d.dropoff.lng, d.dropoff.lat);
+            if (d.courier) setMarker('courier', d.courier.lng, d.courier.lat);
             fitMap(d.pickup, d.dropoff, d.courier);
             map && map.resize();
         } else {
