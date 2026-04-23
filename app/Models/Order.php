@@ -59,7 +59,7 @@ class Order extends Model
         'pos_payment_meta' => 'array',
     ];
 
-    protected $appends = ['module_type', 'order_attachment_full_url', 'order_proof_full_url'];
+    protected $appends = ['module_type', 'order_attachment_full_url', 'order_proof_full_url', 'customer_tracking_url'];
 
     public function getOrderAttachmentFullUrlAttribute()
     {
@@ -77,6 +77,33 @@ class Order extends Model
         }
 
         return $images;
+    }
+
+    /**
+     * URL pública de rastreo (Tootli Directo + domicilio + token vigente).
+     * Expuesto en JSON de la API vendor vía $appends.
+     */
+    public function getCustomerTrackingUrlAttribute(): ?string
+    {
+        if (strtolower((string) ($this->order_type ?? '')) !== 'delivery') {
+            return null;
+        }
+        $rawTd = $this->attributes['tootli_direct'] ?? null;
+        $isTootliDirect = $rawTd === 1 || $rawTd === '1' || $rawTd === true
+            || $this->tootli_direct === true;
+        if (! $isTootliDirect) {
+            return null;
+        }
+        $id = $this->getKey();
+        if (! $id) {
+            return null;
+        }
+        $row = TootliDirectTrackingToken::where('order_id', $id)->first();
+        if (! $row || ($row->expires_at !== null && $row->expires_at->isPast())) {
+            return null;
+        }
+
+        return url('/rastreo-orden/tootli-directo/'.$row->token);
     }
 
     public function getOrderProofFullUrlAttribute()

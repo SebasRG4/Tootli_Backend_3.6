@@ -40,7 +40,6 @@ use App\Models\SubscriptionBillingAndRefundHistory;
 use App\Models\SubscriptionPackage;
 use App\Models\SubscriptionTransaction;
 use App\Models\Tag;
-use App\Models\TootliDirectTrackingToken;
 use App\Models\Translation;
 use App\Models\User;
 use App\Models\UserNotification;
@@ -1411,27 +1410,6 @@ class Helpers
         $order->unsetRelation('transaction');
     }
 
-    /**
-     * URL pública de rastreo Tootli Directo (cliente), si existe token vigente.
-     */
-    public static function attach_tootli_direct_customer_tracking_url($order): void
-    {
-        if (! $order instanceof \App\Models\Order) {
-            return;
-        }
-        $url = null;
-        if ((int) ($order->tootli_direct ?? 0) === 1
-            && ($order->order_type ?? '') === 'delivery'
-            && $order->id
-        ) {
-            $row = TootliDirectTrackingToken::where('order_id', $order->id)->first();
-            if ($row && ($row->expires_at === null || $row->expires_at->isFuture())) {
-                $url = url('/rastreo-orden/tootli-directo/'.$row->token);
-            }
-        }
-        $order->setAttribute('customer_tracking_url', $url);
-    }
-
     public static function order_data_formatting($data, $multi_data = false)
     {
         $storage = [];
@@ -1483,7 +1461,6 @@ class Helpers
 
                 unset($item['details']);
                 self::attach_vendor_store_amount_from_transaction($item);
-                self::attach_tootli_direct_customer_tracking_url($item);
                 array_push($storage, $item);
             }
             $data = $storage;
@@ -1531,7 +1508,6 @@ class Helpers
 
             unset($data['details']);
             self::attach_vendor_store_amount_from_transaction($data);
-            self::attach_tootli_direct_customer_tracking_url($data);
         }
         return $data;
     }
