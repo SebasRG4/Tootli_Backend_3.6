@@ -70,7 +70,7 @@ return [
     | para cotización POS / Tootli Direct. Sin token se usa línea recta (Haversine).
     */
     'mapbox' => [
-        'access_token' => env('MAPBOX_ACCESS_TOKEN'),
+        'access_token' => env('MAPBOX_ACCESS_TOKEN') ?: env('MAPBOX_TOKEN'),
     ],
 
 ];
