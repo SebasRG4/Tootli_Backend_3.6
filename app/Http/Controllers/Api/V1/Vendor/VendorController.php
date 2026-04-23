@@ -309,6 +309,43 @@ class VendorController extends Controller
         return response()->json($data, 200);
     }
 
+    /**
+     * Reporte de ventas por rango (pedidos entregados/reembolsados), incluye POS.
+     */
+    public function get_sales_report(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'from' => 'required|date',
+            'to' => 'required|date|after_or_equal:from',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $vendor = $request['vendor'];
+        $storeId = $vendor->stores[0]->id;
+        $from = \Carbon\Carbon::parse($request->from)->startOfDay();
+        $to = \Carbon\Carbon::parse($request->to)->endOfDay();
+
+        $orders = Order::where('store_id', $storeId)
+            ->whereIn('order_status', ['delivered', 'refunded'])
+            ->whereBetween('created_at', [$from, $to])
+            ->with(['customer', 'transaction'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $ordersFormatted = Helpers::order_data_formatting($orders, true);
+
+        return response()->json([
+            'from' => $from->format('Y-m-d'),
+            'to' => $to->format('Y-m-d'),
+            'total_orders' => $orders->count(),
+            'gross_sales' => round((float) $orders->sum('order_amount'), 2),
+            'orders' => $ordersFormatted,
+        ], 200);
+    }
+
     public function get_canceled_orders(Request $request)
     {
         $validator = Validator::make($request->all(), [

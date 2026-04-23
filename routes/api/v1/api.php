@@ -180,6 +180,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         Route::put('update-announcment', 'VendorController@update_announcment');
         Route::get('current-orders', 'VendorController@get_current_orders');
         Route::get('completed-orders', 'VendorController@get_completed_orders');
+        Route::get('sales-report', 'VendorController@get_sales_report');
         Route::get('canceled-orders', 'VendorController@get_canceled_orders');
         Route::get('all-orders', 'VendorController@get_all_orders');
         Route::put('update-order-status', 'VendorController@update_order_status');
