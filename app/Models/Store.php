@@ -5,8 +5,10 @@ namespace App\Models;
 use App\Scopes\ZoneScope;
 use Illuminate\Support\Str;
 use App\CentralLogics\Helpers;
+use App\Services\StorePosDummyItemService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Database\Eloquent\Model;
 use App\Mail\SubscriptionDeadLineWarning;
@@ -1026,6 +1028,16 @@ class Store extends Model
         static::created(function ($store) {
             $store->slug = $store->generateSlug($store->name);
             $store->save();
+        });
+        static::created(function (Store $store) {
+            try {
+                StorePosDummyItemService::ensureForStore($store);
+            } catch (\Throwable $e) {
+                Log::warning('store_pos_dummy_item', [
+                    'store_id' => $store->id,
+                    'message' => $e->getMessage(),
+                ]);
+            }
         });
         static::saved(function ($model) {
             Helpers::deleteCacheData('advertisement_');
