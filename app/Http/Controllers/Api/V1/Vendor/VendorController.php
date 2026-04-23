@@ -323,27 +323,52 @@ class VendorController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
-        $vendor = $request['vendor'];
-        $storeId = $vendor->stores[0]->id;
-        $from = \Carbon\Carbon::parse($request->from)->startOfDay();
-        $to = \Carbon\Carbon::parse($request->to)->endOfDay();
+        try {
+            $vendor = $request['vendor'];
+            if (! $vendor->relationLoaded('stores')) {
+                $vendor->load('stores');
+            }
+            if ($vendor->stores->isEmpty()) {
+                return response()->json([
+                    'errors' => [['code' => 'store', 'message' => translate('messages.store_not_found')]],
+                ], 403);
+            }
+            $storeId = $vendor->stores[0]->id;
+            $from = \Carbon\Carbon::parse($request->from)->startOfDay();
+            $to = \Carbon\Carbon::parse($request->to)->endOfDay();
 
-        $orders = Order::where('store_id', $storeId)
-            ->whereIn('order_status', ['delivered', 'refunded'])
-            ->whereBetween('created_at', [$from, $to])
-            ->with(['customer', 'transaction'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+            $orders = Order::where('store_id', $storeId)
+                ->whereIn('order_status', ['delivered', 'refunded'])
+                ->whereBetween('created_at', [$from, $to])
+                ->orderBy('created_at', 'desc')
+                ->get(['id', 'order_amount', 'order_status', 'order_type', 'payment_method', 'created_at']);
 
-        $ordersFormatted = Helpers::order_data_formatting($orders, true);
+            // Respuesta ligera (sin order_data_formatting) para evitar errores con relaciones/details.
+            $ordersList = $orders->map(static function ($o) {
+                return [
+                    'id' => $o->id,
+                    'order_amount' => (float) $o->order_amount,
+                    'order_status' => $o->order_status,
+                    'order_type' => $o->order_type,
+                    'payment_method' => $o->payment_method,
+                    'created_at' => $o->created_at?->format('Y-m-d H:i:s'),
+                ];
+            })->values()->all();
 
-        return response()->json([
-            'from' => $from->format('Y-m-d'),
-            'to' => $to->format('Y-m-d'),
-            'total_orders' => $orders->count(),
-            'gross_sales' => round((float) $orders->sum('order_amount'), 2),
-            'orders' => $ordersFormatted,
-        ], 200);
+            return response()->json([
+                'from' => $from->format('Y-m-d'),
+                'to' => $to->format('Y-m-d'),
+                'total_orders' => $orders->count(),
+                'gross_sales' => round((float) $orders->sum('order_amount'), 2),
+                'orders' => $ordersList,
+            ], 200);
+        } catch (\Throwable $e) {
+            \Log::error('get_sales_report: '.$e->getMessage(), ['trace' => $e->getTraceAsString()]);
+
+            return response()->json([
+                'errors' => [['code' => 'sales_report', 'message' => 'Could not build sales report']],
+            ], 500);
+        }
     }
 
     public function get_canceled_orders(Request $request)
