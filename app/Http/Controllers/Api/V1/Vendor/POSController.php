@@ -17,6 +17,7 @@ use App\Models\OrderDetail;
 use App\Models\StorePosCustomer;
 use App\Models\User;
 use App\Scopes\StoreScope;
+use App\Services\MapboxDirectionsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -743,6 +744,9 @@ class POSController extends Controller
      *   - Si hay config por módulo/zona: tarifas del módulo (fija o por km)
      *   - Fallback: BusinessSetting globales
      *
+     * Distancia para tarifa por km: Mapbox Directions (driving-traffic) si MAPBOX_ACCESS_TOKEN
+     * está configurado; si no, línea recta (Haversine).
+     *
      * GET /api/v1/vendor/pos/delivery-fee-estimate?lat=X&lng=Y
      */
     public function deliveryFeeEstimate(Request $request)
@@ -763,8 +767,28 @@ class POSController extends Controller
         $storeLat    = (float) $store->latitude;
         $storeLng    = (float) $store->longitude;
 
-        // Distancia en km (Haversine)
-        $distanceKm = round(Helpers::get_distance($storeLat, $storeLng, $customerLat, $customerLng), 2);
+        // Distancia: ruta Mapbox (tráfico) o fallback Haversine
+        $haversineKm = round(Helpers::get_distance($storeLat, $storeLng, $customerLat, $customerLng), 2);
+        $distanceKm = $haversineKm;
+        $routingSource = 'haversine_fallback';
+        $estimatedDurationSeconds = null;
+        $estimatedDurationMinutes = null;
+
+        $storeHasCoords = ($storeLat != 0.0 || $storeLng != 0.0);
+        if ($storeHasCoords) {
+            $route = app(MapboxDirectionsService::class)->drivingTrafficRoute(
+                $storeLng,
+                $storeLat,
+                $customerLng,
+                $customerLat
+            );
+            if (is_array($route)) {
+                $distanceKm = $route['distance_km'];
+                $estimatedDurationSeconds = $route['duration_seconds'];
+                $estimatedDurationMinutes = $route['duration_minutes'];
+                $routingSource = 'mapbox_driving_traffic';
+            }
+        }
 
         // Determinar tarifas aplicables
         $chargeType  = 'distance';
@@ -855,6 +879,10 @@ class POSController extends Controller
             'surcharge'            => $surcharge,
             'total_fee'            => $totalFee,
             'distance_km'          => $distanceKm,
+            'straight_line_distance_km' => $haversineKm,
+            'routing_source'       => $routingSource,
+            'estimated_duration_seconds' => $estimatedDurationSeconds,
+            'estimated_duration_minutes' => $estimatedDurationMinutes,
             'charge_type'          => $chargeType,
             'has_membership'       => $hasMembership,
             'membership_days_left' => $membershipDaysLeft,

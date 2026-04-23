@@ -44,6 +44,9 @@ class StorePosDummyItemService
             return;
         }
 
+        // Sincronizar PNG compartido antes de comprobar existencia (actualiza storage en despliegues nuevos).
+        self::ensureSharedPlaceholderFile();
+
         if (self::alreadyExists($store->id)) {
             return;
         }
@@ -57,8 +60,6 @@ class StorePosDummyItemService
 
             return;
         }
-
-        self::ensureSharedPlaceholderFile();
 
         $unitId = Unit::query()->orderBy('id')->value('id');
 
@@ -160,21 +161,40 @@ class StorePosDummyItemService
             ->value('id');
     }
 
+    /**
+     * Imagen por defecto versionada en el repo: public/assets/tootli/pos-articulo-personalizado.png
+     * Se copia a storage/app/public/product/ para que image_full_url responda en la API.
+     */
     private static function ensureSharedPlaceholderFile(): void
     {
         $disk = Storage::disk(self::SHARED_PLACEHOLDER_DISK);
-        if ($disk->exists(self::SHARED_PLACEHOLDER_PATH)) {
-            return;
-        }
-
         $dir = dirname(self::SHARED_PLACEHOLDER_PATH);
         if (! $disk->exists($dir)) {
             $disk->makeDirectory($dir);
         }
 
-        // PNG 1×1 transparente (placeholder).
+        $bundle = public_path('assets/tootli/pos-articulo-personalizado.png');
+        if (is_file($bundle)) {
+            $disk->put(self::SHARED_PLACEHOLDER_PATH, (string) file_get_contents($bundle));
+
+            return;
+        }
+
+        if ($disk->exists(self::SHARED_PLACEHOLDER_PATH)) {
+            return;
+        }
+
+        // PNG 1×1 transparente (solo si no hay bundle en public/).
         $png = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', true);
         $disk->put(self::SHARED_PLACEHOLDER_PATH, $png !== false ? $png : '');
+    }
+
+    /**
+     * Sincroniza de nuevo el PNG del artículo personalizado (p. ej. tras desplegar assets nuevos).
+     */
+    public static function syncPlaceholderImageFromPublicBundle(): void
+    {
+        self::ensureSharedPlaceholderFile();
     }
 
     private static function insertTranslations(int $itemId): void
