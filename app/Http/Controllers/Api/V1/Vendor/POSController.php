@@ -361,6 +361,10 @@ class POSController extends Controller
                 return response()->json(['errors' => [['code' => 'item', 'message' => "Producto {$c['item_id']} no encontrado."]]], 422);
             }
 
+            if ((int) $product->store_id !== (int) $store->id) {
+                return response()->json(['errors' => [['code' => 'item', 'message' => 'El producto no pertenece a esta tienda.']]], 422);
+            }
+
             // Precio Tootli Direct (menu_price) siempre en POS
             $base_price = Helpers::item_price_for_context($product, 'direct');
 
@@ -395,6 +399,17 @@ class POSController extends Controller
                 }
                 $variationForDb = json_encode([$cartVariation ?? null]);
             }
+
+            if ($product->pos_variable_price) {
+                $custom = isset($c['custom_unit_price']) ? (float) $c['custom_unit_price'] : 0.0;
+                if ($custom <= 0 || $custom > 99999999) {
+                    return response()->json(['errors' => [['code' => 'price', 'message' => 'Se requiere un precio unitario válido para este producto (precio variable).']]], 422);
+                }
+                $base_price = $custom;
+            }
+
+            $lineNote = isset($c['line_note']) ? trim((string) $c['line_note']) : '';
+            $lineNote = $lineNote === '' ? null : Str::limit($lineNote, 255, '');
 
             $product->tax = $store->tax;
             $formatted    = Helpers::product_data_formatting($product);
@@ -431,7 +446,7 @@ class POSController extends Controller
                 'add_ons'                => json_encode($addon_data['addons']),
                 'total_add_on_price'     => round($addon_data['total_add_on_price'], $round),
                 'addon_discount'         => 0,
-                'request_note'           => null,
+                'request_note'           => $lineNote,
                 'delivery_status'        => 'pending',
                 'created_at'             => now(),
                 'updated_at'             => now(),
@@ -707,6 +722,8 @@ class POSController extends Controller
             'available_time_ends'   => $product->available_time_ends,
             'maximum_cart_quantity' => $product->maximum_cart_quantity,
             'module_type'     => $product->module->module_type ?? null,
+            'pos_only'        => (bool) ($product->pos_only ?? false),
+            'pos_variable_price' => (bool) ($product->pos_variable_price ?? false),
             'food_variations' => $product->food_variations ? json_decode($product->food_variations, true) : null,
             'variations'      => $product->variations      ? json_decode($product->variations, true)      : null,
             'add_ons'         => $product->addOns ? $product->addOns->map(fn($a) => [

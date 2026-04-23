@@ -65,7 +65,7 @@ class BannerLogic
                 }
             }
             if ($banner->type == 'item_wise') {
-                $item = Item::active()
+                $item = Item::active()->visibleInCustomerApp()
                     ->when(config('module.current_module_data'), function ($query) use ($zone_id) {
                         $query->whereHas('module.zones', function ($query) use ($zone_id) {
                             $query->whereIn('zones.id', json_decode($zone_id, true));

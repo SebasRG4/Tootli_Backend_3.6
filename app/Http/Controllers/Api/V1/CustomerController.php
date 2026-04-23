@@ -340,7 +340,7 @@ class CustomerController extends Controller
         $interest = $request->user()->interest;
         $interest = isset($interest) ? json_decode($interest) : null;
 
-        $products = Item::active()->whereHas('store', function ($q) use ($zone_ids) {
+        $products = Item::active()->visibleInCustomerApp()->whereHas('store', function ($q) use ($zone_ids) {
             $q->whereIn('zone_id', $zone_ids);
         })
             ->when(isset($interest), function ($q) use ($interest) {

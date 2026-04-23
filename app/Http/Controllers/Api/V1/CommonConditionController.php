@@ -44,7 +44,7 @@ class CommonConditionController extends Controller
 
             if($common_condition_default_status  != 1 &&  $common_condition_sort_by_general == 'order_count'){
                 foreach ($conditions as $condition) {
-                    $productCountQuery = Item::active()
+                    $productCountQuery = Item::active()->visibleInCustomerApp()
                         ->whereHas('pharmacy_item_details',function($q)use($condition){
                             return $q->whereHas('common_condition',function($q)use($condition){
                                 return $q->when(is_numeric($condition->id),function ($qurey) use($condition){

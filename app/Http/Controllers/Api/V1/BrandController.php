@@ -59,7 +59,7 @@ class BrandController extends Controller
 
             if($brand_default_status  != 1 &&  $brand_sort_by_general == 'order_count'){
                 foreach ($brands as $brand) {
-                    $productCountQuery = Item::active()
+                    $productCountQuery = Item::active()->visibleInCustomerApp()
                         ->whereHas('ecommerce_item_details',function($q)use($brand){
                             return $q->whereHas('brand',function($q)use($brand){
                                 return $q->when(is_numeric($brand->id),function ($qurey) use($brand){

@@ -31,7 +31,7 @@ class Item extends Model
      */
     public function shouldBeSearchable(): bool
     {
-        return $this->status == 1 && $this->is_approved == 1;
+        return $this->status == 1 && $this->is_approved == 1 && ! (bool) ($this->pos_only ?? false);
     }
 
     /**
@@ -89,6 +89,8 @@ class Item extends Model
         'unit_id' => 'integer',
         'is_halal' => 'integer',
         'weight' => 'float',
+        'pos_only' => 'boolean',
+        'pos_variable_price' => 'boolean',
     ];
 
     protected $appends = ['unit_type', 'image_full_url', 'images_full_url'];
@@ -156,6 +158,16 @@ class Item extends Model
                             });
                     });
             });
+    }
+
+    /**
+     * Excluye productos marcados solo para Tootli Direct / POS (no deben listarse en la app cliente).
+     */
+    public function scopeVisibleInCustomerApp($query)
+    {
+        return $query->where(function ($q) {
+            $q->where('pos_only', false)->orWhereNull('pos_only');
+        });
     }
     public function scopePopular($query)
     {

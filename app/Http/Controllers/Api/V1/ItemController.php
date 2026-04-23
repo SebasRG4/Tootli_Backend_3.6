@@ -120,7 +120,7 @@ class ItemController extends Controller
         $max = $request->query('max_price');
         $rating_count = $request->query('rating_count');
 
-        $query = Item::active()->type($type)
+        $query = Item::active()->visibleInCustomerApp()->type($type)
             ->with('store', function ($query) {
                 $query->withCount([
                     'campaigns' => function ($query) {
@@ -316,7 +316,7 @@ class ItemController extends Controller
 
         $type = $request->query('type', 'all');
 
-        $items = Item::active()->type($type)
+        $items = Item::active()->visibleInCustomerApp()->type($type)
 
             ->when($request->category_id, function ($query) use ($request) {
                 $query->whereHas('category', function ($q) use ($request) {
@@ -545,7 +545,7 @@ class ItemController extends Controller
     {
         try {
 
-            $item = Item::withCount('whislists')->with(['tags', 'nutritions', 'allergies', 'reviews', 'reviews.customer'])->active()
+            $item = Item::withCount('whislists')->with(['tags', 'nutritions', 'allergies', 'reviews', 'reviews.customer'])->active()->visibleInCustomerApp()
                 ->when(config('module.current_module_data'), function ($query) {
                     $query->module(config('module.current_module_data')['id']);
                 })
@@ -644,7 +644,7 @@ class ItemController extends Controller
     public function get_set_menus()
     {
         try {
-            $items = Helpers::product_data_formatting(Item::active()->with(['rating'])->where(['set_menu' => 1, 'status' => 1])->get(), true, false, app()->getLocale());
+            $items = Helpers::product_data_formatting(Item::active()->visibleInCustomerApp()->with(['rating'])->where(['set_menu' => 1, 'status' => 1])->get(), true, false, app()->getLocale());
             return response()->json($items, 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -810,7 +810,7 @@ class ItemController extends Controller
         }
         $key = explode(' ', $request->name);
 
-        $items = Item::active()->whereHas('store', function ($query) use ($zone_id) {
+        $items = Item::active()->visibleInCustomerApp()->whereHas('store', function ($query) use ($zone_id) {
             $query->when(config('module.current_module_data'), function ($query) {
                 $query->where('module_id', config('module.current_module_data')['id'])->whereHas('zone.modules', function ($query) {
                     $query->where('modules.id', config('module.current_module_data')['id']);
@@ -975,7 +975,7 @@ class ItemController extends Controller
                     $q->where('slug', $request->store_id);
                 });
             })
-            ->active()->type($type)->latest()->paginate($limit, ['*'], 'page', $offset);
+            ->active()->visibleInCustomerApp()->type($type)->latest()->paginate($limit, ['*'], 'page', $offset);
         $data = [
             'total_size' => $paginator->total(),
             'limit' => $limit,

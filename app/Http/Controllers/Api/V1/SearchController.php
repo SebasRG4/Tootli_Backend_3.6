@@ -45,7 +45,7 @@ class SearchController extends Controller
         $max = $request->query('max_price');
         $rating_count = $request->query('rating_count');
 
-        $items = Item::active()->type($type)
+        $items = Item::active()->visibleInCustomerApp()->type($type)
             ->with('store', function ($query) {
                 $query->withCount(['campaigns' => function ($query) {
                     $query->Running();

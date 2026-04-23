@@ -52,7 +52,7 @@ class ProductLogic
 
     public static function get_product($id)
     {
-        return Item::active()
+        return Item::active()->visibleInCustomerApp()
             ->when(config('module.current_module_data'), function ($query) {
                 $query->module(config('module.current_module_data')['id']);
             })
@@ -120,7 +120,7 @@ class ProductLogic
                     ->from('stores')
                     ->whereColumn('stores.id', 'items.store_id');
             }, 'temp_available')
-            ->active()->type($type)
+            ->active()->visibleInCustomerApp()->type($type)
 
             ->when($filter && in_array('popular', $filter), function ($qurey) {
                 $qurey->popular();
@@ -218,7 +218,7 @@ class ProductLogic
                     ->from('stores')
                     ->whereColumn('stores.id', 'items.store_id');
             }, 'temp_available')
-            ->active()->type($type);
+            ->active()->visibleInCustomerApp()->type($type);
 
         if ($latest_items_default_status == '1') {
             $query = $query->latest();
@@ -358,7 +358,7 @@ class ProductLogic
                     ->from('stores')
                     ->whereColumn('stores.id', 'items.store_id');
             }, 'temp_available')
-            ->active()->type($type);
+            ->active()->visibleInCustomerApp()->type($type);
 
         if ($latest_items_default_status == '1') {
             $query = $query->latest();
@@ -420,7 +420,7 @@ class ProductLogic
     public static function get_related_products($zone_id, $product_id)
     {
         $product = Item::find($product_id);
-        return Item::active()
+        return Item::active()->visibleInCustomerApp()
             ->whereHas('module.zones', function ($query) use ($zone_id) {
                 $query->whereIn('zones.id', json_decode($zone_id, true));
             })
@@ -439,7 +439,7 @@ class ProductLogic
     public static function get_related_store_products($zone_id, $product_id)
     {
         $product = Item::find($product_id);
-        return Item::active()
+        return Item::active()->visibleInCustomerApp()
             ->whereHas('module.zones', function ($query) use ($zone_id) {
                 $query->whereIn('zones.id', json_decode($zone_id, true));
             })
@@ -470,7 +470,7 @@ class ProductLogic
                             $query->where('modules.id', config('module.current_module_data')['id']);
                         });
                     })->whereIn('zone_id', json_decode($zone_id, true));
-                })->active()->type($type)->Recommended()
+                })->active()->visibleInCustomerApp()->type($type)->Recommended()
                 ->when($filter == 'new_arrival', function ($qurey) {
                     $qurey->latest();
                 })
@@ -485,7 +485,7 @@ class ProductLogic
         } else {
             $paginator = Item::when(isset($store_id), function ($q) use ($store_id) {
                 $q->where('store_id', $store_id);
-            })->active()->type($type)->whereHas('store', function ($query) use ($zone_id) {
+            })->active()->visibleInCustomerApp()->type($type)->whereHas('store', function ($query) use ($zone_id) {
                 $query->when(config('module.current_module_data'), function ($query) {
                     $query->where('module_id', config('module.current_module_data')['id'])->whereHas('zone.modules', function ($query) {
                         $query->where('modules.id', config('module.current_module_data')['id']);
@@ -560,7 +560,7 @@ class ProductLogic
                     ->from('stores')
                     ->whereColumn('stores.id', 'items.store_id');
             }, 'temp_available')
-            ->active()->type($type);
+            ->active()->visibleInCustomerApp()->type($type);
 
         $query = self::filterQurey($query, $filter, $min ?? 0, $max, $category_ids, $rating_count, $withCount, $search);
 
@@ -634,7 +634,7 @@ class ProductLogic
                     ->from('stores')
                     ->whereColumn('stores.id', 'items.store_id');
             }, 'temp_available')
-            ->withCount('reviews')->active()->type($type)
+            ->withCount('reviews')->active()->visibleInCustomerApp()->type($type)
             ->having('reviews_count', '>', 0);
 
         $query = self::filterQurey($query, $filter, $min ?? 0, $max, $category_ids, $rating_count, $withCount, $search);
@@ -715,7 +715,7 @@ class ProductLogic
                         return $qurey->has('activeCoupons');
                     });
             })
-            ->Discounted()->active()->type($type);
+            ->Discounted()->active()->visibleInCustomerApp()->type($type);
         $query = self::filterQurey($query, $filter, $min ?? 0, $max, $category_ids, $rating_count, $withCount, $search);
 
 
@@ -880,7 +880,7 @@ class ProductLogic
                     ->when($filter && in_array('coupon', $filter), function ($qurey) {
                         return $qurey->has('activeCoupons');
                     });
-            })->active()->type($type)
+            })->active()->visibleInCustomerApp()->type($type)
             ->when($rating_count, function ($query) use ($rating_count) {
                 return $query->where('avg_rating', '>=', $rating_count);
             })
@@ -1151,7 +1151,10 @@ class ProductLogic
     {
         $data = [];
         if ($limit != null && $offset != null) {
-            $paginator = Item::where('store_id', $store_id)->whereHas('store', function ($query) use ($zone_id) {
+            $paginator = Item::where('store_id', $store_id)
+                ->active()
+                ->visibleInCustomerApp()
+                ->whereHas('store', function ($query) use ($zone_id) {
                 $query->when(config('module.current_module_data'), function ($query) {
                     $query->where('module_id', config('module.current_module_data')['id'])->whereHas('zone.modules', function ($query) {
                         $query->where('modules.id', config('module.current_module_data')['id']);
@@ -1166,7 +1169,7 @@ class ProductLogic
                 ->paginate($limit, ['*'], 'page', $offset);
             $data = $paginator->items();
         } else {
-            $paginator = Item::where('store_id', $store_id)->active()->type($type)->whereHas('store', function ($query) use ($zone_id) {
+            $paginator = Item::where('store_id', $store_id)->active()->visibleInCustomerApp()->type($type)->whereHas('store', function ($query) use ($zone_id) {
                 $query->when(config('module.current_module_data'), function ($query) {
                     $query->where('module_id', config('module.current_module_data')['id'])->whereHas('zone.modules', function ($query) {
                         $query->where('modules.id', config('module.current_module_data')['id']);
@@ -1200,7 +1203,7 @@ class ProductLogic
         if (isset($category_id) && ($category_id != 0)) {
             $category_id = explode(',', $category_id);
         }
-        $query = Item::active()->type($type)
+        $query = Item::active()->visibleInCustomerApp()->type($type)
             ->whereHas('pharmacy_item_details', function ($query) {
                 $query->where('is_basic', 1);
             })
@@ -1238,8 +1241,7 @@ class ProductLogic
                 $subQuery->selectRaw('active as temp_available')
                     ->from('stores')
                     ->whereColumn('stores.id', 'items.store_id');
-            }, 'temp_available')
-            ->active()->type($type);
+            }, 'temp_available');
 
         if ($basic_medicine_default_status == '1') {
             $query = $query->popular();
@@ -1312,7 +1314,7 @@ class ProductLogic
         $module_id = config('module.current_module_data')['id'] ?? null;
         $maxRadiusKm = self::getMaxDeliveryRadius($zone_id, $module_id);
 
-        $query = Item::active()
+        $query = Item::active()->visibleInCustomerApp()
             ->whereHas('module.zones', function ($query) use ($zone_id) {
                 $query->whereIn('zones.id', json_decode($zone_id, true));
             })

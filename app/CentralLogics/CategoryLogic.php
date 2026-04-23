@@ -96,7 +96,7 @@ class CategoryLogic
                     ->from('stores')
                     ->whereColumn('stores.id', 'items.store_id');
             }, 'temp_available')
-            ->active()->type($type);
+            ->active()->visibleInCustomerApp()->type($type);
 
         if ($category_sub_category_item_default_status == '1') {
             $query = $query->latest();
@@ -198,7 +198,7 @@ class CategoryLogic
                     ->from('stores')
                     ->whereColumn('stores.id', 'items.store_id');
             }, 'temp_available')
-            ->active()->type($type);
+            ->active()->visibleInCustomerApp()->type($type);
 
         $query = $query->when($rating_count, function ($query) use ($rating_count) {
             return $query->where('avg_rating', '>=', $rating_count);
@@ -312,7 +312,7 @@ class CategoryLogic
                     return $query->whereIn('zone_id', json_decode($zone_id, true));
                 }
             })
-            ->active()->type($type)
+            ->active()->visibleInCustomerApp()->type($type)
 
             ->when($filter && in_array('free_delivery', $filter), function ($qurey) {
                 return $qurey->where('free_delivery', 1);
@@ -432,7 +432,7 @@ class CategoryLogic
                     $query->whereIn('zone_id', json_decode($zone_id, true));
                 }
             })
-            ->active()->type($type)
+            ->active()->visibleInCustomerApp()->type($type)
             ->latest();
 
         // Apply radius filter if not all_zone_service
@@ -501,6 +501,8 @@ class CategoryLogic
         $all_zone_service = $current_module ? (bool) $current_module['all_zone_service'] : false;
 
         return Item::whereIn('category_id', $cate_ids)
+            ->active()
+            ->visibleInCustomerApp()
             ->when(!$all_zone_service, function ($query) use ($zone_id) {
                 $query->whereHas('module.zones', function ($query) use ($zone_id) {
                     $query->whereIn('zones.id', json_decode($zone_id, true));
@@ -524,7 +526,7 @@ class CategoryLogic
         $current_module = config('module.current_module_data');
         $all_zone_service = $current_module ? (bool) ($current_module['all_zone_service'] || (config('module.' . $current_module['module_type'] . '.all_zone_service') ?? false)) : false;
 
-        $paginator = Item::active()->type($type)
+        $paginator = Item::active()->visibleInCustomerApp()->type($type)
             ->when(!$all_zone_service, function ($query) use ($zone_id) {
                 $query->whereHas('module.zones', function ($query) use ($zone_id) {
                     $query->whereIn('zones.id', json_decode($zone_id, true));
@@ -550,7 +552,7 @@ class CategoryLogic
 
             ->latest()->paginate($limit, ['*'], 'page', $offset);
 
-        $item_categories = Item::active()->type($type)
+        $item_categories = Item::active()->visibleInCustomerApp()->type($type)
             ->when(!$all_zone_service, function ($query) use ($zone_id) {
                 $query->whereHas('module.zones', function ($query) use ($zone_id) {
                     $query->whereIn('zones.id', json_decode($zone_id, true));
