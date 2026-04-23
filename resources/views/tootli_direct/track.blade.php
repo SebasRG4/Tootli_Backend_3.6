@@ -477,7 +477,7 @@
     <header class="td-header">
         <div class="td-header__row">
             <button type="button" class="td-icon-btn" onclick="history.length > 1 ? history.back() : (window.location.href='https://tootli.mx')" aria-label="Cerrar">×</button>
-            <span class="td-header__title">tootli-tracking</span>
+            <span class="td-header__title">Tiempo real pedido</span>
             <button type="button" class="td-icon-btn" id="btn-more" aria-label="Más opciones">⋯</button>
         </div>
         <div class="td-header__brand">TOOTLI DIRECTO</div>
