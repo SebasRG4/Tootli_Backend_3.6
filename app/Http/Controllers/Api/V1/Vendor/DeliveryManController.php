@@ -122,6 +122,12 @@ class DeliveryManController extends Controller
             $identity_image = json_encode([]);
         }
 
+        if (count(json_decode($identity_image, true) ?: []) < 2) {
+            return response()->json([
+                'errors' => [['code' => 'identity_image', 'message' => translate('messages.identity_images_two_sides_required')]],
+            ], 403);
+        }
+
         $dm = New DeliveryMan();
         $dm->f_name = $request->f_name;
         $dm->l_name = $request->l_name;
@@ -254,6 +260,11 @@ class DeliveryManController extends Controller
             foreach ($request->identity_image as $img) {
                 $identity_image = Helpers::upload('delivery-man/', 'png', $img);
                 array_push($img_keeper, ['img'=>$identity_image, 'storage'=> Helpers::getDisk()]);
+            }
+            if (count($img_keeper) < 2) {
+                return response()->json([
+                    'errors' => [['code' => 'identity_image', 'message' => translate('messages.identity_images_two_sides_required')]],
+                ], 403);
             }
             $identity_image = json_encode($img_keeper);
         } else {

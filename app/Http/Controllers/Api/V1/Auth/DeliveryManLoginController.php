@@ -154,6 +154,12 @@ class DeliveryManLoginController extends Controller
             $identity_image = json_encode([]);
         }
 
+        if (count(json_decode($identity_image, true) ?: []) < 2) {
+            return response()->json([
+                'errors' => [['code' => 'identity_image', 'message' => translate('messages.identity_images_two_sides_required')]],
+            ], 403);
+        }
+
         $dm = new DeliveryMan();
         $dm->f_name = $request->f_name;
         $dm->l_name = $request->l_name;
@@ -190,6 +196,22 @@ class DeliveryManLoginController extends Controller
 
         $dm->save();
 
+        $token = Str::random(120);
+        $dm->auth_token = $token;
+        $dm->save();
+        $dm->load('zone');
+
+        $topic = 'restaurant_dm_' . $dm?->store_id;
+        $zone_topic = '';
+        if (isset($dm->zone)) {
+            if ($dm->vehicle_id) {
+                $topic = 'delivery_man_' . $dm->zone->id . '_' . $dm->vehicle_id;
+            } else {
+                $topic = $dm->type == 'zone_wise' ? $dm->zone->deliveryman_wise_topic : 'restaurant_dm_' . $dm->store_id;
+            }
+            $zone_topic = $dm->type == 'zone_wise' ? $dm->zone->deliveryman_wise_topic . '_push' : '';
+        }
+
         try {
             $admin = Admin::where('role_id', 1)->first();
             $mail_status = Helpers::get_mail_status('registration_mail_status_dm');
@@ -214,6 +236,9 @@ class DeliveryManLoginController extends Controller
             'message' => translate('messages.deliveryman_added_successfully'),
             'services_requested' => $services,
             'taxi_verification_required' => $canDriveTaxi,
+            'token' => $token,
+            'topic' => $topic ?? 'No_topic_found',
+            'zone_topic' => $zone_topic,
         ], 200);
     }
 }

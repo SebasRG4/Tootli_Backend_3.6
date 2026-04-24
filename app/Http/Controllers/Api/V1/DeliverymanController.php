@@ -62,6 +62,10 @@ class DeliverymanController extends Controller
             return response()->json($this->deliveryManRevisionProfilePayload($dm), 200);
         }
 
+        if ($dm->application_status === 'pending' && ! $dm->registration_revision_allowed) {
+            return response()->json($this->deliveryManPendingRegistrationProfilePayload($dm), 200);
+        }
+
         $min_amount_to_pay_dm = BusinessSetting::where('key', 'min_amount_to_pay_dm')->first()->value ?? 0;
         $dm['avg_rating'] = (float) (!empty($dm->rating[0]) ? $dm->rating[0]->average : 0);
         $dm['rating_count'] = (float) (!empty($dm->rating[0]) ? $dm->rating[0]->rating_count : 0);
@@ -274,7 +278,22 @@ class DeliverymanController extends Controller
                 $identity_image = Helpers::upload('delivery-man/', 'png', $img);
                 $id_img_names[] = ['img' => $identity_image, 'storage' => Helpers::getDisk()];
             }
+            if (count($id_img_names) < 2) {
+                return response()->json([
+                    'errors' => [['code' => 'identity_image', 'message' => translate('messages.identity_images_two_sides_required')]],
+                ], 403);
+            }
             $dm->identity_image = json_encode($id_img_names);
+        } else {
+            $existingIds = json_decode($dm->identity_image ?? '[]', true);
+            if (! is_array($existingIds)) {
+                $existingIds = [];
+            }
+            if (count($existingIds) < 2) {
+                return response()->json([
+                    'errors' => [['code' => 'identity_image', 'message' => translate('messages.identity_images_two_sides_required')]],
+                ], 403);
+            }
         }
 
         if ($request->filled('password')) {
@@ -317,6 +336,60 @@ class DeliverymanController extends Controller
         }
 
         return response()->json(['message' => translate('messages.registration_revision_submitted')], 200);
+    }
+
+    protected function deliveryManPendingRegistrationProfilePayload(DeliveryMan $dm): array
+    {
+        $dm->loadMissing(['rating']);
+        $avg = (float) (! empty($dm->rating[0]) ? $dm->rating[0]->average : 0);
+        $ratingCount = (float) (! empty($dm->rating[0]) ? $dm->rating[0]->rating_count : 0);
+
+        return [
+            'id' => $dm->id,
+            'f_name' => $dm->f_name,
+            'l_name' => $dm->l_name,
+            'phone' => $dm->phone,
+            'email' => $dm->email,
+            'identity_number' => $dm->identity_number,
+            'identity_type' => $dm->identity_type,
+            'identity_image_full_url' => $dm->identity_image_full_url,
+            'image_full_url' => $dm->image_full_url,
+            'zone_id' => $dm->zone_id,
+            'vehicle_id' => $dm->vehicle_id,
+            'earning' => $dm->earning,
+            'type' => $dm->type,
+            'active' => $dm->active,
+            'application_status' => $dm->application_status,
+            'registration_revision_required' => false,
+            'pending_registration_browse' => true,
+            'registration_revision_message' => null,
+            'can_deliver' => $dm->can_deliver,
+            'can_drive_taxi' => $dm->can_drive_taxi,
+            'taxi_license_number' => $dm->taxi_license_number,
+            'taxi_license_expiry' => $dm->taxi_license_expiry,
+            'avg_rating' => $avg,
+            'rating_count' => $ratingCount,
+            'member_since_days' => (int) $dm->created_at->diffInDays(),
+            'order_count' => 0,
+            'todays_order_count' => 0,
+            'this_week_order_count' => 0,
+            'todays_earning' => 0.0,
+            'this_week_earning' => 0.0,
+            'this_month_earning' => 0.0,
+            'cash_in_hands' => 0.0,
+            'balance' => 0.0,
+            'Payable_Balance' => 0.0,
+            'adjust_able' => false,
+            'over_flow_warning' => false,
+            'over_flow_block_warning' => false,
+            'withdraw_able_balance' => 0.0,
+            'total_withdrawn' => 0.0,
+            'show_pay_now_button' => false,
+            'show_withdraw_button' => false,
+            'pending_withdraw' => 0.0,
+            'dm_max_cash_in_hand' => 0.0,
+            'referal_earning' => 0.0,
+        ];
     }
 
     protected function deliveryManRevisionProfilePayload(DeliveryMan $dm): array

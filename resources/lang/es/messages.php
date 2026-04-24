@@ -521,6 +521,7 @@
   'store_id' => 'Store id',
   'identity_number' => 'Identity number',
   'identity_image' => 'Identity image',
+  'identity_images_two_sides_required' => 'Sube las dos caras de tu identificación (frente y reverso), mínimo dos fotos.',
   'login_information' => 'Login information',
   'pending_delivery_man' => 'Pending delivery man',
   'denied_deliveryman' => 'Denied deliveryman',
