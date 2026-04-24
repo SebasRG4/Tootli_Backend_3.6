@@ -37,6 +37,7 @@ use App\Http\Controllers\Admin\Customer\WalletBonusController;
 use App\Http\Controllers\Admin\Item\CommonConditionController;
 use App\Http\Controllers\Admin\DeliveryMan\DmVehicleController;
 use App\Http\Controllers\Admin\DeliveryMan\DeliveryManController;
+use App\Http\Controllers\Admin\DeliveryMan\DeliveryStrikeIncidentController;
 use App\Http\Controllers\Admin\Item\AddonCategoryController;
 use App\Http\Controllers\Admin\Promotion\AdvertisementController;
 use App\Http\Controllers\Admin\Notification\NotificationController;
@@ -350,6 +351,16 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                     Route::get(DeliveryMan::DENY[URI], [DeliveryManController::class, 'getDeniedDeliveryManView'])->name('deny');
                     Route::get(DeliveryMan::PREVIEW[URI] . '/{id}/{tab?}', [DeliveryManController::class, 'getPreview'])->name('preview');
                     Route::get(DeliveryMan::STATUS[URI] . '/{id}/{status}', [DeliveryManController::class, 'updateStatus'])->name('status');
+                    Route::post('update-tier/{id}', [DeliveryManController::class, 'updateTier'])->name('update-tier');
+                    Route::post('{id}/strike-event', [DeliveryManController::class, 'storeStrikeEvent'])->name('store-strike-event');
+                    Route::post('{id}/strike-suspension', [DeliveryManController::class, 'updateStrikeSuspension'])->name('update-strike-suspension');
+                    Route::group(['prefix' => 'strike', 'as' => 'strike.'], function () {
+                        Route::get('incident-types', [DeliveryStrikeIncidentController::class, 'incidentTypesIndex'])->name('incident-types.index');
+                        Route::post('incident-types', [DeliveryStrikeIncidentController::class, 'incidentTypeStore'])->name('incident-types.store');
+                        Route::post('incident-types/{id}', [DeliveryStrikeIncidentController::class, 'incidentTypeUpdate'])->name('incident-types.update');
+                        Route::get('appeals', [DeliveryStrikeIncidentController::class, 'appealsIndex'])->name('appeals.index');
+                        Route::post('appeals/{id}/resolve', [DeliveryStrikeIncidentController::class, 'appealResolve'])->name('appeals.resolve');
+                    });
                     Route::get(DeliveryMan::EARNING[URI] . '/{id}/{status}', [DeliveryManController::class, 'updateEarning'])->name('earning');
                     Route::get(DeliveryMan::UPDATE_APPLICATION[URI] . '/{id}/{status}', [DeliveryManController::class, 'updateApplication'])->name('application');
                     Route::post(DeliveryMan::REQUEST_REGISTRATION_REVISION[URI] . '/{id}', [DeliveryManController::class, 'requestRegistrationRevision'])->name('request-registration-revision');

@@ -274,6 +274,9 @@
                     @endif
                 </div>
 
+                @if ($deliveryMan->application_status == 'approved')
+                    @include('admin-views.delivery-man.partials._assignment_admin_panel')
+                @endif
 
                 <div class="border rounded p-xxl-20 p-3 mt-20">
                     <div class="d-flex gap-2 align-items-center mb-20">

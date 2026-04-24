@@ -15,9 +15,12 @@ use App\Library\Receiver;
 use App\Mail\WithdrawRequestMail;
 use App\Models\AccountTransaction;
 use App\Models\Admin;
+use App\Models\AssignmentEvent;
 use App\Models\BusinessSetting;
+use App\Models\DmTierLimit;
 use App\Models\DeliveryHistory;
 use App\Models\DeliveryMan;
+use App\Models\DeliveryManStrikeEvent;
 use App\Models\DeliverymanLoyaltyPointHistory;
 use App\Models\DeliverymanReferralHistory;
 use App\Models\DeliveryManWallet;
@@ -35,7 +38,8 @@ use App\CentralLogics\MissionLogic;
 use App\Models\UserNotification;
 use App\Models\WithdrawalMethod;
 use App\Models\WithdrawRequest;
-use App\Models\Zone;
+use App\Services\DeliveryEligibility\DeliveryEligibilityService;
+use App\Services\DeliveryStrike\DeliveryStrikeService;
 use App\Services\MapboxDirectionsService;
 use App\Traits\Payment;
 use Carbon\Carbon;
@@ -47,7 +51,6 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
-use MatanYadaev\EloquentSpatial\Objects\Point;
 
 class DeliverymanController extends Controller
 {
@@ -153,6 +156,35 @@ class DeliverymanController extends Controller
         $dm['over_flow_block_warning'] = false;
         if ($Payable_Balance == 1 && $cash_in_hand_overflow && $over_flow_balance < 0 && $cash_in_hand_overflow_delivery_man < abs($dm?->wallet?->collected_cash)) {
             $dm['over_flow_block_warning'] = true;
+        }
+
+        $tierLimit = DmTierLimit::forTier($dm->dm_tier ?? 'standard');
+        $tlAttrs = $tierLimit->getAttributes();
+        $dm['dm_tier'] = $dm->dm_tier ?? 'standard';
+        $dm['dm_tier_source'] = $dm->dm_tier_source ?? 'auto';
+        if ($dm->dm_tier_reason) {
+            $dm['dm_tier_reason'] = $dm->dm_tier_reason;
+        }
+        $dm['dm_tier_limits'] = [
+            'max_concurrent_orders' => (int) $tierLimit->max_concurrent_orders,
+            'max_cash_cod' => (float) $tierLimit->max_cash_cod,
+            'max_order_value_cod' => (array_key_exists('max_order_value_cod', $tlAttrs) && $tlAttrs['max_order_value_cod'] !== null)
+                ? (float) $tlAttrs['max_order_value_cod']
+                : null,
+        ];
+
+        try {
+            $strikeSvc = app(DeliveryStrikeService::class);
+            $dm['dm_strike_summary'] = [
+                'rolling_weight' => $strikeSvc->rollingStrikeWeight($dm),
+                'block_threshold' => (int) config('dm_strikes.block_weight_threshold', 12),
+                'rolling_window_days' => (int) config('dm_strikes.rolling_window_days', 90),
+                'pending_appeals' => $strikeSvc->pendingAppealsCount($dm),
+                'blocked_by_strikes' => $strikeSvc->blocksNewAssignments($dm),
+                'delivery_suspended_until' => $dm->delivery_suspended_until?->toIso8601String(),
+            ];
+        } catch (\Throwable) {
+            $dm['dm_strike_summary'] = null;
         }
 
         unset($dm['orders']);
@@ -446,9 +478,9 @@ class DeliverymanController extends Controller
 
     public function get_latest_orders(Request $request)
     {
-        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+        $dm = DeliveryMan::with('wallet')->where(['auth_token' => $request['token']])->first();
 
-        $orders = Order::with(['customer', 'store', 'parcel_category']);
+        $orders = Order::with(['customer', 'store', 'parcel_category', 'payments']);
 
         if ($dm->type == 'zone_wise') {
             $orders = $orders->where('zone_id', $dm->zone_id)
@@ -490,6 +522,25 @@ class DeliverymanController extends Controller
             ->whereNull('delivery_man_id')
             ->orderBy('schedule_at', 'desc')
             ->get();
+
+        if (config('dm_assignment.filter_latest_orders_by_eligibility', true)) {
+            $eligibility = app(DeliveryEligibilityService::class);
+            $filtered = collect();
+            foreach ($orders as $order) {
+                $result = $eligibility->evaluateForAccept($dm, $order, null, null, skipZoneCheck: true);
+                if ($result->allowed) {
+                    $filtered->push($order);
+
+                    continue;
+                }
+                if ($result->code === 'max_orders') {
+                    $filtered = collect();
+                    break;
+                }
+            }
+            $orders = $filtered;
+        }
+
         $orders = Helpers::order_data_formatting($orders, true);
 
         return response()->json($orders, 200);
@@ -569,7 +620,11 @@ class DeliverymanController extends Controller
             // Another delivery man is currently accepting this order, or already accepted it
             return response()->json([
                 'errors' => [
-                    ['code' => 'order', 'message' => translate('messages.Another delivery man is accepting this order, please wait or try again.')],
+                    [
+                        'code' => 'order',
+                        'message_key' => 'order_lock',
+                        'message' => translate('messages.Another delivery man is accepting this order, please wait or try again.'),
+                    ],
                 ],
             ], 409); // Conflict
         }
@@ -578,62 +633,49 @@ class DeliverymanController extends Controller
         
         try {
             $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+            if (! $dm) {
+                return response()->json([
+                    'errors' => [
+                        ['code' => 'auth-001', 'message_key' => 'auth-001', 'message' => translate('messages.unauthorized')],
+                    ],
+                ], 401);
+            }
+
             $order = Order::where('id', $request['order_id'])
                 // ->whereIn('order_status', ['pending', 'confirmed'])
                 ->whereNull('delivery_man_id')
                 ->dmOrder()
                 ->first();
-            if (!$order) {
+            if (! $order) {
                 return response()->json([
                     'errors' => [
-                        ['code' => 'order', 'message' => translate('messages.can_not_accept')],
+                        [
+                            'code' => 'order',
+                            'message_key' => 'order',
+                            'message' => translate('messages.can_not_accept'),
+                        ],
                     ],
                 ], 404);
             }
 
-            if ($request->has('lat') && $request->has('lng') && $dm && $order->order_type != 'parcel') {
-                try {
-                    $zoneIds = Zone::whereContains('coordinates', new Point($request->lat, $request->lng, POINT_SRID))->pluck('id')->toArray();
-                    if (($dm->zone_id && !in_array($dm->zone_id, $zoneIds))) {
-                        return response()->json([
-                            'errors' => [
-                                ['code' => 'dm_out_of_zone', 'message' => translate('messages.You are outside the service area. Move closer to accept this order.')]
-                            ]
-                        ], 403);
-                    }
-                } catch (\Throwable $th) {
-                }
-            }
+            $lat = $request->filled('lat') ? (float) $request->input('lat') : null;
+            $lng = $request->filled('lng') ? (float) $request->input('lng') : null;
 
-
-
-            if ($dm->active != 1) {
-                return response()->json([
-                    'errors' => [
-                        ['code' => 'active_status', 'message' => translate('messages.You_can_not_accept_order_on_offline')],
-                    ],
-                ], 404);
-            }
-            if ($dm->current_orders >= config('dm_maximum_orders')) {
-                return response()->json([
-                    'errors' => [
-                        ['code' => 'dm_maximum_order_exceed', 'message' => translate('messages.dm_maximum_order_exceed_warning')],
-                    ],
-                ], 405);
-            }
-
-            $payments = $order->payments()->where('payment_method', 'cash_on_delivery')->exists();
-            $cash_in_hand = $dm?->wallet?->collected_cash ?? 0;
-            $dm_max_cash = BusinessSetting::where('key', 'dm_max_cash_in_hand')->first();
-            $value = $dm_max_cash?->value ?? 0;
-
-            if (($order->payment_method == 'cash_on_delivery' || $payments) && (($cash_in_hand + $order->order_amount) >= $value)) {
+            $eligibility = app(DeliveryEligibilityService::class)->evaluateForAccept($dm, $order, $lat, $lng);
+            if (! $eligibility->allowed) {
+                AssignmentEvent::logAcceptDenied($order, $dm, (string) $eligibility->code, [
+                    'message_key' => $eligibility->messageKey,
+                ]);
 
                 return response()->json([
                     'errors' => [
-                        ['code' => 'dm_maximum_hand_in_cash', 'message' => \App\CentralLogics\Helpers::format_currency($value) . ' ' . translate('max_cash_in_hand_exceeds')],
+                        [
+                            'code' => $eligibility->code,
+                            'message_key' => $eligibility->messageKey,
+                            'message' => $eligibility->message,
+                        ],
                     ],
-                ], 405);
+                ], $eligibility->httpStatus);
             }
 
             if ($order->order_type == 'parcel' && $order->order_status == 'confirmed') {
@@ -2268,5 +2310,71 @@ class DeliverymanController extends Controller
             ->count();
 
         return response()->json([['key' => $request->type, 'count' => $count]], 200);
+    }
+
+    public function get_strike_events(Request $request)
+    {
+        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+        if (! $dm) {
+            return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
+        }
+
+        try {
+            $perPage = (int) $request->get('limit', config('default_pagination', 25));
+            $perPage = max(1, min(100, $perPage));
+            $events = DeliveryManStrikeEvent::query()
+                ->where('delivery_man_id', $dm->id)
+                ->with(['incidentType:id,code,name,weight', 'order:id,order_status'])
+                ->orderByDesc('created_at')
+                ->paginate($perPage);
+        } catch (\Throwable) {
+            return response()->json(['errors' => [['code' => 'strike-001', 'message' => 'unavailable']]], 503);
+        }
+
+        return response()->json($events, 200);
+    }
+
+    public function submit_strike_appeal(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'appeal_text' => 'required|string|max:2000',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+        if (! $dm) {
+            return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
+        }
+
+        try {
+            $event = DeliveryManStrikeEvent::query()
+                ->where('delivery_man_id', $dm->id)
+                ->whereKey((int) $id)
+                ->first();
+        } catch (\Throwable) {
+            return response()->json(['errors' => [['code' => 'strike-001', 'message' => 'unavailable']]], 503);
+        }
+
+        if (! $event) {
+            return response()->json(['errors' => [['code' => 'strike-404', 'message' => translate('messages.not_found')]]], 404);
+        }
+
+        if ($event->appeal_status === DeliveryManStrikeEvent::APPEAL_PENDING) {
+            return response()->json(['errors' => [['code' => 'strike-409', 'message' => 'appeal_pending']]], 409);
+        }
+
+        if (in_array($event->appeal_status, [DeliveryManStrikeEvent::APPEAL_ACCEPTED, DeliveryManStrikeEvent::APPEAL_REJECTED], true)) {
+            return response()->json(['errors' => [['code' => 'strike-422', 'message' => 'appeal_closed']]], 422);
+        }
+
+        $event->update([
+            'appeal_status' => DeliveryManStrikeEvent::APPEAL_PENDING,
+            'appeal_text' => $request['appeal_text'],
+            'appealed_at' => now(),
+        ]);
+
+        return response()->json(['message' => translate('messages.updated_successfully')], 200);
     }
 }

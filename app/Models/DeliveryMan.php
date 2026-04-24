@@ -37,6 +37,8 @@ class DeliveryMan extends Authenticatable
         'identity_image' => 'array',
         'registration_revision_allowed' => 'boolean',
         'registration_revision_requested_at' => 'datetime',
+        'dm_tier_updated_at' => 'datetime',
+        'delivery_suspended_until' => 'datetime',
     ];
 
     protected $hidden = [
@@ -94,6 +96,16 @@ class DeliveryMan extends Authenticatable
     public function wallet()
     {
         return $this->hasOne(DeliveryManWallet::class);
+    }
+
+    public function adminAuditLogs()
+    {
+        return $this->hasMany(DeliveryManAdminAuditLog::class);
+    }
+
+    public function strikeEvents()
+    {
+        return $this->hasMany(DeliveryManStrikeEvent::class, 'delivery_man_id');
     }
 
     public function orders()

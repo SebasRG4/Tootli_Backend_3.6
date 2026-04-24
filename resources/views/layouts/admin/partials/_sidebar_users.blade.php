@@ -128,7 +128,7 @@
 
 
                         <li
-                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/delivery-man') || Request::is('admin/users/delivery-man/edit*') || Request::is('admin/users/delivery-man/preview*') ? 'active' : '' }}">
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/delivery-man') || Request::is('admin/users/delivery-man/edit*') || Request::is('admin/users/delivery-man/preview*') || Request::is('admin/users/delivery-man/strike*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('admin.users.delivery-man.list') }}"
                                 title="{{ translate('messages.deliveryman_list') }}">
@@ -147,6 +147,29 @@
                                 <i class="tio-star-outlined nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                                     {{ translate('messages.reviews') }}
+                                </span>
+                            </a>
+                        </li>
+
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/delivery-man/strike/incident-types*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                href="{{ route('admin.users.delivery-man.strike.incident-types.index') }}"
+                                title="{{ translate('messages.dm_strike_incident_types_title') }}">
+                                <i class="tio-warning-outlined nav-icon"></i>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                    {{ translate('messages.dm_strike_incident_types_menu') }}
+                                </span>
+                            </a>
+                        </li>
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/delivery-man/strike/appeals*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                href="{{ route('admin.users.delivery-man.strike.appeals.index') }}"
+                                title="{{ translate('messages.dm_strike_appeals_title') }}">
+                                <i class="tio-comment-outlined nav-icon"></i>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                    {{ translate('messages.dm_strike_appeals_menu') }}
                                 </span>
                             </a>
                         </li>

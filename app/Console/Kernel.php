@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('spei:cancel-expired')->everyMinute();
+        $schedule->command('dm:recalculate-tiers')->dailyAt('03:15');
     }
 
     /**

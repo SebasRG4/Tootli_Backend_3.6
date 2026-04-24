@@ -1,0 +1,27 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('assignment_events', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('order_id')->nullable()->index();
+            $table->unsignedBigInteger('delivery_man_id')->nullable()->index();
+            $table->string('event_type', 64);
+            $table->string('reason_code', 64)->nullable();
+            $table->unsignedSmallInteger('wave')->nullable();
+            $table->json('meta')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('assignment_events');
+    }
+};

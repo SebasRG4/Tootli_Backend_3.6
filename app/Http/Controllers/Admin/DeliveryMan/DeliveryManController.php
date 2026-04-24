@@ -46,10 +46,15 @@ use App\Contracts\Repositories\UserNotificationRepositoryInterface;
 use App\Exports\DeliveryManWithdrawTransactionExport;
 use App\Exports\SingleDeliveryManLoyaltyPointExport;
 use App\Mail\WithdrawRequestMail;
+use App\Models\DeliveryIncidentType;
+use App\Models\DmTierLimit;
+use App\Models\DeliveryManAdminAuditLog;
+use App\Models\DeliveryManStrikeEvent;
 use App\Models\DeliverymanLoyaltyPointHistory;
 use App\Models\DeliveryManWallet;
 use App\Models\WithdrawRequest;
 use App\Models\DeliveryMan as DeliveryManModel;
+use App\Services\DeliveryStrike\DeliveryStrikeService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -197,7 +202,21 @@ class DeliveryManController extends BaseController
 
     public function updateStatus(Request $request, UserNotificationRepositoryInterface $notificationRepo): RedirectResponse
     {
+        $dmBefore = $this->deliveryManRepo->getFirstWhere(params: ['id' => $request['id']]);
         $deliveryMan = $this->deliveryManRepo->update(id: $request['id'], data: ['status' => $request['status']]);
+
+        DeliveryManAdminAuditLog::log(
+            deliveryManId: (int) $deliveryMan->id,
+            action: (int) $request['status'] === 0
+                ? DeliveryManAdminAuditLog::ACTION_DM_SUSPEND
+                : DeliveryManAdminAuditLog::ACTION_DM_UNSUSPEND,
+            adminId: auth('admin')->id(),
+            meta: [
+                'previous_status' => (bool) $dmBefore->status,
+                'new_status' => (bool) (int) $request['status'],
+                'ip' => $request->ip(),
+            ],
+        );
 
 
         if ($request['status'] == 0) {
@@ -254,6 +273,171 @@ class DeliveryManController extends BaseController
         Toastr::success(translate('messages.deliveryman_status_updated'));
         return back();
     }
+
+    public function updateTier(Request $request, int|string $id): RedirectResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'dm_tier' => 'required|in:new,standard,pro,restricted',
+            'dm_tier_source' => 'required|in:auto,manual',
+            'dm_tier_reason' => 'nullable|string|max:2000',
+        ]);
+        if ($validator->fails()) {
+            Toastr::error($validator->errors()->first());
+
+            return back();
+        }
+
+        $this->deliveryManRepo->update(id: $id, data: [
+            'dm_tier' => $request['dm_tier'],
+            'dm_tier_source' => $request['dm_tier_source'],
+            'dm_tier_reason' => $request['dm_tier_reason'],
+            'dm_tier_updated_at' => now(),
+        ]);
+
+        $dm = $this->deliveryManRepo->getFirstWhere(params: ['id' => $id]);
+        DeliveryManAdminAuditLog::log(
+            deliveryManId: (int) $dm->id,
+            action: DeliveryManAdminAuditLog::ACTION_DM_TIER_MANUAL,
+            adminId: auth('admin')->id(),
+            meta: [
+                'dm_tier' => $request['dm_tier'],
+                'dm_tier_source' => $request['dm_tier_source'],
+                'ip' => $request->ip(),
+            ],
+            note: $request['dm_tier_reason'],
+        );
+
+        DmTierLimit::forgetCache();
+
+        Toastr::success(translate('messages.updated_successfully'));
+        return back();
+    }
+
+    public function storeStrikeEvent(Request $request, int|string $id): RedirectResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'delivery_incident_type_id' => 'required|exists:delivery_incident_types,id',
+            'order_id' => 'nullable|exists:orders,id',
+            'notes' => 'nullable|string|max:2000',
+            'delivery_suspended_until' => 'nullable|date',
+        ]);
+        if ($validator->fails()) {
+            Toastr::error($validator->errors()->first());
+
+            return back();
+        }
+
+        $type = DeliveryIncidentType::query()
+            ->whereKey((int) $request['delivery_incident_type_id'])
+            ->where('active', true)
+            ->first();
+        if (! $type) {
+            Toastr::error(translate('messages.dm_strike_type_invalid'));
+
+            return back();
+        }
+
+        $dm = $this->deliveryManRepo->getFirstWhere(params: ['type' => 'zone_wise', 'id' => $id]);
+        if (! $dm) {
+            Toastr::error(translate('messages.not_found'));
+
+            return back();
+        }
+
+        if ($request->filled('order_id')) {
+            $orderOk = Order::query()
+                ->whereKey((int) $request['order_id'])
+                ->where('delivery_man_id', (int) $dm->id)
+                ->exists();
+            if (! $orderOk) {
+                Toastr::error(translate('messages.dm_strike_order_not_for_dm'));
+
+                return back();
+            }
+        }
+
+        $weight = $type->generates_strike ? (int) $type->weight : 0;
+
+        DeliveryManStrikeEvent::query()->create([
+            'delivery_man_id' => (int) $dm->id,
+            'order_id' => $request->filled('order_id') ? (int) $request['order_id'] : null,
+            'delivery_incident_type_id' => (int) $type->id,
+            'weight_snapshot' => $weight,
+            'created_by_admin_id' => auth('admin')->id(),
+            'notes' => $request['notes'],
+        ]);
+
+        DeliveryManAdminAuditLog::log(
+            deliveryManId: (int) $dm->id,
+            action: DeliveryManAdminAuditLog::ACTION_DM_STRIKE_RECORDED,
+            adminId: auth('admin')->id(),
+            meta: [
+                'delivery_incident_type_id' => (int) $type->id,
+                'weight_snapshot' => $weight,
+                'order_id' => $request->filled('order_id') ? (int) $request['order_id'] : null,
+                'ip' => $request->ip(),
+            ],
+            note: $request['notes'],
+        );
+
+        if ($request->filled('delivery_suspended_until')) {
+            $this->deliveryManRepo->update(id: $id, data: [
+                'delivery_suspended_until' => $request['delivery_suspended_until'],
+            ]);
+            DeliveryManAdminAuditLog::log(
+                deliveryManId: (int) $dm->id,
+                action: DeliveryManAdminAuditLog::ACTION_DM_STRIKE_SUSPENSION_SET,
+                adminId: auth('admin')->id(),
+                meta: [
+                    'delivery_suspended_until' => (string) $request['delivery_suspended_until'],
+                    'ip' => $request->ip(),
+                ],
+            );
+        }
+
+        Toastr::success(translate('messages.updated_successfully'));
+
+        return back();
+    }
+
+    public function updateStrikeSuspension(Request $request, int|string $id): RedirectResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'delivery_suspended_until' => 'nullable|date',
+        ]);
+        if ($validator->fails()) {
+            Toastr::error($validator->errors()->first());
+
+            return back();
+        }
+
+        $dm = $this->deliveryManRepo->getFirstWhere(params: ['type' => 'zone_wise', 'id' => $id]);
+        if (! $dm) {
+            Toastr::error(translate('messages.not_found'));
+
+            return back();
+        }
+
+        $until = $request->filled('delivery_suspended_until') ? $request['delivery_suspended_until'] : null;
+        $this->deliveryManRepo->update(id: $id, data: [
+            'delivery_suspended_until' => $until,
+        ]);
+
+        DeliveryManAdminAuditLog::log(
+            deliveryManId: (int) $dm->id,
+            action: DeliveryManAdminAuditLog::ACTION_DM_STRIKE_SUSPENSION_SET,
+            adminId: auth('admin')->id(),
+            meta: [
+                'delivery_suspended_until' => $until,
+                'ip' => $request->ip(),
+            ],
+        );
+
+        Toastr::success(translate('messages.updated_successfully'));
+
+        return back();
+    }
+
     public function updateEarning(Request $request): RedirectResponse
     {
         $this->deliveryManRepo->update(id: $request['id'], data: ['earning' => $request['status']]);
@@ -390,9 +574,72 @@ class DeliveryManController extends BaseController
     public function getPreview(Request $request, int|string $id, string $tab = 'info'): View
     {
         $deliveryMan = $this->deliveryManRepo->getFirstWhere(params: ['type' => 'zone_wise', 'id' => $id], relations: ['reviews']);
+        $strikeIncidentTypes = collect();
         if ($tab == 'info') {
             $reviews = $this->dmReviewRepo->getListWhere(searchValue: $request['search'], filters: ['delivery_man_id' => $id], dataLimit: config('default_pagination'));
-            return view(DeliveryManViewPath::INFO[VIEW], compact('deliveryMan', 'reviews'));
+            $deliveryMan->loadMissing(['wallet', 'zone']);
+            $dmAssignmentSnapshot = null;
+            $dmAdminAuditLogs = collect();
+            if ($deliveryMan->application_status === 'approved') {
+                $maxCashRaw = Helpers::get_business_settings('dm_max_cash_in_hand', false);
+                $tierKey = strtolower((string) ($deliveryMan->dm_tier ?? 'standard'));
+                $tierLabels = [
+                    'new' => translate('messages.dm_tier_label_new'),
+                    'standard' => translate('messages.dm_tier_label_standard'),
+                    'pro' => translate('messages.dm_tier_label_pro'),
+                    'restricted' => translate('messages.dm_tier_label_restricted'),
+                ];
+                $tierLimit = DmTierLimit::forTier($tierKey);
+                $globalMaxOrders = (int) config('dm_maximum_orders', 1);
+                $tierMaxOrders = (int) ($tierLimit->max_concurrent_orders ?? 1);
+                $globalCash = (float) ($maxCashRaw ?? 0);
+                $tierCash = (float) ($tierLimit->max_cash_cod ?? 0);
+                $cashEffective = ($globalCash > 0 && $tierCash > 0)
+                    ? min($globalCash, $tierCash)
+                    : ($tierCash > 0 ? $tierCash : $globalCash);
+                $tlAttrs = $tierLimit->getAttributes();
+                $maxOrderCod = (array_key_exists('max_order_value_cod', $tlAttrs) && $tlAttrs['max_order_value_cod'] !== null)
+                    ? (float) $tlAttrs['max_order_value_cod']
+                    : null;
+                $dmAssignmentSnapshot = [
+                    'tier' => $tierLabels[$tierKey] ?? translate('messages.dm_tier_label_standard'),
+                    'tier_key' => $tierKey,
+                    'tier_source' => (string) ($deliveryMan->dm_tier_source ?? 'auto'),
+                    'tier_reason' => $deliveryMan->dm_tier_reason,
+                    'max_concurrent_effective' => max(1, min($globalMaxOrders, $tierMaxOrders)),
+                    'max_concurrent_global' => $globalMaxOrders,
+                    'max_concurrent_tier' => $tierMaxOrders,
+                    'current_orders' => (int) $deliveryMan->current_orders,
+                    'collected_cash' => (float) ($deliveryMan->wallet?->collected_cash ?? 0),
+                    'max_cash_effective' => $cashEffective,
+                    'max_cash_global' => $globalCash,
+                    'max_cash_tier' => $tierCash,
+                    'max_order_value_cod' => $maxOrderCod,
+                    'account_suspended' => ! (bool) $deliveryMan->status,
+                ];
+                try {
+                    $strikeSvc = app(DeliveryStrikeService::class);
+                    $dmAssignmentSnapshot['strike_rolling_weight'] = $strikeSvc->rollingStrikeWeight($deliveryMan);
+                    $dmAssignmentSnapshot['strike_threshold'] = (int) config('dm_strikes.block_weight_threshold', 12);
+                    $dmAssignmentSnapshot['strike_window_days'] = (int) config('dm_strikes.rolling_window_days', 90);
+                    $dmAssignmentSnapshot['strike_assignment_blocked'] = $strikeSvc->blocksNewAssignments($deliveryMan);
+                    $dmAssignmentSnapshot['delivery_suspended_until_display'] = $deliveryMan->delivery_suspended_until;
+                    $strikeIncidentTypes = DeliveryIncidentType::query()
+                        ->where('active', true)
+                        ->orderBy('sort_order')
+                        ->orderBy('id')
+                        ->get();
+                } catch (\Throwable) {
+                }
+                $dmAdminAuditLogs = DeliveryManAdminAuditLog::query()
+                    ->with('admin')
+                    ->where('delivery_man_id', $deliveryMan->id)
+                    ->latest()
+                    ->limit(25)
+                    ->get();
+            }
+
+            return view(DeliveryManViewPath::INFO[VIEW], compact('deliveryMan', 'reviews', 'dmAssignmentSnapshot', 'dmAdminAuditLogs', 'strikeIncidentTypes'));
         } else if ($tab == 'transaction') {
             $date = $request->query('dates');
             if ($request->has('date_range') && $request->date_range != 'custom') {
