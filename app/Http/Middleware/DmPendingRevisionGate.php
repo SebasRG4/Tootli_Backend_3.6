@@ -55,6 +55,28 @@ class DmPendingRevisionGate
             ], 403);
         }
 
+        // Registro enviado, pendiente de aprobación (sin flujo de revisión): mapa + perfil + ubicación + FCM.
+        if ($dm->application_status === 'pending' && ! $dm->registration_revision_allowed) {
+            $path = $request->path();
+            $browsePaths = [
+                'api/v1/delivery-man/profile',
+                'api/v1/delivery-man/update-fcm-token',
+                'api/v1/delivery-man/record-location-data',
+            ];
+            foreach ($browsePaths as $allowed) {
+                if ($path === $allowed) {
+                    return $next($request);
+                }
+            }
+
+            return response()->json([
+                'errors' => [[
+                    'code' => 'registration-pending',
+                    'message' => translate('messages.dm_registration_pending_no_action'),
+                ]],
+            ], 403);
+        }
+
         return response()->json([
             'errors' => [[
                 'code' => 'auth-003',

@@ -4545,6 +4545,8 @@
   'registration_revision_message_label' => 'Mensaje para el repartidor',
   'registration_revision_message_hint' => 'Lo verá en la app al iniciar sesión (por ejemplo: volver a tomar la selfie, corregir foto del ID).',
   'dm_registration_revision_only_access' => 'Completa las correcciones solicitadas en tu registro. Solo puedes usar el perfil y reenviar la solicitud hasta que un administrador la revise.',
+  'Your_account_is_not_approved_yet.' => 'Tu cuenta aún no está aprobada. Si necesitas ayuda, contacta al administrador.',
+  'dm_registration_pending_no_action' => 'Tu registro está en revisión. Esta acción estará disponible cuando un administrador apruebe tu cuenta.',
   'registration_revision_submitted' => 'Tu información actualizada fue enviada para revisión.',
   'dm_push_registration_approved_title' => 'Registro aprobado',
   'dm_push_registration_approved_body' => 'Ya puedes iniciar sesión y empezar a trabajar. ¡Bienvenido!',

@@ -4533,6 +4533,8 @@
   'registration_revision_message_label' => 'Message for the delivery man',
   'registration_revision_message_hint' => 'They will see this in the app after signing in (e.g. retake selfie, fix ID photo).',
   'dm_registration_revision_only_access' => 'Please complete the requested registration corrections. Only profile and resubmission are available until an admin reviews your request.',
+  'Your_account_is_not_approved_yet.' => 'Your account is not approved yet. Contact the administrator if you need help.',
+  'dm_registration_pending_no_action' => 'Your registration is under review. This action will be available once an administrator approves your account.',
   'registration_revision_submitted' => 'Your updated information has been submitted for review.',
   'dm_push_registration_approved_title' => 'Registration approved',
   'dm_push_registration_approved_body' => 'You can sign in and start working. Welcome!',
