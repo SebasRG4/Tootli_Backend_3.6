@@ -35,11 +35,25 @@ class DmPendingRevisionGate
             return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
         }
 
-        if ($dm->application_status === 'approved') {
+        $app = strtolower(trim((string) ($dm->application_status ?? '')));
+        if ($app === '' || ! in_array($app, ['approved', 'denied', 'pending'], true)) {
+            $app = 'pending';
+        }
+
+        if ($app === 'approved') {
             return $next($request);
         }
 
-        if ($dm->application_status === 'pending' && $dm->registration_revision_allowed) {
+        if ($app === 'denied') {
+            return response()->json([
+                'errors' => [[
+                    'code' => 'auth-003',
+                    'message' => translate('messages.dm_push_registration_denied_body'),
+                ]],
+            ], 403);
+        }
+
+        if ($app === 'pending' && $dm->registration_revision_allowed) {
             $path = $request->path();
             foreach (self::ALLOWED_PATHS as $allowed) {
                 if ($path === $allowed) {
@@ -56,7 +70,7 @@ class DmPendingRevisionGate
         }
 
         // Registro enviado, pendiente de aprobación (sin flujo de revisión): mapa + perfil + ubicación + FCM.
-        if ($dm->application_status === 'pending' && ! $dm->registration_revision_allowed) {
+        if ($app === 'pending' && ! $dm->registration_revision_allowed) {
             $path = $request->path();
             $browsePaths = [
                 'api/v1/delivery-man/profile',

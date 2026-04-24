@@ -33,25 +33,47 @@ class DeliveryManLoginController extends Controller
         if (auth('delivery_men')->attempt($data)) {
             $token = Str::random(120);
 
-            $user = auth('delivery_men')->user();
-            $revisionLogin = $user->application_status === 'pending'
-                && (bool) $user->registration_revision_allowed;
+            // El provider `database` devuelve GenericUser; leer estado desde el modelo evita
+            // `application_status` ausente o distinto y el falso "cuenta no aprobada" en pending.
+            $delivery_man = DeliveryMan::where('phone', $request->input('phone'))->first();
+            if (! $delivery_man) {
+                auth('delivery_men')->logout();
 
-            if ($user->application_status !== 'approved' && ! $revisionLogin) {
                 return response()->json([
                     'errors' => [
-                        ['code' => 'auth-003', 'message' => translate('messages.Your_account_is_not_approved_yet.')]
-                    ]
-                ], 401);
-            } elseif (! $revisionLogin && ! auth('delivery_men')->user()->status) {
-                $errors = [];
-                array_push($errors, ['code' => 'auth-003', 'message' => translate('messages.your_account_has_been_suspended')]);
-                return response()->json([
-                    'errors' => $errors
+                        ['code' => 'auth-001', 'message' => translate('Incorrect_credential,_please_try_again')],
+                    ],
                 ], 401);
             }
 
-            $delivery_man = DeliveryMan::where(['phone' => $request['phone']])->first();
+            $appStatus = strtolower(trim((string) ($delivery_man->application_status ?? '')));
+            if ($appStatus === '' || ! in_array($appStatus, ['approved', 'denied', 'pending'], true)) {
+                $appStatus = 'pending';
+            }
+
+            if ($appStatus === 'denied') {
+                auth('delivery_men')->logout();
+
+                return response()->json([
+                    'errors' => [
+                        ['code' => 'auth-003', 'message' => translate('messages.dm_push_registration_denied_body')],
+                    ],
+                ], 401);
+            }
+
+            if ($appStatus === 'approved' && ! $delivery_man->status) {
+                auth('delivery_men')->logout();
+                $errors = [];
+                array_push($errors, ['code' => 'auth-003', 'message' => translate('messages.your_account_has_been_suspended')]);
+
+                return response()->json([
+                    'errors' => $errors,
+                ], 401);
+            }
+
+            $revisionLogin = $appStatus === 'pending'
+                && (bool) $delivery_man->registration_revision_allowed;
+
             $delivery_man->auth_token = $token;
             $delivery_man->save();
 
