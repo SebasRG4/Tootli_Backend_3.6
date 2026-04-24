@@ -1115,7 +1115,13 @@ class DeliveryManController extends BaseController
         if (empty($token) || $token === '@') {
             return;
         }
-        if (! Helpers::getNotificationStatusData('deliveryman', $notificationSettingKey, 'push_notification_status')) {
+        $pushEnabled = Helpers::getNotificationStatusData('deliveryman', $notificationSettingKey, 'push_notification_status');
+        $alwaysSendRegistrationKeys = [
+            'deliveryman_registration_approval',
+            'deliveryman_registration_deny',
+            'deliveryman_registration_revision_request',
+        ];
+        if (! $pushEnabled && ! in_array($notificationSettingKey, $alwaysSendRegistrationKeys, true)) {
             return;
         }
         try {
