@@ -21,6 +21,8 @@ use App\Models\DmTierLimit;
 use App\Models\DeliveryHistory;
 use App\Models\DeliveryMan;
 use App\Models\DeliveryManStrikeEvent;
+use App\Models\OrderCancelReason;
+use App\Models\OrderStrikeReviewQueue;
 use App\Models\DeliverymanLoyaltyPointHistory;
 use App\Models\DeliverymanReferralHistory;
 use App\Models\DeliveryManWallet;
@@ -40,9 +42,13 @@ use App\Models\WithdrawalMethod;
 use App\Models\WithdrawRequest;
 use App\Services\DeliveryEligibility\DeliveryEligibilityService;
 use App\Services\DeliveryStrike\DeliveryStrikeService;
+use App\Services\OrderAudit\OrderAuditLogger;
+use App\Services\OrderCancel\DeliveryOrderCancelMetadata;
 use App\Services\MapboxDirectionsService;
 use App\Traits\Payment;
 use Carbon\Carbon;
+use App\Models\OrderAuditEvent;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -54,6 +60,9 @@ use Illuminate\Validation\Rules\Password;
 
 class DeliverymanController extends Controller
 {
+    /** @var array{cancel_reason_id: ?int, display_reason: string, evidence: array}|null */
+    private ?array $deliveryCancelMeta = null;
+
     public function get_profile(Request $request)
     {
         $dm = DeliveryMan::with(['rating'])->where(['auth_token' => $request['token']])->first();
@@ -816,7 +825,8 @@ class DeliverymanController extends Controller
         $validator = Validator::make($request->all(), [
             'order_id' => 'required',
             'status' => 'required|in:confirmed,canceled,picked_up,delivered,handover',
-            'reason' => 'required_if:status,canceled',
+            'reason' => 'nullable|string|max:2000',
+            'cancel_reason_id' => 'nullable|integer|exists:order_cancel_reasons,id',
             'order_proof' => 'array|max:5',
             'actual_price' => 'nullable|numeric',
         ]);
@@ -832,10 +842,28 @@ class DeliverymanController extends Controller
 
         $order = Order::where(['id' => $request['order_id'], 'delivery_man_id' => $dm['id']])->dmOrder()->first();
 
+        $this->deliveryCancelMeta = null;
+
         if (!$order || (!$order->store && $order->order_type != 'parcel')) {
             return response()->json([
                 'errors' => [
                     ['code' => 'not_found', 'message' => translate('messages.you_can_not_change_the_status_of_this_order')],
+                ],
+            ], 403);
+        }
+
+        if ($request['status'] === 'canceled' && $order->order_type !== 'parcel' && config('canceled_by_deliveryman')) {
+            $resolved = app(DeliveryOrderCancelMetadata::class)->resolve($request);
+            if ($resolved instanceof JsonResponse) {
+                return $resolved;
+            }
+            $this->deliveryCancelMeta = $resolved;
+        }
+
+        if ($order->order_type == 'parcel' && $request['status'] == 'canceled' && ! $request->filled('reason')) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'reason', 'message' => translate('messages.dm_cancel_reason_required_parcel')],
                 ],
             ], 403);
         }
@@ -849,6 +877,15 @@ class DeliverymanController extends Controller
                     ],
                 ], data_get($cancel_parcel_order, 'status_code'));
             } else {
+                try {
+                    OrderAuditLogger::log($order, 'deliveryman', (int) $dm->id, OrderAuditEvent::EVENT_DELIVERY_CANCEL, [
+                        'parcel' => true,
+                        'note' => $request->input('note'),
+                    ]);
+                } catch (\Throwable $e) {
+                    report($e);
+                }
+
                 return response()->json(['message' => translate('messages.Parcel_canceled_successfully')], 200);
             }
         }
@@ -1023,7 +1060,13 @@ class DeliverymanController extends Controller
             if ($order->is_guest == 0) {
                 OrderLogic::refund_before_delivered($order);
             }
-            $order->cancellation_reason = $request->reason;
+            if ($order->order_type !== 'parcel' && $this->deliveryCancelMeta !== null) {
+                $order->cancel_reason_id = $this->deliveryCancelMeta['cancel_reason_id'];
+                $order->cancellation_reason = $this->deliveryCancelMeta['display_reason'];
+                $order->cancellation_note = $request->input('cancellation_detail');
+            } else {
+                $order->cancellation_reason = $request->reason;
+            }
             $order->canceled_by = 'deliveryman';
         } elseif ($order->order_type == 'parcel' && $request->status == 'handover') {
             $order->confirmed = now();
@@ -1040,9 +1083,52 @@ class DeliverymanController extends Controller
         $order[$request['status']] = now();
         $order->save();
 
+        if ($request->status === 'canceled' && $order->order_type !== 'parcel' && $this->deliveryCancelMeta !== null) {
+            try {
+                OrderStrikeReviewQueue::query()->create([
+                    'order_id' => $order->id,
+                    'delivery_man_id' => (int) $dm->id,
+                    'order_cancel_reason_id' => $this->deliveryCancelMeta['cancel_reason_id'],
+                    'cancellation_detail' => $request->input('cancellation_detail'),
+                    'evidence' => $this->deliveryCancelMeta['evidence'],
+                    'status' => OrderStrikeReviewQueue::STATUS_PENDING,
+                ]);
+                OrderAuditLogger::log($order, 'deliveryman', (int) $dm->id, OrderAuditEvent::EVENT_DELIVERY_CANCEL, [
+                    'cancel_reason_id' => $this->deliveryCancelMeta['cancel_reason_id'],
+                    'cancellation_detail' => $request->input('cancellation_detail'),
+                    'evidence' => $this->deliveryCancelMeta['evidence'],
+                ]);
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        }
+
         Helpers::send_order_notification($order);
 
         return response()->json(['message' => translate('Status updated')], 200);
+    }
+
+    /**
+     * Motivos de cancelación configurados para repartidor (order_cancel_reasons, user_type=deliveryman).
+     */
+    public function get_delivery_cancel_reasons(Request $request)
+    {
+        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+        if (! $dm) {
+            return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
+        }
+
+        $reasons = OrderCancelReason::query()
+            ->where('user_type', 'deliveryman')
+            ->where('status', 1)
+            ->orderBy('id')
+            ->get()
+            ->map(static fn (OrderCancelReason $r) => [
+                'id' => $r->id,
+                'reason' => $r->reason,
+            ]);
+
+        return response()->json(['reasons' => $reasons], 200);
     }
 
     public function get_order_details(Request $request)

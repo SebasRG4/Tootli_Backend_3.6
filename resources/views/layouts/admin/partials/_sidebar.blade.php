@@ -355,6 +355,28 @@
                                         </span>
                                     </a>
                                 </li>
+                                <li class="nav-item {{ Request::is('admin/order/strike-review-queue*') ? 'active' : '' }}">
+                                    @php
+                                        $pendingStrikeReviews = 0;
+                                        try {
+                                            $pendingStrikeReviews = \App\Models\OrderStrikeReviewQueue::query()
+                                                ->where('status', \App\Models\OrderStrikeReviewQueue::STATUS_PENDING)
+                                                ->count();
+                                        } catch (\Throwable $e) {
+                                            $pendingStrikeReviews = 0;
+                                        }
+                                    @endphp
+                                    <a class="nav-link" href="{{ route('admin.order.strike-review-queue.index') }}"
+                                        title="{{ translate('messages.order_strike_review_queue_title') }}">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate sidebar--badge-container">
+                                            {{ translate('messages.order_strike_review_queue_menu') }}
+                                            <span class="badge badge-soft-warning bg-light badge-pill ml-1">
+                                                {{ $pendingStrikeReviews }}
+                                            </span>
+                                        </span>
+                                    </a>
+                                </li>
                                 <li class="nav-item {{ Request::is('admin/order/offline/payment/list*') ? 'active' : '' }}">
                                     <a class="nav-link "
                                         href="{{ route('admin.order.offline_verification_list', ['all']) }}"

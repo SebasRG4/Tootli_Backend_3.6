@@ -175,6 +175,21 @@ class Order extends Model
         return $this->hasOne(ParcelCancellation::class, 'order_id');
     }
 
+    public function auditEvents()
+    {
+        return $this->hasMany(OrderAuditEvent::class)->orderBy('created_at');
+    }
+
+    public function strikeReviewQueueItems()
+    {
+        return $this->hasMany(OrderStrikeReviewQueue::class);
+    }
+
+    public function dmCancelReason()
+    {
+        return $this->belongsTo(OrderCancelReason::class, 'cancel_reason_id');
+    }
+
 
     public function offline_payments()
     {

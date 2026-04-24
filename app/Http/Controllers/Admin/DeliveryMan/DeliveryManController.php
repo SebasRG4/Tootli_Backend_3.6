@@ -49,12 +49,12 @@ use App\Mail\WithdrawRequestMail;
 use App\Models\DeliveryIncidentType;
 use App\Models\DmTierLimit;
 use App\Models\DeliveryManAdminAuditLog;
-use App\Models\DeliveryManStrikeEvent;
 use App\Models\DeliverymanLoyaltyPointHistory;
 use App\Models\DeliveryManWallet;
 use App\Models\WithdrawRequest;
 use App\Models\DeliveryMan as DeliveryManModel;
 use App\Services\DeliveryStrike\DeliveryStrikeService;
+use App\Services\DeliveryStrike\RecordDeliveryManStrikeAction;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -327,16 +327,6 @@ class DeliveryManController extends BaseController
             return back();
         }
 
-        $type = DeliveryIncidentType::query()
-            ->whereKey((int) $request['delivery_incident_type_id'])
-            ->where('active', true)
-            ->first();
-        if (! $type) {
-            Toastr::error(translate('messages.dm_strike_type_invalid'));
-
-            return back();
-        }
-
         $dm = $this->deliveryManRepo->getFirstWhere(params: ['type' => 'zone_wise', 'id' => $id]);
         if (! $dm) {
             Toastr::error(translate('messages.not_found'));
@@ -344,55 +334,23 @@ class DeliveryManController extends BaseController
             return back();
         }
 
-        if ($request->filled('order_id')) {
-            $orderOk = Order::query()
-                ->whereKey((int) $request['order_id'])
-                ->where('delivery_man_id', (int) $dm->id)
-                ->exists();
-            if (! $orderOk) {
-                Toastr::error(translate('messages.dm_strike_order_not_for_dm'));
-
-                return back();
-            }
-        }
-
-        $weight = $type->generates_strike ? (int) $type->weight : 0;
-
-        DeliveryManStrikeEvent::query()->create([
-            'delivery_man_id' => (int) $dm->id,
-            'order_id' => $request->filled('order_id') ? (int) $request['order_id'] : null,
-            'delivery_incident_type_id' => (int) $type->id,
-            'weight_snapshot' => $weight,
-            'created_by_admin_id' => auth('admin')->id(),
-            'notes' => $request['notes'],
-        ]);
-
-        DeliveryManAdminAuditLog::log(
-            deliveryManId: (int) $dm->id,
-            action: DeliveryManAdminAuditLog::ACTION_DM_STRIKE_RECORDED,
-            adminId: auth('admin')->id(),
-            meta: [
-                'delivery_incident_type_id' => (int) $type->id,
-                'weight_snapshot' => $weight,
-                'order_id' => $request->filled('order_id') ? (int) $request['order_id'] : null,
-                'ip' => $request->ip(),
-            ],
-            note: $request['notes'],
-        );
-
-        if ($request->filled('delivery_suspended_until')) {
-            $this->deliveryManRepo->update(id: $id, data: [
-                'delivery_suspended_until' => $request['delivery_suspended_until'],
-            ]);
-            DeliveryManAdminAuditLog::log(
-                deliveryManId: (int) $dm->id,
-                action: DeliveryManAdminAuditLog::ACTION_DM_STRIKE_SUSPENSION_SET,
-                adminId: auth('admin')->id(),
-                meta: [
-                    'delivery_suspended_until' => (string) $request['delivery_suspended_until'],
-                    'ip' => $request->ip(),
-                ],
+        try {
+            app(RecordDeliveryManStrikeAction::class)->run(
+                (int) $dm->id,
+                (int) $request['delivery_incident_type_id'],
+                $request->filled('order_id') ? (int) $request['order_id'] : null,
+                $request['notes'],
+                auth('admin')->id(),
+                $request->filled('delivery_suspended_until') ? (string) $request['delivery_suspended_until'] : null,
             );
+        } catch (\InvalidArgumentException) {
+            Toastr::error(translate('messages.dm_strike_order_not_for_dm'));
+
+            return back();
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException) {
+            Toastr::error(translate('messages.dm_strike_type_invalid'));
+
+            return back();
         }
 
         Toastr::success(translate('messages.updated_successfully'));

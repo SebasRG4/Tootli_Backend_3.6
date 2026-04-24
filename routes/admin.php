@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DeliveryMan\DeliveryManController;
+use App\Http\Controllers\Admin\OrderStrikeReviewController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\BusinessSettingsController;
 
@@ -370,6 +371,9 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         Route::get('order/status', 'OrderController@status')->name('order.status');
         Route::get('order/offline-payment', 'OrderController@offline_payment')->name('order.offline_payment');
         Route::group(['prefix' => 'order', 'as' => 'order.', 'middleware' => ['module:order']], function () {
+            Route::get('strike-review-queue', [OrderStrikeReviewController::class, 'index'])->name('strike-review-queue.index');
+            Route::post('strike-review-queue/{id}/dismiss', [OrderStrikeReviewController::class, 'dismiss'])->name('strike-review-queue.dismiss');
+            Route::post('strike-review-queue/{id}/strike', [OrderStrikeReviewController::class, 'recordStrike'])->name('strike-review-queue.record-strike');
             Route::post('apply-debt/{id}', 'OrderController@applyDebt')->name('apply-debt');
             Route::get('list/{status}', 'OrderController@list')->name('list');
             Route::get('details/{id}', 'OrderController@details')->name('details');

@@ -37,7 +37,10 @@ use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Rap2hpoutre\FastExcel\FastExcel;
 use App\Exports\StoreOrderlistExport;
+use App\Models\DeliveryIncidentType;
+use App\Models\OrderAuditEvent;
 use App\Models\OrderPayment;
+use App\Models\OrderStrikeReviewQueue;
 use App\Models\ParcelCancellationReason;
 use Illuminate\Support\Facades\Config;
 use MatanYadaev\EloquentSpatial\Objects\Point;
@@ -272,6 +275,29 @@ class OrderController extends Controller
             if ($order->order_type == 'parcel') {
                 return to_route('admin.parcel.order.details', $id);
             }
+
+            $orderAuditEvents = collect();
+            $orderStrikeReviewItems = collect();
+            $strikeIncidentTypes = collect();
+            try {
+                $orderAuditEvents = OrderAuditEvent::query()
+                    ->where('order_id', $order->id)
+                    ->orderByDesc('id')
+                    ->limit(100)
+                    ->get();
+                $orderStrikeReviewItems = OrderStrikeReviewQueue::query()
+                    ->where('order_id', $order->id)
+                    ->with(['deliveryMan', 'cancelReason', 'strikeEvent'])
+                    ->orderByDesc('id')
+                    ->get();
+                $strikeIncidentTypes = DeliveryIncidentType::query()
+                    ->where('active', true)
+                    ->orderBy('sort_order')
+                    ->get();
+            } catch (\Throwable $e) {
+                report($e);
+            }
+
             $excludeDm = $order->delivery_man_id;
 
             if (isset($order->store)) {
@@ -335,7 +361,7 @@ class OrderController extends Controller
             }
 
             $deliveryMen = Helpers::deliverymen_list_formatting($deliveryMen);
-            return view($order->order_type == 'parcel' ? 'admin-views.order.parcel-order-view' : 'admin-views.order.order-view', compact('order', 'deliveryMen', 'categories', 'products', 'category', 'keyword', 'editing'));
+            return view($order->order_type == 'parcel' ? 'admin-views.order.parcel-order-view' : 'admin-views.order.order-view', compact('order', 'deliveryMen', 'categories', 'products', 'category', 'keyword', 'editing', 'orderAuditEvents', 'orderStrikeReviewItems', 'strikeIncidentTypes'));
         } else {
             Toastr::info(translate('messages.no_more_orders'));
             return back();
@@ -414,6 +440,32 @@ class OrderController extends Controller
             }
         ])->where(['id' => $id])->first();
         if (isset($order)) {
+            if ($order->order_type == 'parcel') {
+                return to_route('admin.parcel.order.details', $id);
+            }
+
+            $orderAuditEvents = collect();
+            $orderStrikeReviewItems = collect();
+            $strikeIncidentTypes = collect();
+            try {
+                $orderAuditEvents = OrderAuditEvent::query()
+                    ->where('order_id', $order->id)
+                    ->orderByDesc('id')
+                    ->limit(100)
+                    ->get();
+                $orderStrikeReviewItems = OrderStrikeReviewQueue::query()
+                    ->where('order_id', $order->id)
+                    ->with(['deliveryMan', 'cancelReason', 'strikeEvent'])
+                    ->orderByDesc('id')
+                    ->get();
+                $strikeIncidentTypes = DeliveryIncidentType::query()
+                    ->where('active', true)
+                    ->orderBy('sort_order')
+                    ->get();
+            } catch (\Throwable $e) {
+                report($e);
+            }
+
             if (isset($order->store)) {
                 $deliveryMen = DeliveryMan::where('zone_id', $order->store->zone_id)->available()->active()->get();
             } else {
@@ -449,7 +501,7 @@ class OrderController extends Controller
             }
 
             $deliveryMen = Helpers::deliverymen_list_formatting($deliveryMen);
-            return view($order->order_type == 'parcel' ? 'admin-views.order.parcel-order-view' : 'admin-views.order.order-view', compact('order', 'deliveryMen', 'categories', 'products', 'category', 'keyword', 'editing'));
+            return view($order->order_type == 'parcel' ? 'admin-views.order.parcel-order-view' : 'admin-views.order.order-view', compact('order', 'deliveryMen', 'categories', 'products', 'category', 'keyword', 'editing', 'orderAuditEvents', 'orderStrikeReviewItems', 'strikeIncidentTypes'));
         } else {
             Toastr::info(translate('messages.no_more_orders'));
             return back();

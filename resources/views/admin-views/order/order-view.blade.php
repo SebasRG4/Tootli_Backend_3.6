@@ -1058,6 +1058,9 @@
                     </div>
 
                 @endif
+
+                @include('admin-views.order.partials._order_audit_strike')
+
                 @php($refund = \App\Models\BusinessSetting::where(['key' => 'refund_active_status'])->first())
 
                 @if (!empty($order->refund))
