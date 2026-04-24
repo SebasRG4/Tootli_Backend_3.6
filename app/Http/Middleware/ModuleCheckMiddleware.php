@@ -17,7 +17,9 @@ class ModuleCheckMiddleware
     public function handle($request, Closure $next)
     {
         $except = [
-            'api/v1/customer*', 'api/v1/banners', 'api/v1/stores/get-stores/*', 'api/v1/coupon/list', 'api/v1/categories', 'api/v1/items/reviews/submit', 'api/v1/delivery-man/reviews/submit'
+            'api/v1/customer*', 'api/v1/banners', 'api/v1/stores/get-stores/*', 'api/v1/coupon/list', 'api/v1/categories', 'api/v1/items/reviews/submit', 'api/v1/delivery-man/reviews/submit',
+            // Registro app repartidor: listado de vehículos sin sesión ni módulo elegido aún
+            'api/v1/get-vehicles', 'api/v1/vehicle/extra_charge',
         ];
 
         foreach ($except as $except) {

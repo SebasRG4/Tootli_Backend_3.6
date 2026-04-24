@@ -99,6 +99,72 @@ class MapboxDirectionsService
     }
 
     /**
+     * Solo la geometría de la ruta (perfil driving-traffic, overview full) para dibujar polilínea.
+     * Cada punto es [lng, lat] en orden GeoJSON.
+     *
+     * @return list<array{0: float, 1: float}>|null
+     */
+    public function drivingTrafficPolyline(
+        float $originLng,
+        float $originLat,
+        float $destLng,
+        float $destLat,
+        ?string $accessToken = null
+    ): ?array {
+        $token = $accessToken ?? (string) config('services.mapbox.access_token', '');
+        if ($token === '') {
+            return null;
+        }
+
+        $path = sprintf(
+            '%s,%s;%s,%s',
+            $this->coord($originLng),
+            $this->coord($originLat),
+            $this->coord($destLng),
+            $this->coord($destLat)
+        );
+
+        $url = 'https://api.mapbox.com/directions/v5/mapbox/driving-traffic/'.$path;
+
+        try {
+            $response = Http::timeout(15)
+                ->acceptJson()
+                ->get($url, [
+                    'access_token' => $token,
+                    'alternatives' => 'false',
+                    'geometries' => 'geojson',
+                    'overview' => 'full',
+                    'steps' => 'false',
+                ]);
+        } catch (\Throwable $e) {
+            Log::warning('mapbox_polyline_exception', ['message' => $e->getMessage()]);
+
+            return null;
+        }
+
+        if (! $response->successful()) {
+            Log::warning('mapbox_polyline_http', [
+                'status' => $response->status(),
+                'snippet' => substr($response->body(), 0, 500),
+            ]);
+
+            return null;
+        }
+
+        $routes = $response->json('routes');
+        if (! is_array($routes) || $routes === []) {
+            return null;
+        }
+
+        $first = $routes[0];
+        if (! is_array($first)) {
+            return null;
+        }
+
+        return $this->parseRouteGeometryCoordinates($first['geometry'] ?? null);
+    }
+
+    /**
      * @param  mixed  $geometry
      * @return list<array{0: float, 1: float}>|null
      */

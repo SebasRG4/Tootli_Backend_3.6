@@ -49,6 +49,11 @@ enum DeliveryMan
         VIEW => ''
     ];
 
+    const REQUEST_REGISTRATION_REVISION = [
+        URI => 'request-registration-revision',
+        VIEW => ''
+    ];
+
     const EXPORT = [
         URI => 'export',
         VIEW => ''

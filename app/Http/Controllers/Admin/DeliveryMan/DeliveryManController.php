@@ -49,6 +49,9 @@ use App\Mail\WithdrawRequestMail;
 use App\Models\DeliverymanLoyaltyPointHistory;
 use App\Models\DeliveryManWallet;
 use App\Models\WithdrawRequest;
+use App\Models\DeliveryMan as DeliveryManModel;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class DeliveryManController extends BaseController
 {
@@ -584,7 +587,7 @@ class DeliveryManController extends BaseController
         ]);
     }
 
-    public function updateApplication(Request $request): RedirectResponse
+    public function updateApplication(Request $request, UserNotificationRepositoryInterface $notificationRepo): RedirectResponse
     {
         $deliveryMan = $this->deliveryManRepo->update(id: $request['id'], data: ['application_status' => $request['status']]);
         if ($request['status'] == 'approved')
@@ -606,7 +609,69 @@ class DeliveryManController extends BaseController
         } catch (Exception $ex) {
             info($ex->getMessage());
         }
+
+        $dmForPush = DeliveryManModel::find($request['id']);
+        if ($dmForPush) {
+            if ($request['status'] == 'approved') {
+                $this->notifyDeliverymanRegistrationPush($dmForPush, 'deliveryman_registration_approval', [
+                    'title' => translate('messages.dm_push_registration_approved_title'),
+                    'description' => translate('messages.dm_push_registration_approved_body'),
+                    'order_id' => '',
+                    'image' => '',
+                    'type' => 'dm_registration_approved',
+                ], $notificationRepo);
+            } elseif ($request['status'] == 'denied') {
+                $this->notifyDeliverymanRegistrationPush($dmForPush, 'deliveryman_registration_deny', [
+                    'title' => translate('messages.dm_push_registration_denied_title'),
+                    'description' => translate('messages.dm_push_registration_denied_body'),
+                    'order_id' => '',
+                    'image' => '',
+                    'type' => 'dm_registration_denied',
+                ], $notificationRepo);
+            }
+        }
+
         Toastr::success(translate('messages.application_status_updated_successfully'));
+        return back();
+    }
+
+    public function requestRegistrationRevision(Request $request, int|string $id, UserNotificationRepositoryInterface $notificationRepo): RedirectResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'revision_message' => 'required|string|max:2000',
+        ]);
+        if ($validator->fails()) {
+            Toastr::error(translate('messages.failed_to_update'));
+
+            return back();
+        }
+
+        if (! DeliveryManModel::where('id', $id)->where('application_status', 'pending')->exists()) {
+            Toastr::error(translate('messages.failed_to_update'));
+
+            return back();
+        }
+
+        $this->deliveryManRepo->update(id: (string) $id, data: [
+            'registration_revision_message' => $request->input('revision_message'),
+            'registration_revision_allowed' => true,
+            'registration_revision_requested_at' => now(),
+        ]);
+
+        $dm = DeliveryManModel::find($id);
+        if ($dm) {
+            $revisionText = (string) $request->input('revision_message');
+            $this->notifyDeliverymanRegistrationPush($dm, 'deliveryman_registration_revision_request', [
+                'title' => translate('messages.dm_push_registration_revision_title'),
+                'description' => Str::limit($revisionText, 200),
+                'order_id' => '',
+                'image' => '',
+                'type' => 'dm_registration_revision',
+            ], $notificationRepo);
+        }
+
+        Toastr::success(translate('messages.registration_revision_requested'));
+
         return back();
     }
 
@@ -830,6 +895,35 @@ class DeliveryManController extends BaseController
             info($e->getMessage());
         }
         return true;
+    }
+
+    /**
+     * Push FCM al repartidor según ajustes (negocio → notificaciones → repartidor).
+     */
+    private function notifyDeliverymanRegistrationPush(
+        DeliveryManModel $dm,
+        string $notificationSettingKey,
+        array $pushData,
+        UserNotificationRepositoryInterface $notificationRepo
+    ): void {
+        $token = $dm->fcm_token ?? null;
+        if (empty($token) || $token === '@') {
+            return;
+        }
+        if (! Helpers::getNotificationStatusData('deliveryman', $notificationSettingKey, 'push_notification_status')) {
+            return;
+        }
+        try {
+            Helpers::send_push_notif_to_device($token, $pushData);
+            $notificationRepo->add([
+                'data' => json_encode($pushData),
+                'delivery_man_id' => $dm->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        } catch (Exception $e) {
+            info('Delivery man registration push: '.$e->getMessage());
+        }
     }
 
 }

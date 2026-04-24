@@ -130,6 +130,9 @@
                                             href="javascript:"><i class="tio-done font-weight-bold"></i> </a>
                                         <a class="btn action-btn btn--primary btn-outline-primary"  data-toggle="tooltip" data-placement="top" data-original-title="{{ translate('messages.edit') }}" href="{{route('admin.users.delivery-man.edit',[$dm['id']])}}" ><i class="tio-edit"></i>
                                         </a>
+                                        <button type="button" class="btn action-btn btn--secondary btn-outline-secondary js-registration-revision-btn" data-toggle="tooltip" data-placement="top" data-original-title="{{ translate('messages.request_registration_revision') }}" data-url="{{ route('admin.users.delivery-man.request-registration-revision', $dm['id']) }}">
+                                            <i class="tio-comment"></i>
+                                        </button>
                                         @if($dm->application_status !='denied')
                                         <a class="btn action-btn btn--danger btn-outline-danger request-alert" data-toggle="tooltip" data-placement="top"
                                         data-original-title="{{ translate('messages.deny') }}" data-url="{{route('admin.users.delivery-man.application',[$dm['id'],'denied'])}}" data-message="{{translate('messages.you_want_to_deny_this_application')}}"
@@ -162,6 +165,31 @@
             <!-- End Table -->
         </div>
         <!-- End Card -->
+
+        <div class="modal fade" id="registrationRevisionModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form id="registrationRevisionForm" method="post" action="">
+                        @csrf
+                        <div class="modal-header">
+                            <h5 class="modal-title">{{ translate('messages.request_registration_revision') }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <label class="input-label">{{ translate('messages.registration_revision_message_label') }}</label>
+                            <small class="d-block text-muted mb-2">{{ translate('messages.registration_revision_message_hint') }}</small>
+                            <textarea name="revision_message" class="form-control" rows="4" required maxlength="2000" placeholder="{{ translate('messages.registration_revision_message_label') }}"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ translate('messages.cancel') }}</button>
+                            <button type="submit" class="btn btn--primary">{{ translate('messages.submit') }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
 @endsection
@@ -170,6 +198,12 @@
     <script src="{{asset('assets/admin')}}/js/view-pages/deliveryman-new-denied-list.js"></script>
     <script>
         "use strict";
+        $(document).on('click', '.js-registration-revision-btn', function () {
+            var url = $(this).data('url');
+            $('#registrationRevisionForm').attr('action', url);
+            $('#registrationRevisionForm').find('textarea[name="revision_message"]').val('');
+            $('#registrationRevisionModal').modal('show');
+        });
         function request_alert(url, message) {
             Swal.fire({
                 title: '{{translate('messages.are_you_sure')}}',

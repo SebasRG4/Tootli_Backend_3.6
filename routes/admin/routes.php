@@ -352,6 +352,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                     Route::get(DeliveryMan::STATUS[URI] . '/{id}/{status}', [DeliveryManController::class, 'updateStatus'])->name('status');
                     Route::get(DeliveryMan::EARNING[URI] . '/{id}/{status}', [DeliveryManController::class, 'updateEarning'])->name('earning');
                     Route::get(DeliveryMan::UPDATE_APPLICATION[URI] . '/{id}/{status}', [DeliveryManController::class, 'updateApplication'])->name('application');
+                    Route::post(DeliveryMan::REQUEST_REGISTRATION_REVISION[URI] . '/{id}', [DeliveryManController::class, 'requestRegistrationRevision'])->name('request-registration-revision');
                     Route::get(DeliveryMan::UPDATE[URI] . '/{id}', [DeliveryManController::class, 'getUpdateView'])->name('edit');
                     Route::post(DeliveryMan::UPDATE[URI] . '/{id}', [DeliveryManController::class, 'update'])->name('update');
                     Route::delete(DeliveryMan::DELETE[URI] . '/{id}', [DeliveryManController::class, 'delete'])->name('delete');

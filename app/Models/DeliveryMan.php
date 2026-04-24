@@ -35,6 +35,8 @@ class DeliveryMan extends Authenticatable
         'taxi_license_expiry' => 'date',
         'taxi_documents' => 'array',
         'identity_image' => 'array',
+        'registration_revision_allowed' => 'boolean',
+        'registration_revision_requested_at' => 'datetime',
     ];
 
     protected $hidden = [

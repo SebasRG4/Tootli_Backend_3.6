@@ -100,7 +100,7 @@ trait NotificationDataSetUpTrait
             'type' => 'deliveryman',
             'mail_status' => 'active',
             'sms_status' => 'disable',
-            'push_notification_status' => 'disable',
+            'push_notification_status' => 'active',
             'sub_title' => 'Sent_notification_on_deliveryman_registration_approval',
         ];
         $data []=[
@@ -109,8 +109,17 @@ trait NotificationDataSetUpTrait
             'type' => 'deliveryman',
             'mail_status' => 'active',
             'sms_status' => 'disable',
-            'push_notification_status' => 'disable',
+            'push_notification_status' => 'active',
             'sub_title' => 'Sent_notification_on_deliveryman_registration_deny',
+        ];
+        $data []=[
+            'title' => 'deliveryman_registration_revision_request',
+            'key' => 'deliveryman_registration_revision_request',
+            'type' => 'deliveryman',
+            'mail_status' => 'disable',
+            'sms_status' => 'disable',
+            'push_notification_status' => 'active',
+            'sub_title' => 'Sent_notification_on_deliveryman_registration_revision_request',
         ];
         $data []=[
             'title' => 'deliveryman_account_block',
@@ -807,6 +816,15 @@ trait NotificationDataSetUpTrait
             'sms_status' => 'disable',
             'push_notification_status' => 'disable',
             'sub_title' => 'Sent_notification_on_withdraw_request',
+        ];
+        $data []=[
+            'title' => 'deliveryman_registration_revision_request',
+            'key' => 'deliveryman_registration_revision_request',
+            'type' => 'deliveryman',
+            'mail_status' => 'disable',
+            'sms_status' => 'disable',
+            'push_notification_status' => 'active',
+            'sub_title' => 'Sent_notification_on_deliveryman_registration_revision_request',
         ];
 
             self::checkAndUpdateAdminNotificationData($data);

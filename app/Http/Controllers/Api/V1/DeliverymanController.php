@@ -36,6 +36,7 @@ use App\Models\UserNotification;
 use App\Models\WithdrawalMethod;
 use App\Models\WithdrawRequest;
 use App\Models\Zone;
+use App\Services\MapboxDirectionsService;
 use App\Traits\Payment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -53,6 +54,14 @@ class DeliverymanController extends Controller
     public function get_profile(Request $request)
     {
         $dm = DeliveryMan::with(['rating'])->where(['auth_token' => $request['token']])->first();
+        if (!$dm) {
+            return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
+        }
+
+        if ($dm->application_status === 'pending' && $dm->registration_revision_allowed) {
+            return response()->json($this->deliveryManRevisionProfilePayload($dm), 200);
+        }
+
         $min_amount_to_pay_dm = BusinessSetting::where('key', 'min_amount_to_pay_dm')->first()->value ?? 0;
         $dm['avg_rating'] = (float) (!empty($dm->rating[0]) ? $dm->rating[0]->average : 0);
         $dm['rating_count'] = (float) (!empty($dm->rating[0]) ? $dm->rating[0]->rating_count : 0);
@@ -214,6 +223,128 @@ class DeliverymanController extends Controller
         }
 
         return response()->json(['message' => translate('successfully updated!')], 200);
+    }
+
+    /**
+     * Actualiza datos de registro cuando el admin pidió correcciones (sigue en pending).
+     */
+    public function submitRegistrationRevision(Request $request)
+    {
+        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+        if (!$dm || !$dm->registration_revision_allowed || $dm->application_status !== 'pending') {
+            return response()->json(['errors' => [['code' => 'revision', 'message' => translate('messages.something_went_wrong')]]], 403);
+        }
+
+        $id = $dm->id;
+        $validator = Validator::make($request->all(), [
+            'f_name' => 'required',
+            'identity_type' => 'required|in:passport,driving_license,nid',
+            'identity_number' => 'required',
+            'email' => 'required|unique:delivery_men,email,' . $id,
+            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:delivery_men,phone,' . $id,
+            'password' => ['nullable', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'zone_id' => 'required',
+            'vehicle_id' => 'required',
+            'earning' => 'required',
+            'can_deliver' => 'boolean',
+            'can_drive_taxi' => 'boolean',
+            'taxi_license_number' => 'required_if:can_drive_taxi,true,1|nullable|string|max:50',
+            'taxi_license_expiry' => 'required_if:can_drive_taxi,true,1|nullable|date|after:today',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $canDeliver = filter_var($request->can_deliver ?? true, FILTER_VALIDATE_BOOLEAN);
+        $canDriveTaxi = filter_var($request->can_drive_taxi ?? false, FILTER_VALIDATE_BOOLEAN);
+        if (!$canDeliver && !$canDriveTaxi) {
+            return response()->json([
+                'errors' => [['code' => 'services', 'message' => translate('Select at least one service type (delivery or taxi)')]],
+            ], 403);
+        }
+
+        if ($request->hasFile('image')) {
+            $dm->image = Helpers::update('delivery-man/', $dm->image, 'png', $request->file('image'));
+        }
+
+        if (!empty($request->file('identity_image'))) {
+            $id_img_names = [];
+            foreach ($request->file('identity_image') as $img) {
+                $identity_image = Helpers::upload('delivery-man/', 'png', $img);
+                $id_img_names[] = ['img' => $identity_image, 'storage' => Helpers::getDisk()];
+            }
+            $dm->identity_image = json_encode($id_img_names);
+        }
+
+        if ($request->filled('password')) {
+            $dm->password = bcrypt($request->password);
+        }
+
+        $dm->f_name = $request->f_name;
+        $dm->l_name = $request->l_name ?? $dm->l_name;
+        $dm->email = $request->email;
+        $dm->phone = $request->phone;
+        $dm->identity_number = $request->identity_number;
+        $dm->identity_type = $request->identity_type;
+        $dm->vehicle_id = $request->vehicle_id;
+        $dm->zone_id = $request->zone_id;
+        $dm->earning = $request->earning;
+        $dm->can_deliver = $canDeliver;
+        $dm->can_drive_taxi = $canDriveTaxi;
+        $dm->delivery_active = $canDeliver;
+        if ($canDriveTaxi) {
+            $dm->taxi_license_number = $request->taxi_license_number;
+            $dm->taxi_license_expiry = $request->taxi_license_expiry;
+            $dm->taxi_is_verified = false;
+        } else {
+            $dm->taxi_license_number = null;
+            $dm->taxi_license_expiry = null;
+        }
+
+        $dm->registration_revision_allowed = false;
+        $dm->registration_revision_message = null;
+        $dm->registration_revision_requested_at = null;
+        $dm->save();
+
+        if ($dm->userinfo) {
+            $userinfo = $dm->userinfo;
+            $userinfo->f_name = $dm->f_name;
+            $userinfo->l_name = $dm->l_name;
+            $userinfo->email = $dm->email;
+            $userinfo->image = $dm->image;
+            $userinfo->save();
+        }
+
+        return response()->json(['message' => translate('messages.registration_revision_submitted')], 200);
+    }
+
+    protected function deliveryManRevisionProfilePayload(DeliveryMan $dm): array
+    {
+        return [
+            'id' => $dm->id,
+            'f_name' => $dm->f_name,
+            'l_name' => $dm->l_name,
+            'phone' => $dm->phone,
+            'email' => $dm->email,
+            'identity_number' => $dm->identity_number,
+            'identity_type' => $dm->identity_type,
+            'identity_image_full_url' => $dm->identity_image_full_url,
+            'image_full_url' => $dm->image_full_url,
+            'image' => $dm->image,
+            'zone_id' => $dm->zone_id,
+            'vehicle_id' => $dm->vehicle_id,
+            'earning' => $dm->earning,
+            'type' => $dm->type,
+            'active' => $dm->active,
+            'application_status' => $dm->application_status,
+            'registration_revision_required' => true,
+            'registration_revision_message' => $dm->registration_revision_message,
+            'can_deliver' => $dm->can_deliver,
+            'can_drive_taxi' => $dm->can_drive_taxi,
+            'taxi_license_number' => $dm->taxi_license_number,
+            'taxi_license_expiry' => $dm->taxi_license_expiry,
+        ];
     }
 
     public function activeStatus(Request $request)
@@ -2013,6 +2144,42 @@ class DeliverymanController extends Controller
         ]);
 
         return response()->json(['message' => 'ok'], 200);
+    }
+
+    /**
+     * Polilínea por carretera (Mapbox). El token Mapbox solo existe en el servidor (.env).
+     */
+    public function driving_route(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'origin_lat' => 'required|numeric|between:-90,90',
+            'origin_lng' => 'required|numeric|between:-180,180',
+            'dest_lat' => 'required|numeric|between:-90,90',
+            'dest_lng' => 'required|numeric|between:-180,180',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $oLat = (float) $request->origin_lat;
+        $oLng = (float) $request->origin_lng;
+        $dLat = (float) $request->dest_lat;
+        $dLng = (float) $request->dest_lng;
+
+        /** @var MapboxDirectionsService $mapbox */
+        $mapbox = app(MapboxDirectionsService::class);
+        $coords = $mapbox->drivingTrafficPolyline($oLng, $oLat, $dLng, $dLat);
+
+        if ($coords === null || $coords === []) {
+            return response()->json(['polyline' => []], 200);
+        }
+
+        $polyline = [];
+        foreach ($coords as $c) {
+            $polyline[] = ['latitude' => $c[1], 'longitude' => $c[0]];
+        }
+
+        return response()->json(['polyline' => $polyline], 200);
     }
 
     public function get_orders_count(Request $request)

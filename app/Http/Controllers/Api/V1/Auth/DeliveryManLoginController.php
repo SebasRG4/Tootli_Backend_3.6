@@ -33,13 +33,17 @@ class DeliveryManLoginController extends Controller
         if (auth('delivery_men')->attempt($data)) {
             $token = Str::random(120);
 
-            if (auth('delivery_men')->user()->application_status != 'approved') {
+            $user = auth('delivery_men')->user();
+            $revisionLogin = $user->application_status === 'pending'
+                && (bool) $user->registration_revision_allowed;
+
+            if ($user->application_status !== 'approved' && ! $revisionLogin) {
                 return response()->json([
                     'errors' => [
                         ['code' => 'auth-003', 'message' => translate('messages.Your_account_is_not_approved_yet.')]
                     ]
                 ], 401);
-            } else if (!auth('delivery_men')->user()->status) {
+            } elseif (! $revisionLogin && ! auth('delivery_men')->user()->status) {
                 $errors = [];
                 array_push($errors, ['code' => 'auth-003', 'message' => translate('messages.your_account_has_been_suspended')]);
                 return response()->json([
@@ -61,7 +65,16 @@ class DeliveryManLoginController extends Controller
                 }
                 $zone_topic = $delivery_man->type == 'zone_wise' ? $delivery_man->zone->deliveryman_wise_topic . '_push' : '';
             }
-            return response()->json(['token' => $token, 'topic' => isset($topic) ? $topic : 'No_topic_found', 'zone_topic' => $zone_topic ?? ''], 200);
+
+            $payload = [
+                'token' => $token,
+                'topic' => isset($topic) ? $topic : 'No_topic_found',
+                'zone_topic' => $zone_topic ?? '',
+                'registration_revision_required' => $revisionLogin,
+                'registration_revision_message' => $revisionLogin ? $delivery_man->registration_revision_message : null,
+            ];
+
+            return response()->json($payload, 200);
         } else {
             $errors = [];
             array_push($errors, ['code' => 'auth-001', 'message' => translate('Incorrect_credential,_please_try_again')]);

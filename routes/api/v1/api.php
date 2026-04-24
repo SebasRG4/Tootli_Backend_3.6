@@ -99,12 +99,13 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::get('rating/{delivery_man_id}', 'DeliveryManReviewController@get_rating');
             Route::post('/submit', 'DeliveryManReviewController@submit_review');
         });
-        Route::group(['middleware' => ['dm.api']], function () {
+        Route::group(['middleware' => ['dm.api', 'dm.pending_revision_gate']], function () {
             Route::get('profile', 'DeliverymanController@get_profile');
             Route::get('missions', 'DeliverymanController@get_missions');
             Route::get('convert-loyalty-points', 'DeliverymanController@convertLoyaltyPoints');
             Route::get('notifications', 'DeliverymanController@get_notifications');
             Route::put('update-profile', 'DeliverymanController@update_profile');
+            Route::post('submit-registration-revision', 'DeliverymanController@submitRegistrationRevision');
             Route::post('update-active-status', 'DeliverymanController@activeStatus');
             Route::get('current-orders', 'DeliverymanController@get_current_orders');
             Route::get('latest-orders', 'DeliverymanController@get_latest_orders');
@@ -117,6 +118,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::post('propose-parcel-price', 'DeliverymanController@propose_parcel_price');
             Route::put('update-payment-status', 'DeliverymanController@order_payment_status_update');
             Route::get('order-details', 'DeliverymanController@get_order_details');
+            Route::get('driving-route', 'DeliverymanController@driving_route');
             Route::get('order', 'DeliverymanController@get_order');
             Route::get('tootli-direct-tracking-chat', 'DeliverymanController@get_tootli_direct_tracking_chat');
             Route::post('tootli-direct-tracking-chat', 'DeliverymanController@post_tootli_direct_tracking_chat');
