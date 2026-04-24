@@ -7,13 +7,25 @@ use App\Models\DeliveryIncidentType;
 use App\Models\DeliveryManAdminAuditLog;
 use App\Models\DeliveryManStrikeEvent;
 use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 class DeliveryStrikeIncidentController extends BaseController
 {
+    /**
+     * {@inheritdoc}
+     *
+     * Punto de entrada requerido por ControllerInterface; redirige al listado de tipos.
+     */
+    public function index(?Request $request): View|Collection|LengthAwarePaginator|null
+    {
+        return $this->incidentTypesIndex();
+    }
+
     public function incidentTypesIndex(): View
     {
         $types = DeliveryIncidentType::query()->orderBy('sort_order')->orderBy('id')->get();
