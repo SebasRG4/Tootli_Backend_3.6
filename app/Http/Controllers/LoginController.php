@@ -430,7 +430,7 @@ class LoginController extends Controller
     {
         $request->validate([
             'reset_token' => 'required',
-            'password' => ['required', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'password' => ['required', Password::min(8)->mixedCase()->letters()->numbers()->symbols()],
             'confirm_password' => 'required|same:password',
         ]);
         $data = DB::table('password_resets')->where(['token' => $request['reset_token']])->first();

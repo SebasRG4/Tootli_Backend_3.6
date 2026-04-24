@@ -201,7 +201,7 @@ class VendorController extends Controller
             'f_name' => 'required',
             'l_name' => 'required',
             'phone' => 'required|unique:vendors,phone,'.$vendor->id,
-            'password' => ['nullable', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'password' => ['nullable', Password::min(8)->mixedCase()->letters()->numbers()->symbols()],
         ], [
             'f_name.required' => translate('messages.first_name_is_required'),
             'l_name.required' => translate('messages.Last name is required!'),

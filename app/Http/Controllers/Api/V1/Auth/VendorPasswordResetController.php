@@ -132,7 +132,7 @@ class VendorPasswordResetController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|exists:vendors,email',
             'reset_token'=> 'required',
-            'password' => ['required', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'password' => ['required', Password::min(8)->mixedCase()->letters()->numbers()->symbols()],
             'confirm_password'=> 'required|same:password',
         ],
 
@@ -143,7 +143,6 @@ class VendorPasswordResetController extends Controller
             'password.letters' => translate('The password must contain letters'),
             'password.numbers' => translate('The password must contain numbers'),
             'password.symbols' => translate('The password must contain symbols'),
-            'password.uncompromised' => translate('The password is compromised. Please choose a different one'),
         ]);
 
         if ($validator->fails()) {

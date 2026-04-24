@@ -82,7 +82,7 @@ class SystemController extends Controller
     public function settings_password_update(Request $request)
     {
         $request->validate([
-            'password' => ['required','same:confirm_password', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'password' => ['required','same:confirm_password', Password::min(8)->mixedCase()->letters()->numbers()->symbols()],
             'confirm_password' => 'required',
         ]);
 

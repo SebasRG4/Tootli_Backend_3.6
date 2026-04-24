@@ -183,7 +183,7 @@ class DeliverymanController extends Controller
             'f_name' => 'required',
             'l_name' => 'required',
             'email' => 'required|unique:delivery_men,email,' . $dm->id,
-            'password' => ['nullable', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'password' => ['nullable', Password::min(8)->mixedCase()->letters()->numbers()->symbols()],
         ], [
             'f_name.required' => 'First name is required!',
             'l_name.required' => 'Last name is required!',
@@ -246,7 +246,7 @@ class DeliverymanController extends Controller
             'identity_number' => 'required',
             'email' => 'required|unique:delivery_men,email,' . $id,
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:delivery_men,phone,' . $id,
-            'password' => ['nullable', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'password' => ['nullable', Password::min(8)->mixedCase()->letters()->numbers()->symbols()],
             'zone_id' => 'required',
             'vehicle_id' => 'required',
             'earning' => 'required',

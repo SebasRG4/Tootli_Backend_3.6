@@ -144,7 +144,7 @@ class VendorLoginController extends Controller
             'minimum_delivery_time' => 'required',
             'maximum_delivery_time' => 'required',
             'delivery_time_type'=>'required',
-            'password' => ['required', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'password' => ['required', Password::min(8)->mixedCase()->letters()->numbers()->symbols()],
             'zone_id' => 'required',
             'module_id' => 'required',
             'logo' => 'required|image|max:2048|mimes:'.IMAGE_FORMAT_FOR_VALIDATION,
@@ -156,7 +156,6 @@ class VendorLoginController extends Controller
             'password.letters' => translate('The password must contain letters'),
             'password.numbers' => translate('The password must contain numbers'),
             'password.symbols' => translate('The password must contain symbols'),
-            'password.uncompromised' => translate('The password is compromised. Please choose a different one'),
         ]);
 
         if($request->zone_id)

@@ -98,7 +98,7 @@ class DeliveryManController extends Controller
             'identity_number' => 'required',
             'email' => 'required|unique:delivery_men',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:delivery_men',
-            'password' => ['required', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'password' => ['required', Password::min(8)->mixedCase()->letters()->numbers()->symbols()],
         ]);
 
         if ($validator->fails()) {
@@ -228,7 +228,7 @@ class DeliveryManController extends Controller
             'f_name' => 'required',
             'email' => 'required|unique:delivery_men,email,'.$id,
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:delivery_men,phone,'.$id,
-            'password' => ['nullable', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'password' => ['nullable', Password::min(8)->mixedCase()->letters()->numbers()->symbols()],
         ]);
 
         if ($validator->fails()) {

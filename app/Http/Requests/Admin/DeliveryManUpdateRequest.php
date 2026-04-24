@@ -53,7 +53,7 @@ class DeliveryManUpdateRequest extends FormRequest
             'taxi_license_expiry' => 'required_if:can_drive_taxi,1|nullable|date',
             'password' => [
                 'nullable',
-                Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised(),
+                Password::min(8)->mixedCase()->letters()->numbers()->symbols(),
                 function ($attribute, $value, $fail) {
                     if (strpos($value, ' ') !== false) {
                         $fail('The :attribute cannot contain white spaces.');
@@ -74,7 +74,6 @@ class DeliveryManUpdateRequest extends FormRequest
             'password.letters' => translate('The password must contain letters'),
             'password.numbers' => translate('The password must contain numbers'),
             'password.symbols' => translate('The password must contain symbols'),
-            'password.uncompromised' => translate('The password is compromised. Please choose a different one'),
             'password.custom' => translate('The password cannot contain white spaces.'),
         ];
     }

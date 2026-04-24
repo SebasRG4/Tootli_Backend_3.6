@@ -105,7 +105,6 @@ class VendorController extends Controller
             'password.letters' => translate('The password must contain letters'),
             'password.numbers' => translate('The password must contain numbers'),
             'password.symbols' => translate('The password must contain symbols'),
-            'password.uncompromised' => translate('The password is compromised. Please choose a different one'),
             'password.custom' => translate('The password cannot contain white spaces.'),
         ]);
         if ($validator->fails()) {

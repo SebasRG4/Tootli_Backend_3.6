@@ -226,7 +226,7 @@ class DMPasswordResetController extends Controller
         $validator = Validator::make($request->all(), [
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
             'reset_token'=> 'required',
-            'password' => ['required', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'password' => ['required', Password::min(8)->mixedCase()->letters()->numbers()->symbols()],
             'confirm_password'=> 'required|same:password',
         ], [
             'password.required' => translate('The password is required'),
@@ -235,7 +235,6 @@ class DMPasswordResetController extends Controller
             'password.letters' => translate('The password must contain letters'),
             'password.numbers' => translate('The password must contain numbers'),
             'password.symbols' => translate('The password must contain symbols'),
-            'password.uncompromised' => translate('The password is compromised. Please choose a different one'),
         ]
     );
 
