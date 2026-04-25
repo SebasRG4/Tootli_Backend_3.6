@@ -249,23 +249,28 @@ class TootliDirectPublicTrackingController extends Controller
             if ($key === '' || $cluster === '') {
                 return null;
             }
-            $host = (string) ($opts['host'] ?? '127.0.0.1');
-            $port = (int) ($opts['port'] ?? 6001);
             $scheme = (string) ($opts['scheme'] ?? 'http');
             $useTls = ($opts['encrypted'] ?? false) === true || ($opts['useTLS'] ?? false) === true || $scheme === 'https';
             $channel = 'dm_location_'.$deliveryManId;
 
-            return [
+            $payload = [
                 'driver' => 'pusher',
                 'key' => $key,
                 'cluster' => $cluster,
-                'wsHost' => $host,
-                'wsPort' => $useTls ? 443 : $port,
-                'wssPort' => $useTls ? $port : 443,
                 'forceTLS' => $useTls,
                 'channel' => $channel,
                 'listen_as' => '.'.$channel,
             ];
+            // Pusher.com: no enviar wsHost si sigue el default de Laravel (127.0.0.1); Echo usa el cluster.
+            $host = (string) ($opts['host'] ?? '');
+            if ($host !== '' && $host !== '127.0.0.1') {
+                $port = (int) ($opts['port'] ?? 6001);
+                $payload['wsHost'] = $host;
+                $payload['wsPort'] = $useTls ? 443 : $port;
+                $payload['wssPort'] = $useTls ? $port : 443;
+            }
+
+            return $payload;
         }
 
         return null;

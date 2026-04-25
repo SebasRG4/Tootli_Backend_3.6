@@ -661,18 +661,21 @@
         disconnectLiveCourierWs();
         lastLiveWsChannel = cfg.channel;
         try {
-            liveWsEcho = new Echo({
+            var echoOpts = {
                 broadcaster: cfg.driver === 'pusher' ? 'pusher' : 'reverb',
                 key: cfg.key,
-                wsHost: cfg.wsHost,
-                wsPort: cfg.wsPort != null ? cfg.wsPort : 80,
-                wssPort: cfg.wssPort != null ? cfg.wssPort : 443,
                 cluster: cfg.cluster || 'mt1',
                 forceTLS: !!cfg.forceTLS,
                 encrypted: !!cfg.forceTLS,
                 enabledTransports: ['ws', 'wss'],
                 disableStats: true,
-            });
+            };
+            if (cfg.wsHost && cfg.wsHost !== '127.0.0.1') {
+                echoOpts.wsHost = cfg.wsHost;
+                echoOpts.wsPort = cfg.wsPort != null ? cfg.wsPort : 80;
+                echoOpts.wssPort = cfg.wssPort != null ? cfg.wssPort : 443;
+            }
+            liveWsEcho = new Echo(echoOpts);
             liveWsEcho.channel(cfg.channel).listen(cfg.listen_as, function (e) {
                 onCourierWsPayload(e);
             });
