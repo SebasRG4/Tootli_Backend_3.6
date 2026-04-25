@@ -558,6 +558,15 @@
                                     <option value="deliveryman">{{ translate('messages.deliveryman') }}</option>
                                 </select>
                             </div>
+                            <div class="col-sm-12">
+                                <div class="form-check mt-2">
+                                    <input class="form-check-input" type="checkbox" name="exempt_strike_review" id="exempt_strike_review_new" value="1">
+                                    <label class="form-check-label" for="exempt_strike_review_new">
+                                        {{ translate('messages.order_cancel_reason_exempt_strike_review') }}
+                                        <span class="text-muted d-block small">{{ translate('messages.order_cancel_reason_exempt_strike_review_help') }}</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                         <div class="mt-2">
                             {{ translate('messages.*Users_cannot_cancel_an_order_if_the_Admin_does_not_specify_a_cause_for_cancellation,_even_though_they_see_the_‘Cancel_Order‘_option._So_Admin_MUST_provide_a_proper_Order_Cancellation_Reason_and_select_the_related_user.')}}
@@ -601,6 +610,7 @@
                                                     <th class="border-0">{{ translate('messages.SL') }}</th>
                                                     <th class="border-0">{{ translate('messages.Reason') }}</th>
                                                     <th class="border-0">{{ translate('messages.type') }}</th>
+                                                    <th class="border-0">{{ translate('messages.order_cancel_reason_strike_review_column') }}</th>
                                                     <th class="border-0">{{ translate('messages.status') }}</th>
                                                     <th class="border-0 text-center">{{ translate('messages.action') }}</th>
                                                 </tr>
@@ -617,6 +627,13 @@
                                                             </span>
                                                         </td>
                                                         <td>{{ Str::title($reason->user_type) }}</td>
+                                                        <td>
+                                                            @if(($reason->exempt_strike_review ?? false) && $reason->user_type === 'deliveryman')
+                                                                <span class="badge badge-soft-secondary">{{ translate('messages.order_cancel_reason_exempt_strike_review') }}</span>
+                                                            @else
+                                                                <span class="text-muted">—</span>
+                                                            @endif
+                                                        </td>
                                                         <td>
                                                             <label class="toggle-switch toggle-switch-sm"
                                                                 for="stocksCheckbox{{ $reason->id }}">
@@ -733,6 +750,13 @@
                                                                             <option {{ $reason->user_type == 'customer' ? 'selected': '' }} value="customer">{{ translate('messages.customer') }}</option>
                                                                             <option {{ $reason->user_type == 'deliveryman' ? 'selected': '' }} value="deliveryman">{{ translate('messages.deliveryman') }}</option>
                                                                         </select>
+                                                                        <div class="form-check mt-3">
+                                                                            <input class="form-check-input" type="checkbox" name="exempt_strike_review" id="exempt_strike_review_{{ $reason->id }}" value="1" {{ ($reason->exempt_strike_review ?? false) && $reason->user_type === 'deliveryman' ? 'checked' : '' }}>
+                                                                            <label class="form-check-label" for="exempt_strike_review_{{ $reason->id }}">
+                                                                                {{ translate('messages.order_cancel_reason_exempt_strike_review') }}
+                                                                                <span class="text-muted d-block small">{{ translate('messages.order_cancel_reason_exempt_strike_review_help') }}</span>
+                                                                            </label>
+                                                                        </div>
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ translate('Close') }}</button>

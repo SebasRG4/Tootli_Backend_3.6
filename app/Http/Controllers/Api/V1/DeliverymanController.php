@@ -1094,18 +1094,32 @@ class DeliverymanController extends Controller
 
         if ($request->status === 'canceled' && $order->order_type !== 'parcel' && $this->deliveryCancelMeta !== null) {
             try {
-                OrderStrikeReviewQueue::query()->create([
-                    'order_id' => $order->id,
-                    'delivery_man_id' => (int) $dm->id,
-                    'order_cancel_reason_id' => $this->deliveryCancelMeta['cancel_reason_id'],
-                    'cancellation_detail' => $request->input('cancellation_detail'),
-                    'evidence' => $this->deliveryCancelMeta['evidence'],
-                    'status' => OrderStrikeReviewQueue::STATUS_PENDING,
-                ]);
+                $skipStrikeReviewQueue = false;
+                $cancelReasonId = $this->deliveryCancelMeta['cancel_reason_id'];
+                if ($cancelReasonId) {
+                    $cancelReasonRow = OrderCancelReason::query()
+                        ->whereKey((int) $cancelReasonId)
+                        ->where('user_type', 'deliveryman')
+                        ->first();
+                    $skipStrikeReviewQueue = (bool) ($cancelReasonRow?->exempt_strike_review ?? false);
+                }
+
+                if (! $skipStrikeReviewQueue) {
+                    OrderStrikeReviewQueue::query()->create([
+                        'order_id' => $order->id,
+                        'delivery_man_id' => (int) $dm->id,
+                        'order_cancel_reason_id' => $cancelReasonId,
+                        'cancellation_detail' => $request->input('cancellation_detail'),
+                        'evidence' => $this->deliveryCancelMeta['evidence'],
+                        'status' => OrderStrikeReviewQueue::STATUS_PENDING,
+                    ]);
+                }
+
                 OrderAuditLogger::log($order, 'deliveryman', (int) $dm->id, OrderAuditEvent::EVENT_DELIVERY_CANCEL, [
-                    'cancel_reason_id' => $this->deliveryCancelMeta['cancel_reason_id'],
+                    'cancel_reason_id' => $cancelReasonId,
                     'cancellation_detail' => $request->input('cancellation_detail'),
                     'evidence' => $this->deliveryCancelMeta['evidence'],
+                    'strike_review_queue_skipped' => $skipStrikeReviewQueue,
                 ]);
             } catch (\Throwable $e) {
                 report($e);
@@ -1135,6 +1149,7 @@ class DeliverymanController extends Controller
             ->map(static fn (OrderCancelReason $r) => [
                 'id' => $r->id,
                 'reason' => $r->reason,
+                'exempt_strike_review' => (bool) ($r->exempt_strike_review ?? false),
             ]);
 
         return response()->json(['reasons' => $reasons], 200);

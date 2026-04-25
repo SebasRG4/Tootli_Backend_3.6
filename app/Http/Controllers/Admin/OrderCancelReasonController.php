@@ -23,6 +23,7 @@ class OrderCancelReasonController extends Controller
         $cancelReason = new OrderCancelReason();
         $cancelReason->reason = $request->reason[array_search('default', $request->lang)];
         $cancelReason->user_type=$request->user_type;
+        $cancelReason->exempt_strike_review = $request->boolean('exempt_strike_review') && $request->user_type === 'deliveryman';
         $cancelReason->created_at = now();
         $cancelReason->updated_at = now();
         $cancelReason->save();
@@ -85,6 +86,7 @@ class OrderCancelReasonController extends Controller
         $cancelReason = OrderCancelReason::findOrFail($request->reason_id);
         $cancelReason->reason = $request->reason[array_search('default', $request->lang1)];
         $cancelReason->user_type=$request->user_type;
+        $cancelReason->exempt_strike_review = $request->boolean('exempt_strike_review') && $request->user_type === 'deliveryman';
         $cancelReason?->save();
         $default_lang = str_replace('_', '-', app()->getLocale());
         foreach ($request->lang1 as $index => $key) {

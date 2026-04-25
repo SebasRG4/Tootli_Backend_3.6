@@ -12,7 +12,8 @@ class OrderCancelReason extends Model
     protected $guarded = ['id'];
     protected $casts = [
         'id' => 'integer',
-        'status' => 'integer'
+        'status' => 'integer',
+        'exempt_strike_review' => 'boolean',
     ];
 
     public function translations()
