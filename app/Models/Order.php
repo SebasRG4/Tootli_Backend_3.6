@@ -106,6 +106,15 @@ class Order extends Model
     }
 
     /**
+     * El chat del enlace público de seguimiento Tootli Directo sigue activo
+     * hasta que el pedido quede entregado (o entrega parcial).
+     */
+    public function isTootliDirectPublicTrackingChatOpen(): bool
+    {
+        return ! in_array(strtolower((string) ($this->order_status ?? '')), ['delivered', 'partial_delivered'], true);
+    }
+
+    /**
      * URL pública de rastreo (Tootli Directo + domicilio + token vigente).
      * Expuesto en JSON de la API vendor vía $appends.
      */

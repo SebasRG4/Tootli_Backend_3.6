@@ -2,20 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\CentralLogics\Helpers;
+use App\Models\DeliveryMan;
 use App\Models\Order;
 use App\Models\TootliDirectTrackingChatMessage;
 use App\Models\TootliDirectTrackingToken;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 
 class TootliDirectTrackingChatController extends Controller
 {
     public function index(Request $request, string $token): \Illuminate\Http\JsonResponse
     {
-        $orderId = $this->resolveOrderId($token);
-        if ($orderId === null) {
+        $order = $this->resolveOrder($token);
+        if ($order === null) {
             return response()->json(['ok' => false, 'error' => 'not_found'], 404);
         }
+        if (! $order->isTootliDirectPublicTrackingChatOpen()) {
+            return response()->json(['ok' => true, 'messages' => [], 'chat_closed' => true]);
+        }
+
+        $orderId = (int) $order->id;
 
         $messages = TootliDirectTrackingChatMessage::query()
             ->where('order_id', $orderId)
@@ -38,10 +47,15 @@ class TootliDirectTrackingChatController extends Controller
 
     public function store(Request $request, string $token): \Illuminate\Http\JsonResponse
     {
-        $orderId = $this->resolveOrderId($token);
-        if ($orderId === null) {
+        $order = $this->resolveOrder($token);
+        if ($order === null) {
             return response()->json(['ok' => false, 'error' => 'not_found'], 404);
         }
+        if (! $order->isTootliDirectPublicTrackingChatOpen()) {
+            return response()->json(['ok' => false, 'error' => 'chat_closed'], 403);
+        }
+
+        $orderId = (int) $order->id;
 
         $key = 'td-tracking-chat:'.$token;
         if (RateLimiter::tooManyAttempts($key, 25)) {
@@ -64,10 +78,38 @@ class TootliDirectTrackingChatController extends Controller
             'body' => $body,
         ]);
 
+        try {
+            $this->notifyAssignedDeliveryManNewTrackingChatMessage($order, $body);
+        } catch (\Throwable $e) {
+            Log::warning('td_tracking_chat_push_dm: '.$e->getMessage());
+        }
+
         return response()->json(['ok' => true]);
     }
 
-    private function resolveOrderId(string $token): ?int
+    /**
+     * Aviso push al repartidor asignado (app) cuando el cliente escribe desde la web de seguimiento.
+     */
+    private function notifyAssignedDeliveryManNewTrackingChatMessage(Order $order, string $bodyPreview): void
+    {
+        if (! $order->delivery_man_id) {
+            return;
+        }
+        $dm = DeliveryMan::query()->where('id', $order->delivery_man_id)->first();
+        if (! $dm || empty($dm->fcm_token)) {
+            return;
+        }
+
+        Helpers::send_push_notif_to_device($dm->fcm_token, [
+            'title' => translate('messages.tootli_direct_chat_customer_message_title'),
+            'description' => Str::limit($bodyPreview, 160),
+            'type' => 'tootli_direct_chat',
+            'image' => '',
+            'order_id' => (string) $order->id,
+        ]);
+    }
+
+    private function resolveOrder(string $token): ?Order
     {
         $token = trim($token);
         if (! preg_match('/^[A-Za-z0-9_-]{20,64}$/', $token)) {
@@ -84,6 +126,6 @@ class TootliDirectTrackingChatController extends Controller
             return null;
         }
 
-        return (int) $order->id;
+        return $order;
     }
 }

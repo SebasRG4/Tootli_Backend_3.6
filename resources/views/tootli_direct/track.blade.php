@@ -292,6 +292,13 @@
             letter-spacing: 0.12em;
             color: #166534;
         }
+        .td-otp-legend {
+            margin-top: 10px;
+            font-size: 13px;
+            line-height: 1.4;
+            color: #92400e;
+            font-weight: 600;
+        }
         .td-chat {
             background: #fff;
             border-radius: 18px;
@@ -305,6 +312,18 @@
             padding: 12px 14px;
             border-bottom: 1px solid var(--line);
         }
+        .td-notify-perm {
+            flex-shrink: 0;
+            border: 1px solid var(--line);
+            background: #fff;
+            border-radius: 12px;
+            padding: 6px 10px;
+            font-size: 16px;
+            line-height: 1;
+            cursor: pointer;
+            color: var(--muted);
+        }
+        .td-notify-perm:active { background: #f1f5f9; }
         .td-chat__dot {
             width: 8px;
             height: 8px;
@@ -313,6 +332,8 @@
             flex-shrink: 0;
         }
         .td-chat__title {
+            flex: 1;
+            min-width: 0;
             font-size: 11px;
             font-weight: 700;
             letter-spacing: 0.08em;
@@ -530,7 +551,8 @@
             </div>
 
             <div id="otp-wrap" class="td-otp" style="display:none;">
-                Código de entrega: <strong id="otp-val"></strong>
+                <div>Código de entrega: <strong id="otp-val"></strong></div>
+                <p id="otp-pin-legend" class="td-otp-legend" style="display:none;">Este pin no lo compartas hasta la entrega de tu pedido.</p>
             </div>
 
             <div class="td-chat" id="chat-box">
@@ -580,6 +602,7 @@
         dmSub: document.getElementById('dm-sub'),
         otpWrap: document.getElementById('otp-wrap'),
         otpVal: document.getElementById('otp-val'),
+        otpPinLegend: document.getElementById('otp-pin-legend'),
         dmPhoneRow: document.getElementById('dm-phone-row'),
         dmPhone: document.getElementById('dm-phone'),
         dmCallBtn: document.getElementById('dm-call-btn'),
@@ -595,7 +618,10 @@
     let markers = { pickup: null, dropoff: null, courier: null };
     let lastChatMessageId = 0;
     let chatPollStarted = false;
+    window.__tdOrderId = null;
     let routeLayerReady = false;
+    /** Chat desactivado (p. ej. pedido ya entregado). */
+    let trackingChatClosed = true;
 
     function escapeHtml(s) {
         return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -638,6 +664,37 @@
         } catch (e) { return ''; }
     }
 
+    function maybeNotifyNewDmFromCourier(m) {
+        if (!('Notification' in window) || Notification.permission !== 'granted') return;
+        if (!m || m.sender !== 'delivery_man') return;
+        if (document.visibilityState === 'visible') return;
+        var tag = 'tootli-direct-dm-' + (window.__tdOrderId || '0');
+        try {
+            new Notification('Tootli Directo', {
+                body: (m.body || '').slice(0, 140),
+                tag: tag,
+            });
+        } catch (e2) {}
+    }
+
+    function setupBrowserNotifyPermissionButton() {
+        if (!('Notification' in window)) return;
+        var btn = document.getElementById('btn-notify-perm');
+        if (!btn) return;
+        if (Notification.permission === 'granted') {
+            btn.style.display = 'none';
+            return;
+        }
+        btn.style.display = '';
+        btn.onclick = function () {
+            Notification.requestPermission().then(function (p) {
+                if (p === 'granted') {
+                    btn.style.display = 'none';
+                }
+            }).catch(function () {});
+        };
+    }
+
     function renderChatMessages(list) {
         if (!els.chatLog) return;
         list.forEach(function (m) {
@@ -652,26 +709,47 @@
             row.appendChild(tm);
             els.chatLog.appendChild(row);
             lastChatMessageId = m.id;
+            if (isDm) {
+                maybeNotifyNewDmFromCourier(m);
+            }
         });
         els.chatLog.scrollTop = els.chatLog.scrollHeight;
     }
 
     async function fetchChat() {
-        if (!chatUrl) return;
+        if (!chatUrl || trackingChatClosed) return;
         try {
             var r = await fetch(chatUrl, { headers: { 'Accept': 'application/json' }, cache: 'no-store' });
             if (!r.ok) return;
             var j = await r.json();
+            if (j.chat_closed) {
+                trackingChatClosed = true;
+                setTrackingChatUiVisible(false);
+                if (els.otpPinLegend) {
+                    els.otpPinLegend.style.display = 'none';
+                }
+                return;
+            }
             if (!j.ok || !Array.isArray(j.messages)) return;
             renderChatMessages(j.messages);
         } catch (e) { console.warn(e); }
     }
 
     function startChatPolling() {
-        if (!chatUrl || chatPollStarted) return;
+        if (!chatUrl || chatPollStarted || trackingChatClosed) return;
         chatPollStarted = true;
         fetchChat();
         setInterval(fetchChat, 4000);
+    }
+
+    function setTrackingChatUiVisible(visible) {
+        const box = document.getElementById('chat-box');
+        if (box) {
+            box.style.display = visible ? '' : 'none';
+        }
+        if (els.dmFocusChat) {
+            els.dmFocusChat.style.display = visible ? '' : 'none';
+        }
     }
 
     function pickupSvg() {
@@ -833,6 +911,12 @@
         els.main.style.display = 'flex';
         els.err.style.display = 'none';
 
+        if (d.order_id != null) {
+            window.__tdOrderId = d.order_id;
+        }
+
+        trackingChatClosed = d.tracking_chat_open !== true;
+
         if (d.order_status === 'delivered' || d.order_status === 'partial_delivered') {
             els.eta.textContent = '✓';
             els.etaMeta.textContent = 'Pedido entregado';
@@ -904,13 +988,23 @@
             els.noDm.style.display = 'block';
         }
 
-        startChatPolling();
+        setTrackingChatUiVisible(!trackingChatClosed);
+        if (!trackingChatClosed) {
+            setupBrowserNotifyPermissionButton();
+            startChatPolling();
+        }
 
         if (d.otp) {
             els.otpWrap.style.display = 'block';
             els.otpVal.textContent = d.otp;
+            if (els.otpPinLegend) {
+                els.otpPinLegend.style.display = (!trackingChatClosed) ? 'block' : 'none';
+            }
         } else {
             els.otpWrap.style.display = 'none';
+            if (els.otpPinLegend) {
+                els.otpPinLegend.style.display = 'none';
+            }
         }
     }
 
@@ -960,7 +1054,7 @@
         els.chatForm.addEventListener('submit', async function (ev) {
             ev.preventDefault();
             var t = (els.chatInput.value || '').trim();
-            if (!t || !chatUrl) return;
+            if (!t || !chatUrl || trackingChatClosed) return;
             try {
                 var r = await fetch(chatUrl, {
                     method: 'POST',

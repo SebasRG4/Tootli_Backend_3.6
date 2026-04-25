@@ -168,6 +168,7 @@ class TootliDirectPublicTrackingController extends Controller
             /** @var list<array{0: float, 1: float}>|null Polilínea [lng,lat]… por calles (Mapbox Directions). */
             'route_coordinates' => $routeCoordinates,
             'otp' => $order->order_status === 'picked_up' ? (string) ($order->otp ?? '') : null,
+            'tracking_chat_open' => $order->isTootliDirectPublicTrackingChatOpen(),
             'updated_at' => $order->updated_at?->toIso8601String(),
         ];
     }

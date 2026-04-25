@@ -1461,6 +1461,9 @@ class Helpers
 
                 unset($item['details']);
                 self::attach_vendor_store_amount_from_transaction($item);
+                if ($item instanceof \App\Models\Order) {
+                    $item->setAttribute('tootli_direct_trackable', $item->isTootliDirectTrackable());
+                }
                 array_push($storage, $item);
             }
             $data = $storage;
@@ -1508,6 +1511,9 @@ class Helpers
 
             unset($data['details']);
             self::attach_vendor_store_amount_from_transaction($data);
+            if ($data instanceof \App\Models\Order) {
+                $data->setAttribute('tootli_direct_trackable', $data->isTootliDirectTrackable());
+            }
         }
         return $data;
     }

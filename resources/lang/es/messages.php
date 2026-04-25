@@ -1377,6 +1377,8 @@
   'maps_paste_link_empty' => 'Pega primero un enlace de Google Maps.',
   'pos_maps_link_map_not_ready' => 'Espera a que cargue el mapa de la zona e inténtalo de nuevo.',
   'tootli_direct_order_badge' => 'Tootli Directo',
+  'tootli_direct_tracking_chat_closed' => 'El chat de este pedido ya no está disponible (pedido entregado).',
+  'tootli_direct_chat_customer_message_title' => 'Tootli Directo — mensaje del cliente',
   'Set_a_default_‘Commission_Rate’_for_freelance_deliverymen_(under_admin)_on_every_deliveryman. ' => 'Set a default ‘Commission Rate’ for freelance deliverymen (under admin) on every deliveryman.',
   'Who_Will_Confirm_Order?' => 'Who Will Confirm Order',
   'After_a_customer_order_placement,_Admin_can_define_who_will_confirm_the_order_first-_Deliveryman_or_Store?_For_example,_if_you_choose_‘Delivery_man’,_the_deliveryman_nearby_will_confirm_the_order_and_forward_it_to_the_related_store_to_process_the_order._It_works_vice-versa_if_you_choose_‘Store’.' => 'After a customer order placement  Admin can define who will confirm the order first- Deliveryman or Store  For example  if you choose ‘Delivery man’  the deliveryman nearby will confirm the order and forward it to the related store to process the order. It works vice-versa if you choose ‘Store’.',

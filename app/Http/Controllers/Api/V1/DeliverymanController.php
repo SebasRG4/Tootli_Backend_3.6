@@ -2287,6 +2287,10 @@ class DeliverymanController extends Controller
             return response()->json(['errors' => [['code' => 'order_id', 'message' => trans('messages.order_data_not_found')]]], 404);
         }
 
+        if (! $order->isTootliDirectPublicTrackingChatOpen()) {
+            return response()->json(['messages' => [], 'chat_closed' => true], 200);
+        }
+
         $messages = TootliDirectTrackingChatMessage::query()
             ->where('order_id', $order->id)
             ->whereIn('sender', [
@@ -2325,6 +2329,10 @@ class DeliverymanController extends Controller
             ->first();
         if (! $order || ! $order->isTootliDirectTrackable()) {
             return response()->json(['errors' => [['code' => 'order_id', 'message' => trans('messages.order_data_not_found')]]], 404);
+        }
+
+        if (! $order->isTootliDirectPublicTrackingChatOpen()) {
+            return response()->json(['errors' => [['code' => 'chat_closed', 'message' => translate('messages.tootli_direct_tracking_chat_closed')]]], 403);
         }
 
         $key = 'td-dm-tracking-chat:'.$dm->id.':'.$order->id;
