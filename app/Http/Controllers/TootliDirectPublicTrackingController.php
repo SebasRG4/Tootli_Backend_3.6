@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DeliveryHistory;
 use App\Models\DeliveryMan;
 use App\Models\DMVehicle;
 use App\Models\Order;
@@ -47,7 +48,10 @@ class TootliDirectPublicTrackingController extends Controller
             return response()->json(['ok' => false, 'error' => 'not_found'], 404);
         }
 
-        return response()->json($payload);
+        return response()
+            ->json($payload)
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            ->header('Pragma', 'no-cache');
     }
 
     private function normalizeToken(string $token): string
@@ -85,7 +89,7 @@ class TootliDirectPublicTrackingController extends Controller
         }
 
         $order = Order::withoutGlobalScopes()
-            ->with(['store', 'delivery_man.last_location', 'delivery_man.rating', 'module'])
+            ->with(['store', 'delivery_man.rating', 'module'])
             ->find($row->order_id);
 
         if (! $order || ! $order->isTootliDirectTrackable()) {
@@ -108,9 +112,15 @@ class TootliDirectPublicTrackingController extends Controller
 
         $courierLat = null;
         $courierLng = null;
-        if ($dm && $dm->relationLoaded('last_location') && $dm->last_location) {
-            $courierLat = $this->parseCoord($dm->last_location->latitude);
-            $courierLng = $this->parseCoord($dm->last_location->longitude);
+        if ($dm && $dm->id) {
+            $hist = DeliveryHistory::query()
+                ->where('delivery_man_id', $dm->id)
+                ->orderByDesc('id')
+                ->first();
+            if ($hist) {
+                $courierLat = $this->parseCoord($hist->latitude);
+                $courierLng = $this->parseCoord($hist->longitude);
+            }
         }
 
         $vehicleLine = null;
