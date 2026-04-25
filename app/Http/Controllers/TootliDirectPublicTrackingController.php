@@ -29,6 +29,7 @@ class TootliDirectPublicTrackingController extends Controller
             'chatUrl' => url('/rastreo-orden/tootli-directo/'.$token.'/chat'),
             'mapboxPublicToken' => $this->mapboxPublicToken(),
             'courierMarkerUrl' => asset('assets/tootli/delivery_man_marker.png'),
+            'echoScripts' => $this->echoScriptsEnabledForPublicTracking(),
         ]);
     }
 
@@ -180,7 +181,94 @@ class TootliDirectPublicTrackingController extends Controller
             'otp' => $order->order_status === 'picked_up' ? (string) ($order->otp ?? '') : null,
             'tracking_chat_open' => $order->isTootliDirectPublicTrackingChatOpen(),
             'updated_at' => $order->updated_at?->toIso8601String(),
+            'live_ws' => $this->buildLiveLocationWebsocketConfig($dm?->id),
         ];
+    }
+
+    /**
+     * Carga Pusher + Echo en la vista de rastreo si hay credenciales de broadcast (Reverb/Pusher).
+     */
+    private function echoScriptsEnabledForPublicTracking(): bool
+    {
+        $d = (string) config('broadcasting.default', 'null');
+        if (! in_array($d, ['reverb', 'pusher'], true)) {
+            return false;
+        }
+        $key = (string) (config("broadcasting.connections.{$d}.key") ?? '');
+        $opts = config("broadcasting.connections.{$d}.options", []);
+
+        if ($key === '') {
+            return false;
+        }
+        if ($d === 'reverb') {
+            return ($opts['host'] ?? '') !== '';
+        }
+
+        return ($opts['cluster'] ?? '') !== '';
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function buildLiveLocationWebsocketConfig(?int $deliveryManId): ?array
+    {
+        if (! $deliveryManId) {
+            return null;
+        }
+        $driver = (string) config('broadcasting.default', 'null');
+        if ($driver === 'reverb') {
+            $c = config('broadcasting.connections.reverb');
+            $key = (string) ($c['key'] ?? '');
+            $opts = $c['options'] ?? [];
+            $host = (string) ($opts['host'] ?? '');
+            if ($key === '' || $host === '') {
+                return null;
+            }
+            $scheme = (string) ($opts['scheme'] ?? 'https');
+            $port = (int) ($opts['port'] ?? 443);
+            $useTls = ($opts['useTLS'] ?? ($scheme === 'https')) === true || $scheme === 'https';
+            $channel = 'dm_location_'.$deliveryManId;
+
+            return [
+                'driver' => 'reverb',
+                'key' => $key,
+                'wsHost' => $host,
+                'wsPort' => $useTls ? 443 : 80,
+                'wssPort' => $port,
+                'forceTLS' => $useTls,
+                'cluster' => 'mt1',
+                'channel' => $channel,
+                'listen_as' => '.'.$channel,
+            ];
+        }
+        if ($driver === 'pusher') {
+            $c = config('broadcasting.connections.pusher');
+            $key = (string) ($c['key'] ?? '');
+            $opts = $c['options'] ?? [];
+            $cluster = (string) ($opts['cluster'] ?? '');
+            if ($key === '' || $cluster === '') {
+                return null;
+            }
+            $host = (string) ($opts['host'] ?? '127.0.0.1');
+            $port = (int) ($opts['port'] ?? 6001);
+            $scheme = (string) ($opts['scheme'] ?? 'http');
+            $useTls = ($opts['encrypted'] ?? false) === true || ($opts['useTLS'] ?? false) === true || $scheme === 'https';
+            $channel = 'dm_location_'.$deliveryManId;
+
+            return [
+                'driver' => 'pusher',
+                'key' => $key,
+                'cluster' => $cluster,
+                'wsHost' => $host,
+                'wsPort' => $useTls ? 443 : $port,
+                'wssPort' => $useTls ? $port : 443,
+                'forceTLS' => $useTls,
+                'channel' => $channel,
+                'listen_as' => '.'.$channel,
+            ];
+        }
+
+        return null;
     }
 
     private function parseCoord(mixed $v): ?float

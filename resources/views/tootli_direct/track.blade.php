@@ -574,6 +574,10 @@
     </div>
     <div id="err" class="err-page" style="display:none;"></div>
 </div>
+@if(!empty($echoScripts))
+<script src="https://cdn.jsdelivr.net/npm/pusher-js@8.4.0-rc2/dist/web/pusher.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.16.1/dist/echo.iife.js" crossorigin="anonymous"></script>
+@endif
 <script>
 (function () {
     const pollUrl = @json($pollUrl);
@@ -622,6 +626,64 @@
     let routeLayerReady = false;
     /** Chat desactivado (p. ej. pedido ya entregado). */
     let trackingChatClosed = true;
+    let liveWsEcho = null;
+    let lastLiveWsChannel = null;
+
+    function disconnectLiveCourierWs() {
+        if (liveWsEcho) {
+            try {
+                liveWsEcho.disconnect();
+            } catch (e) {}
+            liveWsEcho = null;
+            lastLiveWsChannel = null;
+        }
+    }
+
+    function onCourierWsPayload(payload) {
+        if (!payload || payload.latitude == null || payload.longitude == null) return;
+        var la = parseFloat(payload.latitude);
+        var ln = parseFloat(payload.longitude);
+        if (!isFinite(la) || !isFinite(ln)) return;
+        if (!mapboxToken || typeof mapboxgl === 'undefined') return;
+        ensureMap();
+        setMarker('courier', ln, la);
+        if (window.__tdRoutePayload && window.__tdRoutePayload.dropoff) {
+            var d = Object.assign({}, window.__tdRoutePayload);
+            d.courier = { lat: la, lng: ln };
+            updateRouteLine(d);
+        }
+    }
+
+    function initLiveCourierWs(cfg) {
+        if (!cfg || !cfg.key || !cfg.channel || !cfg.listen_as) return;
+        if (typeof window.Echo === 'undefined' || typeof window.Pusher === 'undefined') return;
+        if (cfg.channel === lastLiveWsChannel && liveWsEcho) return;
+        disconnectLiveCourierWs();
+        lastLiveWsChannel = cfg.channel;
+        try {
+            liveWsEcho = new Echo({
+                broadcaster: cfg.driver === 'pusher' ? 'pusher' : 'reverb',
+                key: cfg.key,
+                wsHost: cfg.wsHost,
+                wsPort: cfg.wsPort != null ? cfg.wsPort : 80,
+                wssPort: cfg.wssPort != null ? cfg.wssPort : 443,
+                cluster: cfg.cluster || 'mt1',
+                forceTLS: !!cfg.forceTLS,
+                encrypted: !!cfg.forceTLS,
+                enabledTransports: ['ws', 'wss'],
+                disableStats: true,
+            });
+            liveWsEcho.channel(cfg.channel).listen(cfg.listen_as, function (e) {
+                onCourierWsPayload(e);
+            });
+        } catch (e) {
+            console.warn('Echo rastreo:', e);
+            liveWsEcho = null;
+            lastLiveWsChannel = null;
+        }
+    }
+
+    window.addEventListener('beforeunload', disconnectLiveCourierWs);
 
     function escapeHtml(s) {
         return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -986,6 +1048,12 @@
         } else {
             els.dmBlock.style.display = 'none';
             els.noDm.style.display = 'block';
+        }
+
+        if (d.live_ws && d.live_ws.channel) {
+            initLiveCourierWs(d.live_ws);
+        } else {
+            disconnectLiveCourierWs();
         }
 
         setTrackingChatUiVisible(!trackingChatClosed);

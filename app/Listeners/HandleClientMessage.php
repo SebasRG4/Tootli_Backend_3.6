@@ -2,7 +2,6 @@
 
 namespace App\Listeners;
 
-use App\Jobs\DispatchDriverLocationJob;
 use App\Models\DeliveryHistory;
 use App\Models\DeliveryMan;
 use Laravel\Reverb\Events\MessageReceived;
@@ -42,11 +41,6 @@ class HandleClientMessage
                         $data['longitude'],
                         $data['location'] ?? null
                     );
-                    try {
-                        dispatch(new DispatchDriverLocationJob($deliverymanId, $latitude, $longitude, $data['location']))->onQueue('default');
-                    } catch (\Exception $e) {
-                        info($e->getMessage());
-                    }
                 }
             }
         }

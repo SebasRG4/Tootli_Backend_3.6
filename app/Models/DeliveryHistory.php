@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\DeliveryLocationUpdated;
 use Illuminate\Database\Eloquent\Model;
 
 class DeliveryHistory extends Model
@@ -23,13 +24,32 @@ class DeliveryHistory extends Model
 
         if ($row) {
             $row->update($payload);
-            return;
+        } else {
+            static::create(array_merge(
+                ['delivery_man_id' => $deliveryManId],
+                $payload
+            ));
         }
 
-        static::create(array_merge(
-            ['delivery_man_id' => $deliveryManId],
-            $payload
-        ));
+        static::broadcastDriverLocation($deliveryManId, $latitude, $longitude, $location);
+    }
+
+    private static function broadcastDriverLocation(int $deliveryManId, mixed $latitude, mixed $longitude, ?string $location): void
+    {
+        $driver = (string) config('broadcasting.default', 'null');
+        if (! in_array($driver, ['reverb', 'pusher'], true)) {
+            return;
+        }
+        try {
+            broadcast(new DeliveryLocationUpdated(
+                $deliveryManId,
+                $latitude,
+                $longitude,
+                (string) ($location ?? '')
+            ));
+        } catch (\Throwable $e) {
+            report($e);
+        }
     }
 
     protected $casts = [
