@@ -2947,6 +2947,30 @@
         }
 
         $(document).ready(function() {
+            var orderDmMarker = null;
+            var orderDmLivePoll = null;
+            var tdOrderDmLiveUrl = @json(route('admin.order.delivery-man-live-location', $order->id));
+
+            function stopOrderDmLivePoll() {
+                if (orderDmLivePoll) {
+                    clearInterval(orderDmLivePoll);
+                    orderDmLivePoll = null;
+                }
+            }
+
+            function tickOrderDmLocation() {
+                if (!orderDmMarker || !tdOrderDmLiveUrl) return;
+                fetch(tdOrderDmLiveUrl, {
+                    credentials: 'same-origin',
+                    headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+                }).then(function(r) { return r.json(); }).then(function(j) {
+                    if (!j || !j.ok || j.lat == null || j.lng == null) return;
+                    var la = parseFloat(j.lat);
+                    var ln = parseFloat(j.lng);
+                    if (!isFinite(la) || !isFinite(ln)) return;
+                    orderDmMarker.position = new google.maps.LatLng(la, ln);
+                }).catch(function() {});
+            }
 
             // Re-init map before show modal
             $('#myModal').on('shown.bs.modal', function(event) {
@@ -2972,6 +2996,7 @@
 
 
             function initializegLocationMap() {
+                orderDmMarker = null;
                 map = new google.maps.Map(document.getElementById("location_map_canvas"), myOptions);
 
                 var infowindow = new google.maps.InfoWindow();
@@ -3025,6 +3050,7 @@
                     }
                 })(dmmarker));
                 locationbounds.extend(dmmarker.position);
+                orderDmMarker = dmmarker;
                 @endif
 
                 @if ($order->store)
@@ -3060,9 +3086,18 @@
                 });
             }
 
-            // Re-init map before show modal
+            // Re-init map before show modal + posición en vivo del repartidor
             $('#locationModal').on('shown.bs.modal', function(event) {
                 initializegLocationMap();
+                stopOrderDmLivePoll();
+                @if ($order->delivery_man)
+                tickOrderDmLocation();
+                orderDmLivePoll = setInterval(tickOrderDmLocation, 5000);
+                @endif
+            });
+            $('#locationModal').on('hidden.bs.modal', function() {
+                stopOrderDmLivePoll();
+                orderDmMarker = null;
             });
 
 

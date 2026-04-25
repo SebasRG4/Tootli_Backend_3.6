@@ -264,10 +264,30 @@ class Order extends Model
         return $this->hasMany(DeliveryHistory::class, 'order_id');
     }
 
-    public function dm_last_location()
+    /**
+     * Última posición GPS del repartidor asignado (misma fila que DeliveryMan::last_location: mayor id en delivery_histories).
+     * Antes se delegaba a delivery_man->last_location() como “relación” en Order, lo que podía cachear datos incorrectos.
+     *
+     * @return array{latitude: mixed, longitude: mixed, location: string}|null
+     */
+    public function getDmLastLocationAttribute(): ?array
     {
-        // return $this->hasOne(DeliveryHistory::class, 'order_id')->latest();
-        return $this->delivery_man->last_location();
+        if (! $this->delivery_man_id) {
+            return null;
+        }
+        $hist = DeliveryHistory::query()
+            ->where('delivery_man_id', $this->delivery_man_id)
+            ->orderByDesc('id')
+            ->first();
+        if (! $hist || $hist->latitude === null || $hist->longitude === null || $hist->latitude === '' || $hist->longitude === '') {
+            return null;
+        }
+
+        return [
+            'latitude' => $hist->latitude,
+            'longitude' => $hist->longitude,
+            'location' => (string) ($hist->location ?? ''),
+        ];
     }
 
     public function transaction()

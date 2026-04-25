@@ -1241,9 +1241,15 @@ class DeliverymanController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
-        $last_data = DeliveryHistory::whereHas('delivery_man.orders', function ($query) use ($request) {
-            return $query->where('id', $request->order_id);
-        })->latest()->first();
+        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+        if (! $dm) {
+            return response()->json(['errors' => [['code' => 'auth', 'message' => translate('messages.not_found')]]], 401);
+        }
+        $order = Order::where(['id' => $request['order_id'], 'delivery_man_id' => $dm['id']])->first();
+        if (! $order) {
+            return response()->json(['errors' => [['code' => 'order', 'message' => translate('messages.not_found')]]], 404);
+        }
+        $last_data = DeliveryHistory::where('delivery_man_id', $dm['id'])->orderByDesc('id')->first();
 
         return response()->json($last_data, 200);
     }

@@ -381,6 +381,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
             // Route::put('status-update/{id}', 'OrderController@status')->name('status-update');
             Route::get('view/{id}', 'OrderController@view')->name('view');
+            Route::get('delivery-man-live-location/{id}', 'OrderController@delivery_man_live_location')->name('delivery-man-live-location');
             Route::post('update-shipping/{order}', 'OrderController@update_shipping')->name('update-shipping');
             Route::delete('delete/{id}', 'OrderController@delete')->name('delete');
 

@@ -15,6 +15,7 @@ use App\Models\Category;
 use App\Scopes\ZoneScope;
 use App\Scopes\StoreScope;
 use App\Models\DeliveryMan;
+use App\Models\DeliveryHistory;
 use App\Models\OrderDetail;
 use App\Models\Translation;
 use App\Exports\OrderExport;
@@ -367,6 +368,35 @@ class OrderController extends Controller
             return back();
         }
     }
+
+    /**
+     * JSON para refrescar el pin del repartidor en el mapa del pedido (admin).
+     */
+    public function delivery_man_live_location($id)
+    {
+        $order = Order::withoutGlobalScopes()->find($id);
+        if (! $order || ! $order->delivery_man_id) {
+            return response()->json(['ok' => false], 404);
+        }
+
+        $hist = DeliveryHistory::query()
+            ->where('delivery_man_id', $order->delivery_man_id)
+            ->orderByDesc('id')
+            ->first();
+
+        if (! $hist || $hist->latitude === null || $hist->longitude === null || $hist->latitude === '' || $hist->longitude === '') {
+            return response()->json(['ok' => false])
+                ->header('Cache-Control', 'no-store');
+        }
+
+        return response()->json([
+            'ok' => true,
+            'lat' => (float) $hist->latitude,
+            'lng' => (float) $hist->longitude,
+            'location' => (string) ($hist->location ?? ''),
+        ])->header('Cache-Control', 'no-store');
+    }
+
     public function switch_to_cod($id)
     {
         $order = Order::where('id', $id)->first();
