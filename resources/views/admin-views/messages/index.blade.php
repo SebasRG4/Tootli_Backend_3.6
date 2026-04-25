@@ -1,6 +1,8 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Messages'))
+@php($messagesListUrl = $messagesListUrl ?? route('admin.message.list'))
+
+@section('title', isset($messagesPageTitle) ? translate($messagesPageTitle) : translate('Messages'))
 
 
 @section('content')
@@ -10,7 +12,7 @@
         <div class="page-header d-flex align-items-center gap-2 mb-2">
             <img width="20" height="20" src="{{asset('assets/admin/img/icons/conversation-icon.png')}}" alt="">
             <h1 class="page-header-title mb-0">
-                {{ translate('messages.conversation_list') }}
+                {{ isset($messagesPageTitle) ? translate($messagesPageTitle) : translate('messages.conversation_list') }}
             </h1>
         </div>
         <!-- End Page Header -->
@@ -56,6 +58,7 @@
 
     <script>
         "use strict";
+        window.ADMIN_MESSAGES_LIST_URL = @json($messagesListUrl);
 
         $('.view-admin-conv').on('click', function () {
             console.log('fiudegfuy')
@@ -69,7 +72,7 @@
         function viewAdminConvs(url, id_to_active, conv_id, sender_id) {
             $('.customer-list').removeClass('conv-active');
             $('#' + id_to_active).addClass('conv-active');
-            let new_url = "{{ route('admin.message.list') }}" + '?conversation=' + conv_id + '&user=' + sender_id;
+            let new_url = window.ADMIN_MESSAGES_LIST_URL + '?conversation=' + conv_id + '&user=' + sender_id;
             console.log(url);
             $.get({
                 url: url,
@@ -92,7 +95,7 @@
 
         function loadMoreData(page) {
             $.ajax({
-                url: "{{ route('admin.message.list') }}" + '?page=' + page,
+                url: window.ADMIN_MESSAGES_LIST_URL + '?page=' + page,
                 type: "get",
                 beforeSend: function () {
 
@@ -111,7 +114,7 @@
 
         function fetch_data(page, query) {
             $.ajax({
-                url: "{{ route('admin.message.list') }}" + '?page=' + page + "&key=" + query,
+                url: window.ADMIN_MESSAGES_LIST_URL + '?page=' + page + "&key=" + query,
                 success: function (data) {
                     $('#conversation-list').empty();
                     $("#conversation-list").append(data.html);

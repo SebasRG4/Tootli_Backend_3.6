@@ -614,8 +614,11 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
 
 
             function conversationList() {
+                let listUrl = (typeof window.ADMIN_MESSAGES_LIST_URL !== 'undefined' && window.ADMIN_MESSAGES_LIST_URL)
+                    ? window.ADMIN_MESSAGES_LIST_URL
+                    : "{{ route('admin.message.list') }}";
                 $.ajax({
-                    url: "{{ route('admin.message.list') }}",
+                    url: listUrl,
                     success: function (data) {
                         $('#conversation-list').empty();
                         $("#conversation-list").append(data.html);
@@ -630,10 +633,11 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                 let conversation_id = getUrlParameter('conversation');
                 let user_id = getUrlParameter('user');
                 let url = '{{url('/')}}/admin/message/view/' + conversation_id + '/' + user_id;
+                let $target = $('#admin-view-conversation').length ? $('#admin-view-conversation') : $('#view-conversation');
                 $.ajax({
                     url: url,
                     success: function (data) {
-                        $('#view-conversation').html(data.view);
+                        $target.html(data.view);
                     }
                 })
             }
@@ -693,7 +697,7 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                     @endif
 
         } else {
-                    if (window.location.href.includes('message/list?conversation')) {
+                    if (window.location.href.includes('message/list') && window.location.href.includes('conversation=')) {
                         let conversation_id = getUrlParameter('conversation');
                         let user_id = getUrlParameter('user');
                         let url = '{{url('/')}}/admin/message/view/' + conversation_id + '/' + user_id;
@@ -705,10 +709,15 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                             }
                         })
                     }
-                    toastr.success('New message arrived', {
+                    toastr.success(@json(translate('messages.new_message_arrived_toast')), {
                         CloseButton: true,
                         ProgressBar: true
                     });
+                    showBrowserNotification(
+                        (payload.notification && payload.notification.title) ? payload.notification.title : @json(translate('messages.browser_notification_new_message_title')),
+                        (payload.notification && payload.notification.body) ? payload.notification.body : (payload.data && payload.data.description) ? payload.data.description : '',
+                        '{{ route('admin.message.list') }}'
+                    );
                     conversationList();
                 }
             });
@@ -751,6 +760,41 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                 }
             });
 
+            function tryRequestBrowserNotificationPermission() {
+                if (!('Notification' in window)) {
+                    return;
+                }
+                if (Notification.permission === 'default') {
+                    Notification.requestPermission().catch(function () {});
+                }
+            }
+
+            function showBrowserNotification(title, body, clickUrl) {
+                if (!('Notification' in window) || Notification.permission !== 'granted') {
+                    return;
+                }
+                try {
+                    const n = new Notification(title || @json(translate('messages.browser_notification_new_message_title')), {
+                        body: body || '',
+                        icon: @json(\App\CentralLogics\Helpers::get_full_url('business', $logo?->value ?? '', $logo?->storage[0]?->value ?? 'public', 'favicon')),
+                    });
+                    if (clickUrl) {
+                        n.onclick = function () {
+                            window.focus();
+                            window.location.href = clickUrl;
+                            n.close();
+                        };
+                    }
+                } catch (e) {
+                    console.warn('Browser notification failed', e);
+                }
+            }
+
+            document.addEventListener('click', function adminNotifPermOnce() {
+                tryRequestBrowserNotificationPermission();
+                document.removeEventListener('click', adminNotifPermOnce);
+            }, { once: true });
+
             startFCM();
             conversationList();
             if (getUrlParameter('conversation')) {
@@ -767,12 +811,17 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                     type: 'GET',
                     success: function (data) {
                         if (lastUnreadCount !== null && data.count > lastUnreadCount) {
-                            toastr.info('<a href="{{ route("admin.message.list") }}" style="color:#fff;text-decoration:underline;">{{ translate("messages.view_conversation") }}</a>', '{{ translate("New message received") }}', {
+                            toastr.info('<a href="{{ route("admin.message.list") }}" style="color:#fff;text-decoration:underline;">{{ translate("messages.view_conversation") }}</a>', @json(translate('New message received')), {
                                 CloseButton: true,
                                 ProgressBar: true,
                                 timeOut: 8000,
                                 allowHtml: true
                             });
+                            showBrowserNotification(
+                                @json(translate('messages.browser_notification_new_message_title')),
+                                @json(translate('messages.browser_notification_new_message_body')),
+                                '{{ route('admin.message.list') }}'
+                            );
                             // Also refresh conversation list if on messages page
                             if ($('#conversation-list').length > 0) {
                                 conversationList();

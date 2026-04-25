@@ -140,6 +140,18 @@
                         </li>
 
                         <li
+                            class="navbar-vertical-aside-has-menu {{ Request::routeIs('admin.message.list.delivery-support') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                href="{{ route('admin.message.list.delivery-support') }}"
+                                title="{{ translate('messages.admin_delivery_support_chat_menu') }}">
+                                <i class="tio-chat nav-icon"></i>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                    {{ translate('messages.admin_delivery_support_chat_menu') }}
+                                </span>
+                            </a>
+                        </li>
+
+                        <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/delivery-man/reviews') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('admin.users.delivery-man.reviews.list') }}"

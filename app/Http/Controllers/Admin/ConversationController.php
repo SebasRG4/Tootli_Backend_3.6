@@ -15,9 +15,57 @@ use Illuminate\Support\Facades\Validator;
 
 class ConversationController extends Controller
 {
+    /**
+     * Conversaciones donde participa administración (clientes, tiendas, repartidores).
+     */
     public function list(Request $request)
     {
+        $conversations = $this->adminConversationsQuery($request, false)
+            ->paginate(8);
+
+        if ($request->ajax()) {
+            $view = view('admin-views.messages.data', compact('conversations'))->render();
+
+            return response()->json(['html' => $view]);
+        }
+
+        $messagesListUrl = route('admin.message.list');
+
+        return view('admin-views.messages.index', compact('conversations', 'messagesListUrl'));
+    }
+
+    /**
+     * Solo chats repartidor ↔ administración (soporte / cancelaciones desde la app).
+     */
+    public function listDeliverySupport(Request $request)
+    {
+        $conversations = $this->adminConversationsQuery($request, true)
+            ->paginate(8);
+
+        if ($request->ajax()) {
+            $view = view('admin-views.messages.data', compact('conversations'))->render();
+
+            return response()->json(['html' => $view]);
+        }
+
+        $messagesListUrl = route('admin.message.list.delivery-support');
+        $messagesPageTitle = 'messages.admin_delivery_support_chat_title';
+
+        return view('admin-views.messages.index', compact('conversations', 'messagesListUrl', 'messagesPageTitle'));
+    }
+
+    /**
+     * @param  bool  $deliveryManOnly  Solo conversaciones con sender o receiver tipo delivery_man
+     */
+    protected function adminConversationsQuery(Request $request, bool $deliveryManOnly)
+    {
         $conversations = Conversation::with(['sender', 'receiver', 'last_message'])->WhereUserType('admin');
+        if ($deliveryManOnly) {
+            $conversations->where(function ($q) {
+                $q->where('sender_type', 'delivery_man')
+                    ->orWhere('receiver_type', 'delivery_man');
+            });
+        }
         if ($request->query('key')) {
             $key = explode(' ', $request->get('key'));
             $conversations = $conversations->where(function ($qu) use ($key) {
@@ -33,15 +81,8 @@ class ConversationController extends Controller
                     });
             });
         }
-        $conversations = $conversations->orderBy('last_message_time', 'DESC')
-            ->paginate(8);
 
-        if ($request->ajax()) {
-            $view = view('admin-views.messages.data', compact('conversations'))->render();
-            return response()->json(['html' => $view]);
-        }
-
-        return view('admin-views.messages.index', compact('conversations'));
+        return $conversations->orderBy('last_message_time', 'DESC');
     }
 
     public function view($conversation_id, $user_id)

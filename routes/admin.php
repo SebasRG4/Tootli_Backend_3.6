@@ -279,6 +279,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         });
 
         Route::group(['prefix' => 'message', 'as' => 'message.'], function () {
+            Route::get('list/delivery-support', 'ConversationController@listDeliverySupport')->name('list.delivery-support');
             Route::get('list', 'ConversationController@list')->name('list');
             Route::post('store/{user_id}', 'ConversationController@store')->name('store');
             Route::get('view/{conversation_id}/{user_id}', 'ConversationController@view')->name('view');
