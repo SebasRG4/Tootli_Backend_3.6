@@ -155,15 +155,12 @@ class TaxiServiceController extends Controller
             return response()->json(['message' => translate('Driver not found')], 404);
         }
 
-        // Update delivery history (existing location tracking)
-        \App\Models\DeliveryHistory::updateOrCreate(
-            ['delivery_man_id' => $dm->id],
-            [
-                'latitude' => $request->lat,
-                'longitude' => $request->lng,
-                'time' => now(),
-                'location' => $request->location ?? '',
-            ]
+        // Update delivery history (same row as DeliveryMan::last_location / latest id)
+        \App\Models\DeliveryHistory::recordLocationForDeliveryMan(
+            (int) $dm->id,
+            $request->lat,
+            $request->lng,
+            $request->location ?? null
         );
 
         // Update active ride location if exists

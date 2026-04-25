@@ -36,12 +36,12 @@ class HandleClientMessage
                 $deliverymanId = DeliveryMan::where(['auth_token' => $token])->first()?->id;
 
                 if ($deliverymanId && $latitude && $longitude) {
-                    DeliveryHistory::updateOrCreate(['delivery_man_id' => $deliverymanId], [
-                        'longitude' => $data['longitude'],
-                        'latitude' => $data['latitude'],
-                        'time' => now(),
-                        'location' => $data['location'],
-                    ]);
+                    DeliveryHistory::recordLocationForDeliveryMan(
+                        (int) $deliverymanId,
+                        $data['latitude'],
+                        $data['longitude'],
+                        $data['location'] ?? null
+                    );
                     try {
                         dispatch(new DispatchDriverLocationJob($deliverymanId, $latitude, $longitude, $data['location']))->onQueue('default');
                     } catch (\Exception $e) {
