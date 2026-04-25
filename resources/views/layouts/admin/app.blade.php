@@ -769,6 +769,7 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                 }
             }
 
+            @php($adminBrowserNotifIcon = \App\CentralLogics\Helpers::get_full_url('business', $logo?->value ?? '', $logo?->storage[0]?->value ?? 'public', 'favicon'))
             function showBrowserNotification(title, body, clickUrl) {
                 if (!('Notification' in window) || Notification.permission !== 'granted') {
                     return;
@@ -776,7 +777,7 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                 try {
                     const n = new Notification(title || @json(translate('messages.browser_notification_new_message_title')), {
                         body: body || '',
-                        icon: @json(\App\CentralLogics\Helpers::get_full_url('business', $logo?->value ?? '', $logo?->storage[0]?->value ?? 'public', 'favicon')),
+                        icon: @json($adminBrowserNotifIcon),
                     });
                     if (clickUrl) {
                         n.onclick = function () {
