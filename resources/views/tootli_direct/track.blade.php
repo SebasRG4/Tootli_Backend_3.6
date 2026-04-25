@@ -674,6 +674,7 @@
                 echoOpts.wsHost = cfg.wsHost;
                 echoOpts.wsPort = cfg.wsPort != null ? cfg.wsPort : 80;
                 echoOpts.wssPort = cfg.wssPort != null ? cfg.wssPort : 443;
+                if (cfg.wsPath) echoOpts.wsPath = cfg.wsPath;
             }
             liveWsEcho = new Echo(echoOpts);
             liveWsEcho.channel(cfg.channel).listen(cfg.listen_as, function (e) {

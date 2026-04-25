@@ -249,25 +249,55 @@ class TootliDirectPublicTrackingController extends Controller
             if ($key === '' || $cluster === '') {
                 return null;
             }
-            $scheme = (string) ($opts['scheme'] ?? 'http');
-            $useTls = ($opts['encrypted'] ?? false) === true || ($opts['useTLS'] ?? false) === true || $scheme === 'https';
             $channel = 'dm_location_'.$deliveryManId;
 
+            // Determinar el host público que usará el NAVEGADOR para conectar al WebSocket.
+            // PUSHER_HOST puede ser un nombre interno de Docker (ej. "soketi") que el navegador
+            // no puede resolver. Se permite sobreescribirlo con PUSHER_WS_CLIENT_HOST.
+            // Si no se define, se deriva del APP_URL (dominio público).
+            $internalHost = (string) ($opts['host'] ?? '');
+            $publicHost = (string) env('PUSHER_WS_CLIENT_HOST', '');
+            if ($publicHost === '') {
+                // ¿Es el host un nombre interno (sin puntos, no IP, no localhost)?
+                $looksInternal = $internalHost !== ''
+                    && $internalHost !== '127.0.0.1'
+                    && ! filter_var($internalHost, FILTER_VALIDATE_IP)
+                    && strpos($internalHost, '.') === false;
+                if ($looksInternal) {
+                    // Derivar del APP_URL el host público
+                    $appHost = parse_url(config('app.url', ''), PHP_URL_HOST);
+                    $publicHost = $appHost ? (string) $appHost : '';
+                } else {
+                    $publicHost = $internalHost;
+                }
+            }
+
+            // Si el sitio es HTTPS, el navegador bloqueará ws:// → forzar TLS siempre.
+            $appIsHttps = str_starts_with(strtolower((string) config('app.url', '')), 'https');
+            $scheme = (string) ($opts['scheme'] ?? 'http');
+            $useTls = $appIsHttps
+                || ($opts['encrypted'] ?? false) === true
+                || ($opts['useTLS'] ?? false) === true
+                || $scheme === 'https';
+
             $payload = [
-                'driver' => 'pusher',
-                'key' => $key,
-                'cluster' => $cluster,
-                'forceTLS' => $useTls,
-                'channel' => $channel,
-                'listen_as' => '.'.$channel,
+                'driver'     => 'pusher',
+                'key'        => $key,
+                'cluster'    => $cluster,
+                'forceTLS'   => $useTls,
+                'channel'    => $channel,
+                'listen_as'  => '.'.$channel,
             ];
-            // Pusher.com: no enviar wsHost si sigue el default de Laravel (127.0.0.1); Echo usa el cluster.
-            $host = (string) ($opts['host'] ?? '');
-            if ($host !== '' && $host !== '127.0.0.1') {
-                $port = (int) ($opts['port'] ?? 6001);
-                $payload['wsHost'] = $host;
-                $payload['wsPort'] = $useTls ? 443 : $port;
-                $payload['wssPort'] = $useTls ? $port : 443;
+
+            // Solo enviar wsHost al cliente si hay un host público válido (distinto de 127.0.0.1).
+            // wsPath: Nginx proxy /ws/ → soketi:6001 internamente.
+            // Esto permite usar el puerto estándar 443 (HTTPS/WSS) que Cloudflare sí permite,
+            // en vez del puerto 6001 que Cloudflare bloquea.
+            if ($publicHost !== '' && $publicHost !== '127.0.0.1') {
+                $payload['wsHost']  = $publicHost;
+                $payload['wsPort']  = 443;
+                $payload['wssPort'] = 443;
+                $payload['wsPath']  = '/ws';
             }
 
             return $payload;

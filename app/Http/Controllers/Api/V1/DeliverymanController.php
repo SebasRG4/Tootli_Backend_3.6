@@ -739,13 +739,24 @@ class DeliverymanController extends Controller
     public function record_location_data(Request $request)
     {
         $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+        if (! $dm) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'auth-001', 'message' => translate('messages.unauthorized')],
+                ],
+            ], 401);
+        }
         DeliveryHistory::recordLocationForDeliveryMan(
-            (int) $dm['id'],
+            (int) $dm->id,
             $request['latitude'],
             $request['longitude'],
             $request['location'] ?? null
         );
-        return response()->json(['message' => translate('location recorded')], 200);
+        return response()->json([
+            'token'     => $request['token'],
+            'latitude'  => $request['latitude'],
+            'longitude' => $request['longitude'],
+        ], 200);
     }
 
     public function get_order_history(Request $request)
