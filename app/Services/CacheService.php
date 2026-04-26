@@ -15,24 +15,12 @@ class CacheService
     {
         $key = "hex:zone:{$hexId}";
 
-        if (Cache::has($key)) {
-            Log::debug("Cache HIT: {$key}");
-        } else {
-            Log::debug("Cache MISS: {$key}");
-        }
-
         return Cache::remember($key, 86400, $callback); // 24 hours
     }
 
     public static function getHexCoverage($storeId, $lat, $lng, $callback)
     {
         $key = "hex:coverage:{$storeId}:{$lat}:{$lng}";
-
-        if (Cache::has($key)) {
-            Log::debug("Cache HIT: {$key}");
-        } else {
-            Log::debug("Cache MISS: {$key}");
-        }
 
         return Cache::remember($key, 3600, $callback); // 1 hour
     }
@@ -63,12 +51,6 @@ class CacheService
     {
         $key = "module:config:{$moduleId}";
 
-        if (Cache::has($key)) {
-            Log::debug("Cache HIT: {$key}");
-        } else {
-            Log::debug("Cache MISS: {$key}");
-        }
-
         return Cache::remember($key, 43200, $callback); // 12 hours
     }
 
@@ -76,24 +58,12 @@ class CacheService
     {
         $key = 'module:config:all';
 
-        if (Cache::has($key)) {
-            Log::debug("Cache HIT: {$key}");
-        } else {
-            Log::debug("Cache MISS: {$key}");
-        }
-
         return Cache::remember($key, 43200, $callback); // 12 hours
     }
 
     public static function getActiveModules($callback)
     {
         $key = 'module:active';
-
-        if (Cache::has($key)) {
-            Log::debug("Cache HIT: {$key}");
-        } else {
-            Log::debug("Cache MISS: {$key}");
-        }
 
         return Cache::remember($key, 21600, $callback); // 6 hours
     }
@@ -118,12 +88,6 @@ class CacheService
             ? "stores:active:{$zoneId}:{$moduleId}"
             : "stores:active:{$zoneId}";
 
-        if (Cache::has($key)) {
-            Log::debug("Cache HIT: {$key}");
-        } else {
-            Log::debug("Cache MISS: {$key}");
-        }
-
         return Cache::remember($key, 1800, $callback); // 30 minutes
     }
 
@@ -131,24 +95,12 @@ class CacheService
     {
         $key = "stores:details:{$storeId}";
 
-        if (Cache::has($key)) {
-            Log::debug("Cache HIT: {$key}");
-        } else {
-            Log::debug("Cache MISS: {$key}");
-        }
-
         return Cache::remember($key, 3600, $callback); // 1 hour
     }
 
     public static function getStoreLocations($storeId, $callback)
     {
         $key = "stores:locations:{$storeId}";
-
-        if (Cache::has($key)) {
-            Log::debug("Cache HIT: {$key}");
-        } else {
-            Log::debug("Cache MISS: {$key}");
-        }
 
         return Cache::remember($key, 7200, $callback); // 2 hours
     }
