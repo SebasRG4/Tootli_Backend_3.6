@@ -335,7 +335,7 @@
                 }
             });
             $.post({
-                url: '{{ route('admin.message.store', [$user->user_id]) }}',
+                url: '{{ route('admin.message.store', [$user->id]) }}',
                 data: $('reply-form').serialize(),
                 data: formData,
                 cache: false,

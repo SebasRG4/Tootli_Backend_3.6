@@ -136,19 +136,25 @@ class ConversationController extends Controller
             $sender->save();
         }
 
-        $user = User::find($user_id);
-        $fcm_token = $user->cm_firebase_token;
-        $receiver = UserInfo::where('user_id', $user->id)->first();
+        $receiver = UserInfo::find($user_id);
         $user = $receiver;
         if (!$receiver) {
-            $receiver = new UserInfo();
-            $receiver->user_id = $user->id;
-            $receiver->f_name = $user->f_name;
-            $receiver->l_name = $user->l_name;
-            $receiver->phone = $user->phone;
-            $receiver->email = $user->email;
-            $receiver->image = $user->image;
-            $receiver->save();
+            // Fallback for legacy routes if they send customer id
+            $legacy_user = User::find($user_id);
+            if ($legacy_user) {
+                $receiver = UserInfo::where('user_id', $legacy_user->id)->first();
+                if (!$receiver) {
+                    $receiver = new UserInfo();
+                    $receiver->user_id = $legacy_user->id;
+                    $receiver->f_name = $legacy_user->f_name;
+                    $receiver->l_name = $legacy_user->l_name;
+                    $receiver->phone = $legacy_user->phone;
+                    $receiver->email = $legacy_user->email;
+                    $receiver->image = $legacy_user->image;
+                    $receiver->save();
+                }
+                $user = $receiver;
+            }
         }
 
         $conversation = Conversation::whereConversation($receiver->id, 0)->first();
