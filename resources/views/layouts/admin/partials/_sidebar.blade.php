@@ -4,7 +4,9 @@
         <div class="navbar-vertical-container">
             <div class="navbar-brand-wrapper justify-content-between">
                 <!-- Logo -->
-                @php($store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first())
+                @php
+                    $store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first();
+                @endphp
                 <a class="navbar-brand" href="{{ route('admin.dispatch.dashboard') }}" aria-label="Front">
                     <img class="navbar-brand-logo initial--36 onerror-image onerror-image"
                         data-onerror-image="{{ asset('assets/admin/img/160x160/img2.jpg') }}"

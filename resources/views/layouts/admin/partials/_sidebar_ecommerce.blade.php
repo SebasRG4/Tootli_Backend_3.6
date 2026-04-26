@@ -4,7 +4,9 @@
         <div class="navbar-vertical-container">
             <div class="navbar-brand-wrapper justify-content-between">
                 <!-- Logo -->
-                @php($store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first())
+                @php
+                    $store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first();
+                @endphp
                 <a class="navbar-brand" href="{{ route('admin.dashboard') }}" aria-label="Front">
                     <img class="navbar-brand-logo initial--36 onerror-image onerror-image"
                         data-onerror-image="{{ asset('assets/admin/img/160x160/img2.jpg') }}"
@@ -676,9 +678,11 @@
                             <span class="tio-calendar-note nav-icon"></span>
                             <span class="text-truncate position-relative overflow-visible">
                                 {{ translate('messages.new_stores') }}
-                                @php($new_str = \App\Models\Store::whereHas('vendor', function ($query) {
-                                    return $query->where('status', null);
-                                })->module(Config::get('module.current_module_id'))->get())
+                                @php
+                                    $new_str = \App\Models\Store::whereHas('vendor', function ($query) {
+                                        return $query->where('status', null);
+                                    })->module(Config::get('module.current_module_id'))->get();
+                                @endphp
                                 @if (count($new_str) > 0)
 
                                     <span class="btn-status btn-status-danger border-0 size-8px"></span>
