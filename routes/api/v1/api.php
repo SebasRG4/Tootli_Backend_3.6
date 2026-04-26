@@ -125,6 +125,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::get('order', 'DeliverymanController@get_order');
             Route::get('tootli-direct-tracking-chat', 'DeliverymanController@get_tootli_direct_tracking_chat');
             Route::post('tootli-direct-tracking-chat', 'DeliverymanController@post_tootli_direct_tracking_chat');
+            Route::post('log-customer-call-attempt', 'DeliverymanController@log_customer_call_attempt');
             Route::get('orders-count', 'DeliverymanController@get_orders_count');
             Route::put('send-order-otp', 'DeliverymanController@send_order_otp');
             Route::put('update-fcm-token', 'DeliverymanController@update_fcm_token');

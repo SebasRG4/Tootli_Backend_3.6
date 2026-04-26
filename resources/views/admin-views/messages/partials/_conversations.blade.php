@@ -32,6 +32,28 @@
         </div>
     </div>
 
+    @if($user->deliveryman_id)
+        <div class="card-body border-bottom py-2 bg-light">
+            <h6 class="mb-1">{{ translate('messages.support_dm_cancel_tool_title') }}</h6>
+            <p class="fs-12 text-muted mb-2 mb-0">{{ translate('messages.support_dm_cancel_tool_hint') }}</p>
+            <form method="get" action="{{ route('admin.order.status') }}" class="d-flex flex-wrap align-items-end gap-2 mt-2"
+                onsubmit="return confirm({{ json_encode(translate('messages.support_dm_cancel_confirm')) }});">
+                <input type="hidden" name="order_status" value="canceled">
+                <div class="form-group mb-0">
+                    <label class="input-label d-block fs-12">{{ translate('Order ID') }}</label>
+                    <input type="number" name="id" class="form-control form-control-sm" min="1" required
+                        placeholder="#">
+                </div>
+                <div class="form-group mb-0 flex-grow-1" style="min-width: 220px;">
+                    <label class="input-label d-block fs-12">{{ translate('messages.order_cancellation_reason') }}</label>
+                    <input type="text" name="reason" class="form-control form-control-sm" required
+                        value="{{ translate('messages.support_dm_cancel_default_reason') }}">
+                </div>
+                <button type="submit" class="btn btn-sm btn-danger">{{ translate('messages.support_dm_cancel_apply') }}</button>
+            </form>
+        </div>
+    @endif
+
     <div class="card-body">
         <div class="scroll-down">
             @foreach($convs as $con)

@@ -32,6 +32,7 @@ use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderPayment;
 use App\Models\TootliDirectTrackingChatMessage;
+use App\Models\DmCustomerCallAttempt;
 use App\Models\OrderTransaction;
 use App\Models\ParcelCancellation;
 use App\Models\ProvideDMEarning;
@@ -2338,6 +2339,47 @@ class DeliverymanController extends Controller
             ]);
 
         return response()->json(['messages' => $messages], 200);
+    }
+
+    /**
+     * Auditoría de intentos de contacto (declaración del repartidor al regresar de tel:), no prueba de operadora.
+     */
+    public function log_customer_call_attempt(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'token' => 'required',
+            'order_id' => 'required|integer',
+            'attempt_number' => 'required|integer|min:1|max:3',
+            'confirmed_at_ms' => 'nullable|integer',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+        $dm = DeliveryMan::where(['auth_token' => $request['token'] ?? null])->first();
+        if (! $dm) {
+            return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
+        }
+        $order = Order::query()
+            ->where('id', (int) $request->order_id)
+            ->where('delivery_man_id', $dm->id)
+            ->first();
+        if (! $order) {
+            return response()->json(['errors' => [['code' => 'order', 'message' => translate('messages.not_found')]]], 404);
+        }
+
+        DmCustomerCallAttempt::query()->updateOrCreate(
+            [
+                'order_id' => (int) $order->id,
+                'delivery_man_id' => (int) $dm->id,
+                'attempt_number' => (int) $request->attempt_number,
+            ],
+            [
+                'confirmed_at_ms' => $request->input('confirmed_at_ms'),
+                'confirmed_at' => now(),
+            ],
+        );
+
+        return response()->json(['message' => 'ok'], 200);
     }
 
     public function post_tootli_direct_tracking_chat(Request $request)
