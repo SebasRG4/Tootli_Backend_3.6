@@ -2231,6 +2231,26 @@ class Helpers
     {
         $push_notification_status = self::getNotificationStatusData('store', 'store_order_notification', 'push_notification_status', $order?->store?->id);
 
+        if (in_array($order->order_status, ['canceled', 'returned'])) {
+            $data = [
+                'title' => translate('Order_Notification'),
+                'description' => translate('Order canceled') . ' #' . $order->id,
+                'order_id' => $order->id,
+                'image' => '',
+                'type' => 'order_status',
+            ];
+            if ($order->store && $order->store->vendor && $push_notification_status) {
+                self::send_push_notif_to_device($order->store->vendor->firebase_token, $data);
+                DB::table('user_notifications')->insert([
+                    'data' => json_encode($data),
+                    'vendor_id' => $order->store->vendor_id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+                self::sendStoreEmployeeNotification($order, $data);
+            }
+        }
+
         try {
 
             if (

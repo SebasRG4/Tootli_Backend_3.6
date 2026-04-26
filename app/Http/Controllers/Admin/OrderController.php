@@ -2314,7 +2314,7 @@ class OrderController extends Controller
 
     public function cancelAdvanced(Request $request, $id)
     {
-        $order = \App\Models\Order::findOrFail($id);
+        $order = \App\Models\Order::with(['delivery_man'])->findOrFail($id);
         
         $cancellation_note = $request->input('cancellation_note', '');
 
@@ -2339,6 +2339,17 @@ class OrderController extends Controller
                 'created_by_admin_id' => auth('admin')->id(),
                 'appeal_status' => 'pending'
             ]);
+
+            $dmNotificationData = [
+                'title' => 'Penalización aplicada',
+                'description' => 'Se ha aplicado un strike a tu cuenta por la cancelación del pedido #' . $order->id,
+                'order_id' => $order->id,
+                'image' => '',
+                'type' => 'strike_applied',
+            ];
+            if ($order->delivery_man?->fcm_token) {
+                \App\CentralLogics\Helpers::send_push_notif_to_device($order->delivery_man->fcm_token, $dmNotificationData);
+            }
         }
 
         if ($request->has('debt_to_customer') && $order->user_id) {

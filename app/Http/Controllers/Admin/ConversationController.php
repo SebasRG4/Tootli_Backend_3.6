@@ -157,12 +157,22 @@ class ConversationController extends Controller
             }
         }
 
-        $conversation = Conversation::whereConversation($receiver->id, 0)->first();
+        // Get or create the Super Admin UserInfo record (matches mobile app logic)
+        $admin_user_info = UserInfo::where('admin_id', 0)->first();
+        if (!$admin_user_info) {
+            $admin_user_info = new UserInfo();
+            $admin_user_info->admin_id = 0;
+            $admin_user_info->f_name = 'Admin';
+            $admin_user_info->l_name = 'Tootli';
+            $admin_user_info->save();
+        }
+        $admin_id = $admin_user_info->id;
 
+        $conversation = Conversation::whereConversation($receiver->id, $admin_id)->first();
 
         if (!$conversation) {
             $conversation = new Conversation;
-            $conversation->sender_id = 0;
+            $conversation->sender_id = $admin_id;
             $conversation->sender_type = 'admin';
             $conversation->receiver_id = $receiver->id;
             $conversation->receiver_type = 'user';
