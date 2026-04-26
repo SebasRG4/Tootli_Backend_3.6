@@ -300,8 +300,10 @@ class CategoryLogic
         $query = Store::
             WithOpenWithDeliveryTime($longitude ?? 0, $latitude ?? 0)
             ->withCount(['items', 'campaigns'])
-            ->whereHas('items.category', function ($q) use ($category_ids) {
-                return $q->whereIn('id', $category_ids)->orWhereIn('parent_id', $category_ids);
+            ->whereHas('items', function ($q) use ($category_ids) {
+                $q->visibleInCustomerApp()->whereHas('category', function ($q2) use ($category_ids) {
+                    return $q2->whereIn('id', $category_ids)->orWhereIn('parent_id', $category_ids);
+                });
             })
             ->when($current_module, function ($query) use ($zone_id, $current_module) {
                 $all_zone_service = (bool) $current_module['all_zone_service'];
@@ -312,7 +314,7 @@ class CategoryLogic
                     return $query->whereIn('zone_id', json_decode($zone_id, true));
                 }
             })
-            ->active()->visibleInCustomerApp()->type($type)
+            ->active()->type($type)
 
             ->when($filter && in_array('free_delivery', $filter), function ($qurey) {
                 return $qurey->where('free_delivery', 1);
@@ -416,13 +418,15 @@ class CategoryLogic
         $query = Store::
             withOpen($longitude ?? 0, $latitude ?? 0)
             ->withCount(['items', 'campaigns'])
-            ->whereHas('items.category', function ($q) use ($category_id) {
-                return $q->when(is_numeric($category_id), function ($qurey) use ($category_id) {
-                    return $qurey->whereId($category_id)->orWhere('parent_id', $category_id);
-                })
-                    ->when(!is_numeric($category_id), function ($qurey) use ($category_id) {
-                        $qurey->where('slug', $category_id);
-                    });
+            ->whereHas('items', function ($q) use ($category_id) {
+                $q->visibleInCustomerApp()->whereHas('category', function ($q2) use ($category_id) {
+                    return $q2->when(is_numeric($category_id), function ($qurey) use ($category_id) {
+                        return $qurey->whereId($category_id)->orWhere('parent_id', $category_id);
+                    })
+                        ->when(!is_numeric($category_id), function ($qurey) use ($category_id) {
+                            $qurey->where('slug', $category_id);
+                        });
+                });
             })
             ->when(config('module.current_module_data'), function ($query) use ($zone_id) {
                 $query->whereHas('zone.modules', function ($query) {
@@ -432,7 +436,7 @@ class CategoryLogic
                     $query->whereIn('zone_id', json_decode($zone_id, true));
                 }
             })
-            ->active()->visibleInCustomerApp()->type($type)
+            ->active()->type($type)
             ->latest();
 
         // Apply radius filter if not all_zone_service
