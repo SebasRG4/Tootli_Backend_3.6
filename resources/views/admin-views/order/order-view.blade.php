@@ -1346,6 +1346,13 @@
                                                 </button>
                                             </div>
                                         @endif
+                                        @if (!in_array($order->order_status, ['refunded','delivered', 'canceled']))
+                                            <div class="w-100 text-center mt-3">
+                                                <button type="button" class="btn btn-danger w-100" data-toggle="modal" data-target="#advanced_cancel_order_modal">
+                                                    <i class="tio-clear-circle-outlined"></i> {{ translate('Cancelar Orden (Soporte Avanzado)') }}
+                                                </button>
+                                            </div>
+                                        @endif
                                 @endif
                             </div>
                             @endif
@@ -2181,6 +2188,67 @@
         </div>
 
         @endif
+
+        <div class="modal fade" id="advanced_cancel_order_modal" tabindex="-1" role="dialog" aria-labelledby="advanced_cancel_order_modal_label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-600" role="document">
+                <div class="modal-content">
+                    <div class="modal-header px-2 pt-2">
+                        <button type="button" class="close min-w-28 rounded-circle border bg-modal-btn" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{{ route('admin.order.cancel-advanced', ['id' => $order['id']]) }}" method="post">
+                        @csrf
+                        <div class="modal-body text-left">
+                            <h3 class="mb-3 text-center text-danger">{{ translate('Cancelar Orden (Controles Avanzados)') }}</h3>
+                            <p class="text-center text-muted mb-4">{{ translate('Selecciona las reglas financieras y operativas que se aplicarán a esta cancelación.') }}</p>
+                            
+                            <div class="form-group mb-3 custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="strike_deliveryman" name="strike_deliveryman" value="1">
+                                <label class="custom-control-label" for="strike_deliveryman"><strong>{{ translate('Strike para el repartidor') }}</strong></label>
+                            </div>
+                            
+                            <div class="form-group mb-3 custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="debt_to_customer" name="debt_to_customer" value="1">
+                                <label class="custom-control-label" for="debt_to_customer"><strong>{{ translate('Cobrar deuda al cliente') }}</strong> ({{ \App\CentralLogics\Helpers::format_currency($order->order_amount) }})</label>
+                            </div>
+
+                            <div class="form-group mb-3 custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="debt_to_deliveryman" name="debt_to_deliveryman" value="1">
+                                <label class="custom-control-label" for="debt_to_deliveryman"><strong>{{ translate('Cobrar deuda al repartidor') }}</strong> ({{ \App\CentralLogics\Helpers::format_currency($order->order_amount) }})</label>
+                            </div>
+                            
+                            <div class="form-group mb-3 custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="tootli_absorbs_loss" name="tootli_absorbs_loss" value="1">
+                                <label class="custom-control-label" for="tootli_absorbs_loss"><strong>{{ translate('Tootli absorbe la pérdida') }}</strong></label>
+                                <small class="d-block text-muted">{{ translate('Se marcará como "Pedido pagado a restaurante pero dinero no obtenido".') }}</small>
+                            </div>
+                            
+                            <div class="form-group mb-3 custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="pay_delivery_fee" name="pay_delivery_fee" value="1">
+                                <label class="custom-control-label" for="pay_delivery_fee"><strong>{{ translate('Pagar tarifa de envío al repartidor') }}</strong></label>
+                            </div>
+                            
+                            <div class="form-group mb-3 custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="return_to_store" name="return_to_store" value="1">
+                                <label class="custom-control-label" for="return_to_store"><strong>{{ translate('Regresar pedido a la tienda') }}</strong></label>
+                                <small class="d-block text-muted">{{ translate('El estado de la orden cambiará a "returned" y se notificará al restaurante.') }}</small>
+                            </div>
+                            
+                            <div class="form-group mb-3 mt-4">
+                                <label for="cancellation_note">{{ translate('Nota de Cancelación (opcional)') }}</label>
+                                <textarea class="form-control" name="cancellation_note" id="cancellation_note" rows="3"></textarea>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer border-0 pt-2">
+                            <button type="button" class="btn btn--reset h-40px min-w-120px py-2 fs-14" data-dismiss="modal">{{ translate('close') }}</button>
+                            <button type="submit" class="btn btn-danger h-40px min-w-120px py-2 fs-14">{{ translate('Confirmar Cancelación') }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <div class="modal fade" id="offline_payment_cancel_orders" tabindex="-1" role="dialog"
              aria-labelledby="offline_payment_cancel_orders" aria-hidden="true">

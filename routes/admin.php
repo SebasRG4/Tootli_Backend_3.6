@@ -376,6 +376,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('strike-review-queue/{id}/dismiss', [OrderStrikeReviewController::class, 'dismiss'])->name('strike-review-queue.dismiss');
             Route::post('strike-review-queue/{id}/strike', [OrderStrikeReviewController::class, 'recordStrike'])->name('strike-review-queue.record-strike');
             Route::post('apply-debt/{id}', 'OrderController@applyDebt')->name('apply-debt');
+            Route::post('cancel-advanced/{id}', 'OrderController@cancelAdvanced')->name('cancel-advanced');
             Route::get('list/{status}', 'OrderController@list')->name('list');
             Route::get('details/{id}', 'OrderController@details')->name('details');
             Route::get('all-details/{id}', 'OrderController@all_details')->name('all-details');

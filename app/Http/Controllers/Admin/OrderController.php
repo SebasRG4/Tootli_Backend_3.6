@@ -2312,7 +2312,54 @@ class OrderController extends Controller
         return back();
     }
 
+    public function cancelAdvanced(Request $request, $id)
+    {
+        $order = \App\Models\Order::findOrFail($id);
+        
+        $cancellation_note = $request->input('cancellation_note', '');
 
+        if ($request->has('tootli_absorbs_loss')) {
+            $cancellation_note = trim($cancellation_note . ' [Pedido pagado a restaurante pero dinero no obtenido]');
+        }
 
+        $order->order_status = $request->has('return_to_store') ? 'returned' : 'canceled';
+        $order->canceled = now();
+        $order->cancellation_reason = 'Soporte Administrativo (Avanzado)';
+        $order->cancellation_note = $cancellation_note;
+        $order->canceled_by = 'admin';
+        $order->save();
 
+        if ($request->has('strike_deliveryman') && $order->delivery_man_id) {
+            $incidentType = \App\Models\DeliveryIncidentType::first();
+            \App\Models\DeliveryManStrikeEvent::create([
+                'delivery_man_id' => $order->delivery_man_id,
+                'order_id' => $order->id,
+                'delivery_incident_type_id' => $incidentType ? $incidentType->id : 1,
+                'notes' => 'Cancelado desde panel de soporte con strike manual.',
+                'created_by_admin_id' => auth('admin')->id(),
+                'appeal_status' => 'pending'
+            ]);
+        }
+
+        if ($request->has('debt_to_customer') && $order->user_id) {
+            \App\CentralLogics\CustomerLogic::create_wallet_transaction($order->user_id, $order->order_amount, 'debt_applied', 'Deuda por orden cancelada: ' . $order->id);
+        }
+
+        if ($request->has('debt_to_deliveryman') && $order->delivery_man_id) {
+            $dmWallet = \App\Models\DeliveryManWallet::firstOrCreate(['delivery_man_id' => $order->delivery_man_id]);
+            $dmWallet->total_earning -= $order->order_amount;
+            $dmWallet->save();
+        }
+
+        if ($request->has('pay_delivery_fee') && $order->delivery_man_id) {
+            $dmWallet = \App\Models\DeliveryManWallet::firstOrCreate(['delivery_man_id' => $order->delivery_man_id]);
+            $dmWallet->total_earning += $order->original_delivery_charge ?? 0;
+            $dmWallet->save();
+        }
+
+        \App\CentralLogics\Helpers::send_order_notification($order);
+        
+        \Brian2694\Toastr\Facades\Toastr::success('Orden cancelada con reglas avanzadas correctamente.');
+        return back();
+    }
 }
