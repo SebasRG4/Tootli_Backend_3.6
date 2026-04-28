@@ -1058,15 +1058,6 @@
             const totalPrice = subtotal + shippingFee;
             message += `%0A*Total: $${totalPrice.toFixed(2)}*%0A`;
             
-            // Link for Restaurant Admin (Tootli Directo)
-            const adminBaseUrl = '{{ route("vendor.pos.tc-init") }}';
-            const adminParams = `?tc_name=${encodeURIComponent(name)}&tc_phone=${encodeURIComponent(phoneCust)}&tc_address=${encodeURIComponent(address)}&tc_lat=${coordinates?coordinates.lat:''}&tc_lng=${coordinates?coordinates.lng:''}`;
-            
-            message += `%0A--------------------------%0A`;
-            message += `*SOLO RESTAURANTE (Tootli Directo):*%0A`;
-            message += `${adminBaseUrl}${adminParams}%0A`;
-            message += `--------------------------%0A`;
-            
             message += `%0A_Pedido generado desde tootli.mx_`;
 
             const storePhone = '{{ $store->phone }}'.replace(/\D/g, '');
