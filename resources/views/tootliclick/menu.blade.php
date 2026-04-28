@@ -517,6 +517,14 @@
         let cart = [];
         let orderType = 'delivery';
         let coordinates = null;
+        let shippingFee = 0;
+
+        // Store configuration for shipping
+        const storeLat = {{ $store->latitude ?? 0 }};
+        const storeLng = {{ $store->longitude ?? 0 }};
+        const minShipping = {{ $store->minimum_shipping_charge ?? 0 }};
+        const perKmCharge = {{ $store->per_km_shipping_charge ?? 0 }};
+        const maxShipping = {{ $store->maximum_shipping_charge ?? 0 }};
 
         function setOrderType(type) {
             orderType = type;
@@ -527,7 +535,9 @@
             } else {
                 document.getElementById('typePickup').classList.add('active');
                 document.getElementById('deliveryFields').style.display = 'none';
+                shippingFee = 0;
             }
+            updateSummary();
         }
 
         function getLocation() {
@@ -544,7 +554,10 @@
                         btn.innerHTML = '<i class="fas fa-check"></i> Ubicación obtenida';
                         btn.style.borderColor = '#25D366';
                         btn.style.color = '#25D366';
-                        toastr.success('Ubicación fijada correctamente');
+                        
+                        calculateShipping();
+                        updateSummary();
+                        toastr.success('Ubicación y costo de envío actualizados');
                     },
                     (error) => {
                         btn.innerHTML = '<i class="fas fa-location-arrow"></i> Usar mi ubicación actual';
@@ -554,6 +567,28 @@
             } else {
                 alert('Tu navegador no soporta geolocalización.');
             }
+        }
+
+        function calculateShipping() {
+            if (orderType === 'delivery' && coordinates && storeLat && storeLng) {
+                const distance = getDistance(storeLat, storeLng, coordinates.lat, coordinates.lng);
+                let fee = minShipping + (distance * perKmCharge);
+                if (maxShipping > 0 && fee > maxShipping) fee = maxShipping;
+                shippingFee = fee;
+            } else {
+                shippingFee = 0;
+            }
+        }
+
+        function getDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
         }
 
         function addToCart(id, name, price) {
@@ -592,16 +627,27 @@
         }
 
         function openCheckout() {
+            updateSummary();
+            document.getElementById('checkoutModal').classList.add('open');
+        }
+
+        function updateSummary() {
             const summaryDiv = document.getElementById('orderSummary');
             let html = '<strong>Tu Pedido:</strong><br>';
             cart.forEach(item => {
                 html += `${item.qty}x ${item.name} - $${(item.price * item.qty).toFixed(2)}<br>`;
             });
-            const totalPrice = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
-            html += `<br><strong>Total: $${totalPrice.toFixed(2)}</strong>`;
-            summaryDiv.innerHTML = html;
             
-            document.getElementById('checkoutModal').classList.add('open');
+            const subtotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+            
+            if (orderType === 'delivery') {
+                html += `<br>Subtotal: $${subtotal.toFixed(2)}`;
+                html += `<br>Envío: ${shippingFee > 0 ? '$' + shippingFee.toFixed(2) : (coordinates ? '$0.00' : '<i>Pendiente de ubicación</i>')}`;
+            }
+
+            const total = subtotal + shippingFee;
+            html += `<br><strong style="font-size: 16px;">Total a pagar: $${total.toFixed(2)}</strong>`;
+            summaryDiv.innerHTML = html;
         }
 
         function closeCheckout(event) {
@@ -633,6 +679,9 @@
                 if (coordinates) {
                     message += `*Ubicación GPS:* https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}%0A`;
                 }
+                if (shippingFee > 0) {
+                    message += `*Costo de Envío:* $${shippingFee.toFixed(2)}%0A`;
+                }
             }
 
             message += `%0A*Detalle del Pedido:*%0A`;
@@ -641,7 +690,8 @@
                 message += `• ${item.qty}x ${item.name} ($${(item.price * item.qty).toFixed(2)})%0A`;
             });
             
-            const totalPrice = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+            const subtotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+            const totalPrice = subtotal + shippingFee;
             message += `%0A*Total: $${totalPrice.toFixed(2)}*%0A`;
             message += `%0A_Pedido generado desde tootli.mx_`;
 
