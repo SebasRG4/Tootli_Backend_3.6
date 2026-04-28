@@ -303,9 +303,13 @@
         .modal-content {
             background: var(--white);
             width: 100%;
+            max-width: 500px;
             border-radius: 24px 24px 0 0;
             padding: 32px 24px;
+            max-height: 90vh;
+            overflow-y: auto;
             animation: slideUp 0.3s ease-out;
+            -webkit-overflow-scrolling: touch;
         }
 
         @keyframes slideUp {
@@ -491,9 +495,16 @@
             </div>
 
             <div id="deliveryFields">
+                <div class="input-group">
+                    <button type="button" class="location-btn w-100 mb-3" onclick="getLocation()" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px; border-radius: 12px; border: 2px dashed var(--primary); color: var(--primary); background: rgba(255, 111, 0, 0.05); cursor: pointer; font-weight: 600;">
+                        <i class="fas fa-location-arrow"></i>
+                        <span id="locText">Compartir mi ubicación GPS</span>
+                    </button>
+                </div>
+
                 @if(isset($store->tootliclick_settings['colonias']) && count($store->tootliclick_settings['colonias']) > 0)
                 <div class="input-group">
-                    <label>Selecciona tu Colonia</label>
+                    <label>Selecciona tu Colonia (Para costo de envío)</label>
                     <select id="selColonia" class="form-control" onchange="setColonia(this.value)" style="width: 100%; padding: 16px; border-radius: 12px; background: var(--bg-light); border: 1px solid #EEE;">
                         <option value="">Selecciona una colonia...</option>
                         @foreach($store->tootliclick_settings['colonias'] as $col)
@@ -501,15 +512,11 @@
                         @endforeach
                     </select>
                 </div>
-                @else
-                <button class="location-btn" onclick="getLocation()">
-                    <i class="fas fa-location-arrow"></i>
-                    Usar mi ubicación actual
-                </button>
                 @endif
+                
                 <div class="input-group">
-                    <label>Dirección Detallada</label>
-                    <textarea id="custAddress" rows="2" placeholder="Calle, número, colonia y referencias..."></textarea>
+                    <label>Dirección Detallada (Calle, Núm, Cruzamientos)</label>
+                    <textarea id="custAddress" rows="2" placeholder="Ej: Calle 50 x 25 y 27, casa color azul..."></textarea>
                 </div>
             </div>
 
@@ -573,8 +580,9 @@
 
         function getLocation() {
             if (navigator.geolocation) {
-                const btn = document.querySelector('.location-btn');
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Obteniendo ubicación...';
+                const btn = document.getElementById('locText');
+                const btnParent = btn.parentElement;
+                btn.innerHTML = 'Obteniendo ubicación...';
                 
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
@@ -582,17 +590,18 @@
                             lat: position.coords.latitude,
                             lng: position.coords.longitude
                         };
-                        btn.innerHTML = '<i class="fas fa-check"></i> Ubicación obtenida';
-                        btn.style.borderColor = '#25D366';
-                        btn.style.color = '#25D366';
+                        btn.innerHTML = 'Ubicación GPS compartida';
+                        btnParent.style.borderColor = '#25D366';
+                        btnParent.style.color = '#25D366';
+                        btnParent.style.background = 'rgba(37, 211, 102, 0.05)';
                         
                         calculateShipping();
                         updateSummary();
-                        toastr.success('Ubicación y costo de envío actualizados');
+                        toastr.success('Ubicación capturada correctamente');
                     },
                     (error) => {
-                        btn.innerHTML = '<i class="fas fa-location-arrow"></i> Usar mi ubicación actual';
-                        alert('No pudimos obtener tu ubicación. Por favor, ingresa tu dirección manualmente.');
+                        btn.innerHTML = 'Compartir mi ubicación GPS';
+                        toastr.error('No se pudo obtener la ubicación. Activa el GPS de tu celular.');
                     }
                 );
             } else {
@@ -679,20 +688,33 @@
 
         function updateSummary() {
             const summaryDiv = document.getElementById('orderSummary');
-            let html = '<strong>Tu Pedido:</strong><br>';
+            let html = '<div style="background: var(--bg-light); padding: 15px; border-radius: 12px; margin-bottom: 15px;">';
+            html += '<strong>Tu Pedido:</strong><br>';
             cart.forEach(item => {
-                html += `${item.qty}x ${item.name} - $${(item.price * item.qty).toFixed(2)}<br>`;
+                html += `<div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                            <span>${item.qty}x ${item.name}</span>
+                            <span>$${(item.price * item.qty).toFixed(2)}</span>
+                         </div>`;
             });
+            html += '</div>';
             
             const subtotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
             
+            html += `<div style="padding: 0 5px;">`;
             if (orderType === 'delivery') {
-                html += `<br>Subtotal: $${subtotal.toFixed(2)}`;
-                html += `<br>Envío: ${shippingFee > 0 ? '$' + shippingFee.toFixed(2) : (coordinates ? '$0.00' : '<i>Pendiente de ubicación</i>')}`;
+                html += `<div style="display: flex; justify-content: space-between;"><span>Subtotal:</span><span>$${subtotal.toFixed(2)}</span></div>`;
+                html += `<div style="display: flex; justify-content: space-between; color: var(--primary); font-weight: 600;">
+                            <span>Envío:</span>
+                            <span>${shippingFee > 0 ? '$' + shippingFee.toFixed(2) : (minFreeOrder > 0 && subtotal >= minFreeOrder ? 'GRATIS' : '$0.00')}</span>
+                         </div>`;
             }
 
             const total = subtotal + shippingFee;
-            html += `<br><strong style="font-size: 16px;">Total a pagar: $${total.toFixed(2)}</strong>`;
+            html += `<div style="display: flex; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 2px solid #EEE; font-size: 18px; font-weight: 800;">
+                        <span>Total:</span>
+                        <span>$${total.toFixed(2)}</span>
+                     </div>`;
+            html += `</div>`;
             summaryDiv.innerHTML = html;
         }
 
