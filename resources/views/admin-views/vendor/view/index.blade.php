@@ -139,6 +139,16 @@
                                         <span>{{ translate('messages.Zone') }}</span> <span>:</span> &nbsp;
                                         <span>{{ $store?->zone?->name ?? translate('zone_deleted') }}</span>
                                     </li>
+                                    <li>
+                                        <i class="tio-globe nav-icon"></i>
+                                        <span>{{ translate('TootliClick Menu') }}</span> <span>:</span> &nbsp;
+                                        <a href="{{ route('tootliclick', $store->slug) }}" target="_blank" class="text-primary font-weight-bold">
+                                            {{ route('tootliclick', $store->slug) }}
+                                        </a>
+                                        <button class="btn btn-xs btn-soft-primary ml-1" onclick="copyToClipboard('{{ route('tootliclick', $store->slug) }}')">
+                                            <i class="tio-copy"></i>
+                                        </button>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -775,5 +785,15 @@
                 }
             });
         });
+
+        function copyToClipboard(text) {
+            var dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = text;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+            toastr.success('{{ translate('URL copiada al portapapeles') }}');
+        }
     </script>
 @endpush
