@@ -126,6 +126,14 @@
 
                         </div>
 
+                        <div class="col-sm-6 col-lg-{{ $column }}">
+                            <div class="form-group mb-0 error-wrapper">
+                                <label class="input-label" for="priority">{{ translate('Prioridad') }}</label>
+                                <input type="number" min="0" name="priority" id="priority" class="form-control" 
+                                    value="{{ old('priority', $product->priority ?? 0) }}" placeholder="{{ translate('0') }}">
+                            </div>
+                        </div>
+
                         @if (Config::get('module.current_module_type') == 'food')
                             <div class="col-sm-6 col-lg-{{ $column }}" id="veg_input">
                                 <div class="form-group mb-0 error-wrapper">

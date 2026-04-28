@@ -354,6 +354,7 @@ class ItemController extends Controller
         $item->images = $images;
         $item->is_halal = $request->is_halal ?? 0;
         $item->weight = $request->weight ?? 0;
+        $item->priority = $request->priority ?? 0;
         $item->save();
         $item->tags()->sync($tag_ids);
         $item->nutritions()->sync($nutrition_ids);
@@ -692,6 +693,7 @@ class ItemController extends Controller
         $item->organic = $request->organic ?? 0;
         $item->delivery_time_type = $request->delivery_time_type ?? 'standard';
         $item->veg = $request->veg ?? 0;
+        $item->priority = $request->priority ?? 0;
         $item->images = $images;
         if (Helpers::get_mail_status('product_approval') && $request?->temp_product) {
 
@@ -2300,5 +2302,43 @@ class ItemController extends Controller
         $store = $store_id != 'all' ? Store::findOrFail($store_id) : null;
         $category = $category_id != 'all' ? Category::findOrFail($category_id) : null;
         return view('admin-views.product.product_gallery', compact('items', 'store', 'category', 'type'));
+    }
+    public function reorder(Request $request)
+    {
+        $store_id = $request->query('store_id');
+        $stores = Store::orderBy('name')->get();
+        $items_by_category = [];
+        $selected_store = null;
+
+        if ($store_id) {
+            $selected_store = Store::find($store_id);
+            if ($selected_store) {
+                $categories = Category::whereHas('products', function ($query) use ($store_id) {
+                    $query->where('store_id', $store_id);
+                })->where('position', 0)->orderBy('priority', 'desc')->get();
+
+                foreach ($categories as $category) {
+                    $items_by_category[$category->name] = Item::where('store_id', $store_id)
+                        ->where('category_id', $category->id)
+                        ->orderBy('priority', 'desc')
+                        ->get();
+                }
+            }
+        }
+
+        return view('admin-views.product.reorder', compact('stores', 'items_by_category', 'selected_store'));
+    }
+
+    public function update_reorder(Request $request)
+    {
+        $order = $request->input('order');
+        foreach ($order as $index => $id) {
+            $item = Item::find($id);
+            if ($item) {
+                $item->priority = count($order) - $index;
+                $item->save();
+            }
+        }
+        return response()->json(['message' => translate('Order updated successfully')]);
     }
 }

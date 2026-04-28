@@ -21,6 +21,11 @@
                         </span>
                     </h1>
                 </div>
+                <div class="col-md-3 col-12 text-right">
+                    <a href="{{ route('admin.item.reorder') }}" class="btn btn-info">
+                        <i class="tio-format-bullets"></i> {{ translate('Ordenar Productos') }}
+                    </a>
+                </div>
             </div>
 
         </div>
