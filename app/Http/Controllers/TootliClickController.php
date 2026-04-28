@@ -29,8 +29,7 @@ class TootliClickController extends Controller
         // Obtener artículos agrupados por categoría
         $items_by_category = [];
         foreach ($categories as $category) {
-            $items = Item::with('addons')
-                ->where('store_id', $store->id)
+            $items = Item::where('store_id', $store->id)
                 ->where('category_id', $category->id)
                 ->where('status', 1)
                 ->where('is_approved', 1)
@@ -38,6 +37,15 @@ class TootliClickController extends Controller
                 ->map(function($item) {
                     // Lógica de precio: usar menu_price si existe, de lo contrario usar price
                     $item->display_price = ($item->menu_price > 0) ? $item->menu_price : $item->price;
+                    
+                    // Cargar addons manualmente si existen
+                    $addon_ids = json_decode($item->add_ons, true) ?? [];
+                    if (count($addon_ids) > 0) {
+                        $item->addons = \App\Models\AddOn::whereIn('id', $addon_ids)->active()->get();
+                    } else {
+                        $item->addons = [];
+                    }
+                    
                     return $item;
                 });
             
