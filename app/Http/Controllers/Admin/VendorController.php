@@ -304,6 +304,16 @@ class VendorController extends Controller
         $store->cuisine_names = $request->cuisine_names;
         $store->serves_alcohol = $request->serves_alcohol == 1;
 
+        // TootliClick Settings
+        $tc_settings = $store->tootliclick_settings ?? [];
+        $tc_settings['payment_methods'] = [
+            'cash' => $request->has('tc_payment_cash'),
+            'card' => $request->has('tc_payment_card'),
+            'transfer' => $request->has('tc_payment_transfer'),
+        ];
+        $tc_settings['transfer_details'] = $request->tc_transfer_details;
+        $store->tootliclick_settings = $tc_settings;
+
         $infrastructure_images = $store->infrastructure_images ?? [];
         if ($request->removedImageKeys) {
             $removedKeys = explode(',', $request->removedImageKeys);

@@ -345,6 +345,60 @@
                 <div class="card-header">
                     <div class="mb-0">
                         <h3 class="mb-1">
+                            {{ translate('TootliClick Settings') }}
+                        </h3>
+                        <p class="mb-0 fs-12">
+                            {{ translate('Configure your direct order menu (WhatsApp).') }}
+                        </p>
+                    </div>
+                </div>
+                <div class="card-body p-xxl-20 p-3">
+                    @php($tc_settings = $store->tootliclick_settings ?? [])
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="input-label">{{ translate('Habilitar Métodos de Pago') }}</label>
+                            <div class="d-flex flex-wrap gap-4 border rounded p-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <label class="toggle-switch toggle-switch-sm mb-0">
+                                        <input type="checkbox" name="tc_payment_cash" class="toggle-switch-input" {{ isset($tc_settings['payment_methods']['cash']) && $tc_settings['payment_methods']['cash'] ? 'checked' : '' }}>
+                                        <span class="toggle-switch-label">
+                                            <span class="toggle-switch-indicator"></span>
+                                        </span>
+                                    </label>
+                                    <span class="fs-14">{{ translate('Efectivo') }}</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <label class="toggle-switch toggle-switch-sm mb-0">
+                                        <input type="checkbox" name="tc_payment_card" class="toggle-switch-input" {{ isset($tc_settings['payment_methods']['card']) && $tc_settings['payment_methods']['card'] ? 'checked' : '' }}>
+                                        <span class="toggle-switch-label">
+                                            <span class="toggle-switch-indicator"></span>
+                                        </span>
+                                    </label>
+                                    <span class="fs-14">{{ translate('Tarjeta') }}</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <label class="toggle-switch toggle-switch-sm mb-0">
+                                        <input type="checkbox" name="tc_payment_transfer" class="toggle-switch-input" {{ isset($tc_settings['payment_methods']['transfer']) && $tc_settings['payment_methods']['transfer'] ? 'checked' : '' }}>
+                                        <span class="toggle-switch-label">
+                                            <span class="toggle-switch-indicator"></span>
+                                        </span>
+                                    </label>
+                                    <span class="fs-14">{{ translate('Transferencia') }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-3" id="transfer_details_div" style="display: {{ isset($tc_settings['payment_methods']['transfer']) && $tc_settings['payment_methods']['transfer'] ? 'block' : 'none' }};">
+                            <label class="input-label" for="tc_transfer_details">{{ translate('Detalles para Transferencia') }}</label>
+                            <textarea name="tc_transfer_details" id="tc_transfer_details" class="form-control" rows="3" placeholder="{{ translate('Ej: Banco, Clabe, Beneficiario...') }}">{{ $tc_settings['transfer_details'] ?? '' }}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-20">
+                <div class="card-header">
+                    <div class="mb-0">
+                        <h3 class="mb-1">
                             {{ translate("Store Locations (Multi-location)") }}
                         </h3>
                         <p class="mb-0 fs-12">
@@ -914,6 +968,14 @@
             $('#latitude').val(null);
             $('#longitude').val(null);
         })
+
+        $('input[name="tc_payment_transfer"]').change(function() {
+            if($(this).is(':checked')) {
+                $('#transfer_details_div').show();
+            } else {
+                $('#transfer_details_div').hide();
+            }
+        });
 
         function save_location(btn) {
         let row = $(btn).closest('tr');

@@ -488,6 +488,49 @@
             padding: 40px;
             color: var(--text-muted);
         }
+
+        .payment-method-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .payment-option {
+            flex: 1;
+            padding: 12px 8px;
+            border: 1px solid #EEE;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center; gap: 6px;
+            transition: all 0.2s;
+            background: var(--white);
+        }
+
+        .payment-option i {
+            font-size: 18px;
+            color: var(--text-muted);
+        }
+
+        .payment-option span {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .payment-option.active {
+            border-color: var(--primary);
+            background: rgba(0, 185, 189, 0.05);
+        }
+
+        .payment-option.active i {
+            color: var(--primary);
+        }
+
+        .payment-option.active span {
+            color: var(--primary);
+        }
     </style>
 </head>
 <body>
@@ -629,6 +672,38 @@
                     <textarea id="custAddress" rows="2" placeholder="Ej: Calle 50 x 25 y 27, casa color azul..."></textarea>
                 </div>
             </div>
+
+            @php($tc_settings = $store->tootliclick_settings ?? [])
+            @if(isset($tc_settings['payment_methods']) && (
+                ($tc_settings['payment_methods']['cash'] ?? false) || 
+                ($tc_settings['payment_methods']['card'] ?? false) || 
+                ($tc_settings['payment_methods']['transfer'] ?? false)
+            ))
+            <div class="input-group">
+                <label>Método de Pago</label>
+                <div class="payment-method-selector">
+                    @if($tc_settings['payment_methods']['cash'] ?? false)
+                    <div class="payment-option" onclick="setPaymentMethod('Efectivo', this)">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Efectivo</span>
+                    </div>
+                    @endif
+                    @if($tc_settings['payment_methods']['card'] ?? false)
+                    <div class="payment-option" onclick="setPaymentMethod('Tarjeta', this)">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Tarjeta</span>
+                    </div>
+                    @endif
+                    @if($tc_settings['payment_methods']['transfer'] ?? false)
+                    <div class="payment-option" onclick="setPaymentMethod('Transferencia', this)">
+                        <i class="fas fa-university"></i>
+                        <span>Transfer</span>
+                    </div>
+                    @endif
+                </div>
+                <input type="hidden" id="paymentMethod" value="">
+            </div>
+            @endif
 
             <div id="orderSummary" style="margin-bottom: 24px; padding: 16px; background: var(--bg-light); border-radius: 12px; font-size: 14px;">
                 <!-- Summary injected here -->
@@ -1012,10 +1087,17 @@
             }
         }
 
+        function setPaymentMethod(method, el) {
+            document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('paymentMethod').value = method;
+        }
+
         function sendToWhatsApp() {
             const name = document.getElementById('custName').value;
             const phoneCust = document.getElementById('custPhone').value;
             const address = document.getElementById('custAddress').value;
+            const paymentMethod = document.getElementById('paymentMethod').value;
             
             if (!name || !phoneCust) {
                 alert('Por favor, ingresa tu nombre y teléfono.');
@@ -1027,10 +1109,20 @@
                 return;
             }
 
+            // Validar método de pago si hay opciones habilitadas
+            if (document.querySelector('.payment-option') && !paymentMethod) {
+                alert('Por favor selecciona un método de pago.');
+                return;
+            }
+
             let message = `*Nuevo Pedido desde TootliClick*%0A%0A`;
             message += `*Cliente:* ${name}%0A`;
             message += `*Teléfono:* ${phoneCust}%0A`;
             message += `*Tipo:* ${orderType === 'delivery' ? 'A Domicilio' : 'Pasar a Recoger'}%0A`;
+            
+            if (paymentMethod) {
+                message += `*Método de Pago:* ${paymentMethod}%0A`;
+            }
             
             if (orderType === 'delivery') {
                 if (selectedColonia) message += `*Colonia:* ${selectedColonia}%0A`;
@@ -1052,6 +1144,11 @@
             
             cart.forEach(item => {
                 message += `• ${item.qty}x ${item.name} ($${(item.price * item.qty).toFixed(2)})%0A`;
+                if (item.options && item.options.length > 0) {
+                    item.options.forEach(opt => {
+                        message += `   - ${opt.name} (+$${opt.price.toFixed(2)})%0A`;
+                    });
+                }
             });
             
             const subtotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
