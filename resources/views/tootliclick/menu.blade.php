@@ -499,8 +499,7 @@
                             </div>
                             <div class="item-footer">
                                 <span class="item-price">${{ number_format($item->display_price, 2) }}</span>
-                                <span class="item-price">${{ number_format($item->display_price, 2) }}</span>
-                                <button class="add-btn" onclick="checkItemDetails({{ json_encode($item) }})">
+                                <button class="add-btn" onclick="checkItemDetails({{ $item->id }})">
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
@@ -616,6 +615,14 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
+        const allItems = {
+            @foreach($items_by_category as $catId => $data)
+                @foreach($data['items'] as $item)
+                    "{{ $item->id }}": @json($item),
+                @endforeach
+            @endforeach
+        };
+        
         let cart = [];
         let orderType = 'delivery';
         let coordinates = null;
@@ -733,12 +740,14 @@
         let selectedVariations = {};
         let selectedAddons = [];
 
-        function checkItemDetails(item) {
-            const hasFoodVars = item.food_variations && JSON.parse(item.food_variations).length > 0;
-            const hasChoiceOpts = item.choice_options && JSON.parse(item.choice_options).length > 0;
+        function checkItemDetails(itemId) {
+            const item = allItems[itemId];
+            if (!item) return;
+
+            const hasFoodVars = item.food_variations && (typeof item.food_variations === 'string' ? JSON.parse(item.food_variations) : item.food_variations).length > 0;
             const hasAddons = item.addons && item.addons.length > 0;
 
-            if (hasFoodVars || hasChoiceOpts || hasAddons) {
+            if (hasFoodVars || hasAddons) {
                 openVariationModal(item);
             } else {
                 addToCart(item.id, item.name, item.display_price);
@@ -758,7 +767,7 @@
 
             // Food Variations (Food Module)
             if (item.food_variations) {
-                const vars = JSON.parse(item.food_variations);
+                const vars = typeof item.food_variations === 'string' ? JSON.parse(item.food_variations) : item.food_variations;
                 vars.forEach((v, index) => {
                     const group = document.createElement('div');
                     group.className = 'variation-group';
