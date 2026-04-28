@@ -33,6 +33,7 @@ class TootliClickController extends Controller
                 ->where('category_id', $category->id)
                 ->where('status', 1)
                 ->where('is_approved', 1)
+                ->orderBy('priority', 'desc')
                 ->get()
                 ->map(function($item) {
                     // Lógica de precio: usar menu_price si existe, de lo contrario usar price
