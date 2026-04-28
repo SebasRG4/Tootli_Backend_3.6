@@ -213,17 +213,24 @@
         }
 
         .add-btn {
-            background: var(--primary);
+            background: #27ae60;
             color: var(--white);
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
+            padding: 10px 20px;
+            border-radius: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 8px;
             cursor: pointer;
             border: none;
-            font-size: 18px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2);
+        }
+
+        .add-btn:active {
+            transform: scale(0.95);
         }
 
         /* Cart Bar */
@@ -501,6 +508,7 @@
                                 <span class="item-price">${{ number_format($item->display_price, 2) }}</span>
                                 <button class="add-btn" onclick="checkItemDetails({{ $item->id }})">
                                     <i class="fas fa-plus"></i>
+                                    Agregar
                                 </button>
                             </div>
                         </div>
