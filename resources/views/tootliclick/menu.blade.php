@@ -405,6 +405,28 @@
             font-size: 16px;
         }
 
+        .checkout-btn {
+            background: #27ae60;
+            color: var(--white);
+            width: 100%;
+            padding: 18px;
+            border-radius: 50px;
+            border: none;
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 8px 20px rgba(39, 174, 96, 0.3);
+        }
+
+        .checkout-btn:active {
+            transform: scale(0.98);
+        }
+
         .whatsapp-btn {
             background: #25D366;
             color: var(--white);
