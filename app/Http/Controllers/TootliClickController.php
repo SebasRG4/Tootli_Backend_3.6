@@ -19,8 +19,11 @@ class TootliClickController extends Controller
         }
 
         // Obtener categorías que tienen artículos en este restaurante
-        $categories = Category::whereHas('items', function ($query) use ($store) {
-            $query->where('store_id', $store->id)->active();
+        // Nota: Se usa 'products' en lugar de 'items' por la relación en el modelo Category
+        $categories = Category::whereHas('products', function ($query) use ($store) {
+            $query->where('store_id', $store->id)
+                  ->where('status', 1)
+                  ->where('is_approved', 1);
         })->where('position', 0)->orderBy('priority', 'desc')->get();
 
         // Obtener artículos agrupados por categoría
@@ -28,8 +31,14 @@ class TootliClickController extends Controller
         foreach ($categories as $category) {
             $items = Item::where('store_id', $store->id)
                 ->where('category_id', $category->id)
-                ->active()
-                ->get();
+                ->where('status', 1)
+                ->where('is_approved', 1)
+                ->get()
+                ->map(function($item) {
+                    // Lógica de precio: usar menu_price si existe, de lo contrario usar price
+                    $item->display_price = ($item->menu_price > 0) ? $item->menu_price : $item->price;
+                    return $item;
+                });
             
             if ($items->count() > 0) {
                 $items_by_category[$category->id] = [

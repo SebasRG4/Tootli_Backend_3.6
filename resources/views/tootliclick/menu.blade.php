@@ -403,8 +403,8 @@
                                 <p class="item-desc">{{ $item->description }}</p>
                             </div>
                             <div class="item-footer">
-                                <span class="item-price">${{ number_format($item->price, 2) }}</span>
-                                <button class="add-btn" onclick="addToCart({{ $item->id }}, '{{ $item->name }}', {{ $item->price }})">
+                                <span class="item-price">${{ number_format($item->display_price, 2) }}</span>
+                                <button class="add-btn" onclick="addToCart({{ $item->id }}, '{{ $item->name }}', {{ $item->display_price }})">
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
