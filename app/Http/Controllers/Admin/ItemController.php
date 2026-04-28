@@ -2308,6 +2308,7 @@ class ItemController extends Controller
         $store_id = $request->query('store_id');
         $stores = Store::orderBy('name')->get();
         $items_by_category = [];
+        $categories = [];
         $selected_store = null;
 
         if ($store_id) {
@@ -2318,7 +2319,7 @@ class ItemController extends Controller
                 })->where('position', 0)->orderBy('priority', 'desc')->get();
 
                 foreach ($categories as $category) {
-                    $items_by_category[$category->name] = Item::where('store_id', $store_id)
+                    $items_by_category[$category->id] = Item::where('store_id', $store_id)
                         ->where('category_id', $category->id)
                         ->orderBy('priority', 'desc')
                         ->get();
@@ -2326,7 +2327,7 @@ class ItemController extends Controller
             }
         }
 
-        return view('admin-views.product.reorder', compact('stores', 'items_by_category', 'selected_store'));
+        return view('admin-views.product.reorder', compact('stores', 'items_by_category', 'categories', 'selected_store'));
     }
 
     public function update_reorder(Request $request)
@@ -2340,5 +2341,18 @@ class ItemController extends Controller
             }
         }
         return response()->json(['message' => translate('Order updated successfully')]);
+    }
+
+    public function update_category_reorder(Request $request)
+    {
+        $order = $request->input('order');
+        foreach ($order as $index => $id) {
+            $category = Category::find($id);
+            if ($category) {
+                $category->priority = count($order) - $index;
+                $category->save();
+            }
+        }
+        return response()->json(['message' => translate('Category order updated successfully')]);
     }
 }
