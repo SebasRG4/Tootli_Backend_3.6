@@ -588,6 +588,8 @@ class VendorController extends Controller
 
 
 
+        } else if ($tab == 'tootliclick') {
+            return view('admin-views.vendor.view.tootliclick', compact('store'));
         }
         return view('admin-views.vendor.view.index', compact('store', 'wallet'));
     }
@@ -2197,5 +2199,32 @@ class VendorController extends Controller
 
         $location->delete();
         return response()->json(['message' => translate('messages.location_deleted_successfully')], 200);
+    }
+
+    public function tootliclick_settings_update(Request $request, Store $store)
+    {
+        $settings = $store->tootliclick_settings ?? [];
+        
+        $settings['shipping_enabled'] = $request->has('shipping_enabled');
+        $settings['free_delivery_min_amount'] = (float) $request->free_delivery_min_amount;
+        
+        $colonias = [];
+        if($request->has('colonia_name')) {
+            foreach($request->colonia_name as $key => $name) {
+                if(!empty($name)) {
+                    $colonias[] = [
+                        'name' => $name,
+                        'price' => (float) $request->colonia_price[$key]
+                    ];
+                }
+            }
+        }
+        $settings['colonias'] = $colonias;
+        
+        $store->tootliclick_settings = $settings;
+        $store->save();
+        
+        Toastr::success(translate('Configuración de TootliClick actualizada correctamente'));
+        return back();
     }
 }

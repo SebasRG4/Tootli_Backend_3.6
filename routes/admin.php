@@ -308,6 +308,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post('discount/{store}', 'VendorController@discountSetup')->name('discount');
                 Route::post('update-settings/{store}', 'VendorController@updateStoreSettings')->name('update-settings');
                 Route::post('update-meta-data/{store}', 'VendorController@updateStoreMetaData')->name('update-meta-data');
+                Route::post('tootliclick-settings/{store}', 'VendorController@tootliclick_settings_update')->name('tootliclick-settings-update');
                 Route::delete('delete/{store}', 'VendorController@destroy')->name('delete');
                 Route::delete('clear-discount/{store}', 'VendorController@cleardiscount')->name('clear-discount');
                 // Route::get('view/{store}', 'VendorController@view')->name('view_tab');

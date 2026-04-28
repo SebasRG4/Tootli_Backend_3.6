@@ -104,6 +104,11 @@
                             href="{{ route('admin.store.view', ['store' => $store->id, 'tab' => 'business_plan']) }}"
                             aria-disabled="true">{{ translate('messages.business_plan') }}</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link  {{ request('tab') == 'tootliclick' ? 'active' : '' }}"
+                            href="{{ route('admin.store.view', ['store' => $store->id, 'tab' => 'tootliclick']) }}"
+                            aria-disabled="true">{{ translate('TootliClick') }}</a>
+                    </li>
                 </ul>
                 <!-- End Nav -->
             </div>

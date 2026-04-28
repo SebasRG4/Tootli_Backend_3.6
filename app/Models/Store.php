@@ -259,6 +259,7 @@ class Store extends Model
         'accepts_reservations' => 'boolean',
         'serves_alcohol' => 'boolean',
         'menu_images' => 'array',
+        'tootliclick_settings' => 'array',
     ];
 
     /**

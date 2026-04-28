@@ -491,10 +491,22 @@
             </div>
 
             <div id="deliveryFields">
+                @if(isset($store->tootliclick_settings['colonias']) && count($store->tootliclick_settings['colonias']) > 0)
+                <div class="input-group">
+                    <label>Selecciona tu Colonia</label>
+                    <select id="selColonia" class="form-control" onchange="setColonia(this.value)" style="width: 100%; padding: 16px; border-radius: 12px; background: var(--bg-light); border: 1px solid #EEE;">
+                        <option value="">Selecciona una colonia...</option>
+                        @foreach($store->tootliclick_settings['colonias'] as $col)
+                        <option value="{{ $col['name'] }}" data-price="{{ $col['price'] }}">{{ $col['name'] }} (${{ number_format($col['price'], 2) }})</option>
+                        @endforeach
+                    </select>
+                </div>
+                @else
                 <button class="location-btn" onclick="getLocation()">
                     <i class="fas fa-location-arrow"></i>
                     Usar mi ubicación actual
                 </button>
+                @endif
                 <div class="input-group">
                     <label>Dirección Detallada</label>
                     <textarea id="custAddress" rows="2" placeholder="Calle, número, colonia y referencias..."></textarea>
@@ -518,6 +530,7 @@
         let orderType = 'delivery';
         let coordinates = null;
         let shippingFee = 0;
+        let selectedColonia = '';
 
         // Store configuration for shipping
         const storeLat = {{ $store->latitude ?? 0 }};
@@ -525,6 +538,10 @@
         const minShipping = {{ $store->minimum_shipping_charge ?? 0 }};
         const perKmCharge = {{ $store->per_km_shipping_charge ?? 0 }};
         const maxShipping = {{ $store->maximum_shipping_charge ?? 0 }};
+        
+        // Extended settings
+        const tcSettings = @json($store->tootliclick_settings ?? []);
+        const minFreeOrder = tcSettings.free_delivery_min_amount || 0;
 
         function setOrderType(type) {
             orderType = type;
@@ -533,10 +550,24 @@
                 document.getElementById('typeDelivery').classList.add('active');
                 document.getElementById('deliveryFields').style.display = 'block';
             } else {
+                document.getElementById('typeDelivery').classList.remove('active'); // Fixed potentially missing line
                 document.getElementById('typePickup').classList.add('active');
                 document.getElementById('deliveryFields').style.display = 'none';
                 shippingFee = 0;
+                selectedColonia = '';
             }
+            updateSummary();
+        }
+
+        function setColonia(name) {
+            selectedColonia = name;
+            if (name) {
+                const option = document.querySelector(`#selColonia option[value="${name}"]`);
+                shippingFee = parseFloat(option.dataset.price);
+            } else {
+                shippingFee = 0;
+            }
+            calculateShipping(); // Still run for minFreeOrder logic
             updateSummary();
         }
 
@@ -570,11 +601,26 @@
         }
 
         function calculateShipping() {
-            if (orderType === 'delivery' && coordinates && storeLat && storeLng) {
-                const distance = getDistance(storeLat, storeLng, coordinates.lat, coordinates.lng);
-                let fee = minShipping + (distance * perKmCharge);
-                if (maxShipping > 0 && fee > maxShipping) fee = maxShipping;
-                shippingFee = fee;
+            const subtotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+            
+            // Si supera el mínimo de compra para envío gratis
+            if (minFreeOrder > 0 && subtotal >= minFreeOrder) {
+                shippingFee = 0;
+                return;
+            }
+
+            if (orderType === 'delivery') {
+                if (selectedColonia) {
+                    // Ya está seteado en setColonia
+                    return;
+                }
+                
+                if (coordinates && storeLat && storeLng) {
+                    const distance = getDistance(storeLat, storeLng, coordinates.lat, coordinates.lng);
+                    let fee = minShipping + (distance * perKmCharge);
+                    if (maxShipping > 0 && fee > maxShipping) fee = maxShipping;
+                    shippingFee = fee;
+                }
             } else {
                 shippingFee = 0;
             }
@@ -675,12 +721,18 @@
             message += `*Tipo:* ${orderType === 'delivery' ? 'A Domicilio' : 'Pasar a Recoger'}%0A`;
             
             if (orderType === 'delivery') {
+                if (selectedColonia) message += `*Colonia:* ${selectedColonia}%0A`;
                 if (address) message += `*Dirección:* ${address}%0A`;
                 if (coordinates) {
                     message += `*Ubicación GPS:* https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}%0A`;
                 }
                 if (shippingFee > 0) {
                     message += `*Costo de Envío:* $${shippingFee.toFixed(2)}%0A`;
+                } else if (minFreeOrder > 0) {
+                    const subtotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+                    if (subtotal >= minFreeOrder) {
+                        message += `*Envío:* GRATIS (Compra > $${minFreeOrder})%0A`;
+                    }
                 }
             }
 
