@@ -885,7 +885,7 @@
 
             // Validar requeridos
             if (currentItem.food_variations) {
-                const vars = JSON.parse(currentItem.food_variations);
+                const vars = typeof currentItem.food_variations === 'string' ? JSON.parse(currentItem.food_variations) : currentItem.food_variations;
                 for (let i = 0; i < vars.length; i++) {
                     if (vars[i].required === 'on') {
                         const checked = document.querySelectorAll(`input[name="var_${i}"]:checked`);
@@ -929,7 +929,7 @@
                 cart.push(cartItem);
             }
 
-            updateCartUI();
+            updateUI();
             closeVariationModal();
             toastr.success('Agregado al pedido');
         }
