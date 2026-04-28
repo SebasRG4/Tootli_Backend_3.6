@@ -30,6 +30,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::post('variant_price', 'POSController@variant_price')->name('variant_price');
             Route::group(['middleware' => ['module:pos','subscription:pos' ]], function () {
                 Route::post('direct-mode', 'POSController@setDirectMode')->name('direct-mode');
+                Route::get('tc-init', 'POSController@tc_order_init')->name('tc-init');
                 Route::get('/', 'POSController@index')->name('index');
                 Route::get('products-grid', 'POSController@products_grid')->name('products-grid');
                 Route::get('quick-view', 'POSController@quick_view')->name('quick-view');

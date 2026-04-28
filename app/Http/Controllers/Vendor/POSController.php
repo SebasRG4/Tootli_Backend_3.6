@@ -95,6 +95,26 @@ class POSController extends Controller
         return redirect()->route('home')->withErrors(['Token inválido.']);
     }
 
+    public function tc_order_init(Request $request)
+    {
+        $address = [
+            'contact_person_name' => $request->tc_name,
+            'contact_person_number' => $request->tc_phone,
+            'address' => $request->tc_address,
+            'floor' => '',
+            'road' => '',
+            'house' => '',
+            'longitude' => (string) $request->tc_lng,
+            'latitude' => (string) $request->tc_lat,
+            'address_type' => 'delivery',
+            'distance' => 0,
+            'delivery_fee' => 0,
+        ];
+        session()->put('address', $address);
+
+        return redirect()->route('vendor.pos.index');
+    }
+
     public function index(Request $request)
     {
         $category = (int) $request->input('category_id', 0);
