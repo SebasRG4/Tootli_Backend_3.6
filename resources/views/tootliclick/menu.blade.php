@@ -359,6 +359,45 @@
             cursor: pointer;
         }
 
+        .location-btn {
+            background: var(--bg-light);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 12px;
+            border-radius: 10px;
+            width: 100%;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
+
+        .order-type-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .order-type-option {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #EEE;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .order-type-option.active {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
         .empty-state {
             text-align: center;
             padding: 40px;
@@ -444,8 +483,22 @@
             </div>
 
             <div class="input-group">
-                <label>Dirección (Opcional si es para recoger)</label>
-                <textarea id="custAddress" rows="2" placeholder="Calle, número y colonia..."></textarea>
+                <label>Tipo de Entrega</label>
+                <div class="order-type-selector">
+                    <div id="typeDelivery" class="order-type-option active" onclick="setOrderType('delivery')">A Domicilio</div>
+                    <div id="typePickup" class="order-type-option" onclick="setOrderType('pickup')">Pasar a Recoger</div>
+                </div>
+            </div>
+
+            <div id="deliveryFields">
+                <button class="location-btn" onclick="getLocation()">
+                    <i class="fas fa-location-arrow"></i>
+                    Usar mi ubicación actual
+                </button>
+                <div class="input-group">
+                    <label>Dirección Detallada</label>
+                    <textarea id="custAddress" rows="2" placeholder="Calle, número, colonia y referencias..."></textarea>
+                </div>
             </div>
 
             <div id="orderSummary" style="margin-bottom: 24px; padding: 16px; background: var(--bg-light); border-radius: 12px; font-size: 14px;">
@@ -462,6 +515,46 @@
 
     <script>
         let cart = [];
+        let orderType = 'delivery';
+        let coordinates = null;
+
+        function setOrderType(type) {
+            orderType = type;
+            document.querySelectorAll('.order-type-option').forEach(opt => opt.classList.remove('active'));
+            if (type === 'delivery') {
+                document.getElementById('typeDelivery').classList.add('active');
+                document.getElementById('deliveryFields').style.display = 'block';
+            } else {
+                document.getElementById('typePickup').classList.add('active');
+                document.getElementById('deliveryFields').style.display = 'none';
+            }
+        }
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                const btn = document.querySelector('.location-btn');
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Obteniendo ubicación...';
+                
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        coordinates = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        btn.innerHTML = '<i class="fas fa-check"></i> Ubicación obtenida';
+                        btn.style.borderColor = '#25D366';
+                        btn.style.color = '#25D366';
+                        toastr.success('Ubicación fijada correctamente');
+                    },
+                    (error) => {
+                        btn.innerHTML = '<i class="fas fa-location-arrow"></i> Usar mi ubicación actual';
+                        alert('No pudimos obtener tu ubicación. Por favor, ingresa tu dirección manualmente.');
+                    }
+                );
+            } else {
+                alert('Tu navegador no soporta geolocalización.');
+            }
+        }
 
         function addToCart(id, name, price) {
             const index = cart.findIndex(i => i.id === id);
@@ -526,9 +619,22 @@
                 return;
             }
 
+            if (orderType === 'delivery' && !address && !coordinates) {
+                alert('Por favor, ingresa tu dirección o comparte tu ubicación.');
+                return;
+            }
+
             let message = `*Nuevo Pedido desde TootliClick*%0A%0A`;
             message += `*Cliente:* ${name}%0A`;
-            if (address) message += `*Dirección:* ${address}%0A`;
+            message += `*Tipo:* ${orderType === 'delivery' ? 'A Domicilio' : 'Pasar a Recoger'}%0A`;
+            
+            if (orderType === 'delivery') {
+                if (address) message += `*Dirección:* ${address}%0A`;
+                if (coordinates) {
+                    message += `*Ubicación GPS:* https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}%0A`;
+                }
+            }
+
             message += `%0A*Detalle del Pedido:*%0A`;
             
             cart.forEach(item => {
