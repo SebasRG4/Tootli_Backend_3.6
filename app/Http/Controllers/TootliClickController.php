@@ -29,7 +29,8 @@ class TootliClickController extends Controller
         // Obtener artículos agrupados por categoría
         $items_by_category = [];
         foreach ($categories as $category) {
-            $items = Item::where('store_id', $store->id)
+            $items = Item::with('addons')
+                ->where('store_id', $store->id)
                 ->where('category_id', $category->id)
                 ->where('status', 1)
                 ->where('is_approved', 1)

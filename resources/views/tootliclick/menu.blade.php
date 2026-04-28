@@ -313,6 +313,57 @@
             -webkit-overflow-scrolling: touch;
         }
 
+        .variation-group {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #EEE;
+        }
+
+        .variation-group:last-child {
+            border-bottom: none;
+        }
+
+        .variation-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .variation-badge {
+            font-size: 10px;
+            background: var(--bg-light);
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: var(--text-muted);
+        }
+
+        .variation-option {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            cursor: pointer;
+        }
+
+        .variation-option input {
+            margin-right: 12px;
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+        }
+
+        .option-label {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .option-price {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
         @keyframes slideUp {
             from { transform: translateY(100%); }
             to { transform: translateY(0); }
@@ -448,7 +499,8 @@
                             </div>
                             <div class="item-footer">
                                 <span class="item-price">${{ number_format($item->display_price, 2) }}</span>
-                                <button class="add-btn" onclick="addToCart({{ $item->id }}, '{{ $item->name }}', {{ $item->display_price }})">
+                                <span class="item-price">${{ number_format($item->display_price, 2) }}</span>
+                                <button class="add-btn" onclick="checkItemDetails({{ json_encode($item) }})">
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
@@ -474,6 +526,29 @@
         <div class="view-cart-btn">
             Ver Pedido
             <i class="fas fa-chevron-right"></i>
+        </div>
+    </div>
+
+    <!-- Variations Modal -->
+    <div id="variationModal" class="modal" onclick="closeVariation(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                <h2 id="vItemName" style="font-size: 20px; font-weight: 700;">Producto</h2>
+                <button onclick="closeVariationModal()" style="border: none; background: none; font-size: 20px; color: #999;"><i class="fas fa-times"></i></button>
+            </div>
+            <p id="vItemDesc" style="font-size: 14px; color: var(--text-muted); margin-bottom: 24px;"></p>
+            
+            <div id="variationContent">
+                <!-- Variations injected here -->
+            </div>
+
+            <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #EEE;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <span style="font-weight: 600;">Total del producto:</span>
+                    <span id="vItemTotal" style="font-size: 20px; font-weight: 700; color: var(--primary);">$0.00</span>
+                </div>
+                <button onclick="addSelectedToCart()" class="checkout-btn">Agregar al pedido</button>
+            </div>
         </div>
     </div>
 
@@ -652,6 +727,172 @@
                       Math.sin(dLon/2) * Math.sin(dLon/2);
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
             return R * c;
+        }
+
+        let currentItem = null;
+        let selectedVariations = {};
+        let selectedAddons = [];
+
+        function checkItemDetails(item) {
+            const hasFoodVars = item.food_variations && JSON.parse(item.food_variations).length > 0;
+            const hasChoiceOpts = item.choice_options && JSON.parse(item.choice_options).length > 0;
+            const hasAddons = item.addons && item.addons.length > 0;
+
+            if (hasFoodVars || hasChoiceOpts || hasAddons) {
+                openVariationModal(item);
+            } else {
+                addToCart(item.id, item.name, item.display_price);
+            }
+        }
+
+        function openVariationModal(item) {
+            currentItem = item;
+            selectedVariations = {};
+            selectedAddons = [];
+            
+            document.getElementById('vItemName').innerText = item.name;
+            document.getElementById('vItemDesc').innerText = item.description || '';
+            
+            const content = document.getElementById('variationContent');
+            content.innerHTML = '';
+
+            // Food Variations (Food Module)
+            if (item.food_variations) {
+                const vars = JSON.parse(item.food_variations);
+                vars.forEach((v, index) => {
+                    const group = document.createElement('div');
+                    group.className = 'variation-group';
+                    
+                    const title = document.createElement('div');
+                    title.className = 'variation-title';
+                    title.innerHTML = `<span>${v.name}</span> <span class="variation-badge">${v.required === 'on' ? 'OBLIGATORIO' : 'OPCIONAL'}</span>`;
+                    group.appendChild(title);
+
+                    v.values.forEach((opt, optIndex) => {
+                        const option = document.createElement('div');
+                        option.className = 'variation-option';
+                        const inputId = `var_${index}_${optIndex}`;
+                        const inputType = (v.type === 'single' || v.max === '1') ? 'radio' : 'checkbox';
+                        const inputName = `var_${index}`;
+                        
+                        option.innerHTML = `
+                            <input type="${inputType}" id="${inputId}" name="${inputName}" 
+                                value="${opt.label}" 
+                                data-price="${opt.optionPrice}"
+                                onchange="updateVariationTotal()">
+                            <label class="option-label" for="${inputId}">${opt.label}</label>
+                            <span class="option-price">+ $${parseFloat(opt.optionPrice).toFixed(2)}</span>
+                        `;
+                        group.appendChild(option);
+                    });
+                    content.appendChild(group);
+                });
+            }
+
+            // Addons
+            if (item.addons && item.addons.length > 0) {
+                const group = document.createElement('div');
+                group.className = 'variation-group';
+                
+                const title = document.createElement('div');
+                title.className = 'variation-title';
+                title.innerHTML = `<span>Adicionales</span> <span class="variation-badge">OPCIONAL</span>`;
+                group.appendChild(title);
+
+                item.addons.forEach((addon, aIndex) => {
+                    const option = document.createElement('div');
+                    option.className = 'variation-option';
+                    const inputId = `addon_${aIndex}`;
+                    
+                    option.innerHTML = `
+                        <input type="checkbox" id="${inputId}" value="${addon.name}" 
+                            data-price="${addon.price}"
+                            onchange="updateVariationTotal()">
+                        <label class="option-label" for="${inputId}">${addon.name}</label>
+                        <span class="option-price">+ $${parseFloat(addon.price).toFixed(2)}</span>
+                    `;
+                    group.appendChild(option);
+                });
+                content.appendChild(group);
+            }
+
+            document.getElementById('variationModal').style.display = 'flex';
+            updateVariationTotal();
+        }
+
+        function closeVariationModal() {
+            document.getElementById('variationModal').style.display = 'none';
+        }
+
+        function closeVariation(e) {
+            if (e.target.id === 'variationModal') closeVariationModal();
+        }
+
+        function updateVariationTotal() {
+            if (!currentItem) return;
+            let total = parseFloat(currentItem.display_price);
+            
+            // Variaciones de comida
+            const inputs = document.querySelectorAll('#variationContent input:checked');
+            inputs.forEach(input => {
+                total += parseFloat(input.dataset.price || 0);
+            });
+
+            document.getElementById('vItemTotal').innerText = `$${total.toFixed(2)}`;
+        }
+
+        function addSelectedToCart() {
+            if (!currentItem) return;
+
+            // Validar requeridos
+            if (currentItem.food_variations) {
+                const vars = JSON.parse(currentItem.food_variations);
+                for (let i = 0; i < vars.length; i++) {
+                    if (vars[i].required === 'on') {
+                        const checked = document.querySelectorAll(`input[name="var_${i}"]:checked`);
+                        if (checked.length === 0) {
+                            alert(`Por favor selecciona una opción para: ${vars[i].name}`);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            const selections = [];
+            let extraPrice = 0;
+
+            const inputs = document.querySelectorAll('#variationContent input:checked');
+            inputs.forEach(input => {
+                selections.push(input.value);
+                extraPrice += parseFloat(input.dataset.price || 0);
+            });
+
+            const finalPrice = parseFloat(currentItem.display_price) + extraPrice;
+            const displayName = currentItem.name + (selections.length > 0 ? ` (${selections.join(', ')})` : '');
+
+            // Añadir al carrito con nombre descriptivo
+            const cartItem = {
+                id: currentItem.id,
+                name: displayName,
+                price: finalPrice,
+                qty: 1,
+                original_name: currentItem.name,
+                selections: selections
+            };
+
+            // Para TootliClick, si tiene selecciones diferentes, lo tratamos como item separado
+            const key = cartItem.name;
+            const index = cart.findIndex(item => item.name === key);
+            
+            if (index > -1) {
+                cart[index].qty++;
+            } else {
+                cart.push(cartItem);
+            }
+
+            updateCartUI();
+            closeVariationModal();
+            toastr.success('Agregado al pedido');
         }
 
         function addToCart(id, name, price) {
