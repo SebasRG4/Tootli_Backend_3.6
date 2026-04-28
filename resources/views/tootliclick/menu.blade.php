@@ -6,6 +6,7 @@
     <title>{{ $store->name }} | Menú Digital TootliClick</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <style>
         :root {
             --primary: #00B9BD;
@@ -487,6 +488,11 @@
             </div>
 
             <div class="input-group">
+                <label>Tu Teléfono WhatsApp</label>
+                <input type="tel" id="custPhone" placeholder="Ej. 9991234567">
+            </div>
+
+            <div class="input-group">
                 <label>Tipo de Entrega</label>
                 <div class="order-type-selector">
                     <div id="typeDelivery" class="order-type-option active" onclick="setOrderType('delivery')">A Domicilio</div>
@@ -532,6 +538,8 @@
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
         let cart = [];
         let orderType = 'delivery';
@@ -726,10 +734,11 @@
 
         function sendToWhatsApp() {
             const name = document.getElementById('custName').value;
+            const phoneCust = document.getElementById('custPhone').value;
             const address = document.getElementById('custAddress').value;
             
-            if (!name) {
-                alert('Por favor, ingresa tu nombre.');
+            if (!name || !phoneCust) {
+                alert('Por favor, ingresa tu nombre y teléfono.');
                 return;
             }
 
@@ -740,6 +749,7 @@
 
             let message = `*Nuevo Pedido desde TootliClick*%0A%0A`;
             message += `*Cliente:* ${name}%0A`;
+            message += `*Teléfono:* ${phoneCust}%0A`;
             message += `*Tipo:* ${orderType === 'delivery' ? 'A Domicilio' : 'Pasar a Recoger'}%0A`;
             
             if (orderType === 'delivery') {
@@ -770,7 +780,7 @@
             
             // Link for Restaurant Admin (Tootli Directo)
             const adminBaseUrl = '{{ route("vendor.pos.tc-init") }}';
-            const adminParams = `?tc_name=${encodeURIComponent(name)}&tc_phone=${encodeURIComponent(phone)}&tc_address=${encodeURIComponent(address)}&tc_lat=${coordinates?coordinates.lat:''}&tc_lng=${coordinates?coordinates.lng:''}`;
+            const adminParams = `?tc_name=${encodeURIComponent(name)}&tc_phone=${encodeURIComponent(phoneCust)}&tc_address=${encodeURIComponent(address)}&tc_lat=${coordinates?coordinates.lat:''}&tc_lng=${coordinates?coordinates.lng:''}`;
             
             message += `%0A--------------------------%0A`;
             message += `*SOLO RESTAURANTE (Tootli Directo):*%0A`;
@@ -779,8 +789,8 @@
             
             message += `%0A_Pedido generado desde tootli.mx_`;
 
-            const phone = '{{ $store->phone }}'.replace(/\D/g, '');
-            const whatsappUrl = `https://wa.me/${phone}?text=${message}`;
+            const storePhone = '{{ $store->phone }}'.replace(/\D/g, '');
+            const whatsappUrl = `https://wa.me/${storePhone}?text=${message}`;
             
             window.open(whatsappUrl, '_blank');
         }
