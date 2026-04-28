@@ -147,7 +147,7 @@ class ProductLogic
 
 
         if ($latest_items_default_status == '1') {
-            $query = $query->latest();
+            $query = $query->orderBy('priority', 'desc')->latest();
         } else {
             if (config('module.current_module_data')['module_type'] !== 'food') {
                 if ($latest_items_sort_by_unavailable == 'remove') {
@@ -221,7 +221,7 @@ class ProductLogic
             ->active()->visibleInCustomerApp()->type($type);
 
         if ($latest_items_default_status == '1') {
-            $query = $query->latest();
+            $query = $query->orderBy('priority', 'desc')->latest();
         } else {
             if (config('module.current_module_data')['module_type'] !== 'food') {
                 if ($latest_items_sort_by_unavailable == 'remove') {
@@ -361,7 +361,7 @@ class ProductLogic
             ->active()->visibleInCustomerApp()->type($type);
 
         if ($latest_items_default_status == '1') {
-            $query = $query->latest();
+            $query = $query->orderBy('priority', 'desc')->latest();
         } else {
             if (config('module.current_module_data')['module_type'] !== 'food') {
                 if ($latest_items_sort_by_unavailable == 'remove') {
