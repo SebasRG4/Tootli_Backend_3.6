@@ -247,11 +247,11 @@ class VendorController extends Controller
         ->where(function($query)use($vendor){
             if(config('order_confirmation_model') == 'store' || $vendor->stores[0]->sub_self_delivery)
             {
-                $query->whereIn('order_status', ['accepted','pending','confirmed', 'processing', 'handover','picked_up']);
+                $query->whereIn('order_status', ['accepted','pending','confirmed', 'processing', 'handover','picked_up', 'returned']);
             }
             else
             {
-                $query->whereIn('order_status', ['confirmed', 'processing', 'handover','picked_up'])
+                $query->whereIn('order_status', ['confirmed', 'processing', 'handover','picked_up', 'returned'])
                 ->orWhere(function($query){
                     $query->whereNotNull('confirmed')->where('order_status', 'accepted');
                 })

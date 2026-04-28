@@ -1328,6 +1328,165 @@ class ItemController extends Controller
         return Excel::download(new ItemReviewExport($data), $typ . 'Review.xlsx');
     }
 
+    public function quick_price_update_index()
+    {
+        return view('admin-views.product.quick-price-update');
+    }
+
+    public function quick_price_update_parse(Request $request)
+    {
+        $request->validate([
+            'whatsapp_text' => 'required'
+        ]);
+
+        $lines = explode("\n", $request->whatsapp_text);
+        $previewData = [];
+        $module_id = Config::get('module.current_module_id');
+
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if (empty($line)) continue;
+
+            preg_match('/^[-*•]?\s*(.*?)\s*(?:\((.*?)\))?\s*\$\s*([\d,.]+)/', $line, $matches);
+
+            if (count($matches) >= 4) {
+                $productName = trim($matches[1]);
+                $variationName = trim($matches[2]); 
+                $priceStr = trim($matches[3]);
+                $newPrice = (float) str_replace(',', '', $priceStr);
+
+                $items = Item::withoutGlobalScope(StoreScope::class)->where('name', 'LIKE', "%{$productName}%")->where('module_id', $module_id)->get();
+
+                $matchStatus = 'not_found';
+                $dbItem = null;
+
+                if ($items->count() == 1) {
+                    $matchStatus = 'found';
+                    $dbItem = $items->first();
+                } elseif ($items->count() > 1) {
+                    $exactMatch = $items->where('name', $productName)->first();
+                    if ($exactMatch) {
+                        $matchStatus = 'found';
+                        $dbItem = $exactMatch;
+                    } else {
+                        $matchStatus = 'multiple_found';
+                    }
+                }
+
+                $oldPrice = 0;
+                if ($dbItem) {
+                    if ($variationName) {
+                        $variations = $dbItem->module->module_type == 'food' ? json_decode($dbItem->food_variations, true) : json_decode($dbItem->variations, true);
+                        if ($variations) {
+                            if ($dbItem->module->module_type == 'food') {
+                                foreach($variations as $var) {
+                                    if(isset($var['values'])) {
+                                        foreach($var['values'] as $val) {
+                                            if (strtolower($val['label']) == strtolower($variationName)) {
+                                                $oldPrice = $val['optionPrice'];
+                                                break 2;
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                foreach($variations as $var) {
+                                    if (strtolower($var['type']) == strtolower($variationName)) {
+                                        $oldPrice = $var['price'];
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        $oldPrice = $dbItem->price;
+                    }
+                }
+
+                $previewData[] = [
+                    'original_line' => $line,
+                    'parsed_name' => $productName,
+                    'parsed_variation' => $variationName,
+                    'parsed_price' => $newPrice,
+                    'match_status' => $matchStatus,
+                    'db_item_id' => $dbItem ? $dbItem->id : null,
+                    'db_item_name' => $dbItem ? $dbItem->name . ' (' . ($dbItem->store ? $dbItem->store->name : '') . ')' : '',
+                    'old_price' => $dbItem ? $oldPrice : null,
+                ];
+            } else {
+                $previewData[] = [
+                    'original_line' => $line,
+                    'parsed_name' => '',
+                    'parsed_variation' => '',
+                    'parsed_price' => null,
+                    'match_status' => 'invalid_format',
+                    'db_item_id' => null,
+                    'db_item_name' => '',
+                    'old_price' => null,
+                ];
+            }
+        }
+
+        return response()->json([
+            'view' => view('admin-views.product.partials._quick-price-update-preview', compact('previewData'))->render()
+        ]);
+    }
+
+    public function quick_price_update_store(Request $request)
+    {
+        $updates = $request->input('updates', []);
+        $updatedCount = 0;
+
+        foreach ($updates as $update) {
+            if (isset($update['item_id']) && $update['item_id']) {
+                $item = Item::withoutGlobalScope(StoreScope::class)->find($update['item_id']);
+                if ($item) {
+                    $newPrice = (float) $update['new_price'];
+                    $variationName = isset($update['variation']) ? trim($update['variation']) : '';
+
+                    if ($variationName) {
+                        $variations = $item->module->module_type == 'food' ? json_decode($item->food_variations, true) : json_decode($item->variations, true);
+                        $updated = false;
+                        if ($variations) {
+                            if ($item->module->module_type == 'food') {
+                                foreach($variations as &$var) {
+                                    if(isset($var['values'])) {
+                                        foreach($var['values'] as &$val) {
+                                            if (strtolower($val['label']) == strtolower($variationName)) {
+                                                $val['optionPrice'] = $newPrice;
+                                                $updated = true;
+                                            }
+                                        }
+                                    }
+                                }
+                                if ($updated) $item->food_variations = json_encode($variations);
+                            } else {
+                                foreach($variations as &$var) {
+                                    if (strtolower($var['type']) == strtolower($variationName)) {
+                                        $var['price'] = $newPrice;
+                                        $updated = true;
+                                    }
+                                }
+                                if ($updated) $item->variations = json_encode($variations);
+                            }
+                        }
+                        if ($updated) {
+                            $item->save();
+                            $updatedCount++;
+                        }
+                    } else {
+                        $item->price = $newPrice;
+                        $item->save();
+                        $updatedCount++;
+                    }
+                }
+            }
+        }
+
+        Toastr::success(translate('messages.prices_updated_successfully', ['count' => $updatedCount]));
+        return redirect()->route('admin.item.quick-price-update');
+    }
+
     public function bulk_import_index()
     {
         $module_type = Config::get('module.current_module_type');

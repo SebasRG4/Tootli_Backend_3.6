@@ -475,7 +475,7 @@ class DeliverymanController extends Controller
     {
         $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
         $orders = Order::with(['customer', 'store', 'parcel_category'])
-            ->whereIn('order_status', ['accepted', 'confirmed', 'pending', 'processing', 'picked_up', 'handover'])
+            ->whereIn('order_status', ['accepted', 'confirmed', 'pending', 'processing', 'picked_up', 'handover', 'returned'])
             ->where(['delivery_man_id' => $dm['id']])
             ->orderBy('accepted')
             ->orderBy('schedule_at', 'desc')
@@ -924,10 +924,18 @@ class DeliverymanController extends Controller
             ], 403);
         }
 
-        if (Config::get('order_delivery_verification') == 1 && $request['status'] == 'delivered' && $order->otp != $request['otp']) {
+        if (Config::get('order_delivery_verification') == 1 && $request['status'] == 'delivered' && $order->order_status != 'returned' && $order->otp != $request['otp']) {
             return response()->json([
                 'errors' => [
                     ['code' => 'otp', 'message' => translate('Otp Not matched')],
+                ],
+            ], 406);
+        }
+
+        if ($order->order_status == 'returned' && $request['status'] == 'delivered' && $order->return_otp != $request['otp']) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'otp', 'message' => translate('messages.Invalid_return_otp')],
                 ],
             ], 406);
         }

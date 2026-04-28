@@ -176,6 +176,11 @@
                         <a href="{{ route('admin.item.approval_list') }}" class="btn btn--primary font-regular">{{translate('messages.New_Product_Request')}}</a>
                     </div>
                     @endif
+                    <div>
+                        <a href="{{ route('admin.item.quick-price-update') }}" class="btn btn--warning font-regular">
+                            <i class="tio-publish"></i> {{translate('Actualización de Precios')}}
+                        </a>
+                    </div>
                 </div>
                 <!-- End Row -->
             </div>

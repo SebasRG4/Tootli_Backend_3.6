@@ -2322,12 +2322,38 @@ class OrderController extends Controller
             $cancellation_note = trim($cancellation_note . ' [Pedido pagado a restaurante pero dinero no obtenido]');
         }
 
-        $order->order_status = $request->has('return_to_store') ? 'returned' : 'canceled';
-        $order->canceled = now();
+        if ($request->has('return_to_store')) {
+            $order->order_status = 'returned';
+            $order->return_otp = random_int(1000, 9999);
+            $order->returned = now();
+            
+            // Si Tootli absorbe la pérdida, pagamos al restaurante de todos modos
+            if ($request->has('tootli_absorbs_loss')) {
+                \App\CentralLogics\OrderLogic::create_transaction($order, 'admin', 'delivered');
+            }
+        } else {
+            $order->order_status = 'canceled';
+            $order->canceled = now();
+        }
+
         $order->cancellation_reason = 'Soporte Administrativo (Avanzado)';
         $order->cancellation_note = $cancellation_note;
         $order->canceled_by = 'admin';
         $order->save();
+
+        // Notificar al restaurante si es devuelto
+        if ($order->order_status === 'returned') {
+            $vendor_fcm = $order->store->vendor->firebase_token;
+            if ($vendor_fcm) {
+                $data = [
+                    'title' => translate('Pedido en Retorno'),
+                    'description' => translate('El pedido #') . $order->id . translate(' va de regreso. Código de recepción: ') . $order->return_otp,
+                    'order_id' => $order->id,
+                    'type' => 'order_status',
+                ];
+                \App\CentralLogics\Helpers::send_push_notif_to_device($vendor_fcm, $data);
+            }
+        }
 
         if ($request->has('strike_deliveryman') && $order->delivery_man_id) {
             $incidentType = \App\Models\DeliveryIncidentType::first();

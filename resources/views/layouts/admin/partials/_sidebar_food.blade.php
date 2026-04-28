@@ -539,6 +539,13 @@
                                             <span class="text-truncate text-capitalize">{{ translate('messages.bulk_export') }}</span>
                                         </a>
                                     </li>
+                                    <li class="nav-item {{ Request::is('admin/item/quick-price-update') ? 'active' : '' }}">
+                                        <a class="nav-link " href="{{ route('admin.item.quick-price-update') }}"
+                                            title="{{ translate('Actualización de Precios') }}">
+                                            <span class="tio-circle nav-indicator-icon"></span>
+                                            <span class="text-truncate text-capitalize">{{ translate('Actualización de Precios') }}</span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         @endif

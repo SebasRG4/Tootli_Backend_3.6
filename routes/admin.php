@@ -135,6 +135,11 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('bulk-import', 'ItemController@bulk_import_data');
             Route::get('bulk-export', 'ItemController@bulk_export_index')->name('bulk-export-index');
             Route::post('bulk-export', 'ItemController@bulk_export_data')->name('bulk-export');
+
+            // Quick price update
+            Route::get('quick-price-update', 'ItemController@quick_price_update_index')->name('quick-price-update');
+            Route::post('quick-price-update-parse', 'ItemController@quick_price_update_parse')->name('quick-price-update-parse');
+            Route::post('quick-price-update-store', 'ItemController@quick_price_update_store')->name('quick-price-update-store');
         });
 
         Route::group(['prefix' => 'promotional-banner', 'as' => 'promotional-banner.', 'middleware' => ['module:banner']], function () {
