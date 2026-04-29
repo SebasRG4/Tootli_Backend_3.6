@@ -823,6 +823,12 @@ class POSController extends Controller
             if ($moduleZone) {
                 // Usar tarifas Tootli Direct específicas si están configuradas, si no las regulares
                 $tdType = $moduleZone->pivot->td_delivery_charge_type ?? null;
+                $tdMinimum = (float) ($moduleZone->pivot->td_minimum_shipping_charge ?? 0);
+
+                // PREVENCIÓN DE BUGS: Si no se guardó el tdType pero sí existe una tarifa mínima de Tootli Direct, forzar "distance"
+                if (empty($tdType) && $tdMinimum > 0) {
+                    $tdType = 'distance';
+                }
 
                 if ($tdType === 'fixed') {
                     $chargeType = 'fixed';

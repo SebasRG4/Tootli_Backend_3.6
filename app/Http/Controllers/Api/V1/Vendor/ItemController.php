@@ -715,15 +715,19 @@ class ItemController extends Controller
 
         $images = $p['images'];
 
+        $request_images = json_decode($request->images, true) ?? [];
+        $request_image_names = array_map(function($url) {
+            return basename(parse_url($url, PHP_URL_PATH));
+        }, $request_images);
+
         foreach ($p['images'] as $img) {
-            if (!in_array($img, json_decode($request->images, true))) {
-
-                Helpers::check_and_delete('product/' , $img);
-
+            $img_name = is_array($img) ? $img['img'] : $img;
+            if (!in_array($img_name, $request_image_names)) {
+                Helpers::check_and_delete('product/' , $img_name);
                 $key = array_search($img, $images);
                 unset($images[$key]);
             }
-            }
+        }
         $images = array_values($images);
         if ($request->has('item_images')){
             foreach ($request->item_images as $img) {
@@ -1081,8 +1085,14 @@ class ItemController extends Controller
 
         $images= $request?->temp_product == 1 ?   $item->images ?? [] : $data->images ?? [];
         if($request->removedImageKeys){
+            $removed_keys = json_decode($request->removedImageKeys, true) ?? [];
+            $removed_names = array_map(function($url) {
+                return basename(parse_url($url, PHP_URL_PATH));
+            }, $removed_keys);
+
             foreach($images as $key=> $value){
-                if( in_array( is_array($value) ?   $value['img'] : $value , json_decode($request->removedImageKeys,true))) {
+                $img_name = is_array($value) ? $value['img'] : $value;
+                if( in_array($img_name, $removed_names) ) {
                     unset($images[$key]);
                 }
             }
