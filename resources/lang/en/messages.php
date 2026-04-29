@@ -3331,6 +3331,7 @@
   'store is required when banner type is store wise' => 'Store is required when banner type is store wise',
   'default_title_is_required' => 'Default title is required',
   'you_can_not_cancel_a_completed_order' => 'You can not cancel a completed order',
+  'wait_for_store_to_mark_ready' => 'The store has not marked this order as ready for pickup yet. Please wait.',
   'faield_to_create_order_transaction' => 'Faield to create order transaction',
   'Campaign view' => 'Campaign view',
   'owner' => 'Owner',

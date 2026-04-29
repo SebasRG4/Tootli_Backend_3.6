@@ -1094,6 +1094,17 @@ class DeliverymanController extends Controller
                 OrderLogic::apply_price_adjustment($order, $request->actual_price);
             }
         } elseif ($order->order_type != 'parcel' && in_array($request->status, ['picked_up'])) {
+            // Bloquear picked_up hasta que la tienda marque el pedido como listo para la entrega (handover)
+            if ($order->order_status !== 'handover') {
+                return response()->json([
+                    'errors' => [
+                        [
+                            'code'    => 'order_not_ready',
+                            'message' => translate('messages.wait_for_store_to_mark_ready'),
+                        ],
+                    ],
+                ], 403);
+            }
             Helpers::sendOrderDeliveryVerificationOtp($order);
         }
 
