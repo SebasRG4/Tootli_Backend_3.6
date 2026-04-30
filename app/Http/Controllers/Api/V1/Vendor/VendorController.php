@@ -251,16 +251,10 @@ class VendorController extends Controller
             }
             else
             {
-                $query->whereIn('order_status', ['confirmed', 'processing', 'handover','picked_up', 'returned'])
-                ->orWhere(function($query){
-                    $query->whereNotNull('confirmed')->where('order_status', 'accepted');
-                })
-                ->orWhere(function($query){
-                    $query->where('payment_status','paid')->where('order_status', 'accepted');
-                })
-                ->orWhere(function($query){
-                    $query->where('order_status','pending')->whereIn('order_type', ['take_away', 'dine_in']);
-                });
+                // Con modelo 'deliveryman': la tienda ve TODOS los pedidos desde que se crean (pending),
+                // sin importar si el repartidor ya lo aceptó o no. Así la tienda puede preparar el pedido
+                // en paralelo mientras se asigna un repartidor.
+                $query->whereIn('order_status', ['pending', 'accepted', 'confirmed', 'processing', 'handover', 'picked_up', 'returned']);
             }
         })
         ->Notpos()
