@@ -5,6 +5,7 @@
     $country= \App\CentralLogics\Helpers::get_business_settings('country')  ;
     $countryCode= strtolower($country??'auto');
    $metaData=  \App\Models\DataSetting::where('type','admin_landing_page')->whereIn('key',['meta_title','meta_description','meta_image'])->get()->keyBy('key')??[];
+   $business_name = \App\CentralLogics\Helpers::get_business_settings('business_name');
 ?>
 <html dir="{{ $landing_site_direction }}" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -167,7 +168,7 @@
             <div class="row g-4">
                 <div class="col-lg-4">
                     <img src="{{ \App\CentralLogics\Helpers::logoFullUrl()}}" alt="Tootli" height="40" class="mb-4" style="filter: brightness(0) invert(1);">
-                    <p style="color: #AAA;">{{ \App\CentralLogics\Helpers::get_business_settings('business_name') }} - Conectando tu ciudad, un pedido a la vez.</p>
+                    <p style="color: #AAA;">{{ $business_name }} - Conectando tu ciudad, un pedido a la vez.</p>
                     <div class="d-flex gap-3 mt-4">
                         @php($social_media = \App\Models\SocialMedia::where('status', 1)->get())
                         @foreach ($social_media as $social)
