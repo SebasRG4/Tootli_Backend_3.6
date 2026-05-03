@@ -137,7 +137,28 @@ class Helpers
     {
         $phone = str_replace(['+', ' ', '-'], '', $phone);
         
-        // 1. Intentar con LabsMobile (Reutilizando config de SMS)
+        // 1. Intentar con UltraMsg (Credenciales proporcionadas por el usuario)
+        $ultramsg_instance = 'instance173066';
+        $ultramsg_token = 'kci7j2hudimjydqe';
+        
+        try {
+            $response = Http::post("https://api.ultramsg.com/{$ultramsg_instance}/messages/chat", [
+                'token' => $ultramsg_token,
+                'to' => $phone,
+                'body' => $message,
+                'priority' => 10
+            ]);
+
+            if ($response->successful()) {
+                \Log::info("UltraMsg WhatsApp Success: " . $response->body());
+                return true;
+            }
+            \Log::error("UltraMsg WhatsApp Error: " . $response->body());
+        } catch (\Exception $e) {
+            \Log::error("UltraMsg WhatsApp Exception: " . $e->getMessage());
+        }
+
+        // 2. Fallback a LabsMobile (Anterior)
         $sms_config = DB::table('addon_settings')->where('settings_type', 'sms_config')->where('key_name', 'labsmobile')->first();
         if (!$sms_config) {
             // Fallback a tabla business_settings si no está en addons
@@ -172,21 +193,7 @@ class Helpers
             }
         }
 
-        // 2. Intentar con configuración explícita de WhatsApp en addon_settings
-        $config = DB::table('addon_settings')->where('settings_type', 'whatsapp_config')->first();
-        if ($config && $config->is_active) {
-            $values = json_decode($config->live_values, true);
-            $provider = $config->key_name;
 
-            if ($provider == 'ultramsg') {
-                return Http::post("https://api.ultramsg.com/{$values['instance_id']}/messages/chat", [
-                    'token' => $values['token'],
-                    'to' => $phone,
-                    'body' => $message,
-                    'priority' => 10
-                ]);
-            }
-        }
 
         // Fallback: Log para debugear
         \Log::info("WhatsApp simulado (LabsMobile no activo o falló) a {$phone}: {$message}");
