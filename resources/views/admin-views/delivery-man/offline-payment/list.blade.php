@@ -101,7 +101,7 @@
                                     <td>
                                         @if($payment->status == 'pending')
                                             <div class="btn--container justify-content-center">
-                                                <button class="btn btn-sm btn--success" data-toggle="modal" data-target="#approveModal{{$payment->id}}">
+                                                <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#approveModal{{$payment->id}}">
                                                     {{translate('messages.Approve')}}
                                                 </button>
                                                 <button class="btn btn-sm btn--danger" data-toggle="modal" data-target="#denyModal{{$payment->id}}">
