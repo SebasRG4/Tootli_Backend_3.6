@@ -143,8 +143,8 @@ class DeliverymanController extends Controller
 
         $dm['show_pay_now_button'] = false;
         $dm['show_withdraw_button'] = false;
-        $digital_payment = Helpers::get_business_settings('digital_payment');
-        if ($min_amount_to_pay_dm <= $dm?->wallet?->collected_cash && $digital_payment['status'] == 1 && ($dm['Payable_Balance'] > $dm['withdraw_able_balance'])) {
+        
+        if ($dm?->wallet?->collected_cash > 0) {
             $dm['show_pay_now_button'] = true;
         }
 
