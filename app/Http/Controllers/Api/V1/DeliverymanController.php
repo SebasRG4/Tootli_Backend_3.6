@@ -823,7 +823,7 @@ class DeliverymanController extends Controller
             $fcm_token = $order->is_guest == 0 ? $order?->customer?->cm_firebase_token : $order?->guest?->fcm_token;
             if ($value && $fcm_token && Helpers::getNotificationStatusData('customer', 'customer_delivery_verification', 'push_notification_status')) {
                 $data = [
-                    'title' => translate('messages.order_ready_to_be_delivered'),
+                    'title' => 'Pedido listo para ser entregado',
                     'description' => $value,
                     'order_id' => $order->id,
                     'image' => '',

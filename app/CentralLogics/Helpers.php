@@ -2120,95 +2120,50 @@ class Helpers
     public static function order_status_update_message($status, $module_type, $lang = 'en')
     {
         if ($status == 'pending') {
-            $data = NotificationMessage::with([
-                'translations' => function ($query) use ($lang) {
-                    $query->where('locale', $lang);
-                }
-            ])->where('module_type', $module_type)->where('key', 'order_pending_message')->first();
+            $data = NotificationMessage::with(['translations' => function ($query) use ($lang) { $query->where('locale', $lang); }])->where('module_type', $module_type)->where('key', 'order_pending_message')->first();
         } elseif ($status == 'confirmed') {
-            $data = NotificationMessage::with([
-                'translations' => function ($query) use ($lang) {
-                    $query->where('locale', $lang);
-                }
-            ])->where('module_type', $module_type)->where('key', 'order_confirmation_msg')->first();
+            $data = NotificationMessage::with(['translations' => function ($query) use ($lang) { $query->where('locale', $lang); }])->where('module_type', $module_type)->where('key', 'order_confirmation_msg')->first();
         } elseif ($status == 'processing') {
-            $data = NotificationMessage::with([
-                'translations' => function ($query) use ($lang) {
-                    $query->where('locale', $lang);
-                }
-            ])->where('module_type', $module_type)->where('key', 'order_processing_message')->first();
+            $data = NotificationMessage::with(['translations' => function ($query) use ($lang) { $query->where('locale', $lang); }])->where('module_type', $module_type)->where('key', 'order_processing_message')->first();
         } elseif ($status == 'picked_up') {
-            $data = NotificationMessage::with([
-                'translations' => function ($query) use ($lang) {
-                    $query->where('locale', $lang);
-                }
-            ])->where('module_type', $module_type)->where('key', 'out_for_delivery_message')->first();
+            $data = NotificationMessage::with(['translations' => function ($query) use ($lang) { $query->where('locale', $lang); }])->where('module_type', $module_type)->where('key', 'out_for_delivery_message')->first();
         } elseif ($status == 'handover') {
-            $data = NotificationMessage::with([
-                'translations' => function ($query) use ($lang) {
-                    $query->where('locale', $lang);
-                }
-            ])->where('module_type', $module_type)->where('key', 'order_handover_message')->first();
+            $data = NotificationMessage::with(['translations' => function ($query) use ($lang) { $query->where('locale', $lang); }])->where('module_type', $module_type)->where('key', 'order_handover_message')->first();
         } elseif ($status == 'delivered') {
-            $data = NotificationMessage::with([
-                'translations' => function ($query) use ($lang) {
-                    $query->where('locale', $lang);
-                }
-            ])->where('module_type', $module_type)->where('key', 'order_delivered_message')->first();
+            $data = NotificationMessage::with(['translations' => function ($query) use ($lang) { $query->where('locale', $lang); }])->where('module_type', $module_type)->where('key', 'order_delivered_message')->first();
         } elseif ($status == 'delivery_boy_delivered') {
-            $data = NotificationMessage::with([
-                'translations' => function ($query) use ($lang) {
-                    $query->where('locale', $lang);
-                }
-            ])->where('module_type', $module_type)->where('key', 'delivery_boy_delivered_message')->first();
+            $data = NotificationMessage::with(['translations' => function ($query) use ($lang) { $query->where('locale', $lang); }])->where('module_type', $module_type)->where('key', 'delivery_boy_delivered_message')->first();
         } elseif ($status == 'accepted') {
-            $data = NotificationMessage::with([
-                'translations' => function ($query) use ($lang) {
-                    $query->where('locale', $lang);
-                }
-            ])->where('module_type', $module_type)->where('key', 'delivery_boy_assign_message')->first();
+            $data = NotificationMessage::with(['translations' => function ($query) use ($lang) { $query->where('locale', $lang); }])->where('module_type', $module_type)->where('key', 'delivery_boy_assign_message')->first();
         } elseif ($status == 'canceled') {
-            $data = NotificationMessage::with([
-                'translations' => function ($query) use ($lang) {
-                    $query->where('locale', $lang);
-                }
-            ])->where('module_type', $module_type)->where('key', 'order_cancled_message')->first();
+            $data = NotificationMessage::with(['translations' => function ($query) use ($lang) { $query->where('locale', $lang); }])->where('module_type', $module_type)->where('key', 'order_cancled_message')->first();
         } elseif ($status == 'refunded') {
-            $data = NotificationMessage::with([
-                'translations' => function ($query) use ($lang) {
-                    $query->where('locale', $lang);
-                }
-            ])->where('module_type', $module_type)->where('key', 'order_refunded_message')->first();
-        } elseif ($status == 'refund_request_canceled') {
-            $data = NotificationMessage::with([
-                'translations' => function ($query) use ($lang) {
-                    $query->where('locale', $lang);
-                }
-            ])->where('module_type', $module_type)->where('key', 'refund_request_canceled')->first();
-        } elseif ($status == 'offline_verified') {
-            $data = NotificationMessage::with([
-                'translations' => function ($query) use ($lang) {
-                    $query->where('locale', $lang);
-                }
-            ])->where('module_type', $module_type)->where('key', 'offline_order_accept_message')->first();
-        } elseif ($status == 'offline_denied') {
-            $data = NotificationMessage::with([
-                'translations' => function ($query) use ($lang) {
-                    $query->where('locale', $lang);
-                }
-            ])->where('module_type', $module_type)->where('key', 'offline_order_deny_message')->first();
+            $data = NotificationMessage::with(['translations' => function ($query) use ($lang) { $query->where('locale', $lang); }])->where('module_type', $module_type)->where('key', 'order_refunded_message')->first();
         } else {
-            $data = ["status" => "0", "message" => "", 'translations' => []];
+            $data = null;
         }
 
-        if ($data) {
-            if ($data['status'] == 0) {
-                return 0;
-            }
-            $translations = is_array($data) ? ($data['translations'] ?? []) : ($data->translations ?? []);
-            return count($translations) > 0 ? (is_array($translations[0]) ? $translations[0]['value'] : $translations[0]->value) : $data['message'];
+        $translations = $data ? (is_array($data) ? ($data['translations'] ?? []) : ($data->translations ?? [])) : [];
+        
+        if (count($translations) > 0) {
+            return is_array($translations[0]) ? $translations[0]['value'] : $translations[0]->value;
         } else {
-            return false;
+            // Respaldos en español si no hay traducción en DB
+            $messages = [
+                'pending' => 'Tu pedido ha sido recibido y está pendiente de confirmación.',
+                'confirmed' => 'Tu pedido ha sido confirmado y pronto estará en preparación.',
+                'processing' => 'Tu pedido está siendo preparado.',
+                'picked_up' => 'Tu pedido ha sido recolectado y va en camino.',
+                'handover' => 'Tu pedido ha sido entregado al repartidor.',
+                'delivered' => 'Tu pedido ha sido entregado. ¡Que lo disfrutes!',
+                'delivery_boy_delivered' => 'El repartidor ha marcado el pedido como entregado.',
+                'accepted' => 'Un repartidor ha aceptado tu pedido.',
+                'canceled' => 'Tu pedido ha sido cancelado.',
+                'refunded' => 'Tu pedido ha sido reembolsado.',
+                'offline_verified' => 'Tu pago offline ha sido verificado.',
+                'offline_denied' => 'Tu pago offline ha sido rechazado.',
+            ];
+            return $messages[$status] ?? 'Tu pedido ha cambiado de estado.';
         }
     }
 
@@ -2233,8 +2188,8 @@ class Helpers
 
         if (in_array($order->order_status, ['canceled', 'returned'])) {
             $data = [
-                'title' => translate('Order_Notification'),
-                'description' => translate('Order canceled') . ' #' . $order->id,
+                'title' => 'Notificación de Pedido',
+                'description' => 'Pedido cancelado' . ' #' . $order->id,
                 'order_id' => $order->id,
                 'image' => '',
                 'type' => 'order_status',
@@ -2261,8 +2216,8 @@ class Helpers
             ) {
 
                 $data = [
-                    'title' => translate('Order_Notification'),
-                    'description' => translate('New order alert, confirm to proceed'),
+                    'title' => 'Notificación de Pedido',
+                    'description' => 'Nuevo pedido recibido, confirme para proceder',
                     'order_id' => $order->id,
                     'image' => '',
                     'module_id' => $order->module_id,
@@ -2293,7 +2248,7 @@ class Helpers
 
             if (self::getNotificationStatusData('customer', 'customer_order_notification', 'push_notification_status') && $value && $user_fcm) {
                 $data = [
-                    'title' => translate('Order_Notification'),
+                    'title' => 'Notificación de Pedido',
                     'description' => $value,
                     'order_id' => $order->id,
                     'image' => '',
@@ -2310,8 +2265,8 @@ class Helpers
 
             if ($status == 'picked_up') {
                 $data = [
-                    'title' => translate('Order_Notification'),
-                    'description' => $order->id . ' ' . translate('order_is_picked_up'),
+                    'title' => 'Notificación de Pedido',
+                    'description' => 'El pedido #' . $order->id . ' ha sido recolectado',
                     'order_id' => $order->id,
                     'image' => '',
                     'type' => 'order_status',
@@ -2332,8 +2287,8 @@ class Helpers
             if ($order->order_type == 'delivery' && !$order->scheduled && $status == 'pending' && $order->payment_method == 'cash_on_delivery' && config('order_confirmation_model') == 'deliveryman') {
                 if ($order->store->sub_self_delivery && $push_notification_status) {
                     $data = [
-                        'title' => translate('Order_Notification'),
-                        'description' => translate('New order alert, confirm to proceed'),
+                        'title' => 'Notificación de Pedido',
+                        'description' => 'Nuevo pedido recibido, confirme para proceder',
                         'order_id' => $order->id,
                         'module_id' => $order->module_id,
                         'order_type' => $order->order_type,
@@ -2358,8 +2313,8 @@ class Helpers
                     }
                 } else {
                     $data = [
-                        'title' => translate('Order_Notification'),
-                        'description' => translate('New order alert, confirm to proceed'),
+                        'title' => 'Notificación de Pedido',
+                        'description' => 'Nuevo pedido recibido, confirme para proceder',
                         'order_id' => $order->id,
                         'module_id' => $order->module_id,
                         'order_type' => $order->order_type,
@@ -2400,8 +2355,8 @@ class Helpers
 
             if ($order->order_type == 'parcel' && in_array($order->order_status, ['pending', 'confirmed'])) {
                 $data = [
-                    'title' => translate('Order_Notification'),
-                    'description' => translate('New order alert, confirm to proceed'),
+                    'title' => 'Notificación de Pedido',
+                    'description' => 'Nuevo pedido recibido, confirme para proceder',
                     'order_id' => $order->id,
                     'module_id' => $order->module_id,
                     'order_type' => 'parcel_order',
@@ -2421,8 +2376,8 @@ class Helpers
 
             if ($order->order_type == 'delivery' && !$order->scheduled && $order->order_status == 'pending' && in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true) && config('order_confirmation_model') == 'store') {
                 $data = [
-                    'title' => translate('Order_Notification'),
-                    'description' => translate('New order alert, confirm to proceed'),
+                    'title' => 'Notificación de Pedido',
+                    'description' => 'Nuevo pedido recibido, confirme para proceder',
                     'order_id' => $order->id,
                     'module_id' => $order->module_id,
                     'order_type' => $order->order_type,
@@ -2450,8 +2405,8 @@ class Helpers
 
             if (!$order->scheduled && ((in_array($order->order_type, ['take_away', 'dine_in'], true) && $order->order_status == 'pending') || (!in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true) && $order->order_status == 'confirmed'))) {
                 $data = [
-                    'title' => translate('Order_Notification'),
-                    'description' => translate('New order alert, confirm to proceed'),
+                    'title' => 'Notificación de Pedido',
+                    'description' => 'Nuevo pedido recibido, confirme para proceder',
                     'order_id' => $order->id,
                     'image' => '',
                     'type' => 'new_order',
@@ -2477,8 +2432,8 @@ class Helpers
             if ($order->order_status == 'confirmed' && !in_array($order->order_type, ['take_away', 'dine_in'], true) && config('order_confirmation_model') == 'deliveryman' && in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true)) {
                 if ($order->store->sub_self_delivery && $push_notification_status) {
                     $data = [
-                        'title' => translate('Order_Notification'),
-                        'description' => translate('New order alert, confirm to proceed'),
+                        'title' => 'Notificación de Pedido',
+                        'description' => 'Nuevo pedido recibido, confirme para proceder',
                         'order_id' => $order->id,
                         'module_id' => $order->module_id,
                         'order_type' => $order->order_type,
@@ -2491,8 +2446,8 @@ class Helpers
                     }
                 } else {
                     $data = [
-                        'title' => translate('Order_Notification'),
-                        'description' => translate('New order alert, confirm to proceed'),
+                        'title' => 'Notificación de Pedido',
+                        'description' => 'Nuevo pedido recibido, confirme para proceder',
                         'order_id' => $order->id,
                         'module_id' => $order->module_id,
                         'order_type' => $order->order_type,
@@ -2520,8 +2475,8 @@ class Helpers
 
             if ($order->order_type == 'delivery' && !$order->scheduled && $order->order_status == 'confirmed' && (!in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true) || config('order_confirmation_model') == 'store' || !empty($order->tootli_direct))) {
                 $data = [
-                    'title' => translate('Order_Notification'),
-                    'description' => translate('New order alert, confirm to proceed'),
+                    'title' => 'Notificación de Pedido',
+                    'description' => 'Nuevo pedido recibido, confirme para proceder',
                     'order_id' => $order->id,
                     'module_id' => $order->module_id,
                     'order_type' => $order->order_type,
