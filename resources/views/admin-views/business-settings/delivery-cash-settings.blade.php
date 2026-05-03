@@ -19,8 +19,17 @@
         @php($high_value_threshold = \App\Models\BusinessSetting::where(['key' => 'high_value_threshold'])->first())
         @php($max_time_without_deposit_minutes = \App\Models\BusinessSetting::where(['key' => 'max_time_without_deposit_minutes'])->first())
         @php($high_value_strategy = \App\Models\BusinessSetting::where(['key' => 'high_value_strategy'])->first())
+        @php($admin_whatsapp_number = \App\Models\BusinessSetting::where(['key' => 'admin_whatsapp_number'])->first())
 
-        <div class="card">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <span class="card-header-icon">
+                        <i class="tio-settings"></i>
+                    </span>
+                    <span>Parámetros de Control de Efectivo</span>
+                </h5>
+            </div>
             <div class="card-body">
                 <form action="{{route('admin.business-settings.update-cash-settings')}}" method="post">
                     @csrf
@@ -29,7 +38,7 @@
                             <div class="form-group">
                                 <label class="input-label">Límite Global de Efectivo en Mano</label>
                                 <input type="number" name="dm_max_cash_in_hand" class="form-control" 
-                                       value="{{$dm_max_cash_in_hand ? $dm_max_cash_in_hand->value : 500}}" required>
+                                       value="{{$dm_max_cash_in_hand ? $dm_max_cash_in_hand->value : 350}}" required>
                             </div>
                         </div>
                         <div class="col-md-6 col-lg-4">
@@ -57,9 +66,47 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="form-group">
+                                <label class="input-label">Número de WhatsApp del Admin (Alertas)</label>
+                                <input type="text" name="admin_whatsapp_number" class="form-control" 
+                                       value="{{$admin_whatsapp_number ? $admin_whatsapp_number->value : '+527297706434'}}" placeholder="+521234567890">
+                                <small class="text-muted">Incluir código de país (ej. +52 para México)</small>
+                            </div>
+                        </div>
                     </div>
-                    <div class="btn--container justify-content-end">
+                    <div class="btn--container justify-content-end mt-3">
                         <button type="submit" class="btn btn--primary">Guardar Configuración</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <span class="card-header-icon">
+                        <i class="tio-whatsapp"></i>
+                    </span>
+                    <span>Prueba de Notificaciones WhatsApp (LabsMobile)</span>
+                </h5>
+            </div>
+            <div class="card-body">
+                <form action="{{route('admin.business-settings.test-whatsapp')}}" method="post">
+                    @csrf
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-6">
+                            <div class="form-group mb-0">
+                                <label class="input-label">Número para Pruebas</label>
+                                <input type="text" name="admin_phone" class="form-control" 
+                                       value="{{$admin_whatsapp_number ? $admin_whatsapp_number->value : '+527297706434'}}" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn--info">
+                                <i class="tio-send"></i> Enviar Mensaje de Prueba
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>

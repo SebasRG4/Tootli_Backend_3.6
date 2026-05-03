@@ -1125,7 +1125,7 @@ class DeliverymanController extends Controller
                         Helpers::send_whatsapp($dm->phone, $dm_message);
 
                         // 2. Alerta al Admin (WhatsApp)
-                        $admin_phone = '+527297706434';
+                        $admin_phone = \App\Models\BusinessSetting::where('key', 'admin_whatsapp_number')->first()?->value ?? '+527297706434';
                         $admin_message = "💰 *TOOTLI - RECAUDACIÓN* 💰\n\n";
                         $admin_message .= "El repartidor *" . $dm->f_name . " " . $dm->l_name . "* (#" . $dm->id . ") ha finalizado un pedido.\n";
                         $admin_message .= "💵 *Monto Cobrado:* " . Helpers::format_currency($order->order_amount) . "\n";

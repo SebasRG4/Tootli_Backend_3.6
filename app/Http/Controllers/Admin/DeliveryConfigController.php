@@ -26,7 +26,8 @@ class DeliveryConfigController extends Controller
             'dm_max_cash_in_hand',
             'high_value_threshold',
             'max_time_without_deposit_minutes',
-            'high_value_strategy'
+            'high_value_strategy',
+            'admin_whatsapp_number'
         ];
 
         foreach ($keys as $key) {

@@ -550,6 +550,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
             Route::get('cash-settings', 'DeliveryConfigController@cash_settings')->name('cash-settings');
             Route::post('cash-settings', 'DeliveryConfigController@update_cash_settings')->name('update-cash-settings');
+            Route::post('test-whatsapp', 'BusinessSettingsController@test_whatsapp')->name('test-whatsapp');
 
             Route::post('update-fcm-messages', 'BusinessSettingsController@update_fcm_messages')->name('update-fcm-messages');
             Route::post('update-fcm-messages-rental', 'BusinessSettingsController@update_fcm_messages_rental')->name('update-fcm-messages-rental');

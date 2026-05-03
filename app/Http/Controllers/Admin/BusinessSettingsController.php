@@ -163,6 +163,25 @@ class BusinessSettingsController extends Controller
         return back();
     }
 
+    public function test_whatsapp(Request $request)
+    {
+        $admin_phone = $request->admin_phone ?? '+527297706434';
+        $message = "🚨 *PRUEBA TOOTLI* 🚨\n\nEste es un mensaje de prueba enviado desde el Panel Administrativo para validar la integración de WhatsApp con LabsMobile.";
+
+        try {
+            $response = Helpers::send_whatsapp($admin_phone, $message);
+            if ($response === true) {
+                Toastr::success('Mensaje de prueba enviado correctamente a ' . $admin_phone);
+            } else {
+                Toastr::error('Error al enviar el mensaje. Revisa los logs de Laravel.');
+            }
+        } catch (\Exception $e) {
+            Toastr::error('Error: ' . $e->getMessage());
+        }
+
+        return back();
+    }
+
     public function update_priority(Request $request)
     {
         $list = ['category_list', 'popular_store', 'recommended_store', 'special_offer', 'popular_item', 'best_reviewed_item', 'item_campaign', 'latest_items', 'all_stores', 'category_sub_category_item', 'product_search', 'basic_medicine', 'common_condition', 'brand', 'brand_item', 'latest_stores', 'top_offer_near_me_stores'];
