@@ -399,6 +399,7 @@ class OrderLogic
                     }
                 }
                 if (isset($dmWallet)) {
+                    self::auto_wallet_adjustment($dmWallet);
                     $dmWallet->save();
                 }
 
@@ -596,6 +597,7 @@ class OrderLogic
             }
 
             if (isset($dmWallet)) {
+                self::auto_wallet_adjustment($dmWallet);
                 $dmWallet->save();
             }
 
@@ -746,7 +748,42 @@ class OrderLogic
         return true;
     }
 
+    public static function auto_wallet_adjustment(\App\Models\DeliveryManWallet $wallet)
+    {
+        $wallet_earning = round($wallet->total_earning - ($wallet->total_withdrawn + $wallet->pending_withdraw), 8);
+        $adj_amount = $wallet->collected_cash - $wallet_earning;
 
+        if ($wallet->collected_cash <= 0 || $wallet_earning <= 0) {
+            return;
+        }
+
+        if ($adj_amount > 0) {
+            $wallet->total_withdrawn = $wallet->total_withdrawn + $wallet_earning;
+            $wallet->collected_cash = $wallet->collected_cash - $wallet_earning;
+
+            $data = [
+                'delivery_man_id' => $wallet->delivery_man_id,
+                'amount' => $wallet_earning,
+                'ref' => 'delivery_man_wallet_adjustment_partial',
+                'method' => 'adjustment',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        } else {
+            $data = [
+                'delivery_man_id' => $wallet->delivery_man_id,
+                'amount' => $wallet->collected_cash,
+                'ref' => 'delivery_man_wallet_adjustment_full',
+                'method' => 'adjustment',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+            $wallet->total_withdrawn = $wallet->total_withdrawn + $wallet->collected_cash;
+            $wallet->collected_cash = 0;
+        }
+
+        \Illuminate\Support\Facades\DB::table('provide_d_m_earnings')->insert($data);
+    }
 
     public static function create_account_transaction_for_collect_cash($old_collected_cash, $from_type, $from_id, $amount, $order_id)
     {
