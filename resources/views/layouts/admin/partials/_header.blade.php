@@ -144,6 +144,17 @@
                         </button>
                     </li>
 
+                    <li class="nav-item max-sm-m-0 mr-lg-2">
+                        <a class="btn btn-icon rounded-circle nav-msg-icon"
+                           href="{{route('admin.delivery-man.offline_payment_list', ['status' => 'pending'])}}" title="{{translate('Pagos de Repartidores Pendientes')}}">
+                            <i class="tio-wallet-outlined" style="font-size: 20px; color: #006161;"></i>
+                            @php($pending_payments = \App\Models\DeliveryManOfflinePayment::where('status', 'pending')->count())
+                            @if($pending_payments != 0)
+                                <span class="btn-status btn-status-danger">{{ $pending_payments }}</span>
+                            @endif
+                        </a>
+                    </li>
+
                     <li class="nav-item max-sm-m-0  mr-lg-3">
                         <a class="btn btn-icon rounded-circle nav-msg-icon"
                            href="{{route('admin.message.list')}}">
