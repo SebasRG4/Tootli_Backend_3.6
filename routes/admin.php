@@ -857,8 +857,13 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post('contact-search', 'ContactController@search')->name('contact-search');
             });
 
-
         });
+
+        Route::group(['prefix' => 'delivery-man', 'as' => 'delivery-man.'], function () {
+            Route::get('offline-payment-list', 'DeliveryManOfflinePaymentController@list')->name('offline_payment_list');
+            Route::post('offline-payment-verify', 'DeliveryManOfflinePaymentController@verify_status')->name('offline_payment_verify');
+        });
+
         Route::group(['prefix' => 'transactions', 'as' => 'transactions.'], function () {
             Route::get('/', 'DashboardController@transaction_dashboard')->name('dashboard');
             Route::get('order/details/{id}', 'OrderController@details')->name('order.details');
@@ -950,11 +955,8 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get('withdraw_export', [DeliveryManController::class, 'withdraw_export'])->name('withdraw_export');
                 Route::get('withdraw-view/{withdraw_id}/{seller_id}', [DeliveryManController::class, 'withdraw_view'])->name('withdraw_view');
                 Route::get('get-Withdraw-Details', [DeliveryManController::class, 'getWithdrawDetails'])->name('getWithdrawDetails');
-                
-                Route::get('offline-payment-list', 'DeliveryManOfflinePaymentController@list')->name('offline_payment_list');
-                Route::post('offline-payment-verify', 'DeliveryManOfflinePaymentController@verify_status')->name('offline_payment_verify');
-
             });
+
 
             Route::group(['prefix' => 'withdraw-method', 'as' => 'withdraw-method.'], function () {
                 Route::get('list', 'WithdrawalMethodController@list')->name('list');
