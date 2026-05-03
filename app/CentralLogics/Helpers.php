@@ -137,9 +137,41 @@ class Helpers
     {
         $phone = str_replace(['+', ' ', '-'], '', $phone);
         
-        // Buscar configuración de WhatsApp en addon_settings (tipo UltraMsg o similar)
+        // 1. Intentar con LabsMobile (Reutilizando config de SMS)
+        $sms_config = DB::table('addon_settings')->where('settings_type', 'sms_config')->where('key_name', 'labsmobile')->first();
+        if (!$sms_config) {
+            // Fallback a tabla business_settings si no está en addons
+            $sms_config = DB::table('business_settings')->where('key', 'labsmobile')->first();
+        }
+
+        if ($sms_config) {
+            $config = json_decode($sms_config->live_values ?? $sms_config->value, true);
+            if (isset($config['status']) && (int)$config['status'] == 1) {
+                $username = $config['username'];
+                $token = $config['token'];
+                $auth = base64_encode($username . ':' . $token);
+
+                try {
+                    $response = Http::withHeaders([
+                        'Authorization' => 'Basic ' . $auth,
+                        'Content-Type' => 'application/json',
+                    ])->post('https://api.labsmobile.com/json/whatsapp/send', [
+                        'message' => $message,
+                        'recipient' => [['msisdn' => $phone]],
+                    ]);
+
+                    if ($response->successful()) {
+                        return true;
+                    }
+                    \Log::error("LabsMobile WhatsApp Error: " . $response->body());
+                } catch (\Exception $e) {
+                    \Log::error("LabsMobile WhatsApp Exception: " . $e->getMessage());
+                }
+            }
+        }
+
+        // 2. Intentar con configuración explícita de WhatsApp en addon_settings
         $config = DB::table('addon_settings')->where('settings_type', 'whatsapp_config')->first();
-        
         if ($config && $config->is_active) {
             $values = json_decode($config->live_values, true);
             $provider = $config->key_name;
@@ -152,18 +184,10 @@ class Helpers
                     'priority' => 10
                 ]);
             }
-            
-            if ($provider == 'wati') {
-                return Http::withHeaders([
-                    'Authorization' => $values['token']
-                ])->post("{$values['base_url']}/api/v1/sendSessionMessage/{$phone}", [
-                    'messageText' => $message
-                ]);
-            }
         }
 
-        // Fallback: Si no hay API configurada, registrar en log para debugear
-        \Log::info("WhatsApp simulado a {$phone}: {$message}");
+        // Fallback: Log para debugear
+        \Log::info("WhatsApp simulado (LabsMobile no activo o falló) a {$phone}: {$message}");
         return true;
     }
 
