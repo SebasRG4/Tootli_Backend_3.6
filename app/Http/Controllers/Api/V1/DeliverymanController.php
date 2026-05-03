@@ -1496,6 +1496,19 @@ class DeliverymanController extends Controller
         $offline_payment->payment_info = json_encode($offline_payment_info);
         $offline_payment->status = 'pending';
         $offline_payment->save();
+        
+        try {
+            $notification_data = [
+                'title' => translate('Nuevo pago offline de repartidor'),
+                'description' => $dm->f_name . ' ' . translate('ha enviado un pago de') . ' ' . Helpers::format_currency($request->amount),
+                'order_id' => '',
+                'image' => '',
+                'type' => 'offline_payment',
+            ];
+            Helpers::send_push_notif_to_topic($notification_data, 'admin_message', 'order_request', url('/') . '/admin/delivery-man/offline-payment-list');
+        } catch (\Exception $e) {
+            info($e->getMessage());
+        }
 
         return response()->json(['message' => translate('messages.offline_payment_submitted_successfully')], 200);
     }
