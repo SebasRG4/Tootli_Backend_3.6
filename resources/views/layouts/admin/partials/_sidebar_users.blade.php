@@ -167,10 +167,10 @@
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/cash-settings*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('admin.business-settings.cash-settings') }}"
-                                title="{{ translate('Configuración de Efectivo') }}">
+                                title="Configuración de Efectivo">
                                 <i class="tio-wallet nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    {{ translate('Configuración de Efectivo') }}
+                                    Configuración de Efectivo
                                 </span>
                             </a>
                         </li>
@@ -179,10 +179,10 @@
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/delivery-man/cash-deposit-list*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('admin.delivery-man.cash-deposit-list') }}"
-                                title="{{ translate('Auditoría de Depósitos') }}">
+                                title="Auditoría de Depósitos">
                                 <i class="tio-money nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    {{ translate('Auditoría de Depósitos') }}
+                                    Auditoría de Depósitos
                                 </span>
                             </a>
                         </li>
@@ -191,13 +191,12 @@
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/delivery-man/cash-heatmap*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('admin.delivery-man.cash-heatmap') }}"
-                                title="{{ translate('Mapa de Calor de Efectivo') }}">
+                                title="Mapa de Calor de Efectivo">
                                 <i class="tio-map nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    {{ translate('Mapa de Calor de Efectivo') }}
+                                    Mapa de Calor de Efectivo
                                 </span>
                             </a>
-                        </li>
 
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/delivery-man/strike/incident-types*') ? 'active' : '' }}">
@@ -226,10 +225,10 @@
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/delivery-man/offline-payment-list*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('admin.delivery-man.offline_payment_list') }}"
-                                title="{{ translate('Validación de Pagos') }}">
+                                title="Validación de Pagos">
                                 <i class="tio-money nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    {{ translate('Validación de Pagos') }}
+                                    Validación de Pagos
                                 </span>
                             </a>
                         </li>
