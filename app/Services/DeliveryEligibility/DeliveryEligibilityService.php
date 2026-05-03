@@ -80,24 +80,32 @@ class DeliveryEligibilityService
             );
         }
 
-        if ($this->orderExceedsTierCodOrderValue($dm, $order)) {
-            return DeliveryEligibilityResult::deny(
-                'tier_restricted',
-                'tier_restricted',
-                403,
-                translate('messages.dm_tier_restricted_cod_order_value'),
-            );
+        // --- Nueva Lógica de Efectivo y Alto Valor ---
+        $cashService = app(\App\Services\CashManagement\CashManagementService::class);
+        $highValueThreshold = (float)(BusinessSetting::where('key', 'high_value_threshold')->first()?->value ?? 700);
+        $isHighValue = (float)($order->order_amount ?? 0) >= $highValueThreshold;
+
+        // 1. Validar Tiempo sin depósito (Si el Admin lo configuró)
+        if ($cashService->shouldSendDepositReminder($dm)) {
+             // Por ahora solo advertencia o bloqueo suave si excede demasiado
+             // return DeliveryEligibilityResult::deny('deposit_required', 'deposit_required', 403, translate('messages.dm_deposit_required_time_limit'));
         }
 
+        // 2. Validar Límite de Efectivo
         if ($this->exceedsCashInHandLimit($dm, $order)) {
-            $limit = $this->getDmMaxCashInHandLimit($dm);
-
-            return DeliveryEligibilityResult::deny(
-                'cash_limit',
-                'cash_limit',
-                405,
-                $this->formatCashLimitDeniedMessage($limit),
-            );
+            // EXCEPCIÓN: Si es un pedido de Alto Valor, el sistema puede permitirlo según estrategia
+            if ($isHighValue) {
+                $strategy = BusinessSetting::where('key', 'high_value_strategy')->first()?->value ?? 'assign_any';
+                if ($strategy === 'assign_any' || $strategy === 'relaxed_cash') {
+                    // Permitimos que lo tome aunque exceda, para no perder la venta
+                } else {
+                    $limit = $this->getDmMaxCashInHandLimit($dm);
+                    return DeliveryEligibilityResult::deny('cash_limit', 'cash_limit', 405, $this->formatCashLimitDeniedMessage($limit));
+                }
+            } else {
+                $limit = $this->getDmMaxCashInHandLimit($dm);
+                return DeliveryEligibilityResult::deny('cash_limit', 'cash_limit', 405, $this->formatCashLimitDeniedMessage($limit));
+            }
         }
 
         if ($this->exceedsTotalCashBlockLimit($dm)) {

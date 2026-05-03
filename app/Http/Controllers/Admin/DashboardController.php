@@ -254,6 +254,25 @@ class DashboardController extends Controller
 
     }
 
+    public function cash_heatmap(Request $request)
+    {
+        $delivery_men = DeliveryMan::with(['last_location', 'wallet'])
+            ->whereHas('last_location')
+            ->where('active', 1)
+            ->get()
+            ->map(function($dm) {
+                return [
+                    'name' => $dm->f_name . ' ' . $dm->l_name,
+                    'lat' => (float)$dm->last_location->latitude,
+                    'lng' => (float)$dm->last_location->longitude,
+                    'cash' => (float)($dm->wallet ? $dm->wallet->collected_cash : 0),
+                    'pending' => (float)$dm->pending_deposit_amount,
+                ];
+            });
+
+        return view('admin-views.delivery-man.cash-heatmap', compact('delivery_men'));
+    }
+
     public function order(Request $request)
     {
         $params = session('dash_params');

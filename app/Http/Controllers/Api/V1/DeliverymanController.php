@@ -20,6 +20,7 @@ use App\Models\BusinessSetting;
 use App\Models\DmTierLimit;
 use App\Models\DeliveryHistory;
 use App\Models\DeliveryMan;
+use App\Models\DeliveryManCashDeposit;
 use App\Models\DeliveryManStrikeEvent;
 use App\Models\OrderCancelReason;
 use App\Models\OrderStrikeReviewQueue;
@@ -957,6 +958,22 @@ class DeliverymanController extends Controller
             ], 406);
         }
         if ($request->status == 'delivered') {
+            $is_cod = in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true);
+            
+            // --- Fase 2: Validación de Evidencia para COD ---
+            if ($is_cod) {
+                if (empty($request->order_proof)) {
+                    return response()->json([
+                        'errors' => [['code' => 'order_proof', 'message' => translate('messages.photo_evidence_required_for_cash_orders')]],
+                    ], 403);
+                }
+                if (!$request->lat || !$request->lng) {
+                    return response()->json([
+                        'errors' => [['code' => 'gps', 'message' => translate('messages.gps_coordinates_required_for_delivery_proof')]],
+                    ], 403);
+                }
+            }
+
             $unpaid_digital_payment = OrderPayment::where('order_id', $order->id)
                 ->where('payment_status', 'unpaid')
                 ->whereNotIn('payment_method', ['cash_on_delivery', 'card_on_delivery'])
@@ -982,6 +999,12 @@ class DeliverymanController extends Controller
 
                 if (OrderLogic::create_transaction($order, $reveived_by, null)) {
                     $order->payment_status = 'paid';
+                    
+                    // --- Fase 2: Actualizar Saldo Pendiente del Repartidor ---
+                    if ($is_cod_like && $reveived_by == 'deliveryman') {
+                        $dm->pending_deposit_amount += $order->order_amount;
+                        $dm->save();
+                    }
                 } else {
                     return response()->json([
                         'errors' => [
@@ -2632,5 +2655,68 @@ class DeliverymanController extends Controller
         ]);
 
         return response()->json(['message' => translate('messages.updated_successfully')], 200);
+    }
+
+    public function get_cash_in_hand(Request $request)
+    {
+        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+        $wallet = DeliveryManWallet::where('delivery_man_id', $dm->id)->first();
+        
+        return response()->json([
+            'cash_in_hand' => (float)($wallet ? $wallet->collected_cash : 0),
+            'pending_deposit' => (float)($dm->pending_deposit_amount ?? 0),
+            'total_debt' => (float)(($wallet ? $wallet->collected_cash : 0) + ($dm->pending_deposit_amount ?? 0))
+        ], 200);
+    }
+
+    public function report_deposit(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'amount' => 'required|numeric|min:0.01',
+            'image' => 'required|image|max:2048',
+            'lat' => 'nullable',
+            'lng' => 'nullable',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+        $wallet = DeliveryManWallet::where('delivery_man_id', $dm->id)->first();
+
+        if (!$wallet || $wallet->collected_cash < $request->amount) {
+            return response()->json([
+                'errors' => [['code' => 'amount', 'message' => translate('messages.insufficient_collected_cash_to_report')]],
+            ], 403);
+        }
+
+        DB::beginTransaction();
+        try {
+            $deposit = new DeliveryManCashDeposit();
+            $deposit->delivery_man_id = $dm->id;
+            $deposit->amount = $request->amount;
+            $deposit->latitude = $request->lat;
+            $deposit->longitude = $request->lng;
+            $deposit->status = 'pending';
+            $deposit->photo = Helpers::upload('delivery-man/deposit/', 'png', $request->file('image'));
+            $deposit->save();
+
+            // Move balance to pending
+            $wallet->collected_cash -= $request->amount;
+            $wallet->save();
+
+            $dm->pending_deposit_amount += $request->amount;
+            $dm->save();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['errors' => [['code' => 'error', 'message' => translate('messages.failed_to_report_deposit')]]], 500);
+        }
+
+        return response()->json([
+            'message' => translate('messages.deposit_report_submitted_successfully'),
+        ], 200);
     }
 }

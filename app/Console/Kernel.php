@@ -26,6 +26,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('spei:cancel-expired')->everyMinute();
         $schedule->command('dm:recalculate-tiers')->dailyAt('03:15');
+        $schedule->command('delivery:send-deposit-reminders')->everyThirtyMinutes();
     }
 
     /**

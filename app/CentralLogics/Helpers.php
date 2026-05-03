@@ -1463,6 +1463,7 @@ class Helpers
                 self::attach_vendor_store_amount_from_transaction($item);
                 if ($item instanceof \App\Models\Order) {
                     $item->setAttribute('tootli_direct_trackable', $item->isTootliDirectTrackable());
+                    $item->setAttribute('high_surveillance', (float)$item->order_amount > 700);
                 }
                 array_push($storage, $item);
             }
@@ -1513,6 +1514,7 @@ class Helpers
             self::attach_vendor_store_amount_from_transaction($data);
             if ($data instanceof \App\Models\Order) {
                 $data->setAttribute('tootli_direct_trackable', $data->isTootliDirectTrackable());
+                $data->setAttribute('high_surveillance', (float)$data->order_amount > 700);
             }
         }
         return $data;

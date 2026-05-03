@@ -548,6 +548,9 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('fcm-config', 'BusinessSettingsController@fcm_config')->name('fcm-config');
             Route::post('update-fcm', 'BusinessSettingsController@update_fcm')->name('update-fcm');
 
+            Route::get('cash-settings', 'DeliveryConfigController@cash_settings')->name('cash-settings');
+            Route::post('cash-settings', 'DeliveryConfigController@update_cash_settings')->name('update-cash-settings');
+
             Route::post('update-fcm-messages', 'BusinessSettingsController@update_fcm_messages')->name('update-fcm-messages');
             Route::post('update-fcm-messages-rental', 'BusinessSettingsController@update_fcm_messages_rental')->name('update-fcm-messages-rental');
 
@@ -862,6 +865,10 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         Route::group(['prefix' => 'delivery-man', 'as' => 'delivery-man.'], function () {
             Route::get('offline-payment-list', 'DeliveryManOfflinePaymentController@list')->name('offline_payment_list');
             Route::post('offline-payment-verify', 'DeliveryManOfflinePaymentController@verify_status')->name('offline_payment_verify');
+            
+            Route::get('cash-deposit-list', 'CashDepositController@list')->name('cash-deposit-list');
+            Route::post('cash-deposit-update', 'CashDepositController@update_status')->name('cash-deposit-update');
+            Route::get('cash-heatmap', 'DashboardController@cash_heatmap')->name('cash-heatmap');
         });
 
         Route::group(['prefix' => 'transactions', 'as' => 'transactions.'], function () {

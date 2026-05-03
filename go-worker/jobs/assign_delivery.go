@@ -140,8 +140,42 @@ func handleAssignDelivery(ctx context.Context, raw json.RawMessage) error {
 			continue
 		}
 
-		// Calculate Score (lower is better)
-		score := dist + (totalPendingTime * 0.5) + float64(dm.CurrentOrders)*1.5
+		// 2.2 Cash Capacity Check (New)
+		var wallet models.DeliveryManWallet
+		config.DB.Where("delivery_man_id = ?", dm.ID).First(&wallet)
+		collectedCash := wallet.CollectedCash
+
+		// Fetch Limit (Global or Tier)
+		// Default to 500 if not found
+		var limit float64 = 500
+		var setting models.BusinessSetting
+		if err := config.DB.Where("key = ?", "dm_max_cash_in_hand").First(&setting).Error; err == nil {
+			limit, _ = strconv.ParseFloat(setting.Value, 64)
+		}
+
+		// High Value Handling (Strategy check)
+		highValueThreshold := 700.0
+		var hvSetting models.BusinessSetting
+		if err := config.DB.Where("key = ?", "high_value_threshold").First(&hvSetting).Error; err == nil {
+			highValueThreshold, _ = strconv.ParseFloat(hvSetting.Value, 64)
+		}
+
+		isHighValue := order.OrderAmount >= highValueThreshold
+		
+		// If order is COD, check capacity
+		if order.PaymentMethod == "cash_on_delivery" {
+			if float64(collectedCash)+order.OrderAmount > limit {
+				// If not high value, or if strategy is strict, skip
+				if !isHighValue {
+					continue
+				}
+				// If high value, we might "relax" the limit if no one else is found (this logic can be expanded)
+			}
+		}
+
+		// Calculate Score (Updated: Penalize high cash carry)
+		// score = distancia + (carga_trabajo * 0.5) + (pedidos_actuales * 1.5) + (collected_cash * 0.8)
+		score := dist + (totalPendingTime * 0.5) + float64(dm.CurrentOrders)*1.5 + (float64(collectedCash) * 0.8)
 
 		candidates = append(candidates, ScoredDM{
 			DM:       dm,
