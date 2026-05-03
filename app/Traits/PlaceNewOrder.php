@@ -1240,6 +1240,22 @@ trait PlaceNewOrder
                         Mail::to($email)->send(new OrderVerificationMail($order->otp, $name));
                     }
                 }
+
+                // --- REGLA TOOTLI: Alerta de Nuevo Pedido al Admin ---
+                try {
+                    $admin_phone = \App\Models\BusinessSetting::where('key', 'admin_whatsapp_number')->first()?->value ?? '+527297706434';
+                    $new_order_message = "🆕 *TOOTLI - NUEVO PEDIDO #" . $order->id . "* 🆕\n\n";
+                    $new_order_message .= "Se ha recibido un nuevo pedido.\n";
+                    $new_order_message .= "💰 *Monto:* " . Helpers::format_currency($order->order_amount) . "\n";
+                    $new_order_message .= "📍 *Tipo:* " . translate('messages.' . $order->order_type) . "\n";
+                    $new_order_message .= "👤 *Cliente:* " . ($order->customer ? $order->customer->f_name : 'Invitado') . "\n";
+                    if ($store) {
+                        $new_order_message .= "🏪 *Tienda:* " . $store->name . "\n";
+                    }
+                    Helpers::send_whatsapp($admin_phone, $new_order_message);
+                } catch (\Exception $e) {
+                    \Log::error("Error en alerta de nuevo pedido WhatsApp: " . $e->getMessage());
+                }
             }
         } catch (\Exception $exception) {
             info('Error sending order notification', [$exception->getFile(), $exception->getLine(), $exception->getMessage()]);

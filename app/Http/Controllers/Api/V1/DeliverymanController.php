@@ -1113,24 +1113,34 @@ class DeliverymanController extends Controller
             // --- REGLA TOOTLI: Alertas Post-Cobro ---
             if ($is_cod) {
                 try {
-                    $limit = (float)(\App\Models\BusinessSetting::where('key', 'cash_in_hand_full_block_limit')->first()?->value ?? 350);
+                    $limit = (float)(\App\Models\BusinessSetting::where('key', 'dm_max_cash_in_hand')->first()?->value ?? 350);
+                    $high_ticket_threshold = (float)(\App\Models\BusinessSetting::where('key', 'high_value_threshold')->first()?->value ?? 700);
                     $current_balance = (float)$dm->pending_deposit_amount;
                     
-                    if ($current_balance > $limit) {
+                    if ($current_balance > $limit || $order->order_amount >= $high_ticket_threshold) {
+                        $is_high_ticket = $order->order_amount >= $high_ticket_threshold;
+                        
                         // 1. Alerta al Repartidor (WhatsApp)
-                        $dm_message = "⚠️ *TOOTLI - AVISO DE COBRO* ⚠️\n\n";
+                        $dm_message = $is_high_ticket ? "🚀 *TOOTLI - PEDIDO DE ALTO VALOR #" . $order->id . "* 🚀\n\n" : "⚠️ *TOOTLI - AVISO DE COBRO #" . $order->id . "* ⚠️\n\n";
                         $dm_message .= "Has completado un pedido de " . Helpers::format_currency($order->order_amount) . ".\n";
                         $dm_message .= "Tu saldo pendiente actual es de *" . Helpers::format_currency($current_balance) . "*.\n\n";
-                        $dm_message .= "🛑 *IMPORTANTE:* Has superado tu límite de $" . $limit . ". Por favor, realiza un depósito a la brevedad para evitar el bloqueo automático de tu cuenta.";
+                        $dm_message .= "🛑 *IMPORTANTE:* Por favor, realiza un depósito a la brevedad para evitar el bloqueo automático de tu cuenta.";
                         Helpers::send_whatsapp($dm->phone, $dm_message);
 
                         // 2. Alerta al Admin (WhatsApp)
                         $admin_phone = \App\Models\BusinessSetting::where('key', 'admin_whatsapp_number')->first()?->value ?? '+527297706434';
-                        $admin_message = "💰 *TOOTLI - RECAUDACIÓN* 💰\n\n";
-                        $admin_message .= "El repartidor *" . $dm->f_name . " " . $dm->l_name . "* (#" . $dm->id . ") ha finalizado un pedido.\n";
-                        $admin_message .= "💵 *Monto Cobrado:* " . Helpers::format_currency($order->order_amount) . "\n";
-                        $admin_message .= "🚩 *Saldo Total:* " . Helpers::format_currency($current_balance) . "\n";
-                        $admin_message .= "⚠️ El repartidor ya superó el límite de $" . $limit . ".";
+                        $admin_message = $is_high_ticket ? "💎 *TOOTLI - ALTO TICKET DETECTADO #" . $order->id . "* 💎\n\n" : "💰 *TOOTLI - RECAUDACIÓN #" . $order->id . "* 💰\n\n";
+                        $admin_message .= "El repartidor *" . $dm->f_name . " " . $dm->l_name . "* ha finalizado el pedido #" . $order->id . ".\n";
+                        $admin_message .= "💵 *Monto del Pedido:* " . Helpers::format_currency($order->order_amount) . "\n";
+                        $admin_message .= "🚩 *Saldo Total en Mano:* " . Helpers::format_currency($current_balance) . "\n";
+                        
+                        if ($is_high_ticket) {
+                            $admin_message .= "✨ Este pedido superó el umbral de alto valor ($" . $high_ticket_threshold . ").\n";
+                        }
+                        if ($current_balance > $limit) {
+                            $admin_message .= "⚠️ El repartidor ya superó el límite global de $" . $limit . ".";
+                        }
+                        
                         Helpers::send_whatsapp($admin_phone, $admin_message);
                     }
                 } catch (\Exception $e) {
