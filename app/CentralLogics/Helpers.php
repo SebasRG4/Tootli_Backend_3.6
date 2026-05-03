@@ -155,8 +155,9 @@ class Helpers
                     $response = Http::withHeaders([
                         'Authorization' => 'Basic ' . $auth,
                         'Content-Type' => 'application/json',
-                    ])->post('https://api.labsmobile.com/json/whatsapp/send', [
+                    ])->post('https://api.labsmobile.com/json/send', [
                         'message' => $message,
+                        'waonly' => 'yes',
                         'recipient' => [['msisdn' => $phone]],
                     ]);
 
