@@ -156,6 +156,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
 
 
             Route::post('make-collected-cash-payment', 'DeliverymanController@make_payment')->name('make_payment');
+            Route::post('make-offline-payment', 'DeliverymanController@make_offline_payment')->name('make_offline_payment');
             Route::post('make-wallet-adjustment', 'DeliverymanController@make_wallet_adjustment')->name('make_wallet_adjustment');
             Route::get('wallet-payment-list', 'DeliverymanController@wallet_payment_list')->name('wallet_payment_list');
             Route::get('wallet-provided-earning-list', 'DeliverymanController@wallet_provided_earning_list')->name('wallet_provided_earning_list');

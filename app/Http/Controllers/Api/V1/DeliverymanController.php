@@ -1459,6 +1459,47 @@ class DeliverymanController extends Controller
         return response()->json($data, 200);
     }
 
+    public function make_offline_payment(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'amount' => 'required|numeric|min:.001',
+            'method_id' => 'required',
+            'token' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+        $dm = DeliveryMan::where(['auth_token' => $request['token']])->firstOrfail();
+
+        $method = \App\Models\OfflinePaymentMethod::where(['id' => $request->method_id, 'status' => 1])->first();
+        if (!$method) {
+            return response()->json(['errors' => [['code' => 'method_id', 'message' => translate('messages.offline_payment_method_not_found')]]], 403);
+        }
+
+        $offline_payment_info = [];
+        $fields = array_column($method->method_informations ?? [], 'customer_input');
+        $values = $request->all();
+
+        $offline_payment_info['method_id'] = $method->id;
+        $offline_payment_info['method_name'] = $method->method_name;
+        foreach ($fields as $field) {
+            if (key_exists($field, $values)) {
+                $offline_payment_info[$field] = $values[$field];
+            }
+        }
+
+        $offline_payment = new \App\Models\DeliveryManOfflinePayment();
+        $offline_payment->delivery_man_id = $dm->id;
+        $offline_payment->amount = $request->amount;
+        $offline_payment->method_id = $method->id;
+        $offline_payment->payment_info = json_encode($offline_payment_info);
+        $offline_payment->status = 'pending';
+        $offline_payment->save();
+
+        return response()->json(['message' => translate('messages.offline_payment_submitted_successfully')], 200);
+    }
+
     public function make_wallet_adjustment(Request $request)
     {
 

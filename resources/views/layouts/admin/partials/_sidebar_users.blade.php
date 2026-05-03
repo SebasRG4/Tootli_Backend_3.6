@@ -186,6 +186,18 @@
                             </a>
                         </li>
 
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/delivery-man/offline-payment-list*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                href="{{ route('admin.delivery-man.offline_payment_list') }}"
+                                title="{{ translate('messages.offline_payments') }}">
+                                <i class="tio-wallet nav-icon"></i>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                    {{ translate('messages.offline_payments') }}
+                                </span>
+                            </a>
+                        </li>
+
                         <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/mission*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.mission.list') }}"
                                 title="{{ translate('messages.driver_missions') }}">
