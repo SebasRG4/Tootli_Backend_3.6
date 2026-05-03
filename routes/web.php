@@ -19,6 +19,17 @@ use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\TootliDirectPublicTrackingController;
 use App\Http\Controllers\TootliDirectTrackingChatController;
 
+Route::get('/test-whatsapp', function() {
+    $phone = '+527297706434';
+    $message = "🚨 *PRUEBA TOOTLI* 🚨\n\nEste es un mensaje de prueba para validar la integración de alertas de WhatsApp.\n\nSi recibes esto, la conexión es correcta.";
+    $response = \App\CentralLogics\Helpers::send_whatsapp($phone, $message);
+    return response()->json([
+        'status' => 'Solicitud enviada',
+        'phone' => $phone,
+        'response' => $response
+    ]);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes

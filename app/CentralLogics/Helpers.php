@@ -133,6 +133,40 @@ class Helpers
      * @param  \App\Models\Item|array  $item
      * @param  string  $context  app | direct
      */
+    public static function send_whatsapp($phone, $message)
+    {
+        $phone = str_replace(['+', ' ', '-'], '', $phone);
+        
+        // Buscar configuración de WhatsApp en addon_settings (tipo UltraMsg o similar)
+        $config = DB::table('addon_settings')->where('settings_type', 'whatsapp_config')->first();
+        
+        if ($config && $config->is_active) {
+            $values = json_decode($config->live_values, true);
+            $provider = $config->key_name;
+
+            if ($provider == 'ultramsg') {
+                return Http::post("https://api.ultramsg.com/{$values['instance_id']}/messages/chat", [
+                    'token' => $values['token'],
+                    'to' => $phone,
+                    'body' => $message,
+                    'priority' => 10
+                ]);
+            }
+            
+            if ($provider == 'wati') {
+                return Http::withHeaders([
+                    'Authorization' => $values['token']
+                ])->post("{$values['base_url']}/api/v1/sendSessionMessage/{$phone}", [
+                    'messageText' => $message
+                ]);
+            }
+        }
+
+        // Fallback: Si no hay API configurada, registrar en log para debugear
+        \Log::info("WhatsApp simulado a {$phone}: {$message}");
+        return true;
+    }
+
     public static function item_price_for_context($item, string $context = 'app'): float
     {
         $menu = is_array($item) ? ($item['menu_price'] ?? null) : ($item->menu_price ?? null);

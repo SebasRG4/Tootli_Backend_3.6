@@ -8,6 +8,8 @@ use App\Models\DmTierLimit;
 use App\Models\Order;
 use App\Models\Zone;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 
 class DeliveryEligibilityService
@@ -99,6 +101,31 @@ class DeliveryEligibilityService
                 if ($strategy === 'assign_any' || $strategy === 'relaxed_cash') {
                     // Permitimos que lo tome aunque exceda, para no perder la venta
                 } else {
+                    if ($strategy === 'notify_admin') {
+                        // Disparar alertas de emergencia
+                        try {
+                            $admin_phone = '+527297706434';
+                            $message = "🚨 *ALERTA TOOTLI - ALTO VALOR* 🚨\n\n";
+                            $message .= "Se ha detectado un pedido que supera el umbral de seguridad:\n";
+                            $message .= "📦 *Pedido:* #".$order->id."\n";
+                            $message .= "💰 *Monto:* ".\App\CentralLogics\Helpers::format_currency($order->order_amount)."\n";
+                            $message .= "📍 *Zona:* ".($order->zone?->name ?? 'N/A')."\n\n";
+                            $message .= "⚠️ *Acción:* La asignación automática ha sido pausada. Por favor, asigne manualmente este pedido desde el panel.";
+                            
+                            // Enviar WhatsApp (Usando helper de sistema si existe o wa.me link/API)
+                            \App\CentralLogics\Helpers::send_whatsapp($admin_phone, $message);
+                            
+                            // Enviar Email
+                            $admin_email = \App\Models\BusinessSetting::where(['key' => 'email_address'])->first()?->value;
+                            if($admin_email) {
+                                \Mail::raw(str_replace('*', '', $message), function ($m) use ($admin_email, $order) {
+                                    $m->to($admin_email)->subject('⚠️ ALERTA: Pedido de Alto Valor #'.$order->id);
+                                });
+                            }
+                        } catch (\Exception $e) {
+                            \Log::error("Error enviando alertas de alto valor: " . $e->getMessage());
+                        }
+                    }
                     $limit = $this->getDmMaxCashInHandLimit($dm);
                     return DeliveryEligibilityResult::deny('cash_limit', 'cash_limit', 405, $this->formatCashLimitDeniedMessage($limit));
                 }
