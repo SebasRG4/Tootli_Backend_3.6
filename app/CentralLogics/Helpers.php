@@ -157,11 +157,12 @@ class Helpers
                         'Content-Type' => 'application/json',
                     ])->post('https://api.labsmobile.com/json/send', [
                         'message' => $message,
-                        'waonly' => 'yes',
+                        'platform' => 'whatsapp',
                         'recipient' => [['msisdn' => $phone]],
                     ]);
 
                     if ($response->successful()) {
+                        \Log::info("LabsMobile WhatsApp Success Response: " . $response->body());
                         return true;
                     }
                     \Log::error("LabsMobile WhatsApp Error: " . $response->body());
