@@ -218,6 +218,7 @@ class BusinessSettingsController extends Controller
             'min_amount_to_pay_dm',
             'cash_in_hand_overflow_delivery_man',
             'dm_max_cash_in_hand',
+            'dm_max_cash_in_hand_total_block',
             'dm_tips_status',
             'dm_maximum_orders',
             'canceled_by_deliveryman',

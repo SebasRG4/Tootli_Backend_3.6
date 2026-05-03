@@ -254,6 +254,15 @@
                                     <span>{{ translate('messages.payment_method') }}</span> <span>:</span>
                                     <span>{{ translate(str_replace('_', ' ', $order['payment_method'])) }}</span>
                                 </h6>
+                                
+                                @if($order->otp)
+                                    <h6 class="text-danger mt-2">
+                                        <span>Código de Verificación OTP</span> <span>:</span>
+                                        <strong>{{ $order->otp }}</strong>
+                                        <br>
+                                        <small class="text-muted text-lowercase" style="font-size: 11px;">Código de verificación, no compartirlo si no es necesario</small>
+                                    </h6>
+                                @endif
 
                                 <!-- offline_payment -->
                                 @if($order?->offline_payments)

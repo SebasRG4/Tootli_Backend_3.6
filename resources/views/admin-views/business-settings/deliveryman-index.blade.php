@@ -300,6 +300,21 @@
                                                        value="{{ $dm_max_cash_in_hand ?? '' }}" {{ $cash_in_hand_overflow  == 1 ? 'required' : 'readonly' }} >
                                             </div>
                                         </div>
+                                        <div class="col-sm-6 col-lg-4">
+                                            @php($dm_max_cash_in_hand_total_block =  Helpers::get_business_settings('dm_max_cash_in_hand_total_block') )
+                                            <div class="form-label mb-0">
+                                                <label class="d-flex text-capitalize"
+                                                       for="dm_max_cash_in_hand_total_block">
+                                                    <span class="line--limit-1">
+                                                        Delivery Man Maximum Cash in Hand Total Block ({{ \App\CentralLogics\Helpers::currency_symbol() }})
+                                                    </span>
+                                                    <span data-toggle="tooltip" data-placement="right" data-original-title="El límite máximo de efectivo antes de que se bloqueen todas las órdenes (incluidas las pagadas en línea)." class="input-label-secondary"><i class="tio-info text-light-gray"></i></span>
+                                                </label>
+                                                <input type="number" name="dm_max_cash_in_hand_total_block" class="form-control"
+                                                       id="dm_max_cash_in_hand_total_block" min="0" step=".001"
+                                                       value="{{ $dm_max_cash_in_hand_total_block ?? '' }}" {{ $cash_in_hand_overflow  == 1 ? 'required' : 'readonly' }} >
+                                            </div>
+                                        </div>
     
     
     

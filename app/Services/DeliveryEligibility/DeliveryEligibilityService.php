@@ -220,9 +220,8 @@ class DeliveryEligibilityService
 
         $cashInHand = (float) ($dm->wallet?->collected_cash ?? 0);
         $limit = $this->getDmMaxCashInHandLimit($dm);
-        $orderAmount = (float) ($order->order_amount ?? 0);
 
-        return ($cashInHand + $orderAmount) >= $limit;
+        return $cashInHand >= $limit;
     }
 
     protected function getDmMaxCashInHandLimit(DeliveryMan $dm): float
