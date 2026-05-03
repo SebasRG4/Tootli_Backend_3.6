@@ -100,6 +100,15 @@ class DeliveryEligibilityService
             );
         }
 
+        if ($this->exceedsTotalCashBlockLimit($dm)) {
+            return DeliveryEligibilityResult::deny(
+                'total_cash_block',
+                'total_cash_block',
+                405,
+                translate('messages.dm_total_cash_block_warning') ?? 'Total block due to excessive cash in hand',
+            );
+        }
+
         if ($this->isBlockedByTemporaryStrikeSuspension($dm)) {
             return DeliveryEligibilityResult::deny(
                 'strike_blocked',
@@ -230,6 +239,29 @@ class DeliveryEligibilityService
         }
 
         return $tierCap;
+    }
+
+    protected function exceedsTotalCashBlockLimit(DeliveryMan $dm): bool
+    {
+        $cashInHand = (float) ($dm->wallet?->collected_cash ?? 0);
+        $limit = $this->getDmTotalCashBlockLimit($dm);
+
+        if ($limit <= 0) {
+            return false;
+        }
+
+        return $cashInHand >= $limit;
+    }
+
+    protected function getDmTotalCashBlockLimit(DeliveryMan $dm): float
+    {
+        $setting = \App\Models\BusinessSetting::where('key', 'dm_max_cash_in_hand_total_block')->first();
+        if ($setting && (float)$setting->value > 0) {
+            return (float)$setting->value;
+        }
+        
+        $standardLimit = $this->getDmMaxCashInHandLimit($dm);
+        return $standardLimit > 0 ? $standardLimit + 500 : 0;
     }
 
     protected function isBlockedByTemporaryStrikeSuspension(DeliveryMan $dm): bool

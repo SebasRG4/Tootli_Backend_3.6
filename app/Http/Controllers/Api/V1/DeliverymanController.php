@@ -183,6 +183,19 @@ class DeliverymanController extends Controller
                 : null,
         ];
 
+        $tierCap = (float) $tierLimit->max_cash_cod;
+        $globalCap = (float) $cash_in_hand_overflow_delivery_man;
+        $effectiveMaxCash = ($globalCap > 0 && $tierCap > 0) ? min($globalCap, $tierCap) : ($tierCap > 0 ? $tierCap : $globalCap);
+
+        $dm['cash_limit_for_only_paid'] = $effectiveMaxCash;
+
+        $totalBlockSetting = \App\Models\BusinessSetting::where('key', 'dm_max_cash_in_hand_total_block')->first();
+        if ($totalBlockSetting && (float)$totalBlockSetting->value > 0) {
+            $dm['cash_limit_for_total_block'] = (float)$totalBlockSetting->value;
+        } else {
+            $dm['cash_limit_for_total_block'] = $effectiveMaxCash > 0 ? $effectiveMaxCash + 500 : 0;
+        }
+
         try {
             $strikeSvc = app(DeliveryStrikeService::class);
             $dm['dm_strike_summary'] = [
@@ -431,6 +444,8 @@ class DeliverymanController extends Controller
             'pending_withdraw' => 0.0,
             'dm_max_cash_in_hand' => 0.0,
             'referal_earning' => 0.0,
+            'cash_limit_for_only_paid' => 0.0,
+            'cash_limit_for_total_block' => 0.0,
         ];
     }
 
@@ -459,6 +474,8 @@ class DeliverymanController extends Controller
             'can_drive_taxi' => $dm->can_drive_taxi,
             'taxi_license_number' => $dm->taxi_license_number,
             'taxi_license_expiry' => $dm->taxi_license_expiry,
+            'cash_limit_for_only_paid' => 0.0,
+            'cash_limit_for_total_block' => 0.0,
         ];
     }
 
