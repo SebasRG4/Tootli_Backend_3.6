@@ -899,8 +899,10 @@
                             </a>
                         </li>
 
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/cash-settings*') ? 'active' : '' }}">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.business-settings.cash-settings') }}"
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/cash-settings*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                href="{{ route('admin.business-settings.cash-settings') }}"
                                 title="{{ translate('Configuración de Efectivo') }}">
                                 <i class="tio-wallet nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
@@ -909,8 +911,10 @@
                             </a>
                         </li>
 
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/delivery-man/cash-deposit-list*') ? 'active' : '' }}">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.delivery-man.cash-deposit-list') }}"
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/delivery-man/cash-deposit-list*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                href="{{ route('admin.delivery-man.cash-deposit-list') }}"
                                 title="{{ translate('Auditoría de Depósitos') }}">
                                 <i class="tio-money nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
@@ -919,8 +923,10 @@
                             </a>
                         </li>
 
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/delivery-man/cash-heatmap*') ? 'active' : '' }}">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.delivery-man.cash-heatmap') }}"
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/delivery-man/cash-heatmap*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                href="{{ route('admin.delivery-man.cash-heatmap') }}"
                                 title="{{ translate('Mapa de Calor de Efectivo') }}">
                                 <i class="tio-map nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
