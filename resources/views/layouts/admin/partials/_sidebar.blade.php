@@ -741,7 +741,8 @@
                                     <a class="nav-link " href="{{ route('admin.item.quick-price-update') }}"
                                         title="{{ translate('Actualización de Precios') }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate text-capitalize">{{ translate('Actualización de Precios') }}</span>
+                                        <span
+                                            class="text-truncate text-capitalize">{{ translate('Actualización de Precios') }}</span>
                                     </a>
                                 </li>
                             </ul>
@@ -898,8 +899,10 @@
                             </a>
                         </li>
 
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/cash-settings*') ? 'active' : '' }}">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.business-settings.cash-settings') }}"
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/cash-settings*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                href="{{ route('admin.business-settings.cash-settings') }}"
                                 title="{{ translate('Configuración de Efectivo') }}">
                                 <i class="tio-wallet nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
@@ -908,8 +911,10 @@
                             </a>
                         </li>
 
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/delivery-man/cash-deposit-list*') ? 'active' : '' }}">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.delivery-man.cash-deposit-list') }}"
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/delivery-man/cash-deposit-list*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                href="{{ route('admin.delivery-man.cash-deposit-list') }}"
                                 title="{{ translate('Auditoría de Depósitos') }}">
                                 <i class="tio-money nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
@@ -918,8 +923,10 @@
                             </a>
                         </li>
 
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/delivery-man/cash-heatmap*') ? 'active' : '' }}">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.delivery-man.cash-heatmap') }}"
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/delivery-man/cash-heatmap*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                href="{{ route('admin.delivery-man.cash-heatmap') }}"
                                 title="{{ translate('Mapa de Calor de Efectivo') }}">
                                 <i class="tio-map nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
@@ -1039,7 +1046,8 @@
                                 </span>
                             </a>
                         </li>
-                        <li class="navbar-vertical-aside-has-menu {{ Request::routeIs('admin.message.list') ? 'active' : '' }}">
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::routeIs('admin.message.list') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.message.list') }}"
                                 title="{{ translate('messages.customer_chat') }}">
                                 <i class="tio-chat nav-icon"></i>
@@ -1048,7 +1056,8 @@
                                 </span>
                             </a>
                         </li>
-                        <li class="navbar-vertical-aside-has-menu {{ Request::routeIs('admin.message.list.delivery-support') ? 'active' : '' }}">
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::routeIs('admin.message.list.delivery-support') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('admin.message.list.delivery-support') }}"
                                 title="{{ translate('messages.admin_delivery_support_chat_menu') }}">
