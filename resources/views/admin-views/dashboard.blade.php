@@ -94,6 +94,20 @@
                     <div class="col-12">
                         <div class="row g-2">
                             <div class="col-sm-6 col-lg-3">
+                                <a class="order--card h-100" href="{{route('admin.delivery-man.offline_payment_list', ['status' => 'pending'])}}">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
+                                            <img src="{{asset('assets/admin/img/dashboard/food/items.svg')}}" alt="dashboard" class="oder--card-icon">
+                                            <span>{{translate('Pagos Repartidores Pendientes')}}</span>
+                                        </h6>
+                                        <span class="card-title text-info">
+                                            {{ \App\Models\DeliveryManOfflinePayment::where('status', 'pending')->count() }}
+                                        </span>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-sm-6 col-lg-3">
                                 <a class="order--card h-100" href="{{route('admin.order.list',['delivered'])}}">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
