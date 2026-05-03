@@ -66,8 +66,8 @@ class DeliveryManOfflinePaymentController extends Controller
                 $fcm_token = $payment->delivery_man->fcm_token;
                 if ($fcm_token) {
                     $data = [
-                        'title' => translate('messages.Payment_Approved'),
-                        'description' => translate('messages.Your_offline_payment_of_amount') . ' ' . Helpers::format_currency($payment->amount) . ' ' . translate('messages.has_been_approved'),
+                        'title' => 'Pago Aprobado',
+                        'description' => 'Tu pago offline por el monto de ' . Helpers::format_currency($payment->amount) . ' ha sido aprobado con éxito.',
                         'order_id' => '',
                         'image' => '',
                         'type' => 'payment_approved',
@@ -86,8 +86,8 @@ class DeliveryManOfflinePaymentController extends Controller
                 $fcm_token = $payment->delivery_man->fcm_token;
                 if ($fcm_token) {
                     $data = [
-                        'title' => translate('messages.Payment_Denied'),
-                        'description' => translate('messages.Your_offline_payment_of_amount') . ' ' . Helpers::format_currency($payment->amount) . ' ' . translate('messages.has_been_denied'),
+                        'title' => 'Pago Denegado',
+                        'description' => 'Tu pago offline por el monto de ' . Helpers::format_currency($payment->amount) . ' ha sido denegado. Revisa la nota del administrador.',
                         'order_id' => '',
                         'image' => '',
                         'type' => 'payment_denied',
