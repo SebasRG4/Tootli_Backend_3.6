@@ -599,9 +599,16 @@ class DeliverymanController extends Controller
             ], 404);
         }
 
-        // Add to Redis blacklist so the worker doesn't assign it to this dm again
+        // Add to Redis blacklist so the worker doesn't assign it to this dm again.
+        // TTL de 10 minutos: si el pedido sigue sin repartidor, el DM puede volver a verlo
+        // (implementa "Expiración de Ignore" del reporte técnico).
         if ($dm) {
-            Redis::sadd('order:' . $order->id . ':rejected', $dm->id);
+            $rejectedKey = 'order:' . $order->id . ':rejected';
+            Redis::sadd($rejectedKey, $dm->id);
+            // Aplicar TTL solo si la clave no tiene ya uno (para no reiniciarlo si otros DMs también rechazaron)
+            if (Redis::ttl($rejectedKey) < 0) {
+                Redis::expire($rejectedKey, (int) config('dm_assignment.ignore_ttl_seconds', 600)); // 10 min default
+            }
             // Decrease current_orders if it was already accepted
             if ($order->delivery_man_id == $dm->id && $order->order_status == 'accepted') {
                 $dm->current_orders = $dm->current_orders > 1 ? $dm->current_orders - 1 : 0;
