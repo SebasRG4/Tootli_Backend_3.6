@@ -508,6 +508,10 @@ class DeliverymanController extends Controller
     {
         $dm = DeliveryMan::with('wallet')->where(['auth_token' => $request['token']])->first();
 
+        // Cuando el DM abre el "Centro de Pedidos" manualmente, puede ver
+        // pedidos que ignoró previamente (include_rejected=1).
+        $includeRejected = filter_var($request->input('include_rejected', false), FILTER_VALIDATE_BOOLEAN);
+
         $orders = Order::with(['customer', 'store', 'parcel_category', 'payments', 'transaction']);
 
         if ($dm->type == 'zone_wise') {
@@ -558,7 +562,13 @@ class DeliverymanController extends Controller
                 $result = $eligibility->evaluateForAccept($dm, $order, null, null, skipZoneCheck: true);
                 if ($result->allowed) {
                     $filtered->push($order);
-
+                    continue;
+                }
+                // Si el DM está en el "Centro de Pedidos" (include_rejected=1),
+                // mostrar pedidos que ignoró previamente (order_rejected) para que pueda
+                // cambiar de opinión y aceptarlos manualmente.
+                if ($includeRejected && $result->code === 'order_rejected') {
+                    $filtered->push($order);
                     continue;
                 }
                 if ($result->code === 'max_orders') {
@@ -698,19 +708,30 @@ class DeliverymanController extends Controller
 
             $eligibility = app(DeliveryEligibilityService::class)->evaluateForAccept($dm, $order, $lat, $lng);
             if (! $eligibility->allowed) {
-                AssignmentEvent::logAcceptDenied($order, $dm, (string) $eligibility->code, [
-                    'message_key' => $eligibility->messageKey,
-                ]);
+                // Si el único motivo de rechazo es que el DM ignoró este pedido,
+                // permitir la aceptación manual eliminando su entrada del set Redis.
+                // Esto da al DM la capacidad de "cambiar de opinión" desde el Centro de Pedidos.
+                if ($eligibility->code === 'order_rejected') {
+                    Redis::srem('order:' . $order->id . ':rejected', $dm->id);
+                    // Re-evaluar sin el bloqueo de ignore
+                    $eligibility = app(DeliveryEligibilityService::class)->evaluateForAccept($dm, $order, $lat, $lng);
+                }
 
-                return response()->json([
-                    'errors' => [
-                        [
-                            'code' => $eligibility->code,
-                            'message_key' => $eligibility->messageKey,
-                            'message' => $eligibility->message,
+                if (! $eligibility->allowed) {
+                    AssignmentEvent::logAcceptDenied($order, $dm, (string) $eligibility->code, [
+                        'message_key' => $eligibility->messageKey,
+                    ]);
+
+                    return response()->json([
+                        'errors' => [
+                            [
+                                'code' => $eligibility->code,
+                                'message_key' => $eligibility->messageKey,
+                                'message' => $eligibility->message,
+                            ],
                         ],
-                    ],
-                ], $eligibility->httpStatus);
+                    ], $eligibility->httpStatus);
+                }
             }
 
             if ($order->order_type == 'parcel' && $order->order_status == 'confirmed') {
