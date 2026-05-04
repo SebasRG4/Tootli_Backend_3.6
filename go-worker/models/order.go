@@ -14,9 +14,9 @@ type Order struct {
 	CanceledBy         *string    `gorm:"column:canceled_by"`
 	CancellationReason *string    `gorm:"column:cancellation_reason"`
 	Canceled           *time.Time `gorm:"column:canceled"`
-	ZoneID             uint       `gorm:"column:zone_id"`
 	OrderAmount        float64    `gorm:"column:order_amount"`
 	PaymentMethod      string     `gorm:"column:payment_method"`
+	ZoneID             uint       `gorm:"column:zone_id"`
 	CreatedAt          time.Time  `gorm:"column:created_at"`
 	UpdatedAt          time.Time  `gorm:"column:updated_at"`
 }
