@@ -55,10 +55,20 @@ func SendDeliveryOffer(ctx context.Context, tokens []string, orderID uint) error
 			Body:  "You have a new order request. Tap to View!",
 		},
 		APNS: &messaging.APNSConfig{
+			Headers: map[string]string{
+				"apns-priority": "10",
+			},
 			Payload: &messaging.APNSPayload{
 				Aps: &messaging.Aps{
-					Sound: "alert_new_delivery.mp3",
+					Sound:            "alert_new_delivery.mp3",
+					ContentAvailable: true,
 				},
+			},
+		},
+		Android: &messaging.AndroidConfig{
+			Notification: &messaging.AndroidNotification{
+				Sound:     "alert_new_delivery.mp3",
+				ChannelID: "6ammart",
 			},
 		},
 		Tokens: tokens,

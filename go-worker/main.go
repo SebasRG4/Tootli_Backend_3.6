@@ -77,6 +77,9 @@ func main() {
 	// Start the Wave Requeue Cron Job
 	go cron.StartWaveRequeueMonitor(ctx)
 
+	// Start the Inactivity Monitor (Auto-Unassign)
+	go cron.StartInactivityMonitor(ctx)
+
 	// Start the high-performance HTTP API for GPS Tracking
 	go func() {
 		if err := api.StartServer("8080"); err != nil {
