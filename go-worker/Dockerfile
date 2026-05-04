@@ -9,7 +9,6 @@ RUN go mod download
 
 # Copiar y compilar la app de Go
 COPY . .
-RUN cat models/order.go
 RUN go build -o main .
 
 # Imagen final ligera

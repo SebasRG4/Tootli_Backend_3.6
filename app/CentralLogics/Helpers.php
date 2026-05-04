@@ -1940,9 +1940,13 @@ class Helpers
                     ]
                 ],
                 "apns" => [
+                    "headers" => [
+                        "apns-priority" => "10",
+                    ],
                     "payload" => [
                         "aps" => [
-                            "sound" => "notification.wav"
+                            "sound" => "notification.wav",
+                            "content-available" => 1
                         ]
                     ]
                 ]
@@ -2005,9 +2009,13 @@ class Helpers
                         ]
                     ],
                     "apns" => [
+                        "headers" => [
+                            "apns-priority" => "10",
+                        ],
                         "payload" => [
                             "aps" => [
-                                "sound" => "notification.wav"
+                                "sound" => "notification.wav",
+                                "content-available" => 1
                             ]
                         ]
                     ]
@@ -2037,9 +2045,13 @@ class Helpers
                         ]
                     ],
                     "apns" => [
+                        "headers" => [
+                            "apns-priority" => "10",
+                        ],
                         "payload" => [
                             "aps" => [
-                                "sound" => "notification.wav"
+                                "sound" => "notification.wav",
+                                "content-available" => 1
                             ]
                         ]
                     ]
