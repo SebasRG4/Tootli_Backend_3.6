@@ -1587,6 +1587,27 @@ class Helpers
         return $data;
     }
 
+    public static function dm_order_data_formatting($data, $multi_data = false)
+    {
+        $data = self::order_data_formatting($data, $multi_data);
+        if ($multi_data) {
+            foreach ($data as &$item) {
+                if (isset($item->transaction) && $item->transaction && $item->transaction->delivery_man_id) {
+                    $item->setAttribute('delivery_charge', (float) $item->transaction->original_delivery_charge);
+                } else {
+                    $item->setAttribute('delivery_charge', (float) \App\CentralLogics\OrderLogic::dm_net_earning($item));
+                }
+            }
+        } else {
+            if (isset($data->transaction) && $data->transaction && $data->transaction->delivery_man_id) {
+                $data->setAttribute('delivery_charge', (float) $data->transaction->original_delivery_charge);
+            } else {
+                $data->setAttribute('delivery_charge', (float) \App\CentralLogics\OrderLogic::dm_net_earning($data));
+            }
+        }
+        return $data;
+    }
+
     public static function order_details_data_formatting($data)
     {
         $storage = [];

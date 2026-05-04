@@ -1359,4 +1359,23 @@ class OrderLogic
             return false;
         }
     }
+
+    public static function dm_net_earning($order)
+    {
+        $comission = BusinessSetting::where('key', 'delivery_charge_comission')->first();
+        $comission_percentage = $comission ? $comission->value : 0;
+
+        if ($order->tootli_direct ?? false) {
+            $direct_del = BusinessSetting::where('key', 'tootli_direct_delivery_commission')->first();
+            $comission_percentage = $direct_del !== null ? (float) $direct_del->value : 0;
+        }
+
+        $comission_amount = $comission_percentage * ($order->original_delivery_charge / 100);
+
+        if ($order->store && $order->store->sub_self_delivery) {
+            $comission_amount = 0;
+        }
+
+        return $order->original_delivery_charge - $comission_amount;
+    }
 }

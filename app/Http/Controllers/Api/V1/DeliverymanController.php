@@ -492,14 +492,14 @@ class DeliverymanController extends Controller
     public function get_current_orders(Request $request)
     {
         $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
-        $orders = Order::with(['customer', 'store', 'parcel_category'])
+        $orders = Order::with(['customer', 'store', 'parcel_category', 'transaction'])
             ->whereIn('order_status', ['accepted', 'confirmed', 'pending', 'processing', 'picked_up', 'handover', 'returned'])
             ->where(['delivery_man_id' => $dm['id']])
             ->orderBy('accepted')
             ->orderBy('schedule_at', 'desc')
             ->dmOrder()
             ->get();
-        $orders = Helpers::order_data_formatting($orders, true);
+        $orders = Helpers::dm_order_data_formatting($orders, true);
 
         return response()->json($orders, 200);
     }
@@ -508,7 +508,7 @@ class DeliverymanController extends Controller
     {
         $dm = DeliveryMan::with('wallet')->where(['auth_token' => $request['token']])->first();
 
-        $orders = Order::with(['customer', 'store', 'parcel_category', 'payments']);
+        $orders = Order::with(['customer', 'store', 'parcel_category', 'payments', 'transaction']);
 
         if ($dm->type == 'zone_wise') {
             $orders = $orders->where('zone_id', $dm->zone_id)
@@ -569,7 +569,7 @@ class DeliverymanController extends Controller
             $orders = $filtered;
         }
 
-        $orders = Helpers::order_data_formatting($orders, true);
+        $orders = Helpers::dm_order_data_formatting($orders, true);
 
         return response()->json($orders, 200);
     }
@@ -1323,7 +1323,7 @@ class DeliverymanController extends Controller
             ], 204);
         }
 
-        return response()->json(Helpers::order_data_formatting($order), 200);
+        return response()->json(Helpers::dm_order_data_formatting($order), 200);
     }
 
     public function get_all_orders(Request $request)
@@ -1345,7 +1345,7 @@ class DeliverymanController extends Controller
             ->orderBy('schedule_at', 'desc')
             ->dmOrder()
             ->paginate($request['limit'], ['*'], 'page', $request['offset']);
-        $orders = Helpers::order_data_formatting($paginator->items(), true);
+        $orders = Helpers::dm_order_data_formatting($paginator->items(), true);
         $data = [
             'total_size' => $paginator->total(),
             'limit' => $request['limit'],
