@@ -67,7 +67,7 @@ class DeliverymanController extends Controller
 
     public function get_profile(Request $request)
     {
-        $dm = DeliveryMan::with(['rating'])->where(['auth_token' => $request['token']])->first();
+        $dm = DeliveryMan::with(['rating', 'userinfo'])->where(['auth_token' => $request['token']])->first();
         if (!$dm) {
             return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
         }
