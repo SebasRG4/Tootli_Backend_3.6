@@ -207,7 +207,7 @@ class ConversationController extends Controller
 
                 if ($fcm_token) {
                     $data = [
-                        'title' => translate('messages.new_message'),
+                        'title' => 'Mensaje de soporte',
                         'description' => $request->reply,
                         'order_id' => '',
                         'image' => '',
