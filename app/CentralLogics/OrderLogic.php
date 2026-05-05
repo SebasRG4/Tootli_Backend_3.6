@@ -176,7 +176,7 @@ class OrderLogic
             }
 
             $comission_amount = $comission_on_store_amount + $comission_on_actual_delivery_fee;
-            $dm_commission = $order->original_delivery_charge - $comission_on_actual_delivery_fee;
+            $dm_commission = $order->original_delivery_charge - $comission_on_actual_delivery_fee + ($order->incentive_amount ?? 0);
         }
         $store_amount = $store_amount + $order_amount + $order->total_tax_amount + $order->extra_packaging_amount - $comission_on_store_amount - $store_coupon_discount_subsidy - $flash_store_discount_amount;
 
@@ -242,7 +242,7 @@ class OrderLogic
                 'order_amount' => $order->order_amount,
                 'store_amount' => $type == 'parcel' ? 0 : $store_amount,
                 // 'store_amount'=>$type=='parcel' ? 0 : $order_amount + $order->total_tax_amount - $comission_on_store_amount,
-                'admin_commission' => $comission_amount + $order->additional_charge - $admin_subsidy - $admin_coupon_discount_subsidy - $ref_bonus_amount - $store_discount_amount,
+                'admin_commission' => $comission_amount + $order->additional_charge - $admin_subsidy - $admin_coupon_discount_subsidy - $ref_bonus_amount - $store_discount_amount - ($order->incentive_amount ?? 0),
                 'delivery_charge' => $order->delivery_charge,
                 'original_delivery_charge' => $dm_commission,
                 'tax' => $order->total_tax_amount,
@@ -268,7 +268,7 @@ class OrderLogic
                 ['admin_id' => Admin::where('role_id', 1)->first()->id]
             );
 
-            $adminWallet->total_commission_earning = $adminWallet->total_commission_earning + $comission_amount + $order->additional_charge - $admin_subsidy - $admin_coupon_discount_subsidy - $store_discount_amount - $flash_admin_discount_amount - $ref_bonus_amount;
+            $adminWallet->total_commission_earning = $adminWallet->total_commission_earning + $comission_amount + $order->additional_charge - $admin_subsidy - $admin_coupon_discount_subsidy - $store_discount_amount - $flash_admin_discount_amount - $ref_bonus_amount - ($order->incentive_amount ?? 0);
 
             if ($type != 'parcel') {
                 $vendorWallet = StoreWallet::firstOrNew(
@@ -1376,6 +1376,44 @@ class OrderLogic
             $comission_amount = 0;
         }
 
-        return $order->original_delivery_charge - $comission_amount;
+        $net_earning = $order->original_delivery_charge - $comission_amount;
+
+        return (float) ($net_earning + ($order->incentive_amount ?? 0));
+    }
+
+    public static function calculate_order_incentive($order, $level)
+    {
+        if ($level <= 0) return 0;
+
+        $comission = BusinessSetting::where('key', 'delivery_charge_comission')->first();
+        $comission_percentage = $comission ? $comission->value : 0;
+        if ($order->tootli_direct ?? false) {
+            $direct_del = BusinessSetting::where('key', 'tootli_direct_delivery_commission')->first();
+            $comission_percentage = $direct_del !== null ? (float) $direct_del->value : 0;
+        }
+        $admin_delivery_commission = $comission_percentage * ($order->original_delivery_charge / 100);
+
+        if ($level == 1) {
+            return $admin_delivery_commission;
+        }
+
+        if ($level == 2) {
+            $admin_profit = 0;
+            if ($order->order_type == 'parcel') {
+                $comission_parcel = BusinessSetting::where('key', 'parcel_commission_dm')->first();
+                $comission_parcel = isset($comission_parcel) ? $comission_parcel->value : 0;
+                $order_amount = $order->order_amount - $order->dm_tips - $order->additional_charge - $order->extra_packaging_amount - $order->total_tax_amount;
+                $dm_commission = $comission_parcel ? ($order_amount / 100) * $comission_parcel : 0;
+                $admin_profit = $order_amount - $dm_commission;
+            } else {
+                $comission_store = isset($order->store->comission) == null ? BusinessSetting::where('key', 'admin_commission')->first()->value : $order->store->comission;
+                $order_amount = $order->order_amount - $order->additional_charge - $order->extra_packaging_amount - $order->delivery_charge - $order->total_tax_amount - $order->dm_tips + ($order->flash_admin_discount_amount ?? 0) + $order->coupon_discount_amount + ($order->store_discount_amount ?? 0) + ($order->flash_store_discount_amount ?? 0) + ($order->ref_bonus_amount ?? 0);
+                $admin_profit = ($comission_store ? ($order_amount / 100) * $comission_store : 0) + $order->additional_charge;
+            }
+
+            return $admin_delivery_commission + ($admin_profit * 0.1);
+        }
+
+        return 0;
     }
 }
