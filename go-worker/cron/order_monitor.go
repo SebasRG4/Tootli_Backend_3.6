@@ -33,8 +33,8 @@ func processExpiredOrders() {
 		return
 	}
 
-	// 10 minutes ago
-	cutoffTime := time.Now().Add(-10 * time.Minute)
+	// 15 minutes ago
+	cutoffTime := time.Now().Add(-15 * time.Minute)
 
 	var expiredOrders []models.Order
 
@@ -59,7 +59,7 @@ func processExpiredOrders() {
 		return // Nothing to do
 	}
 
-	log.Printf("[Cron] Found %d unaccepted orders older than 10 minutes. Cancelling...\n", len(expiredOrders))
+	log.Printf("[Cron] Found %d unaccepted orders older than 15 minutes. Cancelling...\n", len(expiredOrders))
 
 	now := time.Now()
 	systemUser := "system"

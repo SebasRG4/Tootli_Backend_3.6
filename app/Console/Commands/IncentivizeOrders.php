@@ -34,8 +34,8 @@ class IncentivizeOrders extends Command
 
         // Umbrales de tiempo (minutos)
         // Se añade un factor aleatorio para evitar que los repartidores predigan el momento exacto
-        $threshold_level_1 = 10 + rand(0, 3); 
-        $threshold_level_2 = 20 + rand(0, 5);
+        $threshold_level_1 = 5 + rand(0, 1); 
+        $threshold_level_2 = 10 + rand(0, 2);
 
         // Pedidos buscando repartidor
         $orders = Order::searchingForDeliveryman()
@@ -67,9 +67,20 @@ class IncentivizeOrders extends Command
 
     private function notifyDeliveryMen($order)
     {
+        $title = translate('messages.Incentivized_Order_Alert');
+        $description = translate('A pending order has a pay boost! Accept it now.');
+
+        if ($order->incentive_level == 1) {
+            $title = "🚀 " . translate('messages.Pay_Boost_Level_1');
+            $description = translate('Order') . " #{$order->id} " . translate('now pays better!');
+        } elseif ($order->incentive_level == 2) {
+            $title = "🔥 " . translate('messages.Maximum_Incentive_Alert');
+            $description = translate('Order') . " #{$order->id} " . translate('has an extra bonus! Accept it fast.');
+        }
+
         $data = [
-            'title' => translate('messages.Incentivized_Order_Alert'),
-            'description' => translate('A pending order has a pay boost! Accept it now.'),
+            'title' => $title,
+            'description' => $description,
             'order_id' => $order->id,
             'image' => '',
             'type' => 'new_order',

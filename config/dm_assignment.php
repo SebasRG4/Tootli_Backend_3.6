@@ -30,6 +30,6 @@ return [
     | Valor recomendado: 600 (10 minutos). Ajustar según tiempos de demanda.
     |
     */
-    'ignore_ttl_seconds' => (int) env('DM_IGNORE_TTL_SECONDS', 600),
+    'ignore_ttl_seconds' => (int) env('DM_IGNORE_TTL_SECONDS', 120),
 
 ];
