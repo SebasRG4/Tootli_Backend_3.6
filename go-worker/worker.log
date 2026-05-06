@@ -1,0 +1,4 @@
+2026/05/04 22:54:57 [main] Timezone confirmed: America/Mexico_City (Local time: 22:54:57)
+2026/05/04 22:54:57 [main] Tootli Go Worker starting...
+2026/05/04 22:54:57 [main] Connecting to Redis at 127.0.0.1:6379
+2026/05/04 22:54:57 [main] Failed to connect to DB: failed to connect to database: dial tcp 127.0.0.1:3306: connect: connection refused
