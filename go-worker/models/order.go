@@ -17,8 +17,14 @@ type Order struct {
 	OrderAmount        float64    `gorm:"column:order_amount"`
 	PaymentMethod      string     `gorm:"column:payment_method"`
 	ZoneID             uint       `gorm:"column:zone_id"`
+	DeliveryAddress    string     `gorm:"column:delivery_address"`
+	Confirmed          *time.Time `gorm:"column:confirmed"`
+	ProcessingTime     int        `gorm:"column:processing_time"` // Minutos de preparación
 	CreatedAt          time.Time  `gorm:"column:created_at"`
 	UpdatedAt          time.Time  `gorm:"column:updated_at"`
+
+	// Relaciones
+	Store *Store `gorm:"foreignKey:StoreID"`
 }
 
 // TableName overrides the table name used by Order to `orders`

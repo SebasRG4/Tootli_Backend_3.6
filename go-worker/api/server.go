@@ -33,6 +33,9 @@ func StartServer(port string) error {
 	// Route that Laravel will call to get surge multipliers
 	r.Get("/api/v1/surge/calculate", HandleCalculateSurge)
 
+	// Route to get optimized sequence of waypoints for active orders
+	r.Get("/api/v1/delivery-man/optimized-route", HandleOptimizedRoute)
+
 	// Wallet QR payment
 	r.Post("/api/v1/user/wallet/qr-pay", HandleQrPay)
 
