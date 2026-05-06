@@ -157,14 +157,14 @@ func handleAssignDelivery(ctx context.Context, raw json.RawMessage) error {
 		// Default to 500 if not found
 		var limit float64 = 500
 		var setting models.BusinessSetting
-		if err := config.DB.Where("key = ?", "dm_max_cash_in_hand").First(&setting).Error; err == nil {
+		if err := config.DB.Where("`key` = ?", "dm_max_cash_in_hand").First(&setting).Error; err == nil {
 			limit, _ = strconv.ParseFloat(setting.Value, 64)
 		}
 
 		// High Value Handling (Strategy check)
 		highValueThreshold := 700.0
 		var hvSetting models.BusinessSetting
-		if err := config.DB.Where("key = ?", "high_value_threshold").First(&hvSetting).Error; err == nil {
+		if err := config.DB.Where("`key` = ?", "high_value_threshold").First(&hvSetting).Error; err == nil {
 			highValueThreshold, _ = strconv.ParseFloat(hvSetting.Value, 64)
 		}
 
