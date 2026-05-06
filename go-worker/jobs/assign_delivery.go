@@ -111,9 +111,11 @@ func handleAssignDelivery(ctx context.Context, raw json.RawMessage) error {
 
 		// Calculate Distance (in km) to the NEW order's store
 		dist := storePoint.GreatCircleDistance(dmPoint)
+		log.Printf("[assign_delivery] DM #%d is %.2f km from store", dm.ID, dist)
 
 		// Max distance filter (5 km)
 		if dist > 5.0 {
+			log.Printf("[assign_delivery] Skipping DM #%d: Too far", dm.ID)
 			continue
 		}
 
@@ -142,6 +144,7 @@ func handleAssignDelivery(ctx context.Context, raw json.RawMessage) error {
 
 		// Limit to 2 concurrent orders
 		if dm.CurrentOrders >= 2 {
+			log.Printf("[assign_delivery] Skipping DM #%d: Max concurrent orders (%d)", dm.ID, dm.CurrentOrders)
 			continue
 		}
 

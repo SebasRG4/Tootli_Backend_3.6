@@ -26,6 +26,7 @@ func Register(jobType string, h Handler) {
 
 // Dispatch finds and runs the appropriate handler for a payload
 func Dispatch(ctx context.Context, raw []byte) error {
+	log.Printf("[JOB] Received raw payload: %s", string(raw))
 	var payload JobPayload
 	if err := json.Unmarshal(raw, &payload); err != nil {
 		return fmt.Errorf("invalid job payload: %w", err)
