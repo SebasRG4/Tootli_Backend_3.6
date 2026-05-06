@@ -140,6 +140,11 @@ func handleAssignDelivery(ctx context.Context, raw json.RawMessage) error {
 			continue
 		}
 
+		// Limit to 2 concurrent orders
+		if dm.CurrentOrders >= 2 {
+			continue
+		}
+
 		// 2.2 Cash Capacity Check (New)
 		var wallet models.DeliveryManWallet
 		config.DB.Where("delivery_man_id = ?", dm.ID).First(&wallet)
