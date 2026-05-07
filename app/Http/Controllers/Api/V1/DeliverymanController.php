@@ -492,16 +492,78 @@ class DeliverymanController extends Controller
     public function get_current_orders(Request $request)
     {
         $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
-        $orders = Order::with(['customer', 'store', 'parcel_category', 'transaction'])
+        if (!$dm) {
+            return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
+        }
+
+        $orders = Order::with(['customer', 'store', 'parcel_category', 'transaction', 'delivery_address'])
             ->whereIn('order_status', ['accepted', 'confirmed', 'pending', 'processing', 'picked_up', 'handover', 'returned'])
             ->where(['delivery_man_id' => $dm['id']])
-            ->orderBy('accepted')
-            ->orderBy('schedule_at', 'desc')
             ->dmOrder()
             ->get();
-        $orders = Helpers::dm_order_data_formatting($orders, true);
 
-        return response()->json($orders, 200);
+        if ($orders->count() > 1) {
+            // Get DM current location
+            $lat = $request->input('lat') ?? $request->input('latitude');
+            $lng = $request->input('lng') ?? $request->input('longitude');
+
+            if (!$lat || !$lng) {
+                $history = \App\Models\DeliveryHistory::where('delivery_man_id', $dm->id)->orderByDesc('id')->first();
+                if ($history) {
+                    $lat = $history->latitude;
+                    $lng = $history->longitude;
+                }
+            }
+
+            if ($lat && $lng) {
+                $lat = (float) $lat;
+                $lng = (float) $lng;
+
+                /** @var MapboxDirectionsService $mapbox */
+                $mapbox = app(\App\Services\MapboxDirectionsService::class);
+
+                // Priority:
+                // 1. Orders not yet picked up (must go to store)
+                // 2. Orders picked up (must go to customer)
+                
+                $orders = $orders->map(function ($order) use ($lat, $lng, $mapbox) {
+                    $isPickedUp = in_array($order->order_status, ['picked_up', 'handover']);
+                    
+                    // Destination for routing
+                    $destLat = 0;
+                    $destLng = 0;
+
+                    if (!$isPickedUp) {
+                        // Store location
+                        $destLat = (float) ($order->store->latitude ?? 0);
+                        $destLng = (float) ($order->store->longitude ?? 0);
+                    } else {
+                        // Customer location
+                        $destLat = (float) ($order->delivery_address->latitude ?? 0);
+                        $destLng = (float) ($order->delivery_address->longitude ?? 0);
+                    }
+
+                    $dist = 999999; // Default if mapbox fails
+                    if ($destLat != 0 && $destLng != 0) {
+                        $route = $mapbox->drivingTrafficRoute($lng, $lat, $destLng, $destLat);
+                        if ($route) {
+                            $dist = (float) $route['distance_km'];
+                        }
+                    }
+
+                    // For sorting: not picked up orders always come before picked up ones
+                    // unless we want to mix them. Usually, pickup first.
+                    $order->temp_sort_priority = (!$isPickedUp ? 0 : 1000) + $dist;
+                    return $order;
+                })->sortBy('temp_sort_priority')->values();
+            }
+        } else {
+            // Default sort for single or no orders
+            $orders = $orders->sortBy('accepted')->values();
+        }
+
+        $formattedOrders = Helpers::dm_order_data_formatting($orders, true);
+        return response()->json($formattedOrders, 200);
     }
 
     public function get_latest_orders(Request $request)
