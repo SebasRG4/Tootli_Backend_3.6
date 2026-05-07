@@ -2,8 +2,10 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"tootli.mx/worker/config"
 	"tootli.mx/worker/models"
@@ -30,15 +32,20 @@ func HandleOptimizedRoute(w http.ResponseWriter, r *http.Request) {
 	// 1. Authenticate DM
 	var dm models.DeliveryMan
 	if err := config.DB.Where("auth_token = ?", token).First(&dm).Error; err != nil {
+		log.Printf("[API] Unauthorized access attempt with token: %s", token)
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
+
+	log.Printf("[API] Optimizing route for DM #%d at (%f, %f)", dm.ID, lat, lon)
 
 	// 2. Fetch Active Orders
 	var activeOrders []models.Order
 	config.DB.Preload("Store").
 		Where("delivery_man_id = ? AND order_status IN ?", dm.ID, []string{"accepted", "confirmed", "processing", "picked_up", "handover"}).
 		Find(&activeOrders)
+
+	log.Printf("[API] Found %d active orders for DM #%d", len(activeOrders), dm.ID)
 
 	if len(activeOrders) == 0 {
 		w.Header().Set("Content-Type", "application/json")
@@ -102,7 +109,10 @@ func HandleOptimizedRoute(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// 4. Optimize
+	log.Printf("[API] Optimizing %d waypoints...", len(points))
 	optimized := services.OptimizeOrderRoute(lat, lon, points)
+
+	log.Printf("[API] Optimization complete. Sequence length: %d", len(optimized))
 
 	// 5. Return JSON
 	w.Header().Set("Content-Type", "application/json")
