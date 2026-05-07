@@ -496,7 +496,7 @@ class DeliverymanController extends Controller
             return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
         }
 
-        $orders = Order::with(['customer', 'store', 'parcel_category', 'transaction', 'delivery_address'])
+        $orders = Order::with(['customer', 'store', 'parcel_category', 'transaction'])
             ->whereIn('order_status', ['accepted', 'confirmed', 'pending', 'processing', 'picked_up', 'handover', 'returned'])
             ->where(['delivery_man_id' => $dm['id']])
             ->dmOrder()
@@ -538,9 +538,13 @@ class DeliverymanController extends Controller
                         $destLat = (float) ($order->store->latitude ?? 0);
                         $destLng = (float) ($order->store->longitude ?? 0);
                     } else {
-                        // Customer location
-                        $destLat = (float) ($order->delivery_address->latitude ?? 0);
-                        $destLng = (float) ($order->delivery_address->longitude ?? 0);
+                        // Customer location from JSON column
+                        $address = is_array($order->delivery_address) 
+                            ? $order->delivery_address 
+                            : json_decode($order->delivery_address, true);
+                            
+                        $destLat = (float) ($address['latitude'] ?? 0);
+                        $destLng = (float) ($address['longitude'] ?? 0);
                     }
 
                     $dist = 999999; // Default if mapbox fails
@@ -552,7 +556,6 @@ class DeliverymanController extends Controller
                     }
 
                     // For sorting: not picked up orders always come before picked up ones
-                    // unless we want to mix them. Usually, pickup first.
                     $order->temp_sort_priority = (!$isPickedUp ? 0 : 1000) + $dist;
                     return $order;
                 })->sortBy('temp_sort_priority')->values();
