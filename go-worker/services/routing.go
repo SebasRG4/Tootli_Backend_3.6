@@ -5,12 +5,12 @@ import (
 )
 
 type Point struct {
-	ID        string
-	Type      string // "pickup" or "delivery"
-	OrderID   int
-	Latitude  float64
-	Longitude float64
-	WaitTime  float64 // Minutos de espera estimados en este punto
+	ID        string  `json:"id"`
+	Type      string  `json:"type"` // "pickup" or "delivery"
+	OrderID   int     `json:"order_id"`
+	Latitude  float64 `json:"latitude"`
+	Longitude float64 `json:"longitude"`
+	WaitTime  float64 `json:"wait_time"` // Minutos de espera estimados en este punto
 }
 
 type RouteSequence struct {
