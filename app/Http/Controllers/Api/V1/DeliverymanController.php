@@ -533,25 +533,31 @@ class DeliverymanController extends Controller
                     $destLat = 0;
                     $destLng = 0;
 
-                    if (!$isPickedUp) {
+                    if (!$isPickedUp && $order->store) {
                         // Store location
                         $destLat = (float) ($order->store->latitude ?? 0);
                         $destLng = (float) ($order->store->longitude ?? 0);
-                    } else {
+                    } elseif ($isPickedUp && $order->delivery_address) {
                         // Customer location from JSON column
                         $address = is_array($order->delivery_address) 
                             ? $order->delivery_address 
-                            : json_decode($order->delivery_address, true);
+                            : json_decode((string)$order->delivery_address, true);
                             
-                        $destLat = (float) ($address['latitude'] ?? 0);
-                        $destLng = (float) ($address['longitude'] ?? 0);
+                        if (is_array($address)) {
+                            $destLat = (float) ($address['latitude'] ?? 0);
+                            $destLng = (float) ($address['longitude'] ?? 0);
+                        }
                     }
 
                     $dist = 999999; // Default if mapbox fails
                     if ($destLat != 0 && $destLng != 0) {
-                        $route = $mapbox->drivingTrafficRoute($lng, $lat, $destLng, $destLat);
-                        if ($route) {
-                            $dist = (float) $route['distance_km'];
+                        try {
+                            $route = $mapbox->drivingTrafficRoute($lng, $lat, $destLng, $destLat);
+                            if ($route && isset($route['distance_km'])) {
+                                $dist = (float) $route['distance_km'];
+                            }
+                        } catch (\Exception $e) {
+                            \Log::error("Mapbox Route Error: " . $e->getMessage());
                         }
                     }
 
