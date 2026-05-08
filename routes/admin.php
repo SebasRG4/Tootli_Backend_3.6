@@ -134,6 +134,9 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('stock-update', 'ItemController@stock_update')->name('stock-update');
 
             //Import and export
+            Route::get('bulk-import-text', 'BulkItemController@index')->name('bulk-import-text');
+            Route::post('bulk-import-text-process', 'BulkItemController@process')->name('bulk-import-text-process');
+            
             Route::get('bulk-import', 'ItemController@bulk_import_index')->name('bulk-import');
             Route::post('bulk-import', 'ItemController@bulk_import_data');
             Route::get('bulk-export', 'ItemController@bulk_export_index')->name('bulk-export-index');

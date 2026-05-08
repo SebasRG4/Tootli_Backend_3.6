@@ -24,9 +24,14 @@
             <div class=" d-flex flex-sm-nowrap flex-wrap  align-items-end">
                 <div class="text--primary-2 d-flex flex-wrap align-items-center mr-2">
                     <a href="{{ route('admin.item.product_gallery') }}"
-                        class="btn btn-outline-primary btn--primary d-flex align-items-center bg-not-hover-primary-ash rounded-8 gap-2">
+                        class="btn btn-outline-primary btn--primary d-flex align-items-center bg-not-hover-primary-ash rounded-8 gap-2 mr-2">
                         <img src="{{ asset('assets/admin/img/product-gallery.png') }}" class="w--22" alt="">
                         <span>{{ translate('Add Info From Gallery') }}</span>
+                    </a>
+                    <a href="{{ route('admin.item.bulk-import-text') }}"
+                        class="btn btn-outline-info btn--info d-flex align-items-center bg-not-hover-info-ash rounded-8 gap-2">
+                        <i class="tio-add-circle"></i>
+                        <span>Carga Rápida (Texto)</span>
                     </a>
                 </div>
 
