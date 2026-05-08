@@ -135,16 +135,20 @@ class Helpers
      */
     public static function send_whatsapp($phone, $message)
     {
-        $phone = str_replace(['+', ' ', '-'], '', $phone);
-
-        // 1. UltraMsg (Proveedor Principal según solicitud actual)
+        // 1. UltraMsg (Proveedor Principal)
         $ultramsg_instance = env('ULTRAMSG_INSTANCE', 'instance173998');
         $ultramsg_token = env('ULTRAMSG_TOKEN', '31h6fqjt2xlkblkb');
         
+        // UltraMsg prefiere formato internacional (con o sin +), lo normalizamos a con +
+        $clean_phone = str_replace([' ', '-'], '', $phone);
+        if ($clean_phone[0] != '+') {
+            $clean_phone = '+' . $clean_phone;
+        }
+
         try {
             $response = Http::post("https://api.ultramsg.com/{$ultramsg_instance}/messages/chat", [
                 'token' => $ultramsg_token,
-                'to' => $phone,
+                'to' => $clean_phone,
                 'body' => $message,
                 'priority' => 10
             ]);
