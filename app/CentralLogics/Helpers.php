@@ -137,36 +137,9 @@ class Helpers
     {
         $phone = str_replace(['+', ' ', '-'], '', $phone);
 
-        // 1. Intentar con KAPSO (Prioridad solicitada por el usuario)
-        $kapso_api_key = env('KAPSO_API_KEY');
-        $kapso_phone_id = env('KAPSO_PHONE_ID');
-
-        if ($kapso_api_key && $kapso_phone_id) {
-            try {
-                $response = Http::withHeaders([
-                    'X-API-Key' => $kapso_api_key,
-                    'Content-Type' => 'application/json',
-                ])->post("https://api.kapso.ai/meta/whatsapp/v24.0/{$kapso_phone_id}/messages", [
-                    'messaging_product' => 'whatsapp',
-                    'recipient_type' => 'individual',
-                    'to' => $phone,
-                    'type' => 'text',
-                    'text' => ['body' => $message]
-                ]);
-
-                if ($response->successful()) {
-                    \Log::info("Kapso WhatsApp Success: " . $response->body());
-                    return true;
-                }
-                \Log::error("Kapso WhatsApp Error: " . $response->body());
-            } catch (\Exception $e) {
-                \Log::error("Kapso WhatsApp Exception: " . $e->getMessage());
-            }
-        }
-        
-        // 2. Fallback a UltraMsg (Anterior)
-        $ultramsg_instance = 'instance173066';
-        $ultramsg_token = 'kci7j2hudimjydqe';
+        // 1. UltraMsg (Proveedor Principal según solicitud actual)
+        $ultramsg_instance = env('ULTRAMSG_INSTANCE', 'instance173998');
+        $ultramsg_token = env('ULTRAMSG_TOKEN', '31h6fqjt2xlkblkb');
         
         try {
             $response = Http::post("https://api.ultramsg.com/{$ultramsg_instance}/messages/chat", [
@@ -185,10 +158,9 @@ class Helpers
             \Log::error("UltraMsg WhatsApp Exception: " . $e->getMessage());
         }
 
-        // 2. Fallback a LabsMobile (Anterior)
+        // 2. Fallback a LabsMobile (Solo si UltraMsg falla)
         $sms_config = DB::table('addon_settings')->where('settings_type', 'sms_config')->where('key_name', 'labsmobile')->first();
         if (!$sms_config) {
-            // Fallback a tabla business_settings si no está en addons
             $sms_config = DB::table('business_settings')->where('key', 'labsmobile')->first();
         }
 
@@ -220,10 +192,8 @@ class Helpers
             }
         }
 
-
-
         // Fallback: Log para debugear
-        \Log::info("WhatsApp simulado (LabsMobile no activo o falló) a {$phone}: {$message}");
+        \Log::info("WhatsApp falló en todos los proveedores para {$phone}: {$message}");
         return true;
     }
 

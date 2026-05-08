@@ -11,62 +11,47 @@ import (
 	"tootli.mx/worker/config"
 )
 
-type KapsoTextMessage struct {
-	MessagingProduct string `json:"messaging_product"`
-	RecipientType    string `json:"recipient_type"`
-	To               string `json:"to"`
-	Type             string `json:"type"`
-	Text             struct {
-		Body string `json:"body"`
-	} `json:"text"`
-}
-
-// SendWhatsAppAdminAlert sends a WhatsApp message to the admin via Kapso API
+// SendWhatsAppAdminAlert sends a WhatsApp message to the admin via UltraMsg API
 func SendWhatsAppAdminAlert(cfg *config.Config, message string) error {
-	if cfg.KapsoAPIKey == "" || cfg.KapsoPhoneID == "" {
-		log.Printf("[WhatsApp] Warning: Kapso API Key or Phone ID not configured. Skipping message.")
+	if cfg.UltraMsgInstance == "" || cfg.UltraMsgToken == "" {
+		log.Printf("[WhatsApp] Warning: UltraMsg Instance or Token not configured. Skipping message.")
 		return nil
 	}
 
-	// Clean phone number (remove +)
+	// Clean phone number (keep + for UltraMsg or remove if needed, but UltraMsg usually works with it)
 	to := cfg.AdminWhatsApp
-	if len(to) > 0 && to[0] == '+' {
-		to = to[1:]
-	}
 
-	payload := KapsoTextMessage{
-		MessagingProduct: "whatsapp",
-		RecipientType:    "individual",
-		To:               to,
-		Type:             "text",
+	payload := map[string]interface{}{
+		"token":    cfg.UltraMsgToken,
+		"to":       to,
+		"body":     message,
+		"priority": 10,
 	}
-	payload.Text.Body = message
 
 	jsonData, err := json.Marshal(payload)
 	if err != nil {
-		return fmt.Errorf("failed to marshal kapso payload: %w", err)
+		return fmt.Errorf("failed to marshal ultramsg payload: %w", err)
 	}
 
-	url := fmt.Sprintf("https://api.kapso.ai/meta/whatsapp/v24.0/%s/messages", cfg.KapsoPhoneID)
+	url := fmt.Sprintf("https://api.ultramsg.com/%s/messages/chat", cfg.UltraMsgInstance)
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
 	if err != nil {
-		return fmt.Errorf("failed to create kapso request: %w", err)
+		return fmt.Errorf("failed to create ultramsg request: %w", err)
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("X-API-Key", cfg.KapsoAPIKey)
 
-	client := &http.Client{Timeout: 10 * time.Second}
+	client := &http.Client{Timeout: 15 * time.Second}
 	resp, err := client.Do(req)
 	if err != nil {
-		return fmt.Errorf("failed to send kapso request: %w", err)
+		return fmt.Errorf("failed to send ultramsg request: %w", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
-		return fmt.Errorf("kapso API returned status: %s", resp.Status)
+		return fmt.Errorf("ultramsg API returned status: %s", resp.Status)
 	}
 
-	log.Printf("[WhatsApp] Successfully sent admin alert via Kapso to %s", cfg.AdminWhatsApp)
+	log.Printf("[WhatsApp] Successfully sent admin alert via UltraMsg to %s", cfg.AdminWhatsApp)
 	return nil
 }
