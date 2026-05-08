@@ -64,6 +64,8 @@ class BulkItemController extends Controller
         $batch_image = null;
         if ($request->hasFile('image')) {
             $batch_image = Helpers::upload('product/', 'png', $request->file('image'));
+        } else {
+            $batch_image = 'def.png'; // Imagen por defecto del sistema
         }
 
         foreach ($lines as $line) {
