@@ -482,6 +482,13 @@ trait PlaceNewOrder
                     }
                 }
 
+                // REGLA ESPECIAL SUPER TOOTLI: Grocery (Module 1) Gratis > $150
+                $eligibleAmountForGrocery = $product_price + $total_addon_price - $coupon_discount_amount - $store_discount_amount - $flash_sale_admin_discount_amount - $flash_sale_vendor_discount_amount;
+                if ($request->header('moduleId') == 1 && $eligibleAmountForGrocery >= 150) {
+                    $order->delivery_charge = 0;
+                    $free_delivery_by = 'admin';
+                }
+
                 if ($store->free_delivery) {
                     $order->delivery_charge = 0;
                     $free_delivery_by = 'vendor';
