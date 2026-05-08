@@ -63,7 +63,11 @@ class BulkItemController extends Controller
                     $item->add_ons = json_encode([]);
                     $item->attributes = json_encode([]);
                     $item->choice_options = json_encode([]);
-                    $item->unit_id = 1; // Default unit
+                    $item->images = json_encode([]); // FIX para el error del foreach
+                    $item->unit_id = 1; 
+                    $item->tax = 0;
+                    $item->discount = 0;
+                    $item->discount_type = 'amount';
                     
                     $item->save();
 
