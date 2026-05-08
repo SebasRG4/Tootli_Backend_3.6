@@ -89,7 +89,7 @@ func handleRecordLocation(w http.ResponseWriter, r *http.Request) {
 	// 2. Insert or Update into delivery_histories
 	// Replicating `DeliveryHistory::updateOrCreate` from Laravel
 	var history models.DeliveryHistory
-	res := config.DB.Where("delivery_man_id = ?", dm.ID).First(&history)
+	res := config.DB.Where("delivery_man_id = ?", dm.ID).Order("id desc").First(&history)
 
 	now := time.Now()
 

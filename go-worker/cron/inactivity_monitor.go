@@ -67,14 +67,45 @@ func processIdleDrivers(ctx context.Context) {
 
 		idleDuration := time.Since(*lastHistory.Time)
 
-		// Umbrales: 5 minutos para alerta, 10 para quitar orden
+		// Umbrales: 5 minutos para alerta, 10 para quitar orden o marcar desaparecido
 		if idleDuration >= 10*time.Minute {
-			log.Printf("[Cron] Order #%d: DM #%d inactivo por %v. Reasignando...\n", order.ID, *order.DeliveryManID, idleDuration)
-			unassignOrder(ctx, order)
+			isPickedUp := order.OrderStatus == "handover" || order.OrderStatus == "picked_up"
+
+			if isPickedUp {
+				log.Printf("[Cron] Order #%d: DM #%d inactivo por %v con pedido RECOGIDO. Marcando como desaparecido...\n", order.ID, *order.DeliveryManID, idleDuration)
+				markDriverMissing(ctx, order)
+			} else {
+				log.Printf("[Cron] Order #%d: DM #%d inactivo por %v. Reasignando...\n", order.ID, *order.DeliveryManID, idleDuration)
+				unassignOrder(ctx, order)
+			}
 		} else if idleDuration >= 5*time.Minute {
 			log.Printf("[Cron] Order #%d: DM #%d inactivo por %v. Enviando alerta...\n", order.ID, *order.DeliveryManID, idleDuration)
 			sendInactivityAlert(ctx, order)
 		}
+	}
+}
+
+func markDriverMissing(ctx context.Context, order models.Order) {
+	// 1. Cambiar estado a 'failed' (o similar) sin quitar el repartidor
+	// Usamos 'failed' para compatibilidad con el admin panel, pero mantenemos el DM asignado
+	// para que el admin sepa quién lo tiene.
+	updates := map[string]interface{}{
+		"order_status": "failed",
+		"updated_at":   time.Now(),
+	}
+
+	if err := config.DB.Model(&order).Updates(updates).Error; err != nil {
+		log.Printf("[Cron] Failed to mark Order #%d as driver missing: %v\n", order.ID, err)
+		return
+	}
+
+	// 2. Notificar al administrador vía Pusher/WebSocket
+	notifications.SendAdminInactivityAlert(order.ID, *order.DeliveryManID)
+
+	// 3. Notificar vía WhatsApp (Kapso)
+	if config.GlobalConfig != nil {
+		msg := fmt.Sprintf("⚠️ *ALERTA DE SEGURIDAD*\n\nEl repartidor #%d con el pedido #%d ha dejado de reportar ubicación después de recogerlo (RECOLECTADO).\n\nEstado del pedido: %s\nInactivo hace: +10 minutos.", *order.DeliveryManID, order.ID, order.OrderStatus)
+		notifications.SendWhatsAppAdminAlert(config.GlobalConfig, msg)
 	}
 }
 

@@ -44,3 +44,28 @@ func SendPusherDeliveryOffer(dmID uint, orderID uint) error {
 	log.Printf("[Pusher] Successfully sent OrderAssigned to %s", channel)
 	return nil
 }
+
+// SendAdminInactivityAlert notifies the admin panel about a driver who picked up an order but stopped moving
+func SendAdminInactivityAlert(orderID uint, dmID uint) error {
+	if PusherClient == nil {
+		return nil
+	}
+
+	channel := "admin-alerts"
+	data := map[string]interface{}{
+		"type":     "driver_missing",
+		"title":    "⚠️ Repartidor Desaparecido",
+		"body":     fmt.Sprintf("El repartidor #%d con el pedido #%d ha dejado de reportar ubicación después de recogerlo.", dmID, orderID),
+		"order_id": orderID,
+		"dm_id":    dmID,
+	}
+
+	err := PusherClient.Trigger(channel, "AdminAlert", data)
+	if err != nil {
+		log.Printf("[Pusher] Warning: Failed to send admin alert: %v", err)
+		return err
+	}
+
+	log.Printf("[Pusher] Successfully sent AdminAlert for missing DM #%d", dmID)
+	return nil
+}

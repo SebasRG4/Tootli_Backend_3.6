@@ -136,8 +136,35 @@ class Helpers
     public static function send_whatsapp($phone, $message)
     {
         $phone = str_replace(['+', ' ', '-'], '', $phone);
+
+        // 1. Intentar con KAPSO (Prioridad solicitada por el usuario)
+        $kapso_api_key = env('KAPSO_API_KEY');
+        $kapso_phone_id = env('KAPSO_PHONE_ID');
+
+        if ($kapso_api_key && $kapso_phone_id) {
+            try {
+                $response = Http::withHeaders([
+                    'X-API-Key' => $kapso_api_key,
+                    'Content-Type' => 'application/json',
+                ])->post("https://api.kapso.ai/meta/whatsapp/v24.0/{$kapso_phone_id}/messages", [
+                    'messaging_product' => 'whatsapp',
+                    'recipient_type' => 'individual',
+                    'to' => $phone,
+                    'type' => 'text',
+                    'text' => ['body' => $message]
+                ]);
+
+                if ($response->successful()) {
+                    \Log::info("Kapso WhatsApp Success: " . $response->body());
+                    return true;
+                }
+                \Log::error("Kapso WhatsApp Error: " . $response->body());
+            } catch (\Exception $e) {
+                \Log::error("Kapso WhatsApp Exception: " . $e->getMessage());
+            }
+        }
         
-        // 1. Intentar con UltraMsg (Credenciales proporcionadas por el usuario)
+        // 2. Fallback a UltraMsg (Anterior)
         $ultramsg_instance = 'instance173066';
         $ultramsg_token = 'kci7j2hudimjydqe';
         

@@ -25,11 +25,17 @@ type Config struct {
 
 	FirebaseSAPath string
 	InternalSecret string
+
+	// Kapso WhatsApp
+	KapsoAPIKey     string
+	KapsoPhoneID    string
+	AdminWhatsApp   string
 }
 
 // Global instances
 var DB *gorm.DB
 var Redis *redis.Client
+var GlobalConfig *Config
 var InternalSecret string
 
 // Load reads configuration from environment variables with sensible defaults
@@ -48,7 +54,12 @@ func Load() *Config {
 
 		FirebaseSAPath: getEnv("FIREBASE_CREDENTIALS", "firebase-service-account.json"),
 		InternalSecret: getEnv("INTERNAL_SECRET", "tootli_internal_secret_key"),
+
+		KapsoAPIKey:   getEnv("KAPSO_API_KEY", ""),
+		KapsoPhoneID:  getEnv("KAPSO_PHONE_ID", ""),
+		AdminWhatsApp: getEnv("ADMIN_WHATSAPP_NUMBER", "+527297706434"),
 	}
+	GlobalConfig = cfg
 	InternalSecret = cfg.InternalSecret
 	return cfg
 }
