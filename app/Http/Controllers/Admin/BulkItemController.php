@@ -54,8 +54,17 @@ class BulkItemController extends Controller
                     $item->category_ids = json_encode([['id' => $request->category_id, 'position' => 1]]);
                     $item->status = 1;
                     $item->is_approved = 1;
-                    $item->description = $name; // Default description
+                    $item->description = $name; 
                     $item->slug = Str::slug($name) . '-' . rand(100, 999);
+                    
+                    // Campos por defecto para evitar errores de count() o null
+                    $item->variations = json_encode([]);
+                    $item->food_variations = json_encode([]);
+                    $item->add_ons = json_encode([]);
+                    $item->attributes = json_encode([]);
+                    $item->choice_options = json_encode([]);
+                    $item->unit_id = 1; // Default unit
+                    
                     $item->save();
 
                     // Traducciones obligatorias
