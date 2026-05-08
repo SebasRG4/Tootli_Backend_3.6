@@ -83,7 +83,7 @@ class BulkItemController extends Controller
                     $item->store_id = $request->store_id;
                     $item->module_id = $module_id;
                     $item->category_id = $request->category_id;
-                    $item->category_ids = json_encode([['id' => $request->category_id, 'position' => 1]]);
+                    $item->category_ids = [['id' => $request->category_id, 'position' => 1]];
                     $item->status = 1;
                     $item->is_approved = 1;
                     $item->description = $name; 
@@ -97,14 +97,14 @@ class BulkItemController extends Controller
                     $item->image = $batch_image;
 
                     // Variaciones Masivas
-                    $item->food_variations = json_encode($common_variations);
+                    $item->food_variations = $common_variations;
                     
-                    // Otros campos técnicos
-                    $item->variations = json_encode([]);
-                    $item->add_ons = json_encode([]);
-                    $item->attributes = json_encode([]);
-                    $item->choice_options = json_encode([]);
-                    $item->images = json_encode([]);
+                    // Otros campos técnicos (USANDO ARRAYS DE PHP)
+                    $item->variations = [];
+                    $item->add_ons = [];
+                    $item->attributes = [];
+                    $item->choice_options = [];
+                    $item->images = [];
                     $item->unit_id = 1; 
                     $item->tax = 0;
                     $item->discount = 0;
