@@ -186,6 +186,11 @@
                             <i class="tio-publish"></i> {{translate('Actualización de Precios')}}
                         </a>
                     </div>
+                    <div>
+                        <a href="{{ route('admin.item.bulk-import-text') }}" class="btn btn--info font-regular">
+                            <i class="tio-add-circle"></i> Carga Rápida (Texto)
+                        </a>
+                    </div>
                 </div>
                 <!-- End Row -->
             </div>

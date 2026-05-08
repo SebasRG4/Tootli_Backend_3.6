@@ -546,6 +546,13 @@
                                             <span class="text-truncate text-capitalize">{{ translate('Actualización de Precios') }}</span>
                                         </a>
                                     </li>
+                                    <li class="nav-item {{ Request::is('admin/item/bulk-import-text') ? 'active' : '' }}">
+                                        <a class="nav-link " href="{{ route('admin.item.bulk-import-text') }}"
+                                            title="Carga Rápida (Texto)">
+                                            <span class="tio-circle nav-indicator-icon"></span>
+                                            <span class="text-truncate text-capitalize">Carga Rápida (Texto)</span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         @endif
