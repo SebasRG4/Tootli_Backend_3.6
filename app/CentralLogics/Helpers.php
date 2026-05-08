@@ -136,8 +136,8 @@ class Helpers
     public static function send_whatsapp($phone, $message)
     {
         // 1. UltraMsg (Proveedor Principal)
-        $ultramsg_instance = env('ULTRAMSG_INSTANCE', 'instance173998');
-        $ultramsg_token = env('ULTRAMSG_TOKEN', '31h6fqjt2xlkblkb');
+        $ultramsg_instance = config('services.ultramsg.instance');
+        $ultramsg_token = config('services.ultramsg.token');
         
         // UltraMsg prefiere formato internacional (con o sin +), lo normalizamos a con +
         $clean_phone = str_replace([' ', '-'], '', $phone);

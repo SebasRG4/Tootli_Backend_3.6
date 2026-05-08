@@ -65,6 +65,11 @@ return [
         'url' => rtrim(env('GO_WORKER_URL', 'http://127.0.0.1:8080'), '/'),
     ],
 
+    'ultramsg' => [
+        'instance' => env('ULTRAMSG_INSTANCE', 'instance173998'),
+        'token'    => env('ULTRAMSG_TOKEN', '31h6fqjt2xlkblkb'),
+    ],
+
     /*
     | Mapbox Directions (driving-traffic): distancia por ruta y duración con tráfico
     | para cotización POS / Tootli Direct. Sin token se usa línea recta (Haversine).
