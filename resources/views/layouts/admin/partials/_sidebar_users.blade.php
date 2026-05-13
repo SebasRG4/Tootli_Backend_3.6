@@ -357,6 +357,22 @@
                             </a>
                         </li>
 
+                        <!-- Interest Tracking -->
+                        <li class="nav-item">
+                            <small class="nav-subtitle" title="Interés de Usuarios">Interés de Usuarios</small>
+                            <small class="tio-more-horizontal nav-subtitle-replacer"></small>
+                        </li>
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/interest-track*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                href="{{ route('admin.interest-track.list') }}"
+                                title="Módulos Próximos">
+                                <i class="tio-chart-bar-4 nav-icon"></i>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                    Seguimiento de Interés
+                                </span>
+                            </a>
+                        </li>
+
                     @endif
                     <!-- End customer Section -->
 
