@@ -1006,11 +1006,11 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::delete('clear/stores', 'System\\CacheController@clearStores')->name('clear.stores');
                 Route::delete('clear/zone/{zoneId}', 'System\\CacheController@clearZone')->name('clear.zone');
             });
+        });
 
-            Route::group(['prefix' => 'interest-track', 'as' => 'interest-track.'], function () {
-                Route::get('list', 'InterestTrackController@list')->name('list');
-                Route::delete('delete/{id}', 'InterestTrackController@delete')->name('delete');
-            });
+        Route::group(['prefix' => 'interest-track', 'as' => 'interest-track.'], function () {
+            Route::get('list', 'InterestTrackController@list')->name('list');
+            Route::delete('delete/{id}', 'InterestTrackController@delete')->name('delete');
         });
     });
 });
