@@ -85,7 +85,7 @@
                                                 onclick="form_alert('interest-{{$track['id']}}','¿Desea eliminar este registro?')" title="Eliminar">
                                                 <i class="tio-delete-outlined"></i>
                                             </a>
-                                            <form action="{{route('admin.users.interest-track.delete',[$track['id']])}}"
+                                            <form action="{{route('admin.interest-track.delete',[$track['id']])}}"
                                                     method="post" id="interest-{{$track['id']}}">
                                                 @csrf @method('delete')
                                             </form>
