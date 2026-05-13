@@ -49,6 +49,11 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         //dashboard
         Route::get('/', 'DashboardController@dashboard')->name('dashboard');
 
+        Route::group(['prefix' => 'interest-track', 'as' => 'interest-track.'], function () {
+            Route::get('list', 'InterestTrackController@list')->name('list');
+            Route::delete('delete/{id}', 'InterestTrackController@delete')->name('delete');
+        });
+
         Route::get('maintenance-mode', 'SystemController@maintenance_mode')->name('maintenance-mode');
         Route::get('landing-page', 'SystemController@landing_page')->name('landing-page');
 
@@ -1008,9 +1013,5 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             });
         });
 
-        Route::group(['prefix' => 'interest-track', 'as' => 'interest-track.'], function () {
-            Route::get('list', 'InterestTrackController@list')->name('list');
-            Route::delete('delete/{id}', 'InterestTrackController@delete')->name('delete');
-        });
     });
 });
