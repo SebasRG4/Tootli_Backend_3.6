@@ -951,10 +951,14 @@
                                     <dt class="col-6 color-8a8a8a fs-12">{{ translate('messages.delivery_man_tips') }}</dt>
                                     <dd class="col-6 text-dark fs-14">
                                         + {{ \App\CentralLogics\Helpers::format_currency($deliverman_tips) }}</dd>
-                                    <dt class="col-6 color-8a8a8a fs-12">{{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??\App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge') }}</dt>
+                                    @if($order->additional_charge == 15)
+                                         <dt class="col-6 color-8a8a8a fs-12">{{ translate('Cargo multi tienda') }}</dt>
+                                     @else
+                                         <dt class="col-6 color-8a8a8a fs-12">{{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge') }}</dt>
+                                     @endif
 
-                                    <dd class="col-6 text-dark fs-14">
-                                        + {{ \App\CentralLogics\Helpers::format_currency($additional_charge) }}</dd>
+                                     <dd class="col-6 text-dark fs-14">
+                                         + {{ \App\CentralLogics\Helpers::format_currency($order->additional_charge) }}</dd>
 
                                     @if ($extra_packaging_amount > 0)
                                         <dt class="col-6 color-8a8a8a fs-12">{{ translate('messages.Extra_Packaging_Amount') }}:</dt>

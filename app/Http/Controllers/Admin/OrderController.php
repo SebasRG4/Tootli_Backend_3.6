@@ -1554,12 +1554,34 @@ class OrderController extends Controller
         $additional_charge_status = $settings['additional_charge_status'] ?? null;
         $additional_charge = $settings['additional_charge'] ?? null;
 
-        $order->additional_charge = 0;
+        // Multi-store logic for additional charge
+        $store_ids = [];
+        $grocery_subtotal = 0;
+        foreach ($cart as $c) {
+            if ($c['status'] == true) {
+                if (isset($c['item_campaign_id']) && $c['item_campaign_id'] != null) {
+                    $item = \App\Models\ItemCampaign::withoutGlobalScope(StoreScope::class)->find($c['item_campaign_id']);
+                } else {
+                    $item = Item::withoutGlobalScope(StoreScope::class)->find($c['item_id']);
+                }
 
-        if ($additional_charge_status == 1) {
-            $order->additional_charge = $additional_charge ?? 0;
-            // $additionalCharges['tax_on_additional_charge'] = $order->additional_charge;
+                if ($item) {
+                    $store_ids[] = $item->store_id;
+                    if ($item->module_id == 1) {
+                        $grocery_subtotal += $c['price'] * $c['quantity'];
+                    }
+                }
+            }
         }
+        $is_multi_store = count(array_unique($store_ids)) > 1;
+
+        $order->additional_charge = 0;
+        if ($is_multi_store) {
+            $order->additional_charge = 15.0;
+        } elseif ($additional_charge_status == 1) {
+            $order->additional_charge = $additional_charge ?? 0;
+        }
+
         $order_details = $this->makeEditOrderDetails($cart, null, $store);
 
         foreach ($order_details['order_details'] as $key => $order_de) {
@@ -1615,10 +1637,12 @@ class OrderController extends Controller
 
         $free_delivery_over = BusinessSetting::where('key', 'free_delivery_over')->first()->value;
         if (isset($free_delivery_over)) {
-            if ($free_delivery_over <= $product_price + $total_addon_price - $coupon_discount_amount - $store_discount_amount) {
+            // Updated logic: free delivery only if Grocery subtotal > threshold
+            if ($grocery_subtotal >= 150) {
                 $order->delivery_charge = 0;
             }
         }
+
 
 
         $total_order_ammount = $total_price + $total_tax_amount + $order->delivery_charge + $order->additional_charge;

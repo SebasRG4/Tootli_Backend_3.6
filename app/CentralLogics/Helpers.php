@@ -162,42 +162,8 @@ class Helpers
             \Log::error("UltraMsg WhatsApp Exception: " . $e->getMessage());
         }
 
-        // 2. Fallback a LabsMobile (Solo si UltraMsg falla)
-        $sms_config = DB::table('addon_settings')->where('settings_type', 'sms_config')->where('key_name', 'labsmobile')->first();
-        if (!$sms_config) {
-            $sms_config = DB::table('business_settings')->where('key', 'labsmobile')->first();
-        }
-
-        if ($sms_config) {
-            $config = json_decode($sms_config->live_values ?? $sms_config->value, true);
-            if (isset($config['status']) && (int)$config['status'] == 1) {
-                $username = $config['username'];
-                $token = $config['token'];
-                $auth = base64_encode($username . ':' . $token);
-
-                try {
-                    $response = Http::withHeaders([
-                        'Authorization' => 'Basic ' . $auth,
-                        'Content-Type' => 'application/json',
-                    ])->post('https://api.labsmobile.com/json/send', [
-                        'message' => $message,
-                        'platform' => 'whatsapp',
-                        'recipient' => [['msisdn' => $phone]],
-                    ]);
-
-                    if ($response->successful()) {
-                        \Log::info("LabsMobile WhatsApp Success Response: " . $response->body());
-                        return true;
-                    }
-                    \Log::error("LabsMobile WhatsApp Error: " . $response->body());
-                } catch (\Exception $e) {
-                    \Log::error("LabsMobile WhatsApp Exception: " . $e->getMessage());
-                }
-            }
-        }
-
         // Fallback: Log para debugear
-        \Log::info("WhatsApp falló en todos los proveedores para {$phone}: {$message}");
+        \Log::info("WhatsApp falló en UltraMsg para {$phone}: {$message}");
         return true;
     }
 
