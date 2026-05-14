@@ -767,14 +767,80 @@ trait PlaceNewOrder
                 $this->createCashBackHistory($order->order_amount, $order->user_id, $order->id);
             }
 
+            // --- TOOTLI MULTI-STORE SPLIT ---
+            $groups = collect($order_details)->groupBy('store_id');
+            $originalTotalToReturn = $order->order_amount;
+            if ($groups->count() > 1 && $request->order_type !== 'parcel') {
+                $mainStoreId = (int)$order->store_id;
+                $originalDeliveryCharge = $order->delivery_charge;
+                
+                // 1. Recalcular montos del pedido principal
+                $mainItemsTotal = 0;
+                $mainTaxTotal = 0;
+                foreach ($groups[$mainStoreId] as $item) {
+                    $mainItemsTotal += (($item['price'] * $item['quantity']) + $item['total_add_on_price']) - ($item['discount_on_item'] * $item['quantity']);
+                    $mainTaxTotal += ($item['tax_amount'] ?? 0);
+                }
+                
+                // El primer pedido se queda con la base (menos los extras multi-tienda de $15)
+                $order->delivery_charge = max(0, $originalDeliveryCharge - ($groups->count() - 1) * 15);
+                $order->total_tax_amount = round($mainTaxTotal, config('round_up_to_digit'));
+                $order->order_amount = round($mainItemsTotal + $order->total_tax_amount + $order->delivery_charge + $order->dm_tips + $order->additional_charge + $order->extra_packaging_amount - $order->coupon_discount_amount - $order->ref_bonus_amount, config('round_up_to_digit'));
+                $order->save();
+                
+                // 2. Crear pedidos secundarios
+                foreach ($groups as $sId => $details) {
+                    if ((int)$sId === $mainStoreId) continue;
+                    
+                    $subOrder = $order->replicate();
+                    $lastSubId = Order::max('id') ?? 99999;
+                    $subOrder->id = $lastSubId + 1;
+                    $subOrder->store_id = $sId;
+                    $subOrder->delivery_charge = 15.0; // Tarifa multi-tienda para este tramo
+                    
+                    // Resetear cargos únicos que ya están en el principal
+                    $subOrder->dm_tips = 0;
+                    $subOrder->additional_charge = 0;
+                    $subOrder->extra_packaging_amount = 0;
+                    $subOrder->coupon_discount_amount = 0;
+                    $subOrder->ref_bonus_amount = 0;
+                    
+                    $subItemsTotal = 0;
+                    $subTaxTotal = 0;
+                    foreach ($details as $item) {
+                        $subItemsTotal += (($item['price'] * $item['quantity']) + $item['total_add_on_price']) - ($item['discount_on_item'] * $item['quantity']);
+                        $subTaxTotal += ($item['tax_amount'] ?? 0);
+                    }
+                    $subOrder->total_tax_amount = round($subTaxTotal, config('round_up_to_digit'));
+                    $subOrder->order_amount = round($subItemsTotal + $subOrder->total_tax_amount + $subOrder->delivery_charge, config('round_up_to_digit'));
+                    $subOrder->save();
+                    
+                    // Re-vincular detalles
+                    OrderDetail::where('order_id', $order->id)->where('store_id', $sId)->update(['order_id' => $subOrder->id]);
+                    
+                    // Incrementar órdenes de la tienda secundaria
+                    Store::where('id', $sId)->increment('total_order');
+                    
+                    // Agregar a una lista para notificar después
+                    if (!isset($extra_orders)) $extra_orders = [];
+                    $extra_orders[] = $subOrder;
+                }
+            }
+
             DB::commit();
 
             $this->sentOrderPlaceNotification($request, $order, $store);
+            if (isset($extra_orders)) {
+                foreach ($extra_orders as $sub) {
+                    $subStore = Store::find($sub->store_id);
+                    $this->sentOrderPlaceNotification($request, $sub, $subStore);
+                }
+            }
 
             $responseData = [
                 'message' => translate('messages.order_placed_successfully'),
                 'order_id' => $order->id,
-                'total_ammount' => $order->order_amount,
+                'total_amount' => $originalTotalToReturn,
                 'status' => $order->order_status,
                 'created_at' => $order->created_at,
                 'user_id' => (int) $order->user_id,
@@ -1395,7 +1461,7 @@ trait PlaceNewOrder
 
                     'total_add_on_price' => round($addon_data['total_add_on_price'], config('round_up_to_digit')),
                     'addon_discount' => 0,
-
+                    'store_id' => (int) $product->store_id,
                     'created_at' => now(),
                     'updated_at' => now()
                 ];
