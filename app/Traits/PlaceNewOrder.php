@@ -512,16 +512,13 @@ trait PlaceNewOrder
                     $is_prescription === false
                     && $request->order_type === 'delivery'
                     && $storeCountForMultiFee > 1
-                    && Helpers::parseBusinessSettingBool($businessSettings['multi_store_delivery_extra_status'] ?? null)
                 ) {
-                    $perStore = Helpers::parseBusinessSettingFloat($businessSettings['multi_store_delivery_extra_amount'] ?? null);
-                    if ($perStore > 0) {
-                        $multiStoreDeliveryExtra = ($storeCountForMultiFee - 1) * $perStore;
-                    }
+                    $multiStoreDeliveryExtra = 15.0; // Tarifa plana multi-tienda
                 }
                 if ($multiStoreDeliveryExtra > 0) {
                     $order->delivery_charge = round((float) $order->delivery_charge + $multiStoreDeliveryExtra, config('round_up_to_digit'));
                     $order->original_delivery_charge = round((float) $order->original_delivery_charge + $multiStoreDeliveryExtra, config('round_up_to_digit'));
+                    $order->order_note = ($order->order_note ? $order->order_note . " | " : "") . "Tarifa de multitienda: $15";
                 }
 
                 $order->coupon_created_by = $coupon_created_by;
