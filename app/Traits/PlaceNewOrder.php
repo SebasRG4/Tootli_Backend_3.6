@@ -774,6 +774,11 @@ trait PlaceNewOrder
                 $mainStoreId = (int)$order->store_id;
                 $originalDeliveryCharge = $order->delivery_charge;
                 
+                // Link orders with a shared reference (especially for COD)
+                if (empty($order->transaction_reference)) {
+                    $order->transaction_reference = 'GRP-' . strtoupper(Str::random(10));
+                }
+
                 // 1. Recalcular montos del pedido principal
                 $mainItemsTotal = 0;
                 $mainTaxTotal = 0;
@@ -784,6 +789,7 @@ trait PlaceNewOrder
                 
                 // El primer pedido se queda con la base (menos los extras multi-tienda de $15)
                 $order->delivery_charge = max(0, $originalDeliveryCharge - ($groups->count() - 1) * 15);
+                $order->original_delivery_charge = $order->delivery_charge;
                 $order->total_tax_amount = round($mainTaxTotal, config('round_up_to_digit'));
                 $order->order_amount = round($mainItemsTotal + $order->total_tax_amount + $order->delivery_charge + $order->dm_tips + $order->additional_charge + $order->extra_packaging_amount - $order->coupon_discount_amount - $order->ref_bonus_amount, config('round_up_to_digit'));
                 $order->save();
@@ -797,6 +803,7 @@ trait PlaceNewOrder
                     $subOrder->id = $lastSubId + 1;
                     $subOrder->store_id = $sId;
                     $subOrder->delivery_charge = 15.0; // Tarifa multi-tienda para este tramo
+                    $subOrder->original_delivery_charge = 15.0;
                     
                     // Resetear cargos únicos que ya están en el principal
                     $subOrder->dm_tips = 0;

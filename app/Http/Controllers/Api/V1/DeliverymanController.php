@@ -820,6 +820,22 @@ class DeliverymanController extends Controller
             $dm->current_orders = $dm->current_orders + 1;
             $dm->save();
 
+            // --- TOOTLI AUTO-ACCEPT SIBLINGS ---
+            if ($order->transaction_reference) {
+                $siblings = Order::where('transaction_reference', $order->transaction_reference)
+                    ->whereNull('delivery_man_id')
+                    ->where('id', '!=', $order->id)
+                    ->get();
+                foreach ($siblings as $sib) {
+                    $sib->delivery_man_id = $dm->id;
+                    $sib->order_status = 'accepted';
+                    $sib->accepted = now();
+                    $sib->save();
+                    $dm->increment('assigned_order_count');
+                    $dm->increment('current_orders');
+                }
+            }
+
             $dm->increment('assigned_order_count');
 
             $fcm_token = $order->is_guest == 0 ? $order?->customer?->cm_firebase_token : $order?->guest?->fcm_token;
