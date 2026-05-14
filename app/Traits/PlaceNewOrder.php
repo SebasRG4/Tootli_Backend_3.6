@@ -484,8 +484,16 @@ trait PlaceNewOrder
                 }
 
                 // REGLA ESPECIAL SUPER TOOTLI: Grocery (Module 1) Gratis > $150
-                $eligibleAmountForGrocery = $product_price + $total_addon_price - $coupon_discount_amount - $store_discount_amount - $flash_sale_admin_discount_amount - $flash_sale_vendor_discount_amount;
-                if ($activeModuleId == 1 && $eligibleAmountForGrocery >= 150) {
+                // Solo si la suma de los productos de Grocery supera $150 (sin contar otros módulos)
+                $grocerySubtotal = 0;
+                foreach ($order_details as $detail) {
+                    $item = \App\Models\Item::find($detail['item_id']);
+                    if ($item && $item->module_id == 1) {
+                        $grocerySubtotal += ($detail['price'] * $detail['quantity']) + $detail['total_add_on_price'] - ($detail['discount_on_item'] * $detail['quantity']);
+                    }
+                }
+
+                if ($grocerySubtotal >= 150) {
                     $order->delivery_charge = 0;
                     $free_delivery_by = 'admin';
                 }
