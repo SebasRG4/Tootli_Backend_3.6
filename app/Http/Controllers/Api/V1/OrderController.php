@@ -191,6 +191,35 @@ class OrderController extends Controller
         ], 404);
     }
 
+    public function get_grouped_orders(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'transaction_reference' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $user_id = $request?->user?->id;
+
+        $orders = Order::with(['store', 'delivery_man.rating', 'parcel_category', 'refund', 'payments', 'details'])
+            ->where('transaction_reference', $request['transaction_reference'])
+            ->when($request->user, function ($query) use ($user_id) {
+                return $query->where('user_id', $user_id)->where('is_guest', 0);
+            })
+            ->get();
+
+        foreach ($orders as $order) {
+            $order['store'] = $order['store'] ? Helpers::store_data_formatting($order['store']) : $order['store'];
+            $order['delivery_address'] = $order['delivery_address'] ? json_decode($order['delivery_address']) : $order['delivery_address'];
+            $order['delivery_man'] = $order['delivery_man'] ? Helpers::deliverymen_data_formatting([$order['delivery_man']]) : $order['delivery_man'];
+            $order['details'] = Helpers::order_details_data_formatting($order['details']);
+        }
+
+        return response()->json($orders, 200);
+    }
+
     public function cancel_order(Request $request)
     {
         $validator = Validator::make($request->all(), [

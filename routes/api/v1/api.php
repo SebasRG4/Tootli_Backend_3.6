@@ -437,6 +437,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
                 Route::get('list', 'OrderController@get_order_list');
                 Route::get('running-orders', 'OrderController@get_running_orders');
                 Route::get('details', 'OrderController@get_order_details');
+                Route::get('grouped-details', 'OrderController@get_grouped_orders');
                 Route::post('place', 'OrderController@place_order');
                 Route::post('get-Tax', 'OrderController@getTaxFromCart');
                 Route::post('prescription/place', 'OrderController@prescription_place_order');
