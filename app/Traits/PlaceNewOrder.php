@@ -717,7 +717,12 @@ trait PlaceNewOrder
                     }
                 }
 
-                OrderDetail::insert($order_details);
+                $clean_order_details = array_map(function($item) {
+                    $new_item = $item;
+                    unset($new_item['store_id']);
+                    return $new_item;
+                }, $order_details);
+                OrderDetail::insert($clean_order_details);
 
                 if (count($product_data) > 0) {
                     foreach ($product_data as $item) {
@@ -822,8 +827,9 @@ trait PlaceNewOrder
                     $subOrder->order_amount = round($subItemsTotal + $subOrder->total_tax_amount + $subOrder->delivery_charge, config('round_up_to_digit'));
                     $subOrder->save();
                     
-                    // Re-vincular detalles
-                    OrderDetail::where('order_id', $order->id)->where('store_id', $sId)->update(['order_id' => $subOrder->id]);
+                    // Re-vincular detalles usando los item_id de este grupo
+                    $itemIdsToMove = collect($details)->pluck('item_id')->toArray();
+                    OrderDetail::where('order_id', $order->id)->whereIn('item_id', $itemIdsToMove)->update(['order_id' => $subOrder->id]);
                     
                     // Incrementar órdenes de la tienda secundaria
                     Store::where('id', $sId)->increment('total_order');
