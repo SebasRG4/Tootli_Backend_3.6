@@ -175,9 +175,10 @@ trait PlaceNewOrder
                 }
             }
 
-            $module_wise_delivery_charge = $zone->modules()->where('modules.id', $request->header('moduleId'))->first();
+            $activeModuleId = $request->header('moduleId') ?? ($store ? $store->module_id : null);
+            $module_wise_delivery_charge = $zone->modules()->where('modules.id', $activeModuleId)->first();
 
-            $deliveryChargeData = $this->getDeliveryCharge($request, $zone, $store, $module_wise_delivery_charge, $delivery_charge, $request->header('moduleId'));
+            $deliveryChargeData = $this->getDeliveryCharge($request, $zone, $store, $module_wise_delivery_charge, $delivery_charge, $activeModuleId);
 
             $delivery_charge = data_get($deliveryChargeData, 'delivery_charge', 0);
             $original_delivery_charge = data_get($deliveryChargeData, 'original_delivery_charge', 0);
@@ -244,7 +245,7 @@ trait PlaceNewOrder
             $order->otp = rand(1000, 9999);
             $zone_ids = json_decode($request->header('zoneId'), true);
             $order->zone_id = isset($zone) ? $zone->id : end($zone_ids);
-            $order->module_id = $request->header('moduleId');
+            $order->module_id = $activeModuleId;
             $order->parcel_category_id = $request->parcel_category_id;
             $order->parcel_pickup_at = $request->parcel_pickup_at;
             $order->parcel_delivery_at = $request->parcel_delivery_at;
@@ -330,7 +331,7 @@ trait PlaceNewOrder
                 $totalsByStore = [];
                 if ($is_prescription === false) {
 
-                    $carts = Cart::where('user_id', $order->user_id)->where('is_guest', $order->is_guest)->where('module_id', $request->header('moduleId'))
+                    $carts = Cart::where('user_id', $order->user_id)->where('is_guest', $order->is_guest)
                         ->when(isset($request->is_buy_now) && $request->is_buy_now == 1 && $request->cart_id, function ($query) use ($request) {
                             return $query->where('id', $request->cart_id);
                         })
@@ -484,7 +485,7 @@ trait PlaceNewOrder
 
                 // REGLA ESPECIAL SUPER TOOTLI: Grocery (Module 1) Gratis > $150
                 $eligibleAmountForGrocery = $product_price + $total_addon_price - $coupon_discount_amount - $store_discount_amount - $flash_sale_admin_discount_amount - $flash_sale_vendor_discount_amount;
-                if ($request->header('moduleId') == 1 && $eligibleAmountForGrocery >= 150) {
+                if ($activeModuleId == 1 && $eligibleAmountForGrocery >= 150) {
                     $order->delivery_charge = 0;
                     $free_delivery_by = 'admin';
                 }

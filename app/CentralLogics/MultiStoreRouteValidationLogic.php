@@ -24,7 +24,6 @@ class MultiStoreRouteValidationLogic
         $carts = Cart::with('item')
             ->where('user_id', $userId)
             ->where('is_guest', $isGuest)
-            ->where('module_id', $moduleId)
             ->get();
 
         $ids = [];
