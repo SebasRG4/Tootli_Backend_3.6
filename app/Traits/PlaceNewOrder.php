@@ -807,7 +807,9 @@ trait PlaceNewOrder
                     $subOrder = $order->replicate();
                     $lastSubId = Order::max('id') ?? 99999;
                     $subOrder->id = $lastSubId + 1;
+                    $subStoreModel = Store::find($sId);
                     $subOrder->store_id = $sId;
+                    $subOrder->module_id = $subStoreModel->module_id;
                     $subOrder->delivery_charge = 15.0; // Tarifa multi-tienda para este tramo
                     $subOrder->original_delivery_charge = 15.0;
                     
