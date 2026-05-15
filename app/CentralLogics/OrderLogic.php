@@ -152,7 +152,7 @@ class OrderLogic
                 $comission_on_actual_delivery_fee = 0;
             } else {
 
-                $comission_on_actual_delivery_fee = ($order->delivery_charge > 0) ? $comission_on_delivery : 0;
+                $comission_on_actual_delivery_fee = ($order->original_delivery_charge > 0) ? $comission_on_delivery : 0;
             }
 
             if ($order->free_delivery_by == 'admin') {
