@@ -2285,8 +2285,8 @@ class Helpers
             ) {
 
                 $data = [
-                    'title' => 'Notificación de Pedido',
-                    'description' => 'Nuevo pedido recibido, confirme para proceder',
+                    'title' => 'Nueva solicitud de pedido',
+                    'description' => 'Porfavor acepta el pedido para que no te lo ganen',
                     'order_id' => $order->id,
                     'image' => '',
                     'module_id' => $order->module_id,
@@ -2356,8 +2356,8 @@ class Helpers
             if ($order->order_type == 'delivery' && !$order->scheduled && $status == 'pending' && $order->payment_method == 'cash_on_delivery' && config('order_confirmation_model') == 'deliveryman') {
                 if ($order->store->sub_self_delivery && $push_notification_status) {
                     $data = [
-                        'title' => 'Notificación de Pedido',
-                        'description' => 'Nuevo pedido recibido, confirme para proceder',
+                        'title' => 'Nueva solicitud de pedido',
+                        'description' => 'Porfavor acepta el pedido para que no te lo ganen',
                         'order_id' => $order->id,
                         'module_id' => $order->module_id,
                         'order_type' => $order->order_type,
@@ -2382,8 +2382,8 @@ class Helpers
                     }
                 } else {
                     $data = [
-                        'title' => 'Notificación de Pedido',
-                        'description' => 'Nuevo pedido recibido, confirme para proceder',
+                        'title' => 'Nueva solicitud de pedido',
+                        'description' => 'Porfavor acepta el pedido para que no te lo ganen',
                         'order_id' => $order->id,
                         'module_id' => $order->module_id,
                         'order_type' => $order->order_type,
@@ -2424,8 +2424,8 @@ class Helpers
 
             if ($order->order_type == 'parcel' && in_array($order->order_status, ['pending', 'confirmed'])) {
                 $data = [
-                    'title' => 'Notificación de Pedido',
-                    'description' => 'Nuevo pedido recibido, confirme para proceder',
+                    'title' => 'Nueva solicitud de pedido',
+                    'description' => 'Porfavor acepta el pedido para que no te lo ganen',
                     'order_id' => $order->id,
                     'module_id' => $order->module_id,
                     'order_type' => 'parcel_order',
@@ -2445,8 +2445,8 @@ class Helpers
 
             if ($order->order_type == 'delivery' && !$order->scheduled && $order->order_status == 'pending' && in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true) && config('order_confirmation_model') == 'store') {
                 $data = [
-                    'title' => 'Notificación de Pedido',
-                    'description' => 'Nuevo pedido recibido, confirme para proceder',
+                    'title' => 'Nueva solicitud de pedido',
+                    'description' => 'Porfavor acepta el pedido para que no te lo ganen',
                     'order_id' => $order->id,
                     'module_id' => $order->module_id,
                     'order_type' => $order->order_type,
@@ -2474,8 +2474,8 @@ class Helpers
 
             if (!$order->scheduled && ((in_array($order->order_type, ['take_away', 'dine_in'], true) && $order->order_status == 'pending') || (!in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true) && $order->order_status == 'confirmed'))) {
                 $data = [
-                    'title' => 'Notificación de Pedido',
-                    'description' => 'Nuevo pedido recibido, confirme para proceder',
+                    'title' => 'Nueva solicitud de pedido',
+                    'description' => 'Porfavor acepta el pedido para que no te lo ganen',
                     'order_id' => $order->id,
                     'image' => '',
                     'type' => 'new_order',
@@ -2501,8 +2501,8 @@ class Helpers
             if ($order->order_status == 'confirmed' && !in_array($order->order_type, ['take_away', 'dine_in'], true) && config('order_confirmation_model') == 'deliveryman' && in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true)) {
                 if ($order->store->sub_self_delivery && $push_notification_status) {
                     $data = [
-                        'title' => 'Notificación de Pedido',
-                        'description' => 'Nuevo pedido recibido, confirme para proceder',
+                        'title' => 'Nueva solicitud de pedido',
+                        'description' => 'Porfavor acepta el pedido para que no te lo ganen',
                         'order_id' => $order->id,
                         'module_id' => $order->module_id,
                         'order_type' => $order->order_type,
@@ -2515,8 +2515,8 @@ class Helpers
                     }
                 } else {
                     $data = [
-                        'title' => 'Notificación de Pedido',
-                        'description' => 'Nuevo pedido recibido, confirme para proceder',
+                        'title' => 'Nueva solicitud de pedido',
+                        'description' => 'Porfavor acepta el pedido para que no te lo ganen',
                         'order_id' => $order->id,
                         'module_id' => $order->module_id,
                         'order_type' => $order->order_type,
