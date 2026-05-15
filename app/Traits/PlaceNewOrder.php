@@ -794,8 +794,16 @@ trait PlaceNewOrder
                 }
                 
                 // El primer pedido se queda con la base (menos los extras multi-tienda de $15)
-                $order->delivery_charge = max(0, $originalDeliveryCharge - ($groups->count() - 1) * 15);
-                $order->original_delivery_charge = $order->delivery_charge;
+                $originalBaseDeliveryCharge = $order->original_delivery_charge;
+                $order->original_delivery_charge = max(0, $originalBaseDeliveryCharge - ($groups->count() - 1) * 15);
+                
+                // El delivery_charge real (lo que paga el cliente) se ajusta proporcionalmente
+                if ($order->delivery_charge > 0) {
+                    $order->delivery_charge = max(0, $order->delivery_charge - ($groups->count() - 1) * 15);
+                } else {
+                    $order->delivery_charge = 0;
+                }
+
                 $order->total_tax_amount = round($mainTaxTotal, config('round_up_to_digit'));
                 $order->order_amount = round($mainItemsTotal + $order->total_tax_amount + $order->delivery_charge + $order->dm_tips + $order->additional_charge + $order->extra_packaging_amount - $order->coupon_discount_amount - $order->ref_bonus_amount, config('round_up_to_digit'));
                 $order->save();
@@ -810,8 +818,11 @@ trait PlaceNewOrder
                     $subStoreModel = Store::find($sId);
                     $subOrder->store_id = $sId;
                     $subOrder->module_id = $subStoreModel->module_id;
-                    $subOrder->delivery_charge = 15.0; // Tarifa multi-tienda para este tramo
+                    
+                    // Tarifa multi-tienda para este tramo: siempre $15 de base original
                     $subOrder->original_delivery_charge = 15.0;
+                    // Pero lo que paga el cliente depende de si el pedido principal tiene envío gratis
+                    $subOrder->delivery_charge = ($originalDeliveryCharge > 0) ? 15.0 : 0;
                     
                     // Resetear cargos únicos que ya están en el principal
                     $subOrder->dm_tips = 0;
