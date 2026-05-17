@@ -432,7 +432,7 @@
                             <div class="p-20 mb-3">
                                 <div class="card-body">
                                     <div class="mb-3">
-                                        <h4 class="fs-5 mb-2">{{ 'Información Fiscal' }}</h4>
+                                        <h4 class="fs-5 mb-2">{{ 'Información Fiscal' }} <span class="text-danger" style="font-size: 0.8em; font-weight: bold;">(OPCIONAL)</span></h4>
                                         {{-- <p class="fz-12px mb-0">{{translate('Lorem ipsum dolor sit amet, consectetur adipiscing elit.')}}</p> --}}
                                     </div>
                                     <div class="row g-3">
