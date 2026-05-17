@@ -66,19 +66,19 @@
                     </a>
                     <ul class="menu">
                         <li>
-                            <a href="#home" class="nav-link-custom"><span>{{ translate('messages.home') }}</span></a>
+                            <a href="#home" class="nav-link-custom"><span>Inicio</span></a>
                         </li>
                         <li>
-                            <a href="#beneficios" class="nav-link-custom"><span>{{ translate('messages.benefits') }}</span></a>
+                            <a href="#beneficios" class="nav-link-custom"><span>Beneficios</span></a>
                         </li>
                         <li>
-                            <a href="#categorias" class="nav-link-custom"><span>{{ translate('messages.categories') }}</span></a>
+                            <a href="#categorias" class="nav-link-custom"><span>Categorías</span></a>
                         </li>
                         <li>
-                            <a href="#aliados" class="nav-link-custom"><span>{{ translate('messages.partners') }}</span></a>
+                            <a href="#aliados" class="nav-link-custom"><span>Aliados</span></a>
                         </li>
                         <li>
-                            <a href="{{route('about-us')}}" class="nav-link-custom"><span>{{ translate('messages.about_us') }}</span></a>
+                            <a href="{{route('about-us')}}" class="nav-link-custom"><span>Acerca de Nosotros</span></a>
                         </li>
                     </ul>
                     <div class="nav-toggle d-lg-none ms-auto me-3">
@@ -91,31 +91,8 @@
                     @if ($lang)
                         <div class="dropdown--btn-hover position-relative">
                             <a class="dropdown--btn border-0 px-3 header--btn text-capitalize d-flex align-items-center" href="javascript:void(0)">
-                                @foreach($lang as $data)
-                                @if($data['code']==$local)
-                                    <span class="me-1">{{$data['code']}}</span>
-                                @elseif(!$local &&  $data['default'] == true)
-                                    <span class="me-1">{{$data['code']}}</span>
-                                @endif
-                                @endforeach
-                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M7.24701 11.14L2.45101 5.658C1.88501 5.013 2.34501 4 3.20401 4H12.796C12.9883 3.99984 13.1765 4.05509 13.3381 4.15914C13.4998 4.26319 13.628 4.41164 13.7075 4.58669C13.7869 4.76175 13.8142 4.956 13.7861 5.14618C13.758 5.33636 13.6757 5.51441 13.549 5.659L8.75301 11.139C8.65915 11.2464 8.5434 11.3325 8.41352 11.3915C8.28364 11.4505 8.14265 11.481 8.00001 11.481C7.85737 11.481 7.71638 11.4505 7.5865 11.3915C7.45663 11.3325 7.34087 11.2464 7.24701 11.139V11.14Z" fill="rgba(0,0,0,0.5)"/>
-                                </svg>
+                                <span class="me-1">ES</span>
                             </a>
-                            <ul class="dropdown-list py-0" style="min-width:120px; top:100%">
-                                @foreach($lang as $key =>$data)
-                                @if($data['status']==1)
-                                    <li class="py-0">
-                                        <a class="" href="{{route('lang',[$data['code']])}}">
-                                            {{$data['code']}}
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <hr class="dropdown-divider my-0">
-                                    </li>
-                                @endif
-                            @endforeach
-                            </ul>
                         </div>
                     @endif
                     @if ($fixed_link &&$fixed_link['web_app_url_status'])
@@ -126,7 +103,7 @@
                     @if (isset($toggle_dm_registration) || isset($toggle_store_registration))
                     <div class="dropdown--btn-hover position-relative">
                         <a class="dropdown--btn header--btn text-capitalize d-flex align-items-center" href="javascript:void(0)">
-                            <span class="me-1">{{ translate('Join us') }}</span>
+                            <span class="me-1">Únete</span>
                             <svg width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M6.00224 5.46105L1.33333 0.415128C1.21002 0.290383 1 0.0787335 1 0.0787335C1 0.0787335 0.708488 -0.0458817 0.584976 0.0788632L0.191805 0.475841C0.0680976 0.600389 7.43292e-08 0.766881 7.22135e-08 0.9443C7.00978e-08 1.12172 0.0680976 1.28801 0.191805 1.41266L5.53678 6.80682C5.66068 6.93196 5.82624 7.00049 6.00224 7C6.17902 7.00049 6.34439 6.93206 6.46839 6.80682L11.8082 1.41768C11.9319 1.29303 12 1.12674 12 0.949223C12 0.771804 11.9319 0.605509 11.8082 0.480765L11.415 0.0838844C11.1591 -0.174368 10.9225 0.222512 10.6667 0.480765L6.00224 5.46105Z"
@@ -138,7 +115,7 @@
                             @if ($toggle_store_registration)
                             <li>
                                 <a class="" href="{{ route('restaurant.create') }}">
-                                    {{ translate('messages.vendor_registration') }}
+                                    Registro de Negocio
                                 </a>
                             </li>
                             @if ($toggle_dm_registration)
@@ -149,7 +126,7 @@
                         @endif
                         @if ($toggle_dm_registration)
                             <li><a class=""
-                                    href="{{ route('deliveryman.create') }}">{{ translate('messages.deliveryman_registration') }}</a>
+                                    href="{{ route('deliveryman.create') }}">Registro de Repartidor</a>
                             </li>
                         @endif
                         </ul>
