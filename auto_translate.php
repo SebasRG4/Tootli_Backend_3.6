@@ -1,6 +1,11 @@
 <?php
 
-$file_path = '/Users/giovannavilchis/Herd/back3.6/resources/lang/es/messages.php';
+// Usamos __DIR__ para que funcione en cualquier entorno (Mac local o Docker en Ubuntu)
+$file_path = __DIR__ . '/resources/lang/es/messages.php';
+
+if (!file_exists($file_path)) {
+    die("Archivo no encontrado en: " . $file_path . "\n");
+}
 
 $content = file_get_contents($file_path);
 
@@ -43,7 +48,6 @@ function translate_chunk($texts) {
         }
     }
     
-    // Split
     $translated_texts = preg_split('/\s*\|\s*~\s*\|\s*/', $translated_combined);
     
     if (count($translated_texts) === count($texts)) {
@@ -123,7 +127,6 @@ for ($i = 0; $i < $total; $i += $batch_size) {
             $t = $translated[$j];
             $t = str_replace("'", "\\'", $t);
             
-            // capitalize if needed
             if (!empty($clean_v) && ctype_upper($clean_v[0]) && !empty($t) && ctype_lower($t[0])) {
                 $t = ucfirst($t);
             }
