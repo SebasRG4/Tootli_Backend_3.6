@@ -80,6 +80,47 @@ Route::get('tootliclick/{slug}', 'App\Http\Controllers\TootliClickController@ind
 Route::get('ratreo-orden/tootli-directo/{token}', fn (string $token) => redirect("/rastreo-orden/tootli-directo/{$token}", 301));
 Route::get('ratreo-orden/tootli-directo/{token}/datos', fn (string $token) => redirect("/rastreo-orden/tootli-directo/{$token}/datos", 301));
 
+// Descargar App (Redirección inteligente OS)
+Route::get('/descargar', function (\Illuminate\Http\Request $request) {
+    $userAgent = $request->header('User-Agent');
+    
+    if (preg_match('/(iPhone|iPod|iPad)/i', $userAgent)) {
+        return redirect('https://apps.apple.com/mx/app/tootli/id6747401694');
+    }
+    if (preg_match('/Android/i', $userAgent)) {
+        return redirect('https://play.google.com/store/apps/details?id=com.Tootli.Usuario');
+    }
+    
+    // Fallback for desktop/other
+    return response('
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Descarga Tootli</title>
+            <style>
+                body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #f8f9fa; }
+                .container { text-align: center; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 400px; width: 90%; }
+                h1 { color: #333; margin-bottom: 24px; font-size: 24px; }
+                a { display: block; margin: 12px 0; padding: 16px 24px; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; transition: opacity 0.2s; }
+                a:hover { opacity: 0.9; }
+                .btn-ios { background-color: #000; }
+                .btn-android { background-color: #3DDC84; color: #000; }
+                .logo { max-width: 150px; margin-bottom: 20px; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>Descarga la app de Tootli</h1>
+                <a href="https://apps.apple.com/mx/app/tootli/id6747401694" class="btn-ios">🍎 Descargar en App Store</a>
+                <a href="https://play.google.com/store/apps/details?id=com.Tootli.Usuario" class="btn-android">🤖 Descargar en Google Play</a>
+            </div>
+        </body>
+        </html>
+    ');
+});
+
 Route::get('login/{tab}', 'LoginController@login')->name('login');
 Route::post('login_submit', 'LoginController@submit')->name('login_post')->middleware('actch');
 Route::get('logout', 'LoginController@logout')->name('logout');
