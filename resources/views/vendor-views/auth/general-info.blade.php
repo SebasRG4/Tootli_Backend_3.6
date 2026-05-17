@@ -1,5 +1,5 @@
 @extends('layouts.landing.app')
-@section('title', translate('messages.vendor_registration'))
+@section('title', 'Registro de Restaurante/Tienda')
 @push('css_or_js')
     <link rel="stylesheet" href="{{ asset('assets/admin/css/toastr.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/admin/css/view-pages/vendor-registration.css') }}">
@@ -36,8 +36,8 @@
         <div class="container">
             <!-- Page Header -->
             <div class="section-header">
-                <h2 class="title mb-2">{{ translate('messages.vendor') }} <span
-                        class="text--base">{{ translate('application') }}</span></h2>
+                <h2 class="title mb-2">{{ 'Restaurante/Tienda' }} <span
+                        class="text--base">{{ 'Registro' }}</span></h2>
             </div>
             @php($language = \App\CentralLogics\Helpers::get_business_settings('language'))
             <!-- End Page Header -->
@@ -45,13 +45,13 @@
             <!-- Stepper -->
             <div class="stepper">
                 <div id="show-step1" class="stepper-item active">
-                    <div class="step-name">{{ translate('General Info') }}</div>
+                    <div class="step-name">{{ 'Información General' }}</div>
                 </div>
                 <div class="stepper-item" id="show-step2">
-                    <div class="step-name">{{ translate('Business Plan') }}</div>
+                    <div class="step-name">{{ 'Plan de Negocios' }}</div>
                 </div>
                 <div class="stepper-item">
-                    <div class="step-name">{{ translate('Complete') }}</div>
+                    <div class="step-name">{{ 'Completado' }}</div>
                 </div>
             </div>
             <!-- Stepper -->
@@ -62,7 +62,7 @@
                     <div class="card __card mb-3">
                         <div class="card-header">
                             <h5 class="card-title">
-                                {{ translate('messages.vendor_info') }}
+                                {{ 'Información del Negocio' }}
                             </h5>
                         </div>
                         <div class="card-body p-4">
@@ -73,7 +73,7 @@
                                             <ul class="nav nav-tabs tabs-inner text-nowrap mb-4 store-apply-navs">
                                                 <li class="nav-item">
                                                     <a class="nav-link lang_link active" href="#"
-                                                       id="default-link">{{ translate('Default') }}</a>
+                                                       id="default-link">{{ 'Por defecto' }}</a>
                                                 </li>
                                                 @foreach ($language as $lang)
                                                     <li class="nav-item">
@@ -107,14 +107,14 @@
                                                         <div class="mb-4 mb-lg-0">
                                                             <div class="form-group">
                                                                 <label class="input-label"
-                                                                       for="default_name">{{ translate('messages.name') }}
-                                                                    ({{ translate('messages.Default') }})<span
+                                                                       for="default_name">{{ 'Nombre' }}
+                                                                    ({{ 'Por defecto' }})<span
                                                                         class="text-danger">*</span>
                                                                 </label>
                                                                 <input type="text" name="name[]"
                                                                        value="{{ old('name.0') }}" id="default_name"
                                                                        class="form-control __form-control"
-                                                                       placeholder="{{ translate('messages.vendor_name') }}"
+                                                                       placeholder="{{ 'Nombre del negocio' }}"
                                                                        maxlength="250" required>
                                                             </div>
                                                         </div>
@@ -123,11 +123,11 @@
                                                         <div class="mb-4 mb-lg-0">
                                                             <div class="form-group mb-0">
                                                                 <label class="input-label"
-                                                                       for="address">{{ translate('messages.address') }}
-                                                                    ({{ translate('messages.default') }})<span
+                                                                       for="address">{{ 'Dirección' }}
+                                                                    ({{ 'Por defecto' }})<span
                                                                         class="text-danger">*</span></label>
                                                                 <textarea type="text" id="address" name="address[]"
-                                                                          placeholder="{{ translate('Ex: ABC Company') }}"
+                                                                          placeholder="{{ 'Ej: Mi Restaurante' }}"
                                                                           class="form-control __form-control">{{ old('address.0') }}</textarea>
 
                                                             </div>
@@ -145,26 +145,26 @@
                                                         <div class="col-lg-6">
                                                             <div class="form-group">
                                                                 <label class="input-label"
-                                                                       for="{{ $lang }}_name">{{ translate('messages.name') }}
+                                                                       for="{{ $lang }}_name">{{ 'Nombre' }}
                                                                     ({{ strtoupper($lang) }})
                                                                 </label>
                                                                 <input type="text" name="name[]"
                                                                        value="{{ old('name.' . $key + 1) }}"
                                                                        id="{{ $lang }}_name"
                                                                        class="form-control __form-control"
-                                                                       placeholder="{{ translate('messages.vendor_name') }}">
+                                                                       placeholder="{{ 'Nombre del negocio' }}">
                                                             </div>
                                                         </div>
 
                                                         <div class="col-lg-6">
                                                             <div class="form-group mb-0">
                                                                 <label class="input-label"
-                                                                       for="address{{ $lang }}">{{ translate('messages.address') }}
+                                                                       for="address{{ $lang }}">{{ 'Dirección' }}
                                                                     ({{ strtoupper($lang) }})
                                                                 </label>
                                                                 <textarea type="text" id="address{{ $lang }}"
                                                                           name="address[]"
-                                                                          placeholder="{{ translate('Ex: ABC Company') }}"
+                                                                          placeholder="{{ 'Ej: Mi Restaurante' }}"
                                                                           class="form-control __form-control">{{ old('address.' . $key + 1) }}</textarea>
                                                             </div>
                                                         </div>
@@ -181,19 +181,19 @@
                                 <div class="col-lg-6">
                                     <div class="form-group mb-4">
                                         <label class="input-label"
-                                               title="{{ translate('messages.Select the zone from where the business will be operated') }}"
-                                               for="choice_zones">{{ translate('messages.business_zone') }}<span
+                                               title="{{ 'Selecciona la zona desde donde operará el negocio' }}"
+                                               for="choice_zones">{{ 'Zona del negocio' }}<span
                                                 class="text-danger">*</span> <span class="form-label-secondary"
                                                                                    data-toggle="tooltip"
                                                                                    data-placement="right"
-                                                                                   data-original-title="{{ translate('messages.Select the zone from where the business will be operated') }}"><img
+                                                                                   data-original-title="{{ 'Selecciona la zona desde donde operará el negocio' }}"><img
                                                     src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                    alt="{{ translate('messages.Select the zone from where the business will be operated') }}"></span></label>
+                                                    alt="{{ 'Selecciona la zona desde donde operará el negocio' }}"></span></label>
                                         <select name="zone_id" id="choice_zones" required
                                                 class="form-control __form-control js-select2-custom js-example-basic-single"
-                                                data-placeholder="{{ translate('messages.select_zone') }}">
+                                                data-placeholder="{{ 'Selecciona una zona' }}">
                                             <option value="" selected disabled>
-                                                {{ translate('messages.select_zone') }}</option>
+                                                {{ 'Selecciona una zona' }}</option>
                                             @foreach ($zones as $zone)
                                                 @if (isset(auth('admin')->user()->zone_id))
                                                     @if (auth('admin')->user()->zone_id == $zone->id)
@@ -208,32 +208,32 @@
                                     </div>
                                     <div class="form-group mb-4 overflow-hidden">
                                         <label for="module_id"
-                                               class="input-label">{{ translate('messages.business_module') }}<span
+                                               class="input-label">{{ 'Módulo del negocio' }}<span
                                                 class="text-danger">*</span>
                                             <small
-                                                class="text-danger">({{ translate('messages.Select_zone_first') }}
+                                                class="text-danger">({{ 'Selecciona una zona primero' }}
                                                 )</small></label>
                                         <select name="module_id" required id="module_id"
                                                 class="js-data-example-ajax form-control __form-control overflow-hidden"
-                                                data-placeholder="{{ translate('messages.select_module') }}">
+                                                data-placeholder="{{ 'Selecciona un módulo' }}">
                                         </select>
                                     </div>
                                     <div class="form-group mb-4 pickup-zone-container pickup-zone-tag"
                                          id="pickup-zone-container">
                                         <label class="input-label"
-                                               title="{{ translate('messages.Select zones from where customer can choose their pickup locations for trip booking') }}"
-                                               for="choice_zones">{{ translate('messages.pickup_zone') }}<span
+                                               title="{{ 'Selecciona las zonas de recolección' }}"
+                                               for="choice_zones">{{ 'Zona de recolección' }}<span
                                                 class="text-danger">*</span> <span class="form-label-secondary"
                                                                                    data-toggle="tooltip"
                                                                                    data-placement="right"
-                                                                                   data-original-title="{{ translate('messages.Select zones from where customer can choose their pickup locations for trip booking') }}"><img
+                                                                                   data-original-title="{{ 'Selecciona las zonas de recolección' }}"><img
                                                     src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                    alt="{{ translate('messages.Select zones from where customer can choose their pickup locations for trip booking') }}"></span></label>
+                                                    alt="{{ 'Selecciona las zonas de recolección' }}"></span></label>
                                         <select name="pickup_zone_id[]" required class="form-control multiple-select2"
-                                                data-placeholder="{{ translate('messages.select_zone') }}"
+                                                data-placeholder="{{ 'Selecciona una zona' }}"
                                                 multiple="multiple">
                                             <option value="" disabled>
-                                                {{ translate('messages.select_zone') }}</option>
+                                                {{ 'Selecciona una zona' }}</option>
                                             @foreach ($zones as $zone)
                                                 @if (isset(auth('admin')->user()->zone_id))
                                                     @if (auth('admin')->user()->zone_id == $zone->id)
@@ -248,14 +248,14 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="input-label module-select-time"
-                                               for="minimum_delivery_time">{{ translate('messages.approx_delivery_time') }}
+                                               for="minimum_delivery_time">{{ 'Tiempo aprox. de entrega' }}
                                             <span
                                                 class="text-danger">*</span></label>
                                         <div class=" __form-control custom-group-btn">
                                             <div class="item flex-sm-grow-1">
                                                 <div class="d-flex align-items-center gap-1">
                                                     <label class="floating-label"
-                                                           for="min">{{ translate('messages.min') }}:</label>
+                                                           for="min">{{ 'Mín' }}:</label>
                                                     <input type="number" id="minimum_delivery_time"
                                                            name="minimum_delivery_time"
                                                            class="form-control p-0 border-0"
@@ -265,7 +265,7 @@
                                             <div class="item flex-sm-grow-1">
                                                 <div class="d-flex align-items-center gap-1">
                                                     <label class="floating-label"
-                                                           for="max">{{ translate('messages.max') }}:</label>
+                                                           for="max">{{ 'Máx' }}:</label>
                                                     <input type="number" name="maximum_delivery_time"
                                                            id="max_delivery_time" class="form-control p-0 border-0"
                                                            placeholder="20" value="{{ old('maximum_delivery_time') }}">
@@ -274,10 +274,10 @@
                                             <div class="item flex-shrink-0">
                                                 <select name="delivery_time_type"
                                                         class="form-select custom-select border-0" required>
-                                                    <option value="min">{{ translate('messages.minutes') }}
+                                                    <option value="min">{{ 'Minutos' }}
                                                     </option>
-                                                    <option value="hours">{{ translate('messages.hours') }}</option>
-                                                    <option value="days">{{ translate('messages.days') }}</option>
+                                                    <option value="hours">{{ 'Horas' }}</option>
+                                                    <option value="days">{{ 'Días' }}</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -285,19 +285,19 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="rounded mb-3 map_custom-controls position-relative">
-                                        <input id="pac-input" class="controls rounded initial-8" title="{{translate('messages.search_your_location_here')}}" type="text" placeholder="{{translate('messages.search_here')}}"/>
+                                        <input id="pac-input" class="controls rounded initial-8" title="{{'Busca tu ubicación aquí'}}" type="text" placeholder="{{'Buscar aquí'}}"/>
                                         <div class="h-280" id="map"></div>
 
 
                                             <div class="d-flex bg-white align-items-center gap-1 laglng-controller">
                                                 <div id="latlng" class="d-flex">
-                                                    <input type="text" class="border-0 outline-0" id="latitude" name="latitude" placeholder="{{ translate('messages.Ex:_-94.22213') }} " value="{{ old('latitude') }}" required readonly>
+                                                    <input type="text" class="border-0 outline-0" id="latitude" name="latitude" placeholder="{{ 'Ej: -94.22213' }} " value="{{ old('latitude') }}" required readonly>
                                                     <span class="text-gray1">|</span>
-                                                    <input type="text" class="border-0 outline-0" name="longitude" placeholder="{{ translate('messages.Ex:_103.344322') }} "   id="longitude" value="{{ old('longitude') }}" required readonly>
+                                                    <input type="text" class="border-0 outline-0" name="longitude" placeholder="{{ 'Ej: 103.344322' }} "   id="longitude" value="{{ old('longitude') }}" required readonly>
                                                 </div>
                                             </div>
                                             <div id="outOfZone" class="map-alert bg-dark d-flex align-items-center rounded-8 py-2 px-2 fs-12 text-white mb-2 text-center">
-                                            <img class="" src="{{asset('assets/admin/img/icons/warning-cus.png')}}" alt="img"> {{ translate('messages.Please place the marker inside the available zones.') }}
+                                            <img class="" src="{{asset('assets/admin/img/icons/warning-cus.png')}}" alt="img"> {{ 'Por favor, coloca el marcador dentro de las zonas disponibles.' }}
                                             </div>
 
                                     </div>
@@ -305,11 +305,11 @@
                                 <div class="d-flex flex-column text-sm-start text-center flex-sm-row align-items-sm-start align-items-center gap-4">
                                         <div class="form-group col-lg-3 d-flex flex-column justify-content-between">
                                             <label class="input-label pt-2 mb-2">
-                                                <div class="lh-1">{{ translate('messages.cover') }}<span
+                                                <div class="lh-1">{{ 'Foto de Portada' }}<span
                                                         class="text-danger">*</span></div>
                                                 <div class="fs-12 opacity-70">
-                                                    {{ translate(IMAGE_FORMAT.' ' . 'Less Than 2MB') }}
-                                                    <strong> {{ translate('(Ratio 2:1)') }}
+                                                    {{ 'Menos de 2MB (JPG/PNG)' }}
+                                                    <strong> {{ '(Proporción 2:1)' }}
                                                     </strong>
                                                 </div>
                                             </label>
@@ -323,9 +323,9 @@
                                                          alt="" class="svg">
                                                     <h6 class="mt-2 text-center font-semibold fs-12">
                                                         <span
-                                                            class="text-info">{{ translate('messages.Click to upload') }}</span>
+                                                            class="text-info">{{ 'Haz clic para subir' }}</span>
                                                         <br>
-                                                        {{ translate('messages.or drag and drop') }}
+                                                        {{ 'o arrastra y suelta aquí' }}
                                                     </h6>
                                                 </div>
                                                 <div class="icon-file-group d-none">
@@ -341,11 +341,11 @@
                                         </div>
                                         <div class="form-group d-flex flex-column justify-content-between">
                                             <label class="input-label pt-2 mb-2">
-                                                <div class="lh-1">{{ translate('messages.logo') }}<span
+                                                <div class="lh-1">{{ 'Logo' }}<span
                                                         class="text-danger">*</span></div>
                                                 <div class="fs-12 opacity-70">
-                                                    {{ translate(IMAGE_FORMAT.' ' . 'Less Than 2MB') }}
-                                                    <strong> {{ translate('(Ratio 1:1)') }}
+                                                    {{ 'Menos de 2MB (JPG/PNG)' }}
+                                                    <strong> {{ '(Proporción 1:1)' }}
                                                     </strong>
                                                 </div>
                                             </label>
@@ -360,9 +360,9 @@
                                                          alt="" class="svg">
                                                     <h6 class="mt-2 text-center font-semibold fs-12">
                                                         <span
-                                                            class="text-info">{{ translate('messages.Click to upload') }}</span>
+                                                            class="text-info">{{ 'Haz clic para subir' }}</span>
                                                         <br>
-                                                        {{ translate('messages.or drag and drop') }}
+                                                        {{ 'o arrastra y suelta aquí' }}
                                                     </h6>
                                                 </div>
                                                 <div class="icon-file-group d-none">
@@ -382,10 +382,10 @@
                                 <div class="card-header">
                                     <div>
                                         <h5 class="card-title mb-4">
-                                            {{ translate('messages.owner_information') }}
+                                            {{ 'Información del Propietario' }}
                                         </h5>
                                         <p class="fs-12 mb-0">
-                                            {{ translate('messages.Insert_Owner\'s_General_Information') }}
+                                            {{ 'Ingresa la información general del propietario' }}
                                         </p>
                                     </div>
                                 </div>
@@ -394,33 +394,33 @@
                                         <div class="col-md-4 col-lg-4 col-sm-12">
                                             <div class="form-group">
                                                 <label class="input-label"
-                                                       for="f_name">{{ translate('messages.first_name') }}<span
+                                                       for="f_name">{{ 'Nombre(s)' }}<span
                                                         class="text-danger">*</span></label>
                                                 <input type="text" id="f_name" name="f_name"
                                                        class="form-control __form-control"
-                                                       placeholder="{{ translate('messages.first_name') }}"
+                                                       placeholder="{{ 'Nombre(s)' }}"
                                                        value="{{ old('f_name') }}" required>
                                             </div>
                                         </div>
                                         <div class="col-md-4 col-lg-4 col-sm-12">
                                             <div class="form-group">
                                                 <label class="input-label"
-                                                       for="l_name">{{ translate('messages.last_name') }}<span
+                                                       for="l_name">{{ 'Apellido(s)' }}<span
                                                         class="text-danger">*</span></label>
                                                 <input type="text" id="l_name" name="l_name"
                                                        class="form-control __form-control"
-                                                       placeholder="{{ translate('messages.last_name') }}"
+                                                       placeholder="{{ 'Apellido(s)' }}"
                                                        value="{{ old('l_name') }}" required>
                                             </div>
                                         </div>
                                         <div class="col-md-4 col-lg-4 col-sm-12">
                                             <div class="form-group">
                                                 <label class="input-label"
-                                                       for="phone">{{ translate('messages.phone') }}<span
+                                                       for="phone">{{ 'Teléfono' }}<span
                                                         class="text-danger">*</span></label>
                                                 <input type="tel" id="phone" name="phone"
                                                        class="form-control __form-control"
-                                                       placeholder="{{ translate('messages.Ex:') }} 017********"
+                                                       placeholder="{{ 'Ej:' }} 017********"
                                                        value="{{ old('phone') }}" required>
                                             </div>
 
@@ -432,7 +432,7 @@
                             <div class="p-20 mb-3">
                                 <div class="card-body">
                                     <div class="mb-3">
-                                        <h4 class="fs-5 mb-2">{{ translate('Business TIN') }}</h4>
+                                        <h4 class="fs-5 mb-2">{{ 'Información Fiscal' }}</h4>
                                         {{-- <p class="fz-12px mb-0">{{translate('Lorem ipsum dolor sit amet, consectetur adipiscing elit.')}}</p> --}}
                                     </div>
                                     <div class="row g-3">
@@ -441,15 +441,15 @@
                                                 <div class="card-body">
                                                     <div class="form-group mb-3">
                                                         <label class="input-label mb-2 d-block title-clr fw-normal"
-                                                               for="exampleFormControlInput1">{{ translate('Taxpayer Identification Number(TIN)') }}
+                                                               for="exampleFormControlInput1">{{ 'RFC' }}
                                                         </label>
                                                         <input type="text" name="tin"
-                                                               placeholder="{{ translate('Type Your Taxpayer Identification Number(TIN)') }}"
+                                                               placeholder="{{ 'Ingresa tu RFC' }}"
                                                                class=" form-control __form-control">
                                                     </div>
                                                     <div class="form-group mb-0">
                                                         <label class="input-label mb-2 d-block title-clr fw-normal"
-                                                               for="exampleFormControlInput1">{{ translate('Expire Date') }}
+                                                               for="exampleFormControlInput1">{{ 'Fecha de expiración (opcional)' }}
                                                         </label>
                                                         <input type="date" name="tin_expire_date"
                                                                class="form-control __form-control">
@@ -462,9 +462,9 @@
                                                 <div
                                                     class="d-flex align-items-center gap-1 justify-content-between mb-20 mb-4">
                                                     <div>
-                                                        <h4 class="mb-2 fs-5">{{ translate('TIN Certificate') }}</h4>
+                                                        <h4 class="mb-2 fs-5">{{ 'Constancia de Situación Fiscal' }}</h4>
                                                         <p class="fs-6 mb-0">
-                                                            {{ translate('pdf, doc, jpg. File size : max 2 MB') }}</p>
+                                                            {{ 'pdf, doc, jpg. Tamaño máx: 2 MB' }}</p>
                                                     </div>
                                                     <div class="d-flex gap-3 align-items-center">
                                                         <button type="button" id="doc_edit_btn"
@@ -491,9 +491,9 @@
                                                                      src="{{ asset('assets/admin/img/doc-uploaded.png') }}"
                                                                      alt="">
                                                                 <p class="fs-12 mb-0">
-                                                                    {{ translate('messages.Select_a_file_or') }} <span
-                                                                        class="font-semibold">{{ translate('messages.Drag & Drop') }}</span>
-                                                                    {{ translate('messages.here') }}</p>
+                                                                    {{ 'Selecciona un archivo o' }} <span
+                                                                        class="font-semibold">{{ 'Arrastra y suelta' }}</span>
+                                                                    {{ 'aquí' }}</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -507,10 +507,10 @@
                                 <div class="card-header">
                                     <div>
                                         <h5 class="card-title mb-2">
-                                            {{ translate('messages.account_information') }}
+                                            {{ 'Información de la Cuenta' }}
                                         </h5>
                                         <p class="fs-12 mb-0">
-                                            {{ translate('Insert_Owner\'s_account_information') }}
+                                            {{ 'Ingresa la información de acceso de la cuenta' }}
                                         </p>
                                     </div>
                                 </div>
@@ -519,11 +519,11 @@
                                         <div class="col-md-4 col-sm-12 col-lg-4">
                                             <div class="form-group">
                                                 <label class="input-label"
-                                                       for="email">{{ translate('messages.email') }}<span
+                                                       for="email">{{ 'Correo electrónico' }}<span
                                                         class="text-danger">*</span></label>
                                                 <input type="email" id="email" name="email"
                                                        class="form-control __form-control"
-                                                       placeholder="{{ translate('messages.Ex:') }} ex@example.com"
+                                                       placeholder="{{ 'Ej:' }} ex@example.com"
                                                        value="{{ old('email') }}" required>
                                             </div>
                                         </div>
@@ -531,7 +531,7 @@
                                             <div class="form-group">
                                                 <label class="input-label"
                                                        title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"
-                                                       for="exampleInputPassword">{{ translate('messages.password') }}
+                                                       for="exampleInputPassword">{{ 'Contraseña' }}
                                                     <span
                                                         class="text-danger">*</span>
                                                     &nbsp;
@@ -544,7 +544,7 @@
                                                 </label>
                                                 <label class="position-relative m-0 d-block">
                                                     <input type="password" name="password"
-                                                           placeholder="{{ translate('messages.password_length_placeholder', ['length' => '8+']) }}"
+                                                           placeholder="{{ '8+ caracteres' }}"
                                                            class="form-control __form-control form-control __form-control-user"
                                                            minlength="6" id="exampleInputPassword" required
                                                            value="{{ old('password') }}">
@@ -570,21 +570,21 @@
                                                     </span>
                                                 </label>
                                                 <div id="password-feedback" class="pass password-feedback">
-                                                    {{ translate('messages.password_not_matched') }}
+                                                    {{ 'Las contraseñas no coinciden' }}
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4 col-sm-12 col-lg-4">
                                             <div class="form-group">
                                                 <label class="input-label"
-                                                       for="exampleRepeatPassword">{{ translate('messages.confirm_password') }}
+                                                       for="exampleRepeatPassword">{{ 'Confirmar contraseña' }}
                                                     <span
                                                         class="text-danger">*</span></label>
                                                 <label class="position-relative m-0 d-block">
                                                     <input type="password" name="confirm-password"
                                                            class="form-control __form-control form-control __form-control-user"
                                                            minlength="6" id="exampleRepeatPassword"
-                                                           placeholder="{{ translate('messages.password_length_placeholder', ['length' => '8+']) }}"
+                                                           placeholder="{{ '8+ caracteres' }}"
                                                            required value="{{ old('confirm-password') }}">
                                                     <span class="show-password">
                                                         <span class="icon-2">
@@ -608,7 +608,7 @@
                                                     </span>
                                                 </label>
                                                 <div class="pass invalid-feedback">
-                                                    {{ translate('messages.password_not_matched') }}
+                                                    {{ 'Las contraseñas no coinciden' }}
                                                 </div>
                                             </div>
                                         </div>
@@ -624,7 +624,7 @@
                                                     <div class="col-6">
                                                         <input type="text" class="form-control"
                                                                name="custome_recaptcha" id="custome_recaptcha" required
-                                                               placeholder="{{ translate('Enter recaptcha value') }}"
+                                                               placeholder="{{ 'Ingresa el código captcha' }}"
                                                                autocomplete="off"
                                                                value="{{ env('APP_DEBUG') ? session('six_captcha') : '' }}">
                                                     </div>
@@ -641,11 +641,11 @@
                             </div>
                             <div class="text-end pt-4 d-flex flex-wrap justify-content-end gap-3">
                                 <button type="reset" id='reset-btn'
-                                        class="cmn--btn btn--secondary shadow-none rounded-md border-0 outline-0">{{ translate('Reset') }}</button>
+                                        class="cmn--btn btn--secondary shadow-none rounded-md border-0 outline-0">{{ 'Reiniciar' }}</button>
                                 <button
                                     type="{{ \App\CentralLogics\Helpers::subscription_check() == 1 ? 'button' : 'submit' }}"
                                     id="show-business-plan-div"
-                                    class="cmn--btn rounded-md border-0 outline-0 btn-disable">{{ \App\CentralLogics\Helpers::subscription_check() == 1 ? translate('Next') : translate('messages.submit') }}</button>
+                                    class="cmn--btn rounded-md border-0 outline-0 btn-disable">{{ \App\CentralLogics\Helpers::subscription_check() == 1 ? 'Siguiente' : 'Enviar' }}</button>
                             </div>
                         </div>
                     </div>
@@ -657,7 +657,7 @@
                         <div class="card __card mb-3">
                             <div class="card-header border-0">
                                 <h5 class="card-title text-center">
-                                    {{ translate('Choose Your Business Plan') }}
+                                    {{ 'Elige tu Plan de Negocios' }}
                                 </h5>
                             </div>
                             <div class="card-body p-4">
@@ -670,7 +670,7 @@
                                                 <div class="plan-check-item-inner">
                                                     <div
                                                         class="d-flex gap-3 justify-content-between align-items-center mb-10">
-                                                        <h5 class="mb-0">{{ translate('Commision_Base') }}</h5>
+                                                        <h5 class="mb-0">{{ 'Basado en Comisión' }}</h5>
                                                         <span class="checkmark">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="16"
                                                                  height="16" fill="currentColor" class="bi bi-check2"
@@ -681,9 +681,9 @@
                                                         </span>
                                                     </div>
                                                     <p>
-                                                        {{ translate('vendor will pay') }} {{ $admin_commission }}%
-                                                        {{ translate('commission to') }} {{ $business_name }}
-                                                        {{ translate('from each order. You will get access of all the features and options  in vendor panel , app and interaction with user.') }}
+                                                        {{ 'El negocio pagará' }} {{ $admin_commission }}%
+                                                        {{ 'de comisión a' }} {{ $business_name }}
+                                                        {{ 'por cada pedido. Tendrás acceso a todas las funciones del panel, la app y podrás interactuar con los clientes.' }}
                                                     </p>
                                                 </div>
                                             </label>
@@ -696,7 +696,7 @@
                                             <div class="plan-check-item-inner">
                                                 <div
                                                     class="d-flex gap-3 justify-content-between align-items-center mb-10">
-                                                    <h5 class="mb-0">{{ translate('Subscription_Base') }}</h5>
+                                                    <h5 class="mb-0">{{ 'Basado en Suscripción' }}</h5>
                                                     <span class="checkmark">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16"
                                                              height="16" fill="currentColor" class="bi bi-check2"
@@ -707,7 +707,7 @@
                                                     </span>
                                                 </div>
                                                 <p>
-                                                    {{ translate('Run vendor by puchasing subsciption packages. You will have access the features of in vendor panel , app and interaction with user according to the subscription packages.') }}
+                                                    {{ 'Opera tu negocio comprando paquetes de suscripción. Tendrás acceso a las funciones del panel y app según tu paquete.' }}
                                                 </p>
                                             </div>
                                         </label>
@@ -717,7 +717,7 @@
                                     <br>
                                     <div class="card-header px-0 m-0 border-0">
                                         <h5 class="card-title text-center">
-                                            {{ translate('Choose Subscription Package') }}
+                                            {{ 'Elige un Paquete de Suscripción' }}
                                         </h5>
                                     </div>
                                     <div id='show_sub_packages'>
@@ -731,9 +731,9 @@
                             </div>
                             <div class="text-end pt-5 d-flex flex-wrap p-4 justify-content-end gap-3">
                                 <button type="button" id="back-to-form"
-                                        class="cmn--btn btn--secondary shadow-none rounded-md border-0 outline-0">{{ translate('Back') }}</button>
+                                        class="cmn--btn btn--secondary shadow-none rounded-md border-0 outline-0">{{ 'Atrás' }}</button>
                                 <button type="submit"
-                                        class="cmn--btn rounded-md border-0 outline-0 btn-disable">{{ translate('Next') }}</button>
+                                        class="cmn--btn rounded-md border-0 outline-0 btn-disable">{{ 'Siguiente' }}</button>
                             </div>
                         </div>
                     </div>
@@ -745,8 +745,8 @@
     </section>
 
 <div class="d-none" id="default-text-data"
-     data-default-filesize="{{ translate('File size must be less than') }}"
-     data-default-allowedformat="{{ translate('Invalid file type. Allowed: PDF, DOC, JPG, PNG') }}">
+     data-default-filesize="{{ 'El tamaño del archivo debe ser menor a' }}"
+     data-default-allowedformat="{{ 'Tipo de archivo inválido. Permitidos: PDF, DOC, JPG, PNG' }}">
 </div>
 @endsection
 @push('script_2')
@@ -759,9 +759,9 @@
          const getModuleType ="{{ route('restaurant.get-module-type') }}";
          const checkModuleTypeUrl ="{{ route('restaurant.check-module-type') }}";
         const estimatedPickupText =
-        "{{ translate('messages.Estimated_pickup_time') }} <span class='text-danger'>*</span>";
+        "{{ 'Tiempo estimado de recolección' }} <span class='text-danger'>*</span>";
         const approxDeliveryText =
-        "{{ translate('messages.approx_delivery_time') }} <span class='text-danger'>*</span>";
+        "{{ 'Tiempo aprox. de entrega' }} <span class='text-danger'>*</span>";
 
 
 
@@ -773,11 +773,11 @@
             oldZoneId: "{{ old('zone_id') }}",
             oldAddress: @json(old('address.0')),
             translations: {
-                selectedLocation: "{{ translate('Selected Location') }}",
-                clickMap: "{{ translate('Click_the_map_inside_the_red_marked_area_to_get_Lat/Lng!!!') }}",
-                selectZone: "{{ translate('Select_Zone_From_The_Dropdown') }}",
-                geolocationError: "{{ translate('Error:_Your_browser_doesnot_support_geolocation.') }}",
-                outOfZone: "{{ translate('messages.out_of_coverage') }}",
+                selectedLocation: "{{ 'Ubicación seleccionada' }}",
+                clickMap: "{{ '¡Haz clic en el mapa dentro del área marcada para obtener las coordenadas!' }}",
+                selectZone: "{{ 'Selecciona una zona del menú' }}",
+                geolocationError: "{{ 'Error: Tu navegador no soporta geolocalización.' }}",
+                outOfZone: "{{ 'Fuera de cobertura' }}",
             },
             urls: {
                 zoneCoordinates: "{{ route('admin.zone.get-coordinates', ['id' => ':coordinatesZoneId']) }}",
