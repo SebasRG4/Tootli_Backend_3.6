@@ -482,6 +482,127 @@
       font-size: 18px;
     }
 
+    /* Demo Section */
+    .demo-wrapper {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 40px;
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: 35px;
+      padding: 40px;
+    }
+
+    .demo-tabs {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border-right: 1px solid var(--border-color);
+      padding-right: 30px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 18px 25px;
+      border-radius: 20px;
+      text-align: left;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #020a07;
+      box-shadow: 0 5px 20px rgba(125, 255, 135, 0.2);
+    }
+
+    .demo-content {
+      position: relative;
+      min-height: 380px;
+    }
+
+    .demo-panel {
+      display: none;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 30px;
+      align-items: center;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .demo-panel.active {
+      display: grid;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .demo-text h3 {
+      font-size: 32px;
+      margin-bottom: 20px;
+      color: var(--primary);
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .demo-text p {
+      color: var(--text-muted);
+      font-size: 18px;
+      line-height: 1.7;
+      margin-bottom: 25px;
+    }
+
+    .demo-text ul {
+      list-style: none;
+      margin-bottom: 30px;
+    }
+
+    .demo-text ul li {
+      color: var(--text-main);
+      margin-bottom: 12px;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .demo-link {
+      display: inline-block;
+      color: var(--primary);
+      font-weight: 700;
+      border-bottom: 1px solid var(--primary);
+      padding-bottom: 2px;
+      transition: 0.3s;
+    }
+    .demo-link:hover {
+      color: #fff; border-color: #fff;
+    }
+
+    .demo-visual {
+      background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(0,0,0,0.5));
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 30px;
+      height: 100%;
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 120px;
+      box-shadow: inset 0 5px 20px rgba(0,0,0,0.5);
+    }
+
     /* Footer */
     footer {
       border-top: 1px solid var(--border-color);
@@ -515,6 +636,30 @@
 
       .phone-wrapper {
         justify-content: center;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .demo-wrapper {
+        grid-template-columns: 1fr;
+        padding: 25px;
+      }
+      .demo-tabs {
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        padding-right: 0;
+        padding-bottom: 20px;
+        flex-direction: row;
+        overflow-x: auto;
+      }
+      .tab-btn {
+        white-space: nowrap;
+      }
+      .demo-panel {
+        grid-template-columns: 1fr;
+      }
+      .demo-visual {
+        min-height: 200px;
       }
     }
 
@@ -653,6 +798,102 @@
   </div>
 </section>
 
+<!-- Demo Ecosystem Interactive Section -->
+<section id="demo">
+  <div class="container">
+    <div class="section-title">
+      <h2>Explora el Ecosistema</h2>
+      <p>Todo lo que tú, tus repartidores y tus negocios afiliados necesitan, conectado y sincronizado en tiempo real.</p>
+    </div>
+
+    <div class="demo-wrapper">
+      <div class="demo-tabs">
+        <button class="tab-btn active" onclick="showDemo('usuario')">App de Usuarios</button>
+        <button class="tab-btn" onclick="showDemo('repartidor')">App Repartidor</button>
+        <button class="tab-btn" onclick="showDemo('negocios')">Panel de Negocios</button>
+        <button class="tab-btn" onclick="showDemo('direct')">Tootli Direct</button>
+        <button class="tab-btn" onclick="showDemo('admin')">Panel de Control M&aacute;ster</button>
+      </div>
+
+      <div class="demo-content">
+        
+        <!-- Usuario -->
+        <div id="demo-usuario" class="demo-panel active">
+          <div class="demo-text">
+            <h3>La súper app para tus clientes</h3>
+            <p>Pide comida, supermercado, farmacia y envíos locales en una sola aplicación extremadamente rápida y atractiva.</p>
+            <ul>
+              <li><span style="color:var(--primary)">✔️</span> Tracking GPS del repartidor en tiempo real</li>
+              <li><span style="color:var(--primary)">✔️</span> Carrito mixto (varias tiendas en un solo pedido)</li>
+              <li><span style="color:var(--primary)">✔️</span> Historial, favoritos y billetera electrónica</li>
+            </ul>
+            <br>
+            <a href="https://tootli.mx" target="_blank" class="demo-link">Ver App Web ↗</a>
+          </div>
+          <div class="demo-visual">📱</div>
+        </div>
+        
+        <!-- Repartidor -->
+        <div id="demo-repartidor" class="demo-panel">
+          <div class="demo-text">
+            <h3>App para Repartidores</h3>
+            <p>Rutas optimizadas, pagos integrados y notificaciones eficientes para mantener a tu flotilla moviéndose.</p>
+            <ul>
+              <li><span style="color:var(--primary)">✔️</span> Modo oscuro nativo para batería</li>
+              <li><span style="color:var(--primary)">✔️</span> Alertas de pedido con sonido prioritario</li>
+              <li><span style="color:var(--primary)">✔️</span> Billetera dinámica y comisiones en vivo</li>
+            </ul>
+          </div>
+          <div class="demo-visual">🛵</div>
+        </div>
+
+        <!-- Negocios -->
+        <div id="demo-negocios" class="demo-panel">
+          <div class="demo-text">
+            <h3>Gestor para Restaurantes</h3>
+            <p>Software para que los comercios reciban pedidos, impriman tickets automáticamente y despachen sin estrés.</p>
+            <ul>
+              <li><span style="color:var(--primary)">✔️</span> Impresión térmica Bluetooth automática</li>
+              <li><span style="color:var(--primary)">✔️</span> Panel de campañas y cupones de descuento</li>
+              <li><span style="color:var(--primary)">✔️</span> Carga masiva de inventario y menús</li>
+            </ul>
+          </div>
+          <div class="demo-visual">🏪</div>
+        </div>
+
+        <!-- Tootli Direct -->
+        <div id="demo-direct" class="demo-panel">
+          <div class="demo-text">
+            <h3>Tootli Direct (Envíos Express)</h3>
+            <p>El enlace mágico donde cualquier comercio (como tiendas de Instagram o de la esquina) puede solicitar a tus repartidores.</p>
+            <ul>
+              <li><span style="color:var(--primary)">✔️</span> Formulario web, sin necesidad de descargar apps</li>
+              <li><span style="color:var(--primary)">✔️</span> Calculadora dinámica de costo por kilómetro</li>
+              <li><span style="color:var(--primary)">✔️</span> Link de rastreo SMS para el cliente final</li>
+            </ul>
+          </div>
+          <div class="demo-visual">⚡</div>
+        </div>
+
+        <!-- Admin -->
+        <div id="demo-admin" class="demo-panel">
+          <div class="demo-text">
+            <h3>Panel Operativo Máster</h3>
+            <p>La torre de control. Desde aquí diriges toda tu ciudad, vigilas las ganancias y configuras tus propias reglas.</p>
+            <ul>
+              <li><span style="color:var(--primary)">✔️</span> Mapa global en vivo de todas las zonas</li>
+              <li><span style="color:var(--primary)">✔️</span> Reportes financieros exportables a Excel</li>
+              <li><span style="color:var(--primary)">✔️</span> Control total de comisiones y despachos manuales</li>
+            </ul>
+          </div>
+          <div class="demo-visual">💻</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- Benefits -->
 <section id="beneficios">
   <div class="container">
@@ -701,6 +942,21 @@
 <footer id="contacto" class="container">
   <p>© 2026 <span>Tootli</span> Crece • Tu super app mexicana 🇲🇽</p>
 </footer>
+
+<script>
+  function showDemo(id) {
+    // Quitar clase active a todos los botones
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    // Ocultar todos los paneles
+    document.querySelectorAll('.demo-panel').forEach(panel => panel.classList.remove('active'));
+    
+    // Activar botón clickeado (usando event.target o currentTarget)
+    event.currentTarget.classList.add('active');
+    
+    // Mostrar panel correspondiente
+    document.getElementById('demo-' + id).classList.add('active');
+  }
+</script>
 
 </body>
 </html>
