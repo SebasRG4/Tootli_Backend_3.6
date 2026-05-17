@@ -10,8 +10,8 @@
         <div class="container">
             <!-- Page Header -->
             <div class="section-header">
-                <h2 class="title mb-2">{{ translate('messages.vendor') }} <span
-                        class="text--base">{{ translate('application') }}</span></h2>
+                <h2 class="title mb-2">{{ 'Restaurante/Tienda' }} <span
+                        class="text--base">{{ 'Registro' }}</span></h2>
             </div>
 
             <!-- End Page Header -->
@@ -19,13 +19,13 @@
             <!-- Stepper -->
             <div class="stepper">
                 <div class="stepper-item active">
-                    <div class="step-name">{{ translate('General Info') }}</div>
+                    <div class="step-name">{{ 'Información General' }}</div>
                 </div>
                 <div class="stepper-item active">
-                    <div class="step-name">{{ translate('Business Plan') }}</div>
+                    <div class="step-name">{{ 'Plan de Negocios' }}</div>
                 </div>
                 <div class="stepper-item">
-                    <div class="step-name">{{ translate('Complete') }}</div>
+                    <div class="step-name">{{ 'Completado' }}</div>
                 </div>
             </div>
             <!-- Stepper -->
@@ -37,7 +37,7 @@
                 <div class="card __card mb-3">
                     <div class="card-header border-0">
                         <h5 class="card-title text-center">
-                            {{ translate('Choose Your Business Plan') }}
+                            {{ 'Elige tu Plan de Negocios' }}
                         </h5>
                     </div>
                     <div class="card-body p-4">
@@ -49,7 +49,7 @@
                                             checked>
                                         <div class="plan-check-item-inner">
                                             <div class="d-flex gap-3 justify-content-between align-items-center mb-10">
-                                                <h5 class="mb-0">{{ translate('Commision_Base') }}</h5>
+                                                <h5 class="mb-0">{{ 'Basado en Comisión' }}</h5>
                                                 <span class="checkmark">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                         fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
@@ -59,9 +59,9 @@
                                                 </span>
                                             </div>
                                             <p>
-                                                {{ translate('Vendor will pay') }} {{ $admin_commission }}%
-                                                {{ translate('commission to') }} {{ $business_name }}
-                                                {{ translate('from each order. You will get access of all the features and options  in vendor panel , app and interaction with user.') }}
+                                                {{ 'El negocio pagará' }} {{ $admin_commission }}%
+                                                {{ 'de comisión a' }} {{ $business_name }}
+                                                {{ 'por cada pedido. Tendrás acceso a todas las funciones del panel, la app y podrás interactuar con los clientes.' }}
                                             </p>
                                         </div>
                                     </label>
@@ -72,7 +72,7 @@
                                     <input id="subscription-base" type="radio" name="business_plan" value="subscription-base" class="d-none">
                                     <div class="plan-check-item-inner">
                                         <div class="d-flex gap-3 justify-content-between align-items-center mb-10">
-                                            <h5 class="mb-0">{{ translate('Subscription_Base') }}</h5>
+                                            <h5 class="mb-0">{{ 'Basado en Suscripción' }}</h5>
                                             <span class="checkmark">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                     fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
@@ -82,7 +82,7 @@
                                             </span>
                                         </div>
                                         <p>
-                                            {{ translate('Run vendor by puchasing subsciption packages. You will have access the features of in vendor panel , app and interaction with user according to the subscription packages.') }}
+                                            {{ 'Opera tu negocio comprando paquetes de suscripción. Tendrás acceso a las funciones del panel y app según tu paquete.' }}
                                         </p>
                                     </div>
                                 </label>
@@ -92,7 +92,7 @@
                             <br>
                             <div class="card-header px-0 m-0 border-0">
                                 <h5 class="card-title text-center">
-                                    {{ translate('Choose Subscription Package') }}
+                                    {{ 'Elige un Paquete de Suscripción' }}
                                 </h5>
                             </div>
                             <div class="plan-slider owl-theme owl-carousel owl-refresh">
@@ -108,7 +108,7 @@
                                                 <h2 class="price">
                                                     {{ \App\CentralLogics\Helpers::format_currency($package->price) }}</h2>
                                                 <div class="day-count">{{ $package->validity }}
-                                                    {{ translate('messages.days') }}</div>
+                                                    {{ 'días' }}</div>
                                             </div>
                                             <ul class="info">
 
@@ -118,7 +118,7 @@
                                                             class="check" alt="">
                                                         <img src="{{ asset('assets/landing/img/check-2.svg') }}"
                                                             class="check-white" alt=""> <span>
-                                                            {{ translate('messages.POS') }} </span>
+                                                            {{ 'Punto de Venta (POS)' }} </span>
                                                     </li>
                                                 @endif
                                                 @if ($package->mobile_app)
@@ -127,7 +127,7 @@
                                                             class="check" alt="">
                                                         <img src="{{ asset('assets/landing/img/check-2.svg') }}"
                                                             class="check-white" alt=""> <span>
-                                                            {{ translate('messages.mobile_app') }} </span>
+                                                            {{ 'App Móvil' }} </span>
                                                     </li>
                                                 @endif
                                                 @if ($package->chat)
@@ -136,7 +136,7 @@
                                                             class="check" alt="">
                                                         <img src="{{ asset('assets/landing/img/check-2.svg') }}"
                                                             class="check-white" alt=""> <span>
-                                                            {{ translate('messages.chatting_options') }} </span>
+                                                            {{ 'Opciones de Chat' }} </span>
                                                     </li>
                                                 @endif
                                                 @if ($package->review)
@@ -145,7 +145,7 @@
                                                             class="check" alt="">
                                                         <img src="{{ asset('assets/landing/img/check-2.svg') }}"
                                                             class="check-white" alt=""> <span>
-                                                            {{ translate('messages.review_section') }} </span>
+                                                            {{ 'Sección de Reseñas' }} </span>
                                                     </li>
                                                 @endif
                                                 @if ($package->self_delivery)
@@ -154,7 +154,7 @@
                                                             class="check" alt="">
                                                         <img src="{{ asset('assets/landing/img/check-2.svg') }}"
                                                             class="check-white" alt=""> <span>
-                                                            {{ translate('messages.self_delivery') }} </span>
+                                                            {{ 'Repartidores Propios' }} </span>
                                                     </li>
                                                 @endif
                                                 @if ($package->max_order == 'unlimited')
@@ -163,7 +163,7 @@
                                                             class="check" alt="">
                                                         <img src="{{ asset('assets/landing/img/check-2.svg') }}"
                                                             class="check-white" alt=""> <span>
-                                                            {{ isset($module) && $module == 'rental' ?  translate('messages.Unlimited_trips') :translate('messages.Unlimited_Orders') }} </span>
+                                                            {{ isset($module) && $module == 'rental' ?  'Viajes Ilimitados' :'Pedidos Ilimitados' }} </span>
                                                     </li>
                                                 @else
                                                     <li>
@@ -171,7 +171,7 @@
                                                             class="check" alt="">
                                                         <img src="{{ asset('assets/landing/img/check-2.svg') }}"
                                                             class="check-white" alt=""> <span>
-                                                            {{ $package->max_order }} {{ isset($module) && $module == 'rental' ?  translate('messages.trips') : translate('messages.Orders') }}
+                                                            {{ $package->max_order }} {{ isset($module) && $module == 'rental' ?  'Viajes' : 'Pedidos' }}
                                                         </span>
                                                     </li>
                                                 @endif
@@ -181,7 +181,7 @@
                                                             class="check" alt="">
                                                         <img src="{{ asset('assets/landing/img/check-2.svg') }}"
                                                             class="check-white" alt=""> <span>
-                                                            {{ translate('messages.Unlimited_uploads') }} </span>
+                                                            {{ 'Subidas Ilimitadas' }} </span>
                                                     </li>
                                                 @else
                                                     <li>
@@ -190,7 +190,7 @@
                                                         <img src="{{ asset('assets/landing/img/check-2.svg') }}"
                                                             class="check-white" alt=""> <span>
                                                             {{ $package->max_product }}
-                                                            {{ translate('messages.uploads') }} </span>
+                                                            {{ 'Subidas' }} </span>
                                                     </li>
                                                 @endif
                                             </ul>
@@ -203,10 +203,10 @@
                             </div>
                         </div>
                         <div class="text-end pt-5 d-flex flex-wrap justify-content-end gap-3">
-                            {{-- <button type="button" class="cmn--btn btn--secondary shadow-none rounded-md border-0 outline-0">{{ translate('Back')
+                            {{-- <button type="button" class="cmn--btn btn--secondary shadow-none rounded-md border-0 outline-0">{{ 'Atrás'
                                 }}</button> --}}
                             <button type="submit"
-                                class="cmn--btn rounded-md border-0 outline-0">{{ translate('Next') }}</button>
+                                class="cmn--btn rounded-md border-0 outline-0">{{ 'Siguiente' }}</button>
                         </div>
                     </div>
                 </div>

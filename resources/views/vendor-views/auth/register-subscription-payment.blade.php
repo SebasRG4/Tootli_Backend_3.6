@@ -10,7 +10,7 @@
         <div class="container">
             <!-- Page Header -->
             <div class="section-header">
-                <h2 class="title mb-2">{{ translate('messages.vendor') }} <span class="text--base">{{translate('application')}}</span></h2>
+                <h2 class="title mb-2">{{ 'Restaurante/Tienda' }} <span class="text--base">{{'Registro'}}</span></h2>
             </div>
 
             <!-- End Page Header -->
@@ -18,13 +18,13 @@
             <!-- Stepper -->
                 <div class="stepper">
                     <div class="stepper-item active">
-                        <div class="step-name">{{ translate('General Info') }}</div>
+                        <div class="step-name">{{ 'Información General' }}</div>
                     </div>
                     <div class="stepper-item active">
-                        <div class="step-name">{{ translate('Business Plan') }}</div>
+                        <div class="step-name">{{ 'Plan de Negocios' }}</div>
                     </div>
                     <div class="stepper-item">
-                        <div class="step-name">{{ translate('Complete') }}</div>
+                        <div class="step-name">{{ 'Completado' }}</div>
                     </div>
                 </div>
             <!-- Stepper -->
@@ -60,7 +60,7 @@
                                         {{-- <img src="{{asset('assets/admin/img/check-1.png')}}" class="uncheck" alt=""> --}}
                                         <img src="{{asset('assets/admin/img/check-2.png')}}" class="check" alt="">
                                     </div>
-                                    <span>{{ translate('Continue with') }} {{ $trial_period }}  {{ data_get($free_trial_settings, 'subscription_free_trial_type') }} {{ translate('Free_Trial') }}</span>
+                                    <span>{{ translate('Continue with') }} {{ $trial_period }}  {{ data_get($free_trial_settings, 'subscription_free_trial_type') }} {{ 'Prueba Gratuita' }}</span>
                                 </div>
                             </label>
                         @endif
@@ -95,9 +95,9 @@
                             @endforeach
                         </div>
                         <div class="text-end pt-5 d-flex flex-wrap justify-content-end gap-3">
-                            {{-- <a  href="{{ route('restaurant.back',['store_id' => $store_id] ) }}" type="button" class="cmn--btn btn--secondary shadow-none rounded-md border-0 outline-0">{{ translate('Back')
+                            {{-- <a  href="{{ route('restaurant.back',['store_id' => $store_id] ) }}" type="button" class="cmn--btn btn--secondary shadow-none rounded-md border-0 outline-0">{{ 'Atrás'
                                 }}</a> --}}
-                            <button type="submit" class="cmn--btn rounded-md border-0 outline-0">{{ translate('Next')
+                            <button type="submit" class="cmn--btn rounded-md border-0 outline-0">{{ 'Siguiente'
                                 }}</button>
                         </div>
                     </div>

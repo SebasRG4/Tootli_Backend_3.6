@@ -10,20 +10,20 @@
         <div class="container">
             <!-- Page Header -->
             <div class="section-header">
-                <h2 class="title mb-2">{{ translate('messages.vendor') }} <span class="text--base">{{translate('application')}}</span></h2>
+                <h2 class="title mb-2">{{ 'Restaurante/Tienda' }} <span class="text--base">{{'Registro'}}</span></h2>
             </div>
             <!-- End Page Header -->
 
             <!-- Stepper -->
                 <div class="stepper">
                     <div style class="stepper-item active">
-                        <div class="step-name">{{ translate('General Info') }}</div>
+                        <div class="step-name">{{ 'Información General' }}</div>
                     </div>
                     <div class="stepper-item active">
-                        <div class="step-name">{{ translate('Business Plan') }}</div>
+                        <div class="step-name">{{ 'Plan de Negocios' }}</div>
                     </div>
                     <div  class="stepper-item active">
-                        <div class="step-name  {{  isset($payment_status) && $payment_status == 'fail' ? 'text-danger' : '' }}">{{ translate('Complete') }}</div>
+                        <div class="step-name  {{  isset($payment_status) && $payment_status == 'fail' ? 'text-danger' : '' }}">{{ 'Completado' }}</div>
                     </div>
                 </div>
             <!-- Stepper -->
@@ -35,12 +35,12 @@
                             @if ( isset($payment_status) && $payment_status == 'fail')
                             <img src="{{asset('assets/landing/img/Failed.gif')}}" width="40" alt="" class="mb-4">
                             <h5 class="card-title text-center">
-                                {{ translate('Transaction Failed!') }}
+                                {{ '¡Transacción Fallida!' }}
                             </h5>
                             @else
                             <img src="{{asset('assets/landing/img/Success.gif')}}" width="40" alt="" class="mb-4">
                             <h5 class="card-title text-center">
-                                {{ translate('Congratulations!') }}
+                                {{ '¡Felicidades!' }}
                             </h5>
 
                             @endif
@@ -50,15 +50,15 @@
                     <div class="card-body p-4 pb-5">
                         <div class="register-congrats-txt">
                             @if (isset($type) && $type == 'commission')
-                            {{ translate('You’ve opted for our commission-based plan. Admin will review the details and activate your account shortly. To explore the site.') }}
-                            <a href="{{ route('home',['new_user'=> true]) }}" class="text-base font-bold">{{ translate('visit_here') }}</a>
+                            {{ 'Has optado por nuestro plan basado en comisiones. El administrador revisará los detalles y activará tu cuenta en breve. Para explorar el sitio:' }}
+                            <a href="{{ route('home',['new_user'=> true]) }}" class="text-base font-bold">{{ 'Visita aquí' }}</a>
 
                             @elseif( isset($payment_status) && $payment_status == 'fail')
-                            {{ translate('Sorry, Your Transaction can’t be completed. Please choose another payment method.') }}
-                            <a href="{{ route('restaurant.back',['store_id' => $store_id ?? null]) }}" class="text-base font-bold">{{ translate('Try_again') }}</a>
+                            {{ 'Lo sentimos, tu transacción no pudo ser completada. Por favor, elige otro método de pago.' }}
+                            <a href="{{ route('restaurant.back',['store_id' => $store_id ?? null]) }}" class="text-base font-bold">{{ 'Inténtalo de nuevo' }}</a>
                             @else
-                            {{ translate('Thank you for your subscription purchase! Your payment was successfully processed. Please note that your subscription will be activated once it has been approved by our Admin Team. To explore the site') }}
-                            <a href="{{ route('home',['new_user'=> true]) }}" class="text-base font-bold">{{ translate('visit_here') }}</a>
+                            {{ '¡Gracias por tu suscripción! Tu pago se procesó exitosamente. Ten en cuenta que tu suscripción se activará una vez que sea aprobada por nuestro equipo. Para explorar el sitio:' }}
+                            <a href="{{ route('home',['new_user'=> true]) }}" class="text-base font-bold">{{ 'Visita aquí' }}</a>
                             @endif
 
                         </div>

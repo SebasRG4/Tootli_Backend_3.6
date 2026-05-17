@@ -10,7 +10,7 @@
         <div class="container">
             <!-- Page Header -->
             <div class="section-header">
-                <h2 class="title mb-2">{{ translate('messages.vendor') }} <span class="text--base">{{translate('application')}}</span></h2>
+                <h2 class="title mb-2">{{ 'Restaurante/Tienda' }} <span class="text--base">{{'Registro'}}</span></h2>
             </div>
             @php($language=\App\Models\BusinessSetting::where('key','language')->first())
             @php($language = $language->value ?? null)
@@ -20,13 +20,13 @@
             <!-- Stepper -->
                 <div class="stepper">
                     <div class="stepper-item active">
-                        <div class="step-name">{{ translate('General Info') }}</div>
+                        <div class="step-name">{{ 'Información General' }}</div>
                     </div>
                     <div class="stepper-item active">
-                        <div class="step-name">{{ translate('Business Plan') }}</div>
+                        <div class="step-name">{{ 'Plan de Negocios' }}</div>
                     </div>
                     <div class="stepper-item active error">
-                        <div class="step-name">{{ translate('Complete') }}</div>
+                        <div class="step-name">{{ 'Completado' }}</div>
                     </div>
                 </div>
             <!-- Stepper -->
@@ -38,7 +38,7 @@
                     <div class="card-header border-0 pb-0 pt-5">
                         <h5 class="card-title text-center">
                             <img src="{{asset('assets/landing/img/Failed.gif')}}" width="40" alt="" class="mb-4">
-                            <div>{{ translate('Transaction Failed!') }}</div>
+                            <div>{{ '¡Transacción Fallida!' }}</div>
                         </h5>
                     </div>
                     <div class="card-body p-4 pb-5">
