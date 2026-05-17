@@ -282,9 +282,9 @@ Route::get('module-test', function () {
 });
 
 //Restaurant Registration
-Route::group(['prefix' => 'vendor', 'as' => 'restaurant.'], function () {
-    Route::get('apply', 'VendorController@create')->name('create');
-    Route::post('apply', 'VendorController@store')->name('store');
+Route::group(['prefix' => 'registroaliado', 'as' => 'restaurant.'], function () {
+    Route::get('/', 'VendorController@create')->name('create');
+    Route::post('/', 'VendorController@store')->name('store');
     Route::get('get-all-modules', 'VendorController@get_all_modules')->name('get-all-modules');
     Route::get('get-module-type', 'VendorController@get_modules_type')->name('get-module-type');
     Route::get('check-module-type', 'VendorController@check_module_type')->name('check-module-type');
