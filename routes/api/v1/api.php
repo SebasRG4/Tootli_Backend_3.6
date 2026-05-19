@@ -96,6 +96,12 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::get('delivery-men',          'AdminOrderController@getAvailableDeliveryMen');
             Route::post('assign-delivery-man',  'AdminOrderController@assignDeliveryMan');
         });
+
+        // Solicitudes de Pago (Offline Payments de Repartidores)
+        Route::group(['prefix' => 'offline-payments'], function () {
+            Route::get('list',                  'AdminOfflinePaymentController@list');
+            Route::post('verify',               'AdminOfflinePaymentController@verify');
+        });
     });
 
     //Store Subscription
