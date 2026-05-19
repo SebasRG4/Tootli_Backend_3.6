@@ -54,4 +54,102 @@ class AdminDashboardController extends Controller
             'new_orders_count' => $new_orders_count
         ], 200);
     }
+
+    public function dailyReport(Request $request)
+    {
+        $admin = \App\Models\Admin::where('auth_token', $request->bearerToken())->first();
+        if (!$admin || $admin->role_id != 1) {
+            return response()->json(['errors' => [['code' => 'auth-001', 'message' => 'Unauthorized']]], 401);
+        }
+
+        $today = Carbon::now();
+
+        // 1. Sales metrics
+        $total_sales = Order::whereDate('created_at', $today)
+            ->where('order_status', '!=', 'canceled')
+            ->sum('order_amount');
+
+        $admin_commissions = OrderTransaction::whereDate('created_at', $today)
+            ->sum('admin_commission');
+
+        $delivery_fees = OrderTransaction::whereDate('created_at', $today)
+            ->sum('delivery_charge');
+
+        // 2. Order Funnel
+        $total_orders = Order::whereDate('created_at', $today)->count();
+        $delivered_orders = Order::whereDate('created_at', $today)->where('order_status', 'delivered')->count();
+        $pending_orders = Order::whereDate('created_at', $today)->where('order_status', 'pending')->count();
+        $processing_orders = Order::whereDate('created_at', $today)
+            ->whereIn('order_status', ['accepted', 'confirmed', 'processing', 'handover', 'picked_up'])
+            ->count();
+        $canceled_orders = Order::whereDate('created_at', $today)->where('order_status', 'canceled')->count();
+
+        // 3. Module Breakdown
+        $module_breakdown = Order::whereDate('created_at', $today)
+            ->where('order_status', '!=', 'canceled')
+            ->select('module_id', \Illuminate\Support\Facades\DB::raw('count(*) as count, sum(order_amount) as sales'))
+            ->groupBy('module_id')
+            ->with('module')
+            ->get()
+            ->map(function($item) {
+                return [
+                    'module_id' => $item->module_id,
+                    'module_name' => $item->module ? $item->module->module_name : 'Otro',
+                    'count' => intval($item->count),
+                    'sales' => floatval($item->sales),
+                ];
+            });
+
+        // 4. Top Stores of the Day
+        $top_stores = Order::whereDate('created_at', $today)
+            ->where('order_status', '!=', 'canceled')
+            ->select('store_id', \Illuminate\Support\Facades\DB::raw('count(*) as count, sum(order_amount) as sales'))
+            ->groupBy('store_id')
+            ->orderBy('sales', 'desc')
+            ->take(5)
+            ->with('store')
+            ->get()
+            ->map(function($item) {
+                return [
+                    'store_name' => $item->store ? $item->store->name : 'Tienda Desconocida',
+                    'count' => intval($item->count),
+                    'sales' => floatval($item->sales),
+                ];
+            });
+
+        // 5. Top Delivery Men of the Day
+        $top_delivery_men = Order::whereDate('created_at', $today)
+            ->where('order_status', 'delivered')
+            ->whereNotNull('delivery_man_id')
+            ->select('delivery_man_id', \Illuminate\Support\Facades\DB::raw('count(*) as count'))
+            ->groupBy('delivery_man_id')
+            ->orderBy('count', 'desc')
+            ->take(5)
+            ->with('delivery_man')
+            ->get()
+            ->map(function($item) {
+                return [
+                    'name' => $item->delivery_man ? ($item->delivery_man->f_name . ' ' . $item->delivery_man->l_name) : 'Repartidor',
+                    'count' => intval($item->count),
+                ];
+            });
+
+        return response()->json([
+            'sales' => [
+                'total_sales' => floatval($total_sales),
+                'admin_commissions' => floatval($admin_commissions),
+                'delivery_fees' => floatval($delivery_fees),
+            ],
+            'orders' => [
+                'total' => intval($total_orders),
+                'delivered' => intval($delivered_orders),
+                'pending' => intval($pending_orders),
+                'processing' => intval($processing_orders),
+                'canceled' => intval($canceled_orders),
+            ],
+            'module_breakdown' => $module_breakdown,
+            'top_stores' => $top_stores,
+            'top_delivery_men' => $top_delivery_men,
+        ], 200);
+    }
 }
