@@ -173,9 +173,17 @@ class AdminOrderController extends Controller
             return response()->json(['errors' => [['code' => 'order-001', 'message' => 'Pedido no encontrado']]], 404);
         }
 
-        // Cargar todos los repartidores aprobados (independiente de si están online/offline)
+        // Cargar todos los repartidores aprobados con su última ubicación conocida
         $deliveryMen = DeliveryMan::where('application_status', 'approved')
-            ->get(['id', 'f_name', 'l_name', 'phone', 'image', 'type', 'active', 'current_orders', 'latitude', 'longitude']);
+            ->with('last_location')
+            ->get(['id', 'f_name', 'l_name', 'phone', 'image', 'type', 'active', 'current_orders']);
+
+        $deliveryMen->map(function($dm) {
+            $dm->latitude = $dm->last_location ? $dm->last_location->latitude : null;
+            $dm->longitude = $dm->last_location ? $dm->last_location->longitude : null;
+            unset($dm->last_location);
+            return $dm;
+        });
 
         return response()->json($deliveryMen, 200);
     }
