@@ -173,10 +173,9 @@ class AdminOrderController extends Controller
             return response()->json(['errors' => [['code' => 'order-001', 'message' => 'Pedido no encontrado']]], 404);
         }
 
-        // Cargar repartidores activos y del tipo adecuado
-        $deliveryMen = DeliveryMan::where('active', 1)
-            ->where('application_status', 'approved')
-            ->get(['id', 'f_name', 'l_name', 'phone', 'image', 'type']);
+        // Cargar todos los repartidores aprobados (independiente de si están online/offline)
+        $deliveryMen = DeliveryMan::where('application_status', 'approved')
+            ->get(['id', 'f_name', 'l_name', 'phone', 'image', 'type', 'active', 'current_orders', 'latitude', 'longitude']);
 
         return response()->json($deliveryMen, 200);
     }
