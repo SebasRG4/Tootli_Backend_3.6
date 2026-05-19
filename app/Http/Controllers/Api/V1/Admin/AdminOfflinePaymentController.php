@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DeliveryManOfflinePayment;
 use App\Models\DeliveryManWallet;
 use App\Models\AccountTransaction;
+use App\Models\DeliveryMan;
 use App\CentralLogics\Helpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +18,34 @@ class AdminOfflinePaymentController extends Controller
     {
         $status = $request->query('status', 'pending');
         
+        if ($status == 'collect') {
+            $delivery_men = DeliveryMan::with('wallet')
+                ->whereHas('wallet', function($query) {
+                    $query->where('collected_cash', '>', 0);
+                })
+                ->get()
+                ->map(function($dm) {
+                    return [
+                        'id' => $dm->id,
+                        'is_collect' => true,
+                        'amount' => (float)($dm->wallet ? $dm->wallet->collected_cash : 0.0),
+                        'status' => 'collect',
+                        'admin_note' => '',
+                        'payment_info' => [],
+                        'method_name' => 'Cash in Hand',
+                        'created_at' => now()->toIso8601String(),
+                        'delivery_man' => [
+                            'id' => $dm->id,
+                            'name' => $dm->f_name . ' ' . $dm->l_name,
+                            'phone' => $dm->phone,
+                            'image' => $dm->image_full_url,
+                            'cash_in_hand' => (float)($dm->wallet ? $dm->wallet->collected_cash : 0.0),
+                        ],
+                    ];
+                });
+            return response()->json($delivery_men, 200);
+        }
+
         $payments = DeliveryManOfflinePayment::with(['delivery_man', 'offline_payment_method'])
             ->where('status', $status)
             ->latest()
@@ -136,5 +165,46 @@ class AdminOfflinePaymentController extends Controller
                 ]
             ], 500);
         }
+    }
+
+    public function sendDebtReminder(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'delivery_man_id' => 'required|exists:delivery_men,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $dm = DeliveryMan::with('wallet')->findOrFail($request->delivery_man_id);
+        $amount = (float)($dm->wallet ? $dm->wallet->collected_cash : 0.0);
+
+        if ($amount <= 0) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'no_debt', 'message' => 'Este repartidor no tiene deuda pendiente.']
+                ]
+            ], 400);
+        }
+
+        $fcm_token = $dm->fcm_token;
+        if ($fcm_token) {
+            $data = [
+                'title' => '🚨 Recordatorio de Depósito - Tootli',
+                'description' => 'Tienes un saldo acumulado de ' . Helpers::format_currency($amount) . ' en efectivo de Tootli en mano. Por favor realiza tu depósito a la brevedad para seguir operando.',
+                'order_id' => '',
+                'image' => '',
+                'type' => 'debt_reminder',
+            ];
+            Helpers::send_push_notif_to_device($fcm_token, $data);
+            return response()->json(['message' => 'Notificación de recordatorio enviada con éxito.'], 200);
+        }
+
+        return response()->json([
+            'errors' => [
+                ['code' => 'no_token', 'message' => 'El repartidor no tiene un token de notificación activo.']
+            ]
+        ], 400);
     }
 }

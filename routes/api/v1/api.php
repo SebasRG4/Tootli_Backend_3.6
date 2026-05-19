@@ -102,6 +102,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         Route::group(['prefix' => 'offline-payments'], function () {
             Route::get('list',                  'AdminOfflinePaymentController@list');
             Route::post('verify',               'AdminOfflinePaymentController@verify');
+            Route::post('remind-debt',          'AdminOfflinePaymentController@sendDebtReminder');
         });
     });
 

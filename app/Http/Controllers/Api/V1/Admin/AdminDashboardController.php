@@ -47,6 +47,24 @@ class AdminDashboardController extends Controller
             ->take(5)
             ->get();
 
+        // 2c. Pedidos retrasados (más de 5 minutos sin ser aceptados por el restaurante o sin repartidor asignado)
+        $five_minutes_ago = Carbon::now()->subMinutes(5);
+        $delayed_orders = Order::where(function ($query) use ($five_minutes_ago) {
+                // Restaurante no ha aceptado en 5 min
+                $query->where('order_status', 'pending')
+                      ->where('created_at', '<=', $five_minutes_ago);
+            })
+            ->orWhere(function ($query) use ($five_minutes_ago) {
+                // Aceptado o en preparación pero sin repartidor por 5 min
+                $query->whereIn('order_status', ['accepted', 'confirmed', 'processing'])
+                      ->whereNull('delivery_man_id')
+                      ->where('created_at', '<=', $five_minutes_ago);
+            })
+            ->with(['customer', 'store'])
+            ->latest()
+            ->take(10)
+            ->get();
+
         // 3. Ganancia total del dia
         $daily_profit = OrderTransaction::whereDate('created_at', $today)
             ->sum('admin_commission');
@@ -67,7 +85,8 @@ class AdminDashboardController extends Controller
             'today_earnings' => floatval($daily_profit),
             'new_orders' => $new_orders,
             'new_orders_count' => $new_orders_count,
-            'urgent_refunds' => $urgent_refunds
+            'urgent_refunds' => $urgent_refunds,
+            'delayed_orders' => $delayed_orders
         ], 200);
     }
 
