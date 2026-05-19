@@ -35,7 +35,7 @@ class AdminDashboardController extends Controller
 
         // 3. Ganancia total del dia
         $daily_profit = OrderTransaction::whereDate('created_at', $today)
-            ->sum(\Illuminate\Support\Facades\DB::raw('admin_commission + admin_expense - delivery_fee_comission'));
+            ->sum('admin_commission');
 
         // 4. Notificacion de pedidos nuevos
         $new_orders = Order::whereDate('created_at', $today)->where('order_status', 'pending')
@@ -49,7 +49,8 @@ class AdminDashboardController extends Controller
         return response()->json([
             'special_attention_orders' => $special_attention_orders,
             'payment_requests' => $payment_requests,
-            'daily_profit' => $daily_profit,
+            'daily_profit' => floatval($daily_profit),
+            'today_earnings' => floatval($daily_profit),
             'new_orders' => $new_orders,
             'new_orders_count' => $new_orders_count
         ], 200);
