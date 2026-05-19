@@ -69,11 +69,28 @@ class AdminDashboardController extends Controller
             ->where('order_status', '!=', 'canceled')
             ->sum('order_amount');
 
-        $admin_commissions = OrderTransaction::whereDate('created_at', $today)
+        $admin_commission = OrderTransaction::whereDate('created_at', $today)
             ->sum('admin_commission');
+
+        $admin_expense = OrderTransaction::whereDate('created_at', $today)
+            ->sum('admin_expense');
+
+        $delivery_fee_commission = OrderTransaction::whereDate('created_at', $today)
+            ->sum('delivery_fee_comission');
+
+        $store_amount = OrderTransaction::whereDate('created_at', $today)
+            ->sum('store_amount');
+
+        $delivery_man_amount = OrderTransaction::whereDate('created_at', $today)
+            ->sum('delivery_man_amount');
+
+        $additional_charge = OrderTransaction::whereDate('created_at', $today)
+            ->sum('additional_charge');
 
         $delivery_fees = OrderTransaction::whereDate('created_at', $today)
             ->sum('delivery_charge');
+
+        $admin_net_income = $admin_commission + $admin_expense + $delivery_fee_commission;
 
         // 2. Order Funnel
         $total_orders = Order::whereDate('created_at', $today)->count();
@@ -137,8 +154,14 @@ class AdminDashboardController extends Controller
         return response()->json([
             'sales' => [
                 'total_sales' => floatval($total_sales),
-                'admin_commissions' => floatval($admin_commissions),
+                'admin_commissions' => floatval($admin_net_income),
                 'delivery_fees' => floatval($delivery_fees),
+                'store_commission' => floatval($admin_commission),
+                'service_charge' => floatval($admin_expense),
+                'delivery_fee_commission' => floatval($delivery_fee_commission),
+                'store_net_income' => floatval($store_amount),
+                'delivery_man_net_income' => floatval($delivery_man_amount),
+                'additional_charge' => floatval($additional_charge),
             ],
             'orders' => [
                 'total' => intval($total_orders),
