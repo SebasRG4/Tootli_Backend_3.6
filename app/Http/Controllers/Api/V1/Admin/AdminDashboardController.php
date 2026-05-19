@@ -82,13 +82,13 @@ class AdminDashboardController extends Controller
             ->sum('store_amount');
 
         $delivery_man_amount = OrderTransaction::whereDate('created_at', $today)
-            ->sum('delivery_man_amount');
+            ->sum(\Illuminate\Support\Facades\DB::raw('original_delivery_charge + dm_tips'));
 
         $additional_charge = OrderTransaction::whereDate('created_at', $today)
             ->sum('additional_charge');
 
         $delivery_fees = OrderTransaction::whereDate('created_at', $today)
-            ->sum('delivery_charge');
+            ->sum('original_delivery_charge');
 
         $admin_net_income = $admin_commission + $admin_expense + $delivery_fee_commission;
 
