@@ -71,6 +71,14 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
 
         Route::post('social-login', 'SocialAuthController@social_login');
         Route::post('social-register', 'SocialAuthController@social_register');
+        
+        Route::group(['prefix' => 'admin'], function () {
+            Route::post('login', 'AdminAuthController@login');
+        });
+    });
+
+    Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
+        Route::get('dashboard', 'AdminDashboardController@dashboard');
     });
 
     //Store Subscription
