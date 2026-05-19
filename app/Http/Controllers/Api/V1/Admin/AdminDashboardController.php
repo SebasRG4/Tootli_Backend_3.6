@@ -23,7 +23,7 @@ class AdminDashboardController extends Controller
 
         // 1. Pedidos que necesiten atencion especial
         // Let's assume pending, delayed, refund_requested or canceled
-        $special_attention_orders = Order::whereIn('order_status', ['pending', 'failed', 'canceled', 'refund_requested'])
+        $special_attention_orders = Order::whereIn('order_status', ['pending', 'failed', 'refund_requested'])
             ->with(['customer', 'store', 'delivery_man'])
             ->latest()
             ->take(10)
@@ -32,6 +32,20 @@ class AdminDashboardController extends Controller
         // 2. Solicitudes de pago de repartidores
         // Usually ProvideDMEarning or withdraw requests
         $payment_requests = WithdrawRequest::where('approved', 0)->with('vendor', 'delivery_man')->latest()->take(10)->get();
+
+        // 2b. Reembolsos urgentes (Pagos en línea cancelados o que solicitaron reembolso)
+        $urgent_refunds = Order::where(function ($query) {
+                $query->where('order_status', 'refund_requested')
+                      ->orWhere(function ($q) {
+                          $q->where('order_status', 'canceled')
+                            ->where('payment_status', 'paid')
+                            ->where('payment_method', '!=', 'cash_on_delivery');
+                      });
+            })
+            ->with(['customer', 'store'])
+            ->latest()
+            ->take(5)
+            ->get();
 
         // 3. Ganancia total del dia
         $daily_profit = OrderTransaction::whereDate('created_at', $today)
@@ -52,7 +66,8 @@ class AdminDashboardController extends Controller
             'daily_profit' => floatval($daily_profit),
             'today_earnings' => floatval($daily_profit),
             'new_orders' => $new_orders,
-            'new_orders_count' => $new_orders_count
+            'new_orders_count' => $new_orders_count,
+            'urgent_refunds' => $urgent_refunds
         ], 200);
     }
 
