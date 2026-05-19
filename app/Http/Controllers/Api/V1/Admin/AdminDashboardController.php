@@ -90,6 +90,8 @@ class AdminDashboardController extends Controller
         $delivery_fees = OrderTransaction::whereDate('created_at', $today)
             ->sum('original_delivery_charge');
 
+        $calculated_store_commission = $admin_commission - $delivery_fee_commission - $additional_charge;
+        $calculated_service_charge = $additional_charge;
         $admin_net_income = $admin_commission;
 
         // 2. Order Funnel
@@ -156,12 +158,12 @@ class AdminDashboardController extends Controller
                 'total_sales' => floatval($total_sales),
                 'admin_commissions' => floatval($admin_net_income),
                 'delivery_fees' => floatval($delivery_fees),
-                'store_commission' => floatval($admin_commission),
-                'service_charge' => floatval($admin_expense),
+                'store_commission' => floatval($calculated_store_commission),
+                'service_charge' => floatval($calculated_service_charge),
                 'delivery_fee_commission' => floatval($delivery_fee_commission),
                 'store_net_income' => floatval($store_amount),
                 'delivery_man_net_income' => floatval($delivery_man_amount),
-                'additional_charge' => floatval($additional_charge),
+                'additional_charge' => 0.0,
             ],
             'orders' => [
                 'total' => intval($total_orders),
