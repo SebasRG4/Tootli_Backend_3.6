@@ -204,8 +204,14 @@ class AdminConversationController extends Controller
             return response()->json(['errors' => [['code' => 'auth-001', 'message' => 'No autorizado']]], 401);
         }
 
+        $adminUserInfo = UserInfo::where('admin_id', 0)->first();
+        $adminUserInfoId = $adminUserInfo ? $adminUserInfo->id : 0;
+
         $count = Conversation::whereUserType('admin')
             ->where('unread_message_count', '>', 0)
+            ->whereHas('last_message', function ($q) use ($adminUserInfoId) {
+                $q->where('sender_id', '!=', $adminUserInfoId);
+            })
             ->sum('unread_message_count');
 
         return response()->json(['count' => intval($count)], 200);

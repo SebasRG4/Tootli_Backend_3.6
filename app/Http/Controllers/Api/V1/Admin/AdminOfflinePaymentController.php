@@ -34,7 +34,7 @@ class AdminOfflinePaymentController extends Controller
                         'id' => $payment->delivery_man->id,
                         'name' => $payment->delivery_man->f_name . ' ' . $payment->delivery_man->l_name,
                         'phone' => $payment->delivery_man->phone,
-                        'image' => $payment->delivery_man->image,
+                        'image' => $payment->delivery_man->image_full_url,
                         'cash_in_hand' => (float)($payment->delivery_man->wallet ? $payment->delivery_man->wallet->collected_cash : 0.0),
                     ] : null,
                 ];
