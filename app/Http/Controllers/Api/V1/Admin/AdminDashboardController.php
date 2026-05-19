@@ -90,7 +90,7 @@ class AdminDashboardController extends Controller
         $delivery_fees = OrderTransaction::whereDate('created_at', $today)
             ->sum('original_delivery_charge');
 
-        $admin_net_income = $admin_commission + $admin_expense + $delivery_fee_commission;
+        $admin_net_income = $admin_commission;
 
         // 2. Order Funnel
         $total_orders = Order::whereDate('created_at', $today)->count();
