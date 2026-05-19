@@ -87,6 +87,15 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::post('send',         'AdminConversationController@send');
             Route::get('unread-count',  'AdminConversationController@unreadCount');
         });
+
+        // Gestión de Pedidos por el Administrador
+        Route::group(['prefix' => 'order'], function () {
+            Route::get('list',                  'AdminOrderController@list');
+            Route::get('details',               'AdminOrderController@details');
+            Route::post('update-status',        'AdminOrderController@updateStatus');
+            Route::get('delivery-men',          'AdminOrderController@getAvailableDeliveryMen');
+            Route::post('assign-delivery-man',  'AdminOrderController@assignDeliveryMan');
+        });
     });
 
     //Store Subscription
