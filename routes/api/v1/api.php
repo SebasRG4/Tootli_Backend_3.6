@@ -79,6 +79,14 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
 
     Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::get('dashboard', 'AdminDashboardController@dashboard');
+
+        // Mensajes admin ↔ usuarios/repartidores/tiendas
+        Route::group(['prefix' => 'message'], function () {
+            Route::get('list',          'AdminConversationController@list');
+            Route::get('details',       'AdminConversationController@details');
+            Route::post('send',         'AdminConversationController@send');
+            Route::get('unread-count',  'AdminConversationController@unreadCount');
+        });
     });
 
     //Store Subscription
