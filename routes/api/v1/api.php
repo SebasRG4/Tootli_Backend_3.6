@@ -80,6 +80,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
     Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::get('dashboard',                 'AdminDashboardController@dashboard');
         Route::get('dashboard/daily-report',    'AdminDashboardController@dailyReport');
+        Route::get('dashboard/urgent-refunds',  'AdminDashboardController@urgentRefunds');
 
         // Mensajes admin ↔ usuarios/repartidores/tiendas
         Route::group(['prefix' => 'message'], function () {

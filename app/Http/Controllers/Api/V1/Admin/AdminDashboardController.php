@@ -212,4 +212,21 @@ class AdminDashboardController extends Controller
             'top_delivery_men' => $top_delivery_men,
         ], 200);
     }
+
+    public function urgentRefunds(Request $request)
+    {
+        $refunds = \App\Models\Order::where(function ($query) {
+                $query->where('order_status', 'refund_requested')
+                      ->orWhere(function ($q) {
+                          $q->where('order_status', 'canceled')
+                            ->where('payment_status', 'paid')
+                            ->where('payment_method', '!=', 'cash_on_delivery');
+                      });
+            })
+            ->with(['customer', 'store'])
+            ->latest()
+            ->get();
+
+        return response()->json($refunds, 200);
+    }
 }
