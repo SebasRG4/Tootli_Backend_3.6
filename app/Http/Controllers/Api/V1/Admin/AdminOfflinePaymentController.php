@@ -192,7 +192,7 @@ class AdminOfflinePaymentController extends Controller
         if ($fcm_token) {
             $data = [
                 'title' => '🚨 Recordatorio de Depósito - Tootli',
-                'description' => 'Tienes un saldo acumulado de ' . Helpers::format_currency($amount) . ' en efectivo de Tootli en mano. Por favor realiza tu depósito a la brevedad para seguir operando.',
+                'description' => 'Tienes ' . Helpers::format_currency($amount) . ' pendientes por depositar. Cada depósito nos ayuda a seguir creciendo y generar más oportunidades para todos 💚',
                 'order_id' => '',
                 'image' => '',
                 'type' => 'debt_reminder',
