@@ -209,8 +209,6 @@ class AdminConversationController extends Controller
 
         $count = Conversation::whereUserType('admin')
             ->where('unread_message_count', '>', 0)
-            ->whereHas('sender')
-            ->whereHas('receiver')
             ->whereHas('last_message', function ($q) use ($adminUserInfoId) {
                 $q->where('sender_id', '!=', $adminUserInfoId);
             })
