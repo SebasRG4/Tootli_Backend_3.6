@@ -1834,8 +1834,12 @@ class Helpers
                 'Content-Type' => 'application/json',
             ];
             try {
-                Http::withHeaders($headers)->post($url, $data);
+                $response = Http::withHeaders($headers)->post($url, $data);
+                info("FCM Response Status: " . $response->status());
+                info("FCM Response Body: " . $response->body());
+                return $response->successful();
             } catch (\Exception $exception) {
+                info("FCM Connection Error: " . $exception->getMessage());
                 return false;
             }
         }
@@ -1912,6 +1916,10 @@ class Helpers
                     ],
                     "payload" => [
                         "aps" => [
+                            "alert" => [
+                                "title" => (string) $data['title'],
+                                "body" => (string) $data['description'],
+                            ],
                             "sound" => "notification.wav",
                             "content-available" => 1
                         ]
@@ -1981,6 +1989,10 @@ class Helpers
                         ],
                         "payload" => [
                             "aps" => [
+                                "alert" => [
+                                    "title" => (string) $data['title'],
+                                    "body" => (string) $data['description'],
+                                ],
                                 "sound" => "notification.wav",
                                 "content-available" => 1
                             ]
@@ -2017,6 +2029,10 @@ class Helpers
                         ],
                         "payload" => [
                             "aps" => [
+                                "alert" => [
+                                    "title" => (string) $data['title'],
+                                    "body" => (string) $data['description'],
+                                ],
                                 "sound" => "notification.wav",
                                 "content-available" => 1
                             ]
