@@ -257,6 +257,48 @@ class AdminOrderController extends Controller
         $order->order_status = 'refunded';
         $order->save();
 
-        return response()->json(['message' => 'El reembolso ha sido marcado como completado y el pedido ha sido actualizado.', 'order' => $order], 200);
+        // 1. Verificar si la Cartera (Wallet) está activada en la plataforma
+        $wallet_status = \App\Models\BusinessSetting::where('key', 'wallet_status')->first()?->value ?? 0;
+        $isWalletCredited = false;
+
+        if ($wallet_status == 1 && $order->user_id) {
+            try {
+                $credited = \App\CentralLogics\CustomerLogic::create_wallet_transaction(
+                    $order->user_id,
+                    $order->order_amount,
+                    'order_refund',
+                    $order->id
+                );
+                if ($credited) {
+                    $isWalletCredited = true;
+                }
+            } catch (\Exception $e) {
+                // Capturar errores silenciosamente si la lógica falla
+            }
+        }
+
+        // 2. Enviar notificación push adaptativa según el estado de la billetera
+        try {
+            $customerFcm = $order->customer?->cm_firebase_token;
+            if ($customerFcm) {
+                $description = $isWalletCredited
+                    ? 'El reembolso de tu pedido #' . $order->id . ' por $' . number_format($order->order_amount, 2) . ' ha sido aprobado y abonado a tu Cartera Tootli 💸.'
+                    : 'El reembolso de tu pedido #' . $order->id . ' por $' . number_format($order->order_amount, 2) . ' ha sido aprobado. El dinero se procesará a través de tu método de pago original o manualmente por soporte.';
+
+                \App\CentralLogics\Helpers::send_push_notif_to_device($customerFcm, [
+                    'title' => 'Reembolso Aprobado 💸',
+                    'description' => $description,
+                    'order_id' => $order->id,
+                    'image' => '',
+                    'type' => $isWalletCredited ? 'wallet' : 'order_status',
+                ]);
+            }
+        } catch (\Exception $e) {}
+
+        $resMsg = $isWalletCredited
+            ? 'El reembolso fue completado, el dinero se abonó a la cartera del cliente y se le notificó.'
+            : 'El reembolso fue completado en base de datos. Como la cartera está desactivada, se le notificó al cliente que se procesará manualmente/método original.';
+
+        return response()->json(['message' => $resMsg, 'order' => $order], 200);
     }
 }
