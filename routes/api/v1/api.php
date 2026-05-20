@@ -95,6 +95,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::get('list',                  'AdminOrderController@list');
             Route::get('details',               'AdminOrderController@details');
             Route::post('update-status',        'AdminOrderController@updateStatus');
+            Route::post('refund-payment',       'AdminOrderController@refundPayment');
             Route::get('delivery-men',          'AdminOrderController@getAvailableDeliveryMen');
             Route::post('assign-delivery-man',  'AdminOrderController@assignDeliveryMan');
         });

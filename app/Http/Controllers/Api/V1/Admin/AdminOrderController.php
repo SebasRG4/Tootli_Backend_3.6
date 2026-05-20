@@ -236,4 +236,27 @@ class AdminOrderController extends Controller
 
         return response()->json(['message' => 'Repartidor asignado exitosamente', 'order' => $order], 200);
     }
+
+    public function refundPayment(Request $request)
+    {
+        $admin = $this->getAdmin($request);
+        if (!$admin) {
+            return response()->json(['errors' => [['code' => 'auth-001', 'message' => 'No autorizado']]], 401);
+        }
+
+        $request->validate([
+            'order_id' => 'required'
+        ]);
+
+        $order = Order::find($request->order_id);
+        if (!$order) {
+            return response()->json(['errors' => [['code' => 'order-001', 'message' => 'Pedido no encontrado']]], 404);
+        }
+
+        $order->payment_status = 'refunded';
+        $order->order_status = 'refunded';
+        $order->save();
+
+        return response()->json(['message' => 'El reembolso ha sido marcado como completado y el pedido ha sido actualizado.', 'order' => $order], 200);
+    }
 }
