@@ -7,13 +7,8 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-    /**
-     * The Artisan commands provided by your application.
-     *
-     * @var array
-     */
     protected $commands = [
-        //
+        \App\Console\Commands\SendNightlyDebtReminders::class,
     ];
 
     /**
@@ -27,6 +22,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('spei:cancel-expired')->everyMinute();
         $schedule->command('dm:recalculate-tiers')->dailyAt('03:15');
         $schedule->command('delivery:send-deposit-reminders')->everyThirtyMinutes();
+        $schedule->command('delivery:nightly-debt-reminders')->dailyAt('22:00');
         $schedule->command('order:incentivize')->everyMinute();
     }
 
