@@ -346,3 +346,357 @@ header {
     .grocery-promo { padding: 30px; }
     .partner-card { flex-direction: column; text-align: center; }
 }
+
+/* ==========================================================================
+   BOLT-STYLE HERO AND PREMIUM GLASSMORPHIC HEADER
+   ========================================================================== */
+
+/* Glassmorphism Navbar */
+header.header-bolt {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(26, 26, 26, 0.25) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: none;
+    padding: 15px 0;
+    transition: all 0.3s ease;
+}
+
+header.header-bolt .navbar-bottom {
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+header.header-bolt .logo img {
+    height: 42px;
+    filter: brightness(0) invert(1);
+    transition: transform 0.3s;
+}
+
+header.header-bolt .logo img:hover {
+    transform: scale(1.03);
+}
+
+/* Header Action Groups */
+.header-right-actions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.action-link {
+    color: #FFFFFF !important;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    transition: color 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.action-link:hover {
+    color: var(--tl-primary) !important;
+}
+
+.action-link-lang {
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+.action-link-lang i {
+    font-size: 16px;
+}
+
+/* Pill Button Registrarme */
+.btn-pill-white {
+    background: #FFFFFF;
+    color: #1A1A1A !important;
+    padding: 10px 24px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid #FFFFFF;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.btn-pill-white:hover {
+    background: transparent;
+    color: #FFFFFF !important;
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.15);
+}
+
+/* Hamburger button */
+.btn-hamburger {
+    background: none;
+    border: none;
+    color: #FFFFFF;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s, transform 0.2s;
+}
+
+.btn-hamburger:hover {
+    color: var(--tl-primary);
+    transform: scale(1.1);
+}
+
+/* Drawer Menu (Hamburger Panel) */
+.tootli-drawer {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 380px;
+    max-width: 100%;
+    height: 100vh;
+    background: rgba(18, 18, 18, 0.96);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    z-index: 9999;
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.6);
+    transition: right 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 90px 40px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tootli-drawer.open {
+    right: 0;
+}
+
+.tootli-drawer-close {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background: none;
+    border: none;
+    color: #FFFFFF;
+    font-size: 32px;
+    cursor: pointer;
+    transition: transform 0.3s, color 0.3s;
+    line-height: 1;
+}
+
+.tootli-drawer-close:hover {
+    transform: rotate(90deg);
+    color: var(--tl-primary);
+}
+
+.tootli-drawer-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.tootli-drawer-logo img {
+    height: 40px;
+    filter: brightness(0) invert(1);
+}
+
+.tootli-drawer-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.tootli-drawer-menu li a {
+    color: #FFFFFF;
+    font-size: 20px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.tootli-drawer-menu li a:hover {
+    color: var(--tl-primary);
+    padding-left: 8px;
+}
+
+.tootli-drawer-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 25px;
+}
+
+.tootli-drawer-socials {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+.tootli-drawer-socials a {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 20px;
+    transition: color 0.3s;
+}
+
+.tootli-drawer-socials a:hover {
+    color: var(--tl-primary);
+}
+
+.tootli-drawer-copy {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.4);
+    margin: 0;
+}
+
+/* Background overlay when drawer is open */
+.tootli-drawer-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.tootli-drawer-backdrop.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Bolt-Inspired Hero Section */
+.hero-bolt {
+    min-height: 95vh;
+    display: flex;
+    align-items: center;
+    background-image: linear-gradient(180deg, rgba(18, 18, 18, 0.5) 0%, rgba(18, 18, 18, 0.85) 100%), url('../img/hero-mexican-tech.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding-top: 120px;
+    position: relative;
+    color: #FFFFFF;
+    overflow: hidden;
+}
+
+.hero-bolt-content {
+    max-width: 720px;
+    z-index: 5;
+    position: relative;
+    padding-bottom: 40px;
+}
+
+.hero-bolt-title {
+    font-size: 80px;
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -2.5px;
+    margin-bottom: 24px;
+    color: #FFFFFF;
+    text-transform: none;
+}
+
+.hero-bolt-title span.text-gradient-green {
+    background: linear-gradient(135deg, #00D171 0%, #FFFFFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-bolt-subtitle {
+    font-size: 24px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 45px;
+    line-height: 1.4;
+    letter-spacing: -0.5px;
+}
+
+/* Premium Download Button */
+.btn-bolt {
+    padding: 18px 45px;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 18px;
+    background-color: var(--tl-primary);
+    color: #121212 !important;
+    border: none;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    box-shadow: 0 10px 30px rgba(0, 209, 113, 0.35);
+    cursor: pointer;
+}
+
+.btn-bolt:hover {
+    background-color: #FFFFFF;
+    color: #121212 !important;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(255, 255, 255, 0.25);
+}
+
+.btn-bolt i {
+    font-size: 20px;
+    transition: transform 0.3s;
+}
+
+.btn-bolt:hover i {
+    transform: translateY(2px);
+}
+
+@media (max-width: 991px) {
+    .hero-bolt-title {
+        font-size: 56px;
+        letter-spacing: -1.5px;
+    }
+    .hero-bolt-subtitle {
+        font-size: 20px;
+    }
+    .tootli-drawer {
+        width: 320px;
+    }
+}
+
+@media (max-width: 575px) {
+    .hero-bolt-title {
+        font-size: 44px;
+        letter-spacing: -1px;
+    }
+    .hero-bolt-subtitle {
+        font-size: 18px;
+        margin-bottom: 30px;
+    }
+    .btn-bolt {
+        padding: 16px 36px;
+        font-size: 16px;
+        width: 100%;
+        justify-content: center;
+    }
+    .header-right-actions {
+        gap: 15px;
+    }
+    .action-link-support {
+        display: none !important;
+    }
+}
+

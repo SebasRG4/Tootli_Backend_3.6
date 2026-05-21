@@ -5,34 +5,20 @@
 
 @section('content')
 
-    {{-- Hero Section --}}
-    <section id="home" class="hero-section section-padding">
+    {{-- Hero Section (Bolt Style) --}}
+    <section id="home" class="hero-bolt">
         <div class="container-custom">
-            <div class="row align-items-center">
-                <div class="col-lg-6 wow fadeInUp">
-                    <h1 class="hero-title">
-                        <span class="text-gradient-green">Pide lo que sea,</span><br>
-                        Donde sea.
-                    </h1>
-                    <p class="hero-subtitle">
-                        La super-app que conecta tu ciudad. Comida, súper, farmacia y más en minutos.
-                    </p>
-                    <div class="d-flex flex-wrap gap-3">
-                        @php($hero_links = $landing_data['download_user_app_links'] ?? null)
-                        @if (!empty($hero_links['playstore_url_status']) && $hero_links['playstore_url_status'] == 1)
-                            <a href="{{ $hero_links['playstore_url'] ?? '#' }}" target="_blank" class="btn-tootli btn-tootli-primary">
-                                <i class="fab fa-google-play"></i> Descargar App
-                            </a>
-                        @endif
-                        @if (!empty($hero_links['apple_store_url_status']) && $hero_links['apple_store_url_status'] == 1)
-                            <a href="{{ $hero_links['apple_store_url'] ?? '#' }}" target="_blank" class="btn-tootli btn-tootli-outline" style="border-color: #1A1A1A; color: #1A1A1A !important;">
-                                <i class="fab fa-apple"></i> App Store
-                            </a>
-                        @endif
-                    </div>
-                </div>
-                <div class="col-lg-6 hero-illustration wow fadeInRight">
-                    <img src="{{ asset('assets/landing/img/hero-3d.png') }}" alt="Tootli Hero" class="img-fluid">
+            <div class="hero-bolt-content wow fadeInUp">
+        <h1 class="hero-bolt-title">
+            Tu super app mexicana
+        </h1>
+                <p class="hero-bolt-subtitle">
+                    Lo hecho en México está bien hecho.
+                </p>
+                <div>
+                    <a href="https://tootli.mx/descargar" target="_blank" class="btn-bolt">
+                        Descargar <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
             </div>
         </div>

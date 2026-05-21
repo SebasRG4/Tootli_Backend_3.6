@@ -52,91 +52,92 @@
     <div id="landing-loader"></div>
     <!-- ==== Preloader ==== -->
     <!-- ==== Header Section Starts Here ==== -->
-    <header>
+    <header class="header-bolt">
         <div class="navbar-bottom">
             <div class="container">
                 <div class="navbar-bottom-wrapper">
-
+                    <!-- Logo -->
                     <a href="{{route('home')}}" class="logo">
-                        <img class="onerror-image"  data-onerror-image="{{ asset('assets/admin/img/160x160/img2.jpg') }}"
-
-                    src="{{ \App\CentralLogics\Helpers::logoFullUrl()}}"
-
-                    alt="image">
+                        <img class="onerror-image" data-onerror-image="{{ asset('assets/admin/img/160x160/img2.jpg') }}"
+                            src="{{ \App\CentralLogics\Helpers::logoFullUrl()}}" alt="image">
                     </a>
-                    <ul class="menu">
-                        <li>
-                            <a href="#home" class="nav-link-custom"><span>Inicio</span></a>
-                        </li>
-                        <li>
-                            <a href="#beneficios" class="nav-link-custom"><span>Beneficios</span></a>
-                        </li>
-                        <li>
-                            <a href="#categorias" class="nav-link-custom"><span>Categorías</span></a>
-                        </li>
-                        <li>
-                            <a href="#aliados" class="nav-link-custom"><span>Aliados</span></a>
-                        </li>
-                        <li>
-                            <a href="{{route('about-us')}}" class="nav-link-custom"><span>Acerca de Nosotros</span></a>
-                        </li>
-                    </ul>
-                    <div class="nav-toggle d-lg-none ms-auto me-3">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                    @php( $local = session()->has('landing_local')?session('landing_local'):null)
-                    @php($lang = \App\CentralLogics\Helpers::get_business_settings('system_language') )
-                    @if ($lang)
-                        <div class="dropdown--btn-hover position-relative">
-                            <a class="dropdown--btn border-0 px-3 header--btn text-capitalize d-flex align-items-center" href="javascript:void(0)">
-                                <span class="me-1">ES</span>
-                            </a>
-                        </div>
-                    @endif
-                    @if ($fixed_link &&$fixed_link['web_app_url_status'])
-                        <div class="me-2 d-none d-lg-block">
-                            <a class="cmn--btn me-xl-auto py-2" href="{{ $fixed_link['web_app_url'] }}" target="_blank">{{ translate('messages.browse_web') }}</a>
-                        </div>
-                    @endif
-                    @if (isset($toggle_dm_registration) || isset($toggle_store_registration))
-                    <div class="dropdown--btn-hover position-relative">
-                        <a class="dropdown--btn header--btn text-capitalize d-flex align-items-center" href="javascript:void(0)">
-                            <span class="me-1">Únete</span>
-                            <svg width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M6.00224 5.46105L1.33333 0.415128C1.21002 0.290383 1 0.0787335 1 0.0787335C1 0.0787335 0.708488 -0.0458817 0.584976 0.0788632L0.191805 0.475841C0.0680976 0.600389 7.43292e-08 0.766881 7.22135e-08 0.9443C7.00978e-08 1.12172 0.0680976 1.28801 0.191805 1.41266L5.53678 6.80682C5.66068 6.93196 5.82624 7.00049 6.00224 7C6.17902 7.00049 6.34439 6.93206 6.46839 6.80682L11.8082 1.41768C11.9319 1.29303 12 1.12674 12 0.949223C12 0.771804 11.9319 0.605509 11.8082 0.480765L11.415 0.0838844C11.1591 -0.174368 10.9225 0.222512 10.6667 0.480765L6.00224 5.46105Z"
-                                    fill="rgba(0,0,0,0.6)" />
-                            </svg>
+
+                    <!-- Right Action Elements (Bolt Style) -->
+                    <div class="header-right-actions ms-auto">
+                        <!-- Idioma (ES con Bandera de México) -->
+                        <a href="javascript:void(0)" class="action-link action-link-lang">
+                            <span>🇲🇽</span> ES
                         </a>
 
-                        <ul class="dropdown-list">
-                            @if ($toggle_store_registration)
-                            <li>
-                                <a class="" href="{{ route('restaurant.create') }}">
-                                    Registro de Negocio
-                                </a>
-                            </li>
-                            @if ($toggle_dm_registration)
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                            @endif
-                        @endif
-                        @if ($toggle_dm_registration)
-                            <li><a class=""
-                                    href="{{ route('deliveryman.create') }}">Registro de Repartidor</a>
-                            </li>
-                        @endif
-                        </ul>
+                        <!-- Soporte (Redirige a contacto) -->
+                        <a href="{{ route('contact-us') }}" class="action-link action-link-support">
+                            Soporte
+                        </a>
+
+                        <!-- Registrarme (Pill Button) -->
+                        <a href="javascript:void(0)" class="btn-pill-white" id="btn-registrarme">
+                            Registrarme
+                        </a>
+
+                        <!-- Botón de Menú Hamburguesa -->
+                        <button type="button" class="btn-hamburger" id="tootli-drawer-trigger">
+                            <i class="fas fa-bars"></i>
+                        </button>
                     </div>
-                    @endif
                 </div>
             </div>
         </div>
     </header>
     <!-- ==== Header Section Ends Here ==== -->
+
+    <!-- ==== Drawer Backdrop ==== -->
+    <div class="tootli-drawer-backdrop" id="tootli-drawer-backdrop"></div>
+
+    <!-- ==== Drawer Menu (Panel Hamburguesa) ==== -->
+    <div class="tootli-drawer" id="tootli-drawer">
+        <button class="tootli-drawer-close" id="tootli-drawer-close">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <div class="tootli-drawer-nav">
+            <div class="tootli-drawer-logo">
+                <img src="{{ \App\CentralLogics\Helpers::logoFullUrl()}}" alt="Tootli" height="40" style="filter: brightness(0) invert(1);">
+            </div>
+
+            <ul class="tootli-drawer-menu">
+                <li><a href="#home" class="drawer-nav-link">Inicio</a></li>
+                <li><a href="#beneficios" class="drawer-nav-link">Beneficios</a></li>
+                <li><a href="#categorias" class="drawer-nav-link">Categorías</a></li>
+                <li><a href="#aliados" class="drawer-nav-link">Aliados</a></li>
+                <li><a href="{{route('about-us')}}">Acerca de Nosotros</a></li>
+                <li><a href="{{route('contact-us')}}">Soporte y Ayuda</a></li>
+                
+                <!-- Opciones de Registro Dinámicas -->
+                <li style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 15px;">
+                    <a href="{{ route('restaurant.create') }}" style="color: var(--tl-primary) !important;">
+                        <i class="fas fa-store me-2"></i> Registro de Negocio
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('deliveryman.create') }}" style="color: #F8A629 !important;">
+                        <i class="fas fa-motorcycle me-2"></i> Registro de Repartidor
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="tootli-drawer-footer">
+            <div class="tootli-drawer-socials">
+                @php($social_media = \App\Models\SocialMedia::where('status', 1)->get())
+                @foreach ($social_media as $social)
+                    <a href="{{ $social->link }}" target="_blank">
+                        <i class="fab fa-{{ strtolower($social->name) }}"></i>
+                    </a>
+                @endforeach
+            </div>
+            <p class="tootli-drawer-copy">&copy; {{ date('Y') }} {{ $business_name }}. Todos los derechos reservados.</p>
+        </div>
+    </div>
     @yield('content')
     <!-- ======= Footer Section ======= -->
 
@@ -378,9 +379,36 @@
 
             $(document).on('keyup', 'input[type="tel"]', function () {
                 $(this).val(keepNumbersAndPlus($(this).val()));
-                });
+            });
 
+            // Hamburger Drawer Controls
+            const drawer = document.getElementById('tootli-drawer');
+            const backdrop = document.getElementById('tootli-drawer-backdrop');
+            const trigger = document.getElementById('tootli-drawer-trigger');
+            const closeBtn = document.getElementById('tootli-drawer-close');
+            const registrarmeBtn = document.getElementById('btn-registrarme');
+            const drawerLinks = document.querySelectorAll('.drawer-nav-link');
 
+            function openDrawer() {
+                drawer.classList.add('open');
+                backdrop.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeDrawer() {
+                drawer.classList.remove('open');
+                backdrop.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+
+            if (trigger) trigger.addEventListener('click', openDrawer);
+            if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+            if (backdrop) backdrop.addEventListener('click', closeDrawer);
+            if (registrarmeBtn) registrarmeBtn.addEventListener('click', openDrawer);
+
+            drawerLinks.forEach(link => {
+                link.addEventListener('click', closeDrawer);
+            });
 </script>
 
 </body>
