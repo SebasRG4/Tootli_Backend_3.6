@@ -2301,8 +2301,8 @@ class Helpers
             ) {
 
                 $data = [
-                    'title' => 'Nueva solicitud de pedido',
-                    'description' => 'Porfavor acepta el pedido para que no te lo ganen',
+                    'title' => 'Nuevo pedido recibido',
+                    'description' => 'Revisa la orden si tiene algun detalle',
                     'order_id' => $order->id,
                     'image' => '',
                     'module_id' => $order->module_id,

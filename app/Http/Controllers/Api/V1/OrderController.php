@@ -548,8 +548,8 @@ class OrderController extends Controller
             DB::commit();
 
             $data = [
-                'title' => translate('Order_Notification'),
-                'description' => translate('New order alert, confirm to proceed'),
+                'title' => 'Nuevo pedido recibido',
+                'description' => 'Revisa la orden si tiene algun detalle',
                 'order_id' => $order->id,
                 'image' => '',
                 'module_id' => $order->module_id,
