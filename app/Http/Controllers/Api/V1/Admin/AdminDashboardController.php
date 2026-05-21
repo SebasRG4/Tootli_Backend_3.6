@@ -97,32 +97,43 @@ class AdminDashboardController extends Controller
             return response()->json(['errors' => [['code' => 'auth-001', 'message' => 'Unauthorized']]], 401);
         }
 
-        $today = Carbon::now();
+        $type = $request->query('type', 'day');
+        $now = Carbon::now();
+        if ($type === 'week') {
+            $start_date = $now->copy()->startOfWeek();
+            $end_date = $now->copy()->endOfWeek();
+        } elseif ($type === 'month') {
+            $start_date = $now->copy()->startOfMonth();
+            $end_date = $now->copy()->endOfMonth();
+        } else {
+            $start_date = $now->copy()->startOfDay();
+            $end_date = $now->copy()->endOfDay();
+        }
 
         // 1. Sales metrics
-        $total_sales = Order::whereDate('created_at', $today)
+        $total_sales = Order::whereBetween('created_at', [$start_date, $end_date])
             ->where('order_status', '!=', 'canceled')
             ->sum('order_amount');
 
-        $admin_commission = OrderTransaction::whereDate('created_at', $today)
+        $admin_commission = OrderTransaction::whereBetween('created_at', [$start_date, $end_date])
             ->sum('admin_commission');
 
-        $admin_expense = OrderTransaction::whereDate('created_at', $today)
+        $admin_expense = OrderTransaction::whereBetween('created_at', [$start_date, $end_date])
             ->sum('admin_expense');
 
-        $delivery_fee_commission = OrderTransaction::whereDate('created_at', $today)
+        $delivery_fee_commission = OrderTransaction::whereBetween('created_at', [$start_date, $end_date])
             ->sum('delivery_fee_comission');
 
-        $store_amount = OrderTransaction::whereDate('created_at', $today)
+        $store_amount = OrderTransaction::whereBetween('created_at', [$start_date, $end_date])
             ->sum('store_amount');
 
-        $delivery_man_amount = OrderTransaction::whereDate('created_at', $today)
+        $delivery_man_amount = OrderTransaction::whereBetween('created_at', [$start_date, $end_date])
             ->sum(\Illuminate\Support\Facades\DB::raw('original_delivery_charge + dm_tips'));
 
-        $additional_charge = OrderTransaction::whereDate('created_at', $today)
+        $additional_charge = OrderTransaction::whereBetween('created_at', [$start_date, $end_date])
             ->sum('additional_charge');
 
-        $delivery_fees = OrderTransaction::whereDate('created_at', $today)
+        $delivery_fees = OrderTransaction::whereBetween('created_at', [$start_date, $end_date])
             ->sum('original_delivery_charge');
 
         $calculated_store_commission = $admin_commission - $delivery_fee_commission - $additional_charge;
@@ -130,16 +141,16 @@ class AdminDashboardController extends Controller
         $admin_net_income = $admin_commission;
 
         // 2. Order Funnel
-        $total_orders = Order::whereDate('created_at', $today)->count();
-        $delivered_orders = Order::whereDate('created_at', $today)->where('order_status', 'delivered')->count();
-        $pending_orders = Order::whereDate('created_at', $today)->where('order_status', 'pending')->count();
-        $processing_orders = Order::whereDate('created_at', $today)
+        $total_orders = Order::whereBetween('created_at', [$start_date, $end_date])->count();
+        $delivered_orders = Order::whereBetween('created_at', [$start_date, $end_date])->where('order_status', 'delivered')->count();
+        $pending_orders = Order::whereBetween('created_at', [$start_date, $end_date])->where('order_status', 'pending')->count();
+        $processing_orders = Order::whereBetween('created_at', [$start_date, $end_date])
             ->whereIn('order_status', ['accepted', 'confirmed', 'processing', 'handover', 'picked_up'])
             ->count();
-        $canceled_orders = Order::whereDate('created_at', $today)->where('order_status', 'canceled')->count();
+        $canceled_orders = Order::whereBetween('created_at', [$start_date, $end_date])->where('order_status', 'canceled')->count();
 
         // 3. Module Breakdown
-        $module_breakdown = Order::whereDate('created_at', $today)
+        $module_breakdown = Order::whereBetween('created_at', [$start_date, $end_date])
             ->where('order_status', '!=', 'canceled')
             ->select('module_id', \Illuminate\Support\Facades\DB::raw('count(*) as count, sum(order_amount) as sales'))
             ->groupBy('module_id')
@@ -154,8 +165,8 @@ class AdminDashboardController extends Controller
                 ];
             });
 
-        // 4. Top Stores of the Day
-        $top_stores = Order::whereDate('created_at', $today)
+        // 4. Top Stores of the Period
+        $top_stores = Order::whereBetween('created_at', [$start_date, $end_date])
             ->where('order_status', '!=', 'canceled')
             ->select('store_id', \Illuminate\Support\Facades\DB::raw('count(*) as count, sum(order_amount) as sales'))
             ->groupBy('store_id')
@@ -171,8 +182,8 @@ class AdminDashboardController extends Controller
                 ];
             });
 
-        // 5. Top Delivery Men of the Day
-        $top_delivery_men = Order::whereDate('created_at', $today)
+        // 5. Top Delivery Men of the Period
+        $top_delivery_men = Order::whereBetween('created_at', [$start_date, $end_date])
             ->where('order_status', 'delivered')
             ->whereNotNull('delivery_man_id')
             ->select('delivery_man_id', \Illuminate\Support\Facades\DB::raw('count(*) as count'))
