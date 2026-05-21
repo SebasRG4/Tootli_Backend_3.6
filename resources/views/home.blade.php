@@ -5,22 +5,69 @@
 
 @section('content')
 
-    {{-- Hero Section (Bolt Style) --}}
+    {{-- Hero Section Premium --}}
     <section id="home" class="hero-bolt">
-        <div class="container-custom">
-            <div class="hero-bolt-content wow fadeInUp">
-        <h1 class="hero-bolt-title">
-            Tu super app mexicana
-        </h1>
+        <div class="hero-bolt-particles" id="hero-particles"></div>
+        <div class="container-custom hero-bolt-grid">
+            {{-- Left: Text Content --}}
+            <div class="hero-bolt-content wow fadeInLeft">
+                <div class="hero-badge">
+                    <span>🇲🇽</span> Hecho en México
+                </div>
+                <h1 class="hero-bolt-title">
+                    Tu <span class="text-gradient-green">super app</span><br>mexicana.
+                </h1>
                 <p class="hero-bolt-subtitle">
-                    Lo hecho en México está bien hecho.
+                    Lo hecho en México está bien hecho.<br>
+                    Comida, súper, viajes y más — todo en un solo lugar.
                 </p>
-                <div>
+                <div class="hero-bolt-actions">
                     <a href="https://tootli.mx/descargar" target="_blank" class="btn-bolt">
-                        Descargar <i class="fas fa-arrow-right"></i>
+                        Descargar gratis <i class="fas fa-arrow-right"></i>
                     </a>
+                    @if (!empty($hero_links['playstore_url_status']) && $hero_links['playstore_url_status'] == 1)
+                    <a href="{{ $hero_links['playstore_url'] ?? 'https://tootli.mx/descargar' }}" target="_blank" class="btn-store-hero">
+                        <img src="{{ asset('assets/landing/img/google.svg') }}" alt="Google Play" height="36">
+                    </a>
+                    @endif
+                    @if (!empty($hero_links['apple_store_url_status']) && $hero_links['apple_store_url_status'] == 1)
+                    <a href="{{ $hero_links['apple_store_url'] ?? 'https://tootli.mx/descargar' }}" target="_blank" class="btn-store-hero">
+                        <img src="{{ asset('assets/landing/img/apple.svg') }}" alt="App Store" height="36">
+                    </a>
+                    @endif
+                </div>
+                {{-- Stats Row --}}
+                <div class="hero-stats-row">
+                    <div class="hero-stat">
+                        <span class="hero-stat-number">50K+</span>
+                        <span class="hero-stat-label">Usuarios activos</span>
+                    </div>
+                    <div class="hero-stat-divider"></div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-number">1,200+</span>
+                        <span class="hero-stat-label">Negocios aliados</span>
+                    </div>
+                    <div class="hero-stat-divider"></div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-number">4.8 ⭐</span>
+                        <span class="hero-stat-label">Calificación App</span>
+                    </div>
                 </div>
             </div>
+
+            {{-- Right: App Mockup --}}
+            <div class="hero-bolt-mockup wow fadeInRight" data-wow-delay="0.2s">
+                <div class="hero-mockup-glow"></div>
+                <img src="{{ asset('assets/landing/img/hero-app-mockup.png') }}"
+                     alt="Tootli App"
+                     class="hero-mockup-img">
+            </div>
+        </div>
+        {{-- Wave divider --}}
+        <div class="hero-wave">
+            <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#0a0a0a"/>
+            </svg>
         </div>
     </section>
 
