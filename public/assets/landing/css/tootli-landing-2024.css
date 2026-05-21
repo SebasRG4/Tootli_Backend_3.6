@@ -917,3 +917,188 @@ header.header-bolt .logo img:hover {
         width: 92vw;
     }
 }
+
+
+/* ==========================================================================
+   SERVICIOS DE TOOTLI — CAROUSEL
+   ========================================================================== */
+
+.tootli-services-section {
+    padding: 90px 0 60px;
+    background: #F8FAFA;
+    overflow: hidden;
+}
+
+.tootli-services-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.tootli-services-title {
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: -1.5px;
+    margin-bottom: 12px;
+    color: var(--tl-black);
+}
+
+.tootli-services-subtitle {
+    font-size: 18px;
+    color: #666;
+    font-weight: 400;
+    margin: 0;
+}
+
+/* Cards */
+.tootli-svc-card {
+    border-radius: 24px;
+    overflow: hidden;
+    min-height: 380px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 36px 32px 32px;
+    position: relative;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.35s ease;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    cursor: default;
+}
+
+.tootli-svc-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.07);
+    pointer-events: none;
+}
+
+.tootli-svc-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.28);
+}
+
+/* Emoji icon area */
+.tootli-svc-icon {
+    font-size: 64px;
+    line-height: 1;
+    margin-bottom: 24px;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+    transition: transform 0.4s ease;
+}
+
+.tootli-svc-card:hover .tootli-svc-icon {
+    transform: scale(1.1) rotate(-4deg);
+}
+
+/* Body text */
+.tootli-svc-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tootli-svc-name {
+    font-size: 26px;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.tootli-svc-desc {
+    font-size: 15px;
+    color: rgba(255,255,255,0.68);
+    line-height: 1.55;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* CTA Button */
+.tootli-svc-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 12px 24px;
+    border-radius: 50px;
+    background: var(--tl-primary);
+    color: #121212 !important;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    width: fit-content;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0,209,113,0.35);
+}
+
+.tootli-svc-btn:hover {
+    background: #FFFFFF;
+    color: #121212 !important;
+    transform: translateX(4px);
+    box-shadow: 0 6px 20px rgba(255,255,255,0.2);
+}
+
+/* Carousel margin */
+.tootli-services-carousel {
+    margin: 0 -8px;
+}
+
+.tootli-services-carousel .owl-item {
+    padding: 8px 10px 24px;
+}
+
+/* Custom nav arrows */
+.tootli-svc-nav {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 32px;
+}
+
+.tootli-svc-prev,
+.tootli-svc-next {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--tl-primary);
+    background: transparent;
+    color: var(--tl-primary);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.tootli-svc-prev:hover,
+.tootli-svc-next:hover {
+    background: var(--tl-primary);
+    color: #121212;
+    transform: scale(1.1);
+}
+
+/* Hide default owl nav/dots */
+.tootli-services-carousel .owl-nav,
+.tootli-services-carousel .owl-dots {
+    display: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .tootli-services-title {
+        font-size: 34px;
+    }
+    .tootli-svc-card {
+        min-height: 320px;
+        padding: 28px 24px 24px;
+    }
+    .tootli-svc-icon {
+        font-size: 52px;
+    }
+    .tootli-svc-name {
+        font-size: 22px;
+    }
+}

@@ -23,7 +23,7 @@
                 </p>
                 <div class="hero-bolt-actions">
                     <a href="https://tootli.mx/descargar" target="_blank" class="btn-bolt">
-                        Descargar gratis <i class="fas fa-arrow-right"></i>
+                        Descargar <i class="fas fa-arrow-right"></i>
                     </a>
                     @if (!empty($hero_links['playstore_url_status']) && $hero_links['playstore_url_status'] == 1)
                     <a href="{{ $hero_links['playstore_url'] ?? 'https://tootli.mx/descargar' }}" target="_blank" class="btn-store-hero">
@@ -37,7 +37,7 @@
                     @endif
                 </div>
                 {{-- Stats Row --}}
-                <div class="hero-stats-row">
+                <!--<div class="hero-stats-row">
                     <div class="hero-stat">
                         <span class="hero-stat-number">50K+</span>
                         <span class="hero-stat-label">Usuarios activos</span>
@@ -52,7 +52,7 @@
                         <span class="hero-stat-number">4.8 ⭐</span>
                         <span class="hero-stat-label">Calificación App</span>
                     </div>
-                </div>
+                </div>-->
             </div>
 
 
@@ -65,7 +65,107 @@
         </div>
     </section>
 
+    {{-- =====================================================
+         SECCIÓN: SERVICIOS DE TOOTLI — CAROUSEL
+    ====================================================== --}}
+    <section id="servicios" class="tootli-services-section">
+        <div class="container-custom">
+            <div class="tootli-services-header wow fadeInUp">
+                <h2 class="tootli-services-title">Servicios de <span class="text-gradient-green">Tootli</span></h2>
+                <p class="tootli-services-subtitle">Todo lo que necesitas en una sola app, hecho en México.</p>
+            </div>
+
+            <div class="owl-carousel tootli-services-carousel wow fadeInUp" data-wow-delay="0.15s">
+
+                {{-- Card 1: Comida --}}
+                <div class="tootli-svc-card" style="background: linear-gradient(160deg, #1a1a1a 0%, #0d2b1a 100%);">
+                    <div class="tootli-svc-icon">
+                        <span>🍔</span>
+                    </div>
+                    <div class="tootli-svc-body">
+                        <h3 class="tootli-svc-name">Comida</h3>
+                        <p class="tootli-svc-desc">Tu restaurante favorito, en la puerta de tu casa en minutos.</p>
+                        <a href="#" class="tootli-svc-btn">Pedir ahora</a>
+                    </div>
+                </div>
+
+                {{-- Card 2: Súper --}}
+                <div class="tootli-svc-card" style="background: linear-gradient(160deg, #0a2a1a 0%, #133322 100%);">
+                    <div class="tootli-svc-icon">
+                        <span>🛒</span>
+                    </div>
+                    <div class="tootli-svc-body">
+                        <h3 class="tootli-svc-name">Súper</h3>
+                        <p class="tootli-svc-desc">Frutas, verduras, carnes y más — sin salir de casa.</p>
+                        <a href="#" class="tootli-svc-btn">Hacer mi súper</a>
+                    </div>
+                </div>
+
+                {{-- Card 3: Farmacia --}}
+                <div class="tootli-svc-card" style="background: linear-gradient(160deg, #1a1a2e 0%, #0d1b2a 100%);">
+                    <div class="tootli-svc-icon">
+                        <span>💊</span>
+                    </div>
+                    <div class="tootli-svc-body">
+                        <h3 class="tootli-svc-name">Farmacia</h3>
+                        <p class="tootli-svc-desc">Medicamentos y productos de salud entregados rápido.</p>
+                        <a href="#" class="tootli-svc-btn">Ver farmacia</a>
+                    </div>
+                </div>
+
+                {{-- Card 4: Envíos --}}
+                <div class="tootli-svc-card" style="background: linear-gradient(160deg, #2a1a0a 0%, #331e0d 100%);">
+                    <div class="tootli-svc-icon">
+                        <span>📦</span>
+                    </div>
+                    <div class="tootli-svc-body">
+                        <h3 class="tootli-svc-name">Envíos</h3>
+                        <p class="tootli-svc-desc">Manda paquetes y mensajes a cualquier punto de la ciudad.</p>
+                        <a href="#" class="tootli-svc-btn">Enviar ahora</a>
+                    </div>
+                </div>
+
+                {{-- Card 5: Viajes --}}
+                <div class="tootli-svc-card" style="background: linear-gradient(160deg, #1a0a2a 0%, #22103a 100%);">
+                    <div class="tootli-svc-icon">
+                        <span>🚗</span>
+                    </div>
+                    <div class="tootli-svc-body">
+                        <h3 class="tootli-svc-name">Viajes</h3>
+                        <p class="tootli-svc-desc">Transporte seguro y rápido al mejor precio de tu ciudad.</p>
+                        <a href="#" class="tootli-svc-btn">Pedir viaje</a>
+                    </div>
+                </div>
+
+                {{-- Card 6: Pagos --}}
+                <div class="tootli-svc-card" style="background: linear-gradient(160deg, #0a1a2a 0%, #0d2233 100%);">
+                    <div class="tootli-svc-icon">
+                        <span>💳</span>
+                    </div>
+                    <div class="tootli-svc-body">
+                        <h3 class="tootli-svc-name">Pagos</h3>
+                        <p class="tootli-svc-desc">Transfiere dinero, paga servicios y recarga saldo fácilmente.</p>
+                        <a href="#" class="tootli-svc-btn">Ver Wallet</a>
+                    </div>
+                </div>
+
+            </div>{{-- /owl-carousel --}}
+
+            {{-- Nav arrows --}}
+            <div class="tootli-svc-nav">
+                <button class="tootli-svc-prev" id="svcPrev" aria-label="Anterior">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="tootli-svc-next" id="svcNext" aria-label="Siguiente">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+        </div>
+    </section>
+
     {{-- Comparison Section --}}
+
     <section id="beneficios" class="comparison-section section-padding">
         <div class="container-custom">
             <div class="text-center mb-5 wow fadeInUp">
@@ -356,6 +456,27 @@
                     }, 800);
                 }
             });
+
+            // ── Servicios Carousel ──────────────────────────────────
+            var $svcCarousel = $(".tootli-services-carousel").owlCarousel({
+                loop: true,
+                margin: 0,
+                nav: false,
+                dots: false,
+                autoplay: true,
+                autoplayTimeout: 4000,
+                autoplayHoverPause: true,
+                smartSpeed: 600,
+                responsive: {
+                    0:    { items: 1 },
+                    576:  { items: 2 },
+                    992:  { items: 3 },
+                    1200: { items: 3.3 }
+                }
+            });
+
+            $("#svcPrev").on("click", function() { $svcCarousel.trigger("prev.owl.carousel"); });
+            $("#svcNext").on("click", function() { $svcCarousel.trigger("next.owl.carousel"); });
         });
     </script>
 @endsection
