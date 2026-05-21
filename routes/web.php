@@ -303,7 +303,8 @@ Route::group(['prefix' => 'deliveryman', 'as' => 'deliveryman.'], function () {
 
 });
 
-Route::view('/crece', 'tootli-crece');
+Route::get('/crece', 'HomeController@crece')->name('crece');
+Route::post('/crece/contacto', 'HomeController@creceContacto')->name('crece.contacto');
 
 Route::get('/image-proxy', function () {
     $url = request('url');

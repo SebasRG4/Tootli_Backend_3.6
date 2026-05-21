@@ -1,962 +1,1055 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tootli Crece - Opera en tu ciudad</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-  <style>
-    /* Reset & Base Variables */
-    :root {
-      --bg-dark: #020a07;
-      --bg-card: rgba(255, 255, 255, 0.02);
-      --bg-card-hover: rgba(255, 255, 255, 0.05);
-      --primary: #7dff87;
-      --primary-glow: rgba(125, 255, 135, 0.4);
-      --text-main: #ffffff;
-      --text-muted: rgba(255, 255, 255, 0.65);
-      --border-color: rgba(255, 255, 255, 0.08);
-      --border-hover: rgba(125, 255, 135, 0.3);
-      --font-main: 'Inter', sans-serif;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: var(--font-main);
-      background: var(--bg-dark);
-      color: var(--text-main);
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-    }
-
-    a {
-      text-decoration: none;
-    }
-
-    /* Animated Ambient Backgrounds */
-    .ambient-bg {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .ambient-blob {
-      position: absolute;
-      filter: blur(120px);
-      border-radius: 50%;
-      opacity: 0.4;
-      animation: drift 20s infinite alternate ease-in-out;
-    }
-
-    .blob-1 {
-      width: 600px;
-      height: 600px;
-      background: rgba(125, 255, 135, 0.15);
-      top: -200px;
-      right: -100px;
-    }
-
-    .blob-2 {
-      width: 500px;
-      height: 500px;
-      background: rgba(0, 200, 150, 0.1);
-      bottom: -100px;
-      left: -200px;
-      animation-delay: -5s;
-    }
-
-    @keyframes drift {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(-50px, 50px) scale(1.1); }
-    }
-
-    /* Container & Layout */
-    .container {
-      width: 90%;
-      max-width: 1200px;
-      margin: auto;
-      position: relative;
-      z-index: 2;
-    }
-
-    /* Header */
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 30px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.03);
-    }
-
-    .logo {
-      font-size: 26px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .logo span {
-      color: var(--primary);
-    }
-
-    nav {
-      display: flex;
-      gap: 30px;
-      background: rgba(255, 255, 255, 0.03);
-      padding: 12px 30px;
-      border-radius: 100px;
-      backdrop-filter: blur(10px);
-      border: 1px solid var(--border-color);
-    }
-
-    nav a {
-      color: var(--text-muted);
-      font-size: 14px;
-      font-weight: 500;
-      transition: 0.3s ease;
-    }
-
-    nav a:hover {
-      color: var(--primary);
-    }
-
-    /* Hero Section */
-    .hero {
-      min-height: 85vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 60px;
-      align-items: center;
-      padding: 80px 0;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(125, 255, 135, 0.08);
-      border: 1px solid rgba(125, 255, 135, 0.2);
-      padding: 10px 16px;
-      border-radius: 100px;
-      color: var(--primary);
-      margin-bottom: 25px;
-      font-size: 13px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    h1 {
-      font-size: 72px;
-      line-height: 1.05;
-      margin-bottom: 25px;
-      font-weight: 800;
-      letter-spacing: -2px;
-    }
-
-    h1 span {
-      background: linear-gradient(135deg, #ffffff 0%, var(--primary) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      display: inline-block;
-    }
-
-    .description {
-      color: var(--text-muted);
-      font-size: 19px;
-      line-height: 1.7;
-      margin-bottom: 40px;
-      font-weight: 400;
-      max-width: 540px;
-    }
-
-    .buttons {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      padding: 18px 32px;
-      border-radius: 100px;
-      font-weight: 600;
-      font-size: 16px;
-      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      cursor: pointer;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: #020a07;
-      box-shadow: 0 10px 30px rgba(125, 255, 135, 0.25);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 15px 35px rgba(125, 255, 135, 0.4);
-    }
-
-    .btn-secondary {
-      background: transparent;
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      backdrop-filter: blur(5px);
-    }
-
-    .btn-secondary:hover {
-      border-color: var(--primary);
-      background: rgba(125, 255, 135, 0.05);
-      transform: translateY(-4px);
-    }
-
-    /* Floating Phone Mockup */
-    @keyframes floatPhone {
-      0% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-20px) rotate(1deg); }
-      100% { transform: translateY(0) rotate(0deg); }
-    }
-
-    .phone-wrapper {
-      display: flex;
-      justify-content: flex-end;
-      position: relative;
-    }
-
-    .phone-card {
-      width: 360px;
-      background: rgba(255, 255, 255, 0.02);
-      backdrop-filter: blur(30px);
-      -webkit-backdrop-filter: blur(30px);
-      border-radius: 45px;
-      padding: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 
-        0 40px 100px rgba(0, 0, 0, 0.6),
-        inset 0 1px 1px rgba(255, 255, 255, 0.2);
-      animation: floatPhone 7s ease-in-out infinite;
-      position: relative;
-    }
-
-    .phone-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 20%; right: 20%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    }
-
-    .screen {
-      background: linear-gradient(160deg, #0a1c14 0%, #030d09 100%);
-      border-radius: 35px;
-      min-height: 720px;
-      padding: 35px 25px;
-      border: 1px solid rgba(255, 255, 255, 0.03);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .screen::after {
-      content: '';
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100px;
-      height: 25px;
-      background: #020a07;
-      border-radius: 20px;
-      z-index: 10;
-    }
-
-    .screen-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-      margin-top: 15px;
-    }
-
-    .screen-title {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .user-avatar {
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      background: var(--primary);
-      display: flex; align-items: center; justify-content: center;
-      color: #000; font-weight: bold;
-    }
-
-    .mini-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 15px;
-      transition: 0.3s ease;
-    }
-
-    .mini-card:hover {
-      background: rgba(255, 255, 255, 0.06);
-      transform: scale(1.02);
-      border-color: rgba(125, 255, 135, 0.2);
-    }
-
-    .mini-card h3 {
-      margin-bottom: 8px;
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    .mini-card p {
-      color: var(--text-muted);
-      line-height: 1.5;
-      font-size: 13px;
-    }
-
-    .mini-tag {
-      display: inline-block;
-      margin-top: 12px;
-      background: rgba(125, 255, 135, 0.1);
-      color: var(--primary);
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    /* Generic Sections */
-    section {
-      padding: 120px 0;
-      position: relative;
-    }
-
-    .section-title {
-      text-align: center;
-      margin-bottom: 80px;
-    }
-
-    .section-title h2 {
-      font-size: 48px;
-      margin-bottom: 20px;
-      font-weight: 800;
-      letter-spacing: -1px;
-    }
-
-    .section-title p {
-      color: var(--text-muted);
-      max-width: 600px;
-      margin: auto;
-      line-height: 1.7;
-      font-size: 18px;
-    }
-
-    /* Grid & Cards */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 30px;
-    }
-
-    .card {
-      background: var(--bg-card);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--border-color);
-      border-radius: 30px;
-      padding: 45px 35px;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: radial-gradient(circle at top right, rgba(125,255,135,0.05), transparent 60%);
-      pointer-events: none;
-    }
-
-    .card:hover {
-      transform: translateY(-10px);
-      border-color: var(--border-hover);
-      background: var(--bg-card-hover);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 40px rgba(125, 255, 135, 0.05);
-    }
-
-    .icon-box {
-      width: 64px;
-      height: 64px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, rgba(125, 255, 135, 0.15), rgba(125, 255, 135, 0.02));
-      border: 1px solid rgba(125, 255, 135, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      margin-bottom: 25px;
-      box-shadow: inset 0 2px 5px rgba(255,255,255,0.1);
-    }
-
-    .card h3 {
-      margin-bottom: 15px;
-      font-size: 22px;
-      font-weight: 700;
-    }
-
-    .card p {
-      color: var(--text-muted);
-      line-height: 1.7;
-      font-size: 15px;
-    }
-
-    /* CTA Section */
-    .cta {
-      background: linear-gradient(145deg, rgba(125, 255, 135, 0.08) 0%, rgba(2, 10, 7, 1) 100%);
-      border: 1px solid rgba(125, 255, 135, 0.15);
-      border-radius: 40px;
-      padding: 80px 40px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cta::before {
-      content: '';
-      position: absolute;
-      top: -50%; left: -50%;
-      width: 200%; height: 200%;
-      background: radial-gradient(circle, rgba(125,255,135,0.05) 0%, transparent 60%);
-      animation: rotate 30s linear infinite;
-    }
-
-    @keyframes rotate {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .cta-content {
-      position: relative;
-      z-index: 2;
-    }
-
-    .cta h2 {
-      font-size: 52px;
-      margin-bottom: 25px;
-      font-weight: 800;
-      letter-spacing: -1px;
-    }
-
-    .cta p {
-      max-width: 650px;
-      margin: auto auto 40px;
-      color: var(--text-muted);
-      line-height: 1.8;
-      font-size: 18px;
-    }
-
-    /* Demo Section */
-    .demo-wrapper {
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      gap: 40px;
-      background: var(--bg-card);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--border-color);
-      border-radius: 35px;
-      padding: 40px;
-    }
-
-    .demo-tabs {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      border-right: 1px solid var(--border-color);
-      padding-right: 30px;
-    }
-
-    .tab-btn {
-      background: transparent;
-      border: 1px solid transparent;
-      color: var(--text-muted);
-      padding: 18px 25px;
-      border-radius: 20px;
-      text-align: left;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: inherit;
-      transition: all 0.3s ease;
-    }
-
-    .tab-btn:hover {
-      color: var(--text-main);
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .tab-btn.active {
-      background: var(--primary);
-      color: #020a07;
-      box-shadow: 0 5px 20px rgba(125, 255, 135, 0.2);
-    }
-
-    .demo-content {
-      position: relative;
-      min-height: 380px;
-    }
-
-    .demo-panel {
-      display: none;
-      grid-template-columns: 1.5fr 1fr;
-      gap: 30px;
-      align-items: center;
-      animation: fadeIn 0.4s ease forwards;
-    }
-
-    .demo-panel.active {
-      display: grid;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .demo-text h3 {
-      font-size: 32px;
-      margin-bottom: 20px;
-      color: var(--primary);
-      font-weight: 800;
-      letter-spacing: -1px;
-    }
-
-    .demo-text p {
-      color: var(--text-muted);
-      font-size: 18px;
-      line-height: 1.7;
-      margin-bottom: 25px;
-    }
-
-    .demo-text ul {
-      list-style: none;
-      margin-bottom: 30px;
-    }
-
-    .demo-text ul li {
-      color: var(--text-main);
-      margin-bottom: 12px;
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .demo-link {
-      display: inline-block;
-      color: var(--primary);
-      font-weight: 700;
-      border-bottom: 1px solid var(--primary);
-      padding-bottom: 2px;
-      transition: 0.3s;
-    }
-    .demo-link:hover {
-      color: #fff; border-color: #fff;
-    }
-
-    .demo-visual {
-      background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(0,0,0,0.5));
-      border: 1px solid rgba(255,255,255,0.05);
-      border-radius: 30px;
-      height: 100%;
-      min-height: 300px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 120px;
-      box-shadow: inset 0 5px 20px rgba(0,0,0,0.5);
-    }
-
-    /* Footer */
-    footer {
-      border-top: 1px solid var(--border-color);
-      padding: 40px 0;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 14px;
-      margin-top: 40px;
-    }
-
-    footer span {
-      color: var(--primary);
-      font-weight: 600;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 992px) {
-      .hero {
-        grid-template-columns: 1fr;
-        text-align: center;
-        gap: 80px;
-      }
-      
-      .description {
-        margin: 0 auto 40px;
-      }
-      
-      .buttons {
-        justify-content: center;
-      }
-
-      .phone-wrapper {
-        justify-content: center;
-      }
-    }
-
-    @media (max-width: 860px) {
-      .demo-wrapper {
-        grid-template-columns: 1fr;
-        padding: 25px;
-      }
-      .demo-tabs {
-        border-right: none;
-        border-bottom: 1px solid var(--border-color);
-        padding-right: 0;
-        padding-bottom: 20px;
-        flex-direction: row;
-        overflow-x: auto;
-      }
-      .tab-btn {
-        white-space: nowrap;
-      }
-      .demo-panel {
-        grid-template-columns: 1fr;
-      }
-      .demo-visual {
-        min-height: 200px;
-      }
-    }
-
-    @media (max-width: 768px) {
-      h1 { font-size: 52px; }
-      .section-title h2 { font-size: 38px; }
-      .cta h2 { font-size: 36px; }
-      
-      nav { display: none; }
-      
-      .phone-card {
-        width: 100%;
-        max-width: 340px;
-      }
-      
-      .cta { padding: 50px 25px; }
-      
-      .grid { grid-template-columns: 1fr; }
-    }
-  </style>
-</head>
-
-<body>
-
-<!-- Background Ambient Elements -->
-<div class="ambient-bg">
-  <div class="ambient-blob blob-1"></div>
-  <div class="ambient-blob blob-2"></div>
+@extends('layouts.landing.app')
+
+@section('title', 'Crece con Tootli — Opera en tu ciudad')
+
+@push('css_or_js')
+<style>
+/* ============================================================
+   TOOTLI CRECE — ESTILOS DE PÁGINA
+   ============================================================ */
+
+/* ── Hero ── */
+.crece-hero {
+    min-height: 92vh;
+    display: flex;
+    align-items: center;
+    background-image:
+        linear-gradient(160deg, rgba(10,10,10,0.82) 0%, rgba(0,40,25,0.75) 100%),
+        url('{{ asset("assets/landing/img/hero-tootli-cdmx.jpg") }}');
+    background-size: cover;
+    background-position: center;
+    padding-top: 100px;
+    padding-bottom: 80px;
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+}
+
+.crece-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(0,209,113,0.18) 1px, transparent 1px);
+    background-size: 48px 48px;
+    opacity: 0.12;
+    pointer-events: none;
+}
+
+.crece-hero-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 780px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.crece-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,209,113,0.12);
+    border: 1px solid rgba(0,209,113,0.35);
+    color: #00D171;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    border-radius: 50px;
+    margin-bottom: 28px;
+}
+
+.crece-hero-title {
+    font-size: 72px;
+    font-weight: 900;
+    line-height: 1.04;
+    letter-spacing: -3px;
+    margin-bottom: 24px;
+    color: #fff;
+}
+
+.crece-hero-title .accent {
+    background: linear-gradient(135deg, #00D171 0%, #00ffaa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.crece-hero-sub {
+    font-size: 20px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.7;
+    margin-bottom: 44px;
+    font-weight: 400;
+}
+
+.crece-hero-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-crece-primary {
+    padding: 18px 40px;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 16px;
+    background: #00D171;
+    color: #121212 !important;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+    box-shadow: 0 10px 30px rgba(0,209,113,0.38);
+}
+
+.btn-crece-primary:hover {
+    background: #fff;
+    color: #121212 !important;
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px rgba(255,255,255,0.18);
+}
+
+.btn-crece-outline {
+    padding: 17px 36px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 16px;
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.35);
+    color: #fff !important;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-crece-outline:hover {
+    border-color: #00D171;
+    color: #00D171 !important;
+    transform: translateY(-2px);
+}
+
+/* ── Stats bar ── */
+.crece-stats-bar {
+    background: #fff;
+    border-bottom: 1px solid #F0F0F0;
+    padding: 28px 0;
+}
+
+.crece-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.crece-stat-item {
+    padding: 0 24px;
+    border-right: 1px solid #EEE;
+}
+
+.crece-stat-item:last-child { border-right: none; }
+
+.crece-stat-num {
+    font-size: 36px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    color: #00D171;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.crece-stat-label {
+    font-size: 13px;
+    color: #888;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ── Section base ── */
+.crece-section {
+    padding: 100px 0;
+}
+
+.crece-section-alt {
+    background: #F8FAFA;
+}
+
+.crece-section-dark {
+    background: #0A0A0A;
+    color: #fff;
+}
+
+.crece-section-header {
+    text-align: center;
+    margin-bottom: 64px;
+}
+
+.crece-section-tag {
+    display: inline-block;
+    background: #E6F9F1;
+    color: #00A358;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 50px;
+    margin-bottom: 16px;
+}
+
+.crece-section-dark .crece-section-tag {
+    background: rgba(0,209,113,0.12);
+    color: #00D171;
+}
+
+.crece-section-title {
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    color: #1A1A1A;
+}
+
+.crece-section-dark .crece-section-title { color: #fff; }
+
+.crece-section-sub {
+    font-size: 18px;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+.crece-section-dark .crece-section-sub { color: rgba(255,255,255,0.6); }
+
+/* ── Beneficios cards ── */
+.crece-benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+}
+
+.crece-benefit-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 40px 36px;
+    border: 1px solid #F0F0F0;
+    transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+    position: relative;
+    overflow: hidden;
+}
+
+.crece-benefit-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #00D171, #00ffaa);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.crece-benefit-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.08);
+    border-color: rgba(0,209,113,0.2);
+}
+
+.crece-benefit-card:hover::before { opacity: 1; }
+
+.crece-benefit-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+    background: #E6F9F1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 24px;
+    transition: transform 0.3s;
+}
+
+.crece-benefit-card:hover .crece-benefit-icon {
+    transform: scale(1.1) rotate(-5deg);
+}
+
+.crece-benefit-card h3 {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    color: #1A1A1A;
+}
+
+.crece-benefit-card p {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.65;
+    margin: 0;
+}
+
+/* ── Ecosystem tabs ── */
+.crece-ecosystem {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 0;
+    background: #111;
+    border-radius: 32px;
+    overflow: hidden;
+    min-height: 480px;
+}
+
+.crece-eco-tabs {
+    padding: 32px 24px;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.crece-eco-tab {
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    padding: 16px 20px;
+    border-radius: 16px;
+    text-align: left;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.crece-eco-tab:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.05);
+}
+
+.crece-eco-tab.active {
+    background: #00D171;
+    color: #121212;
+    box-shadow: 0 4px 16px rgba(0,209,113,0.3);
+}
+
+.crece-eco-panels {
+    padding: 48px 40px;
+}
+
+.crece-eco-panel {
+    display: none;
+    animation: fadeSlideIn 0.35s ease forwards;
+}
+
+.crece-eco-panel.active { display: block; }
+
+@keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.crece-eco-panel-emoji {
+    font-size: 52px;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.crece-eco-panel h3 {
+    font-size: 32px;
+    font-weight: 900;
+    color: #00D171;
+    margin-bottom: 12px;
+    letter-spacing: -1px;
+}
+
+.crece-eco-panel p {
+    font-size: 17px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.7;
+    margin-bottom: 24px;
+}
+
+.crece-eco-checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.crece-eco-checklist li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    color: rgba(255,255,255,0.85);
+}
+
+.crece-eco-checklist li::before {
+    content: '✓';
+    width: 22px;
+    height: 22px;
+    background: rgba(0,209,113,0.15);
+    color: #00D171;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* ── Proceso steps ── */
+.crece-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+}
+
+.crece-steps::before {
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: 12%;
+    right: 12%;
+    height: 2px;
+    background: linear-gradient(90deg, #00D171, #00ffaa);
+    opacity: 0.3;
+}
+
+.crece-step {
+    text-align: center;
+    padding: 0 20px;
+    position: relative;
+}
+
+.crece-step-number {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid #00D171;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 900;
+    color: #00D171;
+    margin: 0 auto 24px;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 8px 24px rgba(0,209,113,0.15);
+    transition: all 0.3s ease;
+}
+
+.crece-step:hover .crece-step-number {
+    background: #00D171;
+    color: #fff;
+    transform: scale(1.1);
+    box-shadow: 0 12px 32px rgba(0,209,113,0.35);
+}
+
+.crece-step h4 {
+    font-size: 18px;
+    font-weight: 800;
+    color: #1A1A1A;
+    margin-bottom: 8px;
+}
+
+.crece-step p {
+    font-size: 14px;
+    color: #888;
+    line-height: 1.6;
+}
+
+/* ── Contact Form ── */
+.crece-contact-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 60px;
+    align-items: start;
+}
+
+.crece-contact-info h2 {
+    font-size: 42px;
+    font-weight: 900;
+    letter-spacing: -1.5px;
+    margin-bottom: 16px;
+    color: #fff;
+    line-height: 1.1;
+}
+
+.crece-contact-info p {
+    font-size: 17px;
+    color: rgba(255,255,255,0.62);
+    line-height: 1.7;
+    margin-bottom: 36px;
+}
+
+.crece-contact-perks {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.crece-contact-perks li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    color: rgba(255,255,255,0.8);
+}
+
+.crece-perk-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(0,209,113,0.12);
+    border: 1px solid rgba(0,209,113,0.25);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+/* Form card */
+.crece-form-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 28px;
+    padding: 48px 44px;
+    backdrop-filter: blur(20px);
+}
+
+.crece-form-group {
+    margin-bottom: 20px;
+}
+
+.crece-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.crece-form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.crece-form-input,
+.crece-form-select,
+.crece-form-textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 14px 18px;
+    font-size: 15px;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.crece-form-input::placeholder,
+.crece-form-textarea::placeholder {
+    color: rgba(255,255,255,0.3);
+}
+
+.crece-form-input:focus,
+.crece-form-select:focus,
+.crece-form-textarea:focus {
+    border-color: #00D171;
+    background: rgba(0,209,113,0.05);
+    box-shadow: 0 0 0 3px rgba(0,209,113,0.12);
+}
+
+.crece-form-select {
+    appearance: none;
+    cursor: pointer;
+}
+
+.crece-form-select option { background: #1a1a1a; color: #fff; }
+
+.crece-form-textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.crece-form-submit {
+    width: 100%;
+    padding: 18px;
+    border-radius: 50px;
+    border: none;
+    background: #00D171;
+    color: #121212;
+    font-size: 16px;
+    font-weight: 800;
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 8px;
+    box-shadow: 0 8px 28px rgba(0,209,113,0.38);
+}
+
+.crece-form-submit:hover {
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 14px 36px rgba(255,255,255,0.15);
+}
+
+.crece-form-note {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    margin-top: 14px;
+}
+
+/* ── Alert states ── */
+.crece-alert {
+    padding: 14px 20px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: none;
+}
+
+.crece-alert-success {
+    background: rgba(0,209,113,0.12);
+    border: 1px solid rgba(0,209,113,0.3);
+    color: #00D171;
+}
+
+.crece-alert-error {
+    background: rgba(255,77,77,0.1);
+    border: 1px solid rgba(255,77,77,0.3);
+    color: #FF4D4D;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+    .crece-benefits-grid { grid-template-columns: repeat(2, 1fr); }
+    .crece-ecosystem { grid-template-columns: 1fr; }
+    .crece-eco-tabs { flex-direction: row; overflow-x: auto; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .crece-contact-wrap { grid-template-columns: 1fr; gap: 40px; }
+    .crece-steps { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+    .crece-steps::before { display: none; }
+}
+
+@media (max-width: 768px) {
+    .crece-hero-title { font-size: 48px; letter-spacing: -2px; }
+    .crece-benefits-grid { grid-template-columns: 1fr; }
+    .crece-section-title { font-size: 36px; }
+    .crece-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .crece-stat-item { border-right: none; padding: 10px 0; }
+    .crece-form-row { grid-template-columns: 1fr; }
+    .crece-form-card { padding: 32px 24px; }
+    .crece-steps { grid-template-columns: 1fr; }
+    .crece-hero { padding-top: 120px; }
+}
+</style>
+@endpush
+
+@section('content')
+
+{{-- ══════════ HERO ══════════ --}}
+<section class="crece-hero">
+    <div class="container-custom crece-hero-inner">
+        <div class="crece-badge">
+            🚀 Oportunidad de negocio
+        </div>
+        <h1 class="crece-hero-title">
+            Opera <span class="accent">Tootli</span><br>en tu ciudad
+        </h1>
+        <p class="crece-hero-sub">
+            Conviértete en el operador local de Tootli y lleva la super app mexicana a tu región.<br>
+            Nosotros ponemos la tecnología, tú construyes el mercado.
+        </p>
+        <div class="crece-hero-actions">
+            <a href="#contacto" class="btn-crece-primary">
+                Quiero ser operador <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="#beneficios" class="btn-crece-outline">
+                Ver beneficios
+            </a>
+        </div>
+    </div>
+</section>
+
+{{-- ══════════ STATS BAR ══════════ --}}
+<div class="crece-stats-bar">
+    <div class="container-custom">
+        <div class="crece-stats-grid">
+            <div class="crece-stat-item">
+                <div class="crece-stat-num">50K+</div>
+                <div class="crece-stat-label">Usuarios activos</div>
+            </div>
+            <div class="crece-stat-item">
+                <div class="crece-stat-num">1,200+</div>
+                <div class="crece-stat-label">Negocios aliados</div>
+            </div>
+            <div class="crece-stat-item">
+                <div class="crece-stat-num">6+</div>
+                <div class="crece-stat-label">Ciudades activas</div>
+            </div>
+            <div class="crece-stat-item">
+                <div class="crece-stat-num">4.8 ⭐</div>
+                <div class="crece-stat-label">Calificación App</div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- Header -->
-<header class="container">
-  <div class="logo">
-    tootli <span>crece</span>
-  </div>
+{{-- ══════════ BENEFICIOS ══════════ --}}
+<section id="beneficios" class="crece-section crece-section-alt">
+    <div class="container-custom">
+        <div class="crece-section-header">
+            <span class="crece-section-tag">¿Por qué Tootli?</span>
+            <h2 class="crece-section-title">Todo lo que necesitas<br>para triunfar</h2>
+            <p class="crece-section-sub">Operadores de todo México confían en nuestra plataforma para construir negocios rentables.</p>
+        </div>
 
-  <nav>
-    <a href="#modelo">El Modelo</a>
-    <a href="#beneficios">Beneficios</a>
-    <a href="#contacto">Únete</a>
-  </nav>
-</header>
+        <div class="crece-benefits-grid">
 
-<!-- Hero -->
-<section class="hero container">
-  <div>
-    <div class="badge">
-      <span style="font-size:16px;">🚀</span> Tu super app regional
+            <div class="crece-benefit-card">
+                <div class="crece-benefit-icon">📱</div>
+                <h3>Suite de Apps Lista</h3>
+                <p>Apps nativas para usuarios, repartidores y negocios — más el panel admin. Todo listo para arrancar desde el día uno.</p>
+            </div>
+
+            <div class="crece-benefit-card">
+                <div class="crece-benefit-icon">🛵</div>
+                <h3>Logística Multi-vertical</h3>
+                <p>No solo comida. Ofrece supermercado, farmacia, paquetería y mandados exprés bajo una sola plataforma.</p>
+            </div>
+
+            <div class="crece-benefit-card">
+                <div class="crece-benefit-icon">💰</div>
+                <h3>Múltiples Fuentes de Ingreso</h3>
+                <p>Comisiones por venta, cargos de envío, suscripciones de negocios y publicidad in-app. Varias llaves, un mismo negocio.</p>
+            </div>
+
+            <div class="crece-benefit-card">
+                <div class="crece-benefit-icon">⚙️</div>
+                <h3>Infraestructura Escalable</h3>
+                <p>Servidores en la nube, pasarelas de pago integradas y algoritmos de ruteo optimizados para miles de pedidos diarios.</p>
+            </div>
+
+            <div class="crece-benefit-card">
+                <div class="crece-benefit-icon">🤝</div>
+                <h3>Soporte Dedicado</h3>
+                <p>Tu equipo de Tootli siempre disponible para capacitación, actualizaciones y resolución de problemas técnicos.</p>
+            </div>
+
+            <div class="crece-benefit-card">
+                <div class="crece-benefit-icon">🎨</div>
+                <h3>Material de Marca</h3>
+                <p>Identidad visual premium, assets publicitarios y posicionamiento profesional para liderar tu ciudad desde el inicio.</p>
+            </div>
+
+        </div>
     </div>
-
-    <h1>
-      Opera <span>Tootli</span><br>
-      en tu ciudad.
-    </h1>
-
-    <p class="description">
-      Lleva la tecnología de Tootli a tu región y construye el ecosistema local de delivery, comercio y logística con una plataforma moderna, robusta y lista para arrancar.
-    </p>
-
-    <div class="buttons">
-      <a href="#contacto" class="btn btn-primary">
-        Quiero información
-      </a>
-      <a href="#modelo" class="btn btn-secondary">
-        Descubrir modelo
-      </a>
-    </div>
-  </div>
-
-  <div class="phone-wrapper">
-    <div class="phone-card">
-      <div class="screen">
-        <div class="screen-header">
-          <div class="screen-title">Resumen</div>
-          <div class="user-avatar">T</div>
-        </div>
-
-        <div class="mini-card">
-          <h3>Inversión Inicial Baja</h3>
-          <p>Opera tu ciudad usando el ecosistema Tootli y genera ingresos recurrentes con delivery y logística local desde $15,000.</p>
-          <div class="mini-tag">Operador local</div>
-        </div>
-
-        <div class="mini-card">
-          <h3>Tootli Direct</h3>
-          <p>Permite que negocios locales soliciten repartidores bajo demanda desde WhatsApp o sus propios canales.</p>
-        </div>
-
-        <div class="mini-card">
-          <h3>Marketplace + Logística</h3>
-          <p>Comida, supermercado, mandados y paquetería en una sola plataforma unificada.</p>
-        </div>
-
-        <div class="mini-card" style="border-color: rgba(125,255,135,0.2); background: rgba(125,255,135,0.03);">
-          <h3>Hecho en México 🇲🇽</h3>
-          <p>Tecnología diseñada exclusivamente para las dinámicas de ciudades mexicanas.</p>
-        </div>
-      </div>
-    </div>
-  </div>
 </section>
 
-<!-- Features Grid -->
-<section id="modelo">
-  <div class="container">
-    <div class="section-title">
-      <h2>Un ecosistema completo</h2>
-      <p>Tootli combina tecnología de punta centralizada con el poder de los operadores locales para expandir el delivery hiperlocal en todo México.</p>
+{{-- ══════════ ECOSISTEMA ══════════ --}}
+<section id="ecosistema" class="crece-section crece-section-dark">
+    <div class="container-custom">
+        <div class="crece-section-header">
+            <span class="crece-section-tag">Lo que incluye</span>
+            <h2 class="crece-section-title">Explora el Ecosistema</h2>
+            <p class="crece-section-sub">Todo lo que tus usuarios, repartidores y negocios necesitan, conectado en tiempo real.</p>
+        </div>
+
+        <div class="crece-ecosystem">
+            <div class="crece-eco-tabs">
+                <button class="crece-eco-tab active" onclick="showEco('usuarios')">📱 App Usuarios</button>
+                <button class="crece-eco-tab" onclick="showEco('repartidor')">🛵 App Repartidor</button>
+                <button class="crece-eco-tab" onclick="showEco('negocios')">🏪 Panel Negocios</button>
+                <button class="crece-eco-tab" onclick="showEco('direct')">⚡ Tootli Direct</button>
+                <button class="crece-eco-tab" onclick="showEco('admin')">💻 Panel Operador</button>
+            </div>
+
+            <div class="crece-eco-panels">
+
+                <div id="eco-usuarios" class="crece-eco-panel active">
+                    <span class="crece-eco-panel-emoji">📱</span>
+                    <h3>La súper app para tus clientes</h3>
+                    <p>Pide comida, supermercado, farmacia y envíos locales en una sola app rápida y atractiva.</p>
+                    <ul class="crece-eco-checklist">
+                        <li>Tracking GPS del repartidor en tiempo real</li>
+                        <li>Carrito mixto — varias tiendas en un pedido</li>
+                        <li>Historial, favoritos y billetera electrónica</li>
+                    </ul>
+                </div>
+
+                <div id="eco-repartidor" class="crece-eco-panel">
+                    <span class="crece-eco-panel-emoji">🛵</span>
+                    <h3>App para Repartidores</h3>
+                    <p>Rutas optimizadas, pagos integrados y notificaciones eficientes para mantener tu flotilla moviéndose.</p>
+                    <ul class="crece-eco-checklist">
+                        <li>Modo oscuro nativo para ahorrar batería</li>
+                        <li>Alertas de pedido con sonido prioritario</li>
+                        <li>Billetera dinámica y comisiones en vivo</li>
+                    </ul>
+                </div>
+
+                <div id="eco-negocios" class="crece-eco-panel">
+                    <span class="crece-eco-panel-emoji">🏪</span>
+                    <h3>Gestor para Restaurantes</h3>
+                    <p>Los comercios reciben pedidos, imprimen tickets automáticamente y despachan sin estrés.</p>
+                    <ul class="crece-eco-checklist">
+                        <li>Impresión térmica Bluetooth automática</li>
+                        <li>Panel de campañas y cupones de descuento</li>
+                        <li>Carga masiva de inventario y menús</li>
+                    </ul>
+                </div>
+
+                <div id="eco-direct" class="crece-eco-panel">
+                    <span class="crece-eco-panel-emoji">⚡</span>
+                    <h3>Tootli Direct — Envíos Express</h3>
+                    <p>Cualquier comercio local puede solicitar a tus repartidores sin necesidad de descargar nada.</p>
+                    <ul class="crece-eco-checklist">
+                        <li>Formulario web, sin apps para el negocio</li>
+                        <li>Calculadora dinámica por kilómetro</li>
+                        <li>Link de rastreo SMS para el cliente final</li>
+                    </ul>
+                </div>
+
+                <div id="eco-admin" class="crece-eco-panel">
+                    <span class="crece-eco-panel-emoji">💻</span>
+                    <h3>Panel Operativo Máster</h3>
+                    <p>La torre de control. Diriges toda tu ciudad, vigilas ganancias y configuras tus propias reglas.</p>
+                    <ul class="crece-eco-checklist">
+                        <li>Mapa global en vivo de todas las zonas</li>
+                        <li>Reportes financieros exportables a Excel</li>
+                        <li>Control total de comisiones y despachos</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
     </div>
-
-    <div class="grid">
-      <div class="card">
-        <div class="icon-box">📱</div>
-        <h3>Suite de Apps Listas</h3>
-        <p>Entregamos aplicaciones nativas para usuarios, repartidores y negocios, respaldadas por un potente panel de administración en la nube.</p>
-      </div>
-
-      <div class="card">
-        <div class="icon-box">🛵</div>
-        <h3>Logística Integral</h3>
-        <p>No solo comida. Ofrece envíos de paquetes, compras en supermercado, farmacias y mandados exprés en tu ciudad.</p>
-      </div>
-
-      <div class="card">
-        <div class="icon-box">🏪</div>
-        <h3>Gestión de Flotillas</h3>
-        <p>Sistema inteligente de asignación de repartidores, rastreo en vivo y manejo de ganancias totalmente automatizado.</p>
-      </div>
-
-      <div class="card">
-        <div class="icon-box">🤝</div>
-        <h3>Aliado Tecnológico</h3>
-        <p>Nosotros nos encargamos del código, los servidores y el mantenimiento. Tú te encargas de sumar negocios y crecer el mercado.</p>
-      </div>
-    </div>
-  </div>
 </section>
 
-<!-- Demo Ecosystem Interactive Section -->
-<section id="demo">
-  <div class="container">
-    <div class="section-title">
-      <h2>Explora el Ecosistema</h2>
-      <p>Todo lo que tú, tus repartidores y tus negocios afiliados necesitan, conectado y sincronizado en tiempo real.</p>
+{{-- ══════════ PROCESO ══════════ --}}
+<section class="crece-section">
+    <div class="container-custom">
+        <div class="crece-section-header">
+            <span class="crece-section-tag">¿Cómo funciona?</span>
+            <h2 class="crece-section-title">De la solicitud al lanzamiento</h2>
+            <p class="crece-section-sub">Un proceso simple y acompañado en cada paso.</p>
+        </div>
+
+        <div class="crece-steps">
+            <div class="crece-step">
+                <div class="crece-step-number">1</div>
+                <h4>Solicita información</h4>
+                <p>Llena el formulario de contacto con los datos de tu ciudad y proyecto.</p>
+            </div>
+            <div class="crece-step">
+                <div class="crece-step-number">2</div>
+                <h4>Evaluamos juntos</h4>
+                <p>Analizamos el mercado y definimos el modelo ideal para tu zona.</p>
+            </div>
+            <div class="crece-step">
+                <div class="crece-step-number">3</div>
+                <h4>Onboarding & Setup</h4>
+                <p>Configuramos tu instancia, capacitamos a tu equipo y preparamos el lanzamiento.</p>
+            </div>
+            <div class="crece-step">
+                <div class="crece-step-number">4</div>
+                <h4>¡Arrancas!</h4>
+                <p>Sales al mercado con soporte continuo de nuestro equipo técnico.</p>
+            </div>
+        </div>
     </div>
-
-    <div class="demo-wrapper">
-      <div class="demo-tabs">
-        <button class="tab-btn active" onclick="showDemo('usuario')">App de Usuarios</button>
-        <button class="tab-btn" onclick="showDemo('repartidor')">App Repartidor</button>
-        <button class="tab-btn" onclick="showDemo('negocios')">Panel de Negocios</button>
-        <button class="tab-btn" onclick="showDemo('direct')">Tootli Direct</button>
-        <button class="tab-btn" onclick="showDemo('admin')">Panel de Control M&aacute;ster</button>
-      </div>
-
-      <div class="demo-content">
-        
-        <!-- Usuario -->
-        <div id="demo-usuario" class="demo-panel active">
-          <div class="demo-text">
-            <h3>La súper app para tus clientes</h3>
-            <p>Pide comida, supermercado, farmacia y envíos locales en una sola aplicación extremadamente rápida y atractiva.</p>
-            <ul>
-              <li><span style="color:var(--primary)">✔️</span> Tracking GPS del repartidor en tiempo real</li>
-              <li><span style="color:var(--primary)">✔️</span> Carrito mixto (varias tiendas en un solo pedido)</li>
-              <li><span style="color:var(--primary)">✔️</span> Historial, favoritos y billetera electrónica</li>
-            </ul>
-            <br>
-            <a href="https://tootli.mx" target="_blank" class="demo-link">Ver App Web ↗</a>
-          </div>
-          <div class="demo-visual">📱</div>
-        </div>
-        
-        <!-- Repartidor -->
-        <div id="demo-repartidor" class="demo-panel">
-          <div class="demo-text">
-            <h3>App para Repartidores</h3>
-            <p>Rutas optimizadas, pagos integrados y notificaciones eficientes para mantener a tu flotilla moviéndose.</p>
-            <ul>
-              <li><span style="color:var(--primary)">✔️</span> Modo oscuro nativo para batería</li>
-              <li><span style="color:var(--primary)">✔️</span> Alertas de pedido con sonido prioritario</li>
-              <li><span style="color:var(--primary)">✔️</span> Billetera dinámica y comisiones en vivo</li>
-            </ul>
-          </div>
-          <div class="demo-visual">🛵</div>
-        </div>
-
-        <!-- Negocios -->
-        <div id="demo-negocios" class="demo-panel">
-          <div class="demo-text">
-            <h3>Gestor para Restaurantes</h3>
-            <p>Software para que los comercios reciban pedidos, impriman tickets automáticamente y despachen sin estrés.</p>
-            <ul>
-              <li><span style="color:var(--primary)">✔️</span> Impresión térmica Bluetooth automática</li>
-              <li><span style="color:var(--primary)">✔️</span> Panel de campañas y cupones de descuento</li>
-              <li><span style="color:var(--primary)">✔️</span> Carga masiva de inventario y menús</li>
-            </ul>
-          </div>
-          <div class="demo-visual">🏪</div>
-        </div>
-
-        <!-- Tootli Direct -->
-        <div id="demo-direct" class="demo-panel">
-          <div class="demo-text">
-            <h3>Tootli Direct (Envíos Express)</h3>
-            <p>El enlace mágico donde cualquier comercio (como tiendas de Instagram o de la esquina) puede solicitar a tus repartidores.</p>
-            <ul>
-              <li><span style="color:var(--primary)">✔️</span> Formulario web, sin necesidad de descargar apps</li>
-              <li><span style="color:var(--primary)">✔️</span> Calculadora dinámica de costo por kilómetro</li>
-              <li><span style="color:var(--primary)">✔️</span> Link de rastreo SMS para el cliente final</li>
-            </ul>
-          </div>
-          <div class="demo-visual">⚡</div>
-        </div>
-
-        <!-- Admin -->
-        <div id="demo-admin" class="demo-panel">
-          <div class="demo-text">
-            <h3>Panel Operativo Máster</h3>
-            <p>La torre de control. Desde aquí diriges toda tu ciudad, vigilas las ganancias y configuras tus propias reglas.</p>
-            <ul>
-              <li><span style="color:var(--primary)">✔️</span> Mapa global en vivo de todas las zonas</li>
-              <li><span style="color:var(--primary)">✔️</span> Reportes financieros exportables a Excel</li>
-              <li><span style="color:var(--primary)">✔️</span> Control total de comisiones y despachos manuales</li>
-            </ul>
-          </div>
-          <div class="demo-visual">💻</div>
-        </div>
-
-      </div>
-    </div>
-  </div>
 </section>
 
-<!-- Benefits -->
-<section id="beneficios">
-  <div class="container">
-    <div class="section-title">
-      <h2>Todo lo que necesitas para triunfar</h2>
+{{-- ══════════ FORMULARIO ══════════ --}}
+<section id="contacto" class="crece-section crece-section-dark">
+    <div class="container-custom">
+        <div class="crece-contact-wrap">
+
+            {{-- Info izquierda --}}
+            <div class="crece-contact-info">
+                <div class="crece-section-tag" style="margin-bottom:20px;">Únete al equipo</div>
+                <h2>¿Listo para operar Tootli<br>en tu ciudad?</h2>
+                <p>Completa el formulario y un miembro de nuestro equipo se pondrá en contacto contigo en menos de 48 horas.</p>
+
+                <ul class="crece-contact-perks">
+                    <li>
+                        <span class="crece-perk-icon">🚀</span>
+                        Sin experiencia previa en tecnología necesaria
+                    </li>
+                    <li>
+                        <span class="crece-perk-icon">💰</span>
+                        Inversión inicial desde $15,000 MXN
+                    </li>
+                    <li>
+                        <span class="crece-perk-icon">📊</span>
+                        Ingresos recurrentes desde el primer mes
+                    </li>
+                    <li>
+                        <span class="crece-perk-icon">🛠️</span>
+                        Soporte técnico y comercial continuo
+                    </li>
+                    <li>
+                        <span class="crece-perk-icon">🇲🇽</span>
+                        Tecnología 100% diseñada para México
+                    </li>
+                </ul>
+            </div>
+
+            {{-- Formulario --}}
+            <div class="crece-form-card">
+                <div class="crece-alert crece-alert-success" id="crece-success">
+                    ✅ ¡Gracias! Recibimos tu solicitud. Te contactaremos pronto.
+                </div>
+                <div class="crece-alert crece-alert-error" id="crece-error">
+                    ❌ Hubo un error. Por favor intenta de nuevo.
+                </div>
+
+                <form id="crece-form" action="{{ route('crece.contacto') }}" method="POST">
+                    @csrf
+
+                    <div class="crece-form-row">
+                        <div class="crece-form-group">
+                            <label class="crece-form-label">Nombre *</label>
+                            <input type="text" name="nombre" class="crece-form-input" placeholder="Tu nombre" required>
+                        </div>
+                        <div class="crece-form-group">
+                            <label class="crece-form-label">Apellido *</label>
+                            <input type="text" name="apellido" class="crece-form-input" placeholder="Tu apellido" required>
+                        </div>
+                    </div>
+
+                    <div class="crece-form-row">
+                        <div class="crece-form-group">
+                            <label class="crece-form-label">WhatsApp / Teléfono *</label>
+                            <input type="tel" name="telefono" class="crece-form-input" placeholder="+52 55 1234 5678" required>
+                        </div>
+                        <div class="crece-form-group">
+                            <label class="crece-form-label">Correo electrónico *</label>
+                            <input type="email" name="email" class="crece-form-input" placeholder="hola@tuempresa.com" required>
+                        </div>
+                    </div>
+
+                    <div class="crece-form-group">
+                        <label class="crece-form-label">Ciudad de interés *</label>
+                        <input type="text" name="ciudad" class="crece-form-input" placeholder="Ej: Querétaro, Puebla, Monterrey…" required>
+                    </div>
+
+                    <div class="crece-form-group">
+                        <label class="crece-form-label">¿Cuánto tienes para invertir? *</label>
+                        <select name="inversion" class="crece-form-select crece-form-input" required>
+                            <option value="" disabled selected>Selecciona un rango</option>
+                            <option value="15k-50k">$15,000 – $50,000 MXN</option>
+                            <option value="50k-100k">$50,000 – $100,000 MXN</option>
+                            <option value="100k-250k">$100,000 – $250,000 MXN</option>
+                            <option value="250k+">Más de $250,000 MXN</option>
+                        </select>
+                    </div>
+
+                    <div class="crece-form-group">
+                        <label class="crece-form-label">Cuéntanos sobre ti</label>
+                        <textarea name="mensaje" class="crece-form-textarea" placeholder="Experiencia, motivación, tamaño de tu ciudad, etc."></textarea>
+                    </div>
+
+                    <button type="submit" class="crece-form-submit" id="crece-submit">
+                        <i class="fas fa-paper-plane"></i> Enviar solicitud
+                    </button>
+                    <p class="crece-form-note">🔒 Tu información es privada y nunca será compartida.</p>
+                </form>
+            </div>
+
+        </div>
     </div>
-
-    <div class="grid">
-      <div class="card">
-        <div class="icon-box">⚙️</div>
-        <h3>Infraestructura</h3>
-        <p>Servidores escalables, pasarelas de pago integradas y algoritmos de ruteo optimizados listos para procesar miles de pedidos.</p>
-      </div>
-
-      <div class="card">
-        <div class="icon-box">🎨</div>
-        <h3>Material de Marca</h3>
-        <p>Identidad visual premium, assets publicitarios y presencia profesional para posicionarte como el líder de tu ciudad.</p>
-      </div>
-
-      <div class="card">
-        <div class="icon-box">💰</div>
-        <h3>Múltiples Ingresos</h3>
-        <p>Monetiza a través de comisiones por venta, cargos por envío, suscripciones de negocios y publicidad dentro de la app.</p>
-      </div>
-    </div>
-  </div>
 </section>
 
-<!-- CTA -->
-<section>
-  <div class="container">
-    <div class="cta">
-      <div class="cta-content">
-        <h2>Tú operas el negocio.<br>Nosotros la tecnología.</h2>
-        <p>Buscamos emprendedores audaces para expandir Tootli en las mejores ciudades de México y construir la red de logística más fuerte del país.</p>
-        <a href="mailto:hola@tootli.mx" class="btn btn-primary" style="font-size: 18px; padding: 20px 40px;">
-          Contáctanos: hola@tootli.mx
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Footer -->
-<footer id="contacto" class="container">
-  <p>© 2026 <span>Tootli</span> Crece • Tu super app mexicana 🇲🇽</p>
-</footer>
-
+@push('script_2')
 <script>
-  function showDemo(id) {
-    // Quitar clase active a todos los botones
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    // Ocultar todos los paneles
-    document.querySelectorAll('.demo-panel').forEach(panel => panel.classList.remove('active'));
-    
-    // Activar botón clickeado (usando event.target o currentTarget)
-    event.currentTarget.classList.add('active');
-    
-    // Mostrar panel correspondiente
-    document.getElementById('demo-' + id).classList.add('active');
-  }
-</script>
+    // ── Ecosystem tabs ──────────────────────────────────────
+    function showEco(id) {
+        document.querySelectorAll('.crece-eco-tab').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.crece-eco-panel').forEach(p => p.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+        document.getElementById('eco-' + id).classList.add('active');
+    }
 
-</body>
-</html>
+    // ── Contact form AJAX ───────────────────────────────────
+    document.getElementById('crece-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('crece-submit');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando…';
+
+        const formData = new FormData(this);
+
+        fetch(this.action, {
+            method: 'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            body: formData
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('crece-success').style.display = 'block';
+                document.getElementById('crece-error').style.display = 'none';
+                document.getElementById('crece-form').reset();
+            } else {
+                throw new Error(data.message || 'Error');
+            }
+        })
+        .catch(() => {
+            document.getElementById('crece-error').style.display = 'block';
+            document.getElementById('crece-success').style.display = 'none';
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar solicitud';
+        });
+    });
+
+    // ── Smooth scroll for anchor links ──────────────────────
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', function(e) {
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+</script>
+@endpush
+
+@endsection

@@ -494,4 +494,40 @@ class HomeController extends Controller
         $this->updateActivationConfig(app: 'admin_panel', response: $response);
         return redirect(url('/'));
     }
+
+    // ── Crece con Tootli ─────────────────────────────────────────────────────
+
+    public function crece()
+    {
+        $config = Helpers::get_business_settings('landing_page');
+        if (isset($config) && $config) {
+            return view('tootli-crece');
+        }
+        return view('tootli-crece');
+    }
+
+    public function creceContacto(Request $request)
+    {
+        $request->validate([
+            'nombre'   => 'required|string|max:100',
+            'apellido' => 'required|string|max:100',
+            'telefono' => 'required|string|max:30',
+            'email'    => 'required|email|max:150',
+            'ciudad'   => 'required|string|max:120',
+            'inversion'=> 'required|string|max:50',
+        ]);
+
+        // Guardamos como un Contact con asunto especial
+        $contact = new Contact;
+        $contact->name    = $request->nombre . ' ' . $request->apellido;
+        $contact->email   = $request->email;
+        $contact->subject = 'OPERADOR TOOTLI — ' . $request->ciudad . ' | Inversión: ' . $request->inversion;
+        $contact->message = "Teléfono: {$request->telefono}\nCiudad: {$request->ciudad}\nRango de inversión: {$request->inversion}\n\nMensaje:\n" . ($request->mensaje ?? '(sin mensaje)');
+        $contact->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => '¡Solicitud recibida! Te contactaremos pronto.',
+        ]);
+    }
 }
