@@ -55,13 +55,7 @@
                 </div>
             </div>
 
-            {{-- Right: App Mockup --}}
-            <div class="hero-bolt-mockup wow fadeInRight" data-wow-delay="0.2s">
-                <div class="hero-mockup-glow"></div>
-                <img src="{{ asset('assets/landing/img/hero-app-mockup.png') }}"
-                     alt="Tootli App"
-                     class="hero-mockup-img">
-            </div>
+
         </div>
         {{-- Wave divider --}}
         <div class="hero-wave">

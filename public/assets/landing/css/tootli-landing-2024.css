@@ -594,11 +594,10 @@ header.header-bolt .logo img:hover {
     display: flex;
     align-items: center;
     background-image:
-        radial-gradient(ellipse 60% 50% at 70% 50%, rgba(0, 209, 113, 0.12) 0%, transparent 70%),
-        linear-gradient(180deg, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.90) 100%),
-        url('../img/hero-mexican-tech.png');
+        linear-gradient(180deg, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.80) 100%),
+        url('../img/hero-tootli-cdmx.jpg');
     background-size: cover;
-    background-position: center;
+    background-position: center top;
     background-repeat: no-repeat;
     padding-top: 90px;
     position: relative;
@@ -617,22 +616,26 @@ header.header-bolt .logo img:hover {
     z-index: 1;
 }
 
-/* Two-column grid */
+/* Single centered column grid */
 .hero-bolt-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 60px;
+    text-align: center;
+    gap: 0;
     padding-top: 30px;
     padding-bottom: 110px;
     position: relative;
     z-index: 5;
 }
 
-/* Left column */
+/* Centered content column */
 .hero-bolt-content {
     z-index: 5;
     position: relative;
+    max-width: 780px;
+    width: 100%;
+    text-align: center;
 }
 
 /* Badge pill */
@@ -650,6 +653,8 @@ header.header-bolt .logo img:hover {
     padding: 7px 18px;
     border-radius: 50px;
     margin-bottom: 22px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .hero-bolt-title {
@@ -682,6 +687,7 @@ header.header-bolt .logo img:hover {
 .hero-bolt-actions {
     display: flex;
     align-items: center;
+    justify-content: center;
     flex-wrap: wrap;
     gap: 14px;
     margin-bottom: 48px;
@@ -744,6 +750,7 @@ header.header-bolt .logo img:hover {
 .hero-stats-row {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 28px;
     flex-wrap: wrap;
 }
@@ -776,13 +783,9 @@ header.header-bolt .logo img:hover {
     flex-shrink: 0;
 }
 
-/* Right column — Mockup */
+/* Mockup — hidden */
 .hero-bolt-mockup {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 5;
+    display: none;
 }
 
 .hero-mockup-glow {
@@ -837,8 +840,6 @@ header.header-bolt .logo img:hover {
 
 @media (max-width: 991px) {
     .hero-bolt-grid {
-        grid-template-columns: 1fr;
-        gap: 40px;
         text-align: center;
         padding-bottom: 120px;
     }
@@ -858,19 +859,6 @@ header.header-bolt .logo img:hover {
 
     .hero-stats-row {
         justify-content: center;
-    }
-
-    .hero-bolt-mockup {
-        order: -1;
-    }
-
-    .hero-mockup-img {
-        max-width: 360px;
-    }
-
-    .hero-mockup-glow {
-        width: 280px;
-        height: 280px;
     }
 
     .tootli-drawer {
