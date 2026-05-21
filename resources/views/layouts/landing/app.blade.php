@@ -74,6 +74,11 @@
                             Soporte
                         </a>
 
+                        <!-- Crece con Tootli -->
+                        <a href="{{ route('crece') }}" class="action-link action-link-crece" style="color: var(--tl-primary) !important; font-weight: 700;">
+                            🚀 Crece con Tootli
+                        </a>
+
                         <!-- Registrarme (Pill Button) -->
                         <a href="javascript:void(0)" class="btn-pill-white" id="btn-registrarme">
                             Registrarme
@@ -111,6 +116,11 @@
                 <li><a href="#aliados" class="drawer-nav-link">Aliados</a></li>
                 <li><a href="{{route('about-us')}}">Acerca de Nosotros</a></li>
                 <li><a href="{{route('contact-us')}}">Soporte y Ayuda</a></li>
+                <li style="margin-top: 10px;">
+                    <a href="{{ route('crece') }}" style="color: var(--tl-primary) !important; display: flex; align-items: center; gap: 8px;">
+                        🚀 Crece con Tootli
+                    </a>
+                </li>
                 
                 <!-- Opciones de Registro Dinámicas -->
                 <li style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 15px;">
