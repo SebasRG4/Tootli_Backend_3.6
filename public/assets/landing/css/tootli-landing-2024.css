@@ -349,21 +349,21 @@ header {
 
 
 /* ==========================================================================
-   BOLT-STYLE HERO AND PREMIUM GLASSMORPHIC HEADER
+   NAVBAR — FONDO BLANCO SÓLIDO
    ========================================================================== */
 
-/* Glassmorphism Navbar */
+/* White solid Navbar */
 header.header-bolt {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     z-index: 1000;
-    background: rgba(10, 10, 10, 0.72) !important;
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-    box-shadow: 0 2px 30px rgba(0,0,0,0.3);
+    background: #FFFFFF !important;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
     padding: 14px 0;
     transition: all 0.3s ease;
 }
@@ -376,7 +376,7 @@ header.header-bolt .navbar-bottom {
 
 header.header-bolt .logo img {
     height: 42px;
-    filter: brightness(0) invert(1);
+    filter: none;
     transition: transform 0.3s;
 }
 
@@ -392,7 +392,7 @@ header.header-bolt .logo img:hover {
 }
 
 .action-link {
-    color: #FFFFFF !important;
+    color: #1A1A1A !important;
     font-weight: 600;
     font-size: 15px;
     text-decoration: none;
@@ -415,9 +415,9 @@ header.header-bolt .logo img:hover {
     font-size: 16px;
 }
 
-/* Pill Button Registrarme */
+/* Pill Button Registrarme — verde sobre blanco */
 .btn-pill-white {
-    background: #FFFFFF;
+    background: var(--tl-primary);
     color: #1A1A1A !important;
     padding: 10px 24px;
     border-radius: 50px;
@@ -425,7 +425,7 @@ header.header-bolt .logo img:hover {
     font-size: 14px;
     text-decoration: none;
     transition: all 0.3s ease;
-    border: 1px solid #FFFFFF;
+    border: 2px solid var(--tl-primary);
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -434,17 +434,17 @@ header.header-bolt .logo img:hover {
 
 .btn-pill-white:hover {
     background: transparent;
-    color: #FFFFFF !important;
-    border-color: rgba(255, 255, 255, 0.5);
+    color: var(--tl-primary) !important;
+    border-color: var(--tl-primary);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.15);
+    box-shadow: 0 5px 15px rgba(0, 209, 113, 0.25);
 }
 
 /* Hamburger button */
 .btn-hamburger {
     background: none;
     border: none;
-    color: #FFFFFF;
+    color: #1A1A1A;
     font-size: 24px;
     cursor: pointer;
     padding: 5px;
