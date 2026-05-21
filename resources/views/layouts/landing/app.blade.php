@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="{{ asset('assets/admin/css/toastr.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/landing/css/main.css') }}"/>
     <link rel="stylesheet" href="{{ asset('assets/landing/css/tootli-theme.css') }}"/>
-    <link rel="stylesheet" href="{{ asset('assets/landing/css/tootli-landing-2024.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('assets/landing/css/tootli-landing-2024.css') }}?v={{ filemtime(public_path('assets/landing/css/tootli-landing-2024.css')) }}"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
     <link rel="stylesheet" href="{{asset('assets/admin/intltelinput/css/intlTelInput.css')}}">
