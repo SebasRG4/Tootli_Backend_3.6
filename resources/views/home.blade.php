@@ -75,7 +75,7 @@
                 <p class="tootli-services-subtitle">Todo lo que necesitas en una sola app, hecho en México.</p>
             </div>
 
-            <div class="owl-carousel tootli-services-carousel wow fadeInUp" data-wow-delay="0.15s">
+            <div class="owl-carousel tootli-services-carousel">
 
                 {{-- Card 1: Comida --}}
                 <div class="tootli-svc-card" style="background: linear-gradient(160deg, #1a1a1a 0%, #0d2b1a 100%);">
@@ -443,7 +443,7 @@
         </div>
     </section>
 
-@section('script_2')
+@push('script_2')
     <script>
         $(document).ready(function() {
             // Smooth scroll for nav links
@@ -460,18 +460,19 @@
             // ── Servicios Carousel ──────────────────────────────────
             var $svcCarousel = $(".tootli-services-carousel").owlCarousel({
                 loop: true,
-                margin: 0,
+                margin: 16,
                 nav: false,
                 dots: false,
                 autoplay: true,
                 autoplayTimeout: 4000,
                 autoplayHoverPause: true,
                 smartSpeed: 600,
+                stagePadding: 30,
                 responsive: {
-                    0:    { items: 1 },
-                    576:  { items: 2 },
-                    992:  { items: 3 },
-                    1200: { items: 3.3 }
+                    0:    { items: 1, stagePadding: 20 },
+                    576:  { items: 2, stagePadding: 20 },
+                    992:  { items: 3, stagePadding: 30 },
+                    1200: { items: 3, stagePadding: 60 }
                 }
             });
 
@@ -479,5 +480,5 @@
             $("#svcNext").on("click", function() { $svcCarousel.trigger("next.owl.carousel"); });
         });
     </script>
-@endsection
+@endpush
 @endsection
