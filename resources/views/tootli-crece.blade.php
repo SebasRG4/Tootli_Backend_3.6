@@ -13,7 +13,9 @@
     min-height: 90vh;
     display: flex;
     align-items: center;
-    background-image: url('{{ asset("assets/landing/img/hero-tootli-cdmx.jpg") }}');
+    background-image: 
+        linear-gradient(160deg, rgba(255, 255, 255, 0.80) 0%, rgba(244, 250, 247, 0.72) 100%),
+        url('{{ asset("assets/landing/img/hero-tootli-cdmx.jpg") }}');
     background-size: cover;
     background-position: center;
     padding-top: 120px;
