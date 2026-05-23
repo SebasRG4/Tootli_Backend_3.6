@@ -521,7 +521,6 @@ class HomeController extends Controller
         $contact = new Contact;
         $contact->name          = $request->nombre . ' ' . $request->apellido;
         $contact->email         = $request->email;
-        $contact->mobile_number = $request->telefono;
         $contact->subject       = 'OPERADOR TOOTLI — ' . $request->ciudad . ' | Inversión: ' . $request->inversion;
         $contact->message       = "Teléfono: {$request->telefono}\nCiudad: {$request->ciudad}\nRango de inversión: {$request->inversion}\n\nMensaje:\n" . ($request->mensaje ?? '(sin mensaje)');
         $contact->save();
