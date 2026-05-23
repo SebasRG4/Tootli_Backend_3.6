@@ -13,10 +13,11 @@
     min-height: 90vh;
     display: flex;
     align-items: center;
-    background: 
-        radial-gradient(circle at 80% 20%, rgba(0, 209, 113, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 15% 85%, rgba(0, 209, 113, 0.05) 0%, transparent 40%),
-        #FFFFFF;
+    background-image: 
+        linear-gradient(160deg, rgba(255, 255, 255, 0.94) 0%, rgba(240, 253, 244, 0.90) 100%),
+        url('{{ asset("assets/landing/img/hero-tootli-cdmx.jpg") }}');
+    background-size: cover;
+    background-position: center;
     padding-top: 120px;
     padding-bottom: 80px;
     position: relative;
