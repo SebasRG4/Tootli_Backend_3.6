@@ -5,40 +5,39 @@
 @push('css_or_js')
 <style>
 /* ============================================================
-   TOOTLI CRECE — ESTILOS DE PÁGINA
+   TOOTLI CRECE — ESTILOS DE PÁGINA (LIGHT-MINIMALIST THEME)
    ============================================================ */
 
 /* ── Hero ── */
 .crece-hero {
-    min-height: 92vh;
+    min-height: 90vh;
     display: flex;
     align-items: center;
-    background-image:
-        linear-gradient(160deg, rgba(10,10,10,0.82) 0%, rgba(0,40,25,0.75) 100%),
-        url('{{ asset("assets/landing/img/hero-tootli-cdmx.jpg") }}');
-    background-size: cover;
-    background-position: center;
-    padding-top: 100px;
+    background: 
+        radial-gradient(circle at 80% 20%, rgba(0, 209, 113, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 15% 85%, rgba(0, 209, 113, 0.05) 0%, transparent 40%),
+        #FFFFFF;
+    padding-top: 120px;
     padding-bottom: 80px;
     position: relative;
     overflow: hidden;
-    color: #fff;
+    color: #0F172A;
 }
 
 .crece-hero::before {
     content: '';
     position: absolute;
     inset: 0;
-    background-image: radial-gradient(circle, rgba(0,209,113,0.18) 1px, transparent 1px);
-    background-size: 48px 48px;
-    opacity: 0.12;
+    background-image: radial-gradient(circle, rgba(0,209,113,0.12) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.5;
     pointer-events: none;
 }
 
 .crece-hero-inner {
     position: relative;
     z-index: 2;
-    max-width: 780px;
+    max-width: 820px;
     margin: 0 auto;
     text-align: center;
 }
@@ -47,14 +46,14 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(0,209,113,0.12);
-    border: 1px solid rgba(0,209,113,0.35);
-    color: #00D171;
-    font-size: 12px;
+    background: #E6F9F1;
+    border: 1px solid rgba(0,209,113,0.3);
+    color: #00A358;
+    font-size: 13px;
     font-weight: 700;
-    letter-spacing: 1.2px;
+    letter-spacing: 1px;
     text-transform: uppercase;
-    padding: 8px 20px;
+    padding: 8px 22px;
     border-radius: 50px;
     margin-bottom: 28px;
 }
@@ -62,25 +61,28 @@
 .crece-hero-title {
     font-size: 72px;
     font-weight: 900;
-    line-height: 1.04;
-    letter-spacing: -3px;
+    line-height: 1.05;
+    letter-spacing: -2.5px;
     margin-bottom: 24px;
-    color: #fff;
+    color: #0F172A;
 }
 
 .crece-hero-title .accent {
-    background: linear-gradient(135deg, #00D171 0%, #00ffaa 100%);
+    background: linear-gradient(135deg, #00D171 0%, #00A358 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .crece-hero-sub {
-    font-size: 20px;
-    color: rgba(255,255,255,0.7);
-    line-height: 1.7;
+    font-size: 21px;
+    color: #475569;
+    line-height: 1.65;
     margin-bottom: 44px;
     font-weight: 400;
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .crece-hero-actions {
@@ -91,35 +93,35 @@
 }
 
 .btn-crece-primary {
-    padding: 18px 40px;
+    padding: 18px 42px;
     border-radius: 50px;
     font-weight: 800;
     font-size: 16px;
-    background: #00D171;
-    color: #121212 !important;
+    background: linear-gradient(135deg, #00D171 0%, #00B360 100%);
+    color: #FFFFFF !important;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 10px;
     transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
-    box-shadow: 0 10px 30px rgba(0,209,113,0.38);
+    box-shadow: 0 10px 25px rgba(0,209,113,0.25);
 }
 
 .btn-crece-primary:hover {
-    background: #fff;
-    color: #121212 !important;
+    background: linear-gradient(135deg, #00B360 0%, #009E52 100%);
+    color: #FFFFFF !important;
     transform: translateY(-3px);
-    box-shadow: 0 18px 40px rgba(255,255,255,0.18);
+    box-shadow: 0 15px 35px rgba(0,209,113,0.35);
 }
 
 .btn-crece-outline {
-    padding: 17px 36px;
+    padding: 17px 38px;
     border-radius: 50px;
     font-weight: 700;
     font-size: 16px;
     background: transparent;
-    border: 2px solid rgba(255,255,255,0.35);
-    color: #fff !important;
+    border: 2px solid #E2E8F0;
+    color: #475569 !important;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
@@ -131,60 +133,63 @@
     border-color: #00D171;
     color: #00D171 !important;
     transform: translateY(-2px);
+    background: rgba(0,209,113,0.02);
 }
 
 /* ── Stats bar ── */
 .crece-stats-bar {
-    background: #fff;
-    border-bottom: 1px solid #F0F0F0;
-    padding: 28px 0;
+    background: #FFFFFF;
+    border-top: 1px solid #F1F5F9;
+    border-bottom: 1px solid #F1F5F9;
+    padding: 32px 0;
 }
 
 .crece-stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 0;
-    max-width: 900px;
+    max-width: 1000px;
     margin: 0 auto;
     text-align: center;
 }
 
 .crece-stat-item {
     padding: 0 24px;
-    border-right: 1px solid #EEE;
+    border-right: 1px solid #E2E8F0;
 }
 
 .crece-stat-item:last-child { border-right: none; }
 
 .crece-stat-num {
-    font-size: 36px;
+    font-size: 40px;
     font-weight: 900;
-    letter-spacing: -1px;
+    letter-spacing: -1.5px;
     color: #00D171;
     line-height: 1;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
 }
 
 .crece-stat-label {
     font-size: 13px;
-    color: #888;
-    font-weight: 500;
+    color: #64748B;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
 }
 
 /* ── Section base ── */
 .crece-section {
     padding: 100px 0;
+    background: #FFFFFF;
 }
 
 .crece-section-alt {
-    background: #F8FAFA;
+    background: #F8FAFC;
 }
 
 .crece-section-dark {
-    background: #0A0A0A;
-    color: #fff;
+    background: #F8FAF7; /* Cambiado a blanco/menta minimalista */
+    color: #0F172A;
 }
 
 .crece-section-header {
@@ -198,7 +203,7 @@
     color: #00A358;
     font-size: 12px;
     font-weight: 700;
-    letter-spacing: 1px;
+    letter-spacing: 1.2px;
     text-transform: uppercase;
     padding: 6px 18px;
     border-radius: 50px;
@@ -206,30 +211,30 @@
 }
 
 .crece-section-dark .crece-section-tag {
-    background: rgba(0,209,113,0.12);
-    color: #00D171;
+    background: #E6F9F1;
+    color: #00A358;
 }
 
 .crece-section-title {
     font-size: 48px;
     font-weight: 900;
     letter-spacing: -1.5px;
-    line-height: 1.1;
+    line-height: 1.15;
     margin-bottom: 16px;
-    color: #1A1A1A;
+    color: #0F172A;
 }
 
-.crece-section-dark .crece-section-title { color: #fff; }
+.crece-section-dark .crece-section-title { color: #0F172A; }
 
 .crece-section-sub {
     font-size: 18px;
-    color: #666;
-    max-width: 600px;
+    color: #475569;
+    max-width: 620px;
     margin: 0 auto;
     line-height: 1.7;
 }
 
-.crece-section-dark .crece-section-sub { color: rgba(255,255,255,0.6); }
+.crece-section-dark .crece-section-sub { color: #475569; }
 
 /* ── Beneficios cards ── */
 .crece-benefits-grid {
@@ -239,10 +244,10 @@
 }
 
 .crece-benefit-card {
-    background: #fff;
+    background: #FFFFFF;
     border-radius: 24px;
     padding: 40px 36px;
-    border: 1px solid #F0F0F0;
+    border: 1px solid #E2E8F0;
     transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
     position: relative;
     overflow: hidden;
@@ -252,7 +257,7 @@
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
-    height: 3px;
+    height: 4px;
     background: linear-gradient(90deg, #00D171, #00ffaa);
     opacity: 0;
     transition: opacity 0.3s;
@@ -260,8 +265,8 @@
 
 .crece-benefit-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 24px 60px rgba(0,0,0,0.08);
-    border-color: rgba(0,209,113,0.2);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.04);
+    border-color: rgba(0,209,113,0.3);
 }
 
 .crece-benefit-card:hover::before { opacity: 1; }
@@ -277,6 +282,7 @@
     font-size: 28px;
     margin-bottom: 24px;
     transition: transform 0.3s;
+    color: #00A358;
 }
 
 .crece-benefit-card:hover .crece-benefit-icon {
@@ -286,13 +292,13 @@
 .crece-benefit-card h3 {
     font-size: 20px;
     font-weight: 800;
-    margin-bottom: 10px;
-    color: #1A1A1A;
+    margin-bottom: 12px;
+    color: #0F172A;
 }
 
 .crece-benefit-card p {
     font-size: 15px;
-    color: #666;
+    color: #475569;
     line-height: 1.65;
     margin: 0;
 }
@@ -302,24 +308,27 @@
     display: grid;
     grid-template-columns: 260px 1fr;
     gap: 0;
-    background: #111;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
     border-radius: 32px;
     overflow: hidden;
     min-height: 480px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.03);
 }
 
 .crece-eco-tabs {
     padding: 32px 24px;
-    border-right: 1px solid rgba(255,255,255,0.06);
+    border-right: 1px solid #F1F5F9;
     display: flex;
     flex-direction: column;
     gap: 8px;
+    background: #FCFDFD;
 }
 
 .crece-eco-tab {
     background: transparent;
     border: none;
-    color: rgba(255,255,255,0.5);
+    color: #64748B;
     padding: 16px 20px;
     border-radius: 16px;
     text-align: left;
@@ -334,18 +343,19 @@
 }
 
 .crece-eco-tab:hover {
-    color: #fff;
-    background: rgba(255,255,255,0.05);
+    color: #0F172A;
+    background: #F1F5F9;
 }
 
 .crece-eco-tab.active {
-    background: #00D171;
-    color: #121212;
-    box-shadow: 0 4px 16px rgba(0,209,113,0.3);
+    background: #E6F9F1;
+    color: #00A358;
+    font-weight: 700;
 }
 
 .crece-eco-panels {
-    padding: 48px 40px;
+    padding: 48px 48px;
+    background: #FFFFFF;
 }
 
 .crece-eco-panel {
@@ -369,16 +379,16 @@
 .crece-eco-panel h3 {
     font-size: 32px;
     font-weight: 900;
-    color: #00D171;
-    margin-bottom: 12px;
+    color: #00A358;
+    margin-bottom: 14px;
     letter-spacing: -1px;
 }
 
 .crece-eco-panel p {
     font-size: 17px;
-    color: rgba(255,255,255,0.65);
+    color: #475569;
     line-height: 1.7;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
 }
 
 .crece-eco-checklist {
@@ -387,23 +397,24 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 
 .crece-eco-checklist li {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     font-size: 15px;
-    color: rgba(255,255,255,0.85);
+    color: #1E293B;
+    font-weight: 500;
 }
 
 .crece-eco-checklist li::before {
     content: '✓';
     width: 22px;
     height: 22px;
-    background: rgba(0,209,113,0.15);
-    color: #00D171;
+    background: #E6F9F1;
+    color: #00A358;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -428,7 +439,7 @@
     left: 12%;
     right: 12%;
     height: 2px;
-    background: linear-gradient(90deg, #00D171, #00ffaa);
+    background: linear-gradient(90deg, #00D171, #00B360);
     opacity: 0.3;
 }
 
@@ -442,7 +453,7 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: #fff;
+    background: #FFFFFF;
     border: 3px solid #00D171;
     display: flex;
     align-items: center;
@@ -459,21 +470,21 @@
 
 .crece-step:hover .crece-step-number {
     background: #00D171;
-    color: #fff;
+    color: #FFFFFF;
     transform: scale(1.1);
-    box-shadow: 0 12px 32px rgba(0,209,113,0.35);
+    box-shadow: 0 12px 32px rgba(0,209,113,0.3);
 }
 
 .crece-step h4 {
     font-size: 18px;
     font-weight: 800;
-    color: #1A1A1A;
+    color: #0F172A;
     margin-bottom: 8px;
 }
 
 .crece-step p {
     font-size: 14px;
-    color: #888;
+    color: #64748B;
     line-height: 1.6;
 }
 
@@ -490,13 +501,13 @@
     font-weight: 900;
     letter-spacing: -1.5px;
     margin-bottom: 16px;
-    color: #fff;
-    line-height: 1.1;
+    color: #0F172A;
+    line-height: 1.15;
 }
 
 .crece-contact-info p {
     font-size: 17px;
-    color: rgba(255,255,255,0.62);
+    color: #475569;
     line-height: 1.7;
     margin-bottom: 36px;
 }
@@ -515,14 +526,15 @@
     align-items: center;
     gap: 12px;
     font-size: 15px;
-    color: rgba(255,255,255,0.8);
+    color: #334155;
+    font-weight: 500;
 }
 
 .crece-perk-icon {
     width: 36px;
     height: 36px;
-    background: rgba(0,209,113,0.12);
-    border: 1px solid rgba(0,209,113,0.25);
+    background: #E6F9F1;
+    border: 1px solid rgba(0,209,113,0.2);
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -533,11 +545,11 @@
 
 /* Form card */
 .crece-form-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
     border-radius: 28px;
     padding: 48px 44px;
-    backdrop-filter: blur(20px);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.04);
 }
 
 .crece-form-group {
@@ -554,7 +566,7 @@
     display: block;
     font-size: 13px;
     font-weight: 600;
-    color: rgba(255,255,255,0.7);
+    color: #475569;
     margin-bottom: 8px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -564,12 +576,12 @@
 .crece-form-select,
 .crece-form-textarea {
     width: 100%;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
     border-radius: 14px;
     padding: 14px 18px;
     font-size: 15px;
-    color: #fff;
+    color: #0F172A;
     font-family: 'Outfit', sans-serif;
     transition: all 0.3s ease;
     outline: none;
@@ -577,23 +589,28 @@
 
 .crece-form-input::placeholder,
 .crece-form-textarea::placeholder {
-    color: rgba(255,255,255,0.3);
+    color: #94A3B8;
 }
 
 .crece-form-input:focus,
 .crece-form-select:focus,
 .crece-form-textarea:focus {
     border-color: #00D171;
-    background: rgba(0,209,113,0.05);
-    box-shadow: 0 0 0 3px rgba(0,209,113,0.12);
+    background: #FFFFFF;
+    box-shadow: 0 0 0 4px rgba(0,209,113,0.1);
 }
 
 .crece-form-select {
     appearance: none;
     cursor: pointer;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 18px center;
+    background-size: 16px;
+    padding-right: 40px;
 }
 
-.crece-form-select option { background: #1a1a1a; color: #fff; }
+.crece-form-select option { background: #FFFFFF; color: #0F172A; }
 
 .crece-form-textarea {
     min-height: 120px;
@@ -605,8 +622,8 @@
     padding: 18px;
     border-radius: 50px;
     border: none;
-    background: #00D171;
-    color: #121212;
+    background: linear-gradient(135deg, #00D171 0%, #00B360 100%);
+    color: #FFFFFF;
     font-size: 16px;
     font-weight: 800;
     font-family: 'Outfit', sans-serif;
@@ -617,18 +634,18 @@
     justify-content: center;
     gap: 10px;
     margin-top: 8px;
-    box-shadow: 0 8px 28px rgba(0,209,113,0.38);
+    box-shadow: 0 10px 25px rgba(0,209,113,0.25);
 }
 
 .crece-form-submit:hover {
-    background: #fff;
+    background: linear-gradient(135deg, #00B360 0%, #009E52 100%);
     transform: translateY(-2px);
-    box-shadow: 0 14px 36px rgba(255,255,255,0.15);
+    box-shadow: 0 14px 30px rgba(0,209,113,0.35);
 }
 
 .crece-form-note {
     font-size: 13px;
-    color: rgba(255,255,255,0.4);
+    color: #94A3B8;
     text-align: center;
     margin-top: 14px;
 }
@@ -644,22 +661,22 @@
 }
 
 .crece-alert-success {
-    background: rgba(0,209,113,0.12);
-    border: 1px solid rgba(0,209,113,0.3);
-    color: #00D171;
+    background: #E6F9F1;
+    border: 1px solid rgba(0,209,113,0.25);
+    color: #00A358;
 }
 
 .crece-alert-error {
-    background: rgba(255,77,77,0.1);
-    border: 1px solid rgba(255,77,77,0.3);
-    color: #FF4D4D;
+    background: #FEF2F2;
+    border: 1px solid rgba(239,68,68,0.2);
+    color: #EF4444;
 }
 
 /* ── Responsive ── */
 @media (max-width: 1024px) {
     .crece-benefits-grid { grid-template-columns: repeat(2, 1fr); }
     .crece-ecosystem { grid-template-columns: 1fr; }
-    .crece-eco-tabs { flex-direction: row; overflow-x: auto; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .crece-eco-tabs { flex-direction: row; overflow-x: auto; border-right: none; border-bottom: 1px solid #F1F5F9; }
     .crece-contact-wrap { grid-template-columns: 1fr; gap: 40px; }
     .crece-steps { grid-template-columns: repeat(2, 1fr); gap: 40px; }
     .crece-steps::before { display: none; }

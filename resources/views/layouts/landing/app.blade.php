@@ -156,7 +156,7 @@
             <div class="row g-4">
                 <div class="col-lg-4">
                     <img src="{{ \App\CentralLogics\Helpers::logoFullUrl()}}" alt="Tootli" height="40" class="mb-4" style="filter: brightness(0) invert(1);">
-                    <p style="color: #AAA;">{{ $business_name }} - Conectando tu ciudad, un pedido a la vez.</p>
+                    <p style="color: #AAA;">{{ $business_name }} - Lo hecho en México esta bien hecho!.</p>
                     <div class="d-flex gap-3 mt-4">
                         @php($social_media = \App\Models\SocialMedia::where('status', 1)->get())
                         @foreach ($social_media as $social)
