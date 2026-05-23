@@ -1037,7 +1037,22 @@
             headers: { 'X-Requested-With': 'XMLHttpRequest' },
             body: formData
         })
-        .then(r => r.json())
+        .then(async r => {
+            const isJson = r.headers.get('content-type')?.includes('application/json');
+            const data = isJson ? await r.json() : null;
+
+            if (!r.ok) {
+                let errorMsg = 'Hubo un error al procesar tu solicitud. Por favor intenta de nuevo.';
+                if (data && data.errors) {
+                    const firstErrorKey = Object.keys(data.errors)[0];
+                    errorMsg = data.errors[firstErrorKey][0];
+                } else if (data && data.message) {
+                    errorMsg = data.message;
+                }
+                throw new Error(errorMsg);
+            }
+            return data;
+        })
         .then(data => {
             if (data.success) {
                 document.getElementById('crece-success').style.display = 'block';
@@ -1047,8 +1062,10 @@
                 throw new Error(data.message || 'Error');
             }
         })
-        .catch(() => {
-            document.getElementById('crece-error').style.display = 'block';
+        .catch(err => {
+            const errDiv = document.getElementById('crece-error');
+            errDiv.innerHTML = '❌ ' + err.message;
+            errDiv.style.display = 'block';
             document.getElementById('crece-success').style.display = 'none';
         })
         .finally(() => {
