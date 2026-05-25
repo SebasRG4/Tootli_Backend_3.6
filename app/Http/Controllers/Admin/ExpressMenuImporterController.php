@@ -9,9 +9,7 @@ use App\Models\Store;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use Brian2694\Toastr\Facades\Toastr;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
-use OpenAI\Laravel\Facades\OpenAI;
 
 class ExpressMenuImporterController extends Controller
 {
@@ -37,61 +35,26 @@ class ExpressMenuImporterController extends Controller
             return response()->json(['error' => 'No se encontró el restaurante seleccionado.'], 404);
         }
 
-        // 1. Obtener y validar credenciales de OpenAI configuradas en la BD
-        $openAiConfig = \App\Models\BusinessSetting::where(['key' => 'openai_config'])->first();
-        $openAiConfig = $openAiConfig ? json_decode($openAiConfig['value'], true) : null;
-        $apiKey = $openAiConfig['OPENAI_API_KEY'] ?? null;
-
-        if (empty($apiKey)) {
-            return response()->json([
-                'error' => 'La API Key de OpenAI no está configurada. Por favor ve a Configuración del Negocio > OpenAI Config para activarla.'
-            ], 422);
-        }
-
-        // Asegurar que la configuración esté cargada dinámicamente en el config de Laravel
-        Config::set('openai.api_key', $apiKey);
-        if (!empty($openAiConfig['OPENAI_ORGANIZATION'])) {
-            Config::set('openai.organization', $openAiConfig['OPENAI_ORGANIZATION']);
-        }
-
-        // 2. Convertir imagen a Base64
+        // 1. Convertir imagen a Base64
         $imageFile = $request->file('menu_image');
         $base64Image = base64_encode(file_get_contents($imageFile->getRealPath()));
         $mimeType = $imageFile->getClientMimeType();
 
-        // 3. Llamar a OpenAI Vision (usando gpt-4o-mini que es el más veloz y económico para OCR estructurado)
+        // 2. Llamar a nuestro servicio Tootli AI en Python (que usa Google Gemini 2.5 Flash con Visión)
         try {
-            $response = OpenAI::chat()->create([
-                'model' => 'gpt-4o-mini',
-                'messages' => [
-                    [
-                        'role' => 'user',
-                        'content' => [
-                            [
-                                'type' => 'text',
-                                'text' => "Analiza la imagen de este menú de restaurante. Extrae todos los platillos, bebidas y postres con sus respectivos precios y descripciones.
-                                Debes responder **estrictamente** con un objeto JSON que tenga una propiedad llamada 'items' que contenga un arreglo de objetos. Cada objeto debe tener exactamente los siguientes campos:
-                                - 'name': Nombre del platillo o bebida (limpio y bien escrito).
-                                - 'description': Descripción del platillo o sus ingredientes (si no tiene descripción, genera una descripción corta apetitosa basada en su nombre).
-                                - 'price': Precio como un número flotante o entero sin signos de pesos ni comas (ej. 150.00). Si no tiene precio, calcula un precio estimado promedio de 120.00.
-                                - 'suggested_category': El nombre de la categoría a la que pertenece (ej. 'Entradas', 'Platos Fuertes', 'Bebidas', 'Postres', 'Tacos', 'Pizzas').
-                                
-                                Responde únicamente en formato JSON estructurado, sin texto de introducción, sin bloques markdown de código ```json ... ```, solo el JSON puro."
-                            ],
-                            [
-                                'type' => 'image_url',
-                                'image_url' => [
-                                    'url' => "data:{$mimeType};base64,{$base64Image}",
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                'response_format' => ['type' => 'json_object']
+            $aiUrl = env('AI_SERVICE_URL', 'http://127.0.0.1:8000');
+            $response = \Illuminate\Support\Facades\Http::timeout(60)->post($aiUrl . '/extract-menu', [
+                'image_base64' => $base64Image,
+                'mime_type' => $mimeType,
             ]);
 
-            $rawContent = $response->choices[0]->message->content;
-            $data = json_decode($rawContent, true);
+            if (!$response->successful()) {
+                return response()->json([
+                    'error' => 'El servicio de IA (Google Gemini) devolvió un error: ' . $response->body()
+                ], 500);
+            }
+
+            $data = $response->json();
 
             if (!isset($data['items']) || !is_array($data['items'])) {
                 return response()->json(['error' => 'No se pudo estructurar el menú correctamente. Por favor intenta con otra foto más legible.'], 422);
@@ -99,16 +62,16 @@ class ExpressMenuImporterController extends Controller
 
             $extractedItems = $data['items'];
 
-            // 4. Descargar categorías existentes del módulo del restaurante para hacer matching inteligente
+            // 3. Descargar categorías existentes del módulo del restaurante para hacer matching inteligente
             $moduleId = $store->module_id;
             $existingCategories = Category::where('position', 0)
                 ->where('module_id', $moduleId)
                 ->get(['id', 'name']);
 
-            // 5. Descargar platillos existentes del restaurante para buscar duplicados
+            // 4. Descargar platillos existentes del restaurante para buscar duplicados
             $existingItems = Item::where('store_id', $store->id)->get(['id', 'name', 'price']);
 
-            // 6. Enriquecer los resultados con análisis inteligente y duplicados
+            // 5. Enriquecer los resultados con análisis inteligente y duplicados
             $enrichedItems = [];
             foreach ($extractedItems as $index => $item) {
                 $name = trim($item['name']);
@@ -185,7 +148,7 @@ class ExpressMenuImporterController extends Controller
 
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error("AI Menu Importer Error: " . $e->getMessage());
-            return response()->json(['error' => 'Error al conectar con OpenAI: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Error al conectar con el servicio de IA de Google Gemini: ' . $e->getMessage()], 500);
         }
     }
 
