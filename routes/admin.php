@@ -151,6 +151,11 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('quick-price-update', 'ItemController@quick_price_update_index')->name('quick-price-update');
             Route::post('quick-price-update-parse', 'ItemController@quick_price_update_parse')->name('quick-price-update-parse');
             Route::post('quick-price-update-store', 'ItemController@quick_price_update_store')->name('quick-price-update-store');
+
+            // AI Express Menu Importer
+            Route::get('express-import', 'ExpressMenuImporterController@index')->name('express-import');
+            Route::post('express-import-parse', 'ExpressMenuImporterController@parse')->name('express-import-parse');
+            Route::post('express-import-save', 'ExpressMenuImporterController@import')->name('express-import-save');
         });
 
         Route::group(['prefix' => 'promotional-banner', 'as' => 'promotional-banner.', 'middleware' => ['module:banner']], function () {

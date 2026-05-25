@@ -1636,9 +1636,10 @@ class OrderController extends Controller
         }
 
         $free_delivery_over = BusinessSetting::where('key', 'free_delivery_over')->first()->value;
+        $groceryThreshold = $free_delivery_over > 0 ? (float)$free_delivery_over : 350;
         if (isset($free_delivery_over)) {
             // Updated logic: free delivery only if Grocery subtotal > threshold
-            if ($grocery_subtotal >= 350) {
+            if ($grocery_subtotal >= $groceryThreshold) {
                 $order->delivery_charge = 0;
             }
         }
