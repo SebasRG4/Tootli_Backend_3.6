@@ -209,10 +209,10 @@ class ConfigController extends Controller
             'free_delivery_over' => (float) data_get($settings, 'free_delivery_over', 0),
         ];
 
-        // REGLA ESPECIAL SUPER TOOTLI: Grocery (Module 1) Gratis > $150
+        // REGLA ESPECIAL SUPER TOOTLI: Grocery (Module 1) Gratis > $350
         if (request()->header('moduleId') == 1) {
             $admin_free_delivery['status'] = true;
-            $admin_free_delivery['free_delivery_over'] = 150;
+            $admin_free_delivery['free_delivery_over'] = 350;
             $admin_free_delivery['type'] = 'free_delivery_by_order_amount';
         }
 

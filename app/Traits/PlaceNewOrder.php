@@ -484,8 +484,8 @@ trait PlaceNewOrder
                     }
                 }
 
-                // REGLA ESPECIAL SUPER TOOTLI: Grocery (Module 1) Gratis > $150
-                // Solo si la suma de los productos de Grocery supera $150 (sin contar otros módulos)
+                // REGLA ESPECIAL SUPER TOOTLI: Grocery (Module 1) Gratis > $350
+                // Solo si la suma de los productos de Grocery supera $350 (sin contar otros módulos)
                 $grocerySubtotal = 0;
                 foreach ($order_details as $detail) {
                     $item = \App\Models\Item::find($detail['item_id']);
@@ -494,7 +494,7 @@ trait PlaceNewOrder
                     }
                 }
 
-                if ($grocerySubtotal >= 150) {
+                if ($grocerySubtotal >= 350) {
                     $order->delivery_charge = 0;
                     $free_delivery_by = 'admin';
                 }
