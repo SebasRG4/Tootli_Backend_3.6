@@ -1224,6 +1224,15 @@
                                 <span class="text-truncate">{{ translate('messages.third_party_apis') }}</span>
                             </a>
                         </li>
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/donation-settings*') ? 'active' : '' }}">
+                            <a class="nav-link " href="{{ route('admin.business-settings.donation-settings') }}"
+                                title="{{ translate('Donation Settings') }}">
+                                <span class="tio-gift nav-icon"></span>
+                                <span
+                                    class="text-truncate text-capitalize">{{ translate('Donation Settings') }}</span>
+                            </a>
+                        </li>
 
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/pages*') ? 'active' : '' }}">

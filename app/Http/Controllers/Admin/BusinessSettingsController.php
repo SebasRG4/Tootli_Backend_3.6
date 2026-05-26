@@ -1382,6 +1382,35 @@ class BusinessSettingsController extends Controller
         return view('admin-views.business-settings.app-settings');
     }
 
+    public function donation_settings()
+    {
+        return view('admin-views.business-settings.donation-settings');
+    }
+
+    public function update_donation_settings(Request $request)
+    {
+        if (env('APP_MODE') == 'demo') {
+            Toastr::info(translate('messages.update_option_is_disable_for_demo'));
+
+            return back();
+        }
+
+        Helpers::businessUpdateOrInsert(['key' => 'donation_button_status'], [
+            'value' => $request['donation_button_status'] ?? 0,
+        ]);
+
+        $donation_button_image = BusinessSetting::firstOrNew(['key' => 'donation_button_image']);
+        if ($request->has('donation_button_image')) {
+            $image_name = Helpers::update('business/', $donation_button_image->value, 'png', $request->file('donation_button_image'));
+            $donation_button_image->value = $image_name;
+        }
+        $donation_button_image->save();
+
+        Toastr::success(translate('messages.Donation_settings_updated'));
+
+        return back();
+    }
+
     public function update_app_settings(Request $request)
     {
         if (env('APP_MODE') == 'demo') {

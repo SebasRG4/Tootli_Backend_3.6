@@ -404,6 +404,15 @@
                             </ul>
                         </li>
                         <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/donation-settings*') ? 'active' : '' }}">
+                            <a class="nav-link " href="{{ route('admin.business-settings.donation-settings') }}"
+                                title="{{ translate('Donation Settings') }}">
+                                <span class="tio-gift nav-icon"></span>
+                                <span
+                                    class="text-truncate text-capitalize">{{ translate('Donation Settings') }}</span>
+                            </a>
+                        </li>
+                        <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/login-settings*') || Request::is('admin/business-settings/login-url-setup*') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('admin.business-settings.login-settings.index') }}"
                                 title="{{ translate('messages.login_setup') }}">
