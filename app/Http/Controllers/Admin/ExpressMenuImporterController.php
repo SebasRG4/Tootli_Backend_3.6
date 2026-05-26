@@ -237,7 +237,7 @@ class ExpressMenuImporterController extends Controller
             $item->store_id = $store->id;
             $item->module_id = $moduleId;
             $item->category_id = $categoryId;
-            $item->category_ids = [['id' => $categoryId, 'position' => 1]];
+            $item->category_ids = json_encode([['id' => $categoryId, 'position' => 1]]);
             $item->status = 1;
             $item->is_approved = 1;
             $item->description = $description;
@@ -258,10 +258,10 @@ class ExpressMenuImporterController extends Controller
             $item->available_time_ends = $availableTimeEnds;
             $item->image = 'def.png';
             $item->food_variations = json_encode($rawVariations);
-            $item->variations = [];
-            $item->add_ons = [];
-            $item->attributes = [];
-            $item->choice_options = [];
+            $item->variations = json_encode([]);
+            $item->add_ons = json_encode([]);
+            $item->attributes = json_encode([]);
+            $item->choice_options = json_encode([]);
             $item->images = [];
             $item->unit_id = 1;
             $item->tax = 0;
