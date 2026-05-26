@@ -120,6 +120,50 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal para Ver Detalles del Platillo Existente -->
+        <div class="modal fade" id="matchedItemModal" tabindex="-1" role="dialog" aria-labelledby="matchedItemModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+                    <div class="modal-header bg-light border-0 p-4 pb-0">
+                        <h4 class="modal-title font-weight-bold text-dark d-flex align-items-center" id="matchedItemModalLabel">
+                            <i class="tio-restaurant text-primary mr-2" style="font-size: 24px;"></i> Detalles del Platillo Existente
+                        </h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="font-size: 24px; color: #999; border: none; background: transparent; outline: none;">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <!-- Imagen del Platillo -->
+                        <div class="text-center mb-4 d-none" id="modal-item-image-container">
+                            <img id="modal-item-image" src="" alt="Platillo" class="img-fluid rounded-lg shadow-sm" style="max-height: 180px; object-fit: cover; width: 100%; border-radius: 12px;">
+                        </div>
+                        
+                        <div class="d-flex flex-column gap-3">
+                            <div class="d-flex justify-content-between align-items-center border-bottom pb-2">
+                                <span class="text-muted font-weight-medium">Nombre:</span>
+                                <span class="text-dark font-weight-bold" id="modal-item-name">-</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center border-bottom pb-2">
+                                <span class="text-muted font-weight-medium">Categoría:</span>
+                                <span class="badge badge-info p-2 font-weight-bold" id="modal-item-category" style="font-size: 12px; border-radius: 6px;">-</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center border-bottom pb-2">
+                                <span class="text-muted font-weight-medium">Precio Actual:</span>
+                                <span class="text-success font-weight-bold" style="font-size: 18px;" id="modal-item-price">$0.00</span>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <span class="text-muted font-weight-medium mb-1">Descripción / Ingredientes:</span>
+                                <p class="text-dark mb-0 bg-light p-3 rounded" style="font-size: 13px; min-height: 50px; border-radius: 8px; border: 1px solid #e7eaf3;" id="modal-item-description">-</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 p-4 pt-0">
+                        <button type="button" class="btn btn-secondary btn-block" style="border-radius: 8px;" data-dismiss="modal">Cerrar Detalles</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -228,6 +272,40 @@
             });
         });
 
+        // Utility to escape HTML strings safely for data-attributes
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Click handler to display the details of similar/duplicate matched items
+        $(document).on('click', '.matched-item-trigger', function() {
+            let name = $(this).attr('data-name');
+            let price = $(this).attr('data-price');
+            let desc = $(this).attr('data-desc');
+            let image = $(this).attr('data-image');
+            let cat = $(this).attr('data-cat');
+
+            $('#modal-item-name').text(name);
+            $('#modal-item-price').text(price);
+            $('#modal-item-description').text(desc);
+            $('#modal-item-category').text(cat);
+
+            if (image && image !== 'null' && image !== '') {
+                $('#modal-item-image').attr('src', image);
+                $('#modal-item-image-container').removeClass('d-none');
+            } else {
+                $('#modal-item-image-container').addClass('d-none');
+            }
+
+            $('#matchedItemModal').modal('show');
+        });
+
         // Renderizar Cuadrícula / Tabla de Edición
         function renderPreviewGrid(items, storeId) {
             $('#submit_store_id').val(storeId);
@@ -240,13 +318,52 @@
                 // Estatus Badge
                 let statusBadge = '';
                 let isChecked = 'checked';
+                
+                let escDesc = escapeHtml(item.matched_description || 'Sin descripción');
+                let escImage = item.matched_image || '';
+                let escCat = escapeHtml(item.matched_category || 'Otros');
+
                 if (item.status === 'duplicate') {
-                    statusBadge = `<span class="badge badge-danger p-2" style="font-size:11px;"><i class="tio-warning"></i> Duplicado</span><br><small class="text-danger">Ya existe este nombre</small>`;
+                    statusBadge = `
+                        <span class="badge badge-soft-danger p-2 cursor-pointer matched-item-trigger w-100" 
+                              style="font-size:11px; border-radius: 6px;"
+                              data-name="${escapeHtml(item.matched_name)}"
+                              data-price="$${item.matched_price}"
+                              data-desc="${escDesc}"
+                              data-image="${escImage}"
+                              data-cat="${escCat}">
+                            <i class="tio-warning"></i> Duplicado
+                        </span>
+                        <br>
+                        <small class="text-danger">Parecido a: <a href="javascript:void(0)" class="font-weight-bold text-underline matched-item-trigger" 
+                              data-name="${escapeHtml(item.matched_name)}"
+                              data-price="$${item.matched_price}"
+                              data-desc="${escDesc}"
+                              data-image="${escImage}"
+                              data-cat="${escCat}">${item.matched_name}</a></small>
+                    `;
                     isChecked = ''; // Desmarcar por seguridad si es duplicado idéntico
                 } else if (item.status === 'similar') {
-                    statusBadge = `<span class="badge badge-warning p-2" style="font-size:11px;"><i class="tio-warning-outlined"></i> Nombre Similar</span><br><small class="text-warning">Parecido a: <b>${item.matched_name}</b></small>`;
+                    statusBadge = `
+                        <span class="badge badge-soft-warning p-2 cursor-pointer matched-item-trigger w-100" 
+                              style="font-size:11px; border-radius: 6px;"
+                              data-name="${escapeHtml(item.matched_name)}"
+                              data-price="$${item.matched_price}"
+                              data-desc="${escDesc}"
+                              data-image="${escImage}"
+                              data-cat="${escCat}">
+                            <i class="tio-warning-outlined"></i> Nombre Similar
+                        </span>
+                        <br>
+                        <small class="text-warning">Parecido a: <a href="javascript:void(0)" class="font-weight-bold text-underline matched-item-trigger" 
+                              data-name="${escapeHtml(item.matched_name)}"
+                              data-price="$${item.matched_price}"
+                              data-desc="${escDesc}"
+                              data-image="${escImage}"
+                              data-cat="${escCat}">${item.matched_name}</a></small>
+                    `;
                 } else {
-                    statusBadge = `<span class="badge badge-success p-2" style="font-size:11px;"><i class="tio-checkmark-circle"></i> Nuevo</span>`;
+                    statusBadge = `<span class="badge badge-soft-success p-2 w-100" style="font-size:11px; border-radius: 6px;"><i class="tio-checkmark-circle"></i> Nuevo</span>`;
                 }
 
                 // Armar selector de Categorías
@@ -268,24 +385,24 @@
                             <input type="checkbox" name="items[${index}][import]" value="1" ${isChecked} class="item-import-checkbox" style="transform: scale(1.2);">
                         </td>
                         <td>
-                            <input type="text" name="items[${index}][name]" value="${item.name}" class="form-control font-weight-bold" required>
+                            <input type="text" name="items[${index}][name]" value="${item.name}" class="form-control font-weight-bold express-input-field" required>
                         </td>
                         <td>
-                            <textarea name="items[${index}][description]" class="form-control" rows="2" style="resize: none;" required>${item.description}</textarea>
+                            <textarea name="items[${index}][description]" class="form-control express-input-field express-textarea-field" rows="2" style="resize: none;" required>${item.description}</textarea>
                         </td>
                         <td>
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">$</span>
+                                    <span class="input-group-text bg-light border-right-0" style="border-radius: 8px 0 0 8px; border: 1px solid #e7eaf3;">$</span>
                                 </div>
-                                <input type="number" name="items[${index}][price]" value="${item.price}" step="0.01" min="0" class="form-control" required style="min-width: 80px;">
+                                <input type="number" name="items[${index}][price]" value="${item.price}" step="0.01" min="0" class="form-control express-input-field" required style="min-width: 80px; border-radius: 0 8px 8px 0 !important;">
                             </div>
                         </td>
                         <td>
-                            <select name="items[${index}][category_id]" class="form-control category-select js-select2-custom" data-index="${index}">
+                            <select name="items[${index}][category_id]" class="form-control category-select express-input-field js-select2-custom" data-index="${index}">
                                 ${categoryOptions}
                             </select>
-                            <input type="text" name="items[${index}][new_category_name]" value="${item.suggested_category}" class="form-control mt-2 new-category-input ${matchedCategory ? 'd-none' : ''}" placeholder="Nombre de categoría nueva" style="font-size: 13px;">
+                            <input type="text" name="items[${index}][new_category_name]" value="${item.suggested_category}" class="form-control mt-2 new-category-input express-input-field ${matchedCategory ? 'd-none' : ''}" placeholder="Nombre de categoría nueva" style="font-size: 13px;">
                         </td>
                         <td class="text-center font-weight-medium">
                             ${statusBadge}
@@ -375,6 +492,105 @@
             background-color: #d4edda;
             color: #155724;
             border-radius: 8px;
+        }
+        
+        /* Premium Table Grid & Spacing */
+        .table-responsive {
+            background: transparent !important;
+            border: none !important;
+        }
+        .table {
+            border-collapse: separate !important;
+            border-spacing: 0 12px !important;
+            margin-top: -12px;
+        }
+        .table thead th {
+            border: none !important;
+            padding: 8px 16px !important;
+            background-color: transparent !important;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #64748b !important;
+            font-weight: 700;
+        }
+        .table tbody tr {
+            transition: all 0.2s ease;
+        }
+        .table tbody tr td {
+            border-top: 1px solid #e2e8f0 !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+            padding: 18px 14px !important;
+            background-color: #ffffff;
+            vertical-align: middle !important;
+            box-shadow: none;
+        }
+        .table tbody tr td:first-child {
+            border-left: 1px solid #e2e8f0 !important;
+            border-top-left-radius: 12px !important;
+            border-bottom-left-radius: 12px !important;
+        }
+        .table tbody tr td:last-child {
+            border-right: 1px solid #e2e8f0 !important;
+            border-top-right-radius: 12px !important;
+            border-bottom-right-radius: 12px !important;
+        }
+        .table tbody tr:hover td {
+            background-color: #f8fafc !important;
+            border-color: #cbd5e1 !important;
+        }
+        .table tbody tr:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(148, 163, 184, 0.08);
+        }
+
+        /* Modern Premium Inputs & Selects */
+        .express-input-field {
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 8px !important;
+            font-size: 14px !important;
+            padding: 10px 12px !important;
+            background-color: #f8fafc !important;
+            color: #1e293b !important;
+            transition: all 0.2s ease !important;
+            box-shadow: none !important;
+        }
+        .express-input-field:focus {
+            border-color: var(--primary, #0066cc) !important;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1) !important;
+            background-color: #ffffff !important;
+            outline: none !important;
+        }
+        .express-textarea-field {
+            line-height: 1.5 !important;
+            padding: 8px 12px !important;
+            height: auto !important;
+        }
+        
+        /* Soft Modern Badges */
+        .badge-soft-success {
+            background-color: rgba(40, 167, 69, 0.08) !important;
+            color: #28a745 !important;
+            border: 1px solid rgba(40, 167, 69, 0.15) !important;
+        }
+        .badge-soft-warning {
+            background-color: rgba(255, 193, 7, 0.08) !important;
+            color: #d39e00 !important;
+            border: 1px solid rgba(255, 193, 7, 0.15) !important;
+        }
+        .badge-soft-danger {
+            background-color: rgba(220, 53, 69, 0.08) !important;
+            color: #dc3545 !important;
+            border: 1px solid rgba(220, 53, 69, 0.15) !important;
+        }
+        
+        /* Underline matched names */
+        .text-underline {
+            text-decoration: underline !important;
+            color: inherit !important;
+        }
+        .text-underline:hover {
+            color: #0056b3 !important;
         }
     </style>
 @endpush

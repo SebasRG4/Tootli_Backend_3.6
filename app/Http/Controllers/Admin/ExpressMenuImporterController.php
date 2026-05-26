@@ -69,7 +69,7 @@ class ExpressMenuImporterController extends Controller
                 ->get(['id', 'name']);
 
             // 4. Descargar platillos existentes del restaurante para buscar duplicados
-            $existingItems = Item::where('store_id', $store->id)->get(['id', 'name', 'price']);
+            $existingItems = Item::where('store_id', $store->id)->with('category')->get(['id', 'name', 'price', 'description', 'image', 'category_id']);
 
             // 5. Enriquecer los resultados con análisis inteligente y duplicados
             $enrichedItems = [];
@@ -83,6 +83,7 @@ class ExpressMenuImporterController extends Controller
                 $status = 'new';
                 $matchedItemName = null;
                 $matchedItemId = null;
+                $matchedItem = null;
 
                 foreach ($existingItems as $existing) {
                     // Coincidencia exacta
@@ -90,6 +91,7 @@ class ExpressMenuImporterController extends Controller
                         $status = 'duplicate';
                         $matchedItemName = $existing->name;
                         $matchedItemId = $existing->id;
+                        $matchedItem = $existing;
                         break;
                     }
 
@@ -99,6 +101,7 @@ class ExpressMenuImporterController extends Controller
                         $status = 'similar';
                         $matchedItemName = $existing->name;
                         $matchedItemId = $existing->id;
+                        $matchedItem = $existing;
                         break;
                     }
                 }
@@ -135,8 +138,12 @@ class ExpressMenuImporterController extends Controller
                     'suggested_category' => $suggestedCategoryName,
                     'category_id' => $categoryId,
                     'status' => $status,
+                    'matched_id' => $matchedItemId,
                     'matched_name' => $matchedItemName,
-                    'matched_id' => $matchedItemId
+                    'matched_price' => $matchedItem ? $matchedItem->price : null,
+                    'matched_description' => $matchedItem ? ($matchedItem->description ?? 'Sin descripción') : null,
+                    'matched_image' => $matchedItem ? $matchedItem->image_full_url : null,
+                    'matched_category' => $matchedItem && $matchedItem->category ? $matchedItem->category->name : 'Otros'
                 ];
             }
 
