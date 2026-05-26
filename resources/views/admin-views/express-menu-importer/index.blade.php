@@ -91,7 +91,7 @@
                         <form id="import-submit-form">
                             @csrf
                             <input type="hidden" name="store_id" id="submit_store_id">
-                            <div class="table-responsive border" style="border-radius: 12px; overflow: hidden;">
+                            <div class="table-responsive border" style="border-radius: 12px; overflow-x: auto;">
                                 <table class="table table-hover table-striped mb-0 text-dark align-middle">
                                     <thead class="bg-light font-weight-bold text-secondary">
                                         <tr>
@@ -498,6 +498,7 @@
         .table-responsive {
             background: transparent !important;
             border: none !important;
+            overflow-x: auto !important;
         }
         .table {
             border-collapse: separate !important;
