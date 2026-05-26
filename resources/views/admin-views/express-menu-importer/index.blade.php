@@ -91,6 +91,32 @@
                         <form id="import-submit-form">
                             @csrf
                             <input type="hidden" name="store_id" id="submit_store_id">
+                            
+                            <!-- Sección de Imagen Global Masiva (Opcional) -->
+                            <div class="bg-light p-3 mb-4 border d-flex align-items-center justify-content-between flex-wrap gap-3" style="border-radius: 12px; border-color: #e2e8f0 !important;">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="icon-avatar bg-soft-primary p-3" style="border-radius: 10px; color: var(--primary, #0066cc);">
+                                        <i class="tio-image" style="font-size: 24px;"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1 text-dark font-weight-bold" style="font-size: 14px;">Establecer Imagen Masiva (Opcional)</h5>
+                                        <p class="text-muted mb-0" style="font-size: 12px;">Sube una sola imagen para aplicarla automáticamente a TODOS los platillos que no tengan una imagen personalizada.</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center gap-3">
+                                    <input type="file" id="global_image_input" name="global_image" class="d-none" accept="image/*">
+                                    <div id="global-image-preview-container" class="d-none align-items-center gap-2 bg-white p-2 border" style="border-radius: 8px;">
+                                        <img id="global-image-preview" src="" class="img-thumbnail mr-2" style="width: 40px; height: 40px; object-fit: cover; border-radius: 6px;">
+                                        <button type="button" class="btn btn-xs btn-outline-danger" id="remove-global-image-btn" style="border-radius: 6px; padding: 4px 8px;">
+                                            <i class="tio-delete"></i> Quitar
+                                        </button>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-primary font-weight-bold" id="upload-global-image-btn" style="border-radius: 8px; font-size: 13px; padding: 8px 16px;">
+                                        <i class="tio-upload-to-cloud"></i> Cargar Imagen Masiva
+                                    </button>
+                                </div>
+                            </div>
+
                             <div class="table-responsive border" style="border-radius: 12px; overflow-x: auto;">
                                 <table class="table table-hover table-striped mb-0 text-dark align-middle">
                                     <thead class="bg-light font-weight-bold text-secondary">
@@ -98,6 +124,7 @@
                                             <th class="text-center" width="50">
                                                 <input type="checkbox" id="select-all" checked style="transform: scale(1.2);">
                                             </th>
+                                            <th class="text-center" width="80">Imagen</th>
                                             <th width="200">Nombre del Platillo</th>
                                             <th width="240">Descripción / Ingredientes</th>
                                             <th width="100">Precio ($)</th>
@@ -633,6 +660,22 @@
                         <td class="text-center">
                             <input type="checkbox" name="items[${index}][import]" value="1" ${isChecked} class="item-import-checkbox" style="transform: scale(1.2);">
                         </td>
+                        <td class="text-center">
+                            <div class="item-image-wrapper position-relative mx-auto" style="width: 50px; height: 50px;">
+                                <input type="file" name="items[${index}][image]" class="item-image-input d-none" accept="image/*" data-index="${index}">
+                                <div class="item-image-preview-box border cursor-pointer d-flex align-items-center justify-content-center bg-white" 
+                                     style="width: 50px; height: 50px; border-radius: 8px; overflow: hidden; transition: all 0.2s ease;" 
+                                     id="image-box-${index}" 
+                                     data-index="${index}">
+                                    <i class="tio-camera text-muted" style="font-size: 18px;" id="camera-icon-${index}"></i>
+                                    <img src="" class="d-none w-100 h-100" style="object-fit: cover;" id="image-preview-${index}">
+                                </div>
+                                <button type="button" class="btn btn-danger btn-xs delete-item-image-btn d-none position-absolute" 
+                                        style="border-radius: 50%; width: 16px; height: 16px; padding: 0; font-size: 10px; top: -5px; right: -5px; line-height: 1; display: flex; align-items: center; justify-content: center; z-index: 10;" 
+                                        id="delete-img-btn-${index}" 
+                                        data-index="${index}">&times;</button>
+                            </div>
+                        </td>
                         <td>
                             <input type="text" name="items[${index}][name]" value="${item.name}" class="form-control font-weight-bold express-input-field" required>
                         </td>
@@ -699,7 +742,94 @@
             $('#setup-section').removeClass('d-none');
         });
 
-        // Enviar Formulario de Importación Final
+        // --- MANEJO DE IMÁGENES INDIVIDUALES Y MASIVAS ---
+
+        // Abrir selector de archivos individual
+        $(document).on('click', '.item-image-preview-box', function() {
+            let index = $(this).data('index');
+            $(`.item-image-input[data-index="${index}"]`).click();
+        });
+
+        // Mostrar previsualización local al cargar imagen individual
+        $(document).on('change', '.item-image-input', function() {
+            let index = $(this).data('index');
+            if (this.files && this.files[0]) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    $(`#image-preview-${index}`).attr('src', e.target.result).removeClass('d-none');
+                    $(`#camera-icon-${index}`).addClass('d-none');
+                    $(`#delete-img-btn-${index}`).removeClass('d-none');
+                }
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+
+        // Quitar imagen individual (restaura la global si existe)
+        $(document).on('click', '.delete-item-image-btn', function(e) {
+            e.stopPropagation();
+            let index = $(this).data('index');
+            $(`.item-image-input[data-index="${index}"]`).val('');
+            
+            let globalInput = document.getElementById('global_image_input');
+            if (globalInput && globalInput.files && globalInput.files[0]) {
+                let globalReader = new FileReader();
+                globalReader.onload = function(ev) {
+                    $(`#image-preview-${index}`).attr('src', ev.target.result).removeClass('d-none');
+                    $(`#camera-icon-${index}`).addClass('d-none');
+                    $(`#delete-img-btn-${index}`).removeClass('d-none');
+                }
+                globalReader.readAsDataURL(globalInput.files[0]);
+            } else {
+                $(`#image-preview-${index}`).attr('src', '').addClass('d-none');
+                $(`#camera-icon-${index}`).removeClass('d-none');
+                $(`#delete-img-btn-${index}`).addClass('d-none');
+            }
+        });
+
+        // Abrir selector de archivos global
+        $('#upload-global-image-btn').on('click', function() {
+            $('#global_image_input').click();
+        });
+
+        // Mostrar previsualización global y replicar a todos los platillos sin imagen personalizada
+        $('#global_image_input').on('change', function() {
+            if (this.files && this.files[0]) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#global-image-preview').attr('src', e.target.result);
+                    $('#global-image-preview-container').removeClass('d-none').addClass('d-flex');
+                    $('#upload-global-image-btn').addClass('d-none');
+
+                    $('.item-image-input').each(function() {
+                        let index = $(this).data('index');
+                        if (!this.files || this.files.length === 0) {
+                            $(`#image-preview-${index}`).attr('src', e.target.result).removeClass('d-none');
+                            $(`#camera-icon-${index}`).addClass('d-none');
+                            $(`#delete-img-btn-${index}`).removeClass('d-none');
+                        }
+                    });
+                }
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+
+        // Quitar imagen global
+        $('#remove-global-image-btn').on('click', function() {
+            $('#global_image_input').val('');
+            $('#global-image-preview-container').addClass('d-none').removeClass('d-flex');
+            $('#upload-global-image-btn').removeClass('d-none');
+
+            $('.item-image-input').each(function() {
+                let index = $(this).data('index');
+                if (!this.files || this.files.length === 0) {
+                    $(`#image-preview-${index}`).attr('src', '').addClass('d-none');
+                    $(`#camera-icon-${index}`).removeClass('d-none');
+                    $(`#delete-img-btn-${index}`).addClass('d-none');
+                }
+            });
+        });
+
+        // Enviar Formulario de Importación Final (Multipart/FormData)
         $('#import-submit-form').on('submit', function(e) {
             e.preventDefault();
 
@@ -712,10 +842,15 @@
 
             $('#final-import-btn').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status"></span> Guardando platillos...');
 
+            // Usar FormData para enviar archivos subidos (individuales y global)
+            let formData = new FormData(this);
+
             $.ajax({
                 url: '{{ route("admin.item.express-import-save") }}',
                 type: 'POST',
-                data: $(this).serialize(),
+                data: formData,
+                processData: false,
+                contentType: false,
                 success: function(response) {
                     if (response.success) {
                         toastr.success(response.message);
@@ -859,6 +994,33 @@
         }
         .text-underline:hover {
             color: #0056b3 !important;
+        }
+
+        /* Dynamic Item Image Preview */
+        .item-image-preview-box {
+            border: 1px dashed #cbd5e1 !important;
+            background-color: #f8fafc !important;
+            border-radius: 10px !important;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .item-image-preview-box:hover {
+            border-color: var(--primary, #0066cc) !important;
+            background-color: #f1f8ff !important;
+        }
+        .item-image-preview-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 9px;
+        }
+        .bg-soft-primary {
+            background-color: rgba(0, 102, 204, 0.08) !important;
         }
     </style>
 @endpush

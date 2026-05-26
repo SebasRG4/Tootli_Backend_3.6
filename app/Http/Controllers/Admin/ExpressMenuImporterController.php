@@ -181,7 +181,13 @@ class ExpressMenuImporterController extends Controller
         $itemsImported = 0;
         $categoriesCreated = 0;
 
-        foreach ($request->items as $itemData) {
+        // Subir imagen global si se proporcionó
+        $globalImageName = null;
+        if ($request->hasFile('global_image')) {
+            $globalImageName = Helpers::upload('product/', 'png', $request->file('global_image'));
+        }
+
+        foreach ($request->items as $index => $itemData) {
             // Saltarse el platillo si no se marcó para importar
             if (!isset($itemData['import']) || $itemData['import'] != 1) {
                 continue;
@@ -253,10 +259,19 @@ class ExpressMenuImporterController extends Controller
             $rawVariations = isset($itemData['variations']) ? json_decode($itemData['variations'], true) : [];
             if (!is_array($rawVariations)) $rawVariations = [];
 
+            // Resolver imagen (individual o global)
+            $itemImage = 'def.png';
+            if ($request->hasFile("items.{$index}.image")) {
+                $file = $request->file("items.{$index}.image");
+                $itemImage = Helpers::upload('product/', 'png', $file);
+            } elseif ($globalImageName) {
+                $itemImage = $globalImageName;
+            }
+
             // Valores técnicos por defecto
             $item->available_time_starts = $availableTimeStarts;
             $item->available_time_ends = $availableTimeEnds;
-            $item->image = 'def.png';
+            $item->image = $itemImage;
             $item->food_variations = json_encode($rawVariations);
             $item->variations = json_encode([]);
             $item->add_ons = json_encode([]);
