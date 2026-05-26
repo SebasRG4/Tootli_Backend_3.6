@@ -239,6 +239,30 @@ if (! function_exists('wallet_success')) {
     }
 }
 
+if (! function_exists('donation_success')) {
+    function donation_success($data) {
+        $donation = \App\Models\Donation::find($data->attribute_id);
+        if ($donation) {
+            $donation->payment_method = $data->payment_method;
+            $donation->payment_status = 'success';
+            $donation->transaction_ref = $data->transaction_ref ?? '';
+            $donation->save();
+        }
+    }
+}
+
+if (! function_exists('donation_failed')) {
+    function donation_failed($data) {
+        $donation = \App\Models\Donation::find($data->attribute_id);
+        if ($donation) {
+            $donation->payment_method = $data->payment_method;
+            $donation->payment_status = 'failed';
+            $donation->save();
+        }
+    }
+}
+
+
 if (!function_exists('addon_published_status')) {
     function addon_published_status($module_name)
     {

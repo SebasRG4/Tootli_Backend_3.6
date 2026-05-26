@@ -422,4 +422,67 @@ class WalletController extends Controller
             ], 500);
         }
     }
+
+    public function donation_payment(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'amount' => 'required|numeric|min:1',
+            'payment_method' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $digital_payment = Helpers::get_business_settings('digital_payment');
+        if ($digital_payment['status'] == 0) {
+            return response()->json(['errors' => ['message' => 'digital_payment_is_disable']], 403);
+        }
+
+        $customer = $request->user();
+
+        $donation = new \App\Models\Donation();
+        $donation->user_id = $customer->id;
+        $donation->amount = $request->amount;
+        $donation->payment_status = 'pending';
+        $donation->payment_method = $request->payment_method;
+        $donation->save();
+
+        $payer = new Payer(
+            $customer->f_name . ' ' . $customer->l_name,
+            $customer->email,
+            $customer->phone,
+            ''
+        );
+
+        $currency = BusinessSetting::where(['key' => 'currency'])->first()->value;
+        $store_logo = BusinessSetting::where(['key' => 'logo'])->first();
+        $additional_data = [
+            'business_name' => BusinessSetting::where(['key' => 'business_name'])->first()?->value,
+            'business_logo' => \App\CentralLogics\Helpers::get_full_url('business', $store_logo?->value, $store_logo?->storage[0]?->value ?? 'public')
+        ];
+        $payment_info = new PaymentInfo(
+            success_hook: 'donation_success',
+            failure_hook: 'donation_failed',
+            currency_code: $currency,
+            payment_method: $request->payment_method,
+            payment_platform: $request->payment_platform ?? 'web',
+            payer_id: $customer->id,
+            receiver_id: '100',
+            additional_data: $additional_data,
+            payment_amount: $request->amount,
+            external_redirect_link: $request->has('callback') ? $request['callback'] : session('callback'),
+            attribute: 'donations',
+            attribute_id: $donation->id
+        );
+
+        $receiver_info = new Receiver('receiver_name', 'example.png');
+
+        $redirect_link = Payment::generate_link($payer, $payment_info, $receiver_info);
+
+        $data = [
+            'redirect_link' => $redirect_link,
+        ];
+        return response()->json($data, 200);
+    }
 }

@@ -152,6 +152,8 @@ class ConfigController extends Controller
             'parcel_cancellation_basic_setup',
             'parcel_return_time_fee',
             'openai_config',
+            'donation_button_status',
+            'donation_button_image',
 
             'dm_loyality_point_status',
             'dm_loyality_point_per_order',
@@ -173,7 +175,7 @@ class ConfigController extends Controller
         $settings = Cache::rememberForever($cacheKey, function () use ($key) {
             return array_column(BusinessSetting::whereIn('key', $key)->get()->toArray(), 'value', 'key');
         });
-        $image_key = ['logo', 'icon', 'web_app_landing_page_settings'];
+        $image_key = ['logo', 'icon', 'web_app_landing_page_settings', 'donation_button_image'];
         $data = [];
         $openAIStatus = isset($settings['openai_config']) ? json_decode($settings['openai_config'], true) : [];
         $openAIStatus = isset($openAIStatus['status']) && $openAIStatus['status'] == 1 ? 1 : 0;
@@ -463,6 +465,10 @@ class ConfigController extends Controller
             'parcel_return_time_fee' => isset($settings['parcel_return_time_fee']) ? json_decode($settings['parcel_return_time_fee']) : null,
 
             'open_ai_status' => (int) $openAIStatus,
+
+            'donation_button_status' => (int) (isset($settings['donation_button_status']) ? $settings['donation_button_status'] : 0),
+            'donation_button_image' => (string) (isset($settings['donation_button_image']) ? $settings['donation_button_image'] : ''),
+            'donation_button_image_full_url' => Helpers::get_full_url('business', $settings['donation_button_image'] ?? '', $data['donation_button_image_storage'] ?? 'public'),
 
             'dm_loyality_point_data' => $dm_loyality_point_data,
             'dm_referral_data' => $dm_referral_data,
