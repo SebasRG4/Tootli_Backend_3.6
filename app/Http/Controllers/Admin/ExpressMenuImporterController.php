@@ -78,6 +78,9 @@ class ExpressMenuImporterController extends Controller
                 $price = floatval($item['price']);
                 $description = trim($item['description'] ?? $name);
                 $suggestedCategoryName = trim($item['suggested_category'] ?? 'Otros');
+                $availableTimeStarts = $item['available_time_starts'] ?? '00:00:00';
+                $availableTimeEnds = $item['available_time_ends'] ?? '23:59:59';
+                $variations = $item['variations'] ?? [];
 
                 // A. Buscar Duplicados (Fuzzy matching)
                 $status = 'new';
@@ -143,7 +146,10 @@ class ExpressMenuImporterController extends Controller
                     'matched_price' => $matchedItem ? $matchedItem->price : null,
                     'matched_description' => $matchedItem ? ($matchedItem->description ?? 'Sin descripción') : null,
                     'matched_image' => $matchedItem ? $matchedItem->image_full_url : null,
-                    'matched_category' => $matchedItem && $matchedItem->category ? $matchedItem->category->name : 'Otros'
+                    'matched_category' => $matchedItem && $matchedItem->category ? $matchedItem->category->name : 'Otros',
+                    'available_time_starts' => $availableTimeStarts,
+                    'available_time_ends' => $availableTimeEnds,
+                    'variations' => $variations
                 ];
             }
 
@@ -237,11 +243,21 @@ class ExpressMenuImporterController extends Controller
             $item->description = $description;
             $item->slug = Str::slug($name) . '-' . rand(100, 999);
             
+            // Resolver Horarios de disponibilidad recibidos
+            $availableTimeStarts = $itemData['available_time_starts'] ?? '00:00:00';
+            $availableTimeEnds = $itemData['available_time_ends'] ?? '23:59:59';
+            if (strlen($availableTimeStarts) === 5) $availableTimeStarts .= ':00';
+            if (strlen($availableTimeEnds) === 5) $availableTimeEnds .= ':00';
+
+            // Resolver Variaciones
+            $rawVariations = isset($itemData['variations']) ? json_decode($itemData['variations'], true) : [];
+            if (!is_array($rawVariations)) $rawVariations = [];
+
             // Valores técnicos por defecto
-            $item->available_time_starts = '00:00:00';
-            $item->available_time_ends = '23:59:59';
+            $item->available_time_starts = $availableTimeStarts;
+            $item->available_time_ends = $availableTimeEnds;
             $item->image = 'def.png';
-            $item->food_variations = [];
+            $item->food_variations = json_encode($rawVariations);
             $item->variations = [];
             $item->add_ons = [];
             $item->attributes = [];

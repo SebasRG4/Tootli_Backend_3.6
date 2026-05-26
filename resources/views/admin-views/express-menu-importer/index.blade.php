@@ -98,11 +98,13 @@
                                             <th class="text-center" width="50">
                                                 <input type="checkbox" id="select-all" checked style="transform: scale(1.2);">
                                             </th>
-                                            <th width="240">Nombre del Platillo</th>
-                                            <th width="320">Descripción / Ingredientes</th>
-                                            <th width="120">Precio ($)</th>
-                                            <th width="240">Categoría Asignada</th>
-                                            <th class="text-center" width="160">Estado / Alerta</th>
+                                            <th width="200">Nombre del Platillo</th>
+                                            <th width="240">Descripción / Ingredientes</th>
+                                            <th width="100">Precio ($)</th>
+                                            <th width="180">Categoría Asignada</th>
+                                            <th width="140">Horario Disp.</th>
+                                            <th class="text-center" width="130">Variantes</th>
+                                            <th class="text-center" width="120">Estado / Alerta</th>
                                         </tr>
                                     </thead>
                                     <tbody id="extracted-items-rows">
@@ -160,6 +162,39 @@
                     </div>
                     <div class="modal-footer border-0 p-4 pt-0">
                         <button type="button" class="btn btn-secondary btn-block" style="border-radius: 8px;" data-dismiss="modal">Cerrar Detalles</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para Edición de Variantes -->
+        <div class="modal fade" id="variationsModal" tabindex="-1" role="dialog" aria-labelledby="variationsModalLabel" aria-hidden="true" style="overflow-y: auto;">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+                    <div class="modal-header bg-light border-0 p-4 pb-2">
+                        <h4 class="modal-title font-weight-bold text-dark d-flex align-items-center" id="variationsModalLabel">
+                            <i class="tio-edit text-primary mr-2" style="font-size: 24px;"></i> Variantes y Opciones del Platillo
+                        </h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="font-size: 24px; color: #999; border: none; background: transparent; outline: none;">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body p-4" style="max-height: 60vh; overflow-y: auto; background-color: #f8fafc;">
+                        <p class="text-muted" style="font-size: 13px;">Agrega opciones personalizables como tamaños (ej: Chico/Grande), proteínas, salsas o ingredientes extra para este platillo. Define costos adicionales correspondientes.</p>
+                        
+                        <div id="variations-container" class="d-flex flex-column gap-3">
+                            <!-- Los grupos de variantes se cargarán dinámicamente aquí -->
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="button" class="btn btn-outline-primary px-4" id="add-group-btn" style="border-radius: 8px; font-weight: 600;">
+                                <i class="tio-add"></i> Agregar Grupo de Variantes (Ej. Tamaño, Adicionales)
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 p-4 pt-0">
+                        <button type="button" class="btn btn-secondary" style="border-radius: 8px;" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary px-4" id="save-variations-btn" style="border-radius: 8px; font-weight: 600;">Guardar Variantes</button>
                     </div>
                 </div>
             </div>
@@ -306,6 +341,215 @@
             $('#matchedItemModal').modal('show');
         });
 
+        // Global variables for variations editor
+        let editingItemIndex = null;
+        let currentVariations = [];
+
+        // Click handler to open variations editor modal
+        $(document).on('click', '.edit-variations-btn', function() {
+            editingItemIndex = $(this).attr('data-index');
+            let rawVal = $(`#var-input-${editingItemIndex}`).val();
+            currentVariations = rawVal ? JSON.parse(rawVal) : [];
+            
+            renderVariationsModal();
+            $('#variationsModal').modal('show');
+        });
+
+        // Add variation group
+        $('#add-group-btn').on('click', function() {
+            let groupIndex = $('.variation-group-card').length;
+            let groupHtml = buildGroupHtml({
+                name: '',
+                type: 'single',
+                required: 'off',
+                values: []
+            }, groupIndex);
+            
+            $('#variations-container').append(groupHtml);
+            
+            // Add a default option row inside the new group
+            addOptionRow(groupIndex);
+        });
+
+        // Add option row to a group
+        $(document).on('click', '.add-option-btn', function() {
+            let groupIndex = $(this).attr('data-group-index');
+            addOptionRow(groupIndex);
+        });
+
+        // Delete group
+        $(document).on('click', '.delete-group-btn', function() {
+            $(this).closest('.variation-group-card').remove();
+        });
+
+        // Delete option row
+        $(document).on('click', '.delete-option-btn', function() {
+            $(this).closest('.variation-value-row').remove();
+        });
+
+        function addOptionRow(groupIndex, value = {label: '', optionPrice: 0}) {
+            let valueIndex = $(`.value-row-group-${groupIndex}`).length;
+            let rowHtml = `
+                <div class="row g-2 align-items-center mb-2 variation-value-row value-row-group-${groupIndex}">
+                    <div class="col-6">
+                        <input type="text" class="form-control express-input-field value-label-input" value="${escapeHtml(value.label)}" placeholder="Ej. Chico, Extra Queso" style="font-size: 13px; padding: 6px 10px !important;" required>
+                    </div>
+                    <div class="col-4">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bg-light" style="border: 1px solid #cbd5e1; border-radius: 6px 0 0 6px;">$</span>
+                            </div>
+                            <input type="number" class="form-control express-input-field value-price-input" value="${value.optionPrice}" step="0.01" min="0" placeholder="0.00" style="font-size: 13px; padding: 6px 10px !important; border-radius: 0 6px 6px 0 !important;" required>
+                        </div>
+                    </div>
+                    <div class="col-2 text-right">
+                        <button type="button" class="btn btn-outline-danger btn-sm delete-option-btn" style="border-radius: 6px; padding: 4px 8px;">
+                            <i class="tio-delete"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            $(`#options-list-${groupIndex}`).append(rowHtml);
+        }
+
+        function buildGroupHtml(group, groupIndex) {
+            let isSingle = group.type === 'single';
+            let isRequired = group.required === 'on';
+            
+            return `
+                <div class="card border border-light shadow-sm mb-3 variation-group-card" style="border-radius: 12px; overflow: hidden;" id="group-card-${groupIndex}">
+                    <div class="card-header bg-white py-3 px-4 border-bottom-0 d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-2 flex-grow-1 mr-3">
+                            <span class="badge badge-soft-primary p-2" style="border-radius: 6px;"><i class="tio-settings-outlined"></i></span>
+                            <input type="text" class="form-control express-input-field font-weight-bold group-name-input" value="${escapeHtml(group.name)}" placeholder="Nombre del Grupo (ej. Elige tu proteína, Tamaño)" style="font-size: 14px;" required>
+                        </div>
+                        <button type="button" class="btn btn-outline-danger btn-sm delete-group-btn" style="border-radius: 6px; padding: 6px 10px;">
+                            <i class="tio-delete-outlined"></i> Eliminar
+                        </button>
+                    </div>
+                    <div class="card-body py-2 px-4">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="input-label font-weight-bold mb-1 text-dark" style="font-size: 12px;">Tipo de Selección</label>
+                                <select class="form-control express-input-field group-type-select" style="font-size: 13px; padding: 6px 10px !important;">
+                                    <option value="single" ${isSingle ? 'selected' : ''}>Selección Única (Radio Button)</option>
+                                    <option value="multi" ${!isSingle ? 'selected' : ''}>Selección Múltiple (Checkbox)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-end pb-2">
+                                <div class="form-check">
+                                    <input class="form-check-input group-required-checkbox" type="checkbox" id="req-check-${groupIndex}" ${isRequired ? 'checked' : ''} style="transform: scale(1.1); margin-top: 2px;">
+                                    <label class="form-check-label font-weight-bold ml-1 text-dark" for="req-check-${groupIndex}" style="font-size: 13px;">
+                                        ¿Es obligatorio seleccionar uno?
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-top pt-3">
+                            <h6 class="font-weight-bold text-dark mb-2" style="font-size: 13px;"><i class="tio-menu-hamburger"></i> Opciones de Selección</h6>
+                            <div id="options-list-${groupIndex}">
+                                <!-- Las opciones se agregarán aquí -->
+                            </div>
+                            <div class="text-left mt-2 mb-3">
+                                <button type="button" class="btn btn-outline-success btn-xs add-option-btn" style="border-radius: 6px;" data-group-index="${groupIndex}">
+                                    <i class="tio-add"></i> Agregar Opción (Ej. Grande)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render variations inside the modal
+        function renderVariationsModal() {
+            let container = $('#variations-container');
+            container.empty();
+            
+            if (currentVariations.length === 0) {
+                // If empty, add a default Tamaño variation group to help the user get started
+                let groupHtml = buildGroupHtml({
+                    name: 'Tamaño',
+                    type: 'single',
+                    required: 'on',
+                    values: []
+                }, 0);
+                container.append(groupHtml);
+                addOptionRow(0, {label: 'Chico', optionPrice: 0});
+                addOptionRow(0, {label: 'Grande', optionPrice: 0});
+                return;
+            }
+            
+            currentVariations.forEach((group, groupIndex) => {
+                let groupHtml = buildGroupHtml(group, groupIndex);
+                container.append(groupHtml);
+                
+                group.values.forEach(val => {
+                    addOptionRow(groupIndex, val);
+                });
+            });
+        }
+
+        // Save variations inside the modal
+        $('#save-variations-btn').on('click', function() {
+            let variations = [];
+            let isValid = true;
+            
+            $('.variation-group-card').each(function() {
+                let groupCard = $(this);
+                let name = groupCard.find('.group-name-input').val().trim();
+                if (!name) {
+                    toastr.error('Por favor completa el nombre de todos los grupos de variantes.');
+                    isValid = false;
+                    return false;
+                }
+                
+                let type = groupCard.find('.group-type-select').val();
+                let required = groupCard.find('.group-required-checkbox').is(':checked') ? 'on' : 'off';
+                
+                let values = [];
+                groupCard.find('.variation-value-row').each(function() {
+                    let valRow = $(this);
+                    let label = valRow.find('.value-label-input').val().trim();
+                    let price = parseFloat(valRow.find('.value-price-input').val());
+                    if (isNaN(price)) price = 0;
+                    
+                    if (label) {
+                        values.push({
+                            label: label,
+                            optionPrice: price
+                        });
+                    }
+                });
+                
+                if (values.length === 0) {
+                    toastr.error(`Por favor agrega al menos una opción para el grupo "${name}".`);
+                    isValid = false;
+                    return false;
+                }
+                
+                variations.push({
+                    name: name,
+                    type: type,
+                    min: type === 'single' && required === 'on' ? 1 : 0,
+                    max: type === 'single' ? 1 : values.length,
+                    required: required,
+                    values: values
+                });
+            });
+            
+            if (!isValid) return;
+            
+            // Save back to hidden input
+            $(`#var-input-${editingItemIndex}`).val(JSON.stringify(variations));
+            // Update the count badge
+            $(`#var-count-${editingItemIndex}`).html(`<i class="tio-edit"></i> ${variations.length} Variantes`);
+            
+            $('#variationsModal').modal('hide');
+            toastr.success('Variantes guardadas temporalmente.');
+        });
+
         // Renderizar Cuadrícula / Tabla de Edición
         function renderPreviewGrid(items, storeId) {
             $('#submit_store_id').val(storeId);
@@ -379,6 +623,11 @@
                 // Si no hizo match con ninguna, sugerir "Crear Categoría" por defecto con el nombre sugerido por la IA
                 categoryOptions += `<option value="new" ${!matchedCategory ? 'selected' : ''}>+ Crear Nueva Categoría: "${item.suggested_category}"</option>`;
 
+                // Slice times to HH:MM format for HTML input
+                let timeStarts = (item.available_time_starts || '00:00:00').slice(0, 5);
+                let timeEnds = (item.available_time_ends || '23:59:59').slice(0, 5);
+                let varsCount = (item.variations || []).length;
+
                 let row = `
                     <tr class="align-middle">
                         <td class="text-center">
@@ -403,6 +652,24 @@
                                 ${categoryOptions}
                             </select>
                             <input type="text" name="items[${index}][new_category_name]" value="${item.suggested_category}" class="form-control mt-2 new-category-input express-input-field ${matchedCategory ? 'd-none' : ''}" placeholder="Nombre de categoría nueva" style="font-size: 13px;">
+                        </td>
+                        <td>
+                            <div class="d-flex flex-column gap-1">
+                                <div class="d-flex align-items-center gap-1">
+                                    <small class="text-muted" style="min-width: 40px; font-size: 10px;">Desde:</small>
+                                    <input type="time" name="items[${index}][available_time_starts]" value="${timeStarts}" class="form-control express-input-field p-1" style="font-size: 11px; height: auto;">
+                                </div>
+                                <div class="d-flex align-items-center gap-1">
+                                    <small class="text-muted" style="min-width: 40px; font-size: 10px;">Hasta:</small>
+                                    <input type="time" name="items[${index}][available_time_ends]" value="${timeEnds}" class="form-control express-input-field p-1" style="font-size: 11px; height: auto;">
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-outline-info btn-sm edit-variations-btn px-2 w-100" style="border-radius: 8px; font-size: 12px; font-weight: 600;" data-index="${index}">
+                                <i class="tio-edit"></i> <span id="var-count-${index}">${varsCount} Variantes</span>
+                            </button>
+                            <input type="hidden" name="items[${index}][variations]" id="var-input-${index}" value="${escapeHtml(JSON.stringify(item.variations || []))}">
                         </td>
                         <td class="text-center font-weight-medium">
                             ${statusBadge}
