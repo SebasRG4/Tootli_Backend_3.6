@@ -60,7 +60,7 @@ class MultiStoreRouteValidationLogic
             return ['ok' => true, 'code' => null];
         }
 
-        $stores = Store::whereIn('id', $storeIds)->get()->keyBy('id');
+        $stores = Store::with('module')->whereIn('id', $storeIds)->get()->keyBy('id');
         if ($stores->count() !== count($storeIds)) {
             return ['ok' => false, 'code' => 'store_not_found'];
         }
@@ -87,6 +87,16 @@ class MultiStoreRouteValidationLogic
         $n = count($storeIds);
         for ($i = 0; $i < $n; $i++) {
             for ($j = $i + 1; $j < $n; $j++) {
+                $storeA = $stores->get($storeIds[$i]);
+                $storeB = $stores->get($storeIds[$j]);
+                $typeA = $storeA && $storeA->module ? $storeA->module->module_type : null;
+                $typeB = $storeB && $storeB->module ? $storeB->module->module_type : null;
+
+                // Skip distance check for cross-module store pairs (e.g. food + grocery)
+                if ($typeA !== null && $typeB !== null && $typeA !== $typeB) {
+                    continue;
+                }
+
                 $a = $coords[$storeIds[$i]];
                 $b = $coords[$storeIds[$j]];
                 $meters = Helpers::getDrivingDistanceMetersBetweenPoints(
