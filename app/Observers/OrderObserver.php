@@ -22,7 +22,9 @@ class OrderObserver
      */
     public function updated(Order $order): void
     {
-        //
+        if ($order->isDirty('order_status') && $order->order_status === 'picked_up') {
+            \App\CentralLogics\OrderLogic::process_cash_on_pickup($order);
+        }
     }
 
     /**

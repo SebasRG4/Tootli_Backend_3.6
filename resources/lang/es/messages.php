@@ -9586,4 +9586,7 @@ Smartly or Earn. ',
   'order_strike_review_photo_link' => 'Ver foto',
   'order_strike_review_for_order' => 'Revisión strike / cancelación (este pedido)',
   'order_audit_timeline_title' => 'Auditoría del pedido',
+  'pago_en_recoleccion' => 'Pago en recolección',
+  'recibiras' => 'Recibirás',
+  'en_efectivo_del_repartidor_al_recoger_el_pedido' => 'en efectivo del repartidor al recoger el pedido',
 );

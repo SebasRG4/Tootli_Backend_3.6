@@ -1460,4 +1460,50 @@ class OrderLogic
 
         return round((float) max(0.0, $actual_incentive), 2);
     }
+
+    public static function process_cash_on_pickup($order)
+    {
+        // Solo aplica si el pedido es de tipo delivery y pagado en efectivo (COD)
+        if ($order->payment_method !== 'cash_on_delivery' || $order->order_type !== 'delivery') {
+            return;
+        }
+
+        // Si ya se registró el pago, no hacer nada (prevenir doble ejecución)
+        $already_paid = \App\Models\RepartidorPagoTiendaEfectivo::where('order_id', $order->id)->exists();
+        if ($already_paid) {
+            return;
+        }
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($order) {
+            $dmWallet = DeliveryManWallet::firstOrCreate(['delivery_man_id' => $order->delivery_man_id]);
+            $storeWallet = StoreWallet::firstOrCreate(['vendor_id' => $order->store->vendor_id]);
+
+            // El costo de alimentos que el repartidor entrega al restaurante en efectivo:
+            // Food cost = order_amount - delivery_charge (sin comisiones del driver ni del servicio de Tootli)
+            // Nota: Por el momento no se tienen impuestos ni cargos adicionales en la ecuación
+            $food_cost = (float)($order->order_amount - $order->delivery_charge - ($order->dm_tips ?? 0));
+            if ($food_cost <= 0) {
+                return;
+            }
+
+            // 1. Restar el food cost del efectivo en mano del repartidor (collected_cash)
+            $dmWallet->collected_cash = (float) max(0.0, $dmWallet->collected_cash - $food_cost);
+            $dmWallet->save();
+
+            // 2. Sumar el efectivo recibido al restaurante en su collected_cash
+            // En la ecuación del core: store_balance = total_earning - (total_withdrawn + pending_withdraw + collected_cash)
+            // Al aumentar collected_cash de la tienda, su Withdraw Able Balance disminuye exactamente en $food_cost!
+            $storeWallet->collected_cash = (float)($storeWallet->collected_cash + $food_cost);
+            $storeWallet->save();
+
+            // 3. Registrar la transacción en nuestra nueva tabla
+            \App\Models\RepartidorPagoTiendaEfectivo::create([
+                'order_id' => $order->id,
+                'delivery_man_id' => $order->delivery_man_id,
+                'store_id' => $order->store_id,
+                'amount_paid' => $food_cost,
+                'verified_by_store' => true,
+            ]);
+        });
+    }
 }

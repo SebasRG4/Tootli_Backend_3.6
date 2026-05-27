@@ -90,6 +90,17 @@
                                 </div>
                                 @endif
                                 <!-- New Note End -->
+
+                                <!-- Cash on Pickup Banner for Vendor -->
+                                @if ($order['payment_method'] == 'cash_on_delivery' && $order['order_type'] == 'delivery' && $order->cash_on_pickup_amount > 0)
+                                <div class="info-notes-bg px-3 color-222324CC py-2 rounded fs-12 gap-2 mt-2" style="background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404;">
+                                    <i class="tio-money-clean"></i>
+                                    <strong>{{ translate('messages.pago_en_recoleccion') }}:</strong>
+                                    {{ translate('messages.recibiras') }}
+                                    <strong class="text-title" style="color: #856404;"> {{ \App\CentralLogics\Helpers::format_currency($order->cash_on_pickup_amount) }} </strong>
+                                    {{ translate('messages.en_efectivo_del_repartidor_al_recoger_el_pedido') }}.
+                                </div>
+                                @endif
                                 @if ($order['unavailable_item_note'])
                                     <h6 class="w-100 badge-soft-warning p-1 rounded mt-2">
                                         <span class="text-dark">

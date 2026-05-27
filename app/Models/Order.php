@@ -60,7 +60,7 @@ class Order extends Model
         'pos_payment_meta' => 'array',
     ];
 
-    protected $appends = ['module_type', 'order_attachment_full_url', 'order_proof_full_url', 'customer_tracking_url'];
+    protected $appends = ['module_type', 'order_attachment_full_url', 'order_proof_full_url', 'customer_tracking_url', 'cash_on_pickup_amount'];
 
     public function getOrderAttachmentFullUrlAttribute()
     {
@@ -312,6 +312,14 @@ class Order extends Model
     public function getModuleTypeAttribute()
     {
         return $this->module ? $this->module->module_type : null;
+    }
+
+    public function getCashOnPickupAmountAttribute()
+    {
+        if ($this->payment_method === 'cash_on_delivery' && $this->order_type === 'delivery') {
+            return (float) max(0.0, $this->order_amount - $this->delivery_charge - ($this->dm_tips ?? 0));
+        }
+        return 0.0;
     }
 
     public function scopeAccepteByDeliveryman($query)
