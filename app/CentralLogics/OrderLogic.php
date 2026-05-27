@@ -26,6 +26,38 @@ use Modules\Rental\Entities\PartialPayment;
 
 class OrderLogic
 {
+    // Constantes de configuración de tarifas Tootli
+    const TOOTLI_BASE_SHIPPING_FEE = 25.0;      // Envío base cliente
+    const TOOTLI_BASE_DM_PAY = 20.0;            // Base neta repartidor
+    const TOOTLI_TIER1_KM_LIMIT = 3.5;          // Límite zona 1 (3.5 km)
+    const TOOTLI_TIER2_KM_LIMIT = 6.5;          // Límite zona 2 (6.5 km)
+    const TOOTLI_TIER1_RATE = 4.0;              // Precio km extra zona 1 (hasta 3.5 km)
+    const TOOTLI_TIER2_RATE = 6.0;              // Precio km extra zona 2 (3.5 - 6.5 km)
+    const TOOTLI_TIER3_RATE = 8.5;              // Precio km extra zona 3 (6.5 - 8.0 km)
+    const TOOTLI_LONG_DISTANCE_BONUS = 20.0;    // Bono de viaje largo (> 6.5 km)
+
+    public static function calculate_progressive_distance_fee($distance)
+    {
+        $distance = max(0.0, (float)$distance);
+        $fee = 0.0;
+        
+        if ($distance <= self::TOOTLI_TIER1_KM_LIMIT) {
+            $fee = self::TOOTLI_BASE_SHIPPING_FEE;
+        } elseif ($distance <= self::TOOTLI_TIER2_KM_LIMIT) {
+            // Entre 3.5 y 6.5 km: se cobra base + km extras en Tier 2 a $6.00/km
+            $fee = self::TOOTLI_BASE_SHIPPING_FEE + (($distance - self::TOOTLI_TIER1_KM_LIMIT) * self::TOOTLI_TIER2_RATE);
+        } else {
+            // Más de 6.5 km: se cobra base + 3 km de Tier 2 a $6.00/km + km extras en Tier 3 a $8.50/km + Bono de retorno de $20
+            $tier2_distance = self::TOOTLI_TIER2_KM_LIMIT - self::TOOTLI_TIER1_KM_LIMIT; // 3.0 km
+            $fee = self::TOOTLI_BASE_SHIPPING_FEE 
+                 + ($tier2_distance * self::TOOTLI_TIER2_RATE) 
+                 + (($distance - self::TOOTLI_TIER2_KM_LIMIT) * self::TOOTLI_TIER3_RATE) 
+                 + self::TOOTLI_LONG_DISTANCE_BONUS;
+        }
+
+        return round((float) $fee, 2);
+    }
+
     public static function gen_unique_id()
     {
         return rand(1000, 9999) . '-' . Str::random(5) . '-' . time();
@@ -146,7 +178,8 @@ class OrderLogic
                 $delivery_charge_comission = BusinessSetting::where('key', 'delivery_charge_comission')->first();
                 $delivery_charge_comission_percentage = $delivery_charge_comission ? $delivery_charge_comission->value : 0;
             }
-            $comission_on_delivery = $delivery_charge_comission_percentage * ($order->original_delivery_charge / 100);
+            $base_for_commission = min(self::TOOTLI_BASE_SHIPPING_FEE, (float)$order->original_delivery_charge);
+            $comission_on_delivery = $delivery_charge_comission_percentage * ($base_for_commission / 100);
 
             if ($order->store->sub_self_delivery) {
                 $comission_on_actual_delivery_fee = 0;
@@ -1362,21 +1395,19 @@ class OrderLogic
 
     public static function dm_net_earning($order)
     {
-        $comission = BusinessSetting::where('key', 'delivery_charge_comission')->first();
-        $comission_percentage = $comission ? $comission->value : 0;
-
-        if ($order->tootli_direct ?? false) {
-            $direct_del = BusinessSetting::where('key', 'tootli_direct_delivery_commission')->first();
-            $comission_percentage = $direct_del !== null ? (float) $direct_del->value : 0;
-        }
-
-        $comission_amount = $comission_percentage * ($order->original_delivery_charge / 100);
-
         if ($order->store && $order->store->sub_self_delivery) {
-            $comission_amount = 0;
+            return (float) ($order->original_delivery_charge);
         }
 
-        $net_earning = $order->original_delivery_charge - $comission_amount;
+        $delivery_charge = (float) $order->original_delivery_charge;
+        
+        if ($delivery_charge < self::TOOTLI_BASE_SHIPPING_FEE) {
+            // Si la tarifa cobrada es menor a la base, pagamos el 80% de la tarifa cobrada (ej. multi-tienda secundarias)
+            $net_earning = $delivery_charge * (self::TOOTLI_BASE_DM_PAY / self::TOOTLI_BASE_SHIPPING_FEE);
+        } else {
+            $surcharge = $delivery_charge - self::TOOTLI_BASE_SHIPPING_FEE;
+            $net_earning = self::TOOTLI_BASE_DM_PAY + $surcharge;
+        }
 
         return (float) ($net_earning + ($order->incentive_amount ?? 0));
     }
@@ -1385,35 +1416,48 @@ class OrderLogic
     {
         if ($level <= 0) return 0;
 
+        // 1. Calcular comisión de envío del administrador (máximo sobre el envío base)
         $comission = BusinessSetting::where('key', 'delivery_charge_comission')->first();
         $comission_percentage = $comission ? $comission->value : 0;
         if ($order->tootli_direct ?? false) {
             $direct_del = BusinessSetting::where('key', 'tootli_direct_delivery_commission')->first();
             $comission_percentage = $direct_del !== null ? (float) $direct_del->value : 0;
         }
-        $admin_delivery_commission = $comission_percentage * ($order->original_delivery_charge / 100);
+        $base_for_commission = min(self::TOOTLI_BASE_SHIPPING_FEE, (float)$order->original_delivery_charge);
+        $admin_delivery_commission = $comission_percentage * ($base_for_commission / 100);
 
+        // 2. Calcular comisión de tienda del administrador
+        $store_commission = 0.0;
+        if ($order->order_type == 'parcel') {
+            $comission_parcel = BusinessSetting::where('key', 'parcel_commission_dm')->first();
+            $comission_parcel = isset($comission_parcel) ? $comission_parcel->value : 0;
+            $order_amount = $order->order_amount - $order->dm_tips - $order->additional_charge - $order->extra_packaging_amount - $order->total_tax_amount;
+            $dm_commission = $comission_parcel ? ($order_amount / 100) * $comission_parcel : 0;
+            $store_commission = $order_amount - $dm_commission;
+        } else {
+            $comission_store = isset($order->store->comission) == null ? BusinessSetting::where('key', 'admin_commission')->first()->value : $order->store->comission;
+            $order_amount = $order->order_amount - $order->additional_charge - $order->extra_packaging_amount - $order->delivery_charge - $order->total_tax_amount - $order->dm_tips + ($order->flash_admin_discount_amount ?? 0) + $order->coupon_discount_amount + ($order->store_discount_amount ?? 0) + ($order->flash_store_discount_amount ?? 0) + ($order->ref_bonus_amount ?? 0);
+            $store_commission = $comission_store ? ($order_amount / 100) * $comission_store : 0;
+        }
+
+        // 3. Ganancia Bruta del Administrador en la Orden
+        $admin_gross_earnings = $admin_delivery_commission + (float)$order->additional_charge + $store_commission;
+
+        // 4. Establecer el Tope de Subsidio para conservar al menos $5.0 MXN neta de ganancia
+        $max_subsidized_incentive = max(0.0, $admin_gross_earnings - 5.0);
+
+        // 5. Determinar el incentivo según el nivel
+        $calculated_incentive = 0.0;
         if ($level == 1) {
-            return $admin_delivery_commission;
+            $calculated_incentive = $admin_delivery_commission;
+        } elseif ($level == 2) {
+            // Level 2 = Comisión de Envío + $15.00 extra por espera prolongada
+            $calculated_incentive = $admin_delivery_commission + 15.0;
         }
 
-        if ($level == 2) {
-            $admin_profit = 0;
-            if ($order->order_type == 'parcel') {
-                $comission_parcel = BusinessSetting::where('key', 'parcel_commission_dm')->first();
-                $comission_parcel = isset($comission_parcel) ? $comission_parcel->value : 0;
-                $order_amount = $order->order_amount - $order->dm_tips - $order->additional_charge - $order->extra_packaging_amount - $order->total_tax_amount;
-                $dm_commission = $comission_parcel ? ($order_amount / 100) * $comission_parcel : 0;
-                $admin_profit = $order_amount - $dm_commission;
-            } else {
-                $comission_store = isset($order->store->comission) == null ? BusinessSetting::where('key', 'admin_commission')->first()->value : $order->store->comission;
-                $order_amount = $order->order_amount - $order->additional_charge - $order->extra_packaging_amount - $order->delivery_charge - $order->total_tax_amount - $order->dm_tips + ($order->flash_admin_discount_amount ?? 0) + $order->coupon_discount_amount + ($order->store_discount_amount ?? 0) + ($order->flash_store_discount_amount ?? 0) + ($order->ref_bonus_amount ?? 0);
-                $admin_profit = ($comission_store ? ($order_amount / 100) * $comission_store : 0) + $order->additional_charge;
-            }
+        // Aplicar el tope
+        $actual_incentive = min($calculated_incentive, $max_subsidized_incentive);
 
-            return $admin_delivery_commission + ($admin_profit * 0.1);
-        }
-
-        return 0;
+        return round((float) max(0.0, $actual_incentive), 2);
     }
 }

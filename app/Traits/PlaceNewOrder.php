@@ -611,6 +611,7 @@ trait PlaceNewOrder
 
             $order->save();
 
+            $threeDSecureUrl = null;
             if ($request->payment_method === 'saved_card' && $order->order_amount > 0) {
                 try {
                     $savedCard = \App\Models\UserSavedCard::where('user_id', $order->user_id)
@@ -628,18 +629,23 @@ trait PlaceNewOrder
                         $token = $ecartpay->createCardToken($savedCard);
                     }
 
-                    $chargeResult = $ecartpay->chargeWithSavedCard(
-                        savedCard: $savedCard,
-                        token: $token,
-                        amount: $order->order_amount,
-                        orderDescription: 'Pedido Tootli #' . $order->id,
-                        externalRef: (string) $order->id,
-                    );
+                    if ($request->boolean('three_d_secure') || $request->has('redirect_url')) {
+                        $ecartpayOrderId = $ecartpay->createBaseOrder(
+                            savedCard: $savedCard,
+                            amount: $order->order_amount,
+                            orderDescription: 'Pedido Tootli #' . $order->id,
+                        );
 
-                    if ($chargeResult['status'] === 'approved') {
-                        $order->payment_status = 'paid';
-                        $order->order_status = 'confirmed';
-                        $order->transaction_reference = $chargeResult['payment_id'];
+                        $enrollment = $ecartpay->enroll3DS(
+                            ecartpayOrderId: $ecartpayOrderId,
+                            token: $token,
+                            redirectUrl: $request->redirect_url ?? 'tootli://3ds/result',
+                        );
+
+                        $order->payment_status = 'unpaid';
+                        $order->order_status = 'pending';
+                        $order->transaction_reference = $ecartpayOrderId;
+
                         $international = $request->boolean('international_card');
                         $cardCalc = \App\Services\EcartPayGatewayFeeCalculator::forCard(
                             (float) $order->order_amount,
@@ -650,8 +656,34 @@ trait PlaceNewOrder
                         $order->ecartpay_card_international = $international;
                         $order->ecartpay_gateway_fee = $cardCalc['fee'];
                         $order->save();
+
+                        $threeDSecureUrl = $enrollment['url'];
                     } else {
-                        throw new \Exception('El pago fue rechazado. Estado: ' . $chargeResult['status_detail']);
+                        $chargeResult = $ecartpay->chargeWithSavedCard(
+                            savedCard: $savedCard,
+                            token: $token,
+                            amount: $order->order_amount,
+                            orderDescription: 'Pedido Tootli #' . $order->id,
+                            externalRef: (string) $order->id,
+                        );
+
+                        if ($chargeResult['status'] === 'approved') {
+                            $order->payment_status = 'paid';
+                            $order->order_status = 'confirmed';
+                            $order->transaction_reference = $chargeResult['payment_id'];
+                            $international = $request->boolean('international_card');
+                            $cardCalc = \App\Services\EcartPayGatewayFeeCalculator::forCard(
+                                (float) $order->order_amount,
+                                $savedCard->payment_method_id,
+                                $international
+                            );
+                            $order->ecartpay_card_brand = $savedCard->payment_method_id;
+                            $order->ecartpay_card_international = $international;
+                            $order->ecartpay_gateway_fee = $cardCalc['fee'];
+                            $order->save();
+                        } else {
+                            throw new \Exception('El pago fue rechazado. Estado: ' . $chargeResult['status_detail']);
+                        }
                     }
                 } catch (\Exception $e) {
                     DB::rollBack();
@@ -876,6 +908,11 @@ trait PlaceNewOrder
 
             if ($speiData) {
                 $responseData['spei_data'] = $speiData;
+            }
+
+            if ($threeDSecureUrl) {
+                $responseData['requires_3ds'] = true;
+                $responseData['three_d_secure_url'] = $threeDSecureUrl;
             }
 
             return response()->json($responseData, 200);
@@ -1227,23 +1264,9 @@ trait PlaceNewOrder
                 ];
             }
 
-            $original_delivery_charge = (($request->distance * $per_km_shipping_charge) > $minimum_shipping_charge) ? $request->distance * $per_km_shipping_charge : $minimum_shipping_charge;
-            if ($maximum_shipping_charge >= $minimum_shipping_charge && $original_delivery_charge > $maximum_shipping_charge) {
-                $original_delivery_charge = $maximum_shipping_charge;
-            } else {
-                // $original_delivery_charge = $original_delivery_charge;
-            }
-
-            if (!isset($delivery_charge)) {
-                $delivery_charge = ($request->distance * $per_km_shipping_charge > $minimum_shipping_charge) ? $request->distance * $per_km_shipping_charge : $minimum_shipping_charge;
-                if ($maximum_shipping_charge >= $minimum_shipping_charge && $delivery_charge > $maximum_shipping_charge) {
-                    $delivery_charge = $maximum_shipping_charge;
-                } else {
-                    // $delivery_charge = $delivery_charge;
-                }
-            }
-            $original_delivery_charge = $original_delivery_charge + $extra_charges;
-            $delivery_charge = $delivery_charge + $extra_charges;
+            $progressive_fee = \App\CentralLogics\OrderLogic::calculate_progressive_distance_fee($request->distance ?? 0);
+            $original_delivery_charge = $progressive_fee + $extra_charges;
+            $delivery_charge = $original_delivery_charge;
         } else {
             // PARCEL PRICING LOGIC - HYBRID MODEL
             $parcel_category = ParcelCategory::find($request->parcel_category_id);

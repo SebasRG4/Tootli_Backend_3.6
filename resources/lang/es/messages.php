@@ -4980,7 +4980,7 @@
   'The path field is required.' => 'The path field is required.',
   'To_upload_file_on_s3_bucket_go_to_a_specific_folder' => 'To upload file on s3 bucket go to a specific folder',
   'Extra_Packaging_Amount' => 'Extra Packaging Amount',
-  'active_status_updated' => 'Active status updated',
+  'active_status_updated' => 'Estado de actividad actualizado',
   'Want to enable the option store to reply?' => 'Want to enable the option store to reply?',
   'If enabled, stores can actively engage with the customers by responding to the reviews left for their orders' => 'If enabled, stores can actively engage with the customers by responding to the reviews left for their orders',
   'Want_to_disable_the_option_store_to_reply?' => 'Want to disable the option store to reply?',

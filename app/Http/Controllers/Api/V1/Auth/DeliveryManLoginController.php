@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules\Password;
+use App\CentralLogics\SMS_module;
+use Modules\Gateways\Traits\SmsGateway;
 
 class DeliveryManLoginController extends Controller
 {
@@ -44,6 +46,45 @@ class DeliveryManLoginController extends Controller
                         ['code' => 'auth-001', 'message' => translate('Incorrect_credential,_please_try_again')],
                     ],
                 ], 401);
+            }
+
+            $device_id = $request->input('device_id');
+            if ($device_id) {
+                if (empty($delivery_man->device_token)) {
+                    $delivery_man->device_token = $device_id;
+                    $delivery_man->save();
+                } elseif ($delivery_man->device_token !== $device_id) {
+                    $can_migrate = true;
+                    if ($delivery_man->device_changed_at) {
+                        $last_change = \Carbon\Carbon::parse($delivery_man->device_changed_at);
+                        if ($last_change->diffInDays(now()) < 30) {
+                            $can_migrate = false;
+                        }
+                    }
+
+                    if ($can_migrate) {
+                        auth('delivery_men')->logout();
+                        return response()->json([
+                            'errors' => [
+                                [
+                                    'code' => 'device_migration_allowed',
+                                    'message' => 'Detectamos un nuevo dispositivo. Puedes transferir tu cuenta verificando tu número por SMS.'
+                                ]
+                            ]
+                        ], 400);
+                    } else {
+                        auth('delivery_men')->logout();
+                        $days_left = 30 - \Carbon\Carbon::parse($delivery_man->device_changed_at)->diffInDays(now());
+                        return response()->json([
+                            'errors' => [
+                                [
+                                    'code' => 'device_migration_blocked',
+                                    'message' => "Tu cuenta ya ha sido vinculada a otro dispositivo recientemente. Podrás transferirla nuevamente de forma autónoma en {$days_left} días o contactando a Soporte."
+                                ]
+                            ]
+                        ], 400);
+                    }
+                }
             }
 
             $appStatus = strtolower(trim((string) ($delivery_man->application_status ?? '')));
@@ -261,6 +302,160 @@ class DeliveryManLoginController extends Controller
             'topic' => $topic ?? 'No_topic_found',
             'zone_topic' => $zone_topic,
         ], 200);
+    }
+
+    public function request_device_migration_otp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required',
+            'password' => 'required|min:6'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $data = [
+            'phone' => $request->phone,
+            'password' => $request->password
+        ];
+
+        if (auth('delivery_men')->attempt($data)) {
+            $deliveryman = DeliveryMan::where('phone', $request->phone)->first();
+            if (!$deliveryman) {
+                return response()->json([
+                    'errors' => [['code' => 'auth-001', 'message' => translate('Incorrect_credential,_please_try_again')]]
+                ], 401);
+            }
+
+            if ($deliveryman->device_changed_at) {
+                $last_change = \Carbon\Carbon::parse($deliveryman->device_changed_at);
+                if ($last_change->diffInDays(now()) < 30) {
+                    $days_left = 30 - $last_change->diffInDays(now());
+                    return response()->json([
+                        'errors' => [['code' => 'device_migration_blocked', 'message' => "Cambio bloqueado. Intenta de nuevo en {$days_left} días o contacta a Soporte."]]
+                    ], 400);
+                }
+            }
+
+            $token = rand(100000, 999999);
+            \Illuminate\Support\Facades\DB::table('password_resets')->updateOrInsert(
+                ['email' => $deliveryman->email],
+                [
+                    'token' => $token,
+                    'created_at' => now(),
+                ]
+            );
+
+            $response = null;
+            if (Helpers::getNotificationStatusData('deliveryman', 'deliveryman_forget_password', 'sms_status')) {
+                $published_status = addon_published_status('Gateways');
+                if ($published_status == 1) {
+                    $response = SmsGateway::send($request->phone, $token);
+                } else {
+                    $response = SMS_module::send($request->phone, $token);
+                }
+            }
+
+            if (env('APP_MODE') == 'demo' || $response == 'success') {
+                return response()->json(['message' => translate('messages.Otp_Successfully_Sent_To_Your_Phone')], 200);
+            }
+
+            return response()->json(['message' => translate('messages.Otp_Successfully_Sent_To_Your_Phone')], 200);
+        }
+
+        return response()->json([
+            'errors' => [['code' => 'auth-001', 'message' => translate('Incorrect_credential,_please_try_again')]]
+        ], 401);
+    }
+
+    public function verify_device_migration(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required',
+            'password' => 'required|min:6',
+            'reset_token' => 'required',
+            'device_id' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $data = [
+            'phone' => $request->phone,
+            'password' => $request->password
+        ];
+
+        if (auth('delivery_men')->attempt($data)) {
+            $delivery_man = DeliveryMan::where('phone', $request->phone)->first();
+            if (!$delivery_man) {
+                return response()->json([
+                    'errors' => [['code' => 'auth-001', 'message' => translate('Incorrect_credential,_please_try_again')]]
+                ], 401);
+            }
+
+            $isValid = false;
+            if (env('APP_MODE') == 'demo' && $request->reset_token == '123456') {
+                $isValid = true;
+            } else {
+                $db_otp = \Illuminate\Support\Facades\DB::table('password_resets')
+                    ->where(['token' => $request->reset_token, 'email' => $delivery_man->email])
+                    ->first();
+                if ($db_otp) {
+                    $isValid = true;
+                    \Illuminate\Support\Facades\DB::table('password_resets')
+                        ->where(['token' => $request->reset_token, 'email' => $delivery_man->email])
+                        ->delete();
+                }
+            }
+
+            if (!$isValid) {
+                return response()->json([
+                    'errors' => [['code' => 'reset_token', 'message' => 'Código de verificación inválido.']]
+                ], 400);
+            }
+
+            $delivery_man->device_token = $request->device_id;
+            $delivery_man->device_changed_at = now();
+            $delivery_man->save();
+
+            $token = Str::random(120);
+            $delivery_man->auth_token = $token;
+            $delivery_man->save();
+
+            $appStatus = strtolower(trim((string) ($delivery_man->application_status ?? '')));
+            if ($appStatus === '' || ! in_array($appStatus, ['approved', 'denied', 'pending'], true)) {
+                $appStatus = 'pending';
+            }
+
+            $revisionLogin = $appStatus === 'pending'
+                && (bool) $delivery_man->registration_revision_allowed;
+
+            $topic = 'restaurant_dm_' . $delivery_man->store_id;
+            if (isset($delivery_man->zone)) {
+                if ($delivery_man->vehicle_id) {
+                    $topic = 'delivery_man_' . $delivery_man->zone->id . '_' . $delivery_man->vehicle_id;
+                } else {
+                    $topic = $delivery_man->type == 'zone_wise' ? $delivery_man->zone->deliveryman_wise_topic : 'restaurant_dm_' . $delivery_man->store_id;
+                }
+                $zone_topic = $delivery_man->type == 'zone_wise' ? $delivery_man->zone->deliveryman_wise_topic . '_push' : '';
+            }
+
+            $payload = [
+                'token' => $token,
+                'topic' => isset($topic) ? $topic : 'No_topic_found',
+                'zone_topic' => $zone_topic ?? '',
+                'registration_revision_required' => $revisionLogin,
+                'registration_revision_message' => $revisionLogin ? $delivery_man->registration_revision_message : null,
+            ];
+
+            return response()->json($payload, 200);
+        }
+
+        return response()->json([
+            'errors' => [['code' => 'auth-001', 'message' => translate('Incorrect_credential,_please_try_again')]]
+        ], 401);
     }
 }
 

@@ -363,6 +363,77 @@ class EcartPayService
     }
 
     // -------------------------------------------------------------------------
+    // 3D Secure Payment
+    // -------------------------------------------------------------------------
+
+    public function createBaseOrder(
+        UserSavedCard $savedCard,
+        float $amount,
+        string $orderDescription,
+        string $notifyUrl = ''
+    ): string {
+        return $this->apiWithRetry(function () use ($savedCard, $amount, $orderDescription, $notifyUrl) {
+            $response = $this->api()->post('/api/orders', [
+                'customer_id' => $savedCard->ecartpay_customer_id,
+                'currency'    => 'MXN',
+                'items'       => [
+                    [
+                        'name'       => $orderDescription,
+                        'quantity'   => 1,
+                        'price'      => $amount,
+                        'is_service' => true,
+                    ],
+                ],
+                'notify_url' => $notifyUrl ?: (config('app.url') . '/api/v1/ecartpay/webhook'),
+                'send_email' => false,
+            ]);
+
+            if (!$response->successful()) {
+                Log::error('[EcartPay] Error creando orden base para 3DS', [
+                    'customer_id' => $savedCard->ecartpay_customer_id,
+                    'status'      => $response->status(),
+                    'response'    => $response->json(),
+                ]);
+                throw new Exception('No se pudo crear la orden base en EcartPay: ' . ($response->json('message') ?? $response->body()));
+            }
+
+            $data = $response->json();
+            return $data['id'];
+        });
+    }
+
+    public function enroll3DS(
+        string $ecartpayOrderId,
+        string $token,
+        string $redirectUrl
+    ): array {
+        return $this->apiWithRetry(function () use ($ecartpayOrderId, $token, $redirectUrl) {
+            Log::info('[EcartPay] Creando enrollment 3D Secure', [
+                'order_id'     => $ecartpayOrderId,
+                'token'        => $token,
+                'redirect_url' => $redirectUrl,
+            ]);
+
+            $response = $this->api()->post('/api/three-d-secure', [
+                'order_id'     => $ecartpayOrderId,
+                'token'        => $token,
+                'redirect_url' => $redirectUrl,
+            ]);
+
+            if (!$response->successful()) {
+                Log::error('[EcartPay] Error creando 3DS enrollment', [
+                    'order_id' => $ecartpayOrderId,
+                    'status'   => $response->status(),
+                    'response' => $response->json(),
+                ]);
+                throw new Exception('No se pudo iniciar la autenticación 3D Secure: ' . ($response->json('message') ?? $response->body()));
+            }
+
+            return $response->json();
+        });
+    }
+
+    // -------------------------------------------------------------------------
     // SPEI / Bank Transfer
     // -------------------------------------------------------------------------
 
