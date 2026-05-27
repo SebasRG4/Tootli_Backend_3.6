@@ -34,6 +34,17 @@
     <!-- Store Wallet Balance -->
     <div class="col-md-12">
         <div class="row g-3">
+            @if($wallet->balance < 0)
+            <div class="col-12">
+                <div class="alert alert-danger d-flex align-items-center gap-2 m-0 p-3 rounded" style="border-left: 5px solid #dc3545; background-color: #f8d7da; color: #721c24; display: flex; align-items: center;">
+                    <i class="tio-money" style="font-size: 1.5rem; margin-right: 8px;"></i>
+                    <div>
+                        <strong>{{ translate('messages.le_debes_a_tootli') }}:</strong>
+                        <span>{{ translate('messages.debes') }} <strong style="font-weight: 800; color: #dc3545;">{{\App\CentralLogics\Helpers::format_currency(abs($wallet->balance))}}</strong> {{ translate('messages.a_tootli_se_te_descontara_de_tu_proximo_pedido') }}.</span>
+                    </div>
+                </div>
+            </div>
+            @endif
             <!-- Panding Withdraw Card Example -->
             <div class="col-sm-{{ isset($col_size) == true ? '3' :'4' }}">
                 <div class="resturant-card shadow--card-2" >
@@ -279,6 +290,10 @@
 
                     <li class="nav-item">
                         <a class="nav-link  {{Request::is('vendor-panel/wallet/disbursement-list') ?'active':''}}" href="{{route('vendor.wallet.getDisbursementList')}}"  aria-disabled="true">{{translate('messages.Next_Payouts')}}</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link  {{Request::is('vendor-panel/wallet/cash-on-pickup-history') ?'active':''}}" href="{{route('vendor.wallet.cash_on_pickup_history')}}">{{translate('messages.historial_recolecciones_efectivo')}}</a>
                     </li>
                 </ul>
 

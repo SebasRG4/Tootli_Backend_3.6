@@ -1486,14 +1486,23 @@ class OrderLogic
                 return;
             }
 
-            // 1. Restar el food cost del efectivo en mano del repartidor (collected_cash)
-            $dmWallet->collected_cash = (float) max(0.0, $dmWallet->collected_cash - $food_cost);
+            // HÍBRIDO + LIQUIDACIÓN DIRECTA: Si la tienda tiene deuda acumulada (balance negativo), se le descuenta de lo que el repartidor le va a pagar en efectivo
+            $store_debt = ($storeWallet->balance < 0) ? abs($storeWallet->balance) : 0.0;
+            $cash_to_pay = (float) max(0.0, $food_cost - $store_debt);
+
+            // HÍBRIDO: Si el repartidor no tiene suficiente efectivo en mano para el pago neto, omitir este descuento y tratar como COD tradicional
+            if ($dmWallet->collected_cash < $cash_to_pay) {
+                return;
+            }
+
+            // 1. Restar el efectivo neto pagado de collected_cash del repartidor
+            $dmWallet->collected_cash = (float) max(0.0, $dmWallet->collected_cash - $cash_to_pay);
             $dmWallet->save();
 
             // 2. Sumar el efectivo recibido al restaurante en su collected_cash
-            // En la ecuación del core: store_balance = total_earning - (total_withdrawn + pending_withdraw + collected_cash)
-            // Al aumentar collected_cash de la tienda, su Withdraw Able Balance disminuye exactamente en $food_cost!
-            $storeWallet->collected_cash = (float)($storeWallet->collected_cash + $food_cost);
+            // Al aumentar collected_cash de la tienda por $cash_to_pay, su balance digital se reduce en esa misma cantidad física recibida,
+            // y la deuda de comisiones previas queda saldada digitalmente al 100% de forma limpia.
+            $storeWallet->collected_cash = (float)($storeWallet->collected_cash + $cash_to_pay);
             $storeWallet->save();
 
             // 3. Registrar la transacción en nuestra nueva tabla
@@ -1501,7 +1510,7 @@ class OrderLogic
                 'order_id' => $order->id,
                 'delivery_man_id' => $order->delivery_man_id,
                 'store_id' => $order->store_id,
-                'amount_paid' => $food_cost,
+                'amount_paid' => $cash_to_pay,
                 'verified_by_store' => true,
             ]);
         });

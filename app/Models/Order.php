@@ -317,7 +317,18 @@ class Order extends Model
     public function getCashOnPickupAmountAttribute()
     {
         if ($this->payment_method === 'cash_on_delivery' && $this->order_type === 'delivery') {
-            return (float) max(0.0, $this->order_amount - $this->delivery_charge - ($this->dm_tips ?? 0));
+            $food_cost = (float) max(0.0, $this->order_amount - $this->delivery_charge - ($this->dm_tips ?? 0));
+            if ($this->delivery_man_id) {
+                $dmWallet = \App\Models\DeliveryManWallet::where('delivery_man_id', $this->delivery_man_id)->first();
+                // Si la tienda tiene deuda acumulada (balance negativo), se le descuenta de lo que el repartidor le va a pagar
+                $storeWallet = \App\Models\StoreWallet::where('vendor_id', $this->store->vendor_id)->first();
+                $store_debt = ($storeWallet && $storeWallet->balance < 0) ? abs($storeWallet->balance) : 0.0;
+                $cash_to_pay = (float) max(0.0, $food_cost - $store_debt);
+
+                if ($dmWallet && $dmWallet->collected_cash >= $cash_to_pay) {
+                    return $cash_to_pay;
+                }
+            }
         }
         return 0.0;
     }

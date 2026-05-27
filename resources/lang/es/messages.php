@@ -9589,4 +9589,8 @@ Smartly or Earn. ',
   'pago_en_recoleccion' => 'Pago en recolección',
   'recibiras' => 'Recibirás',
   'en_efectivo_del_repartidor_al_recoger_el_pedido' => 'en efectivo del repartidor al recoger el pedido',
+  'le_debes_a_tootli' => 'Le debes a Tootli',
+  'debes' => 'Debes',
+  'a_tootli_se_te_descontara_de_tu_proximo_pedido' => 'a Tootli (se te descontará de tus próximos pedidos con tarjeta)',
+  'historial_recolecciones_efectivo' => 'Historial de Recolecciones en Efectivo',
 );

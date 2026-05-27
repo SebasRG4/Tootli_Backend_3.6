@@ -314,4 +314,27 @@ class WalletController extends Controller
         }
     }
 
+    public function cash_on_pickup_history(Request $request)
+    {
+        $data = data_get($this->getWithdrawMethods(), 'data', []);
+        $withdrawal_methods = data_get($this->getWithdrawMethods(), 'withdrawal_methods', []);
+
+        $store_id = Helpers::get_store_id();
+        $key = isset($request['search']) ? explode(' ', $request['search']) : [];
+
+        $history = \App\Models\RepartidorPagoTiendaEfectivo::with(['order', 'delivery_man'])
+            ->where('store_id', $store_id)
+            ->when(isset($request['search']), function ($query) use ($key) {
+                return $query->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('order_id', 'like', "%{$value}%");
+                    }
+                });
+            })
+            ->latest()
+            ->paginate(config('default_pagination'));
+
+        return view('vendor-views.wallet.cash_on_pickup_history', compact('history', 'withdrawal_methods', 'data'));
+    }
+
 }

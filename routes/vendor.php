@@ -193,6 +193,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::get('wallet-payment-list', 'WalletController@wallet_payment_list')->name('wallet_payment_list');
             Route::get('disbursement-list', 'WalletController@getDisbursementList')->name('getDisbursementList');
             Route::get('export', 'WalletController@getDisbursementExport')->name('export');
+            Route::get('cash-on-pickup-history', 'WalletController@cash_on_pickup_history')->name('cash_on_pickup_history');
 
         });
 
