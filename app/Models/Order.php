@@ -318,10 +318,22 @@ class Order extends Model
     {
         if ($this->payment_method === 'cash_on_delivery' && $this->order_type === 'delivery') {
             $food_cost = (float) max(0.0, $this->order_amount - $this->delivery_charge - ($this->dm_tips ?? 0));
-            if ($this->delivery_man_id) {
-                $dmWallet = \App\Models\DeliveryManWallet::where('delivery_man_id', $this->delivery_man_id)->first();
+            
+            $dmId = $this->delivery_man_id;
+            if (!$dmId) {
+                $token = request()->header('token') ?? request('token');
+                if ($token) {
+                    $dm = \App\Models\DeliveryMan::where('auth_token', $token)->first();
+                    if ($dm) {
+                        $dmId = $dm->id;
+                    }
+                }
+            }
+
+            if ($dmId) {
+                $dmWallet = \App\Models\DeliveryManWallet::where('delivery_man_id', $dmId)->first();
                 // Si la tienda tiene deuda acumulada (balance negativo), se le descuenta de lo que el repartidor le va a pagar
-                $storeWallet = \App\Models\StoreWallet::where('vendor_id', $this->store->vendor_id)->first();
+                $storeWallet = $this->store ? \App\Models\StoreWallet::where('vendor_id', $this->store->vendor_id)->first() : null;
                 $store_debt = ($storeWallet && $storeWallet->balance < 0) ? abs($storeWallet->balance) : 0.0;
                 $cash_to_pay = (float) max(0.0, $food_cost - $store_debt);
 
