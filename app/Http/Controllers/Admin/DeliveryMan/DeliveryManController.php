@@ -274,6 +274,17 @@ class DeliveryManController extends BaseController
         return back();
     }
 
+    public function reset_device(Request $request, $id): RedirectResponse
+    {
+        $this->deliveryManRepo->update(id: $id, data: [
+            'device_token' => null,
+            'device_changed_at' => null,
+        ]);
+
+        Toastr::success(translate('messages.device_reset_successfully'));
+        return back();
+    }
+
     public function updateTier(Request $request, int|string $id): RedirectResponse
     {
         $validator = Validator::make($request->all(), [

@@ -350,6 +350,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                     Route::get(DeliveryMan::NEW [URI], [DeliveryManController::class, 'getNewDeliveryManView'])->name('new');
                     Route::get(DeliveryMan::DENY[URI], [DeliveryManController::class, 'getDeniedDeliveryManView'])->name('deny');
                     Route::get(DeliveryMan::PREVIEW[URI] . '/{id}/{tab?}', [DeliveryManController::class, 'getPreview'])->name('preview');
+                    Route::get('reset-device/{id}', [DeliveryManController::class, 'reset_device'])->name('reset-device');
                     Route::get(DeliveryMan::STATUS[URI] . '/{id}/{status}', [DeliveryManController::class, 'updateStatus'])->name('status');
                     Route::post('update-tier/{id}', [DeliveryManController::class, 'updateTier'])->name('update-tier');
                     Route::post('{id}/strike-event', [DeliveryManController::class, 'storeStrikeEvent'])->name('store-strike-event');

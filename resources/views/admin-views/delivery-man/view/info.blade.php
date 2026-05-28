@@ -24,6 +24,12 @@
 
                         <div class="d-flex flex-wrap gap-2">
                             <a href="javascript:"
+                                class="btn request-alert py-2 btn-warning text-white align-items-center d-flex"
+                                data-url="{{ route('admin.users.delivery-man.reset-device', [$deliveryMan['id']]) }}"
+                                data-message="{{ translate('messages.are_you_sure_to_reset_device_for_this_deliveryman') }}">
+                                <i class="tio-android-phone mr-1"></i> {{ translate('messages.Reset Device') }}
+                            </a>
+                            <a href="javascript:"
                                 class="btn request-alert py-2 {{ $deliveryMan->status ? 'btn--danger' : 'btn-success' }} align-items-center d-flex"
                                 data-url="{{ route('admin.users.delivery-man.status', [$deliveryMan['id'], $deliveryMan->status ? 0 : 1]) }}"
                                 data-message="{{ $deliveryMan->status ? translate('messages.you_want_to_suspend_this_deliveryman') : translate('messages.you_want_to_unsuspend_this_deliveryman') }}">
