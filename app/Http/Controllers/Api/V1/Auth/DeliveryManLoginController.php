@@ -39,7 +39,7 @@ class DeliveryManLoginController extends Controller
             // `application_status` ausente o distinto y el falso "cuenta no aprobada" en pending.
             $delivery_man = DeliveryMan::where('phone', $request->input('phone'))->first();
             if (! $delivery_man) {
-                auth('delivery_men')->logout();
+                // auth('delivery_men')->logout();
 
                 return response()->json([
                     'errors' => [
@@ -63,7 +63,7 @@ class DeliveryManLoginController extends Controller
                     }
 
                     if ($can_migrate) {
-                        auth('delivery_men')->logout();
+                        // auth('delivery_men')->logout();
                         return response()->json([
                             'errors' => [
                                 [
@@ -73,7 +73,7 @@ class DeliveryManLoginController extends Controller
                             ]
                         ], 400);
                     } else {
-                        auth('delivery_men')->logout();
+                        // auth('delivery_men')->logout();
                         $days_left = 30 - \Carbon\Carbon::parse($delivery_man->device_changed_at)->diffInDays(now());
                         return response()->json([
                             'errors' => [
@@ -93,7 +93,7 @@ class DeliveryManLoginController extends Controller
             }
 
             if ($appStatus === 'denied') {
-                auth('delivery_men')->logout();
+                // auth('delivery_men')->logout();
 
                 return response()->json([
                     'errors' => [
@@ -103,7 +103,7 @@ class DeliveryManLoginController extends Controller
             }
 
             if ($appStatus === 'approved' && ! $delivery_man->status) {
-                auth('delivery_men')->logout();
+                // auth('delivery_men')->logout();
                 $errors = [];
                 array_push($errors, ['code' => 'auth-003', 'message' => translate('messages.your_account_has_been_suspended')]);
 
