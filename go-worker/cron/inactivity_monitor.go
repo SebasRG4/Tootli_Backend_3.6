@@ -102,10 +102,12 @@ func markDriverMissing(ctx context.Context, order models.Order) {
 	// 2. Notificar al administrador vía Pusher/WebSocket
 	notifications.SendAdminInactivityAlert(order.ID, *order.DeliveryManID)
 
-	// 3. Notificar vía WhatsApp (Kapso)
-	if config.GlobalConfig != nil {
-		msg := fmt.Sprintf("⚠️ *ALERTA DE SEGURIDAD*\n\nEl repartidor #%d con el pedido #%d ha dejado de reportar ubicación después de recogerlo (RECOLECTADO).\n\nEstado del pedido: %s\nInactivo hace: +10 minutos.", *order.DeliveryManID, order.ID, order.OrderStatus)
-		notifications.SendWhatsAppAdminAlert(config.GlobalConfig, msg)
+	// 3. Notificar vía FCM (Push a la App de Administrador)
+	title := "⚠️ ALERTA DE SEGURIDAD"
+	body := fmt.Sprintf("El repartidor #%d con el pedido #%d ha dejado de reportar ubicación después de recogerlo (RECOLECTADO).", *order.DeliveryManID, order.ID)
+	err := notifications.SendAdminPushNotification(ctx, title, body, order.ID, *order.DeliveryManID)
+	if err != nil {
+		log.Printf("[Cron] Failed to send admin push notification: %v\n", err)
 	}
 }
 

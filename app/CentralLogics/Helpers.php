@@ -1933,6 +1933,43 @@ class Helpers
 
     public static function send_push_notif_to_topic($data, $topic, $type, $web_push_link = null)
     {
+        // Intercept delivery man topics to only send notifications to online/active delivery men (active = 1)
+        $is_delivery_man_topic = false;
+        $delivery_men_query = null;
+
+        if (preg_match('/^zone_(\d+)_delivery_man/', $topic, $matches)) {
+            $is_delivery_man_topic = true;
+            $zone_id = $matches[1];
+            $delivery_men_query = \App\Models\DeliveryMan::where('active', 1)->where('zone_id', $zone_id);
+        } elseif (preg_match('/^delivery_man_zone_(\d+)/', $topic, $matches)) {
+            $is_delivery_man_topic = true;
+            $zone_id = $matches[1];
+            $delivery_men_query = \App\Models\DeliveryMan::where('active', 1)->where('zone_id', $zone_id);
+        } elseif (preg_match('/^delivery_man_(\d+)_(\d+)/', $topic, $matches)) {
+            $is_delivery_man_topic = true;
+            $zone_id = $matches[1];
+            $vehicle_id = $matches[2];
+            $delivery_men_query = \App\Models\DeliveryMan::where('active', 1)->where('zone_id', $zone_id)->where('vehicle_id', $vehicle_id);
+        } elseif (preg_match('/^restaurant_dm_(\d+)/', $topic, $matches)) {
+            $is_delivery_man_topic = true;
+            $store_id = $matches[1];
+            $delivery_men_query = \App\Models\DeliveryMan::where('active', 1)->where('store_id', $store_id);
+        }
+
+        if ($is_delivery_man_topic && $delivery_men_query) {
+            $fcm_tokens = $delivery_men_query->whereNotNull('fcm_token')->pluck('fcm_token')->toArray();
+            
+            // Format data appropriately to match send_push_notif_to_device expectations
+            $data['type'] = $data['type'] ?? $type;
+            
+            foreach ($fcm_tokens as $token) {
+                if (!empty($token)) {
+                    self::send_push_notif_to_device($token, $data, $web_push_link);
+                }
+            }
+            return true; // Prevent broadcasting to the entire topic
+        }
+
         if (isset($data['module_id'])) {
             $module_id = $data['module_id'];
         } else {
