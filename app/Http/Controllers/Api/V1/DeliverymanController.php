@@ -1130,13 +1130,15 @@ class DeliverymanController extends Controller
                 }
                 $is_cod_like = in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true)
                     || in_array($pay_method, ['cash_on_delivery', 'card_on_delivery'], true);
-                $reveived_by = $is_cod_like ? ($dm->type != 'zone_wise' ? 'store' : 'deliveryman') : 'admin';
+                
+                $is_already_returned = $order->order_status === 'returned';
+                $reveived_by = $is_already_returned ? 'admin' : ($is_cod_like ? ($dm->type != 'zone_wise' ? 'store' : 'deliveryman') : 'admin');
 
                 if (OrderLogic::create_transaction($order, $reveived_by, null)) {
                     $order->payment_status = 'paid';
                     
                     // --- Fase 2: Actualizar Saldo Pendiente del Repartidor ---
-                    if ($is_cod_like && $reveived_by == 'deliveryman') {
+                    if ($is_cod_like && $reveived_by == 'deliveryman' && !$is_already_returned) {
                         $dm->pending_deposit_amount += $order->order_amount;
                         $dm->save();
                     }
