@@ -1592,6 +1592,39 @@
                         @endif
                     </div>
                 </div>
+
+                <div class="card mt-2">
+                    <div class="card-body pt-3">
+                        <h5 class="card-title text-dark mb-3">
+                            <span class="card-header-icon">
+                                <i class="tio-settings"></i>
+                            </span>
+                            <span>{{ translate('Entrega Fallida / Retorno') }}</span>
+                        </h5>
+                        <form action="{{ route('admin.order.status') }}" method="get" class="d-flex flex-column gap-2">
+                            <input type="hidden" name="id" value="{{ $order->id }}">
+                            <input type="hidden" name="order_status" value="{{ $order->order_status }}">
+                            
+                            <div class="form-group mb-2">
+                                <label class="input-label font-semibold">{{ translate('Acción si no es recibido') }}</label>
+                                <select name="failed_delivery_action" class="custom-select bg-white">
+                                    <option value="return" {{ $order->failed_delivery_action == 'return' ? 'selected' : '' }}>{{ translate('Retornar a tienda') }}</option>
+                                    <option value="donation" {{ $order->failed_delivery_action == 'donation' ? 'selected' : '' }}>{{ translate('Donación') }}</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group mb-2">
+                                <label class="input-label font-semibold">{{ translate('Instrucciones Especiales') }}</label>
+                                <textarea name="failed_delivery_instruction" class="form-control" rows="3" placeholder="{{ translate('Instrucciones para el repartidor si la entrega falla...') }}">{{ $order->failed_delivery_instruction }}</textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-sm w-100 mt-2">
+                                <i class="tio-save mr-1"></i> {{ translate('Guardar Configuración') }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
                 <!-- Customer Card -->
                 @php($data = isset($order->order_proof) ? json_decode($order->order_proof, true) : [])
                 @if ( in_array($order->order_status, [ 'handover', 'delivered', 'picked_up']) || ($data != null && count($data) > 0) )

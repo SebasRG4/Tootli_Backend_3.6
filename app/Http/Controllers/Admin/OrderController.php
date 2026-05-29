@@ -810,6 +810,12 @@ class OrderController extends Controller
         if ($request->order_status == 'processing') {
             $order->processing_time = ($request?->processing_time) ? $request->processing_time : explode('-', $order['store']['delivery_time'])[0];
         }
+        if ($request->has('failed_delivery_action')) {
+            $order->failed_delivery_action = $request->failed_delivery_action;
+        }
+        if ($request->has('failed_delivery_instruction')) {
+            $order->failed_delivery_instruction = $request->failed_delivery_instruction;
+        }
         $order[$request->order_status] = now();
         $order->save();
 

@@ -58,6 +58,8 @@ class Order extends Model
         'tootli_direct' => 'boolean',
         'store_pos_customer_id' => 'integer',
         'pos_payment_meta' => 'array',
+        'failed_delivery_action' => 'string',
+        'failed_delivery_instruction' => 'string',
     ];
 
     protected $appends = ['module_type', 'order_attachment_full_url', 'order_proof_full_url', 'customer_tracking_url', 'cash_on_pickup_amount'];
