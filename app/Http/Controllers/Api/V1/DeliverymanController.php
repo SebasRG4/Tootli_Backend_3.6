@@ -975,7 +975,14 @@ class DeliverymanController extends Controller
         ]);
 
         $validator->sometimes('otp', 'required', function ($request) {
-            return Config::get('order_delivery_verification') == 1 && $request['status'] == 'delivered';
+            if ($request['status'] == 'delivered') {
+                $order = Order::find($request['order_id']);
+                if ($order && $order->order_status == 'returned' && $order->failed_delivery_action == 'donation') {
+                    return false;
+                }
+                return Config::get('order_delivery_verification') == 1;
+            }
+            return false;
         });
 
         if ($validator->fails()) {
@@ -1065,12 +1072,25 @@ class DeliverymanController extends Controller
             ], 406);
         }
 
-        if ($order->order_status == 'returned' && $request['status'] == 'delivered' && $order->return_otp != $request['otp']) {
-            return response()->json([
-                'errors' => [
-                    ['code' => 'otp', 'message' => translate('messages.Invalid_return_otp')],
-                ],
-            ], 406);
+        if ($order->order_status == 'returned' && $request['status'] == 'delivered') {
+            $action = $order->failed_delivery_action ?? 'return';
+            if ($action == 'donation') {
+                if (empty($request->order_proof)) {
+                    return response()->json([
+                        'errors' => [
+                            ['code' => 'order_proof', 'message' => translate('Se requiere una foto de evidencia para confirmar la donación')],
+                        ],
+                    ], 403);
+                }
+            } else {
+                if ($order->return_otp != $request['otp']) {
+                    return response()->json([
+                        'errors' => [
+                            ['code' => 'otp', 'message' => translate('messages.Invalid_return_otp')],
+                        ],
+                    ], 406);
+                }
+            }
         }
         if ($request->status == 'delivered') {
             $is_cod = in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true);

@@ -810,6 +810,9 @@ class OrderController extends Controller
         if ($request->order_status == 'processing') {
             $order->processing_time = ($request?->processing_time) ? $request->processing_time : explode('-', $order['store']['delivery_time'])[0];
         }
+        if ($request->order_status == 'returned' && !$order->return_otp) {
+            $order->return_otp = random_int(1000, 9999);
+        }
         if ($request->has('failed_delivery_action')) {
             $order->failed_delivery_action = $request->failed_delivery_action;
         }

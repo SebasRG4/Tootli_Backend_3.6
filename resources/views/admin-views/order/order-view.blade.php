@@ -1622,6 +1622,14 @@
                                 <i class="tio-save mr-1"></i> {{ translate('Guardar Configuración') }}
                             </button>
                         </form>
+
+                        @if ($order->order_status == 'returned' && ($order->failed_delivery_action ?? 'return') == 'return' && $order->return_otp)
+                            <div class="alert alert-soft-warning border-warning mt-3 text-center mb-0">
+                                <h6 class="alert-heading mb-1 text-warning"><i class="tio-lock"></i> {{ translate('PIN para la Tienda') }}</h6>
+                                <span class="font-semibold" style="font-size: 1.6rem; letter-spacing: 2px; color: #b7791f;">{{ $order->return_otp }}</span>
+                                <p class="text-xs text-muted mt-1 mb-0" style="font-size: 0.75rem;">{{ translate('Proporciona este código a la tienda para confirmar la recepción del retorno.') }}</p>
+                            </div>
+                        @endif
                     </div>
                 </div>
 
