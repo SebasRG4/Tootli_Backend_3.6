@@ -53,21 +53,21 @@ def run_ssh_command(commands):
             # Buscar prompts de contraseña
             if b"password:" in buffer.lower() and not password_sent:
                 time.sleep(1.0) # Esperar a que el prompt esté completamente listo
-                os.write(master, b"tHUhl8Ubl#iSafa!r*@h-\r")
+                os.write(master, b"tHUhl8Ubl#iSafa!r*@h-\n")
                 password_sent = True
                 print("\n[DEBUG] Contraseña enviada.")
                 buffer = b""
                 
             elif b"sebastian-rivera@" in buffer and password_sent and not sudo_sent:
                 time.sleep(0.5)
-                os.write(master, b"sudo -i\r")
+                os.write(master, b"sudo -i\n")
                 sudo_sent = True
                 print("\n[DEBUG] Comando sudo -i enviado.")
                 buffer = b""
                 
             elif b"password" in buffer.lower() and sudo_sent and not sudo_pass_sent:
                 time.sleep(1.0) # Esperar al prompt de sudo
-                os.write(master, b"tHUhl8Ubl#iSafa!r*@h-\r")
+                os.write(master, b"tHUhl8Ubl#iSafa!r*@h-\n")
                 sudo_pass_sent = True
                 print("\n[DEBUG] Contraseña de sudo enviada.")
                 buffer = b""
@@ -76,10 +76,10 @@ def run_ssh_command(commands):
                 time.sleep(0.5)
                 # Ya somos root! Correr los comandos solicitados
                 for cmd in commands:
-                    os.write(master, f"{cmd}\r".encode())
+                    os.write(master, f"{cmd}\n".encode())
                     time.sleep(0.5)
-                os.write(master, b"exit\r") # Salir de root
-                os.write(master, b"exit\r") # Salir de ssh
+                os.write(master, b"exit\n") # Salir de root
+                os.write(master, b"exit\n") # Salir de ssh
                 commands_sent = True
                 print("\n[DEBUG] Comandos ejecutados.")
                 buffer = b""

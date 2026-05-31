@@ -80,4 +80,12 @@ return [
         'public_token' => env('MAPBOX_PUBLIC_ACCESS_TOKEN'),
     ],
 
+    /*
+    | OSRM (Open Source Routing Machine) autohospedado en Docker.
+    | Usado para calcular distancias reales de ruta y tiempos de conducción sin costo.
+    */
+    'osrm' => [
+        'url' => env('OSRM_BASE_URL', 'http://127.0.0.1:5000'),
+    ],
+
 ];

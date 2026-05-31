@@ -5460,6 +5460,20 @@ class Helpers
         $cache_key = "travel_time_" . round($origin_lat, 4) . "_" . round($origin_lng, 4) . "_" . round($destination_lat, 4) . "_" . round($destination_lng, 4);
 
         return Cache::remember($cache_key, 900, function () use ($origin_lat, $origin_lng, $destination_lat, $destination_lng) {
+            // 1. Intentar con OSRM autohospedado
+            if (config('services.osrm.url')) {
+                try {
+                    $osrm = app(\App\Services\OSRMService::class);
+                    $route = $osrm->drivingRoute((float)$origin_lng, (float)$origin_lat, (float)$destination_lng, (float)$destination_lat);
+                    if (is_array($route) && isset($route['duration_minutes'])) {
+                        return $route['duration_minutes'];
+                    }
+                } catch (\Throwable $e) {
+                    Log::warning('osrm_travel_time_fallback', ['message' => $e->getMessage()]);
+                }
+            }
+
+            // 2. Fallback a Google Maps
             $api_key = self::get_business_settings('map_api_key_server');
             if (!$api_key) {
                 return null;
@@ -5484,8 +5498,8 @@ class Helpers
     }
 
     /**
-     * Distancia en ruta (conducción) en metros entre dos puntos (Google Distance Matrix).
-     * No usa Haversine. Solo cachea resultados válidos; si la API falla devuelve null.
+     * Distancia en ruta (conducción) en metros entre dos puntos.
+     * Prioriza OSRM autohospedado y usa Google Distance Matrix como fallback secundario.
      */
     public static function getDrivingDistanceMetersBetweenPoints(
         float $originLat,
@@ -5506,6 +5520,22 @@ class Helpers
             return (int) Cache::get($cacheKey);
         }
 
+        // 1. Intentar con OSRM autohospedado
+        if (config('services.osrm.url')) {
+            try {
+                $osrm = app(\App\Services\OSRMService::class);
+                $route = $osrm->drivingRoute($originLng, $originLat, $destLng, $destLat);
+                if (is_array($route) && isset($route['distance_km'])) {
+                    $meters = (int) round($route['distance_km'] * 1000);
+                    Cache::put($cacheKey, $meters, now()->addDays(7));
+                    return $meters;
+                }
+            } catch (\Throwable $e) {
+                Log::warning('osrm_distance_fallback', ['message' => $e->getMessage()]);
+            }
+        }
+
+        // 2. Fallback a Google Maps
         $api_key = self::get_business_settings('map_api_key_server');
         if (! $api_key) {
             return null;

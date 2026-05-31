@@ -789,17 +789,40 @@ class POSController extends Controller
 
         $storeHasCoords = ($storeLat != 0.0 || $storeLng != 0.0);
         if ($storeHasCoords) {
-            $route = app(MapboxDirectionsService::class)->drivingTrafficRoute(
-                $storeLng,
-                $storeLat,
-                $customerLng,
-                $customerLat
-            );
-            if (is_array($route)) {
-                $distanceKm = $route['distance_km'];
-                $estimatedDurationSeconds = $route['duration_seconds'];
-                $estimatedDurationMinutes = $route['duration_minutes'];
-                $routingSource = 'mapbox_driving_traffic';
+            // 1. Intentar con OSRM autohospedado primero
+            if (config('services.osrm.url')) {
+                try {
+                    $route = app(\App\Services\OSRMService::class)->drivingRoute(
+                        $storeLng,
+                        $storeLat,
+                        $customerLng,
+                        $customerLat
+                    );
+                    if (is_array($route)) {
+                        $distanceKm = $route['distance_km'];
+                        $estimatedDurationSeconds = $route['duration_seconds'];
+                        $estimatedDurationMinutes = $route['duration_minutes'];
+                        $routingSource = 'osrm_driving';
+                    }
+                } catch (\Throwable $e) {
+                    \Log::warning('osrm_pos_estimate_fallback', ['message' => $e->getMessage()]);
+                }
+            }
+
+            // 2. Fallback a Mapbox si OSRM no dio resultado
+            if ($routingSource === 'haversine_fallback') {
+                $route = app(MapboxDirectionsService::class)->drivingTrafficRoute(
+                    $storeLng,
+                    $storeLat,
+                    $customerLng,
+                    $customerLat
+                );
+                if (is_array($route)) {
+                    $distanceKm = $route['distance_km'];
+                    $estimatedDurationSeconds = $route['duration_seconds'];
+                    $estimatedDurationMinutes = $route['duration_minutes'];
+                    $routingSource = 'mapbox_driving_traffic';
+                }
             }
         }
 

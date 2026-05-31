@@ -1075,7 +1075,7 @@ class DeliverymanController extends Controller
         if ($order->order_status == 'returned' && $request['status'] == 'delivered') {
             $action = $order->failed_delivery_action ?? 'return';
             if ($action == 'donation') {
-                if (empty($request->order_proof)) {
+                if (!$request->hasFile('order_proof')) {
                     return response()->json([
                         'errors' => [
                             ['code' => 'order_proof', 'message' => translate('Se requiere una foto de evidencia para confirmar la donación')],
@@ -1097,9 +1097,9 @@ class DeliverymanController extends Controller
             
             // --- Fase 2: Validación de Evidencia para COD ---
             if ($is_cod) {
-                if (empty($request->order_proof)) {
+                if (!$request->hasFile('order_proof')) {
                     return response()->json([
-                        'errors' => [['code' => 'order_proof', 'message' => translate('messages.photo_evidence_required_for_cash_orders')]],
+                        'errors' => [['code' => 'order_proof', 'message' => translate('La foto de evidencia es obligatoria para entregas en efectivo.')]],
                     ], 403);
                 }
                 if (!$request->lat || !$request->lng) {
