@@ -1332,7 +1332,12 @@ trait PlaceNewOrder
                 ];
             }
 
-            $progressive_fee = \App\CentralLogics\OrderLogic::calculate_progressive_distance_fee($request->distance ?? 0);
+            $progressive_fee = \App\CentralLogics\OrderLogic::calculate_progressive_distance_fee(
+                $request->distance ?? 0,
+                $per_km_shipping_charge ?? null,
+                $minimum_shipping_charge ?? null,
+                $maximum_shipping_charge ?? null
+            );
             $original_delivery_charge = $progressive_fee + $extra_charges;
             $delivery_charge = $original_delivery_charge;
         } else {

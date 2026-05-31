@@ -84,16 +84,18 @@ class OrderLogic
         ];
     }
 
-    public static function calculate_progressive_distance_fee($distance)
+    public static function calculate_progressive_distance_fee($distance, $per_km_shipping_charge = null, $minimum_shipping_charge = null, $maximum_shipping_charge = null)
     {
         $distance = max(0.0, (float)$distance);
         $settings = self::get_progressive_fee_settings();
         
-        $base_fee = (float) $settings['base_fee'];
+        $base_fee = ($minimum_shipping_charge !== null && (float)$minimum_shipping_charge > 0) ? (float)$minimum_shipping_charge : (float) $settings['base_fee'];
         $tier1_km_limit = (float) $settings['tier1_km_limit'];
         $tier2_km_limit = (float) $settings['tier2_km_limit'];
-        $tier2_rate = (float) $settings['tier2_rate'];
-        $tier3_rate = (float) $settings['tier3_rate'];
+        
+        $tier2_rate = ($per_km_shipping_charge !== null && (float)$per_km_shipping_charge > 0) ? (float)$per_km_shipping_charge : (float) $settings['tier2_rate'];
+        $tier3_rate = ($per_km_shipping_charge !== null && (float)$per_km_shipping_charge > 0) ? round((float)$per_km_shipping_charge * 1.4166, 2) : (float) $settings['tier3_rate'];
+        
         $long_distance_bonus = (float) $settings['long_distance_bonus'];
         
         $fee = 0.0;
@@ -112,7 +114,13 @@ class OrderLogic
                  + $long_distance_bonus;
         }
 
-        return round((float) $fee, 2);
+        $fee = ceil((float) $fee);
+        
+        if ($maximum_shipping_charge !== null && (float)$maximum_shipping_charge > 0 && $fee > (float)$maximum_shipping_charge) {
+            $fee = (float)$maximum_shipping_charge;
+        }
+
+        return $fee;
     }
 
     public static function gen_unique_id()

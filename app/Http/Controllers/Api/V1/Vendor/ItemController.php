@@ -308,6 +308,7 @@ class ItemController extends Controller
         {
             foreach(json_decode($request->options, true) as $option)
             {
+                $temp_variation = [];
                 $temp_variation['name']= $option['name'];
                 $temp_variation['type']= $option['type'];
                 $temp_variation['min']= $option['min'] ?? 0;
@@ -316,6 +317,7 @@ class ItemController extends Controller
                 $temp_value = [];
                 foreach($option['values'] as $value)
                 {
+                    $temp_option = [];
                     if(isset($value['label'])){
                         $temp_option['label'] = $value['label'];
                     }
@@ -644,6 +646,7 @@ class ItemController extends Controller
         {
             foreach(json_decode($request->options,true) as $key=>$option)
             {
+                $temp_variation = [];
                 $temp_variation['name']= $option['name'];
                 $temp_variation['type']= $option['type'];
                 $temp_variation['min']= $option['min'] ?? 0;
@@ -652,6 +655,7 @@ class ItemController extends Controller
                 $temp_value = [];
                 foreach($option['values'] as $value)
                 {
+                    $temp_option = [];
                     if(isset($value['label'])){
                         $temp_option['label'] = $value['label'];
                     }

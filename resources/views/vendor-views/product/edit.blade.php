@@ -485,7 +485,18 @@
         });
 
         function add_new_row_button(data) {
-            countRow = 1 + $('#option_price_view_' + data).children('.add_new_view_row_class').length;
+            let maxIndex = -1;
+            $('#option_price_view_' + data).find('input[name^="options[' + data + '][values]"]').each(function() {
+                let name = $(this).attr('name');
+                let match = name.match(/options\[\d+\]\[values\]\[(\d+)\]/);
+                if (match) {
+                    let index = parseInt(match[1], 10);
+                    if (index > maxIndex) {
+                        maxIndex = index;
+                    }
+                }
+            });
+            countRow = maxIndex + 1;
             let add_new_row_view = `
             <div class="row add_new_view_row_class mb-3 position-relative pt-3 pt-sm-0">
                 <div class="col-md-4 col-sm-5">

@@ -348,7 +348,7 @@ class ItemController extends Controller
         $food_variations = [];
         if (isset($request->options)) {
             foreach (array_values($request->options) as $key => $option) {
-
+                $temp_variation = [];
                 $temp_variation['name'] = $option['name'];
                 $temp_variation['type'] = $option['type'];
                 $temp_variation['min'] = $option['min'] ?? 0;
@@ -369,6 +369,7 @@ class ItemController extends Controller
                 $temp_value = [];
 
                 foreach (array_values($option['values']) as $value) {
+                    $temp_option = [];
                     if (isset($value['label'])) {
                         $temp_option['label'] = $value['label'];
                     }
@@ -716,6 +717,7 @@ class ItemController extends Controller
         $food_variations = [];
         if (isset($request->options)) {
             foreach (array_values($request->options) as $key => $option) {
+                $temp_variation = [];
                 $temp_variation['name'] = $option['name'];
                 $temp_variation['type'] = $option['type'];
                 $temp_variation['min'] = $option['min'] ?? 0;
@@ -735,6 +737,7 @@ class ItemController extends Controller
                 $temp_variation['required'] = $option['required'] ?? 'off';
                 $temp_value = [];
                 foreach (array_values($option['values']) as $value) {
+                    $temp_option = [];
                     if (isset($value['label'])) {
                         $temp_option['label'] = $value['label'];
                     }
@@ -1600,6 +1603,7 @@ class ItemController extends Controller
                 $temp_value = [];
 
                 foreach (array_values($option['values']) as $value) {
+                    $temp_option = [];
                     if (isset($value['label'])) {
                         $temp_option['label'] = $value['label'];
                     }
