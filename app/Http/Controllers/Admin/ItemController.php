@@ -1953,7 +1953,7 @@ class ItemController extends Controller
         $food_variations = [];
         if (isset($request->options)) {
             foreach (array_values($request->options) as $key => $option) {
-
+                $temp_variation = [];
                 $temp_variation['name'] = $option['name'];
                 $temp_variation['type'] = $option['type'];
                 $temp_variation['min'] = $option['min'] ?? 0;

@@ -166,7 +166,7 @@
 @push('script_2')
     <script src="{{ asset('assets/admin') }}/js/tags-input.min.js"></script>
     <script src="{{ asset('assets/admin/js/spartan-multi-image-picker.js') }}"></script>
-    <script src="{{ asset('assets/admin') }}/js/view-pages/product-index.js"></script>
+    <script src="{{ asset('assets/admin') }}/js/view-pages/product-index.js?v=3.6.1"></script>
 
 
 
