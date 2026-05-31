@@ -147,6 +147,7 @@ class ConfigController extends Controller
             'free_delivery_over',
             'multi_store_delivery_extra_status',
             'multi_store_delivery_extra_amount',
+            'progressive_delivery_fees',
 
             'parcel_cancellation_status',
             'parcel_cancellation_basic_setup',
@@ -472,6 +473,7 @@ class ConfigController extends Controller
 
             'dm_loyality_point_data' => $dm_loyality_point_data,
             'dm_referral_data' => $dm_referral_data,
+            'progressive_delivery_fees' => isset($settings['progressive_delivery_fees']) ? json_decode($settings['progressive_delivery_fees'], true) : \App\CentralLogics\OrderLogic::get_progressive_fee_settings(),
         ]);
     }
 

@@ -27,6 +27,7 @@ use Modules\Rental\Entities\PartialPayment;
 class OrderLogic
 {
     // Constantes de configuración de tarifas Tootli
+    // Constantes de configuración de tarifas Tootli
     const TOOTLI_BASE_SHIPPING_FEE = 25.0;      // Envío base cliente
     const TOOTLI_BASE_DM_PAY = 20.0;            // Base neta repartidor
     const TOOTLI_TIER1_KM_LIMIT = 3.5;          // Límite zona 1 (3.5 km)
@@ -36,23 +37,79 @@ class OrderLogic
     const TOOTLI_TIER3_RATE = 8.5;              // Precio km extra zona 3 (6.5 - 8.0 km)
     const TOOTLI_LONG_DISTANCE_BONUS = 20.0;    // Bono de viaje largo (> 6.5 km)
 
+    public static function get_progressive_fee_settings()
+    {
+        try {
+            $setting = \App\Models\BusinessSetting::where('key', 'progressive_delivery_fees')->first();
+            if (!$setting) {
+                $defaults = [
+                    'base_fee' => self::TOOTLI_BASE_SHIPPING_FEE,
+                    'tier1_km_limit' => self::TOOTLI_TIER1_KM_LIMIT,
+                    'tier2_km_limit' => self::TOOTLI_TIER2_KM_LIMIT,
+                    'tier2_rate' => self::TOOTLI_TIER2_RATE,
+                    'tier3_rate' => self::TOOTLI_TIER3_RATE,
+                    'long_distance_bonus' => self::TOOTLI_LONG_DISTANCE_BONUS
+                ];
+                
+                \App\Models\BusinessSetting::updateOrCreate(
+                    ['key' => 'progressive_delivery_fees'],
+                    ['value' => json_encode($defaults)]
+                );
+                
+                return $defaults;
+            }
+            
+            $decoded = json_decode($setting->value, true);
+            if (is_array($decoded)) {
+                return array_merge([
+                    'base_fee' => self::TOOTLI_BASE_SHIPPING_FEE,
+                    'tier1_km_limit' => self::TOOTLI_TIER1_KM_LIMIT,
+                    'tier2_km_limit' => self::TOOTLI_TIER2_KM_LIMIT,
+                    'tier2_rate' => self::TOOTLI_TIER2_RATE,
+                    'tier3_rate' => self::TOOTLI_TIER3_RATE,
+                    'long_distance_bonus' => self::TOOTLI_LONG_DISTANCE_BONUS
+                ], $decoded);
+            }
+        } catch (\Throwable $e) {
+            // Fallback safe in case database connection fails or table doesn't exist
+        }
+        
+        return [
+            'base_fee' => self::TOOTLI_BASE_SHIPPING_FEE,
+            'tier1_km_limit' => self::TOOTLI_TIER1_KM_LIMIT,
+            'tier2_km_limit' => self::TOOTLI_TIER2_KM_LIMIT,
+            'tier2_rate' => self::TOOTLI_TIER2_RATE,
+            'tier3_rate' => self::TOOTLI_TIER3_RATE,
+            'long_distance_bonus' => self::TOOTLI_LONG_DISTANCE_BONUS
+        ];
+    }
+
     public static function calculate_progressive_distance_fee($distance)
     {
         $distance = max(0.0, (float)$distance);
+        $settings = self::get_progressive_fee_settings();
+        
+        $base_fee = (float) $settings['base_fee'];
+        $tier1_km_limit = (float) $settings['tier1_km_limit'];
+        $tier2_km_limit = (float) $settings['tier2_km_limit'];
+        $tier2_rate = (float) $settings['tier2_rate'];
+        $tier3_rate = (float) $settings['tier3_rate'];
+        $long_distance_bonus = (float) $settings['long_distance_bonus'];
+        
         $fee = 0.0;
         
-        if ($distance <= self::TOOTLI_TIER1_KM_LIMIT) {
-            $fee = self::TOOTLI_BASE_SHIPPING_FEE;
-        } elseif ($distance <= self::TOOTLI_TIER2_KM_LIMIT) {
-            // Entre 3.5 y 6.5 km: se cobra base + km extras en Tier 2 a $6.00/km
-            $fee = self::TOOTLI_BASE_SHIPPING_FEE + (($distance - self::TOOTLI_TIER1_KM_LIMIT) * self::TOOTLI_TIER2_RATE);
+        if ($distance <= $tier1_km_limit) {
+            $fee = $base_fee;
+        } elseif ($distance <= $tier2_km_limit) {
+            // Entre tier1_km_limit y tier2_km_limit: se cobra base + km extras en Tier 2
+            $fee = $base_fee + (($distance - $tier1_km_limit) * $tier2_rate);
         } else {
-            // Más de 6.5 km: se cobra base + 3 km de Tier 2 a $6.00/km + km extras en Tier 3 a $8.50/km + Bono de retorno de $20
-            $tier2_distance = self::TOOTLI_TIER2_KM_LIMIT - self::TOOTLI_TIER1_KM_LIMIT; // 3.0 km
-            $fee = self::TOOTLI_BASE_SHIPPING_FEE 
-                 + ($tier2_distance * self::TOOTLI_TIER2_RATE) 
-                 + (($distance - self::TOOTLI_TIER2_KM_LIMIT) * self::TOOTLI_TIER3_RATE) 
-                 + self::TOOTLI_LONG_DISTANCE_BONUS;
+            // Más de tier2_km_limit: se cobra base + km de Tier 2 + km extras en Tier 3 + Bono
+            $tier2_distance = $tier2_km_limit - $tier1_km_limit;
+            $fee = $base_fee 
+                 + ($tier2_distance * $tier2_rate) 
+                 + (($distance - $tier2_km_limit) * $tier3_rate) 
+                 + $long_distance_bonus;
         }
 
         return round((float) $fee, 2);
