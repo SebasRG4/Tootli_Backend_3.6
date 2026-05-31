@@ -641,6 +641,117 @@ class ConfigController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
+        // Regla del "Envío más Lejano" en la API de distancia:
+        // Si el usuario tiene un carrito activo con múltiples tiendas (o una tienda más lejana),
+        // resolvemos las coordenadas de la tienda más lejana y las sobreescribimos como destino.
+        try {
+            $user = null;
+            if ($request->user()) {
+                $user = $request->user();
+            } elseif (auth('api')->check()) {
+                $user = auth('api')->user();
+            }
+
+            $userId = $user ? $user->id : ($request->guest_id ?? $request->header('guest-id') ?? $request->header('guestId'));
+            $isGuest = $user ? 0 : 1;
+
+            if ($userId) {
+                $storeIds = [];
+                // Intentar encontrar las tiendas del carrito actual
+                $carts = \App\Models\Cart::where('user_id', $userId)->where('is_guest', $isGuest)->get();
+                foreach ($carts as $row) {
+                    $itemId = $row->item_id;
+                    $rowType = $row->item_type ?? 'App\Models\Item';
+                    if ($itemId) {
+                        $productRow = (is_string($rowType) && str_contains($rowType, 'ItemCampaign'))
+                            ? \App\Models\ItemCampaign::find($itemId)
+                            : \App\Models\Item::find($itemId);
+                        if ($productRow && $productRow->store_id) {
+                            $storeIds[] = (int) $productRow->store_id;
+                        }
+                    }
+                }
+
+                // También incluir la tienda de las coordenadas provistas en el request
+                $requestedStore = \App\Models\Store::where('latitude', $request->destination_lat)
+                    ->where('longitude', $request->destination_lng)
+                    ->first();
+                if ($requestedStore) {
+                    $storeIds[] = (int) $requestedStore->id;
+                }
+
+                $storeIds = array_values(array_unique($storeIds));
+
+                if (count($storeIds) > 0) {
+                    $customerLat = (float) $request->origin_lat;
+                    $customerLng = (float) $request->origin_lng;
+
+                    $furthestStore = null;
+                    $maxStoreDistance = -1.0;
+
+                    foreach ($storeIds as $sid) {
+                        $s = \App\Models\Store::find($sid);
+                        if ($s && ($s->latitude != 0.0 || $s->longitude != 0.0)) {
+                            $sLat = (float) $s->latitude;
+                            $sLng = (float) $s->longitude;
+
+                            $meters = Helpers::getDrivingDistanceMetersBetweenPoints(
+                                $sLat,
+                                $sLng,
+                                $customerLat,
+                                $customerLng
+                            );
+
+                            $distKm = $meters !== null ? ($meters / 1000.0) : Helpers::get_distance($sLat, $sLng, $customerLat, $customerLng);
+
+                            if ($distKm > $maxStoreDistance) {
+                                $maxStoreDistance = $distKm;
+                                $furthestStore = $s;
+                            }
+                        }
+                    }
+
+                    if ($furthestStore) {
+                        // Sobreescribimos las coordenadas de destino con las de la tienda más lejana
+                        $request->merge([
+                            'destination_lat' => (string) $furthestStore->latitude,
+                            'destination_lng' => (string) $furthestStore->longitude,
+                        ]);
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('furthest_store_distance_api_error', ['message' => $e->getMessage()]);
+        }
+
+        // 1. Intentar con OSRM autohospedado primero (100% gratuito)
+        if (config('services.osrm.url')) {
+            try {
+                $osrm = app(\App\Services\OSRMService::class);
+                $route = $osrm->drivingRoute(
+                    (float)$request['origin_lng'],
+                    (float)$request['origin_lat'],
+                    (float)$request['destination_lng'],
+                    (float)$request['destination_lat']
+                );
+
+                if (is_array($route)) {
+                    $meters = (int) round($route['distance_km'] * 1000);
+                    return response()->json([
+                        'distanceMeters' => $meters,
+                        'duration' => $route['duration_seconds'] . 's',
+                        'localizedValues' => [
+                            'distance' => round($route['distance_km'], 1) . ' km',
+                            'duration' => $route['duration_minutes'] . ' ' . translate('messages.mins'),
+                        ]
+                    ], 200);
+                }
+            } catch (\Throwable $e) {
+                \Log::warning('osrm_distance_api_fallback', ['message' => $e->getMessage()]);
+            }
+        }
+
+        // 2. Fallback a Google Maps original
         $apiKey = $this->map_api_key;
         $url = 'https://routes.googleapis.com/distanceMatrix/v2:computeRouteMatrix';
 
@@ -671,7 +782,12 @@ class ConfigController extends Controller
         $response = curl_exec($ch);
         curl_close($ch);
 
-        return json_decode($response, true)[0];
+        $decoded = json_decode($response, true);
+        if (is_array($decoded) && count($decoded) > 0) {
+            return response()->json($decoded[0], 200);
+        }
+
+        return response()->json(['message' => 'Failed to calculate distance'], 400);
     }
 
     public function place_api_details(Request $request)

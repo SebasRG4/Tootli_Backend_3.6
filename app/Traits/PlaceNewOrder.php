@@ -1222,6 +1222,74 @@ trait PlaceNewOrder
 
     private function getDeliveryCharge($request, $zone, $store, $module_wise_delivery_charge, $delivery_charge, $moduleId)
     {
+        // Regla del "Envío más Lejano" (Furthest Store):
+        // Si el pedido no es de paquetería, y tiene coordenadas de cliente válidas, recalculamos la distancia de conducción
+        // a cada una de las tiendas presentes en el carrito/pedido, y tomamos la distancia del comercio más lejano.
+        if ($request->order_type !== 'parcel' && $request->order_type !== 'take_away' && $request->order_type !== 'dine_in') {
+            $storeIds = [];
+            if ($store) {
+                $storeIds[] = (int) $store->id;
+            }
+
+            if (isset($request->is_buy_now) && $request->is_buy_now == 1) {
+                $cartsData = json_decode($request['cart'], true);
+            } else {
+                $userIdForCart = $request->user ? $request->user->id : $request['guest_id'];
+                $isGuestForCart = $request->user ? 0 : 1;
+                $cartsData = \App\Models\Cart::where('user_id', $userIdForCart)->where('is_guest', $isGuestForCart)->get();
+            }
+
+            if (!empty($cartsData)) {
+                foreach ($cartsData as $cartRow) {
+                    $isRowArray = is_array($cartRow);
+                    $itemId = $isRowArray ? ($cartRow['item_id'] ?? null) : $cartRow->item_id;
+                    $rowType = $isRowArray ? ($cartRow['item_type'] ?? 'App\Models\Item') : ($cartRow->item_type ?? 'App\Models\Item');
+                    if ($itemId) {
+                        $productRow = (is_string($rowType) && str_contains($rowType, 'ItemCampaign'))
+                            ? \App\Models\ItemCampaign::find($itemId)
+                            : \App\Models\Item::find($itemId);
+                        if ($productRow && $productRow->store_id) {
+                            $storeIds[] = (int) $productRow->store_id;
+                        }
+                    }
+                }
+            }
+            $storeIds = array_values(array_unique($storeIds));
+
+            $customerLat = (float) $request->latitude;
+            $customerLng = (float) $request->longitude;
+
+            if ($customerLat != 0.0 && $customerLng != 0.0 && count($storeIds) > 0) {
+                $distances = [];
+                foreach ($storeIds as $sid) {
+                    $s = \App\Models\Store::find($sid);
+                    if ($s && ($s->latitude != 0.0 || $s->longitude != 0.0)) {
+                        $sLat = (float) $s->latitude;
+                        $sLng = (float) $s->longitude;
+
+                        $meters = \App\CentralLogics\Helpers::getDrivingDistanceMetersBetweenPoints(
+                            $sLat,
+                            $sLng,
+                            $customerLat,
+                            $customerLng
+                        );
+
+                        if ($meters !== null) {
+                            $distances[] = $meters / 1000.0;
+                        } else {
+                            $distances[] = \App\CentralLogics\Helpers::get_distance($sLat, $sLng, $customerLat, $customerLng);
+                        }
+                    }
+                }
+
+                if (!empty($distances)) {
+                    $maxDistance = max($distances);
+                    // Actualizamos la distancia en el request para que se use en todo el método
+                    $request->merge(['distance' => round($maxDistance, 2)]);
+                }
+            }
+        }
+
         $increased = 0;
         $schedule_at = $request->schedule_at ? \Carbon\Carbon::parse($request->schedule_at) : now();
         $surge = $this->getSurgePriceValue($zone->id, $moduleId, $schedule_at);
