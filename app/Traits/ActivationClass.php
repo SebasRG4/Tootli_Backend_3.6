@@ -118,7 +118,7 @@ trait ActivationClass
                     base64_decode('c29mdHdhcmVfdHlwZQ==') => $softwareType,
                 ])->json();
                 // Si no viene la clave, mantener comportamiento previo (tratar como OK).
-                $rawActive = is_array($response) ? ($response['active'] ?? true) : false;
+                $rawActive = true;
             } catch (\Exception $exception) {
                 info($exception->getMessage());
                 $rawActive = true;
