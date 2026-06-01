@@ -464,8 +464,10 @@ class ItemController extends Controller
         $category_ids = $request->query('category_ids', '');
 
         $zone_id = $request->header('zoneId');
+        $longitude = $request->header('longitude');
+        $latitude = $request->header('latitude');
 
-        $items = ProductLogic::discounted_products(zone_id: $zone_id, limit: $request['limit'] ?? 25, offset: $request['offset'] ?? 1, type: $type, category_ids: $category_ids, filter: $filter, min: $min_price, max: $max_price, rating_count: $rating_count, search: $request['search'] ?? null);
+        $items = ProductLogic::discounted_products(zone_id: $zone_id, limit: $request['limit'] ?? 25, offset: $request['offset'] ?? 1, type: $type, category_ids: $category_ids, filter: $filter, min: $min_price, max: $max_price, rating_count: $rating_count, search: $request['search'] ?? null, longitude: $longitude, latitude: $latitude);
         $items['products'] = Helpers::productListDataFormatting($items['products']);
         return response()->json($items, 200);
     }
@@ -1041,12 +1043,15 @@ class ItemController extends Controller
         $rating_count = $request->query('rating_count');
         $product_id = $request->query('product_id');
 
+        $longitude = $request->header('longitude');
+        $latitude = $request->header('latitude');
+
         switch ($data_type) {
             case 'searched':
                 return $this->get_searched_products($request);
                 break;
             case 'discounted':
-                $items = ProductLogic::discounted_products(zone_id: $zone_id, limit: $limit, offset: $offset, type: $type, category_ids: $category_ids, filter: $filter, min: $min_price, max: $max_price, rating_count: $rating_count, search: $request['search'] ?? null);
+                $items = ProductLogic::discounted_products(zone_id: $zone_id, limit: $limit, offset: $offset, type: $type, category_ids: $category_ids, filter: $filter, min: $min_price, max: $max_price, rating_count: $rating_count, search: $request['search'] ?? null, longitude: $longitude, latitude: $latitude);
                 break;
             case 'new':
                 $items = ProductLogic::get_new_products($zone_id, $type, $min_price, $max_price, $product_id, $limit, $offset, $filter, $rating_count);

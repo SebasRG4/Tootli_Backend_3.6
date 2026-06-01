@@ -673,7 +673,7 @@ class ProductLogic
 
     }
 
-    public static function discounted_products($zone_id, $limit = 25, $offset = 1, $type = 'all', $category_ids = null, $filter = null, $min = 0, $max = false, $rating_count = null, $brand_ids = null, $search = null)
+    public static function discounted_products($zone_id, $limit = 25, $offset = 1, $type = 'all', $category_ids = null, $filter = null, $min = 0, $max = false, $rating_count = null, $brand_ids = null, $search = null, $longitude = 0, $latitude = 0)
     {
 
         $special_offer_default_status = Helpers::get_business_settings('special_offer_default_status') ?? 1;
@@ -706,7 +706,7 @@ class ProductLogic
                     });
                 });
             })
-            ->whereHas('store', function ($query) use ($zone_id, $filter) {
+            ->whereHas('store', function ($query) use ($zone_id, $filter, $longitude, $latitude) {
                 $query->whereIn('zone_id', json_decode($zone_id, true))
                     ->when($filter && in_array('free_delivery', $filter), function ($qurey) {
                         return $qurey->where('free_delivery', 1);
@@ -714,6 +714,20 @@ class ProductLogic
                     ->when($filter && in_array('coupon', $filter), function ($qurey) {
                         return $qurey->has('activeCoupons');
                     });
+
+                // Filter by radius if coordinates are provided
+                if ($longitude && $latitude) {
+                    $maxRadius = self::getMaxDeliveryRadius($zone_id, config("module.current_module_data")["id"] ?? null);
+                    $nearbyStoreIds = Store::whereIn('zone_id', json_decode($zone_id, true))
+                        ->withOpen($longitude, $latitude)
+                        ->get()
+                        ->filter(function ($store) use ($maxRadius) {
+                            return $store->distance <= ($maxRadius * 1000);
+                        })
+                        ->pluck('id');
+
+                    $query->whereIn('id', $nearbyStoreIds);
+                }
             })
             ->Discounted()->active()->visibleInCustomerApp()->type($type);
         $query = self::filterQurey($query, $filter, $min ?? 0, $max, $category_ids, $rating_count, $withCount, $search);
