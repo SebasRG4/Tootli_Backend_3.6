@@ -11,8 +11,8 @@ use App\Models\Store;
  */
 class MultiStoreRouteValidationLogic
 {
-    /** Rechazar si la distancia en ruta entre cualquier par es &gt;= este valor (metros). */
-    public const MAX_PAIR_DRIVING_METERS_EXCLUSIVE = 1000;
+    /** Rechazar si la distancia en ruta entre cualquier par es >= este valor (metros). */
+    public const MAX_PAIR_DRIVING_METERS_EXCLUSIVE = 5000;
 
     /**
      * IDs de tienda únicos en el carrito en línea del usuario (módulo actual).

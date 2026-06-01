@@ -830,7 +830,86 @@ class ConfigController extends Controller
         if ($validator->errors()->count() > 0) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        $response = Http::get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . $request->lat . ',' . $request->lng . '&key=' . $this->map_api_key);
+
+        $mapboxToken = config('services.mapbox.access_token');
+        if ($mapboxToken) {
+            try {
+                // Try Mapbox Reverse Geocoding first (OSM-based, extremely precise for gated communities in Mexico!)
+                $url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' . $request->lng . ',' . $request->lat . '.json';
+                $response = \Illuminate\Support\Facades\Http::timeout(5)->get($url, [
+                    'access_token' => $mapboxToken,
+                    'limit' => 1,
+                    'language' => app()->getLocale(),
+                ]);
+
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if (!empty($data['features'])) {
+                        $feature = $data['features'][0];
+                        $formattedAddress = $feature['place_name'] ?? '';
+                        $addressComponents = [];
+
+                        $streetNumber = '';
+                        $route = '';
+                        $sublocality = '';
+                        $locality = '';
+
+                        if (isset($feature['address'])) {
+                            $streetNumber = $feature['address'];
+                        }
+                        if (isset($feature['text'])) {
+                            $route = $feature['text'];
+                        }
+
+                        if (!empty($feature['context'])) {
+                            foreach ($feature['context'] as $ctx) {
+                                $id = $ctx['id'] ?? '';
+                                if (str_contains($id, 'neighborhood') || str_contains($id, 'sublocality')) {
+                                    $sublocality = $ctx['text'] ?? '';
+                                } else if (str_contains($id, 'place') || str_contains($id, 'locality')) {
+                                    $locality = $ctx['text'] ?? '';
+                                }
+                            }
+                        }
+
+                        $addressComponents[] = [
+                            'long_name' => $streetNumber,
+                            'short_name' => $streetNumber,
+                            'types' => ['street_number']
+                        ];
+                        $addressComponents[] = [
+                            'long_name' => $route,
+                            'short_name' => $route,
+                            'types' => ['route']
+                        ];
+                        $addressComponents[] = [
+                            'long_name' => $sublocality,
+                            'short_name' => $sublocality,
+                            'types' => ['sublocality_level_1']
+                        ];
+                        $addressComponents[] = [
+                            'long_name' => $locality,
+                            'short_name' => $locality,
+                            'types' => ['locality']
+                        ];
+
+                        return response()->json([
+                            'status' => 'OK',
+                            'results' => [
+                                [
+                                    'formatted_address' => $formattedAddress,
+                                    'address_components' => $addressComponents
+                                ]
+                            ]
+                        ], 200);
+                    }
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('mapbox_geocode_api_error', ['message' => $e->getMessage()]);
+            }
+        }
+
+        $response = \Illuminate\Support\Facades\Http::get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . $request->lat . ',' . $request->lng . '&key=' . $this->map_api_key);
 
         return $response->json();
     }
