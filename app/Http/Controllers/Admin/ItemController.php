@@ -787,6 +787,7 @@ class ItemController extends Controller
             } catch (\Exception $e) {
                 info($e->getMessage());
             }
+        }
         $item->weight = $request->weight ?? 0;
         $item->length = $request->length ?? 0;
         $item->width = $request->width ?? 0;
