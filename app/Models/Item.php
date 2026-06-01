@@ -91,6 +91,10 @@ class Item extends Model
         'weight' => 'float',
         'pos_only' => 'boolean',
         'pos_variable_price' => 'boolean',
+        'length' => 'float',
+        'width' => 'float',
+        'height' => 'float',
+        'requires_large_vehicle' => 'boolean',
     ];
 
     protected $appends = ['unit_type', 'image_full_url', 'images_full_url'];
@@ -374,6 +378,18 @@ class Item extends Model
     protected static function boot()
     {
         parent::boot();
+        static::saving(function ($item) {
+            $length = $item->length ?? 0;
+            $width = $item->width ?? 0;
+            $height = $item->height ?? 0;
+            
+            if ($length > 0 && $width > 0 && $height > 0) {
+                $volumetricWeight = ($length * $width * $height) / 5000;
+                if ($volumetricWeight > 10) {
+                    $item->requires_large_vehicle = 1;
+                }
+            }
+        });
         static::created(function ($item) {
             $item->slug = $item->generateSlug($item->name);
             $item->save();

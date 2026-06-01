@@ -404,6 +404,13 @@ class ItemController extends Controller
             $food->organic = $request->organic ?? 0;
             $food->delivery_time_type = $request->delivery_time_type ?? 'standard';
         }
+        if ($module_type == 'ecommerce') {
+            $food->weight = $request->weight ?? 0;
+            $food->length = $request->length ?? 0;
+            $food->width = $request->width ?? 0;
+            $food->height = $request->height ?? 0;
+            $food->requires_large_vehicle = $request->requires_large_vehicle ?? 0;
+        }
         $food->is_halal = $request->is_halal ?? 0;
         $food->save();
         $food->tags()->sync($tag_ids);
@@ -778,6 +785,13 @@ class ItemController extends Controller
         if ($module_type == 'grocery' || $module_type == 'ecommerce') {
             $p->organic = $request->organic ?? 0;
             $p->delivery_time_type = $request->delivery_time_type ?? 'standard';
+        }
+        if ($module_type == 'ecommerce') {
+            $p->weight = $request->weight ?? 0;
+            $p->length = $request->length ?? 0;
+            $p->width = $request->width ?? 0;
+            $p->height = $request->height ?? 0;
+            $p->requires_large_vehicle = $request->requires_large_vehicle ?? 0;
         }
         $p->is_halal = $request->is_halal ?? 0;
 

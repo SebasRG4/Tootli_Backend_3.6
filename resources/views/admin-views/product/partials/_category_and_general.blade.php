@@ -367,6 +367,43 @@
                             </div>
                         @endif
 
+                        @if (Config::get('module.current_module_type') != 'food')
+                            <div class="col-sm-6 col-lg-3 error-wrapper">
+                                <div class="form-group mb-0">
+                                    <label class="input-label" for="length">{{ translate('Largo (cm)') }}</label>
+                                    <input type="number" min="0" step="0.1" name="length" id="length" class="form-control" 
+                                        value="{{ old('length', $product->length ?? 0) }}" placeholder="{{ translate('0') }}">
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-3 error-wrapper">
+                                <div class="form-group mb-0">
+                                    <label class="input-label" for="width">{{ translate('Ancho (cm)') }}</label>
+                                    <input type="number" min="0" step="0.1" name="width" id="width" class="form-control" 
+                                        value="{{ old('width', $product->width ?? 0) }}" placeholder="{{ translate('0') }}">
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-3 error-wrapper">
+                                <div class="form-group mb-0">
+                                    <label class="input-label" for="height">{{ translate('Alto (cm)') }}</label>
+                                    <input type="number" min="0" step="0.1" name="height" id="height" class="form-control" 
+                                        value="{{ old('height', $product->height ?? 0) }}" placeholder="{{ translate('0') }}">
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-3 error-wrapper">
+                                <div class="form-group mb-0">
+                                    <label class="input-label" for="requires_large_vehicle">{{ translate('Envío Pesado') }}</label>
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" name="requires_large_vehicle" type="checkbox" value="1"
+                                            id="requires_large_vehicle"
+                                            {{ isset($product) && $product->requires_large_vehicle == 1 ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="requires_large_vehicle">
+                                            {{ translate('¿Requiere auto/camioneta?') }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
 
                     </div>
                 </div>

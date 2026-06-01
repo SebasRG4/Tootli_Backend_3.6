@@ -157,7 +157,7 @@ class Zone extends Model
 
     public function modules(): BelongsToMany
     {
-        return $this->belongsToMany(Module::class)->withPivot(['per_km_shipping_charge', 'minimum_shipping_charge', 'maximum_shipping_charge', 'maximum_cod_order_amount', 'delivery_charge_type', 'fixed_shipping_charge', 'max_delivery_radius', 'td_delivery_charge_type', 'td_fixed_shipping_charge', 'td_per_km_shipping_charge', 'td_minimum_shipping_charge', 'td_maximum_shipping_charge'])->using('App\Models\ModuleZone')->orderBy('modules.order', 'asc');
+        return $this->belongsToMany(Module::class)->withPivot(['per_km_shipping_charge', 'minimum_shipping_charge', 'maximum_shipping_charge', 'maximum_cod_order_amount', 'delivery_charge_type', 'fixed_shipping_charge', 'max_delivery_radius', 'td_delivery_charge_type', 'td_fixed_shipping_charge', 'td_per_km_shipping_charge', 'td_minimum_shipping_charge', 'td_maximum_shipping_charge', 'large_order_surcharge'])->using('App\Models\ModuleZone')->orderBy('modules.order', 'asc');
     }
 
     public static function query(): Builder

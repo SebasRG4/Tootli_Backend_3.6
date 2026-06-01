@@ -355,6 +355,10 @@ class ItemController extends Controller
         $item->images = $images;
         $item->is_halal = $request->is_halal ?? 0;
         $item->weight = $request->weight ?? 0;
+        $item->length = $request->length ?? 0;
+        $item->width = $request->width ?? 0;
+        $item->height = $request->height ?? 0;
+        $item->requires_large_vehicle = $request->requires_large_vehicle ?? 0;
         $item->priority = $request->priority ?? 0;
         $item->save();
         $item->tags()->sync($tag_ids);
@@ -783,8 +787,11 @@ class ItemController extends Controller
             } catch (\Exception $e) {
                 info($e->getMessage());
             }
-        }
         $item->weight = $request->weight ?? 0;
+        $item->length = $request->length ?? 0;
+        $item->width = $request->width ?? 0;
+        $item->height = $request->height ?? 0;
+        $item->requires_large_vehicle = $request->requires_large_vehicle ?? 0;
         $item->save();
         $item->tags()->sync($tag_ids);
         $item->nutritions()->sync($nutrition_ids);

@@ -352,6 +352,21 @@
                                                        value="{{ $pivot?->max_delivery_radius }}">
                                             </div>
                                         </div>
+                                        @if ($module->module_type == 'ecommerce')
+                                        <div class="col-md-6 col-lg-4 ">
+                                            <div class="form-group mb-0">
+                                                <label
+                                                    class="input-label text-capitalize fs-14 d-flex alig-items-center line--limit-1">
+                                                    {{ translate('Cargo extra pedidos grandes') }}
+                                                    ({{ \App\CentralLogics\Helpers::currency_symbol() }})
+                                                </label>
+                                                <input type="number" step=".01" min="0" class="form-control"
+                                                       name="module_data[{{ $module->id }}][large_order_surcharge]"
+                                                       placeholder="{{ translate('messages.Ex:120') }}"
+                                                       value="{{ $pivot?->large_order_surcharge ?? 0 }}">
+                                            </div>
+                                        </div>
+                                        @endif
                                         <div class="col-md-6 col-lg-4">
                                             <div class="form-group mb-0">
                                                 <label class="input-label text-capitalize fs-14 d-flex alig-items-center line--limit-1">
