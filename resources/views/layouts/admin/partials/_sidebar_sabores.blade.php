@@ -163,6 +163,7 @@
                     </li>
                     <!-- End Restaurants -->
 
+<<<<<<< Updated upstream
                     <!-- Dineout Categories -->
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/sabores/dineout-categories*') ? 'active' : '' }}">
@@ -202,6 +203,8 @@
                     </li>
                     <!-- End Dineout Categories -->
 
+=======
+>>>>>>> Stashed changes
                     <!-- Coupons -->
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/sabores/coupons*') ? 'active' : '' }}">
@@ -215,6 +218,7 @@
                     </li>
                     <!-- End Coupons -->
 
+<<<<<<< Updated upstream
                     <!-- Campaigns -->
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/sabores/campaigns*') ? 'active' : '' }}">
@@ -247,6 +251,8 @@
                     </li>
                     <!-- End Security Section -->
 
+=======
+>>>>>>> Stashed changes
                     <!-- Analytics Section -->
                     <li class="nav-item">
                         <small class="nav-subtitle"

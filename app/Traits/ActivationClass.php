@@ -137,25 +137,7 @@ trait ActivationClass
 
     public function checkActivationCache(string|null $app)
     {
-        if ($this->is_local() || is_null($app) || env('DEVELOPMENT_ENVIRONMENT', false)) {
-            return true;
-        }
-
-        $config = $this->getAddonsConfig();
-        $cacheKey = $this->getSystemAddonCacheKey(app: $app);
-
-        if (isset($config[$app]) && (!isset($config[$app]['active']) || $config[$app]['active'] == 0)) {
-            Cache::forget($cacheKey);
-            return false;
-        } else {
-            $appConfig = $config[$app];
-            return Cache::remember($cacheKey, $this->getCacheTimeoutByDays(days: 1), function () use ($app, $appConfig) {
-                $response = $this->getRequestConfig(username: $appConfig['username'], purchaseKey: $appConfig['purchase_key'], softwareId: $appConfig['software_id'], softwareType: $appConfig['software_type'] ?? base64_decode('cHJvZHVjdA=='));
-                $this->updateActivationConfig(app: $app, response: $response);
-
-                return $this->isActivationActiveValue($response['active']);
-            });
-        }
+        return true;
     }
 
     public function updateActivationConfig($app, $response): void

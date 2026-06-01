@@ -11,15 +11,19 @@ use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+<<<<<<< Updated upstream
 use Illuminate\Support\Facades\Schema;
 
 use Illuminate\Support\Str;
 use App\Models\VisitedStore;
 use App\Models\Review;
+=======
+>>>>>>> Stashed changes
 
 class SaboresCiudadController extends Controller
 {
     /**
+<<<<<<< Updated upstream
      * Get Global Coupons for Sabores (Food module)
      * Shows all coupons available in the food module, sorted by expiry.
      *
@@ -281,6 +285,8 @@ class SaboresCiudadController extends Controller
     }
 
     /**
+=======
+>>>>>>> Stashed changes
      * Get stores for map view (shows all food module restaurants)
      * Sabores de la Ciudad is a map view of all food restaurants
      *
@@ -306,11 +312,14 @@ class SaboresCiudadController extends Controller
         }
 
         $category_id = $request->query('category_id');
+<<<<<<< Updated upstream
         $dineout_category_ids = $request->query('dineout_category_ids');
         if ($dineout_category_ids && is_string($dineout_category_ids)) {
             $dineout_category_ids = explode(',', $dineout_category_ids);
         }
 
+=======
+>>>>>>> Stashed changes
         $min_rating = $request->query('min_rating');
         $min_price = $request->query('min_price');
         $max_price = $request->query('max_price');
@@ -320,13 +329,17 @@ class SaboresCiudadController extends Controller
             'zone_id_raw' => $zone_id_raw,
             'zone_id_parsed' => $zone_id,
             'category_id' => $category_id,
+<<<<<<< Updated upstream
             'dineout_category_ids' => $dineout_category_ids,
+=======
+>>>>>>> Stashed changes
             'min_rating' => $min_rating,
             'min_price' => $min_price,
             'max_price' => $max_price,
             'search' => $search,
         ]);
 
+<<<<<<< Updated upstream
         // Viewport Filtering Parameters
         $min_lat = $request->query('min_lat');
         $max_lat = $request->query('max_lat');
@@ -353,17 +366,28 @@ class SaboresCiudadController extends Controller
             }, function ($query) use ($zone_id) {
                 return $query->where('zone_id', $zone_id); // Fallback to zone if no viewport
             })
+=======
+        // Query all restaurants from the FOOD module
+        $stores = Store::with(['module'])
+            ->whereHas('module', function ($query) {
+                $query->where('module_type', 'food');
+            })
+            ->where('zone_id', $zone_id)
+>>>>>>> Stashed changes
             ->active()
             ->when($category_id, function ($query) use ($category_id) {
                 return $query->whereHas('items', function ($q) use ($category_id) {
                     $q->where('category_id', $category_id);
                 });
             })
+<<<<<<< Updated upstream
             ->when($dineout_category_ids, function ($query) use ($dineout_category_ids) {
                 return $query->whereHas('dineoutCategories', function ($q) use ($dineout_category_ids) {
                     $q->whereIn('dineout_categories.id', $dineout_category_ids);
                 });
             })
+=======
+>>>>>>> Stashed changes
             ->when($min_rating, function ($query) use ($min_rating) {
                 return $query->whereRaw('JSON_EXTRACT(rating, "$[0]") + JSON_EXTRACT(rating, "$[1]") + JSON_EXTRACT(rating, "$[2]") + JSON_EXTRACT(rating, "$[3]") + JSON_EXTRACT(rating, "$[4]") > 0')
                     ->whereRaw('(5 * JSON_EXTRACT(rating, "$[0]") + 4 * JSON_EXTRACT(rating, "$[1]") + 3 * JSON_EXTRACT(rating, "$[2]") + 2 * JSON_EXTRACT(rating, "$[3]") + JSON_EXTRACT(rating, "$[4]")) / (JSON_EXTRACT(rating, "$[0]") + JSON_EXTRACT(rating, "$[1]") + JSON_EXTRACT(rating, "$[2]") + JSON_EXTRACT(rating, "$[3]") + JSON_EXTRACT(rating, "$[4]")) >= ?', [$min_rating]);
@@ -379,13 +403,18 @@ class SaboresCiudadController extends Controller
             ->when($search, function ($query) use ($search) {
                 return $query->where('name', 'like', '%' . $search . '%');
             })
+<<<<<<< Updated upstream
             ->select('id', 'name', 'address', 'latitude', 'longitude', 'cover_photo', 'average_ticket', 'rating', 'delivery_time', 'google_address', 'google_place_id', 'serves_alcohol', 'cuisine_names', 'sabores_map_emoji', 'infrastructure_images', 'menu_images', 'accepts_reservations', 'featured', 'zone_id', 'module_id')
             ->with('activeCoupons')
             ->withCount(['wishlists', 'userListStores'])
+=======
+            ->select('id', 'name', 'latitude', 'longitude', 'cover_photo', 'average_ticket', 'rating', 'delivery_time')
+>>>>>>> Stashed changes
             ->get();
 
         \Log::info('📦 Sabores API - Query executed', [
             'stores_found' => $stores->count(),
+<<<<<<< Updated upstream
         ]);
 
         $storeIds = $stores->pluck('id')->toArray();
@@ -499,10 +528,33 @@ class SaboresCiudadController extends Controller
 
             // Deeplink for sharing
             $store->share_link = "https://tootli.com/share/store?id={$store->id}&module=sabores";
+=======
+            'store_ids' => $stores->pluck('id')->toArray(),
+        ]);
+
+        // Calculate average rating for each store
+        $stores = $stores->map(function ($store) {
+            $ratings = is_string($store->rating) ? json_decode($store->rating, true) : $store->rating;
+            $total_rating = 0;
+            $total_reviews = 0;
+
+            if ($ratings && is_array($ratings)) {
+                for ($i = 1; $i <= 5; $i++) {
+                    $count = $ratings[$i] ?? 0;
+                    $total_rating += $i * $count;
+                    $total_reviews += $count;
+                }
+            }
+
+            $store->avg_rating = $total_reviews > 0 ? round($total_rating / $total_reviews, 1) : 0;
+            $store->total_reviews = $total_reviews;
+            $store->cover_photo_full_url = $store->cover_photo_full_url;
+>>>>>>> Stashed changes
 
             return $store;
         });
 
+<<<<<<< Updated upstream
         // 3a. Calculate Rank within Categories (Post-processing)
         // Group stores by primary category
         $grouped_by_category = $stores->groupBy(function ($item) {
@@ -545,6 +597,8 @@ class SaboresCiudadController extends Controller
             $stores = $stores->sortByDesc('popularity_score')->values();
         }
 
+=======
+>>>>>>> Stashed changes
         \Log::info('✅ Sabores API - Returning response', [
             'stores_count' => $stores->count(),
         ]);
@@ -567,7 +621,10 @@ class SaboresCiudadController extends Controller
         $latitude = $request->header('latitude');
 
         $store = Store::with(['module', 'schedules', 'activeCoupons'])
+<<<<<<< Updated upstream
             ->withCount(['wishlists', 'userListStores'])
+=======
+>>>>>>> Stashed changes
             ->when(is_numeric($id), function ($query) use ($id) {
                 $query->where('id', $id);
             })
@@ -606,6 +663,7 @@ class SaboresCiudadController extends Controller
         $store['menu_items'] = $menu_items;
         $store['category_ids'] = array_map('intval', $category_ids->pluck('categories')->toArray());
         $store['infrastructure_images_full_url'] = $store->infrastructure_images_full_url ?? [];
+<<<<<<< Updated upstream
         $store['menu_images_full_url'] = $store->menu_images_full_url ?? [];
         // $store['cuisine_names'] = $store->cuisine_names ? array_map('trim', explode(',', $store->cuisine_names)) : [];
         $store['active_coupons_count'] = $store->activeCoupons ? $store->activeCoupons->count() : 0;
@@ -748,6 +806,9 @@ class SaboresCiudadController extends Controller
         $store->share_link = "https://tootli.com/share/store?id={$store->id}&module=sabores";
 
         unset($store->rating);
+=======
+        $store['active_coupons_count'] = $store->activeCoupons ? count($store->activeCoupons) : 0;
+>>>>>>> Stashed changes
 
         return response()->json($store, 200);
     }
@@ -766,8 +827,11 @@ class SaboresCiudadController extends Controller
             'reservation_time' => 'required|date_format:H:i',
             'party_size' => 'required|integer|min:1|max:50',
             'special_requests' => 'nullable|string|max:500',
+<<<<<<< Updated upstream
             'customer_name' => 'nullable|string|max:100',
             'customer_phone' => 'nullable|string|max:20',
+=======
+>>>>>>> Stashed changes
         ]);
 
         if ($validator->fails()) {
@@ -805,10 +869,14 @@ class SaboresCiudadController extends Controller
             'reservation_time' => $request->reservation_time,
             'party_size' => $request->party_size,
             'special_requests' => $request->special_requests,
+<<<<<<< Updated upstream
             'customer_name' => $request->customer_name,
             'customer_phone' => $request->customer_phone,
             'status' => 'pending',
             'confirmation_code' => strtoupper(Str::random(6)),
+=======
+            'status' => 'pending',
+>>>>>>> Stashed changes
         ]);
 
         $reservation->load('store');
@@ -939,6 +1007,7 @@ class SaboresCiudadController extends Controller
             'message' => translate('messages.reservation_cancelled_successfully')
         ], 200);
     }
+<<<<<<< Updated upstream
 
     /**
      * Add store to visited list
@@ -1137,4 +1206,6 @@ class SaboresCiudadController extends Controller
             'review' => $review
         ], 200);
     }
+=======
+>>>>>>> Stashed changes
 }

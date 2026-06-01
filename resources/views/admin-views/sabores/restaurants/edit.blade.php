@@ -32,6 +32,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
+<<<<<<< Updated upstream
                                     <label class="input-label" for="cuisine_names">{{ translate('Cuisine Names') }}</label>
                                     <div class="form-group">
                                         <div class="d-flex flex-wrap border rounded p-2" id="tags-container" style="background-color: #fff;">
@@ -135,6 +136,12 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="input-label" for="average_ticket">
                                         {{ translate('Average Ticket') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})
+=======
+                                <!-- Average Ticket -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="input-label" for="average_ticket">
+                                        {{ translate('Average Ticket') }} ($)
+>>>>>>> Stashed changes
                                         <span class="input-label-secondary" title="{{ translate('Average cost per person') }}">
                                             <i class="tio-info-outined"></i>
                                         </span>
@@ -145,6 +152,7 @@
                                            placeholder="{{ translate('e.g., 25.00') }}">
                                 </div>
 
+<<<<<<< Updated upstream
                                 <!-- Serves Alcohol -->
                                 <div class="col-md-6 mb-3">
                                     <label class="input-label d-block">{{ translate('Serves Alcohol') }}</label>
@@ -158,19 +166,26 @@
                                     </label>
                                 </div>
 
+=======
+>>>>>>> Stashed changes
                                 <!-- Accepts Reservations -->
                                 <div class="col-md-6 mb-3">
                                     <label class="input-label d-block">{{ translate('Accepts Reservations') }}</label>
                                     <label class="toggle-switch toggle-switch-sm" for="accepts_reservations">
                                         <input type="checkbox" class="toggle-switch-input" 
                                                id="accepts_reservations" name="accepts_reservations" 
+<<<<<<< Updated upstream
                                                {{ $restaurant->accepts_reservations ? 'checked' : '' }} value="1">
+=======
+                                               {{ $restaurant->accepts_reservations ? 'checked' : '' }}>
+>>>>>>> Stashed changes
                                         <span class="toggle-switch-label">
                                             <span class="toggle-switch-indicator"></span>
                                         </span>
                                     </label>
                                 </div>
 
+<<<<<<< Updated upstream
                                 <!-- Google Address -->
                                 <div class="col-md-12 mb-3">
                                     <label class="input-label" for="google_address">
@@ -274,6 +289,39 @@
                                             </div>
                                         @endforeach
                                     </div>
+=======
+                                <!-- Infrastructure Images -->
+                                <div class="col-12">
+                                    <label class="input-label">
+                                        {{ translate('Infrastructure Images') }}
+                                        <span class="input-label-secondary" title="{{ translate('Upload photos of restaurant interior, exterior, etc.') }}">
+                                            <i class="tio-info-outined"></i>
+                                        </span>
+                                    </label>
+                                    
+                                    <!-- Current Images -->
+                                    @if($restaurant->infrastructure_images && count($restaurant->infrastructure_images) > 0)
+                                        <div class="row mb-3">
+                                            @foreach($restaurant->infrastructure_images_full_url as $image)
+                                                <div class="col-md-3 mb-2">
+                                                    <img src="{{ $image }}" class="img-fluid rounded" alt="Infrastructure">
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @endif
+
+                                    <!-- Upload New Images -->
+                                    <div class="custom-file">
+                                        <input type="file" name="infrastructure_images[]" class="custom-file-input" 
+                                               id="infrastructure_images" accept="image/*" multiple>
+                                        <label class="custom-file-label" for="infrastructure_images">
+                                            {{ translate('Choose files') }}
+                                        </label>
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        {{ translate('You can select multiple images. Max 2MB per image.') }}
+                                    </small>
+>>>>>>> Stashed changes
                                 </div>
                             </div>
                         </div>
@@ -290,6 +338,7 @@
 @endsection
 
 @push('script_2')
+<<<<<<< Updated upstream
     <script src="{{ asset('assets/admin/js/spartan-multi-image-picker.js') }}"></script>
     <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
     <script>
@@ -410,4 +459,16 @@
             });
         });
     </script>
+=======
+<script>
+    // Update file input label with selected files count
+    document.getElementById('infrastructure_images').addEventListener('change', function(e) {
+        const fileCount = e.target.files.length;
+        const label = document.querySelector('label[for="infrastructure_images"]');
+        if (fileCount > 0) {
+            label.textContent = fileCount + ' {{ translate("file(s) selected") }}';
+        }
+    });
+</script>
+>>>>>>> Stashed changes
 @endpush

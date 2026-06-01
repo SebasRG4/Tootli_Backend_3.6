@@ -9181,6 +9181,7 @@ Smartly or Earn. ',
   'yes_delete_it' => 'Yes delete it',
   'you_wont_be_able_to_revert_this' => 'You wont be able to revert this',
   'select_items' => 'Select items',
+<<<<<<< Updated upstream
   'taxi' => 'Taxi',
   '500_warning_message' => '500 warning message',
   'No rides yet' => 'No rides yet',
@@ -9652,4 +9653,7 @@ Smartly or Earn. ',
   'order_strike_review_photo_link' => 'View photo',
   'order_strike_review_for_order' => 'Strike review / cancellation (this order)',
   'order_audit_timeline_title' => 'Order audit timeline',
+=======
+  '500_warning_message' => '500 warning message',
+>>>>>>> Stashed changes
 );

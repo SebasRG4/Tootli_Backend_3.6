@@ -7,7 +7,10 @@ use App\Models\Reservation;
 use App\Models\Store;
 use App\Models\Coupon;
 use Illuminate\Http\Request;
+<<<<<<< Updated upstream
 use Illuminate\Validation\Rule;
+=======
+>>>>>>> Stashed changes
 use Illuminate\Support\Facades\DB;
 
 class SaboresController extends Controller
@@ -184,6 +187,7 @@ class SaboresController extends Controller
      */
     public function updateRestaurant(Request $request, $id)
     {
+<<<<<<< Updated upstream
         $allowedMapEmojis = array_merge([''], config('sabores.map_marker_emojis', []));
 
         $request->validate([
@@ -196,12 +200,20 @@ class SaboresController extends Controller
             'infrastructure_images.*' => 'image|max:2048',
             'google_address' => 'nullable|string|max:255',
             'google_place_id' => 'nullable|string|max:255',
+=======
+        $request->validate([
+            'average_ticket' => 'nullable|numeric|min:0',
+            'accepts_reservations' => 'nullable|boolean',
+            'infrastructure_images' => 'nullable|array',
+            'infrastructure_images.*' => 'image|max:2048'
+>>>>>>> Stashed changes
         ]);
 
         $restaurant = Store::findOrFail($id);
 
         // Update restaurant-specific fields
         $restaurant->average_ticket = $request->average_ticket;
+<<<<<<< Updated upstream
         $restaurant->cuisine_names = $request->cuisine_names;
         $emoji = $request->input('sabores_map_emoji');
         $restaurant->sabores_map_emoji = ($emoji !== null && $emoji !== '') ? $emoji : null;
@@ -285,10 +297,28 @@ class SaboresController extends Controller
             }
         }
 
+=======
+        $restaurant->accepts_reservations = $request->has('accepts_reservations');
+
+        // Handle infrastructure images upload
+        if ($request->hasFile('infrastructure_images')) {
+            $images = [];
+            foreach ($request->file('infrastructure_images') as $image) {
+                $imageName = \Illuminate\Support\Str::random(10) . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('storage/store'), $imageName);
+                $images[] = ['img' => $imageName, 'storage' => 'public'];
+            }
+            $restaurant->infrastructure_images = array_merge($restaurant->infrastructure_images ?? [], $images);
+        }
+
+        $restaurant->save();
+
+>>>>>>> Stashed changes
         return redirect()->route('admin.sabores.restaurants')->with('success', translate('messages.restaurant_updated'));
     }
 
     /**
+<<<<<<< Updated upstream
      * Update infrastructure images order
      */
     public function updateInfrastructureImagesOrder(Request $request, $id)
@@ -326,6 +356,8 @@ class SaboresController extends Controller
     }
 
     /**
+=======
+>>>>>>> Stashed changes
      * List coupons for food stores
      */
     public function coupons(Request $request)
@@ -335,7 +367,11 @@ class SaboresController extends Controller
 
         $coupons = Coupon::with(['store'])
             ->whereHas('store.module', function ($query) {
+<<<<<<< Updated upstream
                 $query->whereIn('module_type', ['food', 'sabores']);
+=======
+                $query->where('module_type', 'food');
+>>>>>>> Stashed changes
             })
             ->when($search, function ($query) use ($search) {
                 return $query->where('title', 'like', '%' . $search . '%')
@@ -356,6 +392,7 @@ class SaboresController extends Controller
     }
 
     /**
+<<<<<<< Updated upstream
      * List basic campaigns for food module
      */
     public function campaigns(Request $request)
@@ -375,6 +412,8 @@ class SaboresController extends Controller
     }
 
     /**
+=======
+>>>>>>> Stashed changes
      * Analytics and usage statistics
      */
     public function analytics(Request $request)
