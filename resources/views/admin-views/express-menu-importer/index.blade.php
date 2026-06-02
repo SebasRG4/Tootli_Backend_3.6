@@ -127,9 +127,8 @@
                                             <th class="text-center" width="80">Imagen</th>
                                             <th width="200">Nombre del Platillo</th>
                                             <th width="240">Descripción / Ingredientes</th>
-                                            <th width="100">Precio ($)</th>
+                                            <th width="100">Precio Menú ($)</th>
                                             <th width="180">Categoría Asignada</th>
-                                            <th width="140">Horario Disp.</th>
                                             <th class="text-center" width="130">Variantes</th>
                                             <th class="text-center" width="120">Estado / Alerta</th>
                                         </tr>
@@ -638,7 +637,7 @@
                 }
 
                 // Armar selector de Categorías
-                let categoryOptions = `<option value="" disabled>Seleccione Categoría</option>`;
+                let categoryOptions = `<option value="" disabled ${!item.category_id ? 'selected' : ''}>Seleccione Categoría</option>`;
                 let matchedCategory = false;
 
                 categoriesList.forEach(cat => {
@@ -647,12 +646,11 @@
                     categoryOptions += `<option value="${cat.id}" ${selected}>${cat.name}</option>`;
                 });
 
-                // Si no hizo match con ninguna, sugerir "Crear Categoría" por defecto con el nombre sugerido por la IA
-                categoryOptions += `<option value="new" ${!matchedCategory ? 'selected' : ''}>+ Crear Nueva Categoría: "${item.suggested_category}"</option>`;
+                // Si no hizo match con ninguna, seleccionamos la primera por defecto si existe
+                if (!matchedCategory && categoriesList.length > 0) {
+                    categoryOptions = categoryOptions.replace(`value="${categoriesList[0].id}"`, `value="${categoriesList[0].id}" selected`);
+                }
 
-                // Slice times to HH:MM format for HTML input
-                let timeStarts = (item.available_time_starts || '00:00:00').slice(0, 5);
-                let timeEnds = (item.available_time_ends || '23:59:59').slice(0, 5);
                 let varsCount = (item.variations || []).length;
 
                 let row = `
@@ -691,22 +689,9 @@
                             </div>
                         </td>
                         <td>
-                            <select name="items[${index}][category_id]" class="form-control category-select express-input-field js-select2-custom" data-index="${index}">
+                            <select name="items[${index}][category_id]" class="form-control category-select express-input-field js-select2-custom" data-index="${index}" required>
                                 ${categoryOptions}
                             </select>
-                            <input type="text" name="items[${index}][new_category_name]" value="${item.suggested_category}" class="form-control mt-2 new-category-input express-input-field ${matchedCategory ? 'd-none' : ''}" placeholder="Nombre de categoría nueva" style="font-size: 13px;">
-                        </td>
-                        <td>
-                            <div class="d-flex flex-column gap-1">
-                                <div class="d-flex align-items-center gap-1">
-                                    <small class="text-muted" style="min-width: 40px; font-size: 10px;">Desde:</small>
-                                    <input type="time" name="items[${index}][available_time_starts]" value="${timeStarts}" class="form-control express-input-field p-1" style="font-size: 11px; height: auto;">
-                                </div>
-                                <div class="d-flex align-items-center gap-1">
-                                    <small class="text-muted" style="min-width: 40px; font-size: 10px;">Hasta:</small>
-                                    <input type="time" name="items[${index}][available_time_ends]" value="${timeEnds}" class="form-control express-input-field p-1" style="font-size: 11px; height: auto;">
-                                </div>
-                            </div>
                         </td>
                         <td class="text-center">
                             <button type="button" class="btn btn-outline-info btn-sm edit-variations-btn px-2 w-100" style="border-radius: 8px; font-size: 12px; font-weight: 600;" data-index="${index}">
@@ -720,17 +705,6 @@
                     </tr>
                 `;
                 tbody.append(row);
-            });
-
-            // Escuchar cambios en los selectores de categorías para mostrar/ocultar input de crear nueva
-            $('.category-select').on('change', function() {
-                let index = $(this).data('index');
-                let newCategoryInput = $(`input[name="items[${index}][new_category_name]"]`);
-                if ($(this).val() === 'new') {
-                    newCategoryInput.removeClass('d-none');
-                } else {
-                    newCategoryInput.addClass('d-none');
-                }
             });
 
             $('#preview-section').removeClass('d-none');

@@ -553,6 +553,13 @@
                                             <span class="text-truncate text-capitalize">Carga Rápida (Texto)</span>
                                         </a>
                                     </li>
+                                    <li class="nav-item {{ Request::is('admin/item/express-import') ? 'active' : '' }}">
+                                        <a class="nav-link " href="{{ route('admin.item.express-import') }}"
+                                            title="Carga Menú con Imagen">
+                                            <span class="tio-circle nav-indicator-icon"></span>
+                                            <span class="text-truncate text-capitalize">Carga Menú con Imagen</span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         @endif

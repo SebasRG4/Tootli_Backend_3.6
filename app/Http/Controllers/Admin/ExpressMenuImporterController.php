@@ -187,114 +187,99 @@ class ExpressMenuImporterController extends Controller
             $globalImageName = Helpers::upload('product/', 'png', $request->file('global_image'));
         }
 
-        foreach ($request->items as $index => $itemData) {
-            // Saltarse el platillo si no se marcó para importar
-            if (!isset($itemData['import']) || $itemData['import'] != 1) {
-                continue;
-            }
+        // Obtener el horario por defecto del primer platillo existente del restaurante o usar horario general
+        $referenceItem = Item::where('store_id', $store->id)->first();
+        $defaultTimeStarts = $referenceItem ? $referenceItem->available_time_starts : '00:00:00';
+        $defaultTimeEnds = $referenceItem ? $referenceItem->available_time_ends : '23:59:59';
 
-            $name = trim($itemData['name']);
-            $price = floatval($itemData['price']);
-            $description = trim($itemData['description'] ?? $name);
-            $categoryId = $itemData['category_id'] ?? null;
-            $newCategoryName = trim($itemData['new_category_name'] ?? '');
-
-            // 1. Resolver la categoría
-            if ($categoryId === 'new' && !empty($newCategoryName)) {
-                // Crear nueva categoría principal para este módulo si no existe
-                $category = Category::where('name', $newCategoryName)
-                    ->where('module_id', $moduleId)
-                    ->where('position', 0)
-                    ->first();
-
-                if (!$category) {
-                    $category = new Category();
-                    $category->name = $newCategoryName;
-                    $category->module_id = $moduleId;
-                    $category->position = 0;
-                    $category->status = 1;
-                    $category->slug = Str::slug($newCategoryName);
-                    $category->save();
-                    $categoriesCreated++;
+        try {
+            foreach ($request->items as $index => $itemData) {
+                // Saltarse el platillo si no se marcó para importar
+                if (!isset($itemData['import']) || $itemData['import'] != 1) {
+                    continue;
                 }
-                $categoryId = $category->id;
-            }
 
-            // Si por alguna razón no hay categoría elegida, asignar a una por defecto o la primera
-            if (empty($categoryId) || $categoryId === 'new') {
-                $category = Category::where('module_id', $moduleId)->where('position', 0)->first();
-                if (!$category) {
-                    // Crear categoría general por defecto
-                    $category = new Category();
-                    $category->name = 'General';
-                    $category->module_id = $moduleId;
-                    $category->position = 0;
-                    $category->status = 1;
-                    $category->slug = 'general';
-                    $category->save();
+                $name = trim($itemData['name']);
+                
+                // Precios
+                $menu_price = floatval($itemData['price']);
+                $app_price = $menu_price * 1.20; // 20% más para app
+
+                $description = trim($itemData['description'] ?? $name);
+                $categoryId = $itemData['category_id'] ?? null;
+
+                // 1. Resolver la categoría sin crear nuevas
+                if (empty($categoryId) || $categoryId === 'new') {
+                    $category = Category::where('module_id', $moduleId)->where('position', 0)->first();
+                    if (!$category) {
+                        throw new \Exception('No hay categorías disponibles en este módulo para asignar el platillo.');
+                    }
+                    $categoryId = $category->id;
                 }
-                $categoryId = $category->id;
+
+                // 2. Insertar el platillo
+                $item = new Item();
+                $item->name = $name;
+                $item->price = $app_price;
+                $item->menu_price = $menu_price;
+                $item->store_id = $store->id;
+                $item->module_id = $moduleId;
+                $item->category_id = $categoryId;
+                $item->category_ids = json_encode([['id' => $categoryId, 'position' => 1]]);
+                $item->status = 1;
+                $item->is_approved = 1;
+                $item->description = $description;
+                $item->slug = Str::slug($name) . '-' . rand(100, 999);
+                
+                // Resolver Horarios de disponibilidad (utilizando el del store/reference item)
+                $item->available_time_starts = $defaultTimeStarts;
+                $item->available_time_ends = $defaultTimeEnds;
+
+                // Resolver Variaciones
+                $rawVariations = isset($itemData['variations']) ? json_decode($itemData['variations'], true) : [];
+                if (!is_array($rawVariations)) $rawVariations = [];
+
+                // Resolver imagen (individual o global)
+                $itemImage = 'def.png';
+                if ($request->hasFile("items.{$index}.image")) {
+                    $file = $request->file("items.{$index}.image");
+                    $itemImage = Helpers::upload('product/', 'png', $file);
+                } elseif ($globalImageName) {
+                    $itemImage = $globalImageName;
+                }
+
+                // Valores técnicos por defecto
+                $item->image = $itemImage;
+                $item->food_variations = json_encode($rawVariations);
+                $item->variations = json_encode([]);
+                $item->add_ons = json_encode([]);
+                $item->attributes = json_encode([]);
+                $item->choice_options = json_encode([]);
+                $item->images = [];
+                $item->unit_id = 1;
+                $item->tax = 0;
+                $item->discount = 0;
+                $item->discount_type = 'amount';
+
+                $item->save();
+
+                // 3. Agregar traducciones para compatibilidad del sistema
+                Helpers::add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'Item', data_id: $item->id, data_value: $name);
+
+                $itemsImported++;
             }
 
-            // 2. Insertar el platillo
-            $item = new Item();
-            $item->name = $name;
-            $item->price = $price;
-            $item->store_id = $store->id;
-            $item->module_id = $moduleId;
-            $item->category_id = $categoryId;
-            $item->category_ids = json_encode([['id' => $categoryId, 'position' => 1]]);
-            $item->status = 1;
-            $item->is_approved = 1;
-            $item->description = $description;
-            $item->slug = Str::slug($name) . '-' . rand(100, 999);
-            
-            // Resolver Horarios de disponibilidad recibidos
-            $availableTimeStarts = $itemData['available_time_starts'] ?? '00:00:00';
-            $availableTimeEnds = $itemData['available_time_ends'] ?? '23:59:59';
-            if (strlen($availableTimeStarts) === 5) $availableTimeStarts .= ':00';
-            if (strlen($availableTimeEnds) === 5) $availableTimeEnds .= ':00';
+            Toastr::success("Se importaron con éxito {$itemsImported} platillos.");
+            return response()->json([
+                'success' => true,
+                'message' => "Se importaron con éxito {$itemsImported} platillos."
+            ]);
 
-            // Resolver Variaciones
-            $rawVariations = isset($itemData['variations']) ? json_decode($itemData['variations'], true) : [];
-            if (!is_array($rawVariations)) $rawVariations = [];
-
-            // Resolver imagen (individual o global)
-            $itemImage = 'def.png';
-            if ($request->hasFile("items.{$index}.image")) {
-                $file = $request->file("items.{$index}.image");
-                $itemImage = Helpers::upload('product/', 'png', $file);
-            } elseif ($globalImageName) {
-                $itemImage = $globalImageName;
-            }
-
-            // Valores técnicos por defecto
-            $item->available_time_starts = $availableTimeStarts;
-            $item->available_time_ends = $availableTimeEnds;
-            $item->image = $itemImage;
-            $item->food_variations = json_encode($rawVariations);
-            $item->variations = json_encode([]);
-            $item->add_ons = json_encode([]);
-            $item->attributes = json_encode([]);
-            $item->choice_options = json_encode([]);
-            $item->images = [];
-            $item->unit_id = 1;
-            $item->tax = 0;
-            $item->discount = 0;
-            $item->discount_type = 'amount';
-
-            $item->save();
-
-            // 3. Agregar traducciones para compatibilidad del sistema
-            Helpers::add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'Item', data_id: $item->id, data_value: $name);
-
-            $itemsImported++;
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Error importando platillos desde IA: " . $e->getMessage());
+            return response()->json([
+                'error' => 'Error al añadir los productos a la base de datos: ' . $e->getMessage()
+            ], 500);
         }
-
-        Toastr::success("Se importaron con éxito {$itemsImported} platillos y se crearon {$categoriesCreated} nuevas categorías.");
-        return response()->json([
-            'success' => true,
-            'message' => "Se importaron con éxito {$itemsImported} platillos."
-        ]);
     }
 }
