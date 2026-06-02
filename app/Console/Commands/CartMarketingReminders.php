@@ -58,7 +58,7 @@ class CartMarketingReminders extends Command
                 continue;
             }
 
-            $diffInMinutes = $now->diffInMinutes($lastUpdated);
+            $diffInMinutes = abs((int) $now->diffInMinutes($lastUpdated));
 
             // Logica Aviso 1 (3 a 10 minutos de inactividad)
             if ($diffInMinutes >= 3 && $diffInMinutes <= 10) {
