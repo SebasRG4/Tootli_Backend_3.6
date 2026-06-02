@@ -18,11 +18,8 @@ use Illuminate\Support\Str;
  * @property string $status
  * @property string|null $special_requests
  * @property string $confirmation_code
-<<<<<<< Updated upstream
  * @property string|null $customer_name
  * @property string|null $customer_phone
-=======
->>>>>>> Stashed changes
  */
 class Reservation extends Model
 {
@@ -40,11 +37,8 @@ class Reservation extends Model
         'status',
         'special_requests',
         'confirmation_code',
-<<<<<<< Updated upstream
         'customer_name',
         'customer_phone',
-=======
->>>>>>> Stashed changes
     ];
 
     /**

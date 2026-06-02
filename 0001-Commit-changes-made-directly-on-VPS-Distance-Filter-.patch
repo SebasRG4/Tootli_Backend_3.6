@@ -1,0 +1,206 @@
+From 7751d40ece58fd57f69c0b5dd99f1bbe3a9b63f7 Mon Sep 17 00:00:00 2001
+From: Tootli Admin <admin@tootli.mx>
+Date: Tue, 2 Jun 2026 04:42:20 +0000
+Subject: [PATCH] Commit changes made directly on VPS (Distance Filter, config,
+ UI)
+
+---
+ ,                                              |  0
+ ... es un mensaje de prueba al Administrador., |  0
+ Prueba Backend Directa,                        |  0
+ .../V1/DynamicSectionEcommerceController.php   |  0
+ config/dm_assignment.php                       |  0
+ config/dm_delivery_cancel.php                  |  0
+ config/dm_strikes.php                          |  0
+ config/sabores.php                             |  0
+ config/scout.php                               |  0
+ config/system-addons.php                       | 18 +++++++++---------
+ config/trustedproxy.php                        |  0
+ docker-compose.yml                             | 10 ++++++++++
+ order_request                                  |  0
+ resources/lang/es/messages.php                 |  4 +++-
+ .../admin/partials/_sidebar_sabores.blade.php  |  0
+ .../admin/partials/_sidebar_taxi.blade.php     |  0
+ test_db.php                                    | 14 ++++++++++++++
+ 17 files changed, 36 insertions(+), 10 deletions(-)
+ create mode 100644 ,
+ create mode 100644 Este es un mensaje de prueba al Administrador.,
+ create mode 100644 Prueba Backend Directa,
+ mode change 100644 => 100755 app/Http/Controllers/Api/V1/DynamicSectionEcommerceController.php
+ mode change 100644 => 100755 config/dm_assignment.php
+ mode change 100644 => 100755 config/dm_delivery_cancel.php
+ mode change 100644 => 100755 config/dm_strikes.php
+ mode change 100644 => 100755 config/sabores.php
+ mode change 100644 => 100755 config/scout.php
+ mode change 100644 => 100755 config/trustedproxy.php
+ create mode 100644 order_request
+ mode change 100644 => 100755 resources/views/layouts/admin/partials/_sidebar_sabores.blade.php
+ mode change 100644 => 100755 resources/views/layouts/admin/partials/_sidebar_taxi.blade.php
+ create mode 100644 test_db.php
+
+diff --git a/, b/,
+new file mode 100644
+index 0000000..e69de29
+diff --git a/Este es un mensaje de prueba al Administrador., b/Este es un mensaje de prueba al Administrador.,
+new file mode 100644
+index 0000000..e69de29
+diff --git a/Prueba Backend Directa, b/Prueba Backend Directa,
+new file mode 100644
+index 0000000..e69de29
+diff --git a/app/Http/Controllers/Api/V1/DynamicSectionEcommerceController.php b/app/Http/Controllers/Api/V1/DynamicSectionEcommerceController.php
+old mode 100644
+new mode 100755
+diff --git a/config/dm_assignment.php b/config/dm_assignment.php
+old mode 100644
+new mode 100755
+diff --git a/config/dm_delivery_cancel.php b/config/dm_delivery_cancel.php
+old mode 100644
+new mode 100755
+diff --git a/config/dm_strikes.php b/config/dm_strikes.php
+old mode 100644
+new mode 100755
+diff --git a/config/sabores.php b/config/sabores.php
+old mode 100644
+new mode 100755
+diff --git a/config/scout.php b/config/scout.php
+old mode 100644
+new mode 100755
+diff --git a/config/system-addons.php b/config/system-addons.php
+index b975a9d..d416889 100755
+--- a/config/system-addons.php
++++ b/config/system-addons.php
+@@ -1,14 +1,14 @@
+ <?php return array (
+-  'admin_panel' =>
++  'admin_panel' => 
+   array (
+-    'active' => '1',
++    'active' => '0',
+     'username' => '1',
+     'purchase_key' => '1',
+     'software_id' => 'MzY3NzIxMTI=',
+-    'domain' => '',
++    'domain' => 'tootli.mx',
+     'software_type' => 'product',
+   ),
+-  'vendor_panel' =>
++  'vendor_panel' => 
+   array (
+     'active' => '0',
+     'username' => '',
+@@ -17,7 +17,7 @@
+     'domain' => '',
+     'software_type' => 'addon',
+   ),
+-  'user_app' =>
++  'user_app' => 
+   array (
+     'active' => '0',
+     'username' => '',
+@@ -26,7 +26,7 @@
+     'domain' => '',
+     'software_type' => 'addon',
+   ),
+-  'vendor_app' =>
++  'vendor_app' => 
+   array (
+     'active' => '1',
+     'username' => '',
+@@ -35,7 +35,7 @@
+     'domain' => '',
+     'software_type' => 'addon',
+   ),
+-  'deliveryman_app' =>
++  'deliveryman_app' => 
+   array (
+     'active' => '1',
+     'username' => '',
+@@ -44,7 +44,7 @@
+     'domain' => '',
+     'software_type' => 'addon',
+   ),
+-  'react_web' =>
++  'react_web' => 
+   array (
+     'active' => '1',
+     'username' => '',
+@@ -53,4 +53,4 @@
+     'domain' => '',
+     'software_type' => 'addon',
+   ),
+-);
++);
+\ No newline at end of file
+diff --git a/config/trustedproxy.php b/config/trustedproxy.php
+old mode 100644
+new mode 100755
+diff --git a/docker-compose.yml b/docker-compose.yml
+index d1c6acf..fcd7371 100644
+--- a/docker-compose.yml
++++ b/docker-compose.yml
+@@ -111,5 +111,15 @@ services:
+       - '6001:6001'
+       - '9601:9601'
+ 
++  osrm:
++    image: osrm/osrm-backend
++    container_name: tootli-osrm
++    restart: always
++    ports:
++      - "5000:5000"
++    volumes:
++      - /opt/osrm/data:/data
++    command: osrm-routed --algorithm mld /data/estado-de-mexico.osrm
++
+ volumes:
+   db_data:
+diff --git a/order_request b/order_request
+new file mode 100644
+index 0000000..e69de29
+diff --git a/resources/lang/es/messages.php b/resources/lang/es/messages.php
+index 05d6796..325866d 100755
+--- a/resources/lang/es/messages.php
++++ b/resources/lang/es/messages.php
+@@ -1,4 +1,4 @@
+-<?php return array(
++<?php return array (
+   'no_coverage' => 'Sin cobertura',
+   'No Coverage' => 'Sin cobertura',
+   'attributes' => 'Attributes',
+@@ -9593,4 +9593,6 @@ Smartly or Earn. ',
+   'debes' => 'Debes',
+   'a_tootli_se_te_descontara_de_tu_proximo_pedido' => 'a Tootli (se te descontará de tus próximos pedidos con tarjeta)',
+   'historial_recolecciones_efectivo' => 'Historial de Recolecciones en Efectivo',
++  'dashboard' => 'Dashboard',
++  'mins' => 'Mins',
+ );
+\ No newline at end of file
+diff --git a/resources/views/layouts/admin/partials/_sidebar_sabores.blade.php b/resources/views/layouts/admin/partials/_sidebar_sabores.blade.php
+old mode 100644
+new mode 100755
+diff --git a/resources/views/layouts/admin/partials/_sidebar_taxi.blade.php b/resources/views/layouts/admin/partials/_sidebar_taxi.blade.php
+old mode 100644
+new mode 100755
+diff --git a/test_db.php b/test_db.php
+new file mode 100644
+index 0000000..ce2238e
+--- /dev/null
++++ b/test_db.php
+@@ -0,0 +1,14 @@
++<?php
++require __DIR__ . '/vendor/autoload.php';
++$app = require_once __DIR__ . '/bootstrap/app.php';
++$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
++$kernel->bootstrap();
++
++echo "=== BUSINESS SETTINGS ===\n";
++foreach(Illuminate\Support\Facades\DB::table('business_settings')->whereIn('key', ['phone_verification_status', 'otp_login_status', 'firebase_otp_verification'])->get() as $c) {
++    echo $c->key . ": " . $c->value . "\n";
++}
++echo "\n=== SMS SETTINGS (addon_settings) ===\n";
++foreach(Illuminate\Support\Facades\DB::table('addon_settings')->where('settings_type', 'sms_config')->where('is_active', 1)->get() as $s) {
++    echo $s->key_name . " -> IS ACTIVE\n";
++}
+-- 
+2.43.0
+
