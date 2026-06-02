@@ -18,7 +18,7 @@ class ProductLogic
     /**
      * Get the maximum delivery radius for a zone.
      */
-    private static function getMaxDeliveryRadius($zone_id, $module_id = null): float
+    public static function getMaxDeliveryRadius($zone_id, $module_id = null): float
     {
         if (!$zone_id) {
             return 5; // Default 5km if no zone
