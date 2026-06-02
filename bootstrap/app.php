@@ -45,6 +45,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
 
+    ->withSchedule(function (\Illuminate\Console\Scheduling\Schedule $schedule) {
+        $schedule->command('spei:cancel-expired')->everyMinute();
+        $schedule->command('dm:recalculate-tiers')->dailyAt('03:15');
+        $schedule->command('delivery:send-deposit-reminders')->everyThirtyMinutes();
+        $schedule->command('delivery:nightly-debt-reminders')->dailyAt('22:00');
+        $schedule->command('order:incentivize')->everyMinute();
+        $schedule->command('app:cart-marketing-reminders')->everyMinute();
+    })
+
     ->withMiddleware(function (Middleware $middleware) {
 
         // Debe ir antes que el resto: sin esto, X-Forwarded-Proto/Host no aplican (OAuth, URLs, sesiones).
