@@ -33,9 +33,9 @@ class CartMarketingReminders extends Command
         $now = now();
         
         // Buscar a todos los usuarios con carritos (is_guest = 0) 
-        // agrupando para obtener su última fecha de actualización y un nombre de artículo de referencia
+        // agrupando para obtener su última fecha de actualización, cantidad de items y un nombre de artículo de referencia
         $carts = Cart::where('is_guest', 0)
-            ->select('user_id', DB::raw('MAX(updated_at) as last_updated'), DB::raw('MAX(item_id) as item_id'))
+            ->select('user_id', DB::raw('MAX(updated_at) as last_updated'), DB::raw('MAX(item_id) as item_id'), DB::raw('COUNT(id) as total_items'))
             ->groupBy('user_id')
             ->get();
 
@@ -45,6 +45,9 @@ class CartMarketingReminders extends Command
             $item = \App\Models\Item::find($cart->item_id);
             if ($item) {
                 $item_name = $item->name;
+                if ($cart->total_items > 1) {
+                    $item_name .= ' y otros productos';
+                }
             }
 
             $user = User::find($cart->user_id);
