@@ -64,7 +64,7 @@
                 <div class="col-lg-6">
                     <div class="card h-100">
                         <div class="card-body d-flex flex-wrap align-items-center">
-                            <div class="w-100 d-flex gap-3 flex-wrap flex-lg-nowrap">
+                            <div class="w-100 d-flex gap-3 flex-wrap">
                                 <div class="flex-grow-1 mx-auto overflow-x-auto scrollbar-primary">
                                     <label class="text-dark d-block">
                                         {{ translate('messages.item_image') }}
@@ -115,7 +115,7 @@
                                 <div class="flex-grow-1 mx-auto pb-2 flex-shrink-0" id="video_input_div">
                                     <label class="text-dark d-block">
                                         {{ translate('Video (Opcional)') }}
-                                        <small class="text-danger">* ( MP4, Max 5MB )</small>
+                                        <small class="text-danger">* ( MP4, Max 10MB )</small>
                                     </label>
                                     <label class="d-inline-block m-0 position-relative error-wrapper">
                                         <div class="border d-flex align-items-center justify-content-center position-relative" style="width: 176px; height: 176px; background-color: #f8f9fa; border-radius: 8px;" id="video_preview_div">
@@ -127,7 +127,7 @@
                                         <div class="icon-file-group">
                                             <div class="icon-file"><input type="file" name="video" id="customVideo"
                                                     class="custom-file-input"
-                                                    accept=".mp4">
+                                                    accept=".mp4" data-max-size="10">
                                                 <i class="tio-edit"></i>
                                             </div>
                                         </div>
@@ -679,8 +679,8 @@
         $('#customVideo').on('change', function() {
             var file = this.files[0];
             if (file) {
-                if (file.size > 5242880) { // 5MB limit
-                    toastr.error('Video size should not exceed 5MB', {
+                if (file.size > 10485760) { // 10MB limit
+                    toastr.error('Video size should not exceed 10MB', {
                         CloseButton: true,
                         ProgressBar: true
                     });

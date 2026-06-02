@@ -58,7 +58,7 @@ class ItemController extends Controller
         $validator = Validator::make($request->all(), [
             'name.0' => 'required',
             'name.*' => 'max:191',
-            'video' => 'nullable|mimes:mp4|max:5120',
+            'video' => 'nullable|mimes:mp4|max:10240',
             'category_id' => 'required',
             'image' => [
                 Rule::requiredIf(function () use ($request) {
@@ -465,7 +465,7 @@ class ItemController extends Controller
             'name' => 'array',
             'name.0' => 'required',
             'name.*' => 'max:191',
-            'video' => 'nullable|mimes:mp4|max:5120',
+            'video' => 'nullable|mimes:mp4|max:10240',
             'category_id' => 'required',
             'price' => 'required|numeric|between:.01,999999999999.99',
             'store_id' => 'required',
