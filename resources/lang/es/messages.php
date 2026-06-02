@@ -1,4 +1,4 @@
-<?php return array(
+<?php return array (
   'no_coverage' => 'Sin cobertura',
   'No Coverage' => 'Sin cobertura',
   'attributes' => 'Attributes',
@@ -9593,4 +9593,6 @@ Smartly or Earn. ',
   'debes' => 'Debes',
   'a_tootli_se_te_descontara_de_tu_proximo_pedido' => 'a Tootli (se te descontará de tus próximos pedidos con tarjeta)',
   'historial_recolecciones_efectivo' => 'Historial de Recolecciones en Efectivo',
+  'dashboard' => 'Dashboard',
+  'mins' => 'Mins',
 );

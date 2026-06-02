@@ -111,5 +111,15 @@ services:
       - '6001:6001'
       - '9601:9601'
 
+  osrm:
+    image: osrm/osrm-backend
+    container_name: tootli-osrm
+    restart: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - /opt/osrm/data:/data
+    command: osrm-routed --algorithm mld /data/estado-de-mexico.osrm
+
 volumes:
   db_data:
