@@ -24,6 +24,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('delivery:send-deposit-reminders')->everyThirtyMinutes();
         $schedule->command('delivery:nightly-debt-reminders')->dailyAt('22:00');
         $schedule->command('order:incentivize')->everyMinute();
+        $schedule->command('app:cart-marketing-reminders')->everyMinute();
     }
 
     /**
