@@ -111,6 +111,28 @@
                                         </div>
                                     </label>
                                 </div>
+                                
+                                <div class="flex-grow-1 mx-auto pb-2 flex-shrink-0" id="video_input_div">
+                                    <label class="text-dark d-block">
+                                        {{ translate('Video (Opcional)') }}
+                                        <small class="text-danger">* ( MP4, Max 5MB )</small>
+                                    </label>
+                                    <label class="d-inline-block m-0 position-relative error-wrapper">
+                                        <div class="border d-flex align-items-center justify-content-center position-relative" style="width: 176px; height: 176px; background-color: #f8f9fa; border-radius: 8px;" id="video_preview_div">
+                                            <i class="tio-video-camera" style="font-size: 40px; color: #ccc;"></i>
+                                            <span id="video_name_preview" style="position: absolute; bottom: 10px; font-size: 10px; width: 100%; text-align: center; color: #333;">
+                                                {{ $product->video ?? '' }}
+                                            </span>
+                                        </div>
+                                        <div class="icon-file-group">
+                                            <div class="icon-file"><input type="file" name="video" id="customVideo"
+                                                    class="custom-file-input"
+                                                    accept=".mp4">
+                                                <i class="tio-edit"></i>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -654,6 +676,24 @@
             $('#image-viewer-section').show(1000)
         });
 
+        $('#customVideo').on('change', function() {
+            var file = this.files[0];
+            if (file) {
+                if (file.size > 5242880) { // 5MB limit
+                    toastr.error('Video size should not exceed 5MB', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                    $('#customVideo').val(null).trigger('change');
+                    $('#video_name_preview').text('');
+                } else {
+                    $('#video_name_preview').text(file.name);
+                }
+            } else {
+                $('#video_name_preview').text('{{ $product->video ?? '' }}');
+            }
+        });
+
         $(document).ready(function() {
             @if (count(json_decode($product['add_ons'], true)) > 0)
                 getStoreData(
@@ -732,9 +772,15 @@
             if (module_type == 'food') {
                 $('#food_variation_section').show();
                 $('#attribute_section').hide();
+                $('#video_input_div').hide();
             } else {
                 $('#food_variation_section').hide();
                 $('#attribute_section').show();
+                if(module_type == 'grocery' || module_type == 'ecommerce') {
+                    $('#video_input_div').show();
+                } else {
+                    $('#video_input_div').hide();
+                }
             }
             if (module_data.organic) {
                 $('#organic').show();
