@@ -78,7 +78,7 @@ class CategoryLogic
                     })
                         ->pluck('id');
 
-                    $query->whereIn('store_id', $nearbyStoreIds);
+                    $query->whereIn('id', $nearbyStoreIds);
                 }
             })
             ->whereHas('category', function ($q) use ($category_id) {
@@ -141,7 +141,7 @@ class CategoryLogic
         ];
     }
 
-    public static function category_products($category_ids, $zone_id, int $limit, int $offset, $type, $filter = null, $min = false, $max = false, $rating_count = null, $brand_ids = null)
+    public static function category_products($category_ids, $zone_id, int $limit, int $offset, $type, $filter = null, $min = false, $max = false, $rating_count = null, $brand_ids = null, $longitude = 0, $latitude = 0)
     {
 
         $category_sub_category_item_default_status = BusinessSetting::where('key', 'category_sub_category_item_default_status')->first()?->value ?? 1;
@@ -162,8 +162,8 @@ class CategoryLogic
                     $query->whereIn('zones.id', json_decode($zone_id, true));
                 });
             })
-            ->whereHas('store', function ($query) use ($zone_id, $filter, $all_zone_service) {
-                return $query->when(config('module.current_module_data'), function ($query) {
+            ->whereHas('store', function ($query) use ($zone_id, $filter, $all_zone_service, $longitude, $latitude) {
+                $query->when(config('module.current_module_data'), function ($query) {
                     return $query->where('module_id', config('module.current_module_data')['id'])->whereHas('zone.modules', function ($query) {
                         return $query->where('modules.id', config('module.current_module_data')['id']);
                     });
@@ -179,6 +179,19 @@ class CategoryLogic
                         return $qurey->has('activeCoupons');
                     });
 
+                // Filter by radius if coordinates are provided AND not all_zone_service
+                if ($longitude && $latitude && !$all_zone_service) {
+                    $maxRadius = self::getMaxDeliveryRadius($zone_id);
+                    $nearbyStoreIds = Store::whereIn('zone_id', json_decode($zone_id, true))
+                        ->withOpen($longitude, $latitude)
+                        ->get()
+                        ->filter(function ($store) use ($maxRadius) {
+                            return $store->distance <= ($maxRadius * 1000);
+                        })
+                        ->pluck('id');
+
+                    $query->whereIn('id', $nearbyStoreIds);
+                }
             })
             ->when(isset($category_ids) && (count($category_ids) > 0), function ($query) use ($category_ids) {
                 return $query->whereHas('category', function ($q) use ($category_ids) {

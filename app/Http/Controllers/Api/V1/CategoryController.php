@@ -172,11 +172,21 @@ class CategoryController extends Controller
         }
 
         $zone_id = $request->header('zoneId');
+        $longitude = $request->header('longitude');
+        $latitude = $request->header('latitude');
 
         $type = $request->query('type', 'all');
         $category_ids = $request['category_ids'] ? json_decode($request['category_ids']) : '';
 
-        $data = CategoryLogic::category_products($category_ids, $zone_id, $request['limit'], $request['offset'], $type);
+        $data = CategoryLogic::category_products(
+            category_ids: $category_ids,
+            zone_id: $zone_id,
+            limit: $request['limit'],
+            offset: $request['offset'],
+            type: $type,
+            longitude: $longitude,
+            latitude: $latitude
+        );
         $data['products'] = Helpers::product_data_formatting($data['products'], true, false, app()->getLocale());
         return response()->json($data, 200);
     }

@@ -224,7 +224,20 @@ class SearchController extends Controller
                         return response()->json(['errors' => Helpers::error_processor($validator)], 403);
                     }
 
-                    $items = CategoryLogic::category_products($category_ids, $zone_id, $limit, $offset, $type, $filter, $min_price, $max_price, $rating_count, $brand_ids);
+                    $items = CategoryLogic::category_products(
+                        category_ids: $category_ids,
+                        zone_id: $zone_id,
+                        limit: $limit,
+                        offset: $offset,
+                        type: $type,
+                        filter: $filter,
+                        min: $min_price,
+                        max: $max_price,
+                        rating_count: $rating_count,
+                        brand_ids: $brand_ids,
+                        longitude: $longitude,
+                        latitude: $latitude
+                    );
                     break;
                 default:
                     $items =  [
