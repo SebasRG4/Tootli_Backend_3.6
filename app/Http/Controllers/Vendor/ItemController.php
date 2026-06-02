@@ -92,6 +92,7 @@ class ItemController extends Controller
             'name' => 'array',
             'name.0' => 'required',
             'name.*' => 'max:191',
+            'video' => 'nullable|mimes:mp4|max:5120',
             'category_id' => 'required',
             'image' => [
                 Rule::requiredIf(function () use ($request) {
@@ -388,6 +389,7 @@ class ItemController extends Controller
         $food->menu_price = $request->filled('menu_price') ? $request->menu_price : null;
         $food->veg = $request->veg ?? 0;
         $food->image = $request->has('image') ? Helpers::upload('product/', 'png', $request->file('image')) : $newFileNamethumb ?? null;
+        $food->video = $request->has('video') ? Helpers::upload('product/video/', 'mp4', $request->file('video')) : null;
         $food->available_time_starts = $request->available_time_starts ?? '00:00:00';
         $food->available_time_ends = $request->available_time_ends ?? '23:59:59';
         $food->discount = $request->discount_type == 'amount' ? $request->discount : $request->discount;
@@ -566,6 +568,7 @@ class ItemController extends Controller
             'name' => 'array',
             'name.0' => 'required',
             'name.*' => 'max:191',
+            'video' => 'nullable|mimes:mp4|max:5120',
             'category_id' => 'required',
             'price' => 'required|numeric|between:0.01,999999999999.99',
             'description.*' => 'max:1000',
@@ -807,6 +810,7 @@ class ItemController extends Controller
             return response()->json(['product_approval' => translate('your_product_added_for_approval')], 200);
         } else {
             $p->image = $request->has('image') ? Helpers::update('product/', $p->image, 'png', $request->file('image')) : $p->image;
+            $p->video = $request->has('video') ? Helpers::update('product/video/', $p->video, 'mp4', $request->file('video')) : $p->video;
             $images = $p['images'];
 
             foreach ($p->images as $key => $value) {

@@ -97,7 +97,7 @@ class Item extends Model
         'requires_large_vehicle' => 'boolean',
     ];
 
-    protected $appends = ['unit_type', 'image_full_url', 'images_full_url'];
+    protected $appends = ['unit_type', 'image_full_url', 'images_full_url', 'video_full_url'];
 
     public function scopeRecommended($query)
     {
@@ -280,6 +280,22 @@ class Item extends Model
         return $images;
     }
 
+    public function getVideoFullUrlAttribute()
+    {
+        $value = $this->video;
+        if (!$value) {
+            return null;
+        }
+        if (count($this->storage) > 0) {
+            foreach ($this->storage as $storage) {
+                if ($storage['key'] == 'video') {
+                    return Helpers::get_full_url('product/video', $value, $storage['value']);
+                }
+            }
+        }
+        return Helpers::get_full_url('product/video', $value, 'public');
+    }
+
     private function isValidJson($string)
     {
         json_decode($string);
@@ -415,6 +431,19 @@ class Item extends Model
                     'data_type' => get_class($model),
                     'data_id' => $model->id,
                     'key' => 'images',
+                ], [
+                    'value' => $value,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+            if ($model->isDirty('video')) {
+                $value = Helpers::getDisk();
+
+                DB::table('storages')->updateOrInsert([
+                    'data_type' => get_class($model),
+                    'data_id' => $model->id,
+                    'key' => 'video',
                 ], [
                     'value' => $value,
                     'created_at' => now(),

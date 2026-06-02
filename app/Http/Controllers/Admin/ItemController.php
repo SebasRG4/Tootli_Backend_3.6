@@ -58,6 +58,7 @@ class ItemController extends Controller
         $validator = Validator::make($request->all(), [
             'name.0' => 'required',
             'name.*' => 'max:191',
+            'video' => 'nullable|mimes:mp4|max:5120',
             'category_id' => 'required',
             'image' => [
                 Rule::requiredIf(function () use ($request) {
@@ -335,6 +336,7 @@ class ItemController extends Controller
         $item->price = $request->price;
         $item->menu_price = $request->filled('menu_price') ? $request->menu_price : null;
         $item->image = $request->has('image') ? Helpers::upload('product/', 'png', $request->file('image')) : $newFileNamethumb ?? null;
+        $item->video = $request->has('video') ? Helpers::upload('product/video/', 'mp4', $request->file('video')) : null;
         $item->available_time_starts = $request->available_time_starts ?? '00:00:00';
         $item->available_time_ends = $request->available_time_ends ?? '23:59:59';
         $item->discount = $request->discount_type == 'amount' ? $request->discount : $request->discount;
@@ -463,6 +465,7 @@ class ItemController extends Controller
             'name' => 'array',
             'name.0' => 'required',
             'name.*' => 'max:191',
+            'video' => 'nullable|mimes:mp4|max:5120',
             'category_id' => 'required',
             'price' => 'required|numeric|between:.01,999999999999.99',
             'store_id' => 'required',
@@ -684,6 +687,7 @@ class ItemController extends Controller
         $item->price = $request->price;
         $item->menu_price = $request->filled('menu_price') ? $request->menu_price : null;
         $item->image = $request->has('image') ? Helpers::update('product/', $item->image, 'png', $request->file('image')) : $item->image;
+        $item->video = $request->has('video') ? Helpers::update('product/video/', $item->video, 'mp4', $request->file('video')) : $item->video;
         $item->available_time_starts = $request->available_time_starts ?? '00:00:00';
         $item->available_time_ends = $request->available_time_ends ?? '23:59:59';
 

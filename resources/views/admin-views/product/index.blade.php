@@ -96,6 +96,26 @@
                                         </div>
                                     </label>
                                 </div>
+
+                                <div class="flex-grow-1 mx-auto pb-2 flex-shrink-0" id="video_input_div">
+                                    <label class="text-dark d-block mb-4 mb-xl-5">
+                                        {{ translate('Video (Opcional)') }}
+                                        <small class="text-danger">* (Máx 5MB)</small>
+                                    </label>
+                                    <label class="d-inline-block m-0 position-relative error-wrapper">
+                                        <div class="border d-flex align-items-center justify-content-center" style="width: 176px; height: 176px; background-color: #f8f9fa; border-radius: 8px;" id="video_preview_div">
+                                            <i class="tio-video-camera" style="font-size: 40px; color: #ccc;"></i>
+                                            <span id="video_name_preview" style="position: absolute; bottom: 10px; font-size: 10px; width: 100%; text-align: center; color: #333;"></span>
+                                        </div>
+                                        <div class="icon-file-group">
+                                            <div class="icon-file"><input type="file" name="video" id="customVideo"
+                                                    class="custom-file-input d-none"
+                                                    accept=".mp4">
+                                                <i class="tio-edit"></i>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -430,9 +450,15 @@
                     if (module_type == 'food') {
                         $('#food_variation_section').show();
                         $('#attribute_section').hide();
+                        $('#video_input_div').hide();
                     } else {
                         $('#food_variation_section').hide();
                         $('#attribute_section').show();
+                        if (module_type == 'ecommerce' || module_type == 'grocery') {
+                            $('#video_input_div').show();
+                        } else {
+                            $('#video_input_div').hide();
+                        }
                     }
                     if (module_data.organic) {
                         $('#organic').show();
@@ -775,8 +801,28 @@
             $('#variant_combination').empty().trigger('change');
             $('#viewer').attr('src', "{{ asset('assets/admin/img/upload.png') }}");
             $('#customFileEg1').val(null).trigger('change');
+            $('#customVideo').val(null).trigger('change');
+            $('#video_name_preview').text('');
             $("#coba").empty();
             initImagePicker();
         })
+
+        $('#customVideo').on('change', function() {
+            let file = this.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    toastr.error('Video size should not exceed 5MB', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                    $(this).val('');
+                    $('#video_name_preview').text('');
+                } else {
+                    $('#video_name_preview').text(file.name);
+                }
+            } else {
+                $('#video_name_preview').text('');
+            }
+        });
     </script>
 @endpush
