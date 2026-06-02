@@ -67,8 +67,8 @@ class CategoryLogic
                         $query->where('modules.id', config('module.current_module_data')['id']);
                     });
                 });
-                // Filter by radius if coordinates are provided AND not all_zone_service
-                if ($longitude && $latitude && !$all_zone_service) {
+                // Filter by radius if coordinates are provided
+                if ($longitude && $latitude) {
                     $maxRadius = self::getMaxDeliveryRadius($zone_id); // Ensure maxRadius is available here
                     $nearbyStoreIds = Store::whereIn('zone_id', json_decode($zone_id, true))
                         ->withOpen($longitude, $latitude)
@@ -179,8 +179,8 @@ class CategoryLogic
                         return $qurey->has('activeCoupons');
                     });
 
-                // Filter by radius if coordinates are provided AND not all_zone_service
-                if ($longitude && $latitude && !$all_zone_service) {
+                // Filter by radius if coordinates are provided
+                if ($longitude && $latitude) {
                     $maxRadius = self::getMaxDeliveryRadius($zone_id);
                     $nearbyStoreIds = Store::whereIn('zone_id', json_decode($zone_id, true))
                         ->withOpen($longitude, $latitude)
@@ -371,9 +371,9 @@ class CategoryLogic
             })
             ->latest();
 
-        // Apply radius filter if not all_zone_service
+        // Apply radius filter
         $current_module = config('module.current_module_data');
-        if ($current_module && !$current_module['all_zone_service']) {
+        if ($current_module) {
             $maxRadius = self::getMaxDeliveryRadius($zone_id);
             $query = $query->withinRadius($maxRadius);
         }
@@ -452,9 +452,9 @@ class CategoryLogic
             ->active()->type($type)
             ->latest();
 
-        // Apply radius filter if not all_zone_service
+        // Apply radius filter
         $current_module = config('module.current_module_data');
-        if ($current_module && !$current_module['all_zone_service']) {
+        if ($current_module) {
             $maxRadius = self::getMaxDeliveryRadius($zone_id);
             $query = $query->withinRadius($maxRadius);
         }
