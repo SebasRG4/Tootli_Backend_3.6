@@ -33,29 +33,32 @@ class CartMarketingReminders extends Command
         $now = now();
         
         // Buscar a todos los usuarios con carritos (is_guest = 0) 
-        // agrupando para obtener su última fecha de actualización, cantidad de items y un nombre de artículo de referencia
-        $carts = Cart::where('is_guest', 0)
-            ->select('user_id', DB::raw('MAX(updated_at) as last_updated'), DB::raw('MAX(item_id) as item_id'), DB::raw('COUNT(id) as total_items'))
-            ->groupBy('user_id')
-            ->get();
+        // agrupando usando Eloquent para garantizar el casting correcto de fechas y zonas horarias
+        $userCarts = Cart::where('is_guest', 0)
+            ->get()
+            ->groupBy('user_id');
 
-        foreach ($carts as $cart) {
+        foreach ($userCarts as $userId => $carts) {
+            $lastUpdated = $carts->max('updated_at');
+            $totalItems = $carts->count();
+            $item_id = $carts->first()->item_id;
+
             // Cargar el nombre del articulo (usamos el primero que encontramos)
             $item_name = 'tus productos';
-            $item = \App\Models\Item::find($cart->item_id);
+            $item = \App\Models\Item::find($item_id);
             if ($item) {
                 $item_name = $item->name;
-                if ($cart->total_items > 1) {
+                if ($totalItems > 1) {
                     $item_name .= ' y otros productos';
                 }
             }
 
-            $user = User::find($cart->user_id);
+            $user = User::find($userId);
             if (!$user || !$user->cm_firebase_token) {
                 continue;
             }
 
-            $diffInMinutes = $now->diffInMinutes($cart->last_updated);
+            $diffInMinutes = $now->diffInMinutes($lastUpdated);
 
             // Logica Aviso 1 (3 a 10 minutos de inactividad)
             if ($diffInMinutes >= 3 && $diffInMinutes <= 10) {
