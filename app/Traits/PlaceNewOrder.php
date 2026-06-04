@@ -405,19 +405,14 @@ trait PlaceNewOrder
                             ], 406);
                         }
                     }
+                    if (count($totalsByStore) > 1) {
+                        DB::rollBack();
 
-                    if (count($totalsByStore) > 1 && $request->order_type === 'delivery') {
-                        $routeCheck = MultiStoreRouteValidationLogic::validateStorePairsForMultiStoreDelivery(array_keys($totalsByStore));
-                        if (! $routeCheck['ok']) {
-                            DB::rollBack();
-                            $code = $routeCheck['code'] ?? 'multi_store_route_validation_failed';
-
-                            return response()->json([
-                                'errors' => [
-                                    ['code' => $code, 'message' => MultiStoreRouteValidationLogic::translateFailureCode($code)],
-                                ],
-                            ], 403);
-                        }
+                        return response()->json([
+                            'errors' => [
+                                ['code' => 'multi_store_not_allowed', 'message' => translate('messages.multi_store_not_allowed')],
+                            ],
+                        ], 403);
                     }
                 }
 

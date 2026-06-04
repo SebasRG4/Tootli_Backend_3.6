@@ -92,24 +92,16 @@ class CartController extends Controller
         $moduleId = (int) $request->header('moduleId');
         $newStoreId = (int) data_get($item, 'store_id');
         if ($newStoreId > 0) {
-            $prospectiveIds = MultiStoreRouteValidationLogic::collectStoreIdsFromUserCart((int) $user_id, (int) $is_guest, $moduleId);
-            if (! in_array($newStoreId, $prospectiveIds, true)) {
-                $prospectiveIds[] = $newStoreId;
-            }
-            if (count($prospectiveIds) >= 2) {
-                $routeCheck = MultiStoreRouteValidationLogic::validateStorePairsForMultiStoreDelivery($prospectiveIds);
-                if (! $routeCheck['ok']) {
-                    $code = $routeCheck['code'] ?? 'multi_store_route_validation_failed';
+            $cart_store_id = Cart::where('user_id', $user_id)->where('is_guest', $is_guest)->whereHas('item', function ($query) use ($moduleId) {
+                $query->where('module_id', $moduleId);
+            })->first()?->item?->store_id;
 
-                    return response()->json([
-                        'errors' => [
-                            [
-                                'code' => $code,
-                                'message' => MultiStoreRouteValidationLogic::translateFailureCode($code),
-                            ],
-                        ],
-                    ], 403);
-                }
+            if ($cart_store_id && $cart_store_id != $newStoreId) {
+                return response()->json([
+                    'errors' => [
+                        ['code' => 'another_store_item_already_exists', 'message' => translate('messages.another_store_item_already_exists')]
+                    ]
+                ], 403);
             }
         }
 
