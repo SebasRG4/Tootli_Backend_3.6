@@ -693,10 +693,8 @@ class Helpers
 
         $storage = [];
         if ($multi_data == true) {
-            if ($data instanceof \Illuminate\Support\Collection) {
-                $data->loadMissing(['store.schedules', 'store.storeConfig']);
-            } elseif (is_array($data) && count($data) > 0 && reset($data) instanceof \Illuminate\Database\Eloquent\Model) {
-                collect($data)->loadMissing(['store.schedules', 'store.storeConfig']);
+            if ($data instanceof \Illuminate\Support\Collection || is_array($data)) {
+                \Illuminate\Database\Eloquent\Collection::make($data)->loadMissing(['store.schedules', 'store.storeConfig']);
             }
             foreach ($data as $item) {
                 $variations = [];
@@ -926,10 +924,8 @@ class Helpers
 
         $storage = [];
         if ($multi_data == true) {
-            if ($data instanceof \Illuminate\Support\Collection) {
-                $data->loadMissing(['store.schedules', 'store.storeConfig']);
-            } elseif (is_array($data) && count($data) > 0 && reset($data) instanceof \Illuminate\Database\Eloquent\Model) {
-                collect($data)->loadMissing(['store.schedules', 'store.storeConfig']);
+            if ($data instanceof \Illuminate\Support\Collection || is_array($data)) {
+                \Illuminate\Database\Eloquent\Collection::make($data)->loadMissing(['store.schedules', 'store.storeConfig']);
             }
             foreach ($data as $item) {
                 $variations = [];
