@@ -693,6 +693,11 @@ class Helpers
 
         $storage = [];
         if ($multi_data == true) {
+            if ($data instanceof \Illuminate\Support\Collection) {
+                $data->loadMissing(['store.schedules', 'store.storeConfig']);
+            } elseif (is_array($data) && count($data) > 0 && reset($data) instanceof \Illuminate\Database\Eloquent\Model) {
+                collect($data)->loadMissing(['store.schedules', 'store.storeConfig']);
+            }
             foreach ($data as $item) {
                 $variations = [];
                 if ($item->title) {
@@ -799,6 +804,9 @@ class Helpers
             }
             $data = $storage;
         } else {
+            if ($data instanceof \Illuminate\Database\Eloquent\Model) {
+                $data->loadMissing(['store.schedules', 'store.storeConfig']);
+            }
             $variations = [];
             $categories = [];
             foreach (json_decode($data['category_ids']) as $value) {
@@ -918,6 +926,11 @@ class Helpers
 
         $storage = [];
         if ($multi_data == true) {
+            if ($data instanceof \Illuminate\Support\Collection) {
+                $data->loadMissing(['store.schedules', 'store.storeConfig']);
+            } elseif (is_array($data) && count($data) > 0 && reset($data) instanceof \Illuminate\Database\Eloquent\Model) {
+                collect($data)->loadMissing(['store.schedules', 'store.storeConfig']);
+            }
             foreach ($data as $item) {
                 $variations = [];
                 if ($item->title) {
@@ -1046,6 +1059,9 @@ class Helpers
             }
             $data = $storage;
         } else {
+            if ($data instanceof \Illuminate\Database\Eloquent\Model) {
+                $data->loadMissing(['store.schedules', 'store.storeConfig']);
+            }
             $variations = [];
             $categories = [];
             foreach (json_decode($data['category_ids']) as $value) {

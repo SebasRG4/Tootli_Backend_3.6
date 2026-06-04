@@ -53,8 +53,8 @@ class CategoryLogic
         $longitude = $longitude ? (float) str_replace('"', '', (string) $longitude) : 0;
         $latitude = $latitude ? (float) str_replace('"', '', (string) $latitude) : 0;
 
-        $query = Item::
-            when(!$all_zone_service, function ($query) use ($zone_id) {
+        $query = Item::with(['store.schedules', 'store.storeConfig'])
+            ->when(!$all_zone_service, function ($query) use ($zone_id) {
                 $query->whereHas('module.zones', function ($query) use ($zone_id) {
                     $query->whereIn('zones.id', json_decode($zone_id, true));
                 });
@@ -156,8 +156,8 @@ class CategoryLogic
         $current_module = config('module.current_module_data');
         $all_zone_service = $current_module ? (bool) ($current_module['all_zone_service'] || (config('module.' . $current_module['module_type'] . '.all_zone_service') ?? false)) : false;
 
-        $query = Item::
-            when(!$all_zone_service, function ($query) use ($zone_id) {
+        $query = Item::with(['store.schedules', 'store.storeConfig'])
+            ->when(!$all_zone_service, function ($query) use ($zone_id) {
                 $query->whereHas('module.zones', function ($query) use ($zone_id) {
                     $query->whereIn('zones.id', json_decode($zone_id, true));
                 });
@@ -517,7 +517,7 @@ class CategoryLogic
         $current_module = config('module.current_module_data');
         $all_zone_service = $current_module ? (bool) $current_module['all_zone_service'] : false;
 
-        return Item::whereIn('category_id', $cate_ids)
+        return Item::with(['store.schedules', 'store.storeConfig'])->whereIn('category_id', $cate_ids)
             ->active()
             ->visibleInCustomerApp()
             ->when(!$all_zone_service, function ($query) use ($zone_id) {
@@ -544,7 +544,7 @@ class CategoryLogic
         $current_module = config('module.current_module_data');
         $all_zone_service = $current_module ? (bool) ($current_module['all_zone_service'] || (config('module.' . $current_module['module_type'] . '.all_zone_service') ?? false)) : false;
 
-        $paginator = Item::active()->visibleInCustomerApp()->type($type)
+        $paginator = Item::with(['store.schedules', 'store.storeConfig'])->active()->visibleInCustomerApp()->type($type)
             ->when(!$all_zone_service, function ($query) use ($zone_id) {
                 $query->whereHas('module.zones', function ($query) use ($zone_id) {
                     $query->whereIn('zones.id', json_decode($zone_id, true));
