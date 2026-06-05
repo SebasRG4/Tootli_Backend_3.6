@@ -465,6 +465,10 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('update-websocket', 'BusinessSettingsController@update_websocket')->name('update-websocket');
             Route::post('update-store', 'BusinessSettingsController@update_store')->name('update-store');
             Route::post('update-order', 'BusinessSettingsController@update_order')->name('update-order');
+            Route::post('delivery-time-window/store', 'BusinessSettingsController@delivery_time_window_store')->name('delivery-time-window.store');
+            Route::post('delivery-time-window/update', 'BusinessSettingsController@delivery_time_window_update')->name('delivery-time-window.update');
+            Route::get('delivery-time-window/status/{id}/{status}', 'BusinessSettingsController@delivery_time_window_status')->name('delivery-time-window.status');
+            Route::delete('delivery-time-window/destroy/{id}', 'BusinessSettingsController@delivery_time_window_destroy')->name('delivery-time-window.destroy');
             Route::post('update-priority', 'BusinessSettingsController@update_priority')->name('update-priority');
             Route::get('app-settings', 'BusinessSettingsController@app_settings')->name('app-settings');
             Route::POST('app-settings', 'BusinessSettingsController@update_app_settings')->name('app-settings');

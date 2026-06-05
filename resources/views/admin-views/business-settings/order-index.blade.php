@@ -777,6 +777,145 @@
                     </div>
                 </div>
             </div>
+
+            <div class="mt-4">
+                <h4 class="card-title mb-3">
+                    <i class="tio-time mr-1"></i>
+                    {{translate('messages.delivery_time_windows')}}
+                </h4>
+                <div class="card">
+                    <div class="card-body">
+                        <form action="{{ route('admin.business-settings.delivery-time-window.store') }}" method="post">
+                            @csrf
+                            <div class="row g-3">
+                                <div class="col-sm-4">
+                                    <label class="form-label">{{ translate('messages.name') }}</label>
+                                    <input type="text" class="form-control h--45px" name="name" required placeholder="{{ translate('Ex:_Mañana,_Tarde,_Noche') }}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="form-label">{{ translate('messages.start_time') }}</label>
+                                    <input type="time" class="form-control h--45px" name="start_time" required>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="form-label">{{ translate('messages.end_time') }}</label>
+                                    <input type="time" class="form-control h--45px" name="end_time" required>
+                                </div>
+                            </div>
+                            <div class="btn--container justify-content-end mt-3 mb-4">
+                                <button type="reset" class="btn btn--reset">{{ translate('messages.reset') }}</button>
+                                <button type="{{ env('APP_MODE') != 'demo' ? 'submit' : 'button' }}" class="btn btn--primary call-demo">{{ translate('Submit') }}</button>
+                            </div>
+                        </form>
+
+                        @php($time_windows = \App\CentralLogics\Helpers::get_business_settings('delivery_time_windows') ?? [])
+                        <div class="card mt-4">
+                            <div class="card-body mb-3">
+                                <h5 class="form-label mb-4">
+                                    {{ translate('messages.delivery_time_window_list') }}
+                                </h5>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive datatable-custom">
+                                        <table class="table table-borderless table-thead-bordered table-align-middle">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th class="border-0">{{ translate('messages.SL') }}</th>
+                                                    <th class="border-0">{{ translate('messages.name') }}</th>
+                                                    <th class="border-0">{{ translate('messages.start_time') }}</th>
+                                                    <th class="border-0">{{ translate('messages.end_time') }}</th>
+                                                    <th class="border-0">{{ translate('messages.status') }}</th>
+                                                    <th class="border-0 text-center">{{ translate('messages.action') }}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($time_windows as $key => $window)
+                                                    <tr>
+                                                        <td>{{ $key + 1 }}</td>
+                                                        <td>
+                                                            <span class="font-weight-semibold">{{ $window['name'] }}</span>
+                                                        </td>
+                                                        <td>{{ date('h:i A', strtotime($window['start_time'])) }}</td>
+                                                        <td>{{ date('h:i A', strtotime($window['end_time'])) }}</td>
+                                                        <td>
+                                                            <label class="toggle-switch toggle-switch-sm" for="windowCheckbox{{ $window['id'] }}">
+                                                                <input type="checkbox"
+                                                                       data-url="{{ route('admin.business-settings.delivery-time-window.status', [$window['id'], isset($window['status']) && $window['status'] ? 0 : 1]) }}"
+                                                                       class="toggle-switch-input redirect-url"
+                                                                       id="windowCheckbox{{ $window['id'] }}"
+                                                                       {{ isset($window['status']) && $window['status'] ? 'checked' : '' }}>
+                                                                <span class="toggle-switch-label">
+                                                                    <span class="toggle-switch-indicator"></span>
+                                                                </span>
+                                                            </label>
+                                                        </td>
+                                                        <td>
+                                                            <div class="btn--container justify-content-center">
+                                                                <a class="btn btn-sm btn--primary btn-outline-primary action-btn"
+                                                                   title="{{ translate('messages.edit') }}"
+                                                                   data-toggle="modal"
+                                                                   data-target="#edit_window_{{ $window['id'] }}">
+                                                                    <i class="tio-edit"></i>
+                                                                </a>
+                                                                <a class="btn btn-sm btn--danger btn-outline-danger action-btn form-alert"
+                                                                   href="javascript:"
+                                                                   data-id="delivery-time-window-{{ $window['id'] }}"
+                                                                   data-message="{{ translate('messages.If_you_want_to_delete_this_time_window,_please_confirm_your_decision.') }}"
+                                                                   title="{{ translate('messages.delete') }}">
+                                                                    <i class="tio-delete-outlined"></i>
+                                                                </a>
+                                                                <form action="{{ route('admin.business-settings.delivery-time-window.destroy', $window['id']) }}"
+                                                                      method="post" id="delivery-time-window-{{ $window['id'] }}">
+                                                                    @csrf @method('delete')
+                                                                </form>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+
+                                                    <!-- Edit Modal -->
+                                                    <div class="modal fade" id="edit_window_{{ $window['id'] }}" tabindex="-1" role="dialog" aria-labelledby="editWindowModalLabel{{ $window['id'] }}" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="editWindowModalLabel{{ $window['id'] }}">{{ translate('messages.edit_delivery_time_window') }}</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <form action="{{ route('admin.business-settings.delivery-time-window.update') }}" method="post">
+                                                                    @csrf
+                                                                    <div class="modal-body">
+                                                                        <input type="hidden" name="id" value="{{ $window['id'] }}">
+                                                                        <div class="form-group mb-3">
+                                                                            <label class="form-label">{{ translate('messages.name') }}</label>
+                                                                            <input type="text" class="form-control" name="name" value="{{ $window['name'] }}" required>
+                                                                        </div>
+                                                                        <div class="form-group mb-3">
+                                                                            <label class="form-label">{{ translate('messages.start_time') }}</label>
+                                                                            <input type="time" class="form-control" name="start_time" value="{{ date('H:i', strtotime($window['start_time'])) }}" required>
+                                                                        </div>
+                                                                        <div class="form-group mb-3">
+                                                                            <label class="form-label">{{ translate('messages.end_time') }}</label>
+                                                                            <input type="time" class="form-control" name="end_time" value="{{ date('H:i', strtotime($window['end_time'])) }}" required>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ translate('messages.Close') }}</button>
+                                                                        <button type="submit" class="btn btn-primary">{{ translate('messages.Save_changes') }}</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
     </div>
     <!-- Modal -->
 

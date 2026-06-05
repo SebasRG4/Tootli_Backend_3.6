@@ -435,6 +435,156 @@ class BusinessSettingsController extends Controller
         return back();
     }
 
+    public function delivery_time_window_store(Request $request)
+    {
+        if (!Helpers::module_permission_check('settings')) {
+            Toastr::error(translate('messages.access_denied'));
+            return back();
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:100',
+            'start_time' => 'required',
+            'end_time' => 'required',
+        ]);
+
+        $start_time = date('H:i:00', strtotime($request->start_time));
+        $end_time = date('H:i:00', strtotime($request->end_time));
+
+        if (strtotime($end_time) <= strtotime($start_time)) {
+            Toastr::error(translate('messages.end_time_must_be_after_start_time'));
+            return back();
+        }
+
+        $windows = Helpers::get_business_settings('delivery_time_windows') ?? [];
+        if (!is_array($windows)) {
+            $windows = [];
+        }
+
+        $next_id = count($windows) > 0 ? max(array_column($windows, 'id')) + 1 : 1;
+
+        $new_window = [
+            'id' => (int) $next_id,
+            'name' => $request->name,
+            'start_time' => $start_time,
+            'end_time' => $end_time,
+            'status' => 1
+        ];
+
+        $windows[] = $new_window;
+
+        Helpers::businessUpdateOrInsert(['key' => 'delivery_time_windows'], ['value' => json_encode($windows)]);
+
+        Toastr::success(translate('messages.delivery_time_window_added_successfully'));
+        return back();
+    }
+
+    public function delivery_time_window_update(Request $request)
+    {
+        if (!Helpers::module_permission_check('settings')) {
+            Toastr::error(translate('messages.access_denied'));
+            return back();
+        }
+
+        $request->validate([
+            'id' => 'required|integer',
+            'name' => 'required|string|max:100',
+            'start_time' => 'required',
+            'end_time' => 'required',
+        ]);
+
+        $start_time = date('H:i:00', strtotime($request->start_time));
+        $end_time = date('H:i:00', strtotime($request->end_time));
+
+        if (strtotime($end_time) <= strtotime($start_time)) {
+            Toastr::error(translate('messages.end_time_must_be_after_start_time'));
+            return back();
+        }
+
+        $windows = Helpers::get_business_settings('delivery_time_windows') ?? [];
+        if (!is_array($windows)) {
+            $windows = [];
+        }
+
+        $updated = false;
+        foreach ($windows as &$window) {
+            if ($window['id'] == $request->id) {
+                $window['name'] = $request->name;
+                $window['start_time'] = $start_time;
+                $window['end_time'] = $end_time;
+                $updated = true;
+                break;
+            }
+        }
+
+        if ($updated) {
+            Helpers::businessUpdateOrInsert(['key' => 'delivery_time_windows'], ['value' => json_encode($windows)]);
+            Toastr::success(translate('messages.delivery_time_window_updated_successfully'));
+        } else {
+            Toastr::error(translate('messages.delivery_time_window_not_found'));
+        }
+
+        return back();
+    }
+
+    public function delivery_time_window_status($id, $status)
+    {
+        if (!Helpers::module_permission_check('settings')) {
+            Toastr::error(translate('messages.access_denied'));
+            return back();
+        }
+
+        $windows = Helpers::get_business_settings('delivery_time_windows') ?? [];
+        if (!is_array($windows)) {
+            $windows = [];
+        }
+
+        $updated = false;
+        foreach ($windows as &$window) {
+            if ($window['id'] == $id) {
+                $window['status'] = (int) $status;
+                $updated = true;
+                break;
+            }
+        }
+
+        if ($updated) {
+            Helpers::businessUpdateOrInsert(['key' => 'delivery_time_windows'], ['value' => json_encode($windows)]);
+            Toastr::success(translate('messages.status_updated'));
+        } else {
+            Toastr::error(translate('messages.delivery_time_window_not_found'));
+        }
+
+        return back();
+    }
+
+    public function delivery_time_window_destroy($id)
+    {
+        if (!Helpers::module_permission_check('settings')) {
+            Toastr::error(translate('messages.access_denied'));
+            return back();
+        }
+
+        $windows = Helpers::get_business_settings('delivery_time_windows') ?? [];
+        if (!is_array($windows)) {
+            $windows = [];
+        }
+
+        $initial_count = count($windows);
+        $windows = array_values(array_filter($windows, function ($window) use ($id) {
+            return $window['id'] != $id;
+        }));
+
+        if (count($windows) < $initial_count) {
+            Helpers::businessUpdateOrInsert(['key' => 'delivery_time_windows'], ['value' => json_encode($windows)]);
+            Toastr::success(translate('messages.delivery_time_window_deleted_successfully'));
+        } else {
+            Toastr::error(translate('messages.delivery_time_window_not_found'));
+        }
+
+        return back();
+    }
+
     public function update_disbursement(Request $request)
     {
         if (env('APP_MODE') == 'demo') {
