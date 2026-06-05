@@ -74,6 +74,16 @@
                                         : <label
                                             class="fz--10 badge badge-soft-warning">{{ date('d M Y ' . config('timeformat'), strtotime($order['schedule_at'])) }}</label>
                                     </h6>
+                                    @if ($order->delivery_time_window)
+                                        <h6 class="text-capitalize">
+                                            {{ translate('messages.delivery_time_window') }}
+                                            : <label class="fz--10 badge badge-soft-info">{{ $order->delivery_time_window }}</label>
+                                        </h6>
+                                        <div class="info-notes-bg px-3 color-222324CC py-2 rounded fs-12 gap-2 mt-2" style="background-color: #ffeeba; border: 1px solid #ffeeba; color: #856404;">
+                                            ⚠️ <strong>{{ translate('messages.scheduled_order_warning') }}:</strong>
+                                            {{ translate('messages.prepare_to_be_ready_by') }} <strong>{{ date('h:i A', strtotime($order->schedule_at)) }}</strong> {{ translate('messages.at_the_latest') }}.
+                                        </div>
+                                    @endif
                                 @endif
                                 @if($order['cancellation_reason'])
                                 <h6>

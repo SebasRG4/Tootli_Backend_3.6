@@ -241,6 +241,7 @@ trait PlaceNewOrder
             $order->delivery_address = json_encode($address);
             $order->schedule_at = $schedule_at;
             $order->scheduled = $request->schedule_at ? 1 : 0;
+            $order->delivery_time_window = $request->delivery_time_window;
             $order->cutlery = $request->cutlery ? 1 : 0;
             $order->is_guest = $request->user ? 0 : 1;
             $order->otp = rand(1000, 9999);

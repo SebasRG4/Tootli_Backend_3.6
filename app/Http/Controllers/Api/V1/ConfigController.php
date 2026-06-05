@@ -474,6 +474,7 @@ class ConfigController extends Controller
             'dm_loyality_point_data' => $dm_loyality_point_data,
             'dm_referral_data' => $dm_referral_data,
             'progressive_delivery_fees' => isset($settings['progressive_delivery_fees']) ? json_decode($settings['progressive_delivery_fees'], true) : \App\CentralLogics\OrderLogic::get_progressive_fee_settings(),
+            'delivery_time_windows' => Helpers::get_business_settings('delivery_time_windows') ?? [],
         ]);
     }
 
