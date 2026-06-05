@@ -102,7 +102,7 @@ return [
         'veg_non_veg' => false,
         'unit' => true,
         'order_attachment' => false,
-        'always_open' => true,
+        'always_open' => false,
         'all_zone_service' => true,
         'item_available_time' => false,
         'show_restaurant_text' => false,
