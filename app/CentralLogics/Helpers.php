@@ -1353,6 +1353,10 @@ class Helpers
                 $item['delivery_time_type'] = $delivery_info['delivery_time_type'];
                 $item['delivery_time'] = $delivery_info['store_delivery_time'];
                 $item['current_opening_time'] = self::getNextOpeningTime($item['schedules']) ?? 'closed';
+                // Free shipping program fields
+                $item['free_shipping_enabled'] = (bool) ($item->free_shipping_enabled ?? false);
+                $item['free_shipping_threshold'] = (float) ($item->free_shipping_threshold ?? 0);
+                $item['store_shipping_contribution'] = (float) ($item->store_shipping_contribution ?? 0);
                 unset($item['items_count']);
                 unset($item['campaigns_count']);
                 unset($item['storeConfig']);
@@ -1394,6 +1398,10 @@ class Helpers
             $data['total_items'] = $data['items_count'];
             $data['total_campaigns'] = $data['campaigns_count'];
             $data['current_opening_time'] = self::getNextOpeningTime($data['schedules']) ?? 'closed';
+            // Free shipping program fields
+            $data['free_shipping_enabled'] = (bool) ($data->free_shipping_enabled ?? false);
+            $data['free_shipping_threshold'] = (float) ($data->free_shipping_threshold ?? 0);
+            $data['store_shipping_contribution'] = (float) ($data->store_shipping_contribution ?? 0);
             unset($data['items_count']);
             unset($data['campaigns_count']);
             unset($data['campaigns']);

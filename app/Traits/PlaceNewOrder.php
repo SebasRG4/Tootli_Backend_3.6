@@ -501,6 +501,27 @@ trait PlaceNewOrder
                     $free_delivery_by = 'vendor';
                 }
 
+                // ── Envío gratis con umbral (Modelo Híbrido Tootli) ─────────────────
+                // Solo aplica si el cliente no ya tiene envío gratis por cupón/admin.
+                // El subtotal elegible es el precio de productos + addons - descuentos.
+                if (! in_array($free_delivery_by, ['admin', 'vendor'])) {
+                    $eligible_subtotal = $product_price + $total_addon_price
+                        - $store_discount_amount
+                        - $flash_sale_admin_discount_amount
+                        - $flash_sale_vendor_discount_amount
+                        - $coupon_discount_amount;
+
+                    $freeShippingResult = OrderLogic::calculate_free_shipping($store, max(0.0, $eligible_subtotal));
+
+                    if ($freeShippingResult['is_free']) {
+                        $order->delivery_charge = 0;
+                        $free_delivery_by = $freeShippingResult['free_delivery_by']; // 'admin' | 'hybrid'
+                        // Store contribution stored for accounting in create_transaction()
+                        $order->store_shipping_contribution = $freeShippingResult['store_contribution'];
+                    }
+                }
+                // ────────────────────────────────────────────────────────────────────
+
                 if ($coupon) {
                     if ($coupon->coupon_type == 'free_delivery') {
                         if ($coupon->min_purchase <= $product_price + $total_addon_price - $store_discount_amount - $flash_sale_admin_discount_amount - $flash_sale_vendor_discount_amount) {

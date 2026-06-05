@@ -128,6 +128,52 @@ class OrderLogic
         return rand(1000, 9999) . '-' . Str::random(5) . '-' . time();
     }
 
+    /**
+     * Evaluate whether a store qualifies for free shipping on a given cart subtotal.
+     *
+     * Returns an array with:
+     *   - is_free               (bool)   Whether the delivery should be free for the customer
+     *   - store_contribution    (float)  Amount the store absorbs
+     *   - tootli_contribution   (float)  Amount Tootli absorbs (original_charge - store_contribution)
+     *   - free_delivery_by      (string|null)  'vendor' | 'admin' | 'hybrid' | null
+     */
+    public static function calculate_free_shipping($store, float $cart_subtotal): array
+    {
+        if (! $store || ! $store->free_shipping_enabled) {
+            return [
+                'is_free'             => false,
+                'store_contribution'  => 0.0,
+                'tootli_contribution' => 0.0,
+                'free_delivery_by'    => null,
+            ];
+        }
+
+        $threshold = (float) ($store->free_shipping_threshold ?? 0);
+
+        if ($threshold > 0 && $cart_subtotal < $threshold) {
+            return [
+                'is_free'             => false,
+                'store_contribution'  => 0.0,
+                'tootli_contribution' => 0.0,
+                'free_delivery_by'    => null,
+            ];
+        }
+
+        $store_contribution = (float) ($store->store_shipping_contribution ?? 0);
+
+        $by = 'admin'; // Tootli absorbs 100%
+        if ($store_contribution > 0) {
+            $by = 'hybrid'; // Both absorb a portion
+        }
+
+        return [
+            'is_free'             => true,
+            'store_contribution'  => $store_contribution,
+            'tootli_contribution' => 0.0, // resolved at transaction time from original_delivery_charge
+            'free_delivery_by'    => $by,
+        ];
+    }
+
     public static function track_order($order_id)
     {
         return Helpers::order_data_formatting(Order::with(['details', 'delivery_man.rating'])->where(['id' => $order_id])->first(), false);
@@ -167,6 +213,21 @@ class OrderLogic
         if ($order->free_delivery_by == 'vendor') {
             $store_subsidy = $order->original_delivery_charge;
             Helpers::expenseCreate(amount: $order->original_delivery_charge, type: 'free_delivery', datetime: now(), created_by: $order->free_delivery_by, order_id: $order->id, store_id: $order->store->id);
+        }
+        // free delivery hybrid (store + Tootli share the cost)
+        if ($order->free_delivery_by == 'hybrid') {
+            $store_contribution = (float) ($order->store_shipping_contribution ?? 0);
+            $tootli_contribution = max(0.0, (float) $order->original_delivery_charge - $store_contribution);
+            // Store absorbs its share
+            if ($store_contribution > 0) {
+                $store_subsidy = $store_contribution;
+                Helpers::expenseCreate(amount: $store_contribution, type: 'free_delivery', datetime: now(), created_by: 'vendor', order_id: $order->id, store_id: $order->store->id);
+            }
+            // Tootli absorbs the remainder
+            if ($tootli_contribution > 0) {
+                $admin_subsidy = $tootli_contribution;
+                Helpers::expenseCreate(amount: $tootli_contribution, type: 'free_delivery', datetime: now(), created_by: 'admin', order_id: $order->id);
+            }
         }
         // coupon discount by Admin
         if ($order->coupon_created_by == 'admin') {

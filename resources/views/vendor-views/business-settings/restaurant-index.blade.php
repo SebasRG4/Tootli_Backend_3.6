@@ -423,6 +423,80 @@
                             </div>
                         @endif
 
+                        {{-- ── Programa de Envío Gratis (Modelo Híbrido) ─────────────────────── --}}
+                        <div class="col-12 mt-3">
+                            <div class="border border-primary rounded p-3" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);">
+                                <h6 class="font-weight-bold mb-3 text-primary">
+                                    <i class="tio-shopping-cart-add mr-1"></i>
+                                    {{ translate('Programa de Envío Gratis') }}
+                                    <span class="badge badge-soft-primary ml-2">Nuevo</span>
+                                </h6>
+                                <p class="text-muted small mb-3">
+                                    {{ translate('Al activar esta opción, los clientes que superen el monto mínimo recibirán envío gratis. El costo se divide entre tu tienda y Tootli.') }}
+                                </p>
+                                <div class="row g-2 align-items-end">
+                                    <div class="col-sm-4">
+                                        <label class="d-flex justify-content-between switch toggle-switch-sm text-dark mb-2"
+                                            for="free_shipping_enabled">
+                                            <span>{{ translate('Activar envío gratis con umbral') }}</span>
+                                            <input type="checkbox" class="toggle-switch-input"
+                                                name="free_shipping_enabled" id="free_shipping_enabled"
+                                                value="1" {{ $store->free_shipping_enabled ? 'checked' : '' }}
+                                                onchange="document.getElementById('free_shipping_fields').style.display = this.checked ? 'flex' : 'none'">
+                                            <span class="toggle-switch-label">
+                                                <span class="toggle-switch-indicator"></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div class="col-12">
+                                        <div id="free_shipping_fields" class="row g-2" style="display: {{ $store->free_shipping_enabled ? 'flex' : 'none' }}">
+                                            <div class="col-sm-4">
+                                                <label class="input-label" for="free_shipping_threshold">
+                                                    {{ translate('Monto mínimo para envío gratis') }}
+                                                    ({{ \App\CentralLogics\Helpers::currency_symbol() }})
+                                                    <span data-toggle="tooltip" data-placement="right"
+                                                        data-original-title="{{ translate('El cliente debe gastar al menos este monto para obtener envío gratis. Recomendado: $399') }}"
+                                                        class="input-label-secondary"><img
+                                                            src="{{ asset('assets/admin/img/info-circle.svg') }}"
+                                                            alt="i"></span>
+                                                </label>
+                                                <input type="number" id="free_shipping_threshold"
+                                                    name="free_shipping_threshold" step="1" min="0"
+                                                    max="999999" class="form-control"
+                                                    placeholder="399"
+                                                    value="{{ $store->free_shipping_threshold ?? 399 }}">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="input-label" for="store_shipping_contribution">
+                                                    {{ translate('Tu aporte al envío gratis') }}
+                                                    ({{ \App\CentralLogics\Helpers::currency_symbol() }})
+                                                    <span data-toggle="tooltip" data-placement="right"
+                                                        data-original-title="{{ translate('Cuánto aportas tú cuando se aplica el envío gratis. El resto lo absorbe Tootli. Recomendado: $20') }}"
+                                                        class="input-label-secondary"><img
+                                                            src="{{ asset('assets/admin/img/info-circle.svg') }}"
+                                                            alt="i"></span>
+                                                </label>
+                                                <input type="number" id="store_shipping_contribution"
+                                                    name="store_shipping_contribution" step="1" min="0"
+                                                    max="999" class="form-control"
+                                                    placeholder="20"
+                                                    value="{{ $store->store_shipping_contribution ?? 0 }}">
+                                            </div>
+                                            <div class="col-sm-4 d-flex align-items-end">
+                                                <div class="alert alert-soft-info w-100 mb-0 py-2 px-3 small">
+                                                    💡 <strong>Ejemplo:</strong> Cliente gasta ${{ $store->free_shipping_threshold ?? 399 }}+
+                                                    → Envío gratis.<br>
+                                                    Tu aporte: ${{ $store->store_shipping_contribution ?? 20 }} |
+                                                    Tootli: ${{ max(0, 40 - ($store->store_shipping_contribution ?? 20)) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{-- ──────────────────────────────────────────────────────────────────── --}}
+
                         <div class="col-12">
                             <div class="btn--container mt-3 justify-content-end">
                                 <button type="reset" class="btn btn--reset">{{ translate('messages.reset') }}</button>

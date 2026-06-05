@@ -60,6 +60,7 @@ class Order extends Model
         'pos_payment_meta' => 'array',
         'failed_delivery_action' => 'string',
         'failed_delivery_instruction' => 'string',
+        'store_shipping_contribution' => 'float',
     ];
 
     protected $appends = ['module_type', 'order_attachment_full_url', 'order_proof_full_url', 'customer_tracking_url', 'cash_on_pickup_amount'];

@@ -65,6 +65,12 @@ class BusinessSettingsController extends Controller
         $store->maximum_shipping_charge = $store->sub_self_delivery?$request->maximum_shipping_charge??0: $store->maximum_shipping_charge;
         $store->order_place_to_schedule_interval = $request->order_place_to_schedule_interval;
         $store->delivery_time = $request->minimum_delivery_time .'-'. $request->maximum_delivery_time.' '.$request->delivery_time_type;
+
+        // Free shipping program (hybrid model)
+        $store->free_shipping_enabled = $request->has('free_shipping_enabled') ? 1 : 0;
+        $store->free_shipping_threshold = $request->free_shipping_threshold ?? null;
+        $store->store_shipping_contribution = $request->store_shipping_contribution ?? 0;
+
         $store->save();
         $conf = StoreConfig::firstOrNew(
             ['store_id' =>  $store->id]

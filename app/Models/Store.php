@@ -212,6 +212,9 @@ class Store extends Model
         'menu_images',
         'category_ids',
         'reviews_comments_count',
+        'free_shipping_enabled',
+        'free_shipping_threshold',
+        'store_shipping_contribution',
     ];
 
     /**
@@ -260,6 +263,9 @@ class Store extends Model
         'serves_alcohol' => 'boolean',
         'menu_images' => 'array',
         'tootliclick_settings' => 'array',
+        'free_shipping_enabled' => 'boolean',
+        'free_shipping_threshold' => 'float',
+        'store_shipping_contribution' => 'float',
     ];
 
     /**
