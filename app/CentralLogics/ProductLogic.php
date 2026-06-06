@@ -1164,17 +1164,20 @@ class ProductLogic
     public static function cart_suggest_products($zone_id, $store_id, $limit = null, $offset = null, $type = 'all', $recomended = false)
     {
         $data = [];
+        $total_size = 0;
         if ($limit != null && $offset != null) {
-            $paginator = Item::where('store_id', $store_id)
+            $query = Item::where('store_id', $store_id)
                 ->active()
                 ->visibleInCustomerApp()
                 ->whereHas('store', function ($query) use ($zone_id) {
-                $query->when(config('module.current_module_data'), function ($query) {
-                    $query->where('module_id', config('module.current_module_data')['id'])->whereHas('zone.modules', function ($query) {
-                        $query->where('modules.id', config('module.current_module_data')['id']);
-                    });
-                })->whereIn('zone_id', json_decode($zone_id, true))->Weekday();
-            })
+                    $query->when(config('module.current_module_data'), function ($query) {
+                        $query->where('module_id', config('module.current_module_data')['id'])->whereHas('zone.modules', function ($query) {
+                            $query->where('modules.id', config('module.current_module_data')['id']);
+                        });
+                    })->whereIn('zone_id', json_decode($zone_id, true))->Weekday();
+                });
+
+            $paginator = (clone $query)
                 ->when($recomended, function ($query) {
                     $query->Recommended();
                 })
@@ -1182,14 +1185,25 @@ class ProductLogic
                 ->orderBy('reviews_count', 'desc')
                 ->paginate($limit, ['*'], 'page', $offset);
             $data = $paginator->items();
+
+            if ($recomended && count($data) === 0) {
+                $paginator = $query
+                    ->withCount('reviews')
+                    ->orderBy('reviews_count', 'desc')
+                    ->paginate($limit, ['*'], 'page', $offset);
+                $data = $paginator->items();
+            }
+            $total_size = $paginator->count();
         } else {
-            $paginator = Item::where('store_id', $store_id)->active()->visibleInCustomerApp()->type($type)->whereHas('store', function ($query) use ($zone_id) {
+            $query = Item::where('store_id', $store_id)->active()->visibleInCustomerApp()->type($type)->whereHas('store', function ($query) use ($zone_id) {
                 $query->when(config('module.current_module_data'), function ($query) {
                     $query->where('module_id', config('module.current_module_data')['id'])->whereHas('zone.modules', function ($query) {
                         $query->where('modules.id', config('module.current_module_data')['id']);
                     });
                 })->whereIn('zone_id', json_decode($zone_id, true))->Weekday();
-            })
+            });
+
+            $paginator = (clone $query)
                 ->when($recomended, function ($query) {
                     $query->Recommended();
                 })
@@ -1197,10 +1211,19 @@ class ProductLogic
                 ->orderBy('reviews_count', 'desc')
                 ->limit(50)->get();
             $data = $paginator;
+
+            if ($recomended && count($data) === 0) {
+                $paginator = $query
+                    ->withCount('reviews')
+                    ->orderBy('reviews_count', 'desc')
+                    ->limit(50)->get();
+                $data = $paginator;
+            }
+            $total_size = $paginator->count();
         }
 
         return [
-            'total_size' => $paginator->count(),
+            'total_size' => $total_size,
             'limit' => $limit,
             'offset' => $offset,
             'items' => $data
