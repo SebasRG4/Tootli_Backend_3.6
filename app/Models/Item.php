@@ -161,6 +161,11 @@ class Item extends Model
                                 });
                             });
                     });
+            })
+            ->where(function ($query) {
+                $query->whereHas('module', function ($q) {
+                    $q->whereNotIn('module_type', ['grocery', 'pharmacy', 'ecommerce']);
+                })->orWhere('stock', '>', 0);
             });
     }
 

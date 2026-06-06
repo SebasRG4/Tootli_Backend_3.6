@@ -680,8 +680,10 @@ class Helpers
                 foreach ($variation_group['values'] as $index => &$option) {
                     $option['is_best_value'] = ($index == $best_index);
                 }
+                unset($option); // CRITICAL: break reference to prevent data corruption
             }
         }
+        unset($variation_group); // break reference from outer loop
     }
 
     public static function product_data_formatting($data, $multi_data = false, $trans = false, $local = 'en', $temp_product = false)
