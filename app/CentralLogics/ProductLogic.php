@@ -607,7 +607,7 @@ class ProductLogic
 
     }
 
-    public static function most_reviewed_products($zone_id, $limit = 25, $offset = 1, $type = 'all', $category_ids = null, $filter = null, $min = 0, $max = false, $rating_count = null, $search = null)
+    public static function most_reviewed_products($zone_id, $limit = 25, $offset = 1, $type = 'all', $category_ids = null, $filter = null, $min = 0, $max = false, $rating_count = null, $search = null, $longitude = 0, $latitude = 0)
     {
         $category_ids = isset($category_ids) ? (is_array($category_ids) ? $category_ids : json_decode($category_ids)) : [];
         $best_reviewed_item_default_status = Helpers::get_business_settings('best_reviewed_item_default_status') ?? 1;
@@ -622,8 +622,21 @@ class ProductLogic
 
 
         $query = Item::with(['store.schedules', 'store.module', 'store.storeConfig'])
-            ->whereHas('store', function ($query) use ($zone_id) {
+            ->whereHas('store', function ($query) use ($zone_id, $longitude, $latitude) {
                 $query->whereIn('zone_id', json_decode($zone_id, true));
+                // Filter by radius if coordinates are provided and module is food
+                if ($longitude && $latitude && config('module.current_module_data') && config('module.current_module_data')['module_type'] === 'food') {
+                    $maxRadius = self::getMaxDeliveryRadius($zone_id, config("module.current_module_data")["id"] ?? null);
+                    $nearbyStoreIds = Store::whereIn('zone_id', json_decode($zone_id, true))
+                        ->withOpen($longitude, $latitude)
+                        ->get()
+                        ->filter(function ($store) use ($maxRadius) {
+                            return $store->distance <= ($maxRadius * 1000);
+                        })
+                        ->pluck('id');
+
+                    $query->whereIn('id', $nearbyStoreIds);
+                }
             })
             ->when(config('module.current_module_data'), function ($query) {
                 $query->where('module_id', config('module.current_module_data')['id']);

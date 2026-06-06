@@ -437,7 +437,9 @@ class ItemController extends Controller
         $category_ids = $request->query('category_ids', '');
 
         $zone_id = $request->header('zoneId');
-        $items = ProductLogic::most_reviewed_products($zone_id, $request['limit'] ?? 25, $request['offset'] ?? 1, $type, $category_ids, $filter, $min_price, $max_price, $rating_count);
+        $longitude = $request->header('longitude');
+        $latitude = $request->header('latitude');
+        $items = ProductLogic::most_reviewed_products($zone_id, $request['limit'] ?? 25, $request['offset'] ?? 1, $type, $category_ids, $filter, $min_price, $max_price, $rating_count, null, $longitude, $latitude);
         $items['categories'] = $items['categories'];
 
         $items['products'] = Helpers::productListDataFormatting($items['products']);
