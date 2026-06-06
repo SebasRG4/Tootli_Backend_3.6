@@ -139,7 +139,7 @@ class OrderLogic
      */
     public static function calculate_free_shipping($store, float $cart_subtotal): array
     {
-        if (! $store || ! $store->free_shipping_enabled) {
+        if (! $store) {
             return [
                 'is_free'             => false,
                 'store_contribution'  => 0.0,
@@ -148,7 +148,21 @@ class OrderLogic
             ];
         }
 
-        $threshold = (float) ($store->free_shipping_threshold ?? 0);
+        $module_zone = \DB::table('module_zone')
+            ->where('zone_id', $store->zone_id)
+            ->where('module_id', $store->module_id)
+            ->first();
+
+        if (! $module_zone || ! $module_zone->free_shipping_enabled) {
+            return [
+                'is_free'             => false,
+                'store_contribution'  => 0.0,
+                'tootli_contribution' => 0.0,
+                'free_delivery_by'    => null,
+            ];
+        }
+
+        $threshold = (float) ($module_zone->free_shipping_threshold ?? 0);
 
         if ($threshold > 0 && $cart_subtotal < $threshold) {
             return [
@@ -159,7 +173,7 @@ class OrderLogic
             ];
         }
 
-        $store_contribution = (float) ($store->store_shipping_contribution ?? 0);
+        $store_contribution = (float) ($module_zone->store_shipping_contribution ?? 0);
 
         $by = 'admin'; // Tootli absorbs 100%
         if ($store_contribution > 0) {

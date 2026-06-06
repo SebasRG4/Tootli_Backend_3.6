@@ -21,5 +21,8 @@ class ModuleZone extends Pivot
         'maximum_cod_order_amount'=>'float',
         'fixed_shipping_charge'=>'float',
         'large_order_surcharge'=>'float',
+        'free_shipping_enabled'=>'boolean',
+        'free_shipping_threshold'=>'float',
+        'store_shipping_contribution'=>'float',
     ];
 }

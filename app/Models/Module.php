@@ -278,7 +278,10 @@ class Module extends Model
                 'maximum_shipping_charge',
                 'maximum_cod_order_amount',
                 'delivery_charge_type',
-                'fixed_shipping_charge'
+                'fixed_shipping_charge',
+                'free_shipping_enabled',
+                'free_shipping_threshold',
+                'store_shipping_contribution'
             ])
             ->using(ModuleZone::class);
     }

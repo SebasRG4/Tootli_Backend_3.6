@@ -377,6 +377,72 @@
                                                 </a>
                                             </div>
                                         </div>
+                                        {{-- ── Programa de Envío Gratis por Módulo/Zona ─────────────────────── --}}
+                                        <div class="col-12 mt-3">
+                                            <div class="border rounded p-3" style="border-color: #0ea5e9 !important; background: rgba(14,165,233,0.04);">
+                                                <div class="d-flex align-items-center gap-2 mb-3">
+                                                    <span class="badge badge-info px-2 py-1" style="font-size:12px; background-color: #0ea5e9; color: #fff;">
+                                                        <i class="tio-shopping-cart-add mr-1"></i> Envío Gratis con Umbral (AOV)
+                                                    </span>
+                                                    <span class="text-muted fs-12">
+                                                        Define un monto de compra mínimo global para que el envío sea gratuito para todas las tiendas de este módulo en esta zona.
+                                                    </span>
+                                                </div>
+                                                <div class="row gy-2 align-items-end">
+                                                    <div class="col-md-6 col-lg-3">
+                                                        <div class="form-group mb-0">
+                                                            <label class="d-flex justify-content-between switch toggle-switch-sm text-dark mb-1" for="free_shipping_enabled_{{ $module->id }}">
+                                                                <span>Activar envío gratis</span>
+                                                                <input type="hidden" name="module_data[{{ $module->id }}][free_shipping_enabled]" value="0">
+                                                                <input type="checkbox" class="toggle-switch-input"
+                                                                       name="module_data[{{ $module->id }}][free_shipping_enabled]"
+                                                                       id="free_shipping_enabled_{{ $module->id }}"
+                                                                       value="1" {{ $pivot?->free_shipping_enabled ? 'checked' : '' }}
+                                                                       onchange="document.getElementById('free_shipping_fields_{{ $module->id }}').style.display = this.checked ? 'flex' : 'none'">
+                                                                <span class="toggle-switch-label">
+                                                                    <span class="toggle-switch-indicator"></span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div id="free_shipping_fields_{{ $module->id }}" class="row gy-2" style="display: {{ $pivot?->free_shipping_enabled ? 'flex' : 'none' }}">
+                                                            <div class="col-md-6 col-lg-4">
+                                                                <div class="form-group mb-0">
+                                                                    <label class="input-label fs-14" for="free_shipping_threshold_{{ $module->id }}">
+                                                                        Monto mínimo para envío gratis ({{ \App\CentralLogics\Helpers::currency_symbol() }})
+                                                                    </label>
+                                                                    <input type="number" id="free_shipping_threshold_{{ $module->id }}"
+                                                                           name="module_data[{{ $module->id }}][free_shipping_threshold]"
+                                                                           step="1" min="0" class="form-control"
+                                                                           placeholder="399"
+                                                                           value="{{ $pivot?->free_shipping_threshold ?? 399 }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-lg-4">
+                                                                <div class="form-group mb-0">
+                                                                    <label class="input-label fs-14" for="store_shipping_contribution_{{ $module->id }}">
+                                                                        Contribución de la tienda ({{ \App\CentralLogics\Helpers::currency_symbol() }})
+                                                                    </label>
+                                                                    <input type="number" id="store_shipping_contribution_{{ $module->id }}"
+                                                                           name="module_data[{{ $module->id }}][store_shipping_contribution]"
+                                                                           step="1" min="0" class="form-control"
+                                                                           placeholder="20"
+                                                                           value="{{ $pivot?->store_shipping_contribution ?? 0 }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12 col-lg-4 d-flex align-items-end">
+                                                                <div class="alert alert-soft-info w-100 mb-0 py-2 px-3 small">
+                                                                    💡 <strong>Ejemplo:</strong> Compra de ${{ $pivot?->free_shipping_threshold ?? 399 }}+ → Envío gratis.<br>
+                                                                    Tienda aporta: ${{ $pivot?->store_shipping_contribution ?? 20 }} |
+                                                                    Tootli: ${{ max(0, 40 - ($pivot?->store_shipping_contribution ?? 20)) }}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                         {{-- ── Tarifas Tootli Direct (opcionales, sobreescriben las regulares para pedidos POS) ── --}}
                                         <div class="col-12 mt-3">
