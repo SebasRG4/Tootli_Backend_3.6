@@ -87,11 +87,15 @@ def run_ssh_command(commands):
     os.close(master)
 
 if __name__ == "__main__":
-    # Comandos de prueba iniciales para investigar el servidor
+    # Comandos de diagnóstico para el servidor
     cmds = [
-        "pwd",
-        "ls -la",
-        "docker ps",
-        "find / -name 'scrape_justo.py' 2>/dev/null || find / -name 'artisan' 2>/dev/null"
+        "hostname",
+        "redis-cli llen tootli:go_jobs",
+        "ps aux | grep -i worker | grep -v grep || echo 'no worker process'",
+        "ps aux | grep -i go | grep -v grep || echo 'no go process'",
+        "pm2 list || echo 'no pm2'",
+        "supervisorctl status || echo 'no supervisor'",
+        "systemctl list-units | grep -i tootli || echo 'no tootli systemd'",
+        "find /var/www /home /opt -name 'artisan' 2>/dev/null || find / -name 'artisan' 2>/dev/null"
     ]
     run_ssh_command(cmds)

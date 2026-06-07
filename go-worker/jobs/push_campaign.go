@@ -15,13 +15,11 @@ func init() {
 }
 
 type PushCampaignPayload struct {
-	Data struct {
-		Message struct {
-			Topic        string            `json:"topic"`
-			Notification map[string]string `json:"notification"`
-			Data         map[string]string `json:"data"`
-		} `json:"message"`
-	} `json:"data"`
+	Message struct {
+		Topic        string            `json:"topic"`
+		Notification map[string]string `json:"notification"`
+		Data         map[string]string `json:"data"`
+	} `json:"message"`
 }
 
 func handlePushCampaign(ctx context.Context, rawData json.RawMessage) error {
@@ -30,7 +28,7 @@ func handlePushCampaign(ctx context.Context, rawData json.RawMessage) error {
 		return fmt.Errorf("failed to parse push_campaign payload: %w", err)
 	}
 
-	msgStruct := payload.Data.Message
+	msgStruct := payload.Message
 	if msgStruct.Topic == "" {
 		return fmt.Errorf("missing topic in PushCampaignPayload")
 	}

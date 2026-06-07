@@ -8,16 +8,14 @@ import (
 
 func TestHandlePushCampaign_Parse(t *testing.T) {
 	rawJSON := `{
-		"data": {
-			"message": {
-				"topic": "test_topic",
-				"notification": {
-					"title": "Welcome",
-					"body": "Hello World"
-				},
-				"data": {
-					"id": "123"
-				}
+		"message": {
+			"topic": "test_topic",
+			"notification": {
+				"title": "Welcome",
+				"body": "Hello World"
+			},
+			"data": {
+				"id": "123"
 			}
 		}
 	}`
@@ -28,17 +26,17 @@ func TestHandlePushCampaign_Parse(t *testing.T) {
 		t.Fatalf("Failed to unmarshal: %v", err)
 	}
 
-	if payload.Data.Message.Topic != "test_topic" {
-		t.Errorf("Expected topic 'test_topic', got '%s'", payload.Data.Message.Topic)
+	if payload.Message.Topic != "test_topic" {
+		t.Errorf("Expected topic 'test_topic', got '%s'", payload.Message.Topic)
 	}
 
-	if payload.Data.Message.Notification["title"] != "Welcome" {
-		t.Errorf("Expected title 'Welcome', got '%s'", payload.Data.Message.Notification["title"])
+	if payload.Message.Notification["title"] != "Welcome" {
+		t.Errorf("Expected title 'Welcome', got '%s'", payload.Message.Notification["title"])
 	}
 }
 
 func TestHandlePushCampaign_EmptyTopic(t *testing.T) {
-	rawJSON := `{"data": {"message": {"topic": ""}}}`
+	rawJSON := `{"message": {"topic": ""}}`
 	err := handlePushCampaign(context.Background(), json.RawMessage(rawJSON))
 	if err == nil {
 		t.Error("Expected error for empty topic, got nil")
