@@ -78,7 +78,8 @@ class IndexStoreEmbeddings extends Command
                 // Re-index map to be 0-based for this batch
                 $store_map = array_values($store_map);
 
-                $response = \Illuminate\Support\Facades\Http::post('http://127.0.0.1:8000/get-embeddings-batch', [
+                $aiUrl = env('AI_SERVICE_URL', 'http://127.0.0.1:8000');
+                $response = \Illuminate\Support\Facades\Http::post($aiUrl . '/get-embeddings-batch', [
                     'texts' => $texts
                 ]);
 

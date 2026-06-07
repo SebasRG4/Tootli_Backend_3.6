@@ -105,7 +105,8 @@ class SeedEmbeddings extends Command
 
             try {
                 // Call Python service
-                $response = Http::post('http://127.0.0.1:8000/get-embedding', [
+                $aiUrl = env('AI_SERVICE_URL', 'http://127.0.0.1:8000');
+                $response = Http::post($aiUrl . '/get-embedding', [
                     'text' => $text
                 ]);
 
