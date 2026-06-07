@@ -9,13 +9,39 @@ import (
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/messaging"
 	"google.golang.org/api/option"
+	"tootli.mx/worker/config"
+	"tootli.mx/worker/models"
 )
 
 var FCMClient *messaging.Client
 
 // InitFirebase initializes the Firebase SDK using the service account JSON
 func InitFirebase(serviceAccountPath string) error {
-	opt := option.WithCredentialsFile(serviceAccountPath)
+	var credentialsJSON []byte
+	var dbErr error
+
+	if config.DB != nil {
+		var setting models.BusinessSetting
+		if err := config.DB.Where("`key` = ?", "push_notification_service_file_content").First(&setting).Error; err == nil && setting.Value != "" {
+			credentialsJSON = []byte(setting.Value)
+			log.Println("[Firebase] Service account credentials successfully loaded from database ✓")
+		} else {
+			dbErr = err
+		}
+	}
+
+	var opt option.ClientOption
+	if len(credentialsJSON) > 0 {
+		opt = option.WithCredentialsJSON(credentialsJSON)
+	} else {
+		if dbErr != nil {
+			log.Printf("[Firebase] Falling back to file credentials: DB error or empty key: %v\n", dbErr)
+		} else {
+			log.Println("[Firebase] Falling back to file credentials: DB connection not initialized")
+		}
+		opt = option.WithCredentialsFile(serviceAccountPath)
+	}
+
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {
 		log.Printf("[Firebase] Warning: Failed to initialize app (bypassing for dev): %v\n", err)
