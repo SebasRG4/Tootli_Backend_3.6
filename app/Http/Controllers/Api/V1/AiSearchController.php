@@ -110,7 +110,13 @@ class AiSearchController extends Controller
             \Illuminate\Support\Facades\Log::error("Embedding API Error: " . $e->getMessage());
         }
 
-        $stores_query = Store::with(['module', 'activeCoupons'])
+        $stores_query = Store::with([
+            'module',
+            'activeCoupons',
+            'items' => function ($query) {
+                $query->where('status', 1);
+            }
+        ])
             ->whereHas('module', function ($query) {
                 $query->where('module_type', 'food');
             })
@@ -255,6 +261,22 @@ class AiSearchController extends Controller
                 'latitude' => $store_lat,
                 'longitude' => $store_lng,
                 'distance_km' => $distance_km,
+                'items' => $store->items ? $store->items->take(15)->map(function ($item) {
+                    return [
+                        'name' => $item->name,
+                        'price' => (float) $item->price
+                    ];
+                })->toArray() : [],
+                'coupons' => $store->activeCoupons ? $store->activeCoupons->map(function ($coupon) {
+                    return [
+                        'code' => $coupon->code,
+                        'title' => $coupon->title,
+                        'discount' => (float) $coupon->discount,
+                        'discount_type' => $coupon->discount_type,
+                        'min_purchase' => (float) $coupon->min_purchase,
+                        'max_discount' => (float) $coupon->max_discount
+                    ];
+                })->toArray() : []
             ];
         })->toArray();
 
@@ -281,6 +303,7 @@ class AiSearchController extends Controller
                 $data = $response->json();
                 $ai_response_text = $data['responseText'];
                 $recommendation_ids = $data['recommendation_ids'] ?? [];
+                $is_route = $data['is_route'] ?? false;
 
                 // Filter and sort the formatted results to only return those recommended by the AI
                 if (!empty($recommendation_ids)) {
@@ -297,7 +320,8 @@ class AiSearchController extends Controller
                 return response()->json([
                     'message' => $ai_response_text,
                     'recommendations' => $formatted_results,
-                    'recommendation_ids' => $recommendation_ids
+                    'recommendation_ids' => $recommendation_ids,
+                    'is_route' => (bool) $is_route
                 ]);
             } else {
                 \Illuminate\Support\Facades\Log::error("Python Service Error: " . $response->body());
