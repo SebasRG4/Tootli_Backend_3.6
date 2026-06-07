@@ -35,7 +35,15 @@ class SeedEmbeddings extends Command
 
         $this->info('Finding restaurants in food module...');
 
-        $stores = Store::with(['dineoutCategories', 'tags', 'module'])
+        $stores = Store::with([
+            'dineoutCategories',
+            'tags',
+            'module',
+            'reviews_comments',
+            'items' => function ($query) {
+                $query->where('status', 1);
+            }
+        ])
             ->whereHas('module', function ($query) {
                 $query->where('module_type', 'food');
             })
@@ -64,7 +72,36 @@ class SeedEmbeddings extends Command
             $tags = $store->tags->pluck('tag')->toArray();
             $tags_str = !empty($tags) ? implode(', ', $tags) : '';
 
-            $text = "Restaurante: {$store->name}. Dirección: {$store->address}. Cocina: {$cuisines}. Categorías: {$categories_str}. Tags: {$tags_str}. Descripción: " . ($store->meta_description ?? $store->footer_text ?? '');
+            // Extract menu items (up to 10)
+            $menuItems = $store->items->take(10)->pluck('name')->toArray();
+            $menuItems_str = !empty($menuItems) ? implode(', ', $menuItems) : '';
+
+            // Extract best reviews (up to 5 reviews with rating >= 4)
+            $bestReviewsArr = $store->reviews_comments
+                ->where('rating', '>=', 4)
+                ->take(5)
+                ->pluck('comment')
+                ->map(function ($comment) {
+                    $cleaned = strip_tags($comment);
+                    $cleaned = preg_replace('/\s+/', ' ', $cleaned);
+                    return trim($cleaned);
+                })
+                ->filter()
+                ->toArray();
+            $bestReviews = !empty($bestReviewsArr) ? implode(' | ', $bestReviewsArr) : '';
+
+            $text = "Restaurante: {$store->name}. Dirección: {$store->address}. Cocina: {$cuisines}. Categorías: {$categories_str}. Tags: {$tags_str}.";
+            if (!empty($menuItems_str)) {
+                $text .= " Menú y Platillos: {$menuItems_str}.";
+            }
+            if (!empty($bestReviews)) {
+                $text .= " Opiniones de clientes destacados: {$bestReviews}.";
+            }
+
+            $description = $store->meta_description ?? $store->footer_text ?? '';
+            if (!empty($description)) {
+                $text .= " Descripción: {$description}";
+            }
 
             try {
                 // Call Python service
