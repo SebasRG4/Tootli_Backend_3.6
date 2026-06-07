@@ -280,17 +280,25 @@ class AiSearchController extends Controller
             if ($response->successful()) {
                 $data = $response->json();
                 $ai_response_text = $data['responseText'];
-                $recommendation_ids = $data['recommendation_ids'];
+                $recommendation_ids = $data['recommendation_ids'] ?? [];
 
-                // Re-sort results based on AI recommendation if needed, or just pass the text
-                // Ideally we should filter the $formatted_results to match recommendation_ids or order them
+                // Filter and sort the formatted results to only return those recommended by the AI
+                if (!empty($recommendation_ids)) {
+                    $recommendation_ids = array_map('intval', $recommendation_ids);
+                    $formatted_results = $formatted_results->filter(function ($store) use ($recommendation_ids) {
+                        return in_array((int) $store->id, $recommendation_ids, true);
+                    })->sortBy(function ($store) use ($recommendation_ids) {
+                        return array_search((int) $store->id, $recommendation_ids, true);
+                    })->values();
+                } else {
+                    $formatted_results = collect([]);
+                }
 
                 return response()->json([
                     'message' => $ai_response_text,
-                    'recommendations' => $formatted_results, // Sending original candidates for now
-                    'recommendation_ids' => $recommendation_ids // Frontend can use this to highlight/sort
+                    'recommendations' => $formatted_results,
+                    'recommendation_ids' => $recommendation_ids
                 ]);
-
             } else {
                 \Illuminate\Support\Facades\Log::error("Python Service Error: " . $response->body());
                 throw new \Exception("Python Service Failed");
