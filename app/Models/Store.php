@@ -215,6 +215,7 @@ class Store extends Model
         'free_shipping_enabled',
         'free_shipping_threshold',
         'store_shipping_contribution',
+        'tootli_lana',
     ];
 
     /**
@@ -266,6 +267,7 @@ class Store extends Model
         'free_shipping_enabled' => 'boolean',
         'free_shipping_threshold' => 'float',
         'store_shipping_contribution' => 'float',
+        'tootli_lana' => 'boolean',
     ];
 
     /**
