@@ -1653,7 +1653,59 @@ class OrderController extends Controller
             }
         }
 
+        // Large order surcharge logic during order update
+        $hasLargeItems = false;
+        foreach ($cart as $c) {
+            if ($c['status'] == true) {
+                if (isset($c['item_campaign_id']) && $c['item_campaign_id'] != null) {
+                    $item = \App\Models\ItemCampaign::withoutGlobalScope(StoreScope::class)->find($c['item_campaign_id']);
+                } else {
+                    $item = Item::withoutGlobalScope(StoreScope::class)->find($c['item_id']);
+                }
+                if ($item && $item->requires_large_vehicle) {
+                    $hasLargeItems = true;
+                    break;
+                }
+            }
+        }
 
+        if ($hasLargeItems && $order->order_type === 'delivery') {
+            $largeOrderSurcharge = 0;
+            $module_wise_delivery_charge = \DB::table('module_zone')
+                ->where('zone_id', $order->store->zone_id)
+                ->where('module_id', $order->store->module_id)
+                ->first();
+            if ($module_wise_delivery_charge) {
+                $largeOrderSurcharge = (float) ($module_wise_delivery_charge->large_order_surcharge ?? 0);
+            }
+            if ($largeOrderSurcharge <= 0) {
+                $largeOrderSurcharge = 120.00; // Fallback
+            }
+
+            $subtotal_for_large_order = $product_price + $total_addon_price - $store_discount_amount;
+            if ($subtotal_for_large_order >= 899 || $total_price >= 899) {
+                // Surcharge is free for the customer, split 50/50 between store and admin
+                if ($order->delivery_charge > 0) {
+                    $order->delivery_charge = max(0.0, (float)$order->delivery_charge - $largeOrderSurcharge);
+                }
+                
+                // Recalculate store contribution split
+                if ($order->free_delivery_by === 'vendor') {
+                    $order->store_shipping_contribution = (float)$order->original_delivery_charge + ($largeOrderSurcharge / 2);
+                    $order->free_delivery_by = 'hybrid';
+                } elseif ($order->free_delivery_by === 'admin') {
+                    $order->store_shipping_contribution = ($largeOrderSurcharge / 2);
+                    $order->free_delivery_by = 'hybrid';
+                } else {
+                    $standard_contribution = 0;
+                    if ($module_wise_delivery_charge && $module_wise_delivery_charge->free_shipping_enabled) {
+                        $standard_contribution = (float)($module_wise_delivery_charge->store_shipping_contribution ?? 0);
+                    }
+                    $order->store_shipping_contribution = $standard_contribution + ($largeOrderSurcharge / 2);
+                    $order->free_delivery_by = 'hybrid';
+                }
+            }
+        }
 
         $total_order_ammount = $total_price + $total_tax_amount + $order->delivery_charge + $order->additional_charge;
         $adjustment = $order->order_amount - $total_order_ammount;

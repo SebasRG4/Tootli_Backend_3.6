@@ -532,6 +532,50 @@ trait PlaceNewOrder
                     $coupon->increment('total_uses');
                 }
 
+                // ── Large Order Surcharge Calculation ──
+                $hasLargeItems = false;
+                if (isset($order_details) && is_array($order_details)) {
+                    foreach ($order_details as $detail) {
+                        $item = \App\Models\Item::find($detail['item_id']);
+                        if ($item && $item->requires_large_vehicle) {
+                            $hasLargeItems = true;
+                            break;
+                        }
+                    }
+                }
+
+                if ($hasLargeItems && $request->order_type === 'delivery') {
+                    $largeOrderSurcharge = 0;
+                    if ($module_wise_delivery_charge && $module_wise_delivery_charge->pivot) {
+                        $largeOrderSurcharge = (float) ($module_wise_delivery_charge->pivot->large_order_surcharge ?? 0);
+                    }
+                    if ($largeOrderSurcharge <= 0) {
+                        $largeOrderSurcharge = 120.00; // Fallback
+                    }
+
+                    $subtotal_for_large_order = $product_price + $total_addon_price - $store_discount_amount;
+                    if ($subtotal_for_large_order >= 899 || $total_price >= 899) {
+                        // Surcharge is free for the customer, split 50/50 between store and admin
+                        if ($free_delivery_by === 'vendor') {
+                            $order->store_shipping_contribution = (float)$order->original_delivery_charge + ($largeOrderSurcharge / 2);
+                            $free_delivery_by = 'hybrid';
+                        } elseif ($free_delivery_by === 'admin') {
+                            $order->store_shipping_contribution = ($largeOrderSurcharge / 2);
+                            $free_delivery_by = 'hybrid';
+                        } else {
+                            $order->store_shipping_contribution = (float)($order->store_shipping_contribution ?? 0) + ($largeOrderSurcharge / 2);
+                            $free_delivery_by = 'hybrid';
+                        }
+
+                        // Driver always gets paid the surcharge
+                        $order->original_delivery_charge = (float)$order->original_delivery_charge + $largeOrderSurcharge;
+                    } else {
+                        // Customer pays the surcharge
+                        $order->delivery_charge = (float)$order->delivery_charge + $largeOrderSurcharge;
+                        $order->original_delivery_charge = (float)$order->original_delivery_charge + $largeOrderSurcharge;
+                    }
+                }
+
                 $multiStoreDeliveryExtra = 0.0;
                 $distinctStoresInOrder = $this->distinctStoreCountFromOrderDetails($order_details);
                 $storeCountForMultiFee = $distinctStoresInOrder > 0 ? $distinctStoresInOrder : count($totalsByStore);
