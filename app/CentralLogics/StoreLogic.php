@@ -22,7 +22,19 @@ class StoreLogic
             return null;
         }
 
-        $zone_ids = is_array($zone_id) ? $zone_id : json_decode($zone_id, true);
+        $zone_ids = [];
+        if (is_array($zone_id)) {
+            $zone_ids = $zone_id;
+        } else {
+            $decoded = json_decode($zone_id, true);
+            if (is_array($decoded)) {
+                $zone_ids = $decoded;
+            } elseif (is_numeric($zone_id)) {
+                $zone_ids = [(int)$zone_id];
+            } elseif (is_numeric($decoded)) {
+                $zone_ids = [(int)$decoded];
+            }
+        }
         if (empty($zone_ids)) {
             return null;
         }
