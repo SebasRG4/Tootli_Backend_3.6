@@ -150,6 +150,7 @@ class VendorController extends Controller
         $store->allow_minutes = $request->has('allow_minutes');
         $store->allow_standard = $request->has('allow_standard');
         $store->allow_next_day = $request->has('allow_next_day');
+        $store->tootli_lana = true;
         try {
             $store->save();
             // $store->module->increment('stores_count');
@@ -293,6 +294,7 @@ class VendorController extends Controller
         $store->allow_minutes = $request->has('allow_minutes');
         $store->allow_standard = $request->has('allow_standard');
         $store->allow_next_day = $request->has('allow_next_day');
+        $store->tootli_lana = $request->has('tootli_lana');
         $store->zone_id = $request->zone_id;
         $store->tin = $request->tin;
         $store->tin_expire_date = $request->tin_expire_date;

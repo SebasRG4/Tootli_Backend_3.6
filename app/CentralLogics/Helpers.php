@@ -1364,7 +1364,7 @@ class Helpers
                 $item['free_shipping_threshold'] = (float) ($module_zone?->free_shipping_threshold ?? 0);
                 $item['store_shipping_contribution'] = (float) ($module_zone?->store_shipping_contribution ?? 0);
                 $item['max_delivery_radius'] = (float) \App\CentralLogics\StoreLogic::getMaxDeliveryRadius($item->zone_id, $item->module_id);
-                $item['tootli_lana'] = (bool) ($item->tootli_lana ?? false);
+                $item['tootli_lana'] = (bool) ($item->tootli_lana ?? true);
                 unset($item['items_count']);
                 unset($item['campaigns_count']);
                 unset($item['storeConfig']);
@@ -1415,7 +1415,7 @@ class Helpers
             $data['free_shipping_threshold'] = (float) ($module_zone?->free_shipping_threshold ?? 0);
             $data['store_shipping_contribution'] = (float) ($module_zone?->store_shipping_contribution ?? 0);
             $data['max_delivery_radius'] = (float) \App\CentralLogics\StoreLogic::getMaxDeliveryRadius($data->zone_id, $data->module_id);
-            $data['tootli_lana'] = (bool) ($data->tootli_lana ?? false);
+            $data['tootli_lana'] = (bool) ($data->tootli_lana ?? true);
             unset($data['items_count']);
             unset($data['campaigns_count']);
             unset($data['campaigns']);

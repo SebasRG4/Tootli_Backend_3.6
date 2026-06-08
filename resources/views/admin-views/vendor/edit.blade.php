@@ -331,6 +331,15 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-4">
+                             <div class="form-group mb-0">
+                                <label class="input-label" for="tootli_lana">{{ translate('Acepta tootli lana') }}</label>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" name="tootli_lana" class="custom-control-input" id="tootli_lana" {{ (is_null($store->tootli_lana) || $store->tootli_lana) ? 'checked' : '' }} value="1">
+                                    <label class="custom-control-label" for="tootli_lana"></label>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-12">
                              <div class="form-group mb-0">
                                 <label class="input-label">{{ translate('Infrastructure Images') }} ({{ translate('Ratio 1:1') }})</label>
