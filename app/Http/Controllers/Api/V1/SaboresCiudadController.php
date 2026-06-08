@@ -500,6 +500,8 @@ class SaboresCiudadController extends Controller
             // Deeplink for sharing
             $store->share_link = "https://tootli.com/share/store?id={$store->id}&module=sabores";
 
+            $store->max_delivery_radius = (float) \App\CentralLogics\StoreLogic::getMaxDeliveryRadius($store->zone_id, $store->module_id);
+
             return $store;
         });
 
