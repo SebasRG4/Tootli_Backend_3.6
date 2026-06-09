@@ -690,10 +690,41 @@ class DeliverymanController extends Controller
             if (Redis::ttl($rejectedKey) < 0) {
                 Redis::expire($rejectedKey, (int) config('dm_assignment.ignore_ttl_seconds', 600)); // 10 min default
             }
-            // Decrease current_orders if it was already accepted
-            if ($order->delivery_man_id == $dm->id && $order->order_status == 'accepted') {
+            // Decrease current_orders if it was already accepted or checked-in at the store
+            if ($order->delivery_man_id == $dm->id && in_array($order->order_status, ['accepted', 'confirmed', 'processing', 'handover'])) {
                 $dm->current_orders = $dm->current_orders > 1 ? $dm->current_orders - 1 : 0;
                 $dm->save();
+            }
+
+            // Check if it's a justified timeout release (waited at least 10 minutes at store/handover)
+            $isTimeout = false;
+            if ($order->order_status === 'handover' && $order->handover) {
+                try {
+                    $handoverTime = \Carbon\Carbon::parse($order->handover);
+                    if ($handoverTime->diffInSeconds(now()) >= 600) {
+                        $isTimeout = true;
+                    }
+                } catch (\Throwable $e) {
+                    \Log::error("Error parsing order handover time: " . $e->getMessage());
+                }
+            }
+
+            if ($isTimeout) {
+                try {
+                    OrderAuditLogger::log(
+                        $order,
+                        'deliveryman',
+                        (int) $dm->id,
+                        \App\Models\OrderAuditEvent::EVENT_DELIVERY_RELEASE_TIMEOUT,
+                        [
+                            'reason' => 'Restaurant delay waiting timeout (10 minutes completed)',
+                            'handover_at' => $order->handover,
+                            'released_at' => now()->toIso8601String(),
+                        ]
+                    );
+                } catch (\Throwable $e) {
+                    \Log::error("Error logging release timeout audit: " . $e->getMessage());
+                }
             }
         }
 
@@ -2668,6 +2699,26 @@ class DeliverymanController extends Controller
         );
 
         return response()->json(['message' => 'ok'], 200);
+    }
+
+    public function get_order_calls_count(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required|integer',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+        $dm = DeliveryMan::where(['auth_token' => $request['token'] ?? null])->first();
+        if (!$dm) {
+            return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
+        }
+
+        $count = DmCustomerCallAttempt::where('order_id', $request->order_id)
+            ->where('delivery_man_id', $dm->id)
+            ->count();
+
+        return response()->json(['calls_count' => $count], 200);
     }
 
     public function post_tootli_direct_tracking_chat(Request $request)

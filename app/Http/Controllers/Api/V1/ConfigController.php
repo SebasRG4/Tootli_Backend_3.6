@@ -475,6 +475,7 @@ class ConfigController extends Controller
             'dm_referral_data' => $dm_referral_data,
             'progressive_delivery_fees' => isset($settings['progressive_delivery_fees']) ? json_decode($settings['progressive_delivery_fees'], true) : \App\CentralLogics\OrderLogic::get_progressive_fee_settings(),
             'delivery_time_windows' => Helpers::get_business_settings('delivery_time_windows') ?? [],
+            'plivo_proxy_phone' => env('PLIVO_PROXY_PHONE', '+525512345678'),
         ]);
     }
 

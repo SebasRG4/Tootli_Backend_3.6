@@ -9,6 +9,8 @@ class OrderAuditEvent extends Model
 {
     public const EVENT_DELIVERY_CANCEL = 'delivery_cancel';
 
+    public const EVENT_DELIVERY_RELEASE_TIMEOUT = 'delivery_release_timeout';
+
     public const EVENT_ORDER_STATUS = 'order_status_change';
 
     public const EVENT_STRIKE_FROM_REVIEW = 'strike_recorded_from_review';
