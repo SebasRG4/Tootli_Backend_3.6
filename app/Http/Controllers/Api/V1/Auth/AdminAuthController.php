@@ -30,9 +30,12 @@ class AdminAuthController extends Controller
         if (auth('admin')->attempt($data)) {
             $token = Str::random(120);
 
-            $admin = Admin::where('email', $request->email)->first();
+            $admin = Admin::with('role')->where('email', $request->email)->first();
             
-            if ($admin->role_id != 1) {
+            $isAuthorized = ($admin->role_id == 1) || 
+                            ($admin->role && in_array(strtolower($admin->role->name), ['inversionista', 'inversionistas', 'investor']));
+
+            if (!$isAuthorized) {
                 auth('admin')->logout();
                 return response()->json([
                     'errors' => [

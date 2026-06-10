@@ -14,8 +14,13 @@ class AdminDashboardController extends Controller
 {
     public function dashboard(Request $request)
     {
-        $admin = \App\Models\Admin::where('auth_token', $request->bearerToken())->first();
-        if (!$admin || $admin->role_id != 1) {
+        $admin = \App\Models\Admin::with('role')->where('auth_token', $request->bearerToken())->first();
+        if (!$admin) {
+            return response()->json(['errors' => [['code' => 'auth-001', 'message' => 'Unauthorized']]], 401);
+        }
+        $isAuthorized = ($admin->role_id == 1) || 
+                        ($admin->role && in_array(strtolower($admin->role->name), ['inversionista', 'inversionistas', 'investor']));
+        if (!$isAuthorized) {
             return response()->json(['errors' => [['code' => 'auth-001', 'message' => 'Unauthorized']]], 401);
         }
 
@@ -92,8 +97,13 @@ class AdminDashboardController extends Controller
 
     public function dailyReport(Request $request)
     {
-        $admin = \App\Models\Admin::where('auth_token', $request->bearerToken())->first();
-        if (!$admin || $admin->role_id != 1) {
+        $admin = \App\Models\Admin::with('role')->where('auth_token', $request->bearerToken())->first();
+        if (!$admin) {
+            return response()->json(['errors' => [['code' => 'auth-001', 'message' => 'Unauthorized']]], 401);
+        }
+        $isAuthorized = ($admin->role_id == 1) || 
+                        ($admin->role && in_array(strtolower($admin->role->name), ['inversionista', 'inversionistas', 'investor']));
+        if (!$isAuthorized) {
             return response()->json(['errors' => [['code' => 'auth-001', 'message' => 'Unauthorized']]], 401);
         }
 
