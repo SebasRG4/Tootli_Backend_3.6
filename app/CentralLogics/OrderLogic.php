@@ -217,20 +217,22 @@ class OrderLogic
         $store_amount = 0;
 
         // Calcular bono por espera (repartidor) / multa (restaurante)
+        // Premio: $1.00 por cada 10 min de espera a partir del minuto 10.
+        // Al cumplir exactamente 10 min → $1.00, 20 min → $2.00, etc.
         $wait_time_bonus = 0;
         if ($type != 'parcel' && $order->handover && $order->picked_up) {
             try {
                 $handoverTime = Carbon::parse($order->handover);
                 $pickedUpTime = Carbon::parse($order->picked_up);
                 $waitMinutes = $handoverTime->diffInMinutes($pickedUpTime);
-                if ($waitMinutes > 10) {
-                    $delayMinutes = $waitMinutes - 10;
-                    $wait_time_bonus = floor($delayMinutes / 10) * 1.00;
+                if ($waitMinutes >= 10) {
+                    $wait_time_bonus = floor($waitMinutes / 10) * 1.00;
                 }
             } catch (\Throwable $e) {
                 \Log::error("Error calculating wait time bonus/penalty: " . $e->getMessage());
             }
         }
+
 
         $store = $order?->store;
         $store_sub = $order?->store?->store_sub;
