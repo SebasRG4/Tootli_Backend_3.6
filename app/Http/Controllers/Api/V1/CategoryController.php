@@ -56,7 +56,7 @@ class CategoryController extends Controller
                                 AND JSON_CONTAINS(items.category_ids, JSON_OBJECT('position', 1), '$')
                                 AND stores.zone_id IN ($zoneIds)  $moduleCondition ) AS total_order_count");
             } else {
-                $categories = $categories->select('id', 'name', 'image', 'slug');
+                $categories = $categories->select('id', 'name', 'image', 'slug', 'priority');
             }
 
             $categories = $categories->where(['position' => 0, 'status' => 1])
@@ -97,6 +97,7 @@ class CategoryController extends Controller
                         // 'products_count' => $category->products_count,
                         // 'order_count' => (int) $category->total_order_count ,
                         'slug' => $category->slug,
+                        'priority' => $category->priority ?? 0,
                         'childes' => $category->childes->map(function ($child) {
                             return [
                                 'id' => $child->id,

@@ -216,6 +216,22 @@ class OrderLogic
         $commission_percentage = 0;
         $store_amount = 0;
 
+        // Calcular bono por espera (repartidor) / multa (restaurante)
+        $wait_time_bonus = 0;
+        if ($type != 'parcel' && $order->handover && $order->picked_up) {
+            try {
+                $handoverTime = Carbon::parse($order->handover);
+                $pickedUpTime = Carbon::parse($order->picked_up);
+                $waitMinutes = $handoverTime->diffInMinutes($pickedUpTime);
+                if ($waitMinutes > 10) {
+                    $delayMinutes = $waitMinutes - 10;
+                    $wait_time_bonus = floor($delayMinutes / 10) * 1.00;
+                }
+            } catch (\Throwable $e) {
+                \Log::error("Error calculating wait time bonus/penalty: " . $e->getMessage());
+            }
+        }
+
         $store = $order?->store;
         $store_sub = $order?->store?->store_sub;
         // free delivery by admin
@@ -350,6 +366,9 @@ class OrderLogic
 
             $comission_amount = $comission_on_store_amount + $comission_on_actual_delivery_fee;
             $dm_commission = $order->original_delivery_charge - $comission_on_actual_delivery_fee + ($order->incentive_amount ?? 0);
+            if ($wait_time_bonus > 0) {
+                $dm_commission += $wait_time_bonus;
+            }
         }
         $store_amount = $store_amount + $order_amount + $order->total_tax_amount + $order->extra_packaging_amount - $comission_on_store_amount - $store_coupon_discount_subsidy - $flash_store_discount_amount;
 
@@ -405,6 +424,11 @@ class OrderLogic
             $comission_on_store_amount = 0.0;
             $subscription_mode = 0;
             $commission_percentage = 0;
+        }
+
+        // Aplicar penalización al restaurante por espera tardía
+        if ($type != 'parcel' && $wait_time_bonus > 0) {
+            $store_amount = max(0.0, $store_amount - $wait_time_bonus);
         }
 
         try {
@@ -570,10 +594,38 @@ class OrderLogic
                         $tx->type            = 'tootli_direct_fee';
                         $tx->save();
                     }
+
+                    // Registrar multa al restaurante por espera tardía en restaurante
+                    if (isset($wait_time_bonus) && $wait_time_bonus > 0) {
+                        $tx = new AccountTransaction();
+                        $tx->from_type       = 'store';
+                        $tx->from_id         = $order->store->vendor->id;
+                        $tx->created_by      = 'admin';
+                        $tx->method          = 'restaurant_wait_penalty';
+                        $tx->ref             = $order->id;
+                        $tx->amount          = $wait_time_bonus;
+                        $tx->current_balance = $vendorWallet->balance;
+                        $tx->type            = 'penalty';
+                        $tx->save();
+                    }
                 }
                 if (isset($dmWallet)) {
                     self::auto_wallet_adjustment($dmWallet);
                     $dmWallet->save();
+
+                    // Registrar bono al repartidor por espera tardía en restaurante
+                    if (isset($wait_time_bonus) && $wait_time_bonus > 0) {
+                        $tx = new AccountTransaction();
+                        $tx->from_type       = 'deliveryman';
+                        $tx->from_id         = $order->delivery_man_id;
+                        $tx->created_by      = 'admin';
+                        $tx->method          = 'deliveryman_wait_bonus';
+                        $tx->ref             = $order->id;
+                        $tx->amount          = $wait_time_bonus;
+                        $tx->current_balance = $dmWallet->balance;
+                        $tx->type            = 'earning';
+                        $tx->save();
+                    }
                 }
 
                 self::update_unpaid_order_payment(order_id: $order->id, payment_method: $order->payment_method);
