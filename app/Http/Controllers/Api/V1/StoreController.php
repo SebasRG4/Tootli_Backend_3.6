@@ -153,7 +153,32 @@ class StoreController extends Controller
 
             $store = Helpers::store_data_formatting($store);
             $store['category_ids'] = array_map('intval', $category_ids->pluck('categories')->toArray());
-            $store['category_details'] = Category::whereIn('id', $store['category_ids'])->get();
+            
+            // Sort categories dynamically based on the current hour of the day
+            $hour = now()->hour;
+            $active_slot = 'all_day';
+            if ($hour >= 6 && $hour < 12) {
+                $active_slot = 'breakfast';
+            } elseif ($hour >= 12 && $hour < 18) {
+                $active_slot = 'lunch';
+            } else {
+                $active_slot = 'dinner';
+            }
+
+            $store['category_details'] = Category::whereIn('id', $store['category_ids'])->get()
+                ->sortByDesc(function($category) use ($active_slot) {
+                    $slot = $category->time_slot;
+                    if ($slot === $active_slot) {
+                        $slot_priority = 3;
+                    } elseif (empty($slot) || $slot === 'all_day') {
+                        $slot_priority = 2;
+                    } else {
+                        $slot_priority = 1;
+                    }
+                    return [$slot_priority, (int)$category->priority];
+                })
+                ->values();
+
             $store['price_range'] = Item::withoutGlobalScopes()->where('store_id', $store->id)
                 ->select(DB::raw('MIN(price) AS min_price, MAX(price) AS max_price'))
                 ->get(['min_price', 'max_price'])->toArray();

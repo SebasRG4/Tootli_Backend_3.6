@@ -2323,6 +2323,14 @@ class ItemController extends Controller
     }
     public function reorder(Request $request)
     {
+        try {
+            if (!\Illuminate\Support\Facades\Schema::hasColumn('categories', 'time_slot')) {
+                \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Auto-migration failed: " . $e->getMessage());
+        }
+
         $store_id = $request->query('store_id');
         $stores = Store::orderBy('name')->get();
         $items_by_category = [];
@@ -2454,6 +2462,12 @@ class ItemController extends Controller
                 $prompt = "Actúa como un experto en ingeniería de menús y optimización de ventas para plataformas de delivery como Uber Eats, Rappi y DiDi Food.
 Tu objetivo es reorganizar el orden de las categorías y el orden de los productos dentro de cada categoría para maximizar las ventas y el ticket promedio de un restaurante.
 
+Además, debes clasificar cada categoría principal en uno de estos 4 rangos de horario (time_slots) según el tipo de alimentos:
+- \"breakfast\" (ideal de 6:00 AM a 12:00 PM: café, huevos, chilaquiles, pan, desayunos).
+- \"lunch\" (ideal de 12:00 PM a 6:00 PM: platos fuertes, hamburguesas, cortes, comidas corridas, almuerzos).
+- \"dinner\" (ideal de 6:00 PM a 12:00 AM: cenas, pizzas, sushi, postres, snacks nocturnos).
+- \"all_day\" (ideal para todo el día: bebidas, entradas, guarniciones, etc.).
+
 Aplica las siguientes estrategias:
 1. Acomoda primero las categorías principales más vendidas o de mayor ticket (como Combos, Platos Fuertes, Recomendados). Deja bebidas, postres y complementos al final.
 2. Dentro de cada categoría, coloca los productos con promociones o descuentos al principio.
@@ -2466,6 +2480,10 @@ Aquí tienes el menú actual del restaurante en formato JSON:
 Debes responder ÚNICAMENTE con un objeto JSON válido que contenga exactamente esta estructura:
 {
   \"categories_order\": [<lista de IDs de categorías en el nuevo orden recomendado>],
+  \"categories_slots\": {
+     \"<id_categoria_1>\": \"breakfast|lunch|dinner|all_day\",
+     \"<id_categoria_2>\": \"breakfast|lunch|dinner|all_day\"
+  },
   \"items_order\": {
      \"<id_categoria_1>\": [<lista de IDs de productos de esta categoría en el nuevo orden recomendado>],
      \"<id_categoria_2>\": [<lista de IDs de productos de esta categoría en el nuevo orden recomendado>]
@@ -2531,6 +2549,21 @@ Debes responder ÚNICAMENTE con un objeto JSON válido que contenga exactamente 
 
             $categories_order = array_map(function($c) { return $c['id']; }, $sorted_categories);
 
+            // Fallback for categories slots classification
+            $categories_slots = [];
+            foreach ($sorted_categories as $c) {
+                $name = mb_strtolower($c['name']);
+                if (str_contains($name, 'desayuno') || str_contains($name, 'huevo') || str_contains($name, 'cafe') || str_contains($name, 'pan') || str_contains($name, 'jugo')) {
+                    $categories_slots[$c['id']] = 'breakfast';
+                } elseif (str_contains($name, 'comida') || str_contains($name, 'fuerte') || str_contains($name, 'carne') || str_contains($name, 'hamburguesa') || str_contains($name, 'taco')) {
+                    $categories_slots[$c['id']] = 'lunch';
+                } elseif (str_contains($name, 'cena') || str_contains($name, 'postre') || str_contains($name, 'pizza') || str_contains($name, 'sushi') || str_contains($name, 'antojo')) {
+                    $categories_slots[$c['id']] = 'dinner';
+                } else {
+                    $categories_slots[$c['id']] = 'all_day';
+                }
+            }
+
             // Sort items within each category
             $items_order = [];
             foreach ($categories as $cat) {
@@ -2554,8 +2587,9 @@ Debes responder ÚNICAMENTE con un objeto JSON válido que contenga exactamente 
 
             $ai_result = [
                 'categories_order' => $categories_order,
+                'categories_slots' => $categories_slots,
                 'items_order' => $items_order,
-                'explanation' => "Estrategia Automatizada (Ingeniería de Menú):\n1. Ubicamos combos, paquetes y platos fuertes al inicio para capturar compras de alto valor.\n2. Priorizamos artículos marcados como promocionales o con descuentos para potenciar ventas impulsivas.\n3. Posicionamos bebidas, postres y extras al final del listado para fomentar la venta cruzada complementaria al cierre del pedido."
+                'explanation' => "Estrategia Automatizada (Ingeniería de Menú):\n1. Clasificamos las categorías por horario óptimo de consumo para automatizar su relevancia en la app.\n2. Ubicamos combos, paquetes y platos fuertes al inicio para capturar compras de alto valor.\n3. Priorizamos artículos marcados como promocionales o con descuentos para potenciar ventas impulsivas.\n4. Posicionamos bebidas, postres y extras al final del listado para fomentar la venta cruzada complementaria al cierre del pedido."
             ];
         }
 
@@ -2569,6 +2603,7 @@ Debes responder ÚNICAMENTE con un objeto JSON válido que contenga exactamente 
     public function apply_ai_reorder(Request $request)
     {
         $categories_order = $request->input('categories_order');
+        $categories_slots = $request->input('categories_slots');
         $items_order = $request->input('items_order');
 
         if ($categories_order && is_array($categories_order)) {
@@ -2576,6 +2611,9 @@ Debes responder ÚNICAMENTE con un objeto JSON válido que contenga exactamente 
                 $category = Category::find($id);
                 if ($category) {
                     $category->priority = count($categories_order) - $index;
+                    if ($categories_slots && isset($categories_slots[$id])) {
+                        $category->time_slot = $categories_slots[$id];
+                    }
                     $category->save();
                 }
             }
