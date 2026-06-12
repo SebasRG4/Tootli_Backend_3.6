@@ -95,6 +95,7 @@ class Item extends Model
         'width' => 'float',
         'height' => 'float',
         'requires_large_vehicle' => 'boolean',
+        'is_promotional' => 'boolean',
     ];
 
     protected $appends = ['unit_type', 'image_full_url', 'images_full_url', 'video_full_url'];

@@ -347,6 +347,7 @@ class ItemController extends Controller
         $item->store_id = $request->store_id;
         $item->maximum_cart_quantity = $request->maximum_cart_quantity;
         $item->veg = $request->veg ?? 0;
+        $item->is_promotional = $request->is_promotional ?? 0;
         $item->module_id = Config::get('module.current_module_id');
         $module_type = Config::get('module.current_module_type');
         if ($module_type == 'grocery' || $module_type == 'ecommerce') {
@@ -704,6 +705,7 @@ class ItemController extends Controller
         $item->organic = $request->organic ?? 0;
         $item->delivery_time_type = $request->delivery_time_type ?? 'standard';
         $item->veg = $request->veg ?? 0;
+        $item->is_promotional = $request->is_promotional ?? 0;
         $item->priority = $request->priority ?? 0;
         $item->images = $images;
         if (Helpers::get_mail_status('product_approval') && $request?->temp_product) {

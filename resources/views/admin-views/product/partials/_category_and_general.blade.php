@@ -294,6 +294,18 @@
                                 </div>
                             </div>
                         @endif
+                        @if (Config::get('module.current_module_type') == 'food')
+                            <div class="col-sm-6 col-lg-4 error-wrapper" id="promotional">
+                                <div class="form-check mb-sm-2 pb-sm-1">
+                                    <input class="form-check-input" name="is_promotional" type="checkbox" value="1"
+                                        id="is_promotional"
+                                        {{ isset($product) && $product->is_promotional == 1 ? 'checked' : (isset($temp_product) && $temp_product == 1 && $product->is_promotional == 1 ? 'checked' : '') }}>
+                                    <label class="form-check-label" for="is_promotional">
+                                        {{ translate('Promocional') }}
+                                    </label>
+                                </div>
+                            </div>
+                        @endif
                         @if (Config::get('module.current_module_type') == 'pharmacy')
                             <div class="col-sm-6 col-lg--6 error-wrapper" id="generic_name">
                                 <label class="input-label" for="sub-categories">
