@@ -69,3 +69,27 @@ func SendAdminInactivityAlert(orderID uint, dmID uint) error {
 	log.Printf("[Pusher] Successfully sent AdminAlert for missing DM #%d", dmID)
 	return nil
 }
+
+// SendAdminOrderCancelWarning notifies the admin panel about an order that has no driver and is about to be auto-canceled
+func SendAdminOrderCancelWarning(orderID uint) error {
+	if PusherClient == nil {
+		return nil
+	}
+
+	channel := "admin-alerts"
+	data := map[string]interface{}{
+		"type":     "order_cancel_warning",
+		"title":    "⚠️ Pedido por Auto-Cancelar",
+		"body":     fmt.Sprintf("El pedido #%d lleva más de 12 minutos sin repartidor y se auto-cancelará pronto.", orderID),
+		"order_id": orderID,
+	}
+
+	err := PusherClient.Trigger(channel, "AdminAlert", data)
+	if err != nil {
+		log.Printf("[Pusher] Warning: Failed to send order cancel warning alert: %v", err)
+		return err
+	}
+
+	log.Printf("[Pusher] Successfully sent AdminAlert cancel warning for Order #%d", orderID)
+	return nil
+}

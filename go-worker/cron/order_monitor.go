@@ -108,5 +108,11 @@ func processExpiredOrders(ctx context.Context) {
 		if errNotif != nil {
 			log.Printf("[Cron] Failed to send admin push notification for order #%d: %v\n", order.ID, errNotif)
 		}
+
+		// Enviamos alerta por WebSocket en tiempo real al Panel Administrativo
+		errWS := notifications.SendAdminOrderCancelWarning(order.ID)
+		if errWS != nil {
+			log.Printf("[Cron] Failed to send admin websocket alert for order #%d: %v\n", order.ID, errWS)
+		}
 	}
 }
