@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Organizar Menú - Vista Móvil'))
+@section('title', 'Organizar Menú - Vista Móvil')
 
 @push('css_or_js')
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
@@ -18,8 +18,8 @@
         }
 
         .phone-mockup {
-            width: 380px;
-            height: 780px;
+            width: 385px;
+            height: 800px;
             background: #000;
             border-radius: 50px;
             padding: 12px;
@@ -79,11 +79,12 @@
 
         /* Banner section */
         .store-banner-wrapper {
-            height: 200px;
+            height: 160px;
             position: relative;
             background-size: cover;
             background-position: center;
             background-color: #eee;
+            flex-shrink: 0;
         }
 
         .banner-overlay-icons {
@@ -97,8 +98,8 @@
         }
 
         .overlay-icon-btn {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             background: rgba(255, 255, 255, 0.9);
             border-radius: 50%;
             display: flex;
@@ -106,28 +107,29 @@
             justify-content: center;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             color: #333;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         /* Store details overlapping card */
         .store-info-card {
             background: #fff;
-            margin: -40px 15px 15px;
+            margin: -30px 15px 10px;
             border-radius: 20px;
-            padding: 15px;
+            padding: 12px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.06);
             z-index: 5;
             position: relative;
             text-align: center;
             border: 1px solid rgba(0,0,0,0.05);
+            flex-shrink: 0;
         }
 
         .store-logo-circle {
-            width: 70px;
-            height: 70px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             border: 3px solid #fff;
-            margin: -45px auto 8px;
+            margin: -35px auto 5px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             background-size: cover;
             background-position: center;
@@ -135,21 +137,21 @@
         }
 
         .store-name-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             color: #0d1b2a;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
             line-height: 1.2;
         }
 
         .store-stats-row {
             display: flex;
             justify-content: space-around;
-            font-size: 11px;
+            font-size: 10px;
             color: #7f8c8d;
-            margin-top: 10px;
+            margin-top: 8px;
             border-top: 1px solid #f2f2f2;
-            padding-top: 8px;
+            padding-top: 6px;
         }
 
         .stat-item {
@@ -161,7 +163,109 @@
         .stat-value {
             font-weight: 700;
             color: #2c3e50;
-            font-size: 12px;
+            font-size: 11px;
+        }
+
+        /* Promotions Section (Horizontal Widget) */
+        .promotions-section {
+            padding: 10px 15px 5px;
+            background: #fff;
+            flex-shrink: 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .promotions-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .promotions-slider {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scrollbar-width: none;
+        }
+
+        .promotions-slider::-webkit-scrollbar {
+            display: none;
+        }
+
+        .promo-card {
+            flex: 0 0 120px;
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .promo-image-wrapper {
+            position: relative;
+            height: 80px;
+            width: 100%;
+        }
+
+        .promo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .promo-badge {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            background: #ef233c;
+            color: #fff;
+            font-size: 8px;
+            font-weight: 800;
+            padding: 1px 5px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            z-index: 2;
+        }
+
+        .promo-info {
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .promo-name {
+            font-size: 10px;
+            font-weight: 700;
+            color: #2c3e50;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .promo-price-row {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .promo-price {
+            font-size: 10px;
+            font-weight: 800;
+            color: #2c3e50;
+        }
+
+        .promo-old-price {
+            font-size: 8px;
+            color: #95a5a6;
+            text-decoration: line-through;
         }
 
         /* Horizontal drag & drop Categories */
@@ -170,6 +274,7 @@
             border-bottom: 1px solid #f0f0f0;
             background: #fff;
             z-index: 10;
+            flex-shrink: 0;
         }
 
         .categories-draggable-list {
@@ -186,10 +291,10 @@
         }
 
         .category-tab-item {
-            padding: 8px 16px;
+            padding: 6px 12px;
             background: #f8f9fa;
-            border-radius: 20px;
-            font-size: 13px;
+            border-radius: 16px;
+            font-size: 12px;
             font-weight: 600;
             color: #7f8c8d;
             white-space: nowrap;
@@ -198,7 +303,7 @@
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
         .category-tab-item:active {
             cursor: grabbing;
@@ -214,31 +319,100 @@
             width: 60px;
             background: rgba(3, 159, 63, 0.1);
             border: 1.5px dashed #039f3f;
-            border-radius: 20px;
+            border-radius: 16px;
         }
 
-        /* Product items list */
+        /* Subcategories horizontal chips bar */
+        .subcategories-bar {
+            background: #fff;
+            padding: 4px 10px 8px;
+            border-bottom: 1px solid #f2f2f2;
+            z-index: 10;
+            flex-shrink: 0;
+        }
+
+        .subcategory-chips-row {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding: 2px 0;
+        }
+
+        .subcategory-chips-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .subcategory-chip {
+            padding: 4px 10px;
+            background: #f1f2f6;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #57606f;
+            white-space: nowrap;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .subcategory-chip.active {
+            background: #039f3f;
+            color: #fff;
+        }
+
+        /* Product items list - Continuous scroll */
         .products-scroll-area {
             flex: 1;
             overflow-y: auto;
-            padding: 15px;
+            padding: 10px 15px;
             background: #fafafa;
+        }
+
+        .category-section {
+            margin-bottom: 25px;
+        }
+
+        .category-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 10px 0 8px;
+            padding-bottom: 4px;
+            border-bottom: 1.5px solid #eaeaea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .subcategory-group {
+            margin-bottom: 15px;
+        }
+
+        .subcategory-title-header {
+            font-size: 12px;
+            font-weight: 600;
+            color: #7f8c8d;
+            margin: 8px 0 6px;
+            padding-left: 6px;
+            border-left: 2.5px solid #039f3f;
         }
 
         .products-list-container {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
+            min-height: 20px; /* needed for sortable empty states */
         }
 
         .product-card-mockup {
             background: #fff;
-            border-radius: 16px;
-            padding: 12px;
+            border-radius: 12px;
+            padding: 10px;
             display: flex;
-            gap: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-            border: 1px solid rgba(0,0,0,0.04);
+            gap: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            border: 1px solid rgba(0,0,0,0.03);
             cursor: grab;
             transition: transform 0.2s, box-shadow 0.2s;
             position: relative;
@@ -247,7 +421,7 @@
             cursor: grabbing;
         }
         .product-card-mockup:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
         .product-info-col {
@@ -258,64 +432,76 @@
         }
 
         .product-title-text {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             color: #2c3e50;
             margin-bottom: 2px;
         }
 
         .product-desc-text {
-            font-size: 11px;
+            font-size: 10px;
             color: #95a5a6;
             line-height: 1.3;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
 
+        .product-price-row {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
         .product-price-text {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 800;
             color: #2c3e50;
         }
 
+        .product-old-price-text {
+            font-size: 10px;
+            color: #95a5a6;
+            text-decoration: line-through;
+        }
+
         .product-image-wrapper {
             position: relative;
-            width: 75px;
-            height: 75px;
+            width: 65px;
+            height: 65px;
         }
 
         .product-img-circle {
-            width: 75px;
-            height: 75px;
-            border-radius: 12px;
+            width: 65px;
+            height: 65px;
+            border-radius: 10px;
             object-fit: cover;
             background-color: #eee;
         }
 
         .add-mock-btn {
             position: absolute;
-            bottom: -8px;
+            bottom: -6px;
             left: 50%;
             transform: translateX(-50%);
             background: #fff;
             color: #039f3f;
             border: 1px solid #039f3f;
-            border-radius: 8px;
-            padding: 2px 10px;
-            font-size: 10px;
+            border-radius: 6px;
+            padding: 1px 8px;
+            font-size: 9px;
             font-weight: 700;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
             white-space: nowrap;
         }
 
         .product-drag-placeholder {
             border: 2px dashed #039f3f;
-            background: rgba(3, 159, 63, 0.03);
-            border-radius: 16px;
-            height: 95px;
+            background: rgba(3, 159, 63, 0.02);
+            border-radius: 12px;
+            height: 85px;
         }
 
         /* Guide Card style */
@@ -333,10 +519,10 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon"><i class="tio-android-phone-video"></i></span>
-                {{ translate('Organizar Menú (Vista Móvil)') }}
+                Organizar Menú (Vista Móvil)
             </h1>
             <p class="page-header-text">
-                {{ translate('Reordena las categorías y productos arrastrándolos directamente en el mockup celular. Los cambios se guardarán automáticamente.') }}
+                Reordena las categorías y productos arrastrándolos directamente en el mockup celular. Los cambios se guardarán automáticamente.
             </p>
         </div>
 
@@ -346,9 +532,9 @@
                 <div class="card mb-3">
                     <div class="card-body">
                         <form action="{{ route('admin.item.reorder') }}" method="GET" id="store-select-form">
-                            <label class="input-label font-weight-bold text-dark">{{ translate('Selecciona un Restaurante') }}</label>
+                            <label class="input-label font-weight-bold text-dark">Selecciona un Restaurante</label>
                             <select name="store_id" class="form-control js-select2-custom" onchange="this.form.submit()">
-                                <option value="">--- {{ translate('Seleccionar') }} ---</option>
+                                <option value="">--- Seleccionar ---</option>
                                 @foreach($stores as $store)
                                     <option value="{{ $store->id }}" {{ isset($selected_store) && $selected_store->id == $store->id ? 'selected' : '' }}>
                                         {{ $store->name }}
@@ -361,23 +547,23 @@
 
                 <div class="card instruction-card">
                     <div class="card-body">
-                        <h5 class="card-title text-primary"><i class="tio-info-outined mr-1"></i> {{ translate('¿Cómo funciona?') }}</h5>
+                        <h5 class="card-title text-primary"><i class="tio-info-outined mr-1"></i> ¿Cómo funciona?</h5>
                         <ul class="list-unstyled text-dark font-size-sm mb-0" style="line-height: 1.6;">
                             <li class="mb-2">
                                 <span class="badge badge-soft-info mr-1">1</span>
-                                {{ translate('Selecciona un restaurante para cargar su menú.') }}
+                                Selecciona un restaurante para cargar su menú.
                             </li>
                             <li class="mb-2">
                                 <span class="badge badge-soft-info mr-1">2</span>
-                                {{ translate('Arrastra las pestañas verdes horizontales en el celular para reordenar las categorías.') }}
+                                Arrastra las pestañas horizontales de categorías para cambiar su orden en la app.
                             </li>
                             <li class="mb-2">
                                 <span class="badge badge-soft-info mr-1">3</span>
-                                {{ translate('Selecciona cualquier pestaña de categoría para cargar sus respectivos productos.') }}
+                                Haz clic en una categoría para desplazarte automáticamente a su sección o usa la barra de subcategorías para filtrar de forma ágil.
                             </li>
                             <li>
                                 <span class="badge badge-soft-info mr-1">4</span>
-                                {{ translate('Arrastra los platos verticalmente dentro de la lista para cambiar su orden de visualización.') }}
+                                Reordena los platos arrastrándolos verticalmente dentro de su respectiva sección.
                             </li>
                         </ul>
                     </div>
@@ -433,41 +619,286 @@
                                     </div>
                                 </div>
 
+                                <!-- Promociones Horizontal Widget -->
+                                <div class="promotions-section">
+                                    <h5 class="promotions-title">
+                                        <i class="tio-gift text-danger"></i> Promociones
+                                    </h5>
+                                    <div class="promotions-slider">
+                                        @forelse($promotional_items as $promo_item)
+                                            @php
+                                                $discount_label = '';
+                                                if ($promo_item->discount > 0) {
+                                                    if ($promo_item->discount_type == 'percent') {
+                                                        $discount_label = number_format($promo_item->discount, 0) . '% DCTO';
+                                                    } else {
+                                                        $discount_label = '$' . number_format($promo_item->discount, 0);
+                                                    }
+                                                } elseif ($promo_item->is_promotional == 1) {
+                                                    $discount_label = 'PROMO';
+                                                }
+
+                                                $has_discount = $promo_item->discount > 0;
+                                                $current_price = $promo_item->price;
+                                                $old_price = null;
+                                                if ($has_discount) {
+                                                    if ($promo_item->discount_type == 'percent') {
+                                                        $discount_amount = ($promo_item->price * $promo_item->discount) / 100;
+                                                        $current_price = $promo_item->price - $discount_amount;
+                                                        $old_price = $promo_item->price;
+                                                    } else {
+                                                        $current_price = $promo_item->price - $promo_item->discount;
+                                                        $old_price = $promo_item->price;
+                                                    }
+                                                }
+                                            @endphp
+                                            <div class="promo-card">
+                                                @if($discount_label)
+                                                    <div class="promo-badge">{{ $discount_label }}</div>
+                                                @endif
+                                                <div class="promo-image-wrapper">
+                                                    <img class="promo-img" src="{{ $promo_item->image_full_url }}" onerror="this.src='{{ asset('assets/admin/img/160x160/img2.jpg') }}'">
+                                                </div>
+                                                <div class="promo-info">
+                                                    <div class="promo-name">{{ $promo_item->name }}</div>
+                                                    <div class="promo-price-row">
+                                                        <span class="promo-price">${{ number_format($current_price, 2) }}</span>
+                                                        @if($old_price)
+                                                            <span class="promo-old-price">${{ number_format($old_price, 2) }}</span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @empty
+                                            <div class="text-center py-3 text-muted w-100 font-size-sm">No hay promociones activas</div>
+                                        @endforelse
+                                    </div>
+                                </div>
+
                                 <!-- Categories Horizontal Bar -->
                                 <div class="categories-tab-bar">
                                     <ul class="categories-draggable-list" id="category-list">
                                         @foreach($categories as $index => $category)
                                             <li class="category-tab-item {{ $index === 0 ? 'active' : '' }}" 
                                                 data-id="{{ $category->id }}"
-                                                onclick="switchCategory({{ $category->id }}, this)">
-                                                <i class="tio-menu-hamburger mr-1 font-size-sm text-muted"></i>
+                                                onclick="scrollToCategory({{ $category->id }}, this)">
+                                                <i class="tio-menu-hamburger mr-1 font-size-sm text-muted" style="cursor: grab;"></i>
                                                 {{ $category->name }}
                                             </li>
                                         @endforeach
                                     </ul>
                                 </div>
 
-                                <!-- Products Scrollable List -->
-                                <div class="products-scroll-area">
+                                <!-- Subcategories Horizontal Bar -->
+                                <div class="subcategories-bar" id="subcategories-bar-container">
                                     @foreach($categories as $index => $category)
-                                        <div class="products-list-container category-products-section {{ $index === 0 ? '' : 'd-none' }}" 
-                                             id="category-section-{{ $category->id }}" 
-                                             data-category-id="{{ $category->id }}">
-                                            @forelse($items_by_category[$category->id] as $item)
-                                                <div class="product-card-mockup" data-id="{{ $item->id }}">
-                                                    <div class="product-info-col">
-                                                        <div class="product-title-text">{{ $item->name }}</div>
-                                                        <div class="product-desc-text">{{ $item->description ?? '' }}</div>
-                                                        <div class="product-price-text">${{ number_format($item->price, 2) }}</div>
-                                                    </div>
-                                                    <div class="product-image-wrapper">
-                                                        <img class="product-img-circle" src="{{ $item->image_full_url }}" onerror="this.src='{{ asset('assets/admin/img/160x160/img2.jpg') }}'">
-                                                        <div class="add-mock-btn">Agregar</div>
-                                                    </div>
+                                        @if(isset($subcategories_by_category[$category->id]) && count($subcategories_by_category[$category->id]) > 0)
+                                            <div class="subcategory-chips-row {{ $index === 0 ? '' : 'd-none' }}" id="subcategories-for-{{ $category->id }}">
+                                                <div class="subcategory-chip active" data-id="all-{{ $category->id }}" onclick="scrollToCategorySection({{ $category->id }}, 'all')">
+                                                    Todos
                                                 </div>
-                                            @empty
-                                                <div class="text-center py-4 text-muted small">{{ translate('No hay productos en esta categoría.') }}</div>
-                                            @endforelse
+                                                @foreach($subcategories_by_category[$category->id] as $subcat)
+                                                    <div class="subcategory-chip" data-id="{{ $subcat->id }}" onclick="scrollToCategorySection({{ $category->id }}, {{ $subcat->id }})">
+                                                        {{ $subcat->name }}
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+
+                                <!-- Products Continuous Scroll Area -->
+                                <div class="products-scroll-area" id="products-scroll-area">
+                                    @foreach($categories as $category)
+                                        <div class="category-section" id="category-section-{{ $category->id }}" data-category-id="{{ $category->id }}">
+                                            <h5 class="category-section-title">
+                                                <span>{{ $category->name }}</span>
+                                                <small class="text-muted" style="font-size: 10px;">Arrastra platos aquí</small>
+                                            </h5>
+
+                                            @if(isset($subcategories_by_category[$category->id]) && count($subcategories_by_category[$category->id]) > 0)
+                                                @php
+                                                    $subcat_ids = $subcategories_by_category[$category->id]->pluck('id')->toArray();
+                                                    $has_subcat_groups = false;
+                                                @endphp
+
+                                                @foreach($subcategories_by_category[$category->id] as $subcat)
+                                                    @php
+                                                        $subcat_items = $items_by_category[$category->id]->filter(function($item) use ($subcat) {
+                                                            return $item->category_id == $subcat->id;
+                                                        });
+                                                    @endphp
+
+                                                    @if(count($subcat_items) > 0)
+                                                        @php $has_subcat_groups = true; @endphp
+                                                        <div class="subcategory-group" id="subcategory-group-{{ $subcat->id }}" data-subcategory-id="{{ $subcat->id }}">
+                                                            <div class="subcategory-title-header">{{ $subcat->name }}</div>
+                                                            <div class="products-list-container" data-category-id="{{ $category->id }}" data-subcategory-id="{{ $subcat->id }}">
+                                                                @foreach($subcat_items as $item)
+                                                                    @php
+                                                                        $has_discount = $item->discount > 0;
+                                                                        $current_price = $item->price;
+                                                                        $old_price = null;
+                                                                        if ($has_discount) {
+                                                                            if ($item->discount_type == 'percent') {
+                                                                                $discount_amount = ($item->price * $item->discount) / 100;
+                                                                                $current_price = $item->price - $discount_amount;
+                                                                                $old_price = $item->price;
+                                                                            } else {
+                                                                                $current_price = $item->price - $item->discount;
+                                                                                $old_price = $item->price;
+                                                                            }
+                                                                        }
+                                                                        $discount_label = '';
+                                                                        if ($item->discount > 0) {
+                                                                            if ($item->discount_type == 'percent') {
+                                                                                $discount_label = number_format($item->discount, 0) . '% DCTO';
+                                                                            } else {
+                                                                                $discount_label = '$' . number_format($item->discount, 0);
+                                                                            }
+                                                                        } elseif ($item->is_promotional == 1) {
+                                                                            $discount_label = 'PROMO';
+                                                                        }
+                                                                    @endphp
+                                                                    <div class="product-card-mockup" data-id="{{ $item->id }}">
+                                                                        @if($discount_label)
+                                                                            <div class="promo-badge">{{ $discount_label }}</div>
+                                                                        @endif
+                                                                        <div class="product-info-col">
+                                                                            <div class="product-title-text">{{ $item->name }}</div>
+                                                                            <div class="product-desc-text">{{ $item->description ?? '' }}</div>
+                                                                            <div class="product-price-row">
+                                                                                <span class="product-price-text">${{ number_format($current_price, 2) }}</span>
+                                                                                @if($old_price)
+                                                                                    <span class="product-old-price-text">${{ number_format($old_price, 2) }}</span>
+                                                                                @endif
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="product-image-wrapper">
+                                                                            <img class="product-img-circle" src="{{ $item->image_full_url }}" onerror="this.src='{{ asset('assets/admin/img/160x160/img2.jpg') }}'">
+                                                                            <div class="add-mock-btn">Agregar</div>
+                                                                        </div>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                    @endif
+                                                @endforeach
+
+                                                @php
+                                                    $uncategorized_items = $items_by_category[$category->id]->filter(function($item) use ($subcat_ids) {
+                                                        return !in_array($item->category_id, $subcat_ids);
+                                                    });
+                                                @endphp
+
+                                                @if(count($uncategorized_items) > 0)
+                                                    <div class="subcategory-group" id="subcategory-group-uncat-{{ $category->id }}">
+                                                        <div class="products-list-container" data-category-id="{{ $category->id }}" data-subcategory-id="">
+                                                            @foreach($uncategorized_items as $item)
+                                                                @php
+                                                                    $has_discount = $item->discount > 0;
+                                                                    $current_price = $item->price;
+                                                                    $old_price = null;
+                                                                    if ($has_discount) {
+                                                                        if ($item->discount_type == 'percent') {
+                                                                            $discount_amount = ($item->price * $item->discount) / 100;
+                                                                            $current_price = $item->price - $discount_amount;
+                                                                            $old_price = $item->price;
+                                                                        } else {
+                                                                            $current_price = $item->price - $item->discount;
+                                                                            $old_price = $item->price;
+                                                                        }
+                                                                    }
+                                                                    $discount_label = '';
+                                                                    if ($item->discount > 0) {
+                                                                        if ($item->discount_type == 'percent') {
+                                                                            $discount_label = number_format($item->discount, 0) . '% DCTO';
+                                                                        } else {
+                                                                            $discount_label = '$' . number_format($item->discount, 0);
+                                                                        }
+                                                                    } elseif ($item->is_promotional == 1) {
+                                                                        $discount_label = 'PROMO';
+                                                                    }
+                                                                @endphp
+                                                                <div class="product-card-mockup" data-id="{{ $item->id }}">
+                                                                    @if($discount_label)
+                                                                        <div class="promo-badge">{{ $discount_label }}</div>
+                                                                    @endif
+                                                                    <div class="product-info-col">
+                                                                        <div class="product-title-text">{{ $item->name }}</div>
+                                                                        <div class="product-desc-text">{{ $item->description ?? '' }}</div>
+                                                                        <div class="product-price-row">
+                                                                            <span class="product-price-text">${{ number_format($current_price, 2) }}</span>
+                                                                            @if($old_price)
+                                                                                <span class="product-old-price-text">${{ number_format($old_price, 2) }}</span>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="product-image-wrapper">
+                                                                        <img class="product-img-circle" src="{{ $item->image_full_url }}" onerror="this.src='{{ asset('assets/admin/img/160x160/img2.jpg') }}'">
+                                                                        <div class="add-mock-btn">Agregar</div>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                @endif
+
+                                                @if(!$has_subcat_groups && count($uncategorized_items) == 0)
+                                                    <div class="text-center py-4 text-muted small">No hay productos en esta categoría.</div>
+                                                @endif
+                                            @else
+                                                <div class="products-list-container" data-category-id="{{ $category->id }}">
+                                                    @forelse($items_by_category[$category->id] as $item)
+                                                        @php
+                                                            $has_discount = $item->discount > 0;
+                                                            $current_price = $item->price;
+                                                            $old_price = null;
+                                                            if ($has_discount) {
+                                                                if ($item->discount_type == 'percent') {
+                                                                    $discount_amount = ($item->price * $item->discount) / 100;
+                                                                    $current_price = $item->price - $discount_amount;
+                                                                    $old_price = $item->price;
+                                                                } else {
+                                                                    $current_price = $item->price - $item->discount;
+                                                                    $old_price = $item->price;
+                                                                }
+                                                            }
+                                                            $discount_label = '';
+                                                            if ($item->discount > 0) {
+                                                                if ($item->discount_type == 'percent') {
+                                                                    $discount_label = number_format($item->discount, 0) . '% DCTO';
+                                                                } else {
+                                                                    $discount_label = '$' . number_format($item->discount, 0);
+                                                                }
+                                                            } elseif ($item->is_promotional == 1) {
+                                                                $discount_label = 'PROMO';
+                                                            }
+                                                        @endphp
+                                                        <div class="product-card-mockup" data-id="{{ $item->id }}">
+                                                            @if($discount_label)
+                                                                <div class="promo-badge">{{ $discount_label }}</div>
+                                                            @endif
+                                                            <div class="product-info-col">
+                                                                <div class="product-title-text">{{ $item->name }}</div>
+                                                                <div class="product-desc-text">{{ $item->description ?? '' }}</div>
+                                                                <div class="product-price-row">
+                                                                    <span class="product-price-text">${{ number_format($current_price, 2) }}</span>
+                                                                    @if($old_price)
+                                                                        <span class="product-old-price-text">${{ number_format($old_price, 2) }}</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            <div class="product-image-wrapper">
+                                                                <img class="product-img-circle" src="{{ $item->image_full_url }}" onerror="this.src='{{ asset('assets/admin/img/160x160/img2.jpg') }}'">
+                                                                <div class="add-mock-btn">Agregar</div>
+                                                            </div>
+                                                        </div>
+                                                    @empty
+                                                        <div class="text-center py-4 text-muted small">No hay productos en esta categoría.</div>
+                                                    @endforelse
+                                                </div>
+                                            @endif
                                         </div>
                                     @endforeach
                                 </div>
@@ -478,7 +909,7 @@
                     <div class="card border-0 shadow-sm text-center py-5">
                         <div class="card-body">
                             <img src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}" style="width: 150px; margin-bottom: 20px;">
-                            <h4>{{ translate('Por favor, selecciona un restaurante para empezar a organizar el menú.') }}</h4>
+                            <h4>Por favor, selecciona un restaurante para empezar a organizar el menú.</h4>
                         </div>
                     </div>
                 @endif
@@ -490,12 +921,13 @@
 @push('script_2')
     <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
     <script>
+        var isScrollingProgrammatically = false;
+
         $(document).ready(function() {
             // Sortable para Categorías (Horizontal)
             $("#category-list").sortable({
                 placeholder: "category-drag-placeholder",
                 axis: "x",
-                containment: "parent",
                 tolerance: "pointer",
                 update: function(event, ui) {
                     let order = [];
@@ -540,20 +972,122 @@
                     });
                 }
             });
+
+            // Scroll monitor to sync active categories and subcategories
+            $('#products-scroll-area').on('scroll', function() {
+                if (isScrollingProgrammatically) return;
+
+                var scrollArea = $(this);
+                var containerTop = scrollArea.offset().top;
+                var activeCategoryId = null;
+
+                // Find which category section is currently viewable at the top of the container
+                $('.category-section').each(function() {
+                    var section = $(this);
+                    var sectionTop = section.offset().top - containerTop;
+                    
+                    // If the top of the category section is near or above the top of the viewport
+                    if (sectionTop <= 30) {
+                        activeCategoryId = section.data('category-id');
+                    }
+                });
+
+                if (activeCategoryId) {
+                    // Update active category tab
+                    $('.category-tab-item').removeClass('active');
+                    var activeTab = $('.category-tab-item[data-id="' + activeCategoryId + '"]');
+                    activeTab.addClass('active');
+
+                    // Scroll category tab bar to center the active category tab
+                    var tabBar = $('.categories-draggable-list');
+                    if (tabBar.length && activeTab.length) {
+                        var scrollLeft = activeTab.offset().left - tabBar.offset().left + tabBar.scrollLeft() - (tabBar.width() / 2) + (activeTab.width() / 2);
+                        tabBar.stop().animate({ scrollLeft: scrollLeft }, 150);
+                    }
+
+                    // Show correct subcategories chips row
+                    $('.subcategory-chips-row').addClass('d-none');
+                    var subcatRow = $('#subcategories-for-' + activeCategoryId);
+                    if (subcatRow.length) {
+                        subcatRow.removeClass('d-none');
+                    }
+
+                    // Synchronize active subcategory chip based on scroll position within that category
+                    var activeSubcatId = 'all-' + activeCategoryId;
+                    $('#category-section-' + activeCategoryId + ' .subcategory-group').each(function() {
+                        var subGroup = $(this);
+                        var groupTop = subGroup.offset().top - containerTop;
+                        if (groupTop <= 40) {
+                            activeSubcatId = subGroup.data('subcategory-id');
+                        }
+                    });
+
+                    // Set active chip
+                    if (subcatRow.length) {
+                        subcatRow.find('.subcategory-chip').removeClass('active');
+                        subcatRow.find('.subcategory-chip[data-id="' + activeSubcatId + '"]').addClass('active');
+                    }
+                }
+            });
         });
 
-        // Alternar visualización de categorías
-        function switchCategory(categoryId, element) {
-            // No cambiar si estamos arrastrando
+        // Click to scroll to category section
+        function scrollToCategory(categoryId, element) {
             if ($(element).hasClass('ui-sortable-helper')) return;
 
-            // Cambiar pestaña activa
             $('.category-tab-item').removeClass('active');
             $(element).addClass('active');
 
-            // Mostrar sección de productos correspondiente
-            $('.category-products-section').addClass('d-none');
-            $('#category-section-' + categoryId).removeClass('d-none');
+            // Show corresponding subcategory chips row
+            $('.subcategory-chips-row').addClass('d-none');
+            var subcatRow = $('#subcategories-for-' + categoryId);
+            if (subcatRow.length) {
+                subcatRow.removeClass('d-none');
+                subcatRow.find('.subcategory-chip').removeClass('active');
+                subcatRow.find('.subcategory-chip[data-id="all-' + categoryId + '"]').addClass('active');
+            }
+
+            isScrollingProgrammatically = true;
+            var container = $('#products-scroll-area');
+            var target = $('#category-section-' + categoryId);
+            
+            if (target.length) {
+                container.stop().animate({
+                    scrollTop: target.offset().top - container.offset().top + container.scrollTop()
+                }, 400, function() {
+                    isScrollingProgrammatically = false;
+                });
+            } else {
+                isScrollingProgrammatically = false;
+            }
+        }
+
+        // Scroll to subcategory or category top
+        function scrollToCategorySection(categoryId, subcatId) {
+            var container = $('#products-scroll-area');
+            var target;
+
+            if (subcatId === 'all') {
+                target = $('#category-section-' + categoryId);
+            } else {
+                target = $('#subcategory-group-' + subcatId);
+            }
+
+            // Set active class on clicked subcategory chip
+            var subcatRow = $('#subcategories-for-' + categoryId);
+            if (subcatRow.length) {
+                subcatRow.find('.subcategory-chip').removeClass('active');
+                subcatRow.find('.subcategory-chip[data-id="' + subcatId + '"]').addClass('active');
+            }
+
+            if (target && target.length) {
+                isScrollingProgrammatically = true;
+                container.stop().animate({
+                    scrollTop: target.offset().top - container.offset().top + container.scrollTop()
+                }, 400, function() {
+                    isScrollingProgrammatically = false;
+                });
+            }
         }
     </script>
 @endpush

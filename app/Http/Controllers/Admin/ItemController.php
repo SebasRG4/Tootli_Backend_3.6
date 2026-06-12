@@ -2326,26 +2326,49 @@ class ItemController extends Controller
         $store_id = $request->query('store_id');
         $stores = Store::orderBy('name')->get();
         $items_by_category = [];
+        $subcategories_by_category = [];
+        $promotional_items = [];
         $categories = [];
         $selected_store = null;
 
         if ($store_id) {
             $selected_store = Store::find($store_id);
             if ($selected_store) {
-                $categories = Category::whereHas('products', function ($query) use ($store_id) {
-                    $query->where('store_id', $store_id);
+                // Get categories that have products directly or through their subcategories
+                $categories = Category::where(function($query) use ($store_id) {
+                    $query->whereHas('products', function ($q) use ($store_id) {
+                        $q->where('store_id', $store_id);
+                    })->orWhereHas('childes.products', function ($q) use ($store_id) {
+                        $q->where('store_id', $store_id);
+                    });
                 })->where('position', 0)->orderBy('priority', 'desc')->get();
 
                 foreach ($categories as $category) {
+                    // Get subcategories
+                    $subcategories_by_category[$category->id] = Category::where('parent_id', $category->id)
+                        ->orderBy('priority', 'desc')
+                        ->get();
+
+                    // Get all items in this category or in any of its subcategories
                     $items_by_category[$category->id] = Item::where('store_id', $store_id)
-                        ->where('category_id', $category->id)
+                        ->whereHas('category', function ($q) use ($category) {
+                            $q->where('id', $category->id)->orWhere('parent_id', $category->id);
+                        })
                         ->orderBy('priority', 'desc')
                         ->get();
                 }
+
+                // Get promotional items
+                $promotional_items = Item::where('store_id', $store_id)
+                    ->where(function($query) {
+                        $query->where('discount', '>', 0)->orWhere('is_promotional', 1);
+                    })
+                    ->orderBy('priority', 'desc')
+                    ->get();
             }
         }
 
-        return view('admin-views.product.reorder', compact('stores', 'items_by_category', 'categories', 'selected_store'));
+        return view('admin-views.product.reorder', compact('stores', 'items_by_category', 'subcategories_by_category', 'promotional_items', 'categories', 'selected_store'));
     }
 
     public function update_reorder(Request $request)
