@@ -166,6 +166,8 @@
                                 </div>
                             </div>
                             <!-- End Unfold -->
+                            <a href="{{ route('admin.item.reorder', ['store_id' => $store->id]) }}" class="btn btn--info pull-right mr-2"><i
+                                    class="tio-sort"></i> {{ translate('Organizar Menú') }}</a>
                             <a href="{{ route('admin.item.add-new') }}" class="btn btn--primary pull-right"><i
                                     class="tio-add-circle"></i> {{ translate('messages.add_new_item') }}</a>
                         </div>
