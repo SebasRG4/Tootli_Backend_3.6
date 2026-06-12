@@ -2396,4 +2396,208 @@ class ItemController extends Controller
         }
         return response()->json(['message' => translate('Category order updated successfully')]);
     }
+
+    public function ai_reorder(Request $request)
+    {
+        $store_id = $request->input('store_id');
+        if (!$store_id) {
+            return response()->json(['success' => false, 'message' => 'Restaurante no especificado.'], 400);
+        }
+
+        $categories = Category::where(function($query) use ($store_id) {
+            $query->whereHas('products', function ($q) use ($store_id) {
+                $q->where('store_id', $store_id);
+            })->orWhereHas('childes.products', function ($q) use ($store_id) {
+                $q->where('store_id', $store_id);
+            });
+        })->where('position', 0)->orderBy('priority', 'desc')->get();
+
+        $data_for_prompt = [];
+        $items_by_cat = [];
+
+        foreach ($categories as $cat) {
+            $cat_items = Item::where('store_id', $store_id)
+                ->whereHas('category', function ($q) use ($cat) {
+                    $q->where('id', $cat->id)->orWhere('parent_id', $cat->id);
+                })
+                ->get();
+
+            $items_by_cat[$cat->id] = $cat_items;
+
+            $items_data = [];
+            foreach ($cat_items as $item) {
+                $items_data[] = [
+                    'id' => $item->id,
+                    'name' => $item->name,
+                    'description' => $item->description,
+                    'price' => (float)$item->price,
+                    'discount' => (float)$item->discount,
+                    'discount_type' => $item->discount_type,
+                    'is_promotional' => (int)$item->is_promotional,
+                ];
+            }
+
+            $data_for_prompt[] = [
+                'id' => $cat->id,
+                'name' => $cat->name,
+                'items' => $items_data
+            ];
+        }
+
+        $ai_result = null;
+        $used_fallback = false;
+
+        // Try calling Google Gemini API directly
+        $gemini_key = env('GEMINI_API_KEY');
+        if ($gemini_key) {
+            try {
+                $prompt = "Actúa como un experto en ingeniería de menús y optimización de ventas para plataformas de delivery como Uber Eats, Rappi y DiDi Food.
+Tu objetivo es reorganizar el orden de las categorías y el orden de los productos dentro de cada categoría para maximizar las ventas y el ticket promedio de un restaurante.
+
+Aplica las siguientes estrategias:
+1. Acomoda primero las categorías principales más vendidas o de mayor ticket (como Combos, Platos Fuertes, Recomendados). Deja bebidas, postres y complementos al final.
+2. Dentro de cada categoría, coloca los productos con promociones o descuentos al principio.
+3. Coloca platos estrella o de alto margen en las primeras posiciones (efecto ancla visual).
+4. Asegúrate de que las opciones baratas o acompañamientos individuales queden al final de cada sección.
+
+Aquí tienes el menú actual del restaurante en formato JSON:
+" . json_encode($data_for_prompt, JSON_UNESCAPED_UNICODE) . "
+
+Debes responder ÚNICAMENTE con un objeto JSON válido que contenga exactamente esta estructura:
+{
+  \"categories_order\": [<lista de IDs de categorías en el nuevo orden recomendado>],
+  \"items_order\": {
+     \"<id_categoria_1>\": [<lista de IDs de productos de esta categoría en el nuevo orden recomendado>],
+     \"<id_categoria_2>\": [<lista de IDs de productos de esta categoría en el nuevo orden recomendado>]
+  },
+  \"explanation\": \"Una explicación breve de 3 o 4 puntos en español detallando las estrategias psicológicas y de ventas de Uber Eats/Rappi aplicadas a este menú específico.\"
+}";
+
+                $response = \Illuminate\Support\Facades\Http::timeout(30)->post(
+                    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $gemini_key,
+                    [
+                        'contents' => [
+                            [
+                                'parts' => [
+                                    ['text' => $prompt]
+                                ]
+                            ]
+                        ],
+                        'generationConfig' => [
+                            'responseMimeType' => 'application/json',
+                            'temperature' => 0.2
+                        ]
+                    ]
+                );
+
+                if ($response->successful()) {
+                    $resData = $response->json();
+                    if (isset($resData['candidates'][0]['content']['parts'][0]['text'])) {
+                        $responseText = trim($resData['candidates'][0]['content']['parts'][0]['text']);
+                        $ai_result = json_decode($responseText, true);
+                    }
+                }
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("Gemini Reorder Error: " . $e->getMessage());
+                $used_fallback = true;
+            }
+        } else {
+            $used_fallback = true;
+        }
+
+        // Fallback Algorithm
+        if (!$ai_result || !isset($ai_result['categories_order']) || !isset($ai_result['items_order'])) {
+            $used_fallback = true;
+            
+            // Sort categories: Combos/promos first, drinks/desserts last
+            $sorted_categories = $categories->toArray();
+            usort($sorted_categories, function($a, $b) {
+                $nameA = mb_strtolower($a['name']);
+                $nameB = mb_strtolower($b['name']);
+                
+                $scoreA = 0;
+                $scoreB = 0;
+
+                // Keywords to prioritize
+                if (str_contains($nameA, 'combo') || str_contains($nameA, 'paquete') || str_contains($nameA, 'promo') || str_contains($nameA, 'fuerte') || str_contains($nameA, 'recomenda')) $scoreA = 10;
+                if (str_contains($nameB, 'combo') || str_contains($nameB, 'paquete') || str_contains($nameB, 'promo') || str_contains($nameB, 'fuerte') || str_contains($nameB, 'recomenda')) $scoreB = 10;
+
+                // Keywords to deprioritize
+                if (str_contains($nameA, 'bebida') || str_contains($nameA, 'refresco') || str_contains($nameA, 'postre') || str_contains($nameA, 'extra') || str_contains($nameA, 'adicional')) $scoreA = -10;
+                if (str_contains($nameB, 'bebida') || str_contains($nameB, 'refresco') || str_contains($nameB, 'postre') || str_contains($nameB, 'extra') || str_contains($nameB, 'adicional')) $scoreB = -10;
+
+                return $scoreB <=> $scoreA; // desc
+            });
+
+            $categories_order = array_map(function($c) { return $c['id']; }, $sorted_categories);
+
+            // Sort items within each category
+            $items_order = [];
+            foreach ($categories as $cat) {
+                $cat_items = $items_by_cat[$cat->id]->toArray();
+
+                usort($cat_items, function($a, $b) {
+                    // 1. Promotional / discounts first
+                    $promoA = ($a['is_promotional'] == 1 || $a['discount'] > 0) ? 1 : 0;
+                    $promoB = ($b['is_promotional'] == 1 || $b['discount'] > 0) ? 1 : 0;
+
+                    if ($promoA !== $promoB) {
+                        return $promoB <=> $promoA;
+                    }
+
+                    // 2. Higher price (anchor pricing)
+                    return $b['price'] <=> $a['price'];
+                });
+
+                $items_order[$cat->id] = array_map(function($i) { return $i['id']; }, $cat_items);
+            }
+
+            $ai_result = [
+                'categories_order' => $categories_order,
+                'items_order' => $items_order,
+                'explanation' => "Estrategia Automatizada (Ingeniería de Menú):\n1. Ubicamos combos, paquetes y platos fuertes al inicio para capturar compras de alto valor.\n2. Priorizamos artículos marcados como promocionales o con descuentos para potenciar ventas impulsivas.\n3. Posicionamos bebidas, postres y extras al final del listado para fomentar la venta cruzada complementaria al cierre del pedido."
+            ];
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $ai_result,
+            'fallback' => $used_fallback
+        ]);
+    }
+
+    public function apply_ai_reorder(Request $request)
+    {
+        $categories_order = $request->input('categories_order');
+        $items_order = $request->input('items_order');
+
+        if ($categories_order && is_array($categories_order)) {
+            foreach ($categories_order as $index => $id) {
+                $category = Category::find($id);
+                if ($category) {
+                    $category->priority = count($categories_order) - $index;
+                    $category->save();
+                }
+            }
+        }
+
+        if ($items_order && is_array($items_order)) {
+            foreach ($items_order as $cat_id => $item_ids) {
+                if (is_array($item_ids)) {
+                    foreach ($item_ids as $index => $id) {
+                        $item = Item::find($id);
+                        if ($item) {
+                            $item->priority = count($item_ids) - $index;
+                            $item->save();
+                        }
+                    }
+                }
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => '¡Estructura de menú optimizada con IA aplicada con éxito!'
+        ]);
+    }
 }

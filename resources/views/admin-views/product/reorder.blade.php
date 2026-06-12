@@ -542,6 +542,13 @@
                                 @endforeach
                             </select>
                         </form>
+
+                        @if(isset($selected_store))
+                            <hr>
+                            <button type="button" class="btn btn-primary btn-block" id="btn-optimize-ai" onclick="optimizeMenuWithAI()">
+                                <i class="tio-sparkles-outlined mr-1"></i> Optimizar Menú con IA
+                            </button>
+                        @endif
                     </div>
                 </div>
 
@@ -918,10 +925,64 @@
     </div>
 @endsection
 
+<!-- AI Optimization Modal -->
+<div class="modal fade" id="aiOptimizeModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+            <!-- Header -->
+            <div class="modal-header bg-primary text-white border-0 py-3" style="background: linear-gradient(135deg, #039f3f 0%, #028032 100%) !important;">
+                <h5 class="modal-title text-white font-weight-bold" id="aiOptimizeModalLabel">
+                    <i class="tio-sparkles-outlined mr-1"></i> Optimización de Menú con IA
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" id="ai-modal-close-btn">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <!-- Body -->
+            <div class="modal-body p-4">
+                <!-- Loading State -->
+                <div id="ai-loading-state" class="text-center py-4">
+                    <div class="spinner-border text-success mb-3" role="status" style="width: 3rem; height: 3rem; color: #039f3f !important;">
+                        <span class="sr-only">Cargando...</span>
+                    </div>
+                    <h5 class="mt-3 font-weight-bold text-dark">Analizando menú con IA...</h5>
+                    <p class="text-muted small px-2">
+                        Nuestro agente de IA está analizando los precios, las promociones y la psicología de ventas de Uber Eats, Rappi y DiDi Food para estructurar tu menú de la forma más rentable.
+                    </p>
+                </div>
+                
+                <!-- Result State -->
+                <div id="ai-result-state" class="d-none">
+                    <div class="alert alert-soft-success border-0 mb-3" role="alert" style="background-color: rgba(3, 159, 63, 0.08); border-radius: 12px;">
+                        <h6 class="alert-heading text-success font-weight-bold mb-1">
+                            <i class="tio-checkmark-circle-outlined mr-1"></i> ¡Optimización lista!
+                        </h6>
+                        <span class="text-dark font-size-sm">La IA ha diseñado una estrategia de acomodo basada en el comportamiento del consumidor.</span>
+                    </div>
+                    
+                    <h6 class="font-weight-bold text-dark mb-2">Estrategia aplicada:</h6>
+                    <div class="p-3 bg-light rounded-lg text-dark mb-4 font-size-sm" id="ai-strategy-explanation" style="line-height: 1.6; white-space: pre-line; border-left: 4px solid #039f3f; max-height: 250px; overflow-y: auto;">
+                        <!-- Explanation text goes here -->
+                    </div>
+                    
+                    <div class="d-flex justify-content-end gap-2" style="gap: 8px;">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Descartar</button>
+                        <button type="button" class="btn btn-primary" onclick="applyAIOptimization()" style="background-color: #039f3f; border-color: #039f3f;">
+                            Aplicar Acomodo
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('script_2')
     <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
     <script>
         var isScrollingProgrammatically = false;
+        var aiRecommendationData = null;
 
         $(document).ready(function() {
             // Sortable para Categorías (Horizontal)
@@ -1088,6 +1149,81 @@
                     isScrollingProgrammatically = false;
                 });
             }
+        }
+
+        // AI Optimization trigger
+        function optimizeMenuWithAI() {
+            // Show modal and loading state
+            $('#aiOptimizeModal').modal('show');
+            $('#ai-loading-state').removeClass('d-none');
+            $('#ai-loading-state h5').text('Analizando menú con IA...');
+            $('#ai-result-state').addClass('d-none');
+            $('#ai-modal-close-btn').addClass('d-none'); // Disable closing during loading
+
+            $.ajax({
+                url: "{{ route('admin.item.ai-reorder') }}",
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    store_id: "{{ $selected_store->id ?? '' }}"
+                },
+                success: function(response) {
+                    if (response.success) {
+                        aiRecommendationData = response.data;
+                        
+                        // Populate explanation
+                        $('#ai-strategy-explanation').text(response.data.explanation);
+                        
+                        // Switch states
+                        $('#ai-loading-state').addClass('d-none');
+                        $('#ai-result-state').removeClass('d-none');
+                        $('#ai-modal-close-btn').removeClass('d-none');
+                    } else {
+                        toastr.error('No se pudo generar la optimización.');
+                        $('#aiOptimizeModal').modal('hide');
+                    }
+                },
+                error: function(xhr) {
+                    toastr.error('Error al conectar con la Inteligencia Artificial.');
+                    $('#aiOptimizeModal').modal('hide');
+                }
+            });
+        }
+
+        // Apply AI Optimization
+        function applyAIOptimization() {
+            if (!aiRecommendationData) return;
+
+            // Show loading on button or similar
+            $('#ai-result-state').addClass('d-none');
+            $('#ai-loading-state').removeClass('d-none');
+            $('#ai-loading-state h5').text('Aplicando orden en la base de datos...');
+            $('#ai-modal-close-btn').addClass('d-none');
+
+            $.ajax({
+                url: "{{ route('admin.item.apply-ai-reorder') }}",
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    categories_order: aiRecommendationData.categories_order,
+                    items_order: aiRecommendationData.items_order
+                },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success(response.message);
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1000);
+                    } else {
+                        toastr.error('Ocurrió un error al aplicar la optimización.');
+                        $('#aiOptimizeModal').modal('hide');
+                    }
+                },
+                error: function() {
+                    toastr.error('Error al aplicar los cambios.');
+                    $('#aiOptimizeModal').modal('hide');
+                }
+            });
         }
     </script>
 @endpush
