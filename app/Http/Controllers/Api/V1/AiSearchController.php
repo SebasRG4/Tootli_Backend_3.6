@@ -121,6 +121,7 @@ class AiSearchController extends Controller
                 $query->where('module_type', 'food');
             })
             ->where('zone_id', $zone_id)
+            ->where('exclude_from_sabores', 0)
             ->active();
 
         if (!empty($user_vector)) {

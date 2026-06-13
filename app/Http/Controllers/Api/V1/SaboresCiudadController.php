@@ -171,6 +171,7 @@ class SaboresCiudadController extends Controller
         // ---------------------------------------------------------------------
         // Use a base query for stores that respects Viewport/Zone
         $baseStoreQuery = Store::withoutGlobalScope(\App\Scopes\ZoneScope::class)
+            ->where('exclude_from_sabores', 0)
             ->whereHas('module', fn($q) => $q->where('module_type', 'food'));
 
         // This is tricky because we need to query Wishlist then join/filter stores.
@@ -336,6 +337,7 @@ class SaboresCiudadController extends Controller
         // Query all restaurants from the FOOD module
         $stores = Store::withoutGlobalScope(\App\Scopes\ZoneScope::class)
             ->with(['module', 'schedules'])
+            ->where('exclude_from_sabores', 0)
             ->whereHas('module', function ($query) {
                 $query->where('module_type', 'food');
             })
@@ -579,6 +581,7 @@ class SaboresCiudadController extends Controller
             ->whereHas('module', function ($query) {
                 $query->where('module_type', 'food');
             })
+            ->where('exclude_from_sabores', 0)
             ->first();
 
         if (!$store) {

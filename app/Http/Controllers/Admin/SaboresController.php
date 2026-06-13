@@ -192,6 +192,7 @@ class SaboresController extends Controller
             'sabores_map_emoji' => ['nullable', 'string', 'max:32', Rule::in($allowedMapEmojis)],
             'accepts_reservations' => 'nullable|boolean',
             'serves_alcohol' => 'nullable|boolean',
+            'exclude_from_sabores' => 'nullable|boolean',
             'infrastructure_images' => 'nullable|array',
             'infrastructure_images.*' => 'image|max:2048',
             'google_address' => 'nullable|string|max:255',
@@ -207,6 +208,7 @@ class SaboresController extends Controller
         $restaurant->sabores_map_emoji = ($emoji !== null && $emoji !== '') ? $emoji : null;
         $restaurant->accepts_reservations = $request->has('accepts_reservations');
         $restaurant->serves_alcohol = $request->has('serves_alcohol');
+        $restaurant->exclude_from_sabores = $request->has('exclude_from_sabores') ? 1 : 0;
         $restaurant->google_address = $request->google_address;
         $restaurant->google_place_id = $request->google_place_id;
 

@@ -171,6 +171,19 @@
                                     </label>
                                 </div>
 
+                                <!-- Exclude from Sabores de la Ciudad -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="input-label d-block">{{ translate('Exclude from Sabores de la Ciudad (e.g., Dark Kitchens)') }}</label>
+                                    <label class="toggle-switch toggle-switch-sm" for="exclude_from_sabores">
+                                        <input type="checkbox" class="toggle-switch-input" 
+                                               id="exclude_from_sabores" name="exclude_from_sabores" 
+                                               {{ $restaurant->exclude_from_sabores ? 'checked' : '' }} value="1">
+                                        <span class="toggle-switch-label">
+                                            <span class="toggle-switch-indicator"></span>
+                                        </span>
+                                    </label>
+                                </div>
+
                                 <!-- Google Address -->
                                 <div class="col-md-12 mb-3">
                                     <label class="input-label" for="google_address">
