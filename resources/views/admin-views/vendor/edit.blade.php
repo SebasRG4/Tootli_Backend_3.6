@@ -636,6 +636,8 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- Sabores Event Settings -->
