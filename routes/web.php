@@ -121,6 +121,57 @@ Route::get('/descargar', function (\Illuminate\Http\Request $request) {
     ');
 });
 
+Route::get('/share', function (\Illuminate\Http\Request $request) {
+    $type = $request->query('type'); // 'store' or 'item'
+    $id = $request->query('id');
+
+    $appUrl = 'tootli://';
+    if ($type === 'store') {
+        $appUrl = "tootli://store?id={$id}";
+    } elseif ($type === 'item') {
+        $appUrl = "tootli://item-details?id={$id}&page=restaurant";
+    }
+
+    $storeUrl = url('/descargar');
+
+    return response("
+        <!DOCTYPE html>
+        <html lang='es'>
+        <head>
+            <meta charset='UTF-8'>
+            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <title>Abrir Tootli</title>
+            <style>
+                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #f8f9fa; text-align: center; }
+                .loader { border: 4px solid #f3f3f3; border-top: 4px solid #000; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 20px; }
+                @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                h1 { font-size: 20px; color: #333; margin: 0 0 10px 0; }
+                p { color: #666; margin: 0; }
+                a { color: #E02020; text-decoration: none; font-weight: bold; }
+            </style>
+        </head>
+        <body>
+            <div class='loader'></div>
+            <h1>Abriendo Tootli...</h1>
+            <p>Si la aplicación no se abre automáticamente, <a href='{$storeUrl}'>haz clic aquí</a>.</p>
+
+            <script>
+                var appUrl = '{$appUrl}';
+                var storeUrl = '{$storeUrl}';
+                
+                // Intenta abrir la app
+                window.location.href = appUrl;
+                
+                // Redirigir a descargar si no abre la app después de 1.8 segundos
+                setTimeout(function() {
+                    window.location.href = storeUrl;
+                }, 1800);
+            </script>
+        </body>
+        </html>
+    ");
+});
+
 Route::get('login/{tab}', 'LoginController@login')->name('login');
 Route::post('login_submit', 'LoginController@submit')->name('login_post')->middleware('actch');
 Route::get('logout', 'LoginController@logout')->name('logout');
