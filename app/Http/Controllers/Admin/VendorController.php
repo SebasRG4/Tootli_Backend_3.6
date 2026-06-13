@@ -241,6 +241,7 @@ class VendorController extends Controller
             'cover_photo' => 'nullable|image|max:2048|mimes:' . IMAGE_FORMAT_FOR_VALIDATION,
             'event_title' => 'nullable|string|max:191',
             'event_image' => 'nullable|image|max:2048',
+            'event_card_image' => 'nullable|image|max:2048',
             'event_date' => 'nullable|date',
         ], [
             'f_name.required' => translate('messages.first_name_is_required'),
@@ -313,6 +314,9 @@ class VendorController extends Controller
         $store->event_date = $request->event_date;
         if ($request->has('event_image')) {
             $store->event_image = Helpers::update('store/', $store->event_image, 'png', $request->file('event_image'));
+        }
+        if ($request->has('event_card_image')) {
+            $store->event_card_image = Helpers::update('store/', $store->event_card_image, 'png', $request->file('event_card_image'));
         }
 
         // TootliClick Settings

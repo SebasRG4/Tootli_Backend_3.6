@@ -219,6 +219,7 @@ class Store extends Model
         'exclude_from_sabores',
         'event_title',
         'event_image',
+        'event_card_image',
         'event_date',
     ];
 
@@ -279,7 +280,7 @@ class Store extends Model
     /**
      * @var string[]
      */
-    protected $appends = ['gst_status', 'gst_code', 'logo_full_url', 'cover_photo_full_url', 'meta_image_full_url', 'tin_certificate_image_full_url', 'infrastructure_images_full_url', 'menu_images_full_url', 'event_image_full_url'];
+    protected $appends = ['gst_status', 'gst_code', 'logo_full_url', 'cover_photo_full_url', 'meta_image_full_url', 'tin_certificate_image_full_url', 'infrastructure_images_full_url', 'menu_images_full_url', 'event_image_full_url', 'event_card_image_full_url'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -474,6 +475,22 @@ class Store extends Model
         if (count($this->storage) > 0) {
             foreach ($this->storage as $storage) {
                 if ($storage['key'] == 'event_image') {
+                    return Helpers::get_full_url('store', $value, $storage['value']);
+                }
+            }
+        }
+
+        return Helpers::get_full_url('store', $value, 'public');
+    }
+    public function getEventCardImageFullUrlAttribute()
+    {
+        $value = $this->event_card_image;
+        if (!$value) {
+            return null;
+        }
+        if (count($this->storage) > 0) {
+            foreach ($this->storage as $storage) {
+                if ($storage['key'] == 'event_card_image') {
                     return Helpers::get_full_url('store', $value, $storage['value']);
                 }
             }

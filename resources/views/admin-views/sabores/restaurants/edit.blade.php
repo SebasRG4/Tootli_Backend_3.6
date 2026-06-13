@@ -203,15 +203,27 @@
                                            value="{{ old('event_date', $restaurant->event_date ? \Carbon\Carbon::parse($restaurant->event_date)->format('Y-m-d') : '') }}">
                                 </div>
 
-                                <div class="col-md-12 mb-3">
-                                    <label class="input-label">{{ translate('Event Image') }} ({{ translate('Ratio 1:1') }})</label>
+                                <div class="col-md-6 mb-3">
+                                    <label class="input-label">{{ translate('Event Map Sticker (PNG background transparent recommended)') }}</label>
                                     <div class="custom-file">
                                         <input type="file" name="event_image" id="customFileEg1" class="custom-file-input"
                                                accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                         <label class="custom-file-label" for="customFileEg1">{{translate('Choose File')}}</label>
                                     </div>
                                     <div class="mt-2">
-                                        <img id="viewerEvent" src="{{ $restaurant->event_image ? $restaurant->event_image_full_url : asset('assets/admin/img/400x400/img2.jpg') }}" alt="Event Image" class="img-thumbnail" style="max-height: 150px; object-fit: cover;">
+                                        <img id="viewerEvent" src="{{ $restaurant->event_image ? $restaurant->event_image_full_url : asset('assets/admin/img/400x400/img2.jpg') }}" alt="Event Sticker Image" class="img-thumbnail" style="max-height: 150px; object-fit: cover;">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="input-label">{{ translate('Event Card Background Photo') }}</label>
+                                    <div class="custom-file">
+                                        <input type="file" name="event_card_image" id="customFileEg2" class="custom-file-input"
+                                               accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                        <label class="custom-file-label" for="customFileEg2">{{translate('Choose File')}}</label>
+                                    </div>
+                                    <div class="mt-2">
+                                        <img id="viewerEventCard" src="{{ $restaurant->event_card_image ? $restaurant->event_card_image_full_url : asset('assets/admin/img/400x400/img2.jpg') }}" alt="Event Card Image" class="img-thumbnail" style="max-height: 150px; object-fit: cover;">
                                     </div>
                                 </div>
 
@@ -465,6 +477,19 @@
         }
         $("#customFileEg1").change(function () {
             readURL(this);
+        });
+
+        function readURLCard(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#viewerEventCard').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#customFileEg2").change(function () {
+            readURLCard(this);
         });
     </script>
 @endpush
