@@ -217,6 +217,9 @@ class Store extends Model
         'store_shipping_contribution',
         'tootli_lana',
         'exclude_from_sabores',
+        'event_title',
+        'event_image',
+        'event_date',
     ];
 
     /**
@@ -270,12 +273,13 @@ class Store extends Model
         'store_shipping_contribution' => 'float',
         'tootli_lana' => 'boolean',
         'exclude_from_sabores' => 'boolean',
+        'event_date' => 'date',
     ];
 
     /**
      * @var string[]
      */
-    protected $appends = ['gst_status', 'gst_code', 'logo_full_url', 'cover_photo_full_url', 'meta_image_full_url', 'tin_certificate_image_full_url', 'infrastructure_images_full_url', 'menu_images_full_url'];
+    protected $appends = ['gst_status', 'gst_code', 'logo_full_url', 'cover_photo_full_url', 'meta_image_full_url', 'tin_certificate_image_full_url', 'infrastructure_images_full_url', 'menu_images_full_url', 'event_image_full_url'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -460,6 +464,22 @@ class Store extends Model
         }
 
         return Helpers::get_full_url('store/cover', $value, 'public');
+    }
+    public function getEventImageFullUrlAttribute()
+    {
+        $value = $this->event_image;
+        if (!$value) {
+            return null;
+        }
+        if (count($this->storage) > 0) {
+            foreach ($this->storage as $storage) {
+                if ($storage['key'] == 'event_image') {
+                    return Helpers::get_full_url('store', $value, $storage['value']);
+                }
+            }
+        }
+
+        return Helpers::get_full_url('store', $value, 'public');
     }
     public function getMetaImageFullUrlAttribute()
     {

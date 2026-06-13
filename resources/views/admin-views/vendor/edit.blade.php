@@ -636,9 +636,48 @@
                                         </div>
                                     </div>
                                 </div>
+                    </div>
+                    
+                    <!-- Sabores Event Settings -->
+                    <div class="shadow-sm p-xxl-20 p-sm-3 p-0 mb-20">
+                        <div class="mb-20">
+                            <h4 class="mb-1 text-primary">
+                                <i class="tio-calendar"></i> {{ translate('Sabores Event Settings') }}
+                            </h4>
+                            <p class="mb-0 fs-12">
+                                {{ translate('Setup an event for this restaurant in Sabores de la Ciudad.') }}
+                            </p>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-group mb-0">
+                                    <label class="input-label" for="event_title">{{ translate('Event Title') }}</label>
+                                    <input type="text" name="event_title" class="form-control" id="event_title" 
+                                           value="{{ old('event_title', $store->event_title) }}"
+                                           placeholder="{{ translate('e.g., Taco Fest, Live Jazz Night') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-0">
+                                    <label class="input-label" for="event_date">{{ translate('Event Date') }}</label>
+                                    <input type="date" name="event_date" class="form-control" id="event_date" 
+                                           value="{{ old('event_date', $store->event_date ? \Carbon\Carbon::parse($store->event_date)->format('Y-m-d') : '') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-12 mt-3">
+                                <label class="input-label mb-2">{{ translate('Event Image') }} ({{ translate('Ratio 1:1') }})</label>
+                                <div class="custom-file">
+                                    <input type="file" name="event_image" id="eventFile" class="custom-file-input"
+                                           accept=".jpg, .png, .jpeg, .gif, .bmp, .webp|image/*">
+                                    <label class="custom-file-label" for="eventFile">{{translate('Choose File')}}</label>
+                                </div>
+                                <div class="mt-2">
+                                    <img id="viewerEvent" src="{{ $store->event_image ? $store->event_image_full_url : asset('assets/admin/img/400x400/img2.jpg') }}" alt="Event Image" class="img-thumbnail" style="max-height: 150px; object-fit: cover;">
+                                </div>
                             </div>
                         </div>
                     </div>
+
                     <div class="shadow-sm p-xxl-20 p-sm-3 p-0 mb-20">
                         <div class="mb-20">
                             <h4 class="mb-1">
@@ -1226,5 +1265,18 @@
                 $('#locationMapModal').modal('hide');
             });
         }
+
+        function readEventURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#viewerEvent').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#eventFile").change(function () {
+            readEventURL(this);
+        });
     </script>
 @endpush

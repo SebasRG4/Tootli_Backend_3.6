@@ -239,6 +239,9 @@ class VendorController extends Controller
             'delivery_time_type' => 'required',
             'logo' => 'nullable|image|max:2048|mimes:' . IMAGE_FORMAT_FOR_VALIDATION,
             'cover_photo' => 'nullable|image|max:2048|mimes:' . IMAGE_FORMAT_FOR_VALIDATION,
+            'event_title' => 'nullable|string|max:191',
+            'event_image' => 'nullable|image|max:2048',
+            'event_date' => 'nullable|date',
         ], [
             'f_name.required' => translate('messages.first_name_is_required'),
             'name.0.required' => translate('default_name_is_required'),
@@ -306,6 +309,11 @@ class VendorController extends Controller
         $store->cuisine_names = $request->cuisine_names;
         $store->serves_alcohol = $request->serves_alcohol == 1;
         $store->exclude_from_sabores = $request->exclude_from_sabores == 1;
+        $store->event_title = $request->event_title;
+        $store->event_date = $request->event_date;
+        if ($request->has('event_image')) {
+            $store->event_image = Helpers::update('store/', $store->event_image, 'png', $request->file('event_image'));
+        }
 
         // TootliClick Settings
         $tc_settings = $store->tootliclick_settings ?? [];

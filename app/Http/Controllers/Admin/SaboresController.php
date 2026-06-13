@@ -193,6 +193,9 @@ class SaboresController extends Controller
             'accepts_reservations' => 'nullable|boolean',
             'serves_alcohol' => 'nullable|boolean',
             'exclude_from_sabores' => 'nullable|boolean',
+            'event_title' => 'nullable|string|max:191',
+            'event_image' => 'nullable|image|max:2048',
+            'event_date' => 'nullable|date',
             'infrastructure_images' => 'nullable|array',
             'infrastructure_images.*' => 'image|max:2048',
             'google_address' => 'nullable|string|max:255',
@@ -209,6 +212,11 @@ class SaboresController extends Controller
         $restaurant->accepts_reservations = $request->has('accepts_reservations');
         $restaurant->serves_alcohol = $request->has('serves_alcohol');
         $restaurant->exclude_from_sabores = $request->has('exclude_from_sabores') ? 1 : 0;
+        $restaurant->event_title = $request->event_title;
+        $restaurant->event_date = $request->event_date;
+        if ($request->has('event_image')) {
+            $restaurant->event_image = \App\CentralLogics\Helpers::update('store/', $restaurant->event_image, 'png', $request->file('event_image'));
+        }
         $restaurant->google_address = $request->google_address;
         $restaurant->google_place_id = $request->google_place_id;
 

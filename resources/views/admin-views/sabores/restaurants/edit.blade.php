@@ -184,6 +184,37 @@
                                     </label>
                                 </div>
 
+                                <!-- Event Settings -->
+                                <div class="col-md-12 mt-4 mb-2">
+                                    <h4 class="text-primary"><i class="tio-calendar"></i> {{ translate('Sabores Event Settings') }}</h4>
+                                    <hr class="mt-1 mb-3">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="input-label" for="event_title">{{ translate('Event Title') }}</label>
+                                    <input type="text" name="event_title" class="form-control" id="event_title" 
+                                           value="{{ old('event_title', $restaurant->event_title) }}"
+                                           placeholder="{{ translate('e.g., Taco Fest, Live Jazz Night') }}">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="input-label" for="event_date">{{ translate('Event Date') }}</label>
+                                    <input type="date" name="event_date" class="form-control" id="event_date" 
+                                           value="{{ old('event_date', $restaurant->event_date ? \Carbon\Carbon::parse($restaurant->event_date)->format('Y-m-d') : '') }}">
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <label class="input-label">{{ translate('Event Image') }} ({{ translate('Ratio 1:1') }})</label>
+                                    <div class="custom-file">
+                                        <input type="file" name="event_image" id="customFileEg1" class="custom-file-input"
+                                               accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                        <label class="custom-file-label" for="customFileEg1">{{translate('Choose File')}}</label>
+                                    </div>
+                                    <div class="mt-2">
+                                        <img id="viewerEvent" src="{{ $restaurant->event_image ? $restaurant->event_image_full_url : asset('assets/admin/img/400x400/img2.jpg') }}" alt="Event Image" class="img-thumbnail" style="max-height: 150px; object-fit: cover;">
+                                    </div>
+                                </div>
+
                                 <!-- Google Address -->
                                 <div class="col-md-12 mb-3">
                                     <label class="input-label" for="google_address">
@@ -421,6 +452,19 @@
                     });
                 }
             });
+        });
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#viewerEvent').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#customFileEg1").change(function () {
+            readURL(this);
         });
     </script>
 @endpush
