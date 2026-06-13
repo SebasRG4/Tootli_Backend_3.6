@@ -371,3 +371,45 @@ Route::get('/image-proxy', function () {
         ->header('Content-Type', $response->header('Content-Type'))
         ->header('Access-Control-Allow-Origin', '*');
 });
+
+Route::get('/s/{slug}', function ($slug) {
+    $store = \App\Models\Store::where('slug', $slug)->first();
+    if ($store) {
+        $appUrl = "tootli://store?id={$store->id}";
+        $storeUrl = url('/descargar');
+
+        return response("
+            <!DOCTYPE html>
+            <html lang='es'>
+            <head>
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <title>Abrir {$store->name} en Tootli</title>
+                <style>
+                    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #f8f9fa; text-align: center; }
+                    .loader { border: 4px solid #f3f3f3; border-top: 4px solid #000; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 20px; }
+                    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                    h1 { font-size: 20px; color: #333; margin: 0 0 10px 0; }
+                    p { color: #666; margin: 0; }
+                    a { color: #E02020; text-decoration: none; font-weight: bold; }
+                </style>
+            </head>
+            <body>
+                <div class='loader'></div>
+                <h1>Abriendo {$store->name} en Tootli...</h1>
+                <p>Si la aplicación no se abre automáticamente, <a href='{$storeUrl}'>haz clic aquí</a>.</p>
+
+                <script>
+                    var appUrl = '{$appUrl}';
+                    var storeUrl = '{$storeUrl}';
+                    window.location.href = appUrl;
+                    setTimeout(function() {
+                        window.location.href = storeUrl;
+                    }, 1800);
+                </script>
+            </body>
+            </html>
+        ");
+    }
+    return redirect('/');
+});
