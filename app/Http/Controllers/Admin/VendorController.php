@@ -305,6 +305,7 @@ class VendorController extends Controller
         $store->average_ticket = $request->average_ticket;
         $store->cuisine_names = $request->cuisine_names;
         $store->serves_alcohol = $request->serves_alcohol == 1;
+        $store->exclude_from_sabores = $request->exclude_from_sabores == 1;
 
         // TootliClick Settings
         $tc_settings = $store->tootliclick_settings ?? [];

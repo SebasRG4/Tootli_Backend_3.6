@@ -339,6 +339,17 @@
                                 </div>
                             </div>
                         </div>
+                        @if($store->module->module_type == 'food')
+                        <div class="col-md-4">
+                             <div class="form-group mb-0">
+                                <label class="input-label" for="exclude_from_sabores">{{ translate('Exclude from Sabores de la Ciudad') }}</label>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" name="exclude_from_sabores" class="custom-control-input" id="exclude_from_sabores" {{ $store->exclude_from_sabores ? 'checked' : '' }} value="1">
+                                    <label class="custom-control-label" for="exclude_from_sabores"></label>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
                         <div class="col-12">
                              <div class="form-group mb-0">
                                 <label class="input-label">{{ translate('Infrastructure Images') }} ({{ translate('Ratio 1:1') }})</label>
