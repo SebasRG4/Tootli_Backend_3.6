@@ -763,6 +763,15 @@ class Store extends Model
     }
 
     /**
+     * Get event interests for this store.
+     * @return HasMany
+     */
+    public function eventInterests(): HasMany
+    {
+        return $this->hasMany(EventInterest::class);
+    }
+
+    /**
      * Get user list stores relationship (for custom lists saved count)
      * @return HasMany
      */

@@ -383,7 +383,7 @@ class SaboresCiudadController extends Controller
             })
             ->select('id', 'name', 'address', 'latitude', 'longitude', 'cover_photo', 'average_ticket', 'rating', 'delivery_time', 'google_address', 'google_place_id', 'serves_alcohol', 'cuisine_names', 'sabores_map_emoji', 'infrastructure_images', 'menu_images', 'accepts_reservations', 'featured', 'zone_id', 'module_id', 'exclude_from_sabores', 'event_title', 'event_image', 'event_date')
             ->with('activeCoupons')
-            ->withCount(['wishlists', 'userListStores'])
+            ->withCount(['wishlists', 'userListStores', 'eventInterests'])
             ->get();
 
         \Log::info('📦 Sabores API - Query executed', [
@@ -445,6 +445,16 @@ class SaboresCiudadController extends Controller
             $wishlists_count = (int) ($store->wishlists_count ?? 0);
             $user_list_stores_count = (int) ($store->user_list_stores_count ?? 0);
             $store->saved_count = $wishlists_count + $user_list_stores_count;
+
+            // Add event interests count and is_event_interested
+            $store->event_interests_count = (int) ($store->event_interests_count ?? 0);
+            $store->is_event_interested = false;
+            $user = auth('api')->user();
+            if ($user) {
+                $store->is_event_interested = \App\Models\EventInterest::where('user_id', $user->id)
+                    ->where('store_id', $store->id)
+                    ->exists();
+            }
 
             // Removed Deliciosas Logging to speed up IO
 
@@ -751,6 +761,16 @@ class SaboresCiudadController extends Controller
 
         // Deeplink for sharing
         $store->share_link = "https://tootli.com/share/store?id={$store->id}&module=sabores";
+
+        // Add event interests count and is_event_interested
+        $store['event_interests_count'] = (int) \App\Models\EventInterest::where('store_id', $store['id'])->count();
+        $store['is_event_interested'] = false;
+        $user = auth('api')->user() ?? $request->user();
+        if ($user) {
+            $store['is_event_interested'] = \App\Models\EventInterest::where('user_id', $user->id)
+                ->where('store_id', $store['id'])
+                ->exists();
+        }
 
         unset($store->rating);
 
@@ -1140,6 +1160,49 @@ class SaboresCiudadController extends Controller
         return response()->json([
             'message' => translate('messages.review_submitted_successfully'),
             'review' => $review
+        ], 200);
+    }
+
+    /**
+     * Toggle interest in a store's event
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function toggleEventInterest(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'store_id' => 'required|exists:stores,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $userId = $request->user()->id;
+        $storeId = $request->store_id;
+
+        $interest = \App\Models\EventInterest::where('user_id', $userId)
+            ->where('store_id', $storeId)
+            ->first();
+
+        if ($interest) {
+            $interest->delete();
+            $interested = false;
+            $message = translate('messages.interest_removed_successfully');
+        } else {
+            \App\Models\EventInterest::create([
+                'user_id' => $userId,
+                'store_id' => $storeId,
+            ]);
+            $interested = true;
+            $message = translate('messages.interest_added_successfully');
+        }
+
+        return response()->json([
+            'message' => $message,
+            'is_interested' => $interested,
+            'event_interests_count' => \App\Models\EventInterest::where('store_id', $storeId)->count()
         ], 200);
     }
 }

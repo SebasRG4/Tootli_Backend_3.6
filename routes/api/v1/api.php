@@ -645,6 +645,9 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::post('visited', 'SaboresCiudadController@addToVisited');
             Route::get('visited', 'SaboresCiudadController@getVisited');
 
+            // Events
+            Route::post('events/toggle-interest', 'SaboresCiudadController@toggleEventInterest');
+
             // Reviews (Sabores specific)
             Route::post('reviews/submit', 'SaboresCiudadController@submitReview');
 
