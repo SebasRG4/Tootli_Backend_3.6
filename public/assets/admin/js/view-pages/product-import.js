@@ -7,6 +7,8 @@ function show_min_max(data) {
     $('#min_max2_' + data).removeAttr("readonly");
     $('#min_max1_' + data).attr("required", "true");
     $('#min_max2_' + data).attr("required", "true");
+    $('#min_max1_' + data).attr("min", "1");
+    $('#min_max2_' + data).attr("min", "2");
 }
 
 function hide_min_max(data) {
@@ -14,8 +16,10 @@ function hide_min_max(data) {
     $('#min_max2_' + data).val(null).trigger('change');
     $('#min_max1_' + data).attr("readonly", "true");
     $('#min_max2_' + data).attr("readonly", "true");
-    $('#min_max1_' + data).attr("required", "false");
-    $('#min_max2_' + data).attr("required", "false");
+    $('#min_max1_' + data).removeAttr("required");
+    $('#min_max2_' + data).removeAttr("required");
+    $('#min_max1_' + data).removeAttr("min");
+    $('#min_max2_' + data).removeAttr("min");
 }
 
 $(document).on('change', '.show_min_max', function () {

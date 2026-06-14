@@ -352,19 +352,24 @@ class ItemController extends Controller
                 $temp_variation = [];
                 $temp_variation['name'] = $option['name'];
                 $temp_variation['type'] = $option['type'];
-                $temp_variation['min'] = $option['min'] ?? 0;
-                $temp_variation['max'] = $option['max'] ?? 0;
-                $temp_variation['required'] = $option['required'] ?? 'off';
-                if ($option['min'] > 0 && $option['min'] > $option['max']) {
-                    $validator->getMessageBag()->add('name', translate('messages.minimum_value_can_not_be_greater_then_maximum_value'));
-                    return response()->json(['errors' => Helpers::error_processor($validator)]);
+                if ($option['type'] == 'single') {
+                    $temp_variation['min'] = 0;
+                    $temp_variation['max'] = 0;
+                } else {
+                    $temp_variation['min'] = $option['min'] ?? 0;
+                    $temp_variation['max'] = $option['max'] ?? 0;
+                    if ($option['min'] > 0 && $option['min'] > $option['max']) {
+                        $validator->getMessageBag()->add('name', translate('messages.minimum_value_can_not_be_greater_then_maximum_value'));
+                        return response()->json(['errors' => Helpers::error_processor($validator)]);
+                    }
+                    if ($option['max'] > count($option['values'])) {
+                        $validator->getMessageBag()->add('name', translate('messages.please_add_more_options_or_change_the_max_value_for') . $option['name']);
+                        return response()->json(['errors' => Helpers::error_processor($validator)]);
+                    }
                 }
+                $temp_variation['required'] = $option['required'] ?? 'off';
                 if (!isset($option['values'])) {
                     $validator->getMessageBag()->add('name', translate('messages.please_add_options_for') . $option['name']);
-                    return response()->json(['errors' => Helpers::error_processor($validator)]);
-                }
-                if ($option['max'] > count($option['values'])) {
-                    $validator->getMessageBag()->add('name', translate('messages.please_add_more_options_or_change_the_max_value_for') . $option['name']);
                     return response()->json(['errors' => Helpers::error_processor($validator)]);
                 }
                 $temp_value = [];
@@ -730,21 +735,26 @@ class ItemController extends Controller
                 $temp_variation = [];
                 $temp_variation['name'] = $option['name'];
                 $temp_variation['type'] = $option['type'];
-                $temp_variation['min'] = $option['min'] ?? 0;
-                $temp_variation['max'] = $option['max'] ?? 0;
-                if ($option['min'] > 0 && $option['min'] > $option['max']) {
-                    $validator->getMessageBag()->add('name', translate('messages.minimum_value_can_not_be_greater_then_maximum_value'));
-                    return response()->json(['errors' => Helpers::error_processor($validator)]);
+                if ($option['type'] == 'single') {
+                    $temp_variation['min'] = 0;
+                    $temp_variation['max'] = 0;
+                } else {
+                    $temp_variation['min'] = $option['min'] ?? 0;
+                    $temp_variation['max'] = $option['max'] ?? 0;
+                    if ($option['min'] > 0 && $option['min'] > $option['max']) {
+                        $validator->getMessageBag()->add('name', translate('messages.minimum_value_can_not_be_greater_then_maximum_value'));
+                        return response()->json(['errors' => Helpers::error_processor($validator)]);
+                    }
+                    if ($option['max'] > count($option['values'])) {
+                        $validator->getMessageBag()->add('name', translate('messages.please_add_more_options_or_change_the_max_value_for') . $option['name']);
+                        return response()->json(['errors' => Helpers::error_processor($validator)]);
+                    }
                 }
+                $temp_variation['required'] = $option['required'] ?? 'off';
                 if (!isset($option['values'])) {
                     $validator->getMessageBag()->add('name', translate('messages.please_add_options_for') . $option['name']);
                     return response()->json(['errors' => Helpers::error_processor($validator)]);
                 }
-                if ($option['max'] > count($option['values'])) {
-                    $validator->getMessageBag()->add('name', translate('messages.please_add_more_options_or_change_the_max_value_for') . $option['name']);
-                    return response()->json(['errors' => Helpers::error_processor($validator)]);
-                }
-                $temp_variation['required'] = $option['required'] ?? 'off';
                 $temp_value = [];
                 foreach (array_values($option['values']) as $value) {
                     $temp_option = [];
@@ -1603,19 +1613,24 @@ class ItemController extends Controller
                 $temp_variation = [];
                 $temp_variation['name'] = $option['name'];
                 $temp_variation['type'] = $option['type'];
-                $temp_variation['min'] = $option['min'] ?? 0;
-                $temp_variation['max'] = $option['max'] ?? 0;
-                $temp_variation['required'] = $option['required'] ?? 'off';
-                if ($option['min'] > 0 && $option['min'] > $option['max']) {
-                    $validator->getMessageBag()->add('name', translate('messages.minimum_value_can_not_be_greater_then_maximum_value'));
-                    return response()->json(['errors' => Helpers::error_processor($validator)]);
+                if ($option['type'] == 'single') {
+                    $temp_variation['min'] = 0;
+                    $temp_variation['max'] = 0;
+                } else {
+                    $temp_variation['min'] = $option['min'] ?? 0;
+                    $temp_variation['max'] = $option['max'] ?? 0;
+                    if ($option['min'] > 0 && $option['min'] > $option['max']) {
+                        $validator->getMessageBag()->add('name', translate('messages.minimum_value_can_not_be_greater_then_maximum_value'));
+                        return response()->json(['errors' => Helpers::error_processor($validator)]);
+                    }
+                    if ($option['max'] > count($option['values'])) {
+                        $validator->getMessageBag()->add('name', translate('messages.please_add_more_options_or_change_the_max_value_for') . $option['name']);
+                        return response()->json(['errors' => Helpers::error_processor($validator)]);
+                    }
                 }
+                $temp_variation['required'] = $option['required'] ?? 'off';
                 if (!isset($option['values'])) {
                     $validator->getMessageBag()->add('name', translate('messages.please_add_options_for') . $option['name']);
-                    return response()->json(['errors' => Helpers::error_processor($validator)]);
-                }
-                if ($option['max'] > count($option['values'])) {
-                    $validator->getMessageBag()->add('name', translate('messages.please_add_more_options_or_change_the_max_value_for') . $option['name']);
                     return response()->json(['errors' => Helpers::error_processor($validator)]);
                 }
                 $temp_value = [];

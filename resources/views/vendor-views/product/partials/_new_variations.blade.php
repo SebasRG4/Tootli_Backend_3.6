@@ -55,13 +55,13 @@
                         <label for="">{{ translate('Min') }}</label>
                         <input id="min_max1_{{ $key }}" {{ $item['type'] == 'single' ? 'readonly ' : 'required' }}
                         value="{{ ($item['min'] != 0) ? $item['min']:''  }}" name="options[{{ $key }}][min]"
-                               class="form-control" type="number" min="1">
+                               class="form-control" type="number" {{ $item['type'] == 'single' ? '' : 'min=1' }}>
                     </div>
                     <div class="col-6">
                         <label for="">{{ translate('Max') }}</label>
                         <input id="min_max2_{{ $key }}" {{ $item['type'] == 'single' ? 'readonly ' : 'required' }}
                         value="{{ ($item['max'] != 0) ? $item['max']:''  }}" name="options[{{ $key }}][max]"
-                               class="form-control" type="number" min="2">
+                               class="form-control" type="number" {{ $item['type'] == 'single' ? '' : 'min=2' }}>
                     </div>
 
                 </div>
