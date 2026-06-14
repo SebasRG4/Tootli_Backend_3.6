@@ -30,10 +30,10 @@ class OrderLogic
     // Constantes de configuración de tarifas Tootli
     const TOOTLI_BASE_SHIPPING_FEE = 25.0;      // Envío base cliente
     const TOOTLI_BASE_DM_PAY = 20.0;            // Base neta repartidor
-    const TOOTLI_TIER1_KM_LIMIT = 3.5;          // Límite zona 1 (3.5 km)
+    const TOOTLI_TIER1_KM_LIMIT = 2.5;          // Límite zona 1 (2.5 km)
     const TOOTLI_TIER2_KM_LIMIT = 6.5;          // Límite zona 2 (6.5 km)
-    const TOOTLI_TIER1_RATE = 4.0;              // Precio km extra zona 1 (hasta 3.5 km)
-    const TOOTLI_TIER2_RATE = 6.0;              // Precio km extra zona 2 (3.5 - 6.5 km)
+    const TOOTLI_TIER1_RATE = 4.0;              // Precio km extra zona 1 (hasta 2.5 km)
+    const TOOTLI_TIER2_RATE = 6.0;              // Precio km extra zona 2 (2.5 - 6.5 km)
     const TOOTLI_TIER3_RATE = 8.5;              // Precio km extra zona 3 (6.5 - 8.0 km)
     const TOOTLI_LONG_DISTANCE_BONUS = 20.0;    // Bono de viaje largo (> 6.5 km)
 

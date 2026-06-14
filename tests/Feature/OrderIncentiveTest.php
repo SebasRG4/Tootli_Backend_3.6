@@ -18,17 +18,17 @@ class OrderIncentiveTest extends TestCase
         // 2 km (Zona 1 - Corta) -> Debe ser el envío base ($25.0)
         $this->assertEquals(25.0, OrderLogic::calculate_progressive_distance_fee(2.0));
 
-        // 3.5 km (Zona 1 - Límite) -> Debe ser el envío base ($25.0)
-        $this->assertEquals(25.0, OrderLogic::calculate_progressive_distance_fee(3.5));
+        // 3.5 km (Zona 2 - Transición) -> Base ($25.0) + 1.0 km * $6.00 = $31.00
+        $this->assertEquals(31.0, OrderLogic::calculate_progressive_distance_fee(3.5));
 
-        // 4.0 km (Zona 2 - Transición) -> Base ($25.0) + 0.5 km * $6.00 = $28.00
-        $this->assertEquals(28.0, OrderLogic::calculate_progressive_distance_fee(4.0));
+        // 4.0 km (Zona 2 - Transición) -> Base ($25.0) + 1.5 km * $6.00 = $34.00
+        $this->assertEquals(34.0, OrderLogic::calculate_progressive_distance_fee(4.0));
 
-        // 6.5 km (Zona 2 - Límite) -> Base ($25.0) + 3.0 km * $6.00 = $43.00
-        $this->assertEquals(43.0, OrderLogic::calculate_progressive_distance_fee(6.5));
+        // 6.5 km (Zona 2 - Límite) -> Base ($25.0) + 4.0 km * $6.00 = $49.00
+        $this->assertEquals(49.0, OrderLogic::calculate_progressive_distance_fee(6.5));
 
-        // 8.0 km (Zona 3 - Viaje Largo) -> Base ($25) + 3 km * $6 + 1.5 km * $8.5 + $20 Bono = 25 + 18 + 12.75 + 20 = $75.75
-        $this->assertEquals(75.75, OrderLogic::calculate_progressive_distance_fee(8.0));
+        // 8.0 km (Zona 3 - Viaje Largo) -> Base ($25) + 4 km * $6 + 1.5 km * $8.5 + $20 Bono = 25 + 24 + 12.75 + 20 = 81.75 (ceiled to 82)
+        $this->assertEquals(82.0, OrderLogic::calculate_progressive_distance_fee(8.0));
     }
 
     public function test_deliveryman_net_earning_progressive()
