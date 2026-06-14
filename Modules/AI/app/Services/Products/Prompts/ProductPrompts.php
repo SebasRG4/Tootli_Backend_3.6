@@ -133,10 +133,12 @@ class ProductPrompts
                             Match only if relevant to the product name/description.
 
                         "sub_category_name": OPTIONAL.
-                            If provided, it MUST be selected strictly from "{$rawSubCategories}".
-                            The chosen sub_category_name MUST have parent_id equal to the ID of the selected category_name from "{$categories}".
-                            If no valid sub_category_name exists that matches both the product name/description and the selected category, then leave "sub_category_name" empty.
-                            Do not invent, guess, or suggest categories outside the provided lists.
+                            If an existing sub_category in "{$rawSubCategories}" matches the product and has parent_id equal to the selected category_name's ID, use its exact name here.
+                            If no existing sub_category fits, leave "sub_category_name" empty or null.
+
+                        "suggested_new_subcategory": OPTIONAL.
+                            If "sub_category_name" is empty because no existing subcategory matches the product name/description, provide a short, clean new subcategory name in Spanish (e.g. "Pizzas", "Bebidas Calientes", "Postres Especiales") that fits the product. Otherwise, leave it empty or null.
+                            Do not suggest a new subcategory if an existing one can be reasonably used.
                         "nutrition": ["..."], // prefer "{$nutrition}", else infer from description
                         "allergy": ["..."], // prefer "{$allergy}", else infer from description (optional)
                         "addon": ["..."], // must be from "{$addon}" only, optional
@@ -211,10 +213,12 @@ class ProductPrompts
                             Match only if relevant to the product name/description.
 
                         "sub_category_name": OPTIONAL.
-                            If provided, it MUST be selected strictly from "{$rawSubCategories}".
-                            The chosen sub_category_name MUST have parent_id equal to the ID of the selected category_name from "{$categories}".
-                            If no valid sub_category_name exists that matches both the product name/description and the selected category, then leave "sub_category_name" empty.
-                            Do not invent, guess, or suggest categories outside the provided lists.
+                            If an existing sub_category in "{$rawSubCategories}" matches the product and has parent_id equal to the selected category_name's ID, use its exact name here.
+                            If no existing sub_category fits, leave "sub_category_name" empty or null.
+
+                        "suggested_new_subcategory": OPTIONAL.
+                            If "sub_category_name" is empty because no existing subcategory matches the product name/description, provide a short, clean new subcategory name in Spanish (e.g. "Vitaminas", "Analgésicos") that fits the product. Otherwise, leave it empty or null.
+                            Do not suggest a new subcategory if an existing one can be reasonably used.
                         "generic_names": from "{$generic_names}" (preferred, else infer from description), //SUGGESTIONS ARE ALLOWED
                         "common_conditions": must be from "{$common_conditions}" (preferred from description,commonly used medicines),
                         "search_tags": 3–5 keywords extracted from name/description,
@@ -274,10 +278,12 @@ class ProductPrompts
                             Match only if relevant to the product name/description.
 
                         "sub_category_name": OPTIONAL.
-                            If provided, it MUST be selected strictly from "{$rawSubCategories}".
-                            The chosen sub_category_name MUST have parent_id equal to the ID of the selected category_name from "{$categories}".
-                            If no valid sub_category_name exists that matches both the product name/description and the selected category, then leave "sub_category_name" empty.
-                            Do not invent, guess, or suggest categories outside the provided lists.
+                            If an existing sub_category in "{$rawSubCategories}" matches the product and has parent_id equal to the selected category_name's ID, use its exact name here.
+                            If no existing sub_category fits, leave "sub_category_name" empty or null.
+
+                        "suggested_new_subcategory": OPTIONAL.
+                            If "sub_category_name" is empty because no existing subcategory matches the product name/description, provide a short, clean new subcategory name in Spanish (e.g. "Camisas", "Calzado Deportivo") that fits the product. Otherwise, leave it empty or null.
+                            Do not suggest a new subcategory if an existing one can be reasonably used.
                         "brand": from "{$brands}" //optional,
                         "search_tags": 3–5 keywords from name/description,
                         "units": from: must be from "{$units}" and string, optional

@@ -47,6 +47,8 @@ class ProductResponse
 
         $fields = [
             'sub_category_name',
+            'sub_category_id',
+            'suggested_new_subcategory',
             'addon',
             'addonsNames',
             'nutrition',

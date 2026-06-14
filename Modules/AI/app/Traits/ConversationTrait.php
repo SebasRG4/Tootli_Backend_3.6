@@ -22,6 +22,53 @@ trait ConversationTrait
                 $data['sub_category_id'] = $resources['sub_categories'][$subCategoryName];
             }
         }
+
+        // Intelligent subcategory creation by AI if none matched
+        if (isset($data['category_id']) && !isset($data['sub_category_id']) && !empty($data['suggested_new_subcategory'])) {
+            $suggestedName = trim($data['suggested_new_subcategory']);
+            $parentCategoryId = $data['category_id'];
+            
+            // Check if subcategory already exists under this parent (case-insensitive)
+            $existingSubCategory = \App\Models\Category::where('parent_id', $parentCategoryId)
+                ->where('position', 1)
+                ->whereRaw('LOWER(name) = ?', [strtolower($suggestedName)])
+                ->first();
+                
+            if ($existingSubCategory) {
+                $data['sub_category_id'] = $existingSubCategory->id;
+                $data['sub_category_name'] = $existingSubCategory->name;
+            } else {
+                $parentCategory = \App\Models\Category::find($parentCategoryId);
+                if ($parentCategory) {
+                    $newSub = new \App\Models\Category();
+                    $newSub->name = $suggestedName;
+                    $newSub->parent_id = $parentCategoryId;
+                    $newSub->position = 1;
+                    $newSub->status = 1;
+                    $newSub->priority = 0;
+                    $newSub->module_id = $parentCategory->module_id;
+                    $newSub->image = 'def.png';
+                    $newSub->featured = 0;
+                    $newSub->time_slot = 'all_day';
+                    $newSub->save();
+                    
+                    try {
+                        $translation = new \App\Models\Translation();
+                        $translation->translationable_type = 'App\\Models\\Category';
+                        $translation->translationable_id = $newSub->id;
+                        $translation->locale = app()->getLocale() ?? 'es';
+                        $translation->key = 'name';
+                        $translation->value = $suggestedName;
+                        $translation->save();
+                    } catch (\Exception $e) {
+                        // Safe fallback
+                    }
+                    
+                    $data['sub_category_id'] = $newSub->id;
+                    $data['sub_category_name'] = $newSub->name;
+                }
+            }
+        }
         if (isset($data['units'])) {
             $unitName = strtolower(trim($data['units']));
             if (isset($resources['units'][$unitName])) {
