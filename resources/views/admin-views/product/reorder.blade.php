@@ -545,9 +545,15 @@
 
                         @if(isset($selected_store))
                             <hr>
-                            <button type="button" class="btn btn-primary btn-block" id="btn-optimize-ai" onclick="optimizeMenuWithAI()">
+                            <button type="button" class="btn btn-primary btn-block mb-2" id="btn-optimize-ai" onclick="optimizeMenuWithAI()">
                                 <i class="tio-sparkles-outlined mr-1"></i> Optimizar Menú con IA
                             </button>
+                            
+                            @if(isset($selected_store->module) && $selected_store->module->module_type == 'food')
+                                <button type="button" class="btn btn-success btn-block" id="btn-reclassify-ai" onclick="reclassifyMenuWithAI()" style="background-color: #039f3f; border-color: #039f3f;">
+                                    <i class="tio-filter-list mr-1"></i> Reclasificar Categorías con IA
+                                </button>
+                            @endif
                         @endif
                     </div>
                 </div>
@@ -978,11 +984,83 @@
     </div>
 </div>
 
+<!-- AI Reclassification Modal -->
+<div class="modal fade" id="aiReclassifyModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+            <!-- Header -->
+            <div class="modal-header bg-success text-white border-0 py-3" style="background: linear-gradient(135deg, #039f3f 0%, #028032 100%) !important;">
+                <h5 class="modal-title text-white font-weight-bold" id="aiReclassifyModalLabel">
+                    <i class="tio-sparkles-outlined mr-1"></i> Reclasificación de Categorías con IA
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" id="ai-reclassify-modal-close-btn" style="background: transparent; border: 0; outline: none; font-size: 24px;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <!-- Body -->
+            <div class="modal-body p-4">
+                <!-- Loading State -->
+                <div id="ai-reclassify-loading-state" class="text-center py-5">
+                    <div class="spinner-border text-success mb-3" role="status" style="width: 3.5rem; height: 3.5rem; color: #039f3f !important;">
+                        <span class="sr-only">Cargando...</span>
+                    </div>
+                    <h4 class="mt-3 font-weight-bold text-dark">Clasificando platillos con IA...</h4>
+                    <p class="text-muted small px-2 max-w-500 mx-auto">
+                        Nuestro agente de IA está analizando cada producto para asignarle la categoría principal y subcategoría óptmas. Reutilizaremos las subcategorías existentes y propondremos nuevas únicamente cuando sea necesario.
+                    </p>
+                </div>
+                
+                <!-- Result State -->
+                <div id="ai-reclassify-result-state" class="d-none">
+                    <div class="alert alert-soft-success border-0 mb-3 d-flex align-items-center justify-content-between" role="alert" style="background-color: rgba(3, 159, 63, 0.08); border-radius: 12px; gap: 10px;">
+                        <div>
+                            <h6 class="alert-heading text-success font-weight-bold mb-1">
+                                <i class="tio-checkmark-circle-outlined mr-1"></i> Clasificación Recomendada Generada
+                            </h6>
+                            <span class="text-dark font-size-sm">Revisa las propuestas de la IA. Los platillos con una subcategoría sugerida que no existe se marcarán como <span class="badge badge-soft-warning font-weight-bold">Nueva Subcategoría</span> y se crearán automáticamente.</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <input type="checkbox" id="reclassify-select-all" checked style="transform: scale(1.3); margin-right: 5px; cursor: pointer;">
+                            <label for="reclassify-select-all" class="text-success font-weight-bold mb-0" style="cursor: pointer; user-select: none;">Aplicar a todos</label>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive border mb-4" style="border-radius: 12px; max-height: 400px; overflow-y: auto;">
+                        <table class="table table-hover table-striped mb-0 text-dark align-middle">
+                            <thead class="bg-light font-weight-bold text-secondary sticky-top" style="z-index: 1;">
+                                <tr>
+                                    <th class="text-center" width="50">Aplicar</th>
+                                    <th width="200">Platillo</th>
+                                    <th width="200">Ubicación Actual</th>
+                                    <th width="250">Ubicación Propuesta por IA</th>
+                                    <th>Justificación</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ai-reclassify-table-rows">
+                                <!-- Loaded dynamically via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="d-flex justify-content-end gap-2" style="gap: 8px;">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Descartar</button>
+                        <button type="button" class="btn btn-primary" onclick="applyAIReclassification()" style="background-color: #039f3f; border-color: #039f3f; font-weight: 600;">
+                            Aplicar Reclasificación
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('script_2')
     <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
     <script>
         var isScrollingProgrammatically = false;
         var aiRecommendationData = null;
+        var aiReclassifyData = null;
 
         $(document).ready(function() {
             // Sortable para Categorías (Horizontal)
@@ -1089,6 +1167,11 @@
                         subcatRow.find('.subcategory-chip[data-id="' + activeSubcatId + '"]').addClass('active');
                     }
                 }
+            });
+
+            // Reclassify Select All handler
+            $('#reclassify-select-all').on('change', function() {
+                $('.reclassify-apply-checkbox').prop('checked', this.checked);
             });
         });
 
@@ -1222,6 +1305,138 @@
                 error: function() {
                     toastr.error('Error al aplicar los cambios.');
                     $('#aiOptimizeModal').modal('hide');
+                }
+            });
+        }
+
+        // AI Reclassification trigger
+        function reclassifyMenuWithAI() {
+            $('#aiReclassifyModal').modal('show');
+            $('#ai-reclassify-loading-state').removeClass('d-none');
+            $('#ai-reclassify-result-state').addClass('d-none');
+            $('#ai-reclassify-modal-close-btn').addClass('d-none');
+
+            $.ajax({
+                url: "{{ route('admin.item.ai-reclassify') }}",
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    store_id: "{{ $selected_store->id ?? '' }}"
+                },
+                success: function(response) {
+                    if (response.success) {
+                        aiReclassifyData = response.classification;
+                        
+                        let tbody = $('#ai-reclassify-table-rows');
+                        tbody.empty();
+
+                        aiReclassifyData.forEach((c, index) => {
+                            let proposedLocationHtml = '';
+                            if (c.suggested_new_subcategory) {
+                                proposedLocationHtml = `<strong>${c.new_category_name}</strong> &gt; <span class="badge badge-soft-warning font-weight-bold" title="Se creará automáticamente"><i class="tio-sparkles text-warning"></i> Nuevo: ${c.suggested_new_subcategory}</span>`;
+                            } else {
+                                proposedLocationHtml = `<strong>${c.new_category_name}</strong> &gt; <span class="text-secondary">${c.new_subcategory_name || 'Sin subcategoría'}</span>`;
+                            }
+
+                            let row = `
+                                <tr>
+                                    <td class="text-center">
+                                        <input type="checkbox" class="reclassify-apply-checkbox" data-index="${index}" checked style="transform: scale(1.2); cursor: pointer;">
+                                    </td>
+                                    <td>
+                                        <div class="font-weight-bold">${c.item_name}</div>
+                                        <small class="text-muted text-truncate d-inline-block" style="max-width: 200px;">${c.item_description}</small>
+                                    </td>
+                                    <td>
+                                        <small class="text-dark font-weight-medium">${c.current_category_name}</small> &gt; 
+                                        <small class="text-muted">${c.current_subcategory_name}</small>
+                                    </td>
+                                    <td>
+                                        <small>${proposedLocationHtml}</small>
+                                    </td>
+                                    <td>
+                                        <span class="text-dark font-size-sm" style="font-style: italic;">"${c.justification}"</span>
+                                    </td>
+                                </tr>
+                            `;
+                            tbody.append(row);
+                        });
+
+                        $('#reclassify-select-all').prop('checked', true);
+                        $('#ai-reclassify-loading-state').addClass('d-none');
+                        $('#ai-reclassify-result-state').removeClass('d-none');
+                        $('#ai-reclassify-modal-close-btn').removeClass('d-none');
+                    } else {
+                        toastr.error('No se pudo generar la reclasificación.');
+                        $('#aiReclassifyModal').modal('hide');
+                    }
+                },
+                error: function(xhr) {
+                    let msg = xhr.responseJSON?.message || 'Error al conectar con la Inteligencia Artificial.';
+                    toastr.error(msg);
+                    $('#aiReclassifyModal').modal('hide');
+                }
+            });
+        }
+
+        // Apply AI Reclassification
+        function applyAIReclassification() {
+            if (!aiReclassifyData) return;
+
+            let classificationPayload = [];
+            let anySelected = false;
+
+            $('.reclassify-apply-checkbox').each(function() {
+                let index = $(this).data('index');
+                let isChecked = $(this).is(':checked');
+                let original = aiReclassifyData[index];
+
+                if (isChecked) {
+                    anySelected = true;
+                }
+
+                classificationPayload.push({
+                    item_id: original.item_id,
+                    new_category_id: original.new_category_id,
+                    new_subcategory_id: original.new_subcategory_id,
+                    suggested_new_subcategory: original.suggested_new_subcategory,
+                    apply: isChecked ? 1 : 0
+                });
+            });
+
+            if (!anySelected) {
+                toastr.warning('Por favor selecciona al menos un platillo para aplicar.');
+                return;
+            }
+
+            $('#ai-reclassify-result-state').addClass('d-none');
+            $('#ai-reclassify-loading-state').removeClass('d-none');
+            $('#ai-reclassify-loading-state h4').text('Aplicando clasificación en la base de datos...');
+            $('#ai-reclassify-modal-close-btn').addClass('d-none');
+
+            $.ajax({
+                url: "{{ route('admin.item.apply-ai-reclassify') }}",
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    store_id: "{{ $selected_store->id ?? '' }}",
+                    classification: classificationPayload
+                },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success(response.message);
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1200);
+                    } else {
+                        toastr.error(response.message || 'Ocurrió un error al aplicar los cambios.');
+                        $('#aiReclassifyModal').modal('hide');
+                    }
+                },
+                error: function(xhr) {
+                    let msg = xhr.responseJSON?.message || 'Error al guardar los cambios.';
+                    toastr.error(msg);
+                    $('#aiReclassifyModal').modal('hide');
                 }
             });
         }

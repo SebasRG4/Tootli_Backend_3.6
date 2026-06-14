@@ -107,6 +107,8 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('update-category-reorder', 'ItemController@update_category_reorder')->name('update-category-reorder');
             Route::post('ai-reorder', 'ItemController@ai_reorder')->name('ai-reorder');
             Route::post('apply-ai-reorder', 'ItemController@apply_ai_reorder')->name('apply-ai-reorder');
+            Route::post('ai-reclassify', 'ItemController@ai_reclassify')->name('ai-reclassify');
+            Route::post('apply-ai-reclassify', 'ItemController@apply_ai_reclassify')->name('apply-ai-reclassify');
             Route::get('status/{id}/{status}', 'ItemController@status')->name('status');
             Route::get('review-status/{id}/{status}', 'ItemController@reviews_status')->name('reviews.status');
             Route::post('search', 'ItemController@search')->name('search');

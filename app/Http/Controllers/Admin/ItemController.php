@@ -2653,4 +2653,294 @@ Debes responder ÚNICAMENTE con un objeto JSON válido que contenga exactamente 
             'message' => '¡Estructura de menú optimizada con IA aplicada con éxito!'
         ]);
     }
+
+    public function ai_reclassify(Request $request)
+    {
+        $store_id = $request->input('store_id');
+        if (!$store_id) {
+            return response()->json(['success' => false, 'message' => 'Restaurante no especificado.'], 400);
+        }
+
+        $store = Store::find($store_id);
+        if (!$store) {
+            return response()->json(['success' => false, 'message' => 'Restaurante no encontrado.'], 404);
+        }
+        $moduleId = $store->module_id;
+
+        // Get all parent categories of the module
+        $parentCategories = Category::where('module_id', $moduleId)
+            ->where('position', 0)
+            ->where('status', 1)
+            ->get();
+
+        $categoriesData = [];
+        foreach ($parentCategories as $cat) {
+            // Get subcategories of this parent category
+            $subCategories = Category::where('parent_id', $cat->id)
+                ->where('position', 1)
+                ->where('status', 1)
+                ->get();
+                
+            $subData = [];
+            foreach ($subCategories as $sub) {
+                $subData[] = [
+                    'id' => $sub->id,
+                    'name' => $sub->name
+                ];
+            }
+            
+            $categoriesData[] = [
+                'id' => $cat->id,
+                'name' => $cat->name,
+                'subcategories' => $subData
+            ];
+        }
+
+        // Get all products of the restaurant
+        $items = Item::where('store_id', $store_id)
+            ->get(['id', 'name', 'description', 'category_id']);
+
+        $itemsData = [];
+        foreach ($items as $item) {
+            $itemsData[] = [
+                'id' => $item->id,
+                'name' => $item->name,
+                'description' => $item->description ?? ''
+            ];
+        }
+
+        if (count($itemsData) == 0) {
+            return response()->json(['success' => false, 'message' => 'Este restaurante no tiene platillos cargados para organizar.'], 400);
+        }
+
+        $gemini_key = env('GEMINI_API_KEY');
+        if (!$gemini_key) {
+            return response()->json(['success' => false, 'message' => 'API Key de Gemini no configurada.'], 400);
+        }
+
+        $prompt = "Actúa como un experto en estructuración de menús y categorización de alimentos para plataformas de delivery como Uber Eats, Rappi y DiDi Food.
+Tu tarea es analizar cada platillo del menú de un restaurante y reclasificarlo asignándolo a la categoría principal y subcategoría más adecuada de la lista de categorías existentes.
+
+Para cada platillo, debes:
+1. Buscar la categoría principal (parent category) que mejor se adapte al producto de entre las categorías provistas.
+2. Buscar dentro de esa categoría principal si existe una subcategoría que coincida.
+3. CRÍTICO (ojo para no llenar de subcategorías innecesarias): Analiza muy bien las subcategorías existentes provistas para esa categoría principal. Si alguna de ellas se adapta perfectamente al producto, utilízala.
+4. Si y solo si ninguna de las subcategorías existentes se adapta (por ejemplo, es un plato de sushi y no hay subcategorías de sushi, o son postres y no hay subcategoría de postres), puedes sugerir crear una NUEVA subcategoría bajo esa categoría principal. En ese caso, establece el campo 'suggested_new_subcategory' con el nombre propuesto (sé muy conciso y descriptivo en español, por ejemplo 'Sushi', 'Hamburguesas', 'Bebidas Calientes', 'Entradas', 'Paquetes'). Si decides reutilizar una subcategoría existente, pon este campo en null.
+
+Aquí tienes la lista de categorías principales y sus subcategorías existentes en formato JSON:
+" . json_encode($categoriesData, JSON_UNESCAPED_UNICODE) . "
+
+Aquí tienes la lista de productos del restaurante que debes clasificar:
+" . json_encode($itemsData, JSON_UNESCAPED_UNICODE) . "
+
+Debes responder ÚNICAMENTE con un objeto JSON válido que contenga exactamente esta estructura:
+{
+  \"items_classification\": [
+     {
+        \"item_id\": <id_del_producto>,
+        \"category_id\": <id_categoria_principal_elegida>,
+        \"subcategory_id\": <id_subcategoria_existente_elegida_o_null>,
+        \"suggested_new_subcategory\": \"<nombre_de_nueva_subcategoria_propuesta_o_null>\",
+        \"justification\": \"<una breve justificación de por qué se ubicó aquí en español, máx 15 palabras>\"
+     },
+     ...
+  ]
+}
+
+No agregues explicaciones fuera del JSON, no uses bloques markdown ```json ... ```, responde únicamente con el JSON puro.";
+
+        try {
+            $response = \Illuminate\Support\Facades\Http::timeout(60)->post(
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $gemini_key,
+                [
+                    'contents' => [
+                        [
+                            'parts' => [
+                                ['text' => $prompt]
+                            ]
+                        ]
+                    ],
+                    'generationConfig' => [
+                        'responseMimeType' => 'application/json',
+                        'temperature' => 0.1
+                    ]
+                ]
+            );
+
+            if ($response->successful()) {
+                $resData = $response->json();
+                if (isset($resData['candidates'][0]['content']['parts'][0]['text'])) {
+                    $responseText = trim($resData['candidates'][0]['content']['parts'][0]['text']);
+                    $aiResult = json_decode($responseText, true);
+
+                    if (isset($aiResult['items_classification']) && is_array($aiResult['items_classification'])) {
+                        $enrichedClassification = [];
+                        foreach ($aiResult['items_classification'] as $c) {
+                            $itemId = $c['item_id'];
+                            $item = Item::find($itemId);
+                            if ($item) {
+                                $parentCat = Category::find($c['category_id']);
+                                $subCat = $c['subcategory_id'] ? Category::find($c['subcategory_id']) : null;
+
+                                $currentCatName = 'Sin categoría';
+                                $currentSubCatName = 'Sin subcategoría';
+
+                                $currentCatObj = Category::find($item->category_id);
+                                if ($currentCatObj) {
+                                    if ($currentCatObj->position == 1) {
+                                        $currentSubCatName = $currentCatObj->name;
+                                        $parent = Category::find($currentCatObj->parent_id);
+                                        if ($parent) {
+                                            $currentCatName = $parent->name;
+                                        }
+                                    } else {
+                                        $currentCatName = $currentCatObj->name;
+                                    }
+                                }
+
+                                $enrichedClassification[] = [
+                                    'item_id' => $itemId,
+                                    'item_name' => $item->name,
+                                    'item_description' => $item->description ?? '',
+                                    'current_category_name' => $currentCatName,
+                                    'current_subcategory_name' => $currentSubCatName,
+                                    'new_category_id' => $c['category_id'],
+                                    'new_category_name' => $parentCat ? $parentCat->name : 'Categoría desconocida',
+                                    'new_subcategory_id' => $c['subcategory_id'],
+                                    'new_subcategory_name' => $subCat ? $subCat->name : null,
+                                    'suggested_new_subcategory' => $c['suggested_new_subcategory'] ?? null,
+                                    'justification' => $c['justification'] ?? ''
+                                ];
+                            }
+                        }
+
+                        return response()->json([
+                            'success' => true,
+                            'classification' => $enrichedClassification
+                        ]);
+                    }
+                }
+            }
+
+            return response()->json(['success' => false, 'message' => 'Respuesta no válida del servicio de Inteligencia Artificial.'], 500);
+
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Gemini Reclassify Error: " . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Error al conectar con la Inteligencia Artificial: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function apply_ai_reclassify(Request $request)
+    {
+        $store_id = $request->input('store_id');
+        $classifications = $request->input('classification');
+
+        if (!$store_id || !$classifications || !is_array($classifications)) {
+            return response()->json(['success' => false, 'message' => 'Datos inválidos o incompletos.'], 400);
+        }
+
+        $store = Store::find($store_id);
+        if (!$store) {
+            return response()->json(['success' => false, 'message' => 'Restaurante no encontrado.'], 404);
+        }
+        $moduleId = $store->module_id;
+
+        $createdSubCategories = [];
+
+        DB::beginTransaction();
+        try {
+            foreach ($classifications as $c) {
+                if (!isset($c['apply']) || $c['apply'] != 1) {
+                    continue;
+                }
+
+                $itemId = $c['item_id'];
+                $parentCategoryId = $c['new_category_id'];
+                $subcategory_id = $c['new_subcategory_id'] ?? null;
+                $suggested_new_subcategory = isset($c['suggested_new_subcategory']) ? trim($c['suggested_new_subcategory']) : null;
+
+                $item = Item::find($itemId);
+                if (!$item) continue;
+
+                $finalSubCategoryId = $subcategory_id;
+
+                if (empty($finalSubCategoryId) && !empty($suggested_new_subcategory)) {
+                    $normalizedName = strtolower($suggested_new_subcategory);
+
+                    if (isset($createdSubCategories[$parentCategoryId][$normalizedName])) {
+                        $finalSubCategoryId = $createdSubCategories[$parentCategoryId][$normalizedName];
+                    } else {
+                        $existingSub = Category::where('parent_id', $parentCategoryId)
+                            ->where('position', 1)
+                            ->whereRaw('LOWER(name) = ?', [$normalizedName])
+                            ->first();
+
+                        if ($existingSub) {
+                            $finalSubCategoryId = $existingSub->id;
+                            $createdSubCategories[$parentCategoryId][$normalizedName] = $existingSub->id;
+                        } else {
+                            $newSub = new Category();
+                            $newSub->name = $suggested_new_subcategory;
+                            $newSub->parent_id = $parentCategoryId;
+                            $newSub->position = 1;
+                            $newSub->status = 1;
+                            $newSub->priority = 0;
+                            $newSub->module_id = $moduleId;
+                            $newSub->image = 'def.png';
+                            $newSub->featured = 0;
+                            $newSub->time_slot = 'all_day';
+                            $newSub->slug = \Illuminate\Support\Str::slug($suggested_new_subcategory) . '-' . rand(100, 999);
+                            $newSub->save();
+
+                            try {
+                                $translation = new \App\Models\Translation();
+                                $translation->translationable_type = 'App\\Models\\Category';
+                                $translation->translationable_id = $newSub->id;
+                                $translation->locale = app()->getLocale() ?? 'es';
+                                $translation->key = 'name';
+                                $translation->value = $suggested_new_subcategory;
+                                $translation->save();
+                            } catch (\Exception $e) {
+                                \Illuminate\Support\Facades\Log::error("Failed to save category translation: " . $e->getMessage());
+                            }
+
+                            $finalSubCategoryId = $newSub->id;
+                            $createdSubCategories[$parentCategoryId][$normalizedName] = $newSub->id;
+                        }
+                    }
+                }
+
+                $item->category_id = $finalSubCategoryId ? $finalSubCategoryId : $parentCategoryId;
+
+                $categories = [];
+                $categories[] = [
+                    'id' => (string)$parentCategoryId,
+                    'position' => 1
+                ];
+                if ($finalSubCategoryId) {
+                    $categories[] = [
+                        'id' => (string)$finalSubCategoryId,
+                        'position' => 2
+                    ];
+                }
+
+                $item->category_ids = json_encode($categories);
+                $item->save();
+            }
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => '¡Menú reclasificado con IA con éxito!'
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Illuminate\Support\Facades\Log::error("Apply AI Reclassify Error: " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al aplicar los cambios: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }
