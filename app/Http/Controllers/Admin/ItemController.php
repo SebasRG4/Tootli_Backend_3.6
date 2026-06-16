@@ -1016,9 +1016,15 @@ class ItemController extends Controller
     public function get_categories(Request $request)
     {
         $key = explode(' ', $request['q']);
+        $is_abastos = $request->query('is_abastos', null);
         $cat = Category::when(isset($request->module_id), function ($query) use ($request) {
             $query->where('module_id', $request->module_id);
         })
+            ->when($is_abastos !== null, function ($query) use ($is_abastos) {
+                $query->where('is_abastos', $is_abastos);
+            }, function ($query) {
+                $query->where('is_abastos', 0);
+            })
             ->when($request->sub_category, function ($query) {
                 $query->where('position', '>', '0');
             })
@@ -1118,7 +1124,13 @@ class ItemController extends Controller
 
         $type = $request->query('type', 'all');
         $key = explode(' ', $request['search']);
+        $is_abastos = $request->query('is_abastos', null);
         $items = Item::withoutGlobalScope(StoreScope::class)
+            ->when($is_abastos !== null, function ($query) use ($is_abastos) {
+                return $query->where('is_abastos', $is_abastos);
+            }, function ($query) {
+                return $query->where('is_abastos', 0);
+            })
             ->when($request->query('module_id', null), function ($query) use ($request) {
                 return $query->module($request->query('module_id'));
             })

@@ -52,15 +52,30 @@ class CategoryController extends BaseController
 
     private function getCategoryView(Request $request): View
     {
+        $is_abastos = $request->query('is_abastos', null);
+        $filters = ['position' => $request['position'] ?? 0];
+        if ($is_abastos !== null) {
+            $filters['is_abastos'] = $is_abastos;
+        } else {
+            $filters['is_abastos'] = 0;
+        }
+
         $categories = $this->categoryRepo->getListWhere(
             searchValue: $request['search'],
-            filters: ['position' => $request['position'] ?? 0],
+            filters: $filters,
             relations: ['module'],
             dataLimit: config('default_pagination')
         );
 
+        $mainFilters = ['position' => 0];
+        if ($is_abastos !== null) {
+            $mainFilters['is_abastos'] = $is_abastos;
+        } else {
+            $mainFilters['is_abastos'] = 0;
+        }
+
         $mainCategories = $this->categoryRepo->getMainList(
-            filters: ['position' => 0],
+            filters: $mainFilters,
             relations: ['module'],
         );
 

@@ -97,11 +97,15 @@
                             <div class="form-group">
                                 <label class="toggle-switch toggle-switch-sm d-flex justify-content-between align-items-center" for="is_abastos">
                                     <span class="input-label mb-0 text-capitalize">{{ translate('Tootli Abastos') }}</span>
-                                    <input type="checkbox" name="is_abastos" class="toggle-switch-input" id="is_abastos" value="1">
+                                    <input type="checkbox" name="is_abastos" class="toggle-switch-input" id="is_abastos" value="1"
+                                        {{ request()->query('is_abastos') == 1 ? 'checked' : '' }}>
                                     <span class="toggle-switch-label mx-auto">
                                         <span class="toggle-switch-indicator"></span>
                                     </span>
                                 </label>
+                                @if(request()->query('is_abastos') == 1)
+                                    <input type="hidden" name="is_abastos" value="1">
+                                @endif
                             </div>
 
                             @if ($categoryWiseTax)

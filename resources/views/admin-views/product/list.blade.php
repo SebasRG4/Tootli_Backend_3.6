@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('Item List'))
+@section('title', request()->query('is_abastos') == 1 ? 'Insumos de Tootli Abastos' : translate('Item List'))
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -17,7 +17,7 @@
                             <img src="{{asset('assets/admin/img/items.png')}}" class="w--22" alt="">
                         </span>
                         <span>
-                            {{translate('messages.item_list')}} <span class="badge badge-soft-dark ml-2" id="foodCount">{{$items->total()}}</span>
+                            {{ request()->query('is_abastos') == 1 ? 'Insumos de Tootli Abastos' : translate('messages.item_list') }} <span class="badge badge-soft-dark ml-2" id="foodCount">{{$items->total()}}</span>
                         </span>
                     </h1>
                 </div>
@@ -419,6 +419,7 @@
                         all:true,
                         module_id:$('#current_module_id').val(),
                         position:0,
+                        is_abastos: {{ request()->query('is_abastos') == 1 ? 1 : 0 }},
                         page: params.page
                     };
                 },
@@ -450,7 +451,8 @@
                         page: params.page,
                         module_id: $('#current_module_id').val(),
                         parent_id: $('#category_id').val(),
-                        sub_category: true
+                        sub_category: true,
+                        is_abastos: {{ request()->query('is_abastos') == 1 ? 1 : 0 }}
                     };
                 },
                 processResults: function(data) {

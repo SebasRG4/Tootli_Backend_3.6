@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.add_new_item'))
+@section('title', request()->query('is_abastos') == 1 ? 'Agregar Insumo de Tootli Abastos' : translate('messages.add_new_item'))
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -18,7 +18,7 @@
                     <img src="{{ asset('assets/admin/img/items.png') }}" class="w--22" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.add_new_item') }}
+                    {{ request()->query('is_abastos') == 1 ? 'Agregar Insumo de Tootli Abastos' : translate('messages.add_new_item') }}
                 </span>
             </h1>
             <div class=" d-flex flex-sm-nowrap flex-wrap  align-items-end">
@@ -571,6 +571,7 @@
                         q: params.term, // search term
                         page: params.page,
                         module_id: {{ Config::get('module.current_module_id') }},
+                        is_abastos: {{ request()->query('is_abastos') == 1 ? 1 : 0 }},
                     };
                 },
                 processResults: function(data) {
@@ -598,7 +599,8 @@
                         page: params.page,
                         module_id: {{ Config::get('module.current_module_id') }},
                         parent_id: parent_category_id,
-                        sub_category: true
+                        sub_category: true,
+                        is_abastos: {{ request()->query('is_abastos') == 1 ? 1 : 0 }},
                     };
                 },
                 processResults: function(data) {

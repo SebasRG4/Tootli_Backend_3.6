@@ -286,11 +286,14 @@
                             <div class="form-check mb-sm-2 pb-sm-1">
                                 <input class="form-check-input" name="is_abastos" type="checkbox" value="1"
                                     id="is_abastos"
-                                    {{ isset($product) && $product->is_abastos == 1 ? 'checked' : '' }}>
+                                    {{ (isset($product) && $product->is_abastos == 1) || request()->query('is_abastos') == 1 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="is_abastos">
                                     {{ translate('Tootli Abastos') }}
                                 </label>
                             </div>
+                            @if(request()->query('is_abastos') == 1)
+                                <input type="hidden" name="is_abastos" value="1">
+                            @endif
                         </div>
 
                         @if (Config::get('module.current_module_type') == 'grocery' || Config::get('module.current_module_type') == 'food')

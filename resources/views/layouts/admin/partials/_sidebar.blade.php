@@ -224,7 +224,7 @@
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
 
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/abastos*') ? 'active' : '' }}">
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/abastos*') || (Request::is('admin/item*') && request()->query('is_abastos') == 1) || (Request::is('admin/category*') && request()->query('is_abastos') == 1) ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
                                 title="Tootli Abastos">
                                 <i class="tio-shopping-basket nav-icon"></i>
@@ -233,7 +233,7 @@
                                 </span>
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                                style="display:{{ Request::is('admin/abastos*') ? 'block' : 'none' }}">
+                                style="display:{{ Request::is('admin/abastos*') || (Request::is('admin/item*') && request()->query('is_abastos') == 1) || (Request::is('admin/category*') && request()->query('is_abastos') == 1) ? 'block' : 'none' }}">
                                 <li class="nav-item {{ Request::is('admin/abastos/order/list/all') ? 'active' : '' }}">
                                     <a class="nav-link" href="{{ route('admin.abastos.order.list', ['all']) }}"
                                         title="Todos los Pedidos">
@@ -292,6 +292,39 @@
                                                 {{ \App\Models\Order::where('is_abastos', 1)->where('order_status', 'canceled')->count() }}
                                             </span>
                                         </span>
+                                    </a>
+                                </li>
+
+                                <!-- Separador Catálogo -->
+                                <li class="nav-item-header" style="padding: 0.5rem 1rem 0.25rem; font-size: 0.75rem; text-transform: uppercase; color: #9ca3af; font-weight: 600;">
+                                    Catálogo de Insumos
+                                </li>
+                                <li class="nav-item {{ Request::is('admin/category/add*') && request()->query('is_abastos') == 1 && request()->query('position') == 0 ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('admin.category.add', ['position' => 0, 'is_abastos' => 1]) }}"
+                                        title="Categorías">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate">Categorías</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item {{ Request::is('admin/category/add*') && request()->query('is_abastos') == 1 && request()->query('position') == 1 ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('admin.category.add', ['position' => 1, 'is_abastos' => 1]) }}"
+                                        title="Sub Categorías">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate">Sub Categorías</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item {{ Request::is('admin/item/add-new') && request()->query('is_abastos') == 1 ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('admin.item.add-new', ['is_abastos' => 1]) }}"
+                                        title="Nuevo Insumo">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate">Nuevo Insumo</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item {{ Request::is('admin/item/list') && request()->query('is_abastos') == 1 ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('admin.item.list', ['is_abastos' => 1]) }}"
+                                        title="Lista de Insumos">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate">Lista de Insumos</span>
                                     </a>
                                 </li>
                             </ul>
