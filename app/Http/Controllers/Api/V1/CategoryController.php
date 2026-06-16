@@ -60,6 +60,7 @@ class CategoryController extends Controller
             }
 
             $categories = $categories->where(['position' => 0, 'status' => 1])
+                ->where('is_abastos', 0)
                 ->when(config('module.current_module_data'), function ($query) {
                     $query->module(config('module.current_module_data')['id']);
                 })

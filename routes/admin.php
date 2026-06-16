@@ -443,6 +443,13 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('parcel-return', 'OrderController@parcelReturn')->name('parcelReturn');
 
         });
+
+        Route::group(['prefix' => 'abastos', 'as' => 'abastos.', 'middleware' => ['module:order']], function () {
+            Route::get('order/list/{status}', 'AbastosOrderController@list')->name('order.list');
+            Route::get('order/details/{id}', 'AbastosOrderController@details')->name('order.details');
+            Route::post('order/status-update/{id}', 'AbastosOrderController@statusUpdate')->name('order.status-update');
+        });
+
         // Refund
         Route::group(['prefix' => 'refund', 'as' => 'refund.', 'middleware' => ['module:order']], function () {
             Route::get('settings', 'OrderController@refund_settings')->name('refund_settings');

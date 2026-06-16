@@ -31,7 +31,8 @@ class CategoryService
             'parent_id' => $request->parent_id == null ? 0 : $request->parent_id,
             'position' => $request->position,
             'priority' => $request->priority??0,
-            'module_id' => isset($request->parent_id) ? $parentCategory['module_id'] : Config::get('module.current_module_id')
+            'module_id' => isset($request->parent_id) ? $parentCategory['module_id'] : Config::get('module.current_module_id'),
+            'is_abastos' => $request->is_abastos ?? 0,
         ];
     }
 
@@ -46,6 +47,7 @@ class CategoryService
             'status' => $request->status ?? 0,
             'parent_id' =>$request->parent_id ?? 0,
             'image' => $request->has('image') ? $this->updateAndUpload('category/', $object->image, 'png', $request->file('image')) : $object->image,
+            'is_abastos' => $request->is_abastos ?? 0,
         ];
     }
 

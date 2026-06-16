@@ -94,6 +94,16 @@
                                 </select>
                             </div>
 
+                            <div class="form-group">
+                                <label class="toggle-switch toggle-switch-sm d-flex justify-content-between align-items-center" for="is_abastos">
+                                    <span class="input-label mb-0 text-capitalize">{{ translate('Tootli Abastos') }}</span>
+                                    <input type="checkbox" name="is_abastos" class="toggle-switch-input" id="is_abastos" value="1">
+                                    <span class="toggle-switch-label mx-auto">
+                                        <span class="toggle-switch-indicator"></span>
+                                    </span>
+                                </label>
+                            </div>
+
                             @if ($categoryWiseTax)
                                 <span class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rate') }}</span>
                                 <select name="tax_ids[]" id="tax__rate"

@@ -362,6 +362,7 @@ class ItemController extends Controller
         $item->stock = $request->current_stock ?? 0;
         $item->images = $images;
         $item->is_halal = $request->is_halal ?? 0;
+        $item->is_abastos = $request->is_abastos ?? 0;
         $item->weight = $request->weight ?? 0;
         $item->length = $request->length ?? 0;
         $item->width = $request->width ?? 0;
@@ -712,6 +713,7 @@ class ItemController extends Controller
         // $item->module_id= $request->module_id;
         $item->stock = $request->current_stock ?? 0;
         $item->is_halal = $request->is_halal ?? 0;
+        $item->is_abastos = $request->is_abastos ?? 0;
         $item->organic = $request->organic ?? 0;
         $item->delivery_time_type = $request->delivery_time_type ?? 'standard';
         $item->veg = $request->veg ?? 0;

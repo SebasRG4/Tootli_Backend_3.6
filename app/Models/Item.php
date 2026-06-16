@@ -177,7 +177,7 @@ class Item extends Model
     {
         return $query->where(function ($q) {
             $q->where('pos_only', false)->orWhereNull('pos_only');
-        });
+        })->where('is_abastos', 0);
     }
     public function scopePopular($query)
     {

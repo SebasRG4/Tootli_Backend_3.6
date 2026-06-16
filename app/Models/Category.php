@@ -49,6 +49,7 @@ class Category extends Model
         'products_count',
         'childes_count',
         'time_slot',
+        'is_abastos',
     ];
 
     protected $casts = [
@@ -60,6 +61,7 @@ class Category extends Model
         'module_id' => 'integer',
         'products_count' => 'integer',
         'childes_count' => 'integer',
+        'is_abastos' => 'integer',
     ];
     protected $appends = ['image_full_url'];
 

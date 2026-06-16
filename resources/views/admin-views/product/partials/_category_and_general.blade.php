@@ -282,6 +282,17 @@
 
 
 
+                        <div class="col-sm-6 col-lg-4 error-wrapper" id="is_abastos_div">
+                            <div class="form-check mb-sm-2 pb-sm-1">
+                                <input class="form-check-input" name="is_abastos" type="checkbox" value="1"
+                                    id="is_abastos"
+                                    {{ isset($product) && $product->is_abastos == 1 ? 'checked' : '' }}>
+                                <label class="form-check-label" for="is_abastos">
+                                    {{ translate('Tootli Abastos') }}
+                                </label>
+                            </div>
+                        </div>
+
                         @if (Config::get('module.current_module_type') == 'grocery' || Config::get('module.current_module_type') == 'food')
                             <div class="col-sm-6 col-lg-4 error-wrapper" id="halal">
                                 <div class="form-check mb-sm-2 pb-sm-1">
