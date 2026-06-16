@@ -2842,6 +2842,44 @@ class Helpers
         return $imageName;
     }
 
+    public static function remove_background($imageFile)
+    {
+        if ($imageFile == null) {
+            return null;
+        }
+
+        $aiServiceUrl = env('AI_SERVICE_URL', 'http://127.0.0.1:8000');
+        try {
+            $response = \Illuminate\Support\Facades\Http::attach(
+                'file', 
+                file_get_contents($imageFile->getRealPath()), 
+                $imageFile->getClientOriginalName()
+            )->post($aiServiceUrl . '/remove-bg');
+
+            if ($response->successful()) {
+                $tempPath = tempnam(sys_get_temp_dir(), 'no_bg_');
+                $newTempPath = $tempPath . '.png';
+                rename($tempPath, $newTempPath);
+                
+                file_put_contents($newTempPath, $response->body());
+                
+                return new \Illuminate\Http\UploadedFile(
+                    $newTempPath,
+                    $imageFile->getClientOriginalName(),
+                    'image/png',
+                    null,
+                    true
+                );
+            } else {
+                \Log::error("AI Background Removal responded with status: " . $response->status());
+            }
+        } catch (\Exception $e) {
+            \Log::error("Error calling AI Background Removal service: " . $e->getMessage());
+        }
+
+        return $imageFile;
+    }
+
     public static function update(string $dir, $old_image, string $format, $image = null)
     {
         if ($image == null) {

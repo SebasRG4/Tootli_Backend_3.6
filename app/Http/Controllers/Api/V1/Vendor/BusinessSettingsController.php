@@ -22,6 +22,10 @@ class BusinessSettingsController extends Controller
             'logo' => 'nullable|image|max:2048',
             'cover_photo' => 'nullable|image|max:2048',
             'meta_title' => 'max:100',
+            'event_title' => 'nullable|string|max:191',
+            'event_date' => 'nullable|date',
+            'event_image' => 'nullable|image|max:2048',
+            'event_card_image' => 'nullable|image|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -47,6 +51,21 @@ class BusinessSettingsController extends Controller
         $store->meta_title = $data_trans[2]['value'];
         $store->meta_description = $data_trans[3]['value'];
         $store->meta_image = $request->has('meta_image') ? Helpers::update(dir: 'store/', old_image: $store->meta_image, format: 'png', image: $request->file('meta_image')) : $store->meta_image;
+
+        if ($request->has('event_title')) {
+            $store->event_title = $request->event_title;
+        }
+        if ($request->has('event_date')) {
+            $store->event_date = $request->event_date;
+        }
+        if ($request->has('event_image')) {
+            $eventImage = Helpers::remove_background($request->file('event_image'));
+            $store->event_image = Helpers::update(dir: 'store/', old_image: $store->event_image, format: 'png', image: $eventImage);
+        }
+        if ($request->has('event_card_image')) {
+            $eventCardImage = Helpers::remove_background($request->file('event_card_image'));
+            $store->event_card_image = Helpers::update(dir: 'store/', old_image: $store->event_card_image, format: 'png', image: $eventCardImage);
+        }
 
         $store->save();
 
