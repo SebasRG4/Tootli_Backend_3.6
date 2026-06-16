@@ -33,6 +33,12 @@
                 <div class="card-body">
                     <div class="row g-2">
                         @php($column = 4)
+                        @php
+                            $default_store = null;
+                            if (request()->query('is_abastos') == 1) {
+                                $default_store = \App\Models\Store::where('name', 'like', '%Abastos%')->first();
+                            }
+                        @endphp
                         @if (Auth::guard('admin')->check())
                             <div class="col-sm-6 col-lg-3">
 
@@ -50,6 +56,9 @@
                                         @if (isset($product->store) && request()->product_gellary != 1)
                                             <option value="{{ $product->store_id }}" selected="selected">
                                                 {{ $product->store->name }}</option>
+                                        @elseif ($default_store)
+                                            <option value="{{ $default_store->id }}" selected="selected">
+                                                {{ $default_store->name }}</option>
                                         @endif
                                     </select>
                                 </div>

@@ -67,6 +67,26 @@
                             </div>
                         </div>
 
+                        <div class="col-md-3">
+                            <div class="form-group mb-0 error-wrapper">
+                                <label class="input-label" for="abastos_price">
+                                    Precio Abastos (Insumos)
+                                    {{ \App\CentralLogics\Helpers::currency_symbol() }}
+                                    <span class="form-label-secondary" data-toggle="tooltip"
+                                        data-placement="right"
+                                        data-original-title="Precio especial para la sección de compras de tiendas Tootli Abastos">
+                                        <i class="tio-info-outined"></i>
+                                    </span>
+                                </label>
+                                <input type="number" id="abastos_price" min="0" max="999999999999.999"
+                                    step="0.001"
+                                    value="{{ $product?->abastos_price ?? old('abastos_price') }}"
+                                    name="abastos_price"
+                                    class="form-control"
+                                    placeholder="{{ translate('messages.optional') }}">
+                            </div>
+                        </div>
+
                         @if ($productWiseTax)
                             <div class="col-md-3">
                                 <div class="form-group pickup-zone-tag mb-0 error-wrapper">

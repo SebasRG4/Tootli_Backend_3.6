@@ -363,6 +363,7 @@ class ItemController extends Controller
         $item->images = $images;
         $item->is_halal = $request->is_halal ?? 0;
         $item->is_abastos = $request->is_abastos ?? 0;
+        $item->abastos_price = $request->abastos_price ?? 0;
         $item->weight = $request->weight ?? 0;
         $item->length = $request->length ?? 0;
         $item->width = $request->width ?? 0;
@@ -714,6 +715,7 @@ class ItemController extends Controller
         $item->stock = $request->current_stock ?? 0;
         $item->is_halal = $request->is_halal ?? 0;
         $item->is_abastos = $request->is_abastos ?? 0;
+        $item->abastos_price = $request->abastos_price ?? 0;
         $item->organic = $request->organic ?? 0;
         $item->delivery_time_type = $request->delivery_time_type ?? 'standard';
         $item->veg = $request->veg ?? 0;
@@ -1126,10 +1128,10 @@ class ItemController extends Controller
         $key = explode(' ', $request['search']);
         $is_abastos = $request->query('is_abastos', null);
         $items = Item::withoutGlobalScope(StoreScope::class)
-            ->when($is_abastos !== null, function ($query) use ($is_abastos) {
-                return $query->where('is_abastos', $is_abastos);
+            ->when($is_abastos == 1, function ($query) {
+                return $query->where('abastos_price', '>', 0);
             }, function ($query) {
-                return $query->where('is_abastos', 0);
+                return $query->where('abastos_price', 0);
             })
             ->when($request->query('module_id', null), function ($query) use ($request) {
                 return $query->module($request->query('module_id'));

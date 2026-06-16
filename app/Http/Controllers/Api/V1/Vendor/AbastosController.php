@@ -17,7 +17,13 @@ class AbastosController extends Controller
     public function get_categories(Request $request)
     {
         try {
-            $categories = Category::where('is_abastos', 1)
+            // Obtener las categorías únicas de los ítems con abastos_price > 0
+            $categories_ids = Item::where('abastos_price', '>', 0)
+                ->where('status', 1)
+                ->pluck('category_id')
+                ->unique();
+
+            $categories = Category::whereIn('id', $categories_ids)
                 ->where('status', 1)
                 ->orderBy('priority', 'desc')
                 ->get();
@@ -31,7 +37,8 @@ class AbastosController extends Controller
     public function get_items(Request $request)
     {
         try {
-            $items = Item::where('is_abastos', 1)
+            // Filtrar ítems con abastos_price > 0
+            $items = Item::where('abastos_price', '>', 0)
                 ->where('status', 1)
                 ->when($request->category_id, function ($query) use ($request) {
                     $query->where('category_id', $request->category_id);
@@ -41,6 +48,11 @@ class AbastosController extends Controller
                 })
                 ->orderBy('id', 'desc')
                 ->get();
+
+            // Mapeamos el precio de abastos al campo de precio principal para que sea transparente en Flutter
+            foreach ($items as $item) {
+                $item->price = $item->abastos_price;
+            }
 
             $formatted_items = Helpers::product_data_formatting($items, true, false, app()->getLocale());
 
@@ -83,13 +95,14 @@ class AbastosController extends Controller
             $details = [];
 
             foreach ($cart as $cart_item) {
+                // Buscar ítem con abastos_price > 0
                 $item = Item::where('id', $cart_item['item_id'])
-                    ->where('is_abastos', 1)
+                    ->where('abastos_price', '>', 0)
                     ->where('status', 1)
                     ->first();
 
                 if (!$item) {
-                    return response()->json(['errors' => [['code' => 'item', 'message' => 'Uno de los productos no existe o no está disponible.']]], 404);
+                    return response()->json(['errors' => [['code' => 'item', 'message' => 'Uno de los productos no existe o no está disponible en abastos.']]], 404);
                 }
 
                 $qty = (int)$cart_item['quantity'];
@@ -97,15 +110,18 @@ class AbastosController extends Controller
                     continue;
                 }
 
-                $item_total = $item->price * $qty;
+                $item_total = $item->abastos_price * $qty;
                 $item_tax = $item_total * 0.16; // 16% IVA standard
 
                 $subtotal += $item_total;
                 $tax_amount += $item_tax;
 
+                // Sobreescribimos el objeto item para que en order_details se guarde el precio especial de abastos
+                $item->price = $item->abastos_price;
+
                 $details[] = [
                     'item_id' => $item->id,
-                    'price' => $item->price,
+                    'price' => $item->abastos_price,
                     'quantity' => $qty,
                     'tax_amount' => $item_tax,
                     'discount_on_item' => 0,
