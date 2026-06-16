@@ -317,6 +317,51 @@
                     @endif
                     <!-- End Orders -->
 
+                    <!-- Tootli Abastos -->
+                    @if (\App\CentralLogics\Helpers::module_permission_check('order'))
+                        <li class="nav-item">
+                            <small class="nav-subtitle">Tootli Abastos</small>
+                            <small class="tio-more-horizontal nav-subtitle-replacer"></small>
+                        </li>
+
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/abastos*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
+                                title="Tootli Abastos">
+                                <i class="tio-shopping-basket nav-icon"></i>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                    Tootli Abastos
+                                </span>
+                            </a>
+                            <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
+                                style="display:{{ Request::is('admin/abastos*') ? 'block' : 'none' }}">
+                                <li class="nav-item {{ Request::is('admin/abastos/order/list/all') ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('admin.abastos.order.list', ['all']) }}"
+                                        title="Todos los Pedidos">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate sidebar--badge-container">
+                                            Todos
+                                            <span class="badge badge-soft-info badge-pill ml-1">
+                                                {{ \App\Models\Order::where('is_abastos', 1)->count() }}
+                                            </span>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item {{ Request::is('admin/abastos/order/list/pending') ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('admin.abastos.order.list', ['pending']) }}"
+                                        title="Pendientes">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate sidebar--badge-container">
+                                            Pendientes
+                                            <span class="badge badge-soft-info badge-pill ml-1">
+                                                {{ \App\Models\Order::where('is_abastos', 1)->where('order_status', 'pending')->count() }}
+                                            </span>
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
+
                     <!-- Marketing section -->
                     @if (
                             \App\CentralLogics\Helpers::module_permission_check('campaign') ||
