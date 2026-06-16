@@ -32,8 +32,8 @@
                 </div>
                 <div class="card-body">
                     <div class="row g-2">
-                        @php($column = 4)
                         @php
+                            $column = 4;
                             $default_store = null;
                             if (request()->query('is_abastos') == 1) {
                                 $default_store = \App\Models\Store::where('name', 'like', '%Abastos%')->first();
