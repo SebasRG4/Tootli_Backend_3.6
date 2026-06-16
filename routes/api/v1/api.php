@@ -108,6 +108,13 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::post('verify',               'AdminOfflinePaymentController@verify');
             Route::post('remind-debt',          'AdminOfflinePaymentController@sendDebtReminder');
         });
+
+        // Tootli Abastos Admin
+        Route::group(['prefix' => 'abastos'], function () {
+            Route::get('orders', 'AdminAbastosController@list');
+            Route::get('orders/details', 'AdminAbastosController@details');
+            Route::put('orders/update-status', 'AdminAbastosController@updateStatus');
+        });
     });
 
     //Store Subscription
@@ -377,6 +384,13 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::get('search-list', 'ConversationController@search_conversations');
             Route::get('details', 'ConversationController@messages');
             Route::post('send', 'ConversationController@messages_store');
+        });
+
+        // Tootli Abastos
+        Route::group(['prefix' => 'abastos'], function () {
+            Route::get('categories', 'AbastosController@get_categories');
+            Route::get('items', 'AbastosController@get_items');
+            Route::post('order/place', 'AbastosController@place_order');
         });
     });
 

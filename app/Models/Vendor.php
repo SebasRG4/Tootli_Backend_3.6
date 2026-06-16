@@ -56,6 +56,11 @@ class Vendor extends Authenticatable
         return $this->hasMany(OrderTransaction::class)->whereDate('created_at',now());
     }
 
+    public function yesterdays_earning()
+    {
+        return $this->hasMany(OrderTransaction::class)->whereDate('created_at', Carbon::yesterday());
+    }
+
     public function this_week_earning()
     {
         return $this->hasMany(OrderTransaction::class)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
@@ -69,6 +74,11 @@ class Vendor extends Authenticatable
     public function todaysorders()
     {
         return $this->hasManyThrough(Order::class, Store::class)->whereDate('orders.created_at',now());
+    }
+
+    public function yesterdaysorders()
+    {
+        return $this->hasManyThrough(Order::class, Store::class)->whereDate('orders.created_at', Carbon::yesterday());
     }
 
     public function this_week_orders()

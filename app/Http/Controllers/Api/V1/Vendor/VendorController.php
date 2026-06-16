@@ -52,6 +52,7 @@ class VendorController extends Controller
         $store['module']=$store->module;
         $vendor['order_count'] =$vendor->orders->where('order_type','!=','pos')->whereNotIn('order_status',['canceled','failed'])->count();
         $vendor['todays_order_count'] =$vendor->todaysorders->where('order_type','!=','pos')->whereIn('order_status', ['refunded', 'delivered'])->count();
+        $vendor['yesterdays_order_count'] =$vendor->yesterdaysorders->where('order_type','!=','pos')->whereIn('order_status', ['refunded', 'delivered'])->count();
         $vendor['this_week_order_count'] =$vendor->this_week_orders->where('order_type','!=','pos')->whereIn('order_status', ['refunded', 'delivered'])->count();
         $vendor['this_month_order_count'] =$vendor->this_month_orders->where('order_type','!=','pos')->whereIn('order_status', ['refunded', 'delivered'])->count();
         $vendor['member_since_days'] = (int) $vendor->created_at->diffInDays();
@@ -59,6 +60,7 @@ class VendorController extends Controller
         $vendor['balance'] =$vendor->wallet?(float)$vendor->wallet->balance:0;
         $vendor['total_earning'] =$vendor->wallet?(float)$vendor->wallet->total_earning:0;
         $vendor['todays_earning'] =(float)$vendor->todays_earning()->sum('store_amount');
+        $vendor['yesterdays_earning'] =(float)$vendor->yesterdays_earning()->sum('store_amount');
         $vendor['this_week_earning'] =(float)$vendor->this_week_earning()->sum('store_amount');
         $vendor['this_month_earning'] =(float)$vendor->this_month_earning()->sum('store_amount');
 
@@ -135,10 +137,9 @@ class VendorController extends Controller
         unset($vendor['orders']);
         unset($vendor['rating']);
         unset($vendor['todaysorders']);
+        unset($vendor['yesterdaysorders']);
         unset($vendor['this_week_orders']);
         unset($vendor['wallet']);
-        unset($vendor['todaysorders']);
-        unset($vendor['this_week_orders']);
         unset($vendor['this_month_orders']);
 
         $vendor['subscription_transactions']= (boolean) SubscriptionTransaction::where('store_id',$store->id)->count() > 0? true : false;
