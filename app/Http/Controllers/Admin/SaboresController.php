@@ -216,10 +216,12 @@ class SaboresController extends Controller
         $restaurant->event_title = $request->event_title;
         $restaurant->event_date = $request->event_date;
         if ($request->has('event_image')) {
-            $restaurant->event_image = \App\CentralLogics\Helpers::update('store/', $restaurant->event_image, 'png', $request->file('event_image'));
+            $eventImage = \App\CentralLogics\Helpers::remove_background($request->file('event_image'));
+            $restaurant->event_image = \App\CentralLogics\Helpers::update('store/', $restaurant->event_image, 'png', $eventImage);
         }
         if ($request->has('event_card_image')) {
-            $restaurant->event_card_image = \App\CentralLogics\Helpers::update('store/', $restaurant->event_card_image, 'png', $request->file('event_card_image'));
+            $eventCardImage = \App\CentralLogics\Helpers::remove_background($request->file('event_card_image'));
+            $restaurant->event_card_image = \App\CentralLogics\Helpers::update('store/', $restaurant->event_card_image, 'png', $eventCardImage);
         }
         $restaurant->google_address = $request->google_address;
         $restaurant->google_place_id = $request->google_place_id;

@@ -313,10 +313,12 @@ class VendorController extends Controller
         $store->event_title = $request->event_title;
         $store->event_date = $request->event_date;
         if ($request->has('event_image')) {
-            $store->event_image = Helpers::update('store/', $store->event_image, 'png', $request->file('event_image'));
+            $eventImage = Helpers::remove_background($request->file('event_image'));
+            $store->event_image = Helpers::update('store/', $store->event_image, 'png', $eventImage);
         }
         if ($request->has('event_card_image')) {
-            $store->event_card_image = Helpers::update('store/', $store->event_card_image, 'png', $request->file('event_card_image'));
+            $eventCardImage = Helpers::remove_background($request->file('event_card_image'));
+            $store->event_card_image = Helpers::update('store/', $store->event_card_image, 'png', $eventCardImage);
         }
 
         // TootliClick Settings
