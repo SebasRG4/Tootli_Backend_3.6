@@ -187,4 +187,52 @@ class AbastosController extends Controller
             return response()->json(['errors' => [['code' => 'error', 'message' => $e->getMessage()]]], 500);
         }
     }
+
+    public function get_orders(Request $request)
+    {
+        $vendor = $request['vendor'];
+        if (!$vendor || empty($vendor->stores)) {
+            return response()->json(['errors' => [['code' => 'vendor', 'message' => 'No autorizado.']]], 403);
+        }
+        $store = $vendor->stores[0];
+
+        $orders = Order::where('store_id', $store->id)
+            ->where('is_abastos', 1)
+            ->with(['details' => function ($q) {
+                $q->select('id', 'order_id', 'item_id', 'price', 'quantity', 'item_details');
+            }])
+            ->orderByDesc('created_at')
+            ->paginate(15);
+
+        // Map each order to include a simplified summary
+        $data = $orders->map(function ($order) {
+            return [
+                'id'             => $order->id,
+                'order_status'   => $order->order_status,
+                'payment_status' => $order->payment_status,
+                'payment_method' => $order->payment_method,
+                'order_amount'   => $order->order_amount,
+                'total_tax'      => $order->total_tax_amount,
+                'created_at'     => $order->created_at,
+                'items_count'    => $order->details->count(),
+                'items'          => $order->details->map(function ($d) {
+                    $details = json_decode($d->item_details, true);
+                    return [
+                        'item_id'  => $d->item_id,
+                        'name'     => data_get($details, 'name', 'Producto'),
+                        'price'    => $d->price,
+                        'quantity' => $d->quantity,
+                    ];
+                }),
+            ];
+        });
+
+        return response()->json([
+            'orders'      => $data,
+            'total'       => $orders->total(),
+            'per_page'    => $orders->perPage(),
+            'current_page' => $orders->currentPage(),
+            'last_page'   => $orders->lastPage(),
+        ], 200);
+    }
 }
