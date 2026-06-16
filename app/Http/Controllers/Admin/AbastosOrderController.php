@@ -12,7 +12,7 @@ class AbastosOrderController extends Controller
     public function list($status, Request $request)
     {
         $search = $request->get('search');
-        $query = Order::with(['customer', 'store'])->where('is_abastos', 1);
+        $query = Order::with(['store.vendor'])->where('is_abastos', 1);
 
         if ($search) {
             $query->where(function ($q) use ($search) {
@@ -47,8 +47,7 @@ class AbastosOrderController extends Controller
     {
         $order = Order::with([
             'details',
-            'store',
-            'customer',
+            'store.vendor',
             'details.item' => function ($query) {
                 $query->withoutGlobalScope(\App\Scopes\StoreScope::class);
             }

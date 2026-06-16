@@ -81,8 +81,8 @@
                                                 {{ $order->store->name }}
                                             </a>
                                         </div>
-                                        @if($order->customer)
-                                            <div class="fz-12px text-muted">{{ $order->customer->f_name }} {{ $order->customer->l_name }}</div>
+                                        @if($order->store && $order->store->vendor)
+                                            <div class="fz-12px text-muted">{{ $order->store->vendor->f_name }} {{ $order->store->vendor->l_name }}</div>
                                         @endif
                                     @else
                                         <div class="text-muted">Tienda no encontrada</div>

@@ -145,8 +145,8 @@ class AbastosController extends Controller
                     return response()->json(['errors' => [['code' => 'balance', 'message' => 'Saldo de cartera insuficiente para realizar la compra.']]], 400);
                 }
 
-                // Deduct balance
-                $wallet->balance -= $order_amount;
+                // Deduct balance by increasing total_withdrawn
+                $wallet->total_withdrawn += $order_amount;
                 $wallet->save();
             }
 

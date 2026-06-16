@@ -208,20 +208,20 @@
                         <h4 class="card-header-title">Información del Vendedor</h4>
                     </div>
                     <div class="card-body">
-                        @if ($order->customer)
+                        @if ($order->store && $order->store->vendor)
                             <div class="media align-items-center">
                                 <div class="avatar avatar-circle mr-3">
                                     <img class="avatar-img onerror-image"
-                                        src="{{ $order->customer->image_full_url }}"
+                                        src="{{ $order->store->vendor->image_full_url }}"
                                         data-onerror-image="{{ asset('assets/admin/img/160x160/img1.jpg') }}"
                                         alt="Foto">
                                 </div>
                                 <div class="media-body">
                                     <span class="text-body font-bold text-hover-primary d-block">
-                                        {{ $order->customer->f_name }} {{ $order->customer->l_name }}
+                                        {{ $order->store->vendor->f_name }} {{ $order->store->vendor->l_name }}
                                     </span>
-                                    <span class="d-block text-muted fz-12px">Teléfono: {{ $order->customer->phone }}</span>
-                                    <span class="d-block text-muted fz-12px">Email: {{ $order->customer->email }}</span>
+                                    <span class="d-block text-muted fz-12px">Teléfono: {{ $order->store->vendor->phone }}</span>
+                                    <span class="d-block text-muted fz-12px">Email: {{ $order->store->vendor->email }}</span>
                                 </div>
                             </div>
                         @else
