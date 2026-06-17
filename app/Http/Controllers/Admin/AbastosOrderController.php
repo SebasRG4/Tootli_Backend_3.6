@@ -148,4 +148,67 @@ class AbastosOrderController extends Controller
         Toastr::success('Estado del pedido de insumos actualizado exitosamente');
         return back();
     }
+
+    public function shippingSetup()
+    {
+        // Buscar la tienda del módulo grocery (Tootli Abastos es la única tienda de este módulo)
+        $store = Store::withoutGlobalScopes()
+            ->whereHas('module', function ($q) {
+                $q->where('module_type', 'grocery');
+            })
+            ->first();
+
+        if (!$store) {
+            Toastr::error('No se encontró la tienda del módulo Grocery (Tootli Abastos).');
+            return redirect()->route('admin.dashboard');
+        }
+
+        return view('admin-views.order.abastos-shipping-setup', compact('store'));
+    }
+
+    public function updateShippingSetup(Request $request)
+    {
+        $request->validate([
+            'abastos_shipping_fee_minutes' => 'required|numeric|min:0',
+            'abastos_free_shipping_min_minutes' => 'required|numeric|min:0',
+            'abastos_shipping_fee_standard' => 'required|numeric|min:0',
+            'abastos_free_shipping_min_standard' => 'required|numeric|min:0',
+            'abastos_shipping_fee_next_day' => 'required|numeric|min:0',
+            'abastos_free_shipping_min_next_day' => 'required|numeric|min:0',
+        ]);
+
+        \App\Models\BusinessSetting::updateOrCreate(
+            ['key' => 'abastos_shipping_fee_minutes'],
+            ['value' => $request->abastos_shipping_fee_minutes]
+        );
+        \App\Models\BusinessSetting::updateOrCreate(
+            ['key' => 'abastos_free_shipping_min_minutes'],
+            ['value' => $request->abastos_free_shipping_min_minutes]
+        );
+
+        \App\Models\BusinessSetting::updateOrCreate(
+            ['key' => 'abastos_shipping_fee_standard'],
+            ['value' => $request->abastos_shipping_fee_standard]
+        );
+        \App\Models\BusinessSetting::updateOrCreate(
+            ['key' => 'abastos_free_shipping_min_standard'],
+            ['value' => $request->abastos_free_shipping_min_standard]
+        );
+
+        \App\Models\BusinessSetting::updateOrCreate(
+            ['key' => 'abastos_shipping_fee_next_day'],
+            ['value' => $request->abastos_shipping_fee_next_day]
+        );
+        \App\Models\BusinessSetting::updateOrCreate(
+            ['key' => 'abastos_free_shipping_min_next_day'],
+            ['value' => $request->abastos_free_shipping_min_next_day]
+        );
+
+        // Clear settings cache
+        \Illuminate\Support\Facades\Cache::forget('business_settings_all_data');
+        \Illuminate\Support\Facades\Cache::forget('business_settings_config_keys');
+
+        Toastr::success('Configuración de envío de Tootli Abastos actualizada correctamente.');
+        return back();
+    }
 }

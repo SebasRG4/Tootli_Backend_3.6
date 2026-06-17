@@ -450,6 +450,8 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('order/status-update/{id}', 'AbastosOrderController@statusUpdate')->name('order.status-update');
             Route::get('schedule', 'AbastosOrderController@scheduleIndex')->name('schedule');
             Route::post('schedule/update-delivery-time', 'AbastosOrderController@updateDeliveryTime')->name('schedule.update-delivery-time');
+            Route::get('shipping-setup', 'AbastosOrderController@shippingSetup')->name('shipping-setup');
+            Route::post('shipping-setup/update', 'AbastosOrderController@updateShippingSetup')->name('shipping-setup.update');
         });
 
         // Refund

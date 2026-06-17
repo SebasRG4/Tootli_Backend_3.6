@@ -403,6 +403,13 @@
                                         <span class="text-truncate">Horarios de Entrega</span>
                                     </a>
                                 </li>
+                                <li class="nav-item {{ Request::is('admin/abastos/shipping-setup') ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('admin.abastos.shipping-setup') }}"
+                                        title="Configuración de Envío">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate">Configuración de Envío</span>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     @endif

@@ -185,13 +185,50 @@ class AbastosController extends Controller
             }
         }
 
+        // Grid hex delivery type calculation based on buyer's store coordinates
+        $delivery_type = 'next_day'; // fallback default
+        if ($abastos_store && $store->latitude && $store->longitude) {
+            $hexagon_id = \App\CentralLogics\H3Helper::latLngToHex($store->latitude, $store->longitude);
+            $grid_rule = \DB::table('delivery_grids')
+                ->where('zone_id', $abastos_store->zone_id)
+                ->where('module_id', $abastos_store->module_id)
+                ->where('hexagon_id', $hexagon_id)
+                ->where('is_active', true)
+                ->first();
+            if ($grid_rule) {
+                $delivery_type = $grid_rule->delivery_type; // 'minutes', 'standard', 'next_day', 'no_coverage'
+            }
+        }
+
+        // Map type to label in Spanish
+        $delivery_type_labels = [
+            'minutes'     => 'Entrega en minutos',
+            'standard'    => 'Entrega en horas (Estándar)',
+            'next_day'    => 'Entrega al día siguiente',
+            'no_coverage' => 'Sin cobertura',
+        ];
+        $delivery_type_label = $delivery_type_labels[$delivery_type] ?? 'Entrega al día siguiente';
+
+        // Get shipping configuration from DB or fallbacks
+        $type_key = $delivery_type === 'standard' ? 'standard' : $delivery_type;
+        
+        $shipping_fee = Helpers::get_business_settings("abastos_shipping_fee_{$type_key}");
+        $shipping_fee = !is_null($shipping_fee) ? (float) $shipping_fee : 50.00;
+        
+        $free_shipping_min = Helpers::get_business_settings("abastos_free_shipping_min_{$type_key}");
+        $free_shipping_min = !is_null($free_shipping_min) ? (float) $free_shipping_min : 299.00;
+
         return response()->json([
-            'store_name'       => $store->name,
-            'store_address'    => $store_address ?: 'Dirección de la tienda no registrada',
-            'delivery_time'    => $delivery_time,
-            'tomorrow_day'     => $tomorrow_day,
-            'tomorrow_label'   => $tomorrow_label,
-            'delivery_schedule' => $tomorrow_schedule,
+            'store_name'          => $store->name,
+            'store_address'       => $store_address ?: 'Dirección de la tienda no registrada',
+            'delivery_time'       => $delivery_time,
+            'tomorrow_day'        => $tomorrow_day,
+            'tomorrow_label'      => $tomorrow_label,
+            'delivery_schedule'   => $tomorrow_schedule,
+            'delivery_type'       => $delivery_type,
+            'delivery_type_label' => $delivery_type_label,
+            'shipping_fee'        => $shipping_fee,
+            'free_shipping_min'   => $free_shipping_min,
         ], 200);
     }
 
@@ -232,9 +269,38 @@ class AbastosController extends Controller
             $subtotal = 0;
             $details = [];
 
-            // Constantes de envío Abastos
-            $shipping_fee      = 50.00;
-            $free_shipping_min = 299.00;
+            // Tienda Abastos (módulo grocery)
+            $abastos_store = Store::withoutGlobalScopes()
+                ->whereHas('module', function ($q) {
+                    $q->where('module_type', 'grocery');
+                })
+                ->first();
+
+            $delivery_type = 'next_day'; // fallback default
+            if ($abastos_store && $store->latitude && $store->longitude) {
+                $hexagon_id = \App\CentralLogics\H3Helper::latLngToHex($store->latitude, $store->longitude);
+                $grid_rule = \DB::table('delivery_grids')
+                    ->where('zone_id', $abastos_store->zone_id)
+                    ->where('module_id', $abastos_store->module_id)
+                    ->where('hexagon_id', $hexagon_id)
+                    ->where('is_active', true)
+                    ->first();
+                if ($grid_rule) {
+                    $delivery_type = $grid_rule->delivery_type;
+                }
+            }
+
+            if ($delivery_type === 'no_coverage') {
+                return response()->json(['errors' => [['code' => 'no_coverage', 'message' => 'Lo sentimos, no hay cobertura de entrega en tu ubicación para Tootli Abastos.']]], 403);
+            }
+
+            $type_key = $delivery_type === 'standard' ? 'standard' : $delivery_type;
+            
+            $shipping_fee = Helpers::get_business_settings("abastos_shipping_fee_{$type_key}");
+            $shipping_fee = !is_null($shipping_fee) ? (float) $shipping_fee : 50.00;
+            
+            $free_shipping_min = Helpers::get_business_settings("abastos_free_shipping_min_{$type_key}");
+            $free_shipping_min = !is_null($free_shipping_min) ? (float) $free_shipping_min : 299.00;
 
             foreach ($cart as $cart_item) {
                 // Buscar ítem con abastos_price > 0
