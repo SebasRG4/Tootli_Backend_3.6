@@ -25,19 +25,46 @@
         <!-- Card -->
         <div class="card">
             <!-- Header -->
-            <div class="card-header py-1 border-0">
-                <div class="search--button-wrapper justify-content-end">
-                    <form class="search-form min--260">
-                        <div class="input-group input--group">
-                            <input id="datatableSearch_" type="search" name="search" class="form-control h--40px"
-                                placeholder="Buscar por ID o Tienda" value="{{ request()->query('search') }}" aria-label="Buscar">
-                            <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
-                        </div>
-                    </form>
+            <div class="card-header py-2 border-0">
+                <div class="d-flex flex-wrap align-items-center justify-content-between" style="gap: 8px;">
+                    <!-- Status Filter Tabs -->
+                    <ul class="nav nav-tabs border-0" style="gap: 4px;">
+                        @php
+                            $tabDefs = [
+                                'all'        => ['Todos',        'secondary'],
+                                'pending'    => ['Pendientes',   'warning'],
+                                'processing' => ['En Proceso',   'info'],
+                                'delivered'  => ['Entregados',   'success'],
+                                'canceled'   => ['Cancelados',   'danger'],
+                            ];
+                        @endphp
+                        @foreach ($tabDefs as $tabKey => [$tabLabel, $tabClass])
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center {{ $status === $tabKey ? 'active' : '' }}"
+                                   href="{{ route('admin.abastos.order.list', [$tabKey]) }}"
+                                   style="padding: 6px 14px;">
+                                    {{ $tabLabel }}
+                                    <span class="badge badge-soft-{{ $tabClass }} ml-1">
+                                        {{ $statusCounts[$tabKey] ?? 0 }}
+                                    </span>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
 
-                    @if (request()->query('search'))
-                        <a href="{{ route('admin.abastos.order.list', [$status]) }}" class="btn btn--primary ml-2">Reset</a>
-                    @endif
+                    <!-- Search -->
+                    <div class="d-flex">
+                        <form class="search-form min--260">
+                            <div class="input-group input--group">
+                                <input id="datatableSearch_" type="search" name="search" class="form-control h--40px"
+                                    placeholder="Buscar por ID o Tienda" value="{{ request()->query('search') }}" aria-label="Buscar">
+                                <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
+                            </div>
+                        </form>
+                        @if (request()->query('search'))
+                            <a href="{{ route('admin.abastos.order.list', [$status]) }}" class="btn btn--primary ml-2">Reset</a>
+                        @endif
+                    </div>
                 </div>
             </div>
             <!-- End Header -->

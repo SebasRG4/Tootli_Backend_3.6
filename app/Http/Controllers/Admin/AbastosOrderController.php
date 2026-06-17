@@ -12,7 +12,7 @@ class AbastosOrderController extends Controller
 {
     public function scheduleIndex(Request $request)
     {
-        $store = Store::where('name', 'like', '%Abastos%')->first();
+        $store = Store::withoutGlobalScopes()->where('name', 'like', '%Abastos%')->first();
         if (!$store) {
             Toastr::error('No se encontró la tienda proveedora Tootli Abastos.');
             return redirect()->route('admin.dashboard');
@@ -31,7 +31,7 @@ class AbastosOrderController extends Controller
             'maximum_delivery_time.gte' => 'El tiempo máximo debe ser mayor o igual al mínimo.'
         ]);
 
-        $store = Store::where('name', 'like', '%Abastos%')->firstOrFail();
+        $store = Store::withoutGlobalScopes()->where('name', 'like', '%Abastos%')->firstOrFail();
         $store->delivery_time = $request->minimum_delivery_time . '-' . $request->maximum_delivery_time . ' ' . $request->delivery_time_type;
         $store->save();
 
@@ -69,7 +69,16 @@ class AbastosOrderController extends Controller
         $orders = $query->orderBy('id', 'DESC')->paginate(config('default_pagination') ?? 15);
         $total = $orders->total();
 
-        return view('admin-views.order.abastos-list', compact('orders', 'status', 'total'));
+        // Status counts for tabs
+        $statusCounts = [
+            'all'        => Order::where('is_abastos', 1)->count(),
+            'pending'    => Order::where('is_abastos', 1)->where('order_status', 'pending')->count(),
+            'processing' => Order::where('is_abastos', 1)->whereIn('order_status', ['confirmed', 'processing', 'handover'])->count(),
+            'delivered'  => Order::where('is_abastos', 1)->where('order_status', 'delivered')->count(),
+            'canceled'   => Order::where('is_abastos', 1)->where('order_status', 'canceled')->count(),
+        ];
+
+        return view('admin-views.order.abastos-list', compact('orders', 'status', 'total', 'statusCounts'));
     }
 
     public function details($id)
