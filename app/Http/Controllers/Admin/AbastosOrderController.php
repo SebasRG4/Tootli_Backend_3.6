@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Store;
+use App\CentralLogics\Helpers;
 use Illuminate\Http\Request;
 use Brian2694\Toastr\Facades\Toastr;
 
@@ -100,7 +101,7 @@ class AbastosOrderController extends Controller
             'status' => 'required|in:pending,accepted,confirmed,processing,handover,picked_up,delivered,canceled,failed'
         ]);
 
-        $order = Order::where('is_abastos', 1)->findOrFail($id);
+        $order = Order::with(['store.vendor'])->where('is_abastos', 1)->findOrFail($id);
         $order->order_status = $request->status;
 
         if ($request->status === 'delivered') {
@@ -108,6 +109,30 @@ class AbastosOrderController extends Controller
         }
 
         $order->save();
+
+        // Send push notification to vendor
+        if ($order->store && $order->store->vendor && $order->store->vendor->firebase_token) {
+            $statusLabels = [
+                'pending'    => 'Pendiente',
+                'confirmed'  => 'Confirmado',
+                'processing' => 'En Preparación',
+                'handover'   => 'Listo para Entrega',
+                'delivered'  => 'Entregado',
+                'canceled'   => 'Cancelado',
+            ];
+            $statusLabel = $statusLabels[$request->status] ?? $request->status;
+            $notification_data = [
+                'title'  => 'Tootli Abastos: Pedido Actualizado',
+                'body'   => "Tu pedido #{$order->id} ha cambiado a: {$statusLabel}",
+                'order_id' => $order->id,
+                'type'   => 'abastos_order_status',
+            ];
+            try {
+                Helpers::send_push_notif_to_device($order->store->vendor->firebase_token, $notification_data);
+            } catch (\Exception $e) {
+                // Fail silently - notifications are non-critical
+            }
+        }
 
         Toastr::success('Estado del pedido de insumos actualizado exitosamente');
         return back();
