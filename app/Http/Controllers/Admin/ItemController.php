@@ -1128,9 +1128,11 @@ class ItemController extends Controller
         $key = explode(' ', $request['search']);
         $is_abastos = $request->query('is_abastos', null);
         $items = Item::withoutGlobalScope(StoreScope::class)
-            ->when($is_abastos == 1, function ($query) {
-                return $query->where('abastos_price', '>', 0);
-            }, function ($query) {
+            ->when($is_abastos !== null, function ($query) use ($is_abastos) {
+                // Filtro explícito: is_abastos=1 muestra solo productos Abastos, is_abastos=0 los excluye
+                if ($is_abastos == 1) {
+                    return $query->where('abastos_price', '>', 0);
+                }
                 return $query->where('abastos_price', 0);
             })
             ->when($request->query('module_id', null), function ($query) use ($request) {

@@ -39,7 +39,9 @@ class AbastosController extends Controller
     {
         try {
             // Filtrar ítems con abastos_price > 0
-            $items = Item::where('abastos_price', '>', 0)
+            $items = Item::withoutGlobalScopes()
+                ->with(['translations', 'storage', 'store', 'module', 'unit'])
+                ->where('abastos_price', '>', 0)
                 ->where('status', 1)
                 ->when($request->category_id, function ($query) use ($request) {
                     $query->where('category_id', $request->category_id);
@@ -50,14 +52,64 @@ class AbastosController extends Controller
                 ->orderBy('id', 'desc')
                 ->get();
 
-            // Mapeamos el precio de abastos al campo de precio principal para que sea transparente en Flutter
-            foreach ($items as $item) {
-                $item->price = $item->abastos_price;
-            }
+            // Construimos la respuesta con precio = abastos_price garantizado
+            $result = $items->map(function ($item) {
+                // Resolución de nombre traducido
+                $name = $item->getRawOriginal('name');
+                foreach ($item->translations as $t) {
+                    if ($t->key === 'name' && $t->locale === app()->getLocale()) {
+                        $name = $t->value;
+                        break;
+                    }
+                }
 
-            $formatted_items = Helpers::product_data_formatting($items, true, false, app()->getLocale());
+                // Imagen
+                $imageFullUrl = $item->image_full_url;
 
-            return response()->json($formatted_items, 200);
+                return [
+                    'id'               => $item->id,
+                    'name'             => $name,
+                    'description'      => $item->description,
+                    // PRECIO: siempre abastos_price
+                    'price'            => (float) $item->abastos_price,
+                    'abastos_price'    => (float) $item->abastos_price,
+                    'menu_price'       => (float) ($item->menu_price ?? 0),
+                    'discount'         => (float) ($item->discount ?? 0),
+                    'discount_type'    => $item->discount_type ?? 'percent',
+                    'category_id'      => $item->category_id,
+                    'store_id'         => $item->store_id,
+                    'module_id'        => $item->module_id,
+                    'module_type'      => $item->module?->module_type,
+                    'status'           => $item->status,
+                    'stock'            => $item->stock ?? 0,
+                    'unit_type'        => $item->unit?->unit,
+                    'unit_id'          => $item->unit_id,
+                    'veg'              => $item->veg ?? 0,
+                    'is_halal'         => $item->is_halal ?? 0,
+                    'organic'          => $item->organic ?? 0,
+                    'avg_rating'       => (float) ($item->avg_rating ?? 0),
+                    'rating_count'     => (int) ($item->rating_count ?? 0),
+                    'image'            => $item->image,
+                    'image_full_url'   => $imageFullUrl,
+                    'images_full_url'  => $item->images_full_url ?? [],
+                    'tax'              => 0,
+                    'variations'       => [],
+                    'food_variations'  => [],
+                    'add_ons'          => [],
+                    'attributes'       => [],
+                    'choice_options'   => [],
+                    'store_name'       => $item->store?->name,
+                    'flash_sale'       => 0,
+                    'delivery_time_type' => 'next_day',
+                    'store_delivery_time' => 'Mañana',
+                    'schedule_order'   => false,
+                    'free_delivery'    => false,
+                    'zone_id'          => $item->store?->zone_id,
+                    'is_abastos'       => 1,
+                ];
+            });
+
+            return response()->json($result->values(), 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
