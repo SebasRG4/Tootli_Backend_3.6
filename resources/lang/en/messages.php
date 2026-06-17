@@ -9654,4 +9654,5 @@ Smartly or Earn. ',
   'order_audit_timeline_title' => 'Order audit timeline',
   'another_store_item_already_exists' => 'You cannot add products from a different store to the cart.',
   'multi_store_not_allowed' => 'Ordering from multiple stores in a single checkout is not allowed.',
+  'exclusive_for_tootli_abastos' => 'Exclusive for Tootli Abastos',
 );

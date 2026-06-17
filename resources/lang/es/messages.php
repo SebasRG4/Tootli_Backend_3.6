@@ -9600,4 +9600,5 @@ Smartly or Earn. ',
   'You_can_not_accept_order_on_offline' => 'You can not accept order on offline',
   'can_not_accept' => 'Can not accept',
   'dm_maximum_order_exceed_warning' => 'Dm maximum order exceed warning',
+  'exclusive_for_tootli_abastos' => 'Exclusivo para Tootli Abastos',
 );
