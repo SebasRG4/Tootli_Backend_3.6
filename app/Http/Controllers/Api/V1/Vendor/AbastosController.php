@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -60,6 +61,92 @@ class AbastosController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
+
+    /**
+     * Devuelve la info necesaria para el carrito:
+     * - Dirección de la tienda del vendor (a donde llegará el pedido)
+     * - Horario de entrega de Tootli Abastos para mañana
+     */
+    public function cart_info(Request $request)
+    {
+        $vendor = $request['vendor'];
+        if (!$vendor || empty($vendor->stores)) {
+            return response()->json(['errors' => [['code' => 'vendor', 'message' => 'No autorizado.']]], 403);
+        }
+        $store = $vendor->stores[0];
+
+        // Dirección de la tienda del vendor
+        $store_address = trim(implode(', ', array_filter([
+            $store->address,
+            $store->city ?? null,
+            $store->state ?? null,
+            $store->country ?? null,
+        ])));
+
+        // Tienda Abastos (módulo grocery) para obtener horario de entrega
+        $abastos_store = Store::withoutGlobalScopes()
+            ->with(['schedules'])
+            ->whereHas('module', function ($q) {
+                $q->where('module_type', 'grocery');
+            })
+            ->first();
+
+        $delivery_time = $abastos_store ? ($abastos_store->delivery_time ?? '1-2 días') : '1-2 días';
+
+        // Horarios del día siguiente
+        $tomorrow_day = (int) now()->addDay()->dayOfWeek; // 0=domingo, 1=lunes ... 6=sábado
+        $tomorrow_label = $this->_day_name_es($tomorrow_day);
+        $tomorrow_schedule = null;
+
+        if ($abastos_store && $abastos_store->schedules) {
+            foreach ($abastos_store->schedules as $schedule) {
+                if ((int)$schedule->day === $tomorrow_day) {
+                    $tomorrow_schedule = [
+                        'day'          => $tomorrow_day,
+                        'day_label'    => $tomorrow_label,
+                        'opening_time' => substr($schedule->opening_time, 0, 5),
+                        'closing_time' => substr($schedule->closing_time, 0, 5),
+                    ];
+                    break;
+                }
+            }
+        }
+
+        // Si mañana no tiene horario, buscar el próximo día disponible
+        if (!$tomorrow_schedule && $abastos_store && $abastos_store->schedules && $abastos_store->schedules->count() > 0) {
+            for ($offset = 2; $offset <= 7; $offset++) {
+                $check_day = (int) now()->addDays($offset)->dayOfWeek;
+                foreach ($abastos_store->schedules as $schedule) {
+                    if ((int)$schedule->day === $check_day) {
+                        $days_from_now = $offset;
+                        $tomorrow_schedule = [
+                            'day'          => $check_day,
+                            'day_label'    => $this->_day_name_es($check_day),
+                            'opening_time' => substr($schedule->opening_time, 0, 5),
+                            'closing_time' => substr($schedule->closing_time, 0, 5),
+                            'days_from_now' => $days_from_now,
+                        ];
+                        break 2;
+                    }
+                }
+            }
+        }
+
+        return response()->json([
+            'store_name'       => $store->name,
+            'store_address'    => $store_address ?: 'Dirección de la tienda no registrada',
+            'delivery_time'    => $delivery_time,
+            'tomorrow_day'     => $tomorrow_day,
+            'tomorrow_label'   => $tomorrow_label,
+            'delivery_schedule' => $tomorrow_schedule,
+        ], 200);
+    }
+
+    private function _day_name_es(int $day): string
+    {
+        $days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        return $days[$day] ?? 'Día';
     }
 
     public function place_order(Request $request)

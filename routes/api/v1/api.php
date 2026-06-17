@@ -390,6 +390,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         Route::group(['prefix' => 'abastos'], function () {
             Route::get('categories', 'AbastosController@get_categories');
             Route::get('items', 'AbastosController@get_items');
+            Route::get('cart-info', 'AbastosController@cart_info');
             Route::post('order/place', 'AbastosController@place_order');
             Route::get('orders', 'AbastosController@get_orders');
         });
