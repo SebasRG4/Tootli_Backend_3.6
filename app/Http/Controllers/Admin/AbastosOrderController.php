@@ -13,9 +13,15 @@ class AbastosOrderController extends Controller
 {
     public function scheduleIndex(Request $request)
     {
-        $store = Store::withoutGlobalScopes()->where('name', 'like', '%Abastos%')->first();
+        // Buscar la tienda del módulo grocery (Tootli Abastos es la única tienda de este módulo)
+        $store = Store::withoutGlobalScopes()
+            ->whereHas('module', function ($q) {
+                $q->where('module_type', 'grocery');
+            })
+            ->first();
+
         if (!$store) {
-            Toastr::error('No se encontró la tienda proveedora Tootli Abastos.');
+            Toastr::error('No se encontró la tienda del módulo Grocery (Tootli Abastos).');
             return redirect()->route('admin.dashboard');
         }
 
@@ -32,7 +38,12 @@ class AbastosOrderController extends Controller
             'maximum_delivery_time.gte' => 'El tiempo máximo debe ser mayor o igual al mínimo.'
         ]);
 
-        $store = Store::withoutGlobalScopes()->where('name', 'like', '%Abastos%')->firstOrFail();
+        $store = Store::withoutGlobalScopes()
+            ->whereHas('module', function ($q) {
+                $q->where('module_type', 'grocery');
+            })
+            ->firstOrFail();
+
         $store->delivery_time = $request->minimum_delivery_time . '-' . $request->maximum_delivery_time . ' ' . $request->delivery_time_type;
         $store->save();
 

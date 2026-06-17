@@ -204,8 +204,13 @@ class AbastosController extends Controller
             ->orderByDesc('created_at')
             ->paginate(15);
 
-        $abastos_store = \App\Models\Store::withoutGlobalScopes()->where('name', 'like', '%Abastos%')->first();
+        $abastos_store = \App\Models\Store::withoutGlobalScopes()
+            ->whereHas('module', function ($q) {
+                $q->where('module_type', 'grocery');
+            })
+            ->first();
         $delivery_time = $abastos_store ? $abastos_store->delivery_time : '1-2 days';
+
 
         $store_with_schedules = \App\Models\Store::with(['schedules'])->find($store->id);
         $store_schedules = $store_with_schedules ? $store_with_schedules->schedules->map(function ($s) {

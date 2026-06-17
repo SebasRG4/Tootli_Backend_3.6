@@ -36,7 +36,10 @@
                             $column = 4;
                             $default_store = null;
                             if (request()->query('is_abastos') == 1) {
-                                $default_store = \App\Models\Store::withoutGlobalScopes()->where('name', 'like', '%Abastos%')->first();
+                                $default_store = \App\Models\Store::withoutGlobalScopes()
+                                    ->whereHas('module', function ($q) { $q->where('module_type', 'grocery'); })
+                                    ->first();
+
                             }
                         @endphp
                         @if (Auth::guard('admin')->check())
