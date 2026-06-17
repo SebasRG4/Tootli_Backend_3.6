@@ -230,12 +230,16 @@ class AbastosController extends Controller
         DB::beginTransaction();
         try {
             $subtotal = 0;
-            $tax_amount = 0;
             $details = [];
+
+            // Constantes de envío Abastos
+            $shipping_fee      = 50.00;
+            $free_shipping_min = 299.00;
 
             foreach ($cart as $cart_item) {
                 // Buscar ítem con abastos_price > 0
-                $item = Item::where('id', $cart_item['item_id'])
+                $item = Item::withoutGlobalScopes()
+                    ->where('id', $cart_item['item_id'])
                     ->where('abastos_price', '>', 0)
                     ->where('status', 1)
                     ->first();
@@ -250,24 +254,18 @@ class AbastosController extends Controller
                 }
 
                 $item_total = $item->abastos_price * $qty;
-                $item_tax = $item_total * 0.16; // 16% IVA standard
-
                 $subtotal += $item_total;
-                $tax_amount += $item_tax;
-
-                // Sobreescribimos el objeto item para que en order_details se guarde el precio especial de abastos
-                $item->price = $item->abastos_price;
 
                 $details[] = [
-                    'item_id' => $item->id,
-                    'price' => $item->abastos_price,
-                    'quantity' => $qty,
-                    'tax_amount' => $item_tax,
+                    'item_id'          => $item->id,
+                    'price'            => $item->abastos_price,
+                    'quantity'         => $qty,
+                    'tax_amount'       => 0, // Sin IVA
                     'discount_on_item' => 0,
                     'total_add_on_price' => 0,
-                    'item_details' => json_encode($item),
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                    'item_details'     => json_encode($item),
+                    'created_at'       => now(),
+                    'updated_at'       => now(),
                 ];
             }
 
@@ -275,7 +273,9 @@ class AbastosController extends Controller
                 return response()->json(['errors' => [['code' => 'cart', 'message' => 'No hay productos válidos en el carrito.']]], 403);
             }
 
-            $order_amount = $subtotal + $tax_amount;
+            // Costo de envío: $50 fijo, gratis si subtotal >= $299
+            $delivery_charge = $subtotal >= $free_shipping_min ? 0.00 : $shipping_fee;
+            $order_amount    = $subtotal + $delivery_charge;
 
             // Check wallet balance if payment_method is wallet
             if ($request->payment_method === 'wallet') {
@@ -291,20 +291,21 @@ class AbastosController extends Controller
 
             // Create Order
             $order = new Order();
-            $order->store_id = $store->id;
-            $order->zone_id = $store->zone_id;
-            $order->module_id = $store->module_id;
-            $order->order_amount = $order_amount;
-            $order->total_tax_amount = $tax_amount;
+            $order->store_id       = $store->id;
+            $order->zone_id        = $store->zone_id;
+            $order->module_id      = $store->module_id;
+            $order->order_amount   = $order_amount;
+            $order->total_tax_amount = 0;
+            $order->delivery_charge  = $delivery_charge;
             $order->payment_method = $request->payment_method;
             $order->payment_status = $request->payment_method === 'wallet' ? 'paid' : 'unpaid';
-            $order->order_status = 'pending';
-            $order->order_type = 'abastos';
-            $order->is_abastos = 1;
-            $order->otp = rand(1000, 9999);
-            $order->pending = now();
-            $order->created_at = now();
-            $order->updated_at = now();
+            $order->order_status   = 'pending';
+            $order->order_type     = 'abastos';
+            $order->is_abastos     = 1;
+            $order->otp            = rand(1000, 9999);
+            $order->pending        = now();
+            $order->created_at     = now();
+            $order->updated_at     = now();
             $order->save();
 
             // Insert OrderDetails
@@ -316,9 +317,11 @@ class AbastosController extends Controller
             DB::commit();
 
             return response()->json([
-                'message' => 'Pedido de insumos realizado con éxito.',
-                'order_id' => $order->id,
-                'order_amount' => $order_amount
+                'message'          => 'Pedido de insumos realizado con éxito.',
+                'order_id'         => $order->id,
+                'subtotal'         => $subtotal,
+                'delivery_charge'  => $delivery_charge,
+                'order_amount'     => $order_amount,
             ], 200);
 
         } catch (\Exception $e) {
