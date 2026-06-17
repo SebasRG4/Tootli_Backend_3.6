@@ -4,11 +4,40 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Store;
 use Illuminate\Http\Request;
 use Brian2694\Toastr\Facades\Toastr;
 
 class AbastosOrderController extends Controller
 {
+    public function scheduleIndex(Request $request)
+    {
+        $store = Store::where('name', 'like', '%Abastos%')->first();
+        if (!$store) {
+            Toastr::error('No se encontró la tienda proveedora Tootli Abastos.');
+            return redirect()->route('admin.dashboard');
+        }
+
+        return view('admin-views.order.abastos-schedule', compact('store'));
+    }
+
+    public function updateDeliveryTime(Request $request)
+    {
+        $request->validate([
+            'minimum_delivery_time' => 'required|numeric|min:1',
+            'maximum_delivery_time' => 'required|numeric|min:1|gte:minimum_delivery_time',
+            'delivery_time_type' => 'required|in:min,hours,days',
+        ], [
+            'maximum_delivery_time.gte' => 'El tiempo máximo debe ser mayor o igual al mínimo.'
+        ]);
+
+        $store = Store::where('name', 'like', '%Abastos%')->firstOrFail();
+        $store->delivery_time = $request->minimum_delivery_time . '-' . $request->maximum_delivery_time . ' ' . $request->delivery_time_type;
+        $store->save();
+
+        Toastr::success('Horario/Tiempo de entrega de Tootli Abastos actualizado correctamente');
+        return back();
+    }
     public function list($status, Request $request)
     {
         $search = $request->get('search');

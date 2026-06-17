@@ -204,8 +204,20 @@ class AbastosController extends Controller
             ->orderByDesc('created_at')
             ->paginate(15);
 
+        $abastos_store = \App\Models\Store::where('name', 'like', '%Abastos%')->first();
+        $delivery_time = $abastos_store ? $abastos_store->delivery_time : '1-2 days';
+
+        $store_with_schedules = \App\Models\Store::with(['schedules'])->find($store->id);
+        $store_schedules = $store_with_schedules ? $store_with_schedules->schedules->map(function ($s) {
+            return [
+                'day'          => $s->day,
+                'opening_time' => substr($s->opening_time, 0, 5),
+                'closing_time' => substr($s->closing_time, 0, 5),
+            ];
+        })->toArray() : [];
+
         // Map each order to include a simplified summary
-        $data = $orders->map(function ($order) {
+        $data = $orders->map(function ($order) use ($delivery_time, $store_with_schedules, $store_schedules) {
             return [
                 'id'             => $order->id,
                 'order_status'   => $order->order_status,
@@ -215,6 +227,10 @@ class AbastosController extends Controller
                 'total_tax'      => $order->total_tax_amount,
                 'created_at'     => $order->created_at,
                 'items_count'    => $order->details->count(),
+                'delivery_time'   => $delivery_time,
+                'store_address'   => $store_with_schedules ? $store_with_schedules->address : '',
+                'store_phone'     => $store_with_schedules ? $store_with_schedules->phone : '',
+                'store_schedules' => $store_schedules,
                 'items'          => $order->details->map(function ($d) {
                     $details = json_decode($d->item_details, true);
                     return [

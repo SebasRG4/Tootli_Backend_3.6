@@ -448,6 +448,8 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('order/list/{status}', 'AbastosOrderController@list')->name('order.list');
             Route::get('order/details/{id}', 'AbastosOrderController@details')->name('order.details');
             Route::post('order/status-update/{id}', 'AbastosOrderController@statusUpdate')->name('order.status-update');
+            Route::get('schedule', 'AbastosOrderController@scheduleIndex')->name('schedule');
+            Route::post('schedule/update-delivery-time', 'AbastosOrderController@updateDeliveryTime')->name('schedule.update-delivery-time');
         });
 
         // Refund

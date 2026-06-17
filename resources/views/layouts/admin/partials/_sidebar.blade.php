@@ -327,6 +327,18 @@
                                         <span class="text-truncate">Lista de Insumos</span>
                                     </a>
                                 </li>
+
+                                <!-- Configuración -->
+                                <li class="nav-item-header" style="padding: 0.5rem 1rem 0.25rem; font-size: 0.75rem; text-transform: uppercase; color: #9ca3af; font-weight: 600;">
+                                    Configuración
+                                </li>
+                                <li class="nav-item {{ Request::is('admin/abastos/schedule') ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('admin.abastos.schedule') }}"
+                                        title="Horarios de Entrega">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate">Horarios de Entrega</span>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     @endif
