@@ -339,7 +339,7 @@ class OrderLogic
             $base_for_commission = min(self::TOOTLI_BASE_SHIPPING_FEE, (float)$order->original_delivery_charge);
             $comission_on_delivery = $delivery_charge_comission_percentage * ($base_for_commission / 100);
 
-            if ($order->store->sub_self_delivery) {
+            if ($order->store->sub_self_delivery || $order->is_abastos == 1) {
                 $comission_on_actual_delivery_fee = 0;
             } else {
 
@@ -347,7 +347,7 @@ class OrderLogic
             }
 
             if ($order->free_delivery_by == 'admin') {
-                if ($order->store->sub_self_delivery) {
+                if ($order->store->sub_self_delivery || $order->is_abastos == 1) {
                     $comission_on_actual_delivery_fee = 0;
                     $store_amount = $order->original_delivery_charge ?? 0;
                 } else {

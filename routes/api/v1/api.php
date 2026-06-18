@@ -386,13 +386,18 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::post('send', 'ConversationController@messages_store');
         });
 
-        // Tootli Abastos
         Route::group(['prefix' => 'abastos'], function () {
             Route::get('categories', 'AbastosController@get_categories');
             Route::get('items', 'AbastosController@get_items');
             Route::get('cart-info', 'AbastosController@cart_info');
             Route::post('order/place', 'AbastosController@place_order');
             Route::get('orders', 'AbastosController@get_orders');
+
+            // Abastos Admin Assignment API
+            Route::get('admin/received-orders', 'AbastosAdminController@get_received_orders');
+            Route::post('admin/search-freelance', 'AbastosAdminController@search_freelance');
+            Route::post('admin/self-delivery', 'AbastosAdminController@self_delivery');
+            Route::post('admin/assign-deliveryman', 'AbastosAdminController@assign_deliveryman');
         });
     });
 
