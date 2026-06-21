@@ -579,6 +579,69 @@ class ItemController extends Controller
             }
             $item = Helpers::product_data_formatting($item, false, true, app()->getLocale());
             $item['store_details'] = $store;
+
+            $gemini_key = env('GEMINI_API_KEY');
+            $ai_tags = null;
+            if ($gemini_key) {
+                try {
+                    $prompt = "Actúa como un etiquetador automático de productos de supermercado.
+Dado el producto con nombre '{$item['name']}' y descripción '{$item['description']}', genera exactamente 3 etiquetas/tags cortas en español (máximo 2 o 3 palabras cada una) que lo describan mejor. Cada etiqueta debe iniciar con un emoji relevante.
+Ejemplos:
+- Para un Ribeye: [\"🥩 Corte premium\", \"🔥 Ideal para asar\", \"👥 1-2 personas\"]
+- Para Leche Lala: [\"🥛 Lácteo fresco\", \"🥛 Rico en calcio\", \"👪 Familiar\"]
+- Para Aguacate: [\"🥑 100% natural\", \"🥗 Ideal para ensalada\", \"👥 2-3 personas\"]
+
+Debes responder ÚNICAMENTE con un arreglo JSON conteniendo las 3 etiquetas con su respectivo emoji al inicio, por ejemplo:
+[\"🥩 Corte premium\", \"🔥 Ideal para asar\", \"👥 1-2 personas\"]";
+
+                    $response = \Illuminate\Support\Facades\Http::timeout(5)->post(
+                        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $gemini_key,
+                        [
+                            'contents' => [
+                                [
+                                    'parts' => [
+                                        ['text' => $prompt]
+                                    ]
+                                ]
+                            ],
+                            'generationConfig' => [
+                                'responseMimeType' => 'application/json',
+                                'temperature' => 0.2
+                            ]
+                        ]
+                    );
+
+                    if ($response->successful()) {
+                        $resData = $response->json();
+                        if (isset($resData['candidates'][0]['content']['parts'][0]['text'])) {
+                            $responseText = trim($resData['candidates'][0]['content']['parts'][0]['text']);
+                            $parsedTags = json_decode($responseText, true);
+                            if (is_array($parsedTags) && count($parsedTags) >= 3) {
+                                $ai_tags = array_slice($parsedTags, 0, 3);
+                            }
+                        }
+                    }
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error("Gemini Product Tags Error: " . $e->getMessage());
+                }
+            }
+
+            if (!$ai_tags) {
+                $nameLower = strtolower($item['name'] ?? '');
+                $isMeat = str_contains($nameLower, 'carne') || str_contains($nameLower, 'corte') || str_contains($nameLower, 'res') || str_contains($nameLower, 'asador') || str_contains($nameLower, 'bife') || str_contains($nameLower, 'arrachera') || str_contains($nameLower, 'ribeye') || str_contains($nameLower, 't-bone') || str_contains($nameLower, 'picaña');
+                $isChicken = str_contains($nameLower, 'pollo') || str_contains($nameLower, 'pechuga') || str_contains($nameLower, 'alitas');
+
+                if ($isMeat) {
+                    $ai_tags = ['🥩 Corte premium', '🔥 Ideal para asar', '👥 1-2 personas'];
+                } elseif ($isChicken) {
+                    $ai_tags = ['🍗 Pollo fresco', '🍳 Alto en proteína', '👥 1-2 personas'];
+                } else {
+                    $ai_tags = ['🥑 Calidad superior', '🥗 100% natural', '👥 1-2 personas'];
+                }
+            }
+
+            $item['ai_tags'] = $ai_tags;
+
             return response()->json($item, 200);
         } catch (\Exception $e) {
             return response()->json([
