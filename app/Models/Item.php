@@ -179,7 +179,9 @@ class Item extends Model
     {
         return $query->where(function ($q) {
             $q->where('pos_only', false)->orWhereNull('pos_only');
-        })->where('is_abastos', 0);
+        })->where('is_abastos', 0)
+        ->where('name', '!=', 'Demo Product')
+        ->where('name', 'not like', '%Demo Product%');
     }
     public function scopePopular($query)
     {
