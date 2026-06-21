@@ -646,23 +646,37 @@ Ejemplos de extracción específica:
                 $descLower = strtolower($item['description'] ?? '');
                 $combined = $nameLower . ' ' . $descLower;
 
-                if (str_contains($combined, 'carne') || str_contains($combined, 'corte') || str_contains($combined, 'res') || str_contains($combined, 'asador') || str_contains($combined, 'bife') || str_contains($combined, 'arrachera') || str_contains($combined, 'ribeye') || str_contains($combined, 't-bone') || str_contains($combined, 'picaña') || str_contains($combined, 'sirloin') || str_contains($combined, 'costilla')) {
+                // Safe word-boundary check handling Spanish characters and optional plural 's'
+                $hasWord = function ($words, $text) {
+                    if (!is_array($words)) {
+                        $words = [$words];
+                    }
+                    foreach ($words as $word) {
+                        $pattern = '/(?<!\p{L})' . preg_quote($word, '/') . '(s)?(?!\p{L})/iu';
+                        if (preg_match($pattern, $text)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                };
+
+                if ($hasWord(['carne', 'corte', 'res', 'asador', 'bife', 'arrachera', 'ribeye', 't-bone', 'picaña', 'sirloin', 'costilla', 'vacuno', 'bovino'], $combined)) {
                     $ai_tags = ['🥩 Corte premium', '🔥 Ideal para asar', '👥 1-2 personas'];
-                } elseif (str_contains($combined, 'pollo') || str_contains($combined, 'pechuga') || str_contains($combined, 'alitas') || str_contains($combined, 'muslo') || str_contains($combined, 'milanesa')) {
+                } elseif ($hasWord(['pollo', 'pechuga', 'alitas', 'muslo', 'milanesa'], $combined)) {
                     $ai_tags = ['🍗 Pollo fresco', '🍳 Alto en proteína', '👥 2-3 personas'];
-                } elseif (str_contains($combined, 'cerdo') || str_contains($combined, 'puerco') || str_contains($combined, 'chuleta') || str_contains($combined, 'tocino') || str_contains($combined, 'longaniza')) {
+                } elseif ($hasWord(['cerdo', 'puerco', 'chuleta', 'tocino', 'longaniza'], $combined)) {
                     $ai_tags = ['🐷 Cerdo de calidad', '🔥 Ideal para guisar', '👥 2-3 personas'];
-                } elseif (str_contains($combined, 'atun') || str_contains($combined, 'atún') || str_contains($combined, 'salmon') || str_contains($combined, 'salmón') || str_contains($combined, 'filete') || str_contains($combined, 'camaron') || str_contains($combined, 'camarón') || str_contains($combined, 'pescado') || str_contains($combined, 'marisco')) {
+                } elseif ($hasWord(['atun', 'atún', 'salmon', 'salmón', 'filete', 'camaron', 'camarón', 'pescado', 'marisco'], $combined)) {
                     $ai_tags = ['🐟 Pescado fresco', '🌊 Rico en Omega-3', '👥 1-2 personas'];
-                } elseif (str_contains($combined, 'leche') || str_contains($combined, 'queso') || str_contains($combined, 'crema') || str_contains($combined, 'yogur') || str_contains($combined, 'mantequilla') || str_contains($combined, 'lacteo') || str_contains($combined, 'lácteo')) {
+                } elseif ($hasWord(['leche', 'queso', 'crema', 'yogur', 'mantequilla', 'lacteo', 'lácteo'], $combined)) {
                     $ai_tags = ['🥛 Lácteo fresco', '🧀 Rico en calcio', '👪 Familiar'];
-                } elseif (str_contains($combined, 'refresco') || str_contains($combined, 'coca') || str_contains($combined, 'jugo') || str_contains($combined, 'cerveza') || str_contains($combined, 'agua') || str_contains($combined, 'bebida') || str_contains($combined, 'soda')) {
+                } elseif ($hasWord(['refresco', 'coca', 'jugo', 'cerveza', 'agua', 'bebida', 'soda'], $combined)) {
                     $ai_tags = ['🥤 Bebida fría', '⚡ Refrescante', '🎉 Ideal para compartir'];
-                } elseif (str_contains($combined, 'pan') || str_contains($combined, 'tortilla') || str_contains($combined, 'bolillo') || str_contains($combined, 'teleras') || str_contains($combined, 'baguette')) {
+                } elseif ($hasWord(['pan', 'tortilla', 'bolillo', 'telera', 'baguette'], $combined)) {
                     $ai_tags = ['🍞 Horneado fresco', '🌾 Trigo natural', '🥖 Suave y crujiente'];
-                } elseif (str_contains($combined, 'aguacate') || str_contains($combined, 'limon') || str_contains($combined, 'limón') || str_contains($combined, 'manzana') || str_contains($combined, 'platano') || str_contains($combined, 'plátano') || str_contains($combined, 'jitomate') || str_contains($combined, 'cebolla') || str_contains($combined, 'papa') || str_contains($combined, 'verdura') || str_contains($combined, 'fruta') || str_contains($combined, 'verduras')) {
+                } elseif ($hasWord(['aguacate', 'limon', 'limón', 'manzana', 'platano', 'plátano', 'jitomate', 'cebolla', 'papa', 'verdura', 'fruta'], $combined)) {
                     $ai_tags = ['🥑 100% fresco', '🥗 Rico en vitaminas', '🌱 Orgánico'];
-                } elseif (str_contains($combined, 'arroz') || str_contains($combined, 'frijol') || str_contains($combined, 'aceite') || str_contains($combined, 'pasta') || str_contains($combined, 'harina') || str_contains($combined, 'lata') || str_contains($combined, 'salsa')) {
+                } elseif ($hasWord(['arroz', 'frijol', 'aceite', 'pasta', 'harina', 'lata', 'salsa'], $combined)) {
                     $ai_tags = ['🥫 Básico de alacena', '🍲 Alto rendimiento', '📦 Calidad garantizada'];
                 } else {
                     $ai_tags = ['✨ Calidad Selección', '🍃 100% Frescura', '📦 Producto Premium'];
