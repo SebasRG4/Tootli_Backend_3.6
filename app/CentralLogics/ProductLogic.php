@@ -451,7 +451,12 @@ class ProductLogic
     public static function get_related_store_products($zone_id, $product_id)
     {
         $product = Item::find($product_id);
-        return Item::active()->visibleInCustomerApp()
+        if (!$product) {
+            return collect();
+        }
+
+        // Get up to 40 candidate items from the same store (excluding the current one).
+        $candidates = Item::active()->visibleInCustomerApp()
             ->whereHas('module.zones', function ($query) use ($zone_id) {
                 $query->whereIn('zones.id', json_decode($zone_id, true));
             })
@@ -464,8 +469,90 @@ class ProductLogic
             })
             ->where('store_id', $product->store_id)
             ->where('id', '!=', $product->id)
-            ->limit(10)
+            ->limit(40)
             ->get();
+
+        if ($candidates->isEmpty()) {
+            return collect();
+        }
+
+        $gemini_key = env('GEMINI_API_KEY');
+        if ($gemini_key) {
+            try {
+                $mainItemData = [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'description' => $product->description,
+                ];
+
+                $candidatesData = $candidates->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'name' => $item->name,
+                        'description' => $item->description,
+                    ];
+                })->toArray();
+
+                $prompt = "Actúa como un experto en gastronomía y sugerencias de acompañamientos de supermercado/tienda de conveniencia.
+Tu objetivo es sugerir los productos que mejor combinan (hacen maridaje o combinación) con el producto principal seleccionado por el usuario.
+
+Producto Principal:
+" . json_encode($mainItemData, JSON_UNESCAPED_UNICODE) . "
+
+Candidatos Disponibles de la misma tienda:
+" . json_encode($candidatesData, JSON_UNESCAPED_UNICODE) . "
+
+Por favor selecciona hasta 10 productos de los candidatos disponibles que combinen mejor gastronómicamente con el Producto Principal.
+Evita sugerir productos incompatibles (por ejemplo, si el producto principal es pechuga de pollo, evita sugerir atún en lata o cosas que no tienen sentido comer juntas). Prioriza vegetales, salsas, quesos, cremas, carbón (si es carne para asar), bebidas o complementos que harían una buena comida o par con el producto principal.
+
+Debes responder ÚNICAMENTE con un objeto JSON que contenga un arreglo de IDs ordenados por relevancia (de mejor combinación a menor):
+{
+  \"recommended_ids\": [<lista de IDs de productos seleccionados>]
+}";
+
+                $response = \Illuminate\Support\Facades\Http::timeout(10)->post(
+                    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $gemini_key,
+                    [
+                        'contents' => [
+                            [
+                                'parts' => [
+                                    ['text' => $prompt]
+                                ]
+                            ]
+                        ],
+                        'generationConfig' => [
+                            'responseMimeType' => 'application/json',
+                            'temperature' => 0.2
+                        ]
+                    ]
+                );
+
+                if ($response->successful()) {
+                    $resData = $response->json();
+                    if (isset($resData['candidates'][0]['content']['parts'][0]['text'])) {
+                        $responseText = trim($resData['candidates'][0]['content']['parts'][0]['text']);
+                        $aiResult = json_decode($responseText, true);
+                        if (isset($aiResult['recommended_ids']) && is_array($aiResult['recommended_ids'])) {
+                            $recommendedIds = array_map('intval', $aiResult['recommended_ids']);
+                            
+                            $sortedItems = $candidates->filter(function ($item) use ($recommendedIds) {
+                                return in_array($item->id, $recommendedIds);
+                            })->sortBy(function ($item) use ($recommendedIds) {
+                                return array_search($item->id, $recommendedIds);
+                            })->values();
+
+                            if ($sortedItems->isNotEmpty()) {
+                                return $sortedItems;
+                            }
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("Gemini Related Products Error: " . $e->getMessage());
+            }
+        }
+
+        return $candidates->take(10);
     }
 
     public static function recommended_items($zone_id, $store_id = null, $limit = null, $offset = null, $type = 'all', $filter = 'all')
