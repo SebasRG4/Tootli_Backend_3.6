@@ -34,6 +34,14 @@
         .cursor-pointer:hover {
             text-decoration: underline;
         }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .spin-icon {
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
     </style>
 @endpush
 
@@ -50,14 +58,16 @@
                 </h1>
                 
                 <!-- Clear Logs Action -->
-                @if(count($parsedLogs) > 0)
-                    <form action="{{ route('admin.logs.clear') }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas limpiar el historial de registros? Esta acción no se puede deshacer.');">
-                        @csrf
-                        <button type="submit" class="btn btn-danger">
-                            <i class="tio-delete-outlined mr-1"></i> {{ translate('Limpiar Logs') }}
-                        </button>
-                    </form>
-                @endif
+                <div id="clear-logs-container">
+                    @if(count($parsedLogs) > 0)
+                        <form action="{{ route('admin.logs.clear') }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas limpiar el historial de registros? Esta acción no se puede deshacer.');">
+                            @csrf
+                            <button type="submit" class="btn btn-danger">
+                                <i class="tio-delete-outlined mr-1"></i> {{ translate('Limpiar Logs') }}
+                            </button>
+                        </form>
+                    @endif
+                </div>
             </div>
         </div>
         <!-- End Page Header -->
@@ -111,11 +121,20 @@
 
         <!-- Logs Content Card -->
         <div class="card">
-            <div class="card-header border-0 py-3">
+            <div class="card-header border-0 py-3 d-flex flex-wrap justify-content-between align-items-center">
                 <h4 class="card-title">
                     {{ translate('Registros de Logs Recientes') }}
-                    <span class="badge badge-soft-dark ml-2">{{ count($parsedLogs) }} encontrados</span>
+                    <span class="badge badge-soft-dark ml-2" id="log-count-badge">{{ count($parsedLogs) }} encontrados</span>
                 </h4>
+                <div class="d-flex align-items-center flex-wrap" style="gap: 12px;">
+                    <div class="custom-control custom-switch mr-3">
+                        <input type="checkbox" class="custom-control-input" id="autoRefreshSwitch">
+                        <label class="custom-control-label cursor-pointer mb-0" for="autoRefreshSwitch">{{ translate('Auto-refrescar (5s)') }}</label>
+                    </div>
+                    <button type="button" id="refreshBtn" class="btn btn-outline-secondary btn-sm">
+                        <i class="tio-sync mr-1" id="refreshIcon"></i> {{ translate('Refrescar') }}
+                    </button>
+                </div>
             </div>
 
             <div class="card-body p-0">
@@ -128,7 +147,7 @@
                                 <th>{{ translate('messages.message') }}</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="log-table-body">
                             @forelse ($parsedLogs as $log)
                                 @php
                                     $levelClass = 'badge-secondary text-dark';
@@ -187,3 +206,99 @@
         </div>
     </div>
 @endsection
+
+@push('script_2')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let refreshInterval = null;
+        const autoRefreshSwitch = document.getElementById('autoRefreshSwitch');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const refreshIcon = document.getElementById('refreshIcon');
+        const logTableBody = document.getElementById('log-table-body');
+        const logCountBadge = document.getElementById('log-count-badge');
+        const clearLogsContainer = document.getElementById('clear-logs-container');
+
+        function fetchLogs() {
+            if (refreshIcon) refreshIcon.classList.add('spin-icon');
+            if (refreshBtn) refreshBtn.disabled = true;
+
+            fetch(window.location.href, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                const newTableBody = doc.getElementById('log-table-body');
+                const newCountBadge = doc.getElementById('log-count-badge');
+                const newClearLogs = doc.getElementById('clear-logs-container');
+
+                if (newTableBody && logTableBody) {
+                    logTableBody.innerHTML = newTableBody.innerHTML;
+                }
+                if (newCountBadge && logCountBadge) {
+                    logCountBadge.innerHTML = newCountBadge.innerHTML;
+                }
+                if (newClearLogs && clearLogsContainer) {
+                    clearLogsContainer.innerHTML = newClearLogs.innerHTML;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching logs:', error);
+            })
+            .finally(() => {
+                if (refreshIcon) refreshIcon.classList.remove('spin-icon');
+                if (refreshBtn) refreshBtn.disabled = false;
+            });
+        }
+
+        function startAutoRefresh() {
+            stopAutoRefresh();
+            refreshInterval = setInterval(fetchLogs, 5000);
+        }
+
+        function stopAutoRefresh() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+                refreshInterval = null;
+            }
+        }
+
+        if (autoRefreshSwitch) {
+            // Initialize state from localStorage
+            const storedState = localStorage.getItem('logs_auto_refresh');
+            if (storedState === 'true') {
+                autoRefreshSwitch.checked = true;
+                startAutoRefresh();
+            } else {
+                autoRefreshSwitch.checked = false;
+            }
+
+            autoRefreshSwitch.addEventListener('change', function() {
+                const isChecked = this.checked;
+                localStorage.setItem('logs_auto_refresh', isChecked);
+                if (isChecked) {
+                    startAutoRefresh();
+                    fetchLogs();
+                } else {
+                    stopAutoRefresh();
+                }
+            });
+        }
+
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', function() {
+                fetchLogs();
+            });
+        }
+    });
+</script>
+@endpush
