@@ -546,6 +546,8 @@ Debes responder ÚNICAMENTE con un objeto JSON que contenga un arreglo de IDs or
                             }
                         }
                     }
+                } else {
+                    \Illuminate\Support\Facades\Log::error("Gemini Related Products API Failure: Status " . $response->status() . " - Body: " . $response->body());
                 }
             } catch (\Exception $e) {
                 \Illuminate\Support\Facades\Log::error("Gemini Related Products Error: " . $e->getMessage());

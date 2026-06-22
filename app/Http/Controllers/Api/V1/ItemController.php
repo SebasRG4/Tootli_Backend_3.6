@@ -635,6 +635,8 @@ Ejemplos de extracción específica:
                                 $ai_tags = array_slice($parsedTags, 0, 3);
                             }
                         }
+                    } else {
+                        \Illuminate\Support\Facades\Log::error("Gemini Product Tags API Failure: Status " . $response->status() . " - Body: " . $response->body());
                     }
                 } catch (\Exception $e) {
                     \Illuminate\Support\Facades\Log::error("Gemini Product Tags Error: " . $e->getMessage());

@@ -555,6 +555,12 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('open-ai-config-status', 'BusinessSettingsController@openAIConfigStatus')->name('openAIConfigStatus');
             Route::post('openai-update', 'BusinessSettingsController@openAIConfigUpdate')->name('openAIConfigUpdate');
 
+            // Logs Viewer (System Monitoring)
+            Route::group(['prefix' => 'logs', 'as' => 'logs.'], function () {
+                Route::get('/', 'LogViewerController@index')->name('index');
+                Route::post('clear', 'LogViewerController@clear')->name('clear');
+            });
+
 
             // Centerlize login
             Route::group(['prefix' => 'login-settings', 'as' => 'login-settings.'], function () {
