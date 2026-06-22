@@ -547,6 +547,27 @@
                                 </span>
                             </a>
                         </li>
+
+                        <!-- Seguridad & Logs -->
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/logs*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
+                                title="{{ translate('Seguridad') }}">
+                                <i class="tio-shield nav-icon"></i>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                    {{ translate('Seguridad') }}
+                                </span>
+                            </a>
+                            <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
+                                style="display:{{ Request::is('admin/logs*') ? 'block' : 'none' }}">
+                                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/logs*') ? 'active' : '' }}">
+                                    <a class="nav-link " href="{{ route('admin.logs.index') }}"
+                                        title="{{ translate('Monitoreo de Logs') }}">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate">{{ translate('Monitoreo de Logs') }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     @endif
 
                     <!-- Dashboards -->
