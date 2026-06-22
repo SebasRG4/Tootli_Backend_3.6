@@ -549,6 +549,7 @@
                         </li>
 
                         <!-- Seguridad & Logs -->
+                        @if (Route::has('admin.logs.index'))
                         <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/logs*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
                                 title="{{ translate('Seguridad') }}">
@@ -568,6 +569,7 @@
                                 </li>
                             </ul>
                         </li>
+                        @endif
                     @endif
 
                     <!-- Dashboards -->
