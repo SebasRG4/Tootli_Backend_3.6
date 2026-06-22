@@ -603,7 +603,7 @@ Ejemplos de extracción específica:
 - Para 'Atún Dolores en Agua 140g' con descripción 'Atún aleta amarilla en agua bajo en grasa': [\"🐟 Atún en agua\", \"💪 Bajo en grasa\", \"🥗 Listo para comer\"]
 - Para 'Salsa Huichol Picante 190ml' con descripción 'Salsa picante tradicional de Nayarit': [\"🌶️ Salsa picante\", \"🇲🇽 Sabor Nayarit\", \"🔥 Nivel medio-alto\"]";
 
-                    $response = \Illuminate\Support\Facades\Http::timeout(5)->post(
+                    $response = \Illuminate\Support\Facades\Http::timeout(30)->post(
                         "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $gemini_key,
                         [
                             'contents' => [

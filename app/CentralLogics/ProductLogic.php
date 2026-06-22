@@ -510,7 +510,7 @@ Debes responder ÚNICAMENTE con un objeto JSON que contenga un arreglo de IDs or
   \"recommended_ids\": [<lista de IDs de productos seleccionados>]
 }";
 
-                $response = \Illuminate\Support\Facades\Http::timeout(10)->post(
+                $response = \Illuminate\Support\Facades\Http::timeout(30)->post(
                     "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $gemini_key,
                     [
                         'contents' => [
