@@ -583,10 +583,13 @@ class ItemController extends Controller
             $gemini_key = env('GEMINI_API_KEY');
             $ai_tags = null;
             if ($gemini_key) {
-                try {
-                    $productName = trim($item['name'] ?? '');
-                    $productDesc = trim(strip_tags($item['description'] ?? ''));
-                    $prompt = "Actúa como un etiquetador analítico de productos de supermercado.
+                $cacheKey = 'item_ai_tags_' . $item['id'];
+                $ai_tags = \Illuminate\Support\Facades\Cache::get($cacheKey);
+                if ($ai_tags === null) {
+                    try {
+                        $productName = trim($item['name'] ?? '');
+                        $productDesc = trim(strip_tags($item['description'] ?? ''));
+                        $prompt = "Actúa como un etiquetador analítico de productos de supermercado.
 Tu tarea es generar exactamente 3 etiquetas/tags cortas en español (máximo 2 a 3 palabras cada una) que describan las características específicas del siguiente producto, basándote ÚNICAMENTE en su nombre y descripción provistos.
 
 Nombre del producto: '{$productName}'
@@ -603,43 +606,45 @@ Ejemplos de extracción específica:
 - Para 'Atún Dolores en Agua 140g' con descripción 'Atún aleta amarilla en agua bajo en grasa': [\"🐟 Atún en agua\", \"💪 Bajo en grasa\", \"🥗 Listo para comer\"]
 - Para 'Salsa Huichol Picante 190ml' con descripción 'Salsa picante tradicional de Nayarit': [\"🌶️ Salsa picante\", \"🇲🇽 Sabor Nayarit\", \"🔥 Nivel medio-alto\"]";
 
-                    $response = \Illuminate\Support\Facades\Http::timeout(30)->post(
-                        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $gemini_key,
-                        [
-                            'contents' => [
-                                [
-                                    'parts' => [
-                                        ['text' => $prompt]
-                                    ]
-                                ]
-                            ],
-                            'generationConfig' => [
-                                'responseMimeType' => 'application/json',
-                                'responseSchema' => [
-                                    'type' => 'ARRAY',
-                                    'items' => [
-                                        'type' => 'STRING'
+                        $response = \Illuminate\Support\Facades\Http::timeout(30)->post(
+                            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $gemini_key,
+                            [
+                                'contents' => [
+                                    [
+                                        'parts' => [
+                                            ['text' => $prompt]
+                                        ]
                                     ]
                                 ],
-                                'temperature' => 0.2
+                                'generationConfig' => [
+                                    'responseMimeType' => 'application/json',
+                                    'responseSchema' => [
+                                        'type' => 'ARRAY',
+                                        'items' => [
+                                            'type' => 'STRING'
+                                        ]
+                                    ],
+                                    'temperature' => 0.2
+                                ]
                             ]
-                        ]
-                    );
+                        );
 
-                    if ($response->successful()) {
-                        $resData = $response->json();
-                        if (isset($resData['candidates'][0]['content']['parts'][0]['text'])) {
-                            $responseText = trim($resData['candidates'][0]['content']['parts'][0]['text']);
-                            $parsedTags = json_decode($responseText, true);
-                            if (is_array($parsedTags) && count($parsedTags) >= 3) {
-                                $ai_tags = array_slice($parsedTags, 0, 3);
+                        if ($response->successful()) {
+                            $resData = $response->json();
+                            if (isset($resData['candidates'][0]['content']['parts'][0]['text'])) {
+                                $responseText = trim($resData['candidates'][0]['content']['parts'][0]['text']);
+                                $parsedTags = json_decode($responseText, true);
+                                if (is_array($parsedTags) && count($parsedTags) >= 3) {
+                                    $ai_tags = array_slice($parsedTags, 0, 3);
+                                    \Illuminate\Support\Facades\Cache::forever($cacheKey, $ai_tags);
+                                }
                             }
+                        } else {
+                            \Illuminate\Support\Facades\Log::error("Gemini Product Tags API Failure: Status " . $response->status() . " - Body: " . $response->body());
                         }
-                    } else {
-                        \Illuminate\Support\Facades\Log::error("Gemini Product Tags API Failure: Status " . $response->status() . " - Body: " . $response->body());
+                    } catch (\Exception $e) {
+                        \Illuminate\Support\Facades\Log::error("Gemini Product Tags Error: " . $e->getMessage());
                     }
-                } catch (\Exception $e) {
-                    \Illuminate\Support\Facades\Log::error("Gemini Product Tags Error: " . $e->getMessage());
                 }
             }
 

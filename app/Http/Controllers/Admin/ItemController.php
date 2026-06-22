@@ -872,6 +872,9 @@ class ItemController extends Controller
             $item->searchable();
         }
 
+        \Illuminate\Support\Facades\Cache::forget('item_ai_tags_' . $item->id);
+        \Illuminate\Support\Facades\Cache::forget('item_recommendations_' . $item->id);
+
         return response()->json(['success' => translate('messages.product_updated_successfully')], 200);
     }
 
@@ -896,6 +899,9 @@ class ItemController extends Controller
         }
         $product?->translations()->delete();
         $product?->taxVats()->delete();
+
+        \Illuminate\Support\Facades\Cache::forget('item_ai_tags_' . $product->id);
+        \Illuminate\Support\Facades\Cache::forget('item_recommendations_' . $product->id);
 
         $product->delete();
         Toastr::success(translate('messages.product_deleted_successfully'));
