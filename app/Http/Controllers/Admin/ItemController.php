@@ -2525,7 +2525,7 @@ Debes responder ÚNICAMENTE con un objeto JSON válido que contenga exactamente 
 }";
 
                 $response = \Illuminate\Support\Facades\Http::timeout(30)->post(
-                    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $gemini_key,
+                    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $gemini_key,
                     [
                         'contents' => [
                             [

@@ -604,7 +604,7 @@ Ejemplos de extracción específica:
 - Para 'Salsa Huichol Picante 190ml' con descripción 'Salsa picante tradicional de Nayarit': [\"🌶️ Salsa picante\", \"🇲🇽 Sabor Nayarit\", \"🔥 Nivel medio-alto\"]";
 
                     $response = \Illuminate\Support\Facades\Http::timeout(5)->post(
-                        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $gemini_key,
+                        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $gemini_key,
                         [
                             'contents' => [
                                 [
