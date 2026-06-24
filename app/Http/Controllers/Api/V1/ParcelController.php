@@ -147,7 +147,8 @@ class ParcelController extends Controller
                     "description" => "Tienda de conveniencia",
                     "address" => null,
                     "latitude" => null,
-                    "longitude" => null
+                    "longitude" => null,
+                    "source" => "google"
                 ],
                 [
                     "id" => "static-2",
@@ -156,7 +157,8 @@ class ParcelController extends Controller
                     "description" => "Tienda de conveniencia",
                     "address" => null,
                     "latitude" => null,
-                    "longitude" => null
+                    "longitude" => null,
+                    "source" => "google"
                 ],
                 [
                     "id" => "static-3",
@@ -165,7 +167,8 @@ class ParcelController extends Controller
                     "description" => "Farmacia",
                     "address" => null,
                     "latitude" => null,
-                    "longitude" => null
+                    "longitude" => null,
+                    "source" => "google"
                 ],
                 [
                     "id" => "static-4",
@@ -174,7 +177,8 @@ class ParcelController extends Controller
                     "description" => "Supermercado",
                     "address" => null,
                     "latitude" => null,
-                    "longitude" => null
+                    "longitude" => null,
+                    "source" => "google"
                 ]
             ];
             $suggestions = array_merge($suggestions, $genericBrands);

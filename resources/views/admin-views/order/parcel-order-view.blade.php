@@ -323,13 +323,40 @@
                                     + {{ \App\CentralLogics\Helpers::format_currency($order['dm_tips']) }}</dd>
                                 <dt class="col-6 col-sm-8 p-0 font-regular text-truncate">
                                     {{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name') ?? (\App\CentralLogics\Helpers::get_business_data('additional_charge_name') ?? translate('messages.additional_charge')) }}
-                                    <hr>
                                 </dt>
 
                                 <dd class="col-6 col-sm-4 p-0">
                                     + {{ \App\CentralLogics\Helpers::format_currency($order['additional_charge']) }}
-                                    <hr>
                                 </dd>
+
+                                @if(($order['parcel_item_estimated_price'] ?? 0) > 0)
+                                    <dt class="col-6 col-sm-8 p-0 font-regular text-truncate">
+                                        {{ translate('messages.estimated_item_price') ?? 'Precio Estimado del Artículo' }}:
+                                    </dt>
+                                    <dd class="col-6 col-sm-4 p-0">
+                                        + {{ \App\CentralLogics\Helpers::format_currency($order['parcel_item_estimated_price']) }}
+                                    </dd>
+                                @endif
+
+                                @if(($order['parcel_declared_value'] ?? 0) > 0)
+                                    <dt class="col-6 col-sm-8 p-0 font-regular text-truncate">
+                                        {{ translate('messages.parcel_declared_value') ?? 'Valor Declarado' }}:
+                                    </dt>
+                                    <dd class="col-6 col-sm-4 p-0">
+                                        {{ \App\CentralLogics\Helpers::format_currency($order['parcel_declared_value']) }}
+                                    </dd>
+                                @endif
+
+                                @if(($order['parcel_insurance_fee'] ?? 0) > 0)
+                                    <dt class="col-6 col-sm-8 p-0 font-regular text-truncate">
+                                        {{ translate('messages.parcel_insurance_fee') ?? 'Seguro del Paquete' }}:
+                                    </dt>
+                                    <dd class="col-6 col-sm-4 p-0">
+                                        + {{ \App\CentralLogics\Helpers::format_currency($order['parcel_insurance_fee']) }}
+                                    </dd>
+                                @endif
+
+                                <dt class="col-12"><hr class="my-2"></dt>
 
                                 <dt class="col-6 col-sm-8 p-0 fs-16">
                                     <div class="d-flex align-items-center gap-2 justify-content-end">
@@ -361,7 +388,7 @@
                                     </div>
                                 </dt>
                                 <dd class="col-6 col-sm-4 p-0 font-semibold text-title">
-                                    {{ \App\CentralLogics\Helpers::format_currency($order['delivery_charge'] + $order['total_tax_amount'] + $order['dm_tips'] + $order['additional_charge'] - $order['coupon_discount_amount'] - $order['ref_bonus_amount']) }}
+                                    {{ \App\CentralLogics\Helpers::format_currency($order['delivery_charge'] + $order['total_tax_amount'] + $order['dm_tips'] + $order['additional_charge'] - $order['coupon_discount_amount'] - $order['ref_bonus_amount'] + ($order['parcel_insurance_fee'] ?? 0) + ($order['parcel_item_estimated_price'] ?? 0)) }}
                                 </dd>
                                 @if ($order->parcelCancellation?->return_fee > 0)
 
@@ -387,46 +414,46 @@
                                         @endif
                                     </dt>
                                     <dd class="col-6 col-sm-4 p-0">
-                                        <div class="fs-14 text-title">
-                                            {{ \App\CentralLogics\Helpers::format_currency($order?->parcelCancellation?->return_fee) }}
-                                        </div>
-                                        @if (
-                                                $order->parcelCancellation?->return_fee > 0 &&
-                                                !in_array($order->parcelCancellation?->cancel_by, ['deliveryman', 'admin_for_deliveryman'])
-                                            )
-                                            <hr>
-                                        @endif
-                                    </dd>
-                                @endif
+                                         <div class="fs-14 text-title">
+                                             {{ \App\CentralLogics\Helpers::format_currency($order?->parcelCancellation?->return_fee) }}
+                                         </div>
+                                         @if (
+                                                 $order->parcelCancellation?->return_fee > 0 &&
+                                                 !in_array($order->parcelCancellation?->cancel_by, ['deliveryman', 'admin_for_deliveryman'])
+                                             )
+                                             <hr>
+                                         @endif
+                                     </dd>
+                                 @endif
 
-                                @if (
-                                        $order->parcelCancellation?->return_fee > 0 &&
-                                        !in_array($order->parcelCancellation?->cancel_by, ['deliveryman', 'admin_for_deliveryman'])
-                                    )
-                                    <dt class="col-6 col-sm-8 p-0 fs-16">
-                                        <div
-                                            class="d-flex fs-16 font-semibold font-regular text-title align-items-center gap-2 justify-content-end">
-                                            {{ translate('Sub Total') }}
+                                 @if (
+                                         $order->parcelCancellation?->return_fee > 0 &&
+                                         !in_array($order->parcelCancellation?->cancel_by, ['deliveryman', 'admin_for_deliveryman'])
+                                     )
+                                     <dt class="col-6 col-sm-8 p-0 fs-16">
+                                         <div
+                                             class="d-flex fs-16 font-semibold font-regular text-title align-items-center gap-2 justify-content-end">
+                                             {{ translate('Sub Total') }}
 
-                                            @if ($order?->parcelCancellation?->return_fee_payment_status == 'paid')
-                                                <span class="badge border-0 fs-10 badge-soft-success">
-                                                    {{ translate('messages.Paid') }}
-                                                </span>
-                                            @else
-                                                <span class="badge border-0 fs-10 badge-soft-danger">
-                                                    {{ translate('Due') }}
-                                                </span>
-                                            @endif
+                                             @if ($order?->parcelCancellation?->return_fee_payment_status == 'paid')
+                                                 <span class="badge border-0 fs-10 badge-soft-success">
+                                                     {{ translate('messages.Paid') }}
+                                                 </span>
+                                             @else
+                                                 <span class="badge border-0 fs-10 badge-soft-danger">
+                                                     {{ translate('Due') }}
+                                                 </span>
+                                             @endif
 
 
-                                        </div>
-                                    </dt>
-                                    <dd class="col-6 col-sm-4 p-0">
-                                        <div class="fs-16 text-title font-semibold">
-                                            {{ \App\CentralLogics\Helpers::format_currency($order['delivery_charge'] + $order['total_tax_amount'] + $order['dm_tips'] + $order['additional_charge'] - $order['coupon_discount_amount'] - $order['ref_bonus_amount'] + $order?->parcelCancellation?->return_fee ?? 0) }}
-                                        </div>
-                                    </dd>
-                                @endif
+                                         </div>
+                                     </dt>
+                                     <dd class="col-6 col-sm-4 p-0">
+                                         <div class="fs-16 text-title font-semibold">
+                                             {{ \App\CentralLogics\Helpers::format_currency($order['delivery_charge'] + $order['total_tax_amount'] + $order['dm_tips'] + $order['additional_charge'] - $order['coupon_discount_amount'] - $order['ref_bonus_amount'] + ($order['parcel_insurance_fee'] ?? 0) + ($order['parcel_item_estimated_price'] ?? 0) + ($order?->parcelCancellation?->return_fee ?? 0)) }}
+                                         </div>
+                                     </dd>
+                                 @endif
 
 
 
@@ -1079,6 +1106,48 @@
                     </div>
                 </div>
                 @endif
+            </div>
+        </div>
+        @endif
+
+        @php($receiptPhotos = $order->parcel_receipt_photos_full_url)
+        @if ($receiptPhotos && count($receiptPhotos) > 0)
+        <!-- receipt photos -->
+        <div class="card mb-2 mt-2">
+            <div class="card-header border-0 mb-10px text-center pb-0">
+                <h5 class="m-0 fs-14 color-222324CC">{{ translate('messages.purchase_receipt') ?? 'Comprobante de Compra' }} </h5>
+            </div>
+            <div class="card-body pt-0">
+                <div class="__bg-FAFAFA p-10px rounded">
+                    <div class="row g-1">
+                        @foreach ($receiptPhotos as $key => $imgUrl)
+                        <div class="col-3">
+                            <img class="img__aspect-1 rounded border w-100 onerror-image" data-toggle="modal"
+                                data-target="#receiptmodal{{ $key }}"
+                                data-onerror-image="{{ asset('assets/admin/img/160x160/img2.jpg') }}"
+                                src="{{ $imgUrl }}">
+                        </div>
+                        <div class="modal fade" id="receiptmodal{{ $key }}" tabindex="-1" role="dialog"
+                            aria-labelledby="receipt_photo_{{ $key }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="receipt_photo_{{ $key }}">
+                                            {{ translate('messages.purchase_receipt') ?? 'Comprobante de Compra' }}
+                                        </h4>
+                                        <button type="button" class="close" data-dismiss="modal"><span
+                                                aria-hidden="true">&times;</span><span
+                                                class="sr-only">{{ translate('messages.cancel') }}</span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <img src="{{ $imgUrl }}" class="initial--22 w-100">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
             </div>
         </div>
         @endif
