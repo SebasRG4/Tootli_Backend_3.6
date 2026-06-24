@@ -345,6 +345,22 @@ class OrderController extends Controller
 
                 $order?->store ?   Helpers::increment_order_count($order?->store) : '';
 
+                if (config('module.' . $order->module->module_type)['stock']) {
+                    $order->load(['details.item' => function ($query) {
+                        $query->withoutGlobalScope(\App\Scopes\StoreScope::class);
+                    }, 'details.campaign' => function ($query) {
+                        $query->withoutGlobalScope(\App\Scopes\StoreScope::class);
+                    }]);
+
+                    foreach ($order->details as $detail) {
+                        $variant = json_decode($detail['variation'], true);
+                        $item = $detail->item;
+                        if ($detail->campaign) {
+                            $item = $detail->campaign;
+                        }
+                        \App\CentralLogics\ProductLogic::update_stock($item, -$detail->quantity, count($variant) ? $variant[0]['type'] : null)->save();
+                    }
+                }
             }
 
             if($order->is_guest == 0){

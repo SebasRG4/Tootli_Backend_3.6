@@ -84,6 +84,7 @@ class Item extends Model
         'module_id' => 'integer',
         'is_approved' => 'integer',
         'stock' => 'integer',
+        'barcode' => 'string',
         "min_price" => 'float',
         "max_price" => 'float',
         'order_count' => 'integer',

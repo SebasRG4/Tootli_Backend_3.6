@@ -113,6 +113,7 @@ class AbastosOrderController extends Controller
         ]);
 
         $order = Order::with(['store.vendor'])->where('is_abastos', 1)->findOrFail($id);
+        $old_status = $order->order_status;
         $order->order_status = $request->status;
 
         if ($request->status === 'delivered') {
@@ -120,6 +121,19 @@ class AbastosOrderController extends Controller
         }
 
         $order->save();
+
+        if (in_array($request->status, ['canceled', 'failed']) && !in_array($old_status, ['canceled', 'failed'])) {
+            $order->load(['details.item' => function ($query) {
+                $query->withoutGlobalScope(\App\Scopes\StoreScope::class);
+            }]);
+
+            foreach ($order->details as $detail) {
+                $item = $detail->item;
+                if ($item && $item->module && config('module.' . $item->module->module_type)['stock']) {
+                    \App\CentralLogics\ProductLogic::update_stock($item, -$detail->quantity)->save();
+                }
+            }
+        }
 
         // Send push notification to vendor
         if ($order->store && $order->store->vendor && $order->store->vendor->firebase_token) {

@@ -531,6 +531,17 @@
         .payment-option.active span {
             color: var(--primary);
         }
+
+        .add-btn:disabled {
+            background: #bdc3c7 !important;
+            color: #7f8c8d !important;
+            box-shadow: none !important;
+            cursor: not-allowed !important;
+        }
+
+        .item-card.out-of-stock {
+            opacity: 0.65;
+        }
     </style>
 </head>
 <body>
@@ -546,6 +557,7 @@
         </div>
     </div>
 
+    @php($stock_enabled = ($store->module ?? null) ? (config('module.' . $store->module->module_type)['stock'] ?? false) : false)
     @if($categories->count() > 0)
     <div class="categories-nav">
         @foreach($categories as $category)
@@ -560,7 +572,7 @@
             <h2 class="section-title">{{ $data['category']->name }}</h2>
             <div class="items-grid">
                 @foreach($data['items'] as $item)
-                    <div class="item-card">
+                    <div class="item-card {{ ($stock_enabled && $item->stock <= 0) ? 'out-of-stock' : '' }}">
                         @if($item->image_full_url)
                         <img src="{{ $item->image_full_url }}" alt="{{ $item->name }}" class="item-image">
                         @endif
@@ -571,10 +583,16 @@
                             </div>
                             <div class="item-footer">
                                 <span class="item-price">${{ number_format($item->display_price, 2) }}</span>
+                                @if($stock_enabled && $item->stock <= 0)
+                                <button class="add-btn" disabled>
+                                    Agotado
+                                </button>
+                                @else
                                 <button class="add-btn" onclick="checkItemDetails({{ $item->id }})">
                                     <i class="fas fa-plus"></i>
                                     Agregar
                                 </button>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -720,6 +738,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
+        const stockEnabled = {{ ($stock_enabled) ? 'true' : 'false' }};
         const allItems = {
             @foreach($items_by_category as $catId => $data)
                 @foreach($data['items'] as $item)
@@ -998,6 +1017,15 @@
             const key = cartItem.name;
             const index = cart.findIndex(item => item.name === key);
             
+            if (stockEnabled && currentItem) {
+                const currentQty = cart.filter(i => i.id === currentItem.id).reduce((sum, i) => sum + i.qty, 0);
+                const availableStock = currentItem.stock || 0;
+                if (currentQty + 1 > availableStock) {
+                    toastr.error('No hay suficiente stock disponible para este producto.');
+                    return;
+                }
+            }
+
             if (index > -1) {
                 cart[index].qty++;
             } else {
@@ -1011,6 +1039,17 @@
 
         function addToCart(id, name, price) {
             const index = cart.findIndex(i => i.id === id);
+            const item = allItems[id];
+            
+            if (stockEnabled && item) {
+                const currentQty = index > -1 ? cart[index].qty : 0;
+                const availableStock = item.stock || 0;
+                if (currentQty + 1 > availableStock) {
+                    toastr.error('No hay suficiente stock disponible para este producto.');
+                    return;
+                }
+            }
+
             if (index > -1) {
                 cart[index].qty += 1;
             } else {

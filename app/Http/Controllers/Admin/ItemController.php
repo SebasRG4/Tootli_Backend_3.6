@@ -72,6 +72,7 @@ class ItemController extends Controller
             'name.0' => 'required',
             'description.0' => 'required',
             'weight' => 'required|numeric|max:10',
+            'barcode' => 'nullable|string|max:191',
         ], [
             'description.*.max' => translate('messages.description_length_warning'),
             'name.0.required' => translate('messages.item_name_required'),
@@ -361,6 +362,7 @@ class ItemController extends Controller
         }
         $item->stock = $request->current_stock ?? 0;
         $item->images = $images;
+        $item->barcode = $request->barcode;
         $item->is_halal = $request->is_halal ?? 0;
         $item->is_abastos = $request->is_abastos ?? 0;
         $item->abastos_price = $request->abastos_price ?? 0;
@@ -483,6 +485,7 @@ class ItemController extends Controller
             'name.0' => 'required',
             'description.0' => 'required',
             'weight' => 'required|numeric|max:10',
+            'barcode' => 'nullable|string|max:191',
         ], [
             'description.*.max' => translate('messages.description_length_warning'),
             'category_id.required' => translate('messages.category_required'),
@@ -714,6 +717,7 @@ class ItemController extends Controller
         // $item->module_id= $request->module_id;
         $item->stock = $request->current_stock ?? 0;
         $item->is_halal = $request->is_halal ?? 0;
+        $item->barcode = $request->barcode;
         $item->is_abastos = $request->is_abastos ?? 0;
         $item->abastos_price = $request->abastos_price ?? 0;
         $item->organic = $request->organic ?? 0;
@@ -2254,6 +2258,7 @@ class ItemController extends Controller
         $item->organic = $data->organic;
         $item->is_halal = $data->is_halal;
         $item->stock = $data->stock;
+        $item->barcode = $data->barcode;
         $item->is_approved = 1;
 
         $item->save();

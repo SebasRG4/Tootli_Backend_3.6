@@ -554,6 +554,25 @@ class VendorController extends Controller
             }
             $order->cancellation_reason=$request->reason;
             $order->canceled_by='store';
+
+            if($request->status == 'canceled') {
+                if (config('module.' . $order->module->module_type)['stock']) {
+                    $order->load(['details.item' => function ($query) {
+                        $query->withoutGlobalScope(\App\Scopes\StoreScope::class);
+                    }, 'details.campaign' => function ($query) {
+                        $query->withoutGlobalScope(\App\Scopes\StoreScope::class);
+                    }]);
+
+                    foreach ($order->details as $detail) {
+                        $variant = json_decode($detail['variation'], true);
+                        $item = $detail->item;
+                        if ($detail->campaign) {
+                            $item = $detail->campaign;
+                        }
+                        \App\CentralLogics\ProductLogic::update_stock($item, -$detail->quantity, count($variant) ? $variant[0]['type'] : null)->save();
+                    }
+                }
+            }
         } else if ($order->order_type != 'parcel' && in_array($request->status, ['picked_up']) ) {
             Helpers::sendOrderDeliveryVerificationOtp($order);
         }

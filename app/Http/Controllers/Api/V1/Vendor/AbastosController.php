@@ -319,6 +319,12 @@ class AbastosController extends Controller
                     continue;
                 }
 
+                if ($item->module && config('module.' . $item->module->module_type)['stock']) {
+                    if ($qty > $item->stock) {
+                        return response()->json(['errors' => [['code' => 'stock', 'message' => "El producto {$item->name} está agotado o no tiene suficiente stock (Disponible: {$item->stock})."]]], 422);
+                    }
+                }
+
                 $item_total = $item->abastos_price * $qty;
                 $subtotal += $item_total;
 
@@ -374,9 +380,14 @@ class AbastosController extends Controller
             $order->updated_at     = now();
             $order->save();
 
-            // Insert OrderDetails
+            // Insert OrderDetails & decrement stock
             foreach ($details as &$detail) {
                 $detail['order_id'] = $order->id;
+
+                $dbItem = Item::withoutGlobalScopes()->find($detail['item_id']);
+                if ($dbItem && $dbItem->module && config('module.' . $dbItem->module->module_type)['stock']) {
+                    \App\CentralLogics\ProductLogic::update_stock($dbItem, $detail['quantity'])->save();
+                }
             }
             OrderDetail::insert($details);
 

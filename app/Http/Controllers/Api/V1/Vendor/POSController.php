@@ -72,7 +72,7 @@ class POSController extends Controller
         $items = Item::active()
             ->where('store_id', $store->id)
             ->when($catId, fn($q) => $q->whereHas('category', fn($c) => $c->whereId($catId)->orWhere('parent_id', $catId)))
-            ->when($key, fn($q) => $q->where(fn($s) => collect($key)->each(fn($v) => $s->orWhere('name', 'like', "%$v%"))))
+            ->when($key, fn($q) => $q->where(fn($s) => collect($key)->each(fn($v) => $s->orWhere('name', 'like', "%$v%")->orWhere('barcode', 'like', "%$v%"))))
             ->latest()
             ->paginate($perPage);
 
@@ -402,6 +402,23 @@ class POSController extends Controller
                 $variationForDb = json_encode([$cartVariation ?? null]);
             }
 
+            // Stock validation
+            if ($product->module && ($product->module->module_type !== 'food')) {
+                $stock = $product->stock;
+                if (!empty($cartVariation)) {
+                    $var_data = Helpers::pos_variation_price($product, is_string($cartVariation) ? $cartVariation : json_encode($cartVariation));
+                    $stock = $var_data['stock'] ?? 0;
+                }
+
+                if (config('module.' . $product->module->module_type)['stock']) {
+                    if ($c['quantity'] > $stock) {
+                        return response()->json([
+                            'errors' => [['code' => 'stock', 'message' => "El producto {$product->name} está agotado o no tiene suficiente stock (Disponible: {$stock})."]]
+                        ], 422);
+                    }
+                }
+            }
+
             if ($product->pos_variable_price) {
                 $custom = isset($c['custom_unit_price']) ? (float) $c['custom_unit_price'] : 0.0;
                 if ($custom <= 0 || $custom > 99999999) {
@@ -458,7 +475,17 @@ class POSController extends Controller
             $product_price       += $base_price * $or_d['quantity'];
             $store_discount_amount += $disc_amount * $or_d['quantity'];
             $order_details[]      = $or_d;
-            $product_data[]       = $formatted;
+
+            $variantName = null;
+            if (!empty($cartVariation)) {
+                $decodedVar = is_array($cartVariation) ? $cartVariation : json_decode($cartVariation, true);
+                $variantName = $decodedVar['type'] ?? null;
+            }
+            $product_data[] = [
+                'item' => $product,
+                'quantity' => $c['quantity'],
+                'variant' => $variantName
+            ];
         }
 
         // ── Descuento extra ───────────────────────────────────────────────────
@@ -592,6 +619,13 @@ class POSController extends Controller
                 $od['order_id'] = $order->id;
             }
             OrderDetail::insert($order_details);
+
+            if (count($product_data) > 0) {
+                foreach ($product_data as $item) {
+                    \App\CentralLogics\ProductLogic::update_stock($item['item'], $item['quantity'], $item['variant'])->save();
+                    \App\CentralLogics\ProductLogic::update_flash_stock($item['item'], $item['quantity'])?->save();
+                }
+            }
 
             $store->increment('total_order');
 

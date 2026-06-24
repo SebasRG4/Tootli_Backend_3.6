@@ -103,6 +103,7 @@ class ItemController extends Controller
             'description.*' => 'max:1000',
             'description.0' => 'required',
             'discount' => 'required|numeric|min:0',
+            'barcode' => 'nullable|string|max:191',
         ], [
             'name.0.required' => translate('messages.item_default_name_required'),
             'description.0.required' => translate('messages.item_default_description_required'),
@@ -406,6 +407,7 @@ class ItemController extends Controller
         $food->module_id = Helpers::get_store_data()->module_id;
         $food->images = $images;
         $food->stock = $request->current_stock ?? 0;
+        $food->barcode = $request->barcode;
         $module_type = Helpers::get_store_data()->module->module_type;
         if ($module_type == 'grocery' || $module_type == 'ecommerce') {
             $food->organic = $request->organic ?? 0;
@@ -579,6 +581,7 @@ class ItemController extends Controller
             'description.*' => 'max:1000',
             'description.0' => 'required',
             'discount' => 'required|numeric|min:0',
+            'barcode' => 'nullable|string|max:191',
         ], [
             'name.0.required' => translate('messages.item_default_name_required'),
             'description.0.required' => translate('messages.item_default_description_required'),
@@ -794,6 +797,7 @@ class ItemController extends Controller
         $p->attributes = $request->has('attribute_id') ? json_encode($request->attribute_id) : json_encode([]);
         $p->add_ons = $request->has('addon_ids') ? json_encode($request->addon_ids) : json_encode([]);
         $p->stock = $request->current_stock ?? 0;
+        $p->barcode = $request->barcode;
         $module_type = Helpers::get_store_data()->module->module_type;
         if ($module_type == 'grocery' || $module_type == 'ecommerce') {
             $p->organic = $request->organic ?? 0;
@@ -1797,6 +1801,7 @@ class ItemController extends Controller
         $temp_item->common_condition_id = $data->common_condition_id;
         $temp_item->brand_id = $request->brand_id ?? 0;
         $temp_item->stock = $data->stock ?? 0;
+        $temp_item->barcode = $data->barcode;
         $module_type = Helpers::get_store_data()->module->module_type;
         if ($module_type == 'pharmacy') {
             $temp_item->common_condition_id = $request->condition_id ?? 0;

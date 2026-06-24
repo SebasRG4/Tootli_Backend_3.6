@@ -70,7 +70,8 @@ class POSController extends Controller
         ->when($keyword, function($query)use($key){
             return $query->where(function ($q) use ($key) {
                 foreach ($key as $value) {
-                    $q->orWhere('name', 'like', "%{$value}%");
+                    $q->orWhere('name', 'like', "%{$value}%")
+                      ->orWhere('barcode', 'like', "%{$value}%");
                 }
             });
         })
@@ -466,7 +467,8 @@ class POSController extends Controller
             ->when($keyword, function($query)use($key){
                 return $query->where(function ($q) use ($key) {
                     foreach ($key as $value) {
-                        $q->orWhere('name', 'like', "%{$value}%");
+                        $q->orWhere('name', 'like', "%{$value}%")
+                          ->orWhere('barcode', 'like', "%{$value}%");
                     }
                 });
             })
