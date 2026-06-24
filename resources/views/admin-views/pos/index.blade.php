@@ -58,18 +58,15 @@
                                             <!-- Search -->
                                             <div class="position-relative">
                                                 <input id="datatableSearch" type="search" value="{{$keyword ?? ''}}"
-                                                    name="keyword" class="form-control h--45px pl-5"
+                                                    name="keyword" class="form-control h--45px pl-5 pr-5"
                                                     placeholder="{{translate('messages.Search_by_product_name')}}"
                                                     aria-label="{{translate('messages.search_here')}}" disabled>
                                                 <img width="16" height="16"
                                                     src="{{asset('assets/admin/img/icons/search-icon.png')}}" alt=""
                                                     class="search-icon">
-
-                                                {{-- @if($keyword)
-                                                <button type="reset"
-                                                    class="btn btn--primary ml-2 location-reload-to-base-pos"
-                                                    data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
-                                                @endif --}}
+                                                <button type="button" class="btn btn-transparent p-0 position-absolute" onclick="openBarcodeScanner('datatableSearch')" style="right: 15px; top: 50%; transform: translateY(-50%); z-index: 5;" title="{{ translate('Escanear con cámara') }}">
+                                                    <i class="tio-camera text-muted" style="font-size: 1.25rem;"></i>
+                                                </button>
                                             </div>
                                             <!-- End Search -->
                                         </form>
@@ -1096,3 +1093,5 @@
     });
 </script>
 @endpush
+
+@include('layouts.admin.partials._barcode_scanner')

@@ -149,8 +149,15 @@
                         <div class="col-sm-6 col-lg-{{ $column }}">
                             <div class="form-group mb-0 error-wrapper">
                                 <label class="input-label" for="barcode">{{ translate('Código de Barras') }}</label>
-                                <input type="text" name="barcode" id="barcode" class="form-control" 
-                                    value="{{ old('barcode', $product->barcode ?? '') }}" placeholder="{{ translate('Ej. 7501011110022') }}">
+                                <div class="input-group">
+                                    <input type="text" name="barcode" id="barcode" class="form-control" 
+                                        value="{{ old('barcode', $product->barcode ?? '') }}" placeholder="{{ translate('Ej. 7501011110022') }}">
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-outline-secondary" onclick="openBarcodeScanner('barcode')" title="{{ translate('Escanear con cámara') }}">
+                                            <i class="tio-camera"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -611,3 +618,5 @@
         </div>
     </div>
 </div>
+
+@include('layouts.admin.partials._barcode_scanner')

@@ -22,12 +22,15 @@
                                 <span class="pos-grill-date">{{ now()->translatedFormat('F j, Y') }}</span>
                                 <h1 class="pos-grill-store-name">{{ Str::limit($store_data->name, 48) }}</h1>
                             </div>
-                            <form id="search-form" class="pos-grill-search-form search-form m-0" autocomplete="off">
+                             <form id="search-form" class="pos-grill-search-form search-form m-0" autocomplete="off">
                                 <span class="pos-grill-search-icon" aria-hidden="true"><i class="tio-search"></i></span>
                                 <input id="datatableSearch" type="search" value="{{ $keyword ?? '' }}" name="search"
                                     class="pos-grill-search-input"
                                     placeholder="{{ translate('messages.pos_shell_search_placeholder') }}"
                                     aria-label="{{ translate('messages.search_here') }}">
+                                <button type="button" onclick="openBarcodeScanner('datatableSearch')" class="bg-transparent border-0 p-0 mr-1" style="cursor: pointer;" title="{{ translate('Escanear con cámara') }}">
+                                    <i class="tio-camera text-muted" style="font-size: 1.25rem;"></i>
+                                </button>
                                 <button class="pos-grill-search-submit" type="submit" aria-label="{{ translate('messages.search_here') }}">
                                     <i class="tio-filter-list"></i>
                                 </button>
@@ -1209,3 +1212,5 @@
     </script>
 
 @endpush
+
+@include('layouts.admin.partials._barcode_scanner')
