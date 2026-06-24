@@ -42,19 +42,33 @@
                     html5QrCode.clear();
                 }
                 
-                html5QrCode = new Html5Qrcode("barcode-reader");
+                html5QrCode = new Html5Qrcode("barcode-reader", {
+                    formatsToSupport: [
+                        Html5QrcodeSupportedFormats.EAN_13,
+                        Html5QrcodeSupportedFormats.EAN_8,
+                        Html5QrcodeSupportedFormats.CODE_128,
+                        Html5QrcodeSupportedFormats.CODE_39,
+                        Html5QrcodeSupportedFormats.UPC_A,
+                        Html5QrcodeSupportedFormats.UPC_E,
+                        Html5QrcodeSupportedFormats.QR_CODE
+                    ]
+                });
                 
                 const config = { 
-                    fps: 15, 
+                    fps: 20, 
                     qrbox: function(width, height) {
-                        // Wide and thin box optimized for typical barcodes
                         let widthBox = Math.floor(width * 0.85);
                         let heightBox = Math.floor(height * 0.35);
                         if (widthBox < 220) widthBox = 220;
                         if (heightBox < 90) heightBox = 90;
                         return { width: widthBox, height: heightBox };
                     },
-                    aspectRatio: 1.0
+                    aspectRatio: 1.0,
+                    videoConstraints: {
+                        facingMode: "environment",
+                        width: { min: 640, ideal: 1280, max: 1920 },
+                        height: { min: 480, ideal: 720, max: 1080 }
+                    }
                 };
 
                 html5QrCode.start(
