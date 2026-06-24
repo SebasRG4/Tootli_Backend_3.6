@@ -80,6 +80,8 @@ class ParcelCategoryController extends Controller
         $parcel_category->parcel_per_km_shipping_charge = $request->parcel_per_km_shipping_charge;
         $parcel_category->parcel_minimum_shipping_charge = $request->parcel_minimum_shipping_charge;
         $parcel_category->buy_and_deliver = $request->buy_and_deliver ?? 0;
+        $parcel_category->insurance_rate_percentage = $request->insurance_rate_percentage ?? 0;
+        $parcel_category->min_insurance_fee = $request->min_insurance_fee ?? 0;
         $parcel_category->save();
 
         if (addon_published_status('TaxModule')) {
@@ -217,6 +219,8 @@ class ParcelCategoryController extends Controller
         $parcel_category->parcel_per_km_shipping_charge = $request->parcel_per_km_shipping_charge;
         $parcel_category->parcel_minimum_shipping_charge = $request->parcel_minimum_shipping_charge;
         $parcel_category->buy_and_deliver = $request->buy_and_deliver ?? 0;
+        $parcel_category->insurance_rate_percentage = $request->insurance_rate_percentage ?? 0;
+        $parcel_category->min_insurance_fee = $request->min_insurance_fee ?? 0;
         $parcel_category->save();
         if (addon_published_status('TaxModule') && $parcel_category['position'] == 0) {
             $taxVatIds = $parcel_category->taxVats()->pluck('tax_id')->toArray() ?? [];

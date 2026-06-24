@@ -154,6 +154,32 @@
                             </label>
                         </div>
                     </div>
+
+                    {{-- ── Seguro del paquete (Rappi Favor-style) ── --}}
+                    <div class="col-12"><hr><h6 class="mb-3 text-primary"><i class="tio-verified mr-1"></i>{{ translate('messages.parcel_insurance') ?? 'Seguro del Paquete' }}</h6></div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="input-label text-capitalize">{{ translate('messages.insurance_rate_percentage') ?? 'Tasa de Seguro (%)' }}</label>
+                            <input type="number" step="0.01" min="0" max="100"
+                                placeholder="Ej: 2 (significa 2% del valor declarado)"
+                                class="form-control"
+                                name="insurance_rate_percentage"
+                                value="0">
+                            <small class="text-muted">Porcentaje del valor declarado que se cobra como seguro. Ej: 2 = 2%.</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="input-label text-capitalize">{{ translate('messages.min_insurance_fee') ?? 'Tarifa Mínima de Seguro' }}</label>
+                            <input type="number" step="0.01" min="0"
+                                placeholder="Ej: 10 (tarifa mínima en pesos)"
+                                class="form-control"
+                                name="min_insurance_fee"
+                                value="0">
+                            <small class="text-muted">El usuario paga el mayor entre (tasa × valor declarado) y esta tarifa mínima.</small>
+                        </div>
+                    </div>
+                    {{-- ────────────────────────────────────────────────────────────── --}}
                     @if ($categoryWiseTax)
                         <div class="col-md-6">
 

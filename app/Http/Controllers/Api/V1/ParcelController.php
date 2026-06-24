@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\CentralLogics\StoreLogic;
 use App\CentralLogics\Helpers;
 use App\Models\BusinessSetting;
+use App\Models\DeliveryMan;
 use App\Models\Module;
+use App\Models\Order;
 use App\Models\Store;
 use App\Models\Zone;
 use Illuminate\Http\Request;
@@ -346,6 +348,104 @@ class ParcelController extends Controller
         return response()->json([
             'stores' => $storePayload,
             'suggestions' => $placeSuggestions,
+        ], 200);
+    }
+
+    /**
+     * El repartidor sube fotos del ticket/recibo de una compra.
+     * Solo permitido mientras el pedido esté activo (no entregado ni cancelado).
+     * Endpoint: POST /api/v1/parcel/receipt-photo
+     * Body (multipart): order_id, photos[] (hasta 5 archivos)
+     * Header: token (auth del repartidor)
+     */
+    public function uploadReceiptPhotos(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required|integer|exists:orders,id',
+            'photos'   => 'required|array|min:1|max:5',
+            'photos.*' => 'required|image|mimes:jpg,jpeg,png,webp|max:5120',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        // Autenticar repartidor por token
+        $dm = DeliveryMan::where('auth_token', $request->header('token'))->first();
+        if (! $dm) {
+            return response()->json(['errors' => [['code' => 'unauthorized', 'message' => 'Acceso no autorizado.']]], 401);
+        }
+
+        $order = Order::find($request->order_id);
+
+        // Verificar que la orden es de tipo parcel y pertenece al repartidor
+        if (! $order || $order->order_type !== 'parcel') {
+            return response()->json(['errors' => [['code' => 'not_found', 'message' => 'Pedido no encontrado o no es de tipo parcel.']]], 404);
+        }
+        if ((int) $order->delivery_man_id !== (int) $dm->id) {
+            return response()->json(['errors' => [['code' => 'forbidden', 'message' => 'No tienes permiso para modificar este pedido.']]], 403);
+        }
+        if (in_array($order->order_status, ['delivered', 'canceled', 'failed', 'refunded'])) {
+            return response()->json(['errors' => [['code' => 'order_closed', 'message' => 'El pedido ya está cerrado.']]], 403);
+        }
+
+        // Subir imágenes
+        $existing = is_array($order->parcel_receipt_photos) ? $order->parcel_receipt_photos : [];
+        foreach ($request->file('photos') as $photo) {
+            $imageName = Helpers::upload('order/', 'jpg', $photo);
+            $existing[] = [
+                'img'     => $imageName,
+                'storage' => Helpers::getDisk(),
+            ];
+        }
+        $order->parcel_receipt_photos = $existing;
+        $order->save();
+
+        // Notificar al usuario vía FCM si tiene token
+        try {
+            $user = $order->customer;
+            if ($user && $user->cm_firebase_token) {
+                Helpers::send_push_notif_to_device($user->cm_firebase_token, [
+                    'title' => translate('messages.parcel_receipt_photos_uploaded_title'),
+                    'description' => translate('messages.parcel_receipt_photos_uploaded_body'),
+                    'order_id' => $order->id,
+                    'type' => 'parcel_receipt_photos',
+                ]);
+            }
+        } catch (\Throwable) {}
+
+        // Construir URLs públicas de las fotos
+        $photoUrls = [];
+        foreach ($existing as $item) {
+            $photoUrls[] = Helpers::get_full_url('order', $item['img'], $item['storage'] ?? 'public');
+        }
+
+        return response()->json([
+            'message' => translate('messages.receipt_photos_uploaded_successfully'),
+            'photos'  => $photoUrls,
+        ], 200);
+    }
+
+    /**
+     * El usuario o repartidor obtiene las fotos del ticket de un pedido parcel.
+     * Endpoint: GET /api/v1/parcel/receipt-photos/{order_id}
+     */
+    public function getReceiptPhotos(Request $request, $orderId)
+    {
+        $order = Order::find($orderId);
+        if (! $order || $order->order_type !== 'parcel') {
+            return response()->json(['errors' => [['code' => 'not_found', 'message' => 'Pedido no encontrado.']]], 404);
+        }
+
+        $photos = [];
+        $raw = is_array($order->parcel_receipt_photos) ? $order->parcel_receipt_photos : [];
+        foreach ($raw as $item) {
+            $photos[] = Helpers::get_full_url('order', $item['img'], $item['storage'] ?? 'public');
+        }
+
+        return response()->json([
+            'order_id' => (int) $orderId,
+            'photos'   => $photos,
         ], 200);
     }
 }

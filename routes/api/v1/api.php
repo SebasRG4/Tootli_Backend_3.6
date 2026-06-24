@@ -641,6 +641,8 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         Route::get('get-parcel-cancellation-reasons', 'ConfigController@parcel_cancellation_reason');
         Route::get('parcel/suggestions', 'ParcelController@suggestions');
         Route::get('parcel/buy-location-search', 'ParcelController@buyLocationSearch');
+        Route::post('parcel/receipt-photo', 'ParcelController@uploadReceiptPhotos');
+        Route::get('parcel/receipt-photos/{order_id}', 'ParcelController@getReceiptPhotos');
 
     });
 

@@ -67,6 +67,8 @@ trait PlaceNewOrder
             'parcel_pickup_at' => 'nullable|string',
             'parcel_delivery_at' => 'nullable|string',
             'parcel_item_estimated_price' => 'nullable|numeric',
+            'parcel_declared_value' => 'nullable|numeric|min:0',
+            'parcel_insurance_enabled' => 'nullable|boolean',
             'receiver_details' => 'required_if:order_type,parcel',
             'charge_payer' => 'required_if:order_type,parcel|in:sender,receiver',
             'dm_tips' => 'nullable|numeric',
@@ -253,6 +255,23 @@ trait PlaceNewOrder
             $order->parcel_delivery_at = $request->parcel_delivery_at;
             $order->parcel_item_estimated_price = $request->parcel_item_estimated_price;
             $order->receiver_details = json_decode($request->receiver_details);
+
+            // ── Seguro del paquete (Rappi Favor-style) ──────────────────────────
+            $order->parcel_declared_value = null;
+            $order->parcel_insurance_fee  = null;
+            if ($request->parcel_declared_value > 0 && $request->parcel_insurance_enabled) {
+                $parcelCat = ParcelCategory::find($request->parcel_category_id);
+                $rate      = $parcelCat ? (float) $parcelCat->insurance_rate_percentage : 0;
+                $minFee    = $parcelCat ? (float) $parcelCat->min_insurance_fee : 0;
+                $order->parcel_declared_value = (float) $request->parcel_declared_value;
+                if ($rate > 0) {
+                    $calculatedFee = round($order->parcel_declared_value * $rate / 100, 2);
+                    $order->parcel_insurance_fee = max($calculatedFee, $minFee);
+                } else {
+                    $order->parcel_insurance_fee = $minFee > 0 ? $minFee : 0;
+                }
+            }
+            // ────────────────────────────────────────────────────────────────────
 
             if ($order_status == 'confirmed') {
                 $order->confirmed = now();
@@ -643,7 +662,7 @@ trait PlaceNewOrder
             $order->flash_store_discount_amount = round($flash_sale_vendor_discount_amount, config('round_up_to_digit'));
 
             //DM TIPS
-            $order->order_amount = $order->order_amount + $order->dm_tips + $order->additional_charge + $order->extra_packaging_amount + ($order->parcel_item_estimated_price ?? 0);
+            $order->order_amount = $order->order_amount + $order->dm_tips + $order->additional_charge + $order->extra_packaging_amount + ($order->parcel_item_estimated_price ?? 0) + ($order->parcel_insurance_fee ?? 0);
             if ($request->payment_method == 'wallet' && $request->user->wallet_balance < $order->order_amount) {
                 DB::rollBack();
                 return response()->json([

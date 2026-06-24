@@ -53,6 +53,9 @@ class Order extends Model
         'actual_parcel_item_price' => 'float',
         'proposed_parcel_item_price' => 'float',
         'adjustment_status' => 'string',
+        'parcel_declared_value' => 'float',
+        'parcel_insurance_fee' => 'float',
+        'parcel_receipt_photos' => 'array',
         'ecartpay_gateway_fee' => 'float',
         'ecartpay_card_international' => 'boolean',
         'tootli_direct' => 'boolean',
@@ -63,7 +66,25 @@ class Order extends Model
         'store_shipping_contribution' => 'float',
     ];
 
-    protected $appends = ['module_type', 'order_attachment_full_url', 'order_proof_full_url', 'customer_tracking_url', 'cash_on_pickup_amount'];
+    protected $appends = ['module_type', 'order_attachment_full_url', 'order_proof_full_url', 'customer_tracking_url', 'cash_on_pickup_amount', 'parcel_receipt_photos_full_url'];
+
+    public function getParcelReceiptPhotosFullUrlAttribute()
+    {
+        $images = [];
+        $value = is_array($this->parcel_receipt_photos)
+            ? $this->parcel_receipt_photos
+            : ($this->parcel_receipt_photos && is_string($this->parcel_receipt_photos) && $this->isValidJson($this->parcel_receipt_photos)
+                ? json_decode($this->parcel_receipt_photos, true)
+                : []);
+        if ($value) {
+            foreach ($value as $item) {
+                $item = is_array($item) ? $item : (is_object($item) && get_class($item) == 'stdClass' ? json_decode(json_encode($item), true) : ['img' => $item, 'storage' => 'public']);
+                $images[] = Helpers::get_full_url('order', $item['img'], $item['storage'] ?? 'public');
+            }
+        }
+
+        return $images;
+    }
 
     public function getOrderAttachmentFullUrlAttribute()
     {

@@ -14,13 +14,15 @@ class ParcelCategory extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['image', 'status', 'buy_and_deliver', 'parcel_per_km_shipping_charge', 'parcel_minimum_shipping_charge', 'name', 'description'];
+    protected $fillable = ['image', 'status', 'buy_and_deliver', 'parcel_per_km_shipping_charge', 'parcel_minimum_shipping_charge', 'insurance_rate_percentage', 'min_insurance_fee', 'name', 'description'];
 
     protected $casts = [
         'status' => 'integer',
         'buy_and_deliver' => 'integer',
         'parcel_per_km_shipping_charge' => 'float',
         'parcel_minimum_shipping_charge' => 'float',
+        'insurance_rate_percentage' => 'float',
+        'min_insurance_fee' => 'float',
     ];
 
     protected $appends = ['image_full_url'];
