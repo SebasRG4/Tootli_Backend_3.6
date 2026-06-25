@@ -73,8 +73,6 @@ services:
       context: ./Tootli_AI
       dockerfile: Dockerfile
     restart: always
-    ports:
-      - "8000:8000"
     env_file:
       - ./Tootli_AI/.env
     volumes:
@@ -85,8 +83,6 @@ services:
       context: ./go-worker
       dockerfile: Dockerfile
     restart: always
-    ports:
-      - "8080:8080"
     env_file:
       - ./go-worker/.env
     volumes:
@@ -110,7 +106,6 @@ services:
       SOKETI_DEFAULT_APP_SECRET: 'tootli-secret'
     ports:
       - '6001:6001'
-      - '9601:9601'
 
   osrm:
     image: osrm/osrm-backend
