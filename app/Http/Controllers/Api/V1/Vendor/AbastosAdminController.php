@@ -39,8 +39,8 @@ class AbastosAdminController extends Controller
             'offset' => $request->get('offset', 1),
             'orders' => Helpers::order_data_formatting($orders->items(), true)
         ];
+        return response()->json($data);
     }
-}
 
     public function search_freelance(Request $request)
     {
