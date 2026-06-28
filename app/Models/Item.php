@@ -127,6 +127,7 @@ class Item extends Model
 
         return $query->where(function ($query) use ($nowDate, $nowTime) {
             $query->where('discount', '>', 0)
+                ->orWhere('is_promotional', 1)
                 ->orWhereHas('store.discount', function ($q) use ($nowDate, $nowTime) {
                     $q->whereDate('start_date', '<=', $nowDate)
                         ->whereDate('end_date', '>=', $nowDate)
