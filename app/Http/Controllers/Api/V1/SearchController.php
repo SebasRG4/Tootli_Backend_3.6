@@ -181,8 +181,8 @@ class SearchController extends Controller
         $limit = $request->query('limit', 10);
         $offset = $request->query('offset', 1);
 
-        $longitude = (float) $request->header('longitude') ?? 0;
-        $latitude = (float) $request->header('latitude') ?? 0;
+        $longitude = (float) str_replace('"', '', (string) $request->header('longitude')) ?? 0;
+        $latitude = (float) str_replace('"', '', (string) $request->header('latitude')) ?? 0;
         $filter = $request->query('filter', '');
         $filter = $filter ? (is_array($filter) ? $filter : str_getcsv(trim($filter, "[]"), ',')) : '';
         $rating_count = $request->query('rating_count');

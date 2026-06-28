@@ -168,7 +168,6 @@ class ReportController extends Controller
                     ->select('id', 'order_id', 'tax_name', 'tax_amount', 'tax_type');
             }
         ])
-
             ->where('store_id', $store_id)
             ->when(count($search), fn($q) => $q->where(function ($q) use ($search) {
                 foreach ($search as $value) {

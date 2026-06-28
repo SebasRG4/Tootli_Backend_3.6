@@ -363,9 +363,10 @@ class AbastosController extends Controller
 
             // Create Order
             $order = new Order();
-            $order->store_id       = $store->id;
-            $order->zone_id        = $store->zone_id;
-            $order->module_id      = $store->module_id;
+            $order->store_id       = $abastos_store->id; // Tootli Abastos Grocery Store (Seller)
+            $order->user_id        = $store->id;         // Buyer Store ID stored in user_id
+            $order->zone_id        = $abastos_store->zone_id;
+            $order->module_id      = $abastos_store->module_id;
             $order->order_amount   = $order_amount;
             $order->total_tax_amount = 0;
             $order->delivery_charge  = $delivery_charge;
@@ -378,6 +379,22 @@ class AbastosController extends Controller
             $order->pending        = now();
             $order->created_at     = now();
             $order->updated_at     = now();
+
+            // Set delivery address as buyer store's details
+            $store_address = trim(implode(', ', array_filter([
+                $store->address,
+                $store->city ?? null,
+                $store->state ?? null,
+                $store->country ?? null,
+            ])));
+            $order->delivery_address = json_encode([
+                'contact_person_name' => $store->name,
+                'contact_person_number' => $store->phone ?? $vendor->phone ?? '',
+                'address' => $store_address ?: 'Dirección de la tienda',
+                'latitude' => (string) $store->latitude,
+                'longitude' => (string) $store->longitude,
+            ]);
+
             $order->save();
 
             // Insert OrderDetails & decrement stock
@@ -415,7 +432,7 @@ class AbastosController extends Controller
         }
         $store = $vendor->stores[0];
 
-        $orders = Order::where('store_id', $store->id)
+        $orders = Order::where('user_id', $store->id)
             ->where('is_abastos', 1)
             ->with(['details' => function ($q) {
                 $q->select('id', 'order_id', 'item_id', 'price', 'quantity', 'item_details');

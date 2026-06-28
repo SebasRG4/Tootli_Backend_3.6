@@ -506,6 +506,61 @@ class Order extends Model
         });
     }
 
+    public function scopeNotAbastos($query)
+    {
+        return $query->where(function ($q) {
+            $q->where('is_abastos', '!=', 1)->orWhereNull('is_abastos');
+        });
+    }
+
+    public function getStoreAttribute()
+    {
+        if ($this->is_abastos == 1) {
+            return Store::withoutGlobalScopes()->find($this->user_id);
+        }
+        return $this->relations['store'] ?? $this->belongsTo(Store::class, 'store_id')->first();
+    }
+
+    public function getCustomerAttribute()
+    {
+        if ($this->is_abastos == 1) {
+            $buyerStore = Store::withoutGlobalScopes()->find($this->user_id);
+            if ($buyerStore) {
+                $user = new User();
+                $user->id = $buyerStore->id;
+                $user->f_name = $buyerStore->name;
+                $user->l_name = '(Tienda)';
+                $user->phone = $buyerStore->phone;
+                $user->email = $buyerStore->email ?? '';
+                $user->image = $buyerStore->logo;
+                $user->setAttribute('image_full_url', $buyerStore->logo_full_url);
+                return $user;
+            }
+        }
+        return $this->relations['customer'] ?? $this->belongsTo(User::class, 'user_id')->first();
+    }
+
+    public function toArray()
+    {
+        $array = parent::toArray();
+        if ($this->is_abastos == 1) {
+            $buyerStore = Store::withoutGlobalScopes()->find($this->user_id);
+            if ($buyerStore) {
+                $array['store'] = $buyerStore->toArray();
+                $array['customer'] = [
+                    'id' => $buyerStore->id,
+                    'f_name' => $buyerStore->name,
+                    'l_name' => '(Tienda)',
+                    'phone' => $buyerStore->phone,
+                    'email' => $buyerStore->email ?? '',
+                    'image' => $buyerStore->logo,
+                    'image_full_url' => $buyerStore->logo_full_url,
+                ];
+            }
+        }
+        return $array;
+    }
+
     public function getCreatedAtAttribute($value)
     {
         return date('Y-m-d H:i:s', strtotime($value));
