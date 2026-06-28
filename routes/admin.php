@@ -448,6 +448,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('order/list/{status}', 'AbastosOrderController@list')->name('order.list');
             Route::get('order/details/{id}', 'AbastosOrderController@details')->name('order.details');
             Route::post('order/status-update/{id}', 'AbastosOrderController@statusUpdate')->name('order.status-update');
+            Route::post('order/assign-seller-store/{id}', 'AbastosOrderController@assignSellerStore')->name('order.assign-seller-store');
             Route::get('schedule', 'AbastosOrderController@scheduleIndex')->name('schedule');
             Route::post('schedule/update-delivery-time', 'AbastosOrderController@updateDeliveryTime')->name('schedule.update-delivery-time');
             Route::get('shipping-setup', 'AbastosOrderController@shippingSetup')->name('shipping-setup');

@@ -513,9 +513,14 @@ class Order extends Model
         });
     }
 
+    public function seller_store()
+    {
+        return $this->belongsTo(Store::class, 'store_id');
+    }
+
     public function getStoreAttribute()
     {
-        if ($this->is_abastos == 1) {
+        if ($this->is_abastos == 1 && $this->user_id && $this->user_id != $this->store_id) {
             return Store::withoutGlobalScopes()->find($this->user_id);
         }
         return $this->relations['store'] ?? $this->belongsTo(Store::class, 'store_id')->first();
@@ -523,7 +528,7 @@ class Order extends Model
 
     public function getCustomerAttribute()
     {
-        if ($this->is_abastos == 1) {
+        if ($this->is_abastos == 1 && $this->user_id && $this->user_id != $this->store_id) {
             $buyerStore = Store::withoutGlobalScopes()->find($this->user_id);
             if ($buyerStore) {
                 $user = new User();
@@ -543,7 +548,7 @@ class Order extends Model
     public function toArray()
     {
         $array = parent::toArray();
-        if ($this->is_abastos == 1) {
+        if ($this->is_abastos == 1 && $this->user_id && $this->user_id != $this->store_id) {
             $buyerStore = Store::withoutGlobalScopes()->find($this->user_id);
             if ($buyerStore) {
                 $array['store'] = $buyerStore->toArray();

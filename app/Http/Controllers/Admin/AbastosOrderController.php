@@ -98,12 +98,19 @@ class AbastosOrderController extends Controller
         $order = Order::with([
             'details',
             'store.vendor',
+            'seller_store.vendor',
             'details.item' => function ($query) {
                 $query->withoutGlobalScope(\App\Scopes\StoreScope::class);
             }
         ])->where('is_abastos', 1)->findOrFail($id);
 
-        return view('admin-views.order.abastos-view', compact('order'));
+        $groceryStores = Store::withoutGlobalScopes()
+            ->whereHas('module', function ($q) {
+                $q->where('module_type', 'grocery');
+            })
+            ->get(['id', 'name']);
+
+        return view('admin-views.order.abastos-view', compact('order', 'groceryStores'));
     }
 
     public function statusUpdate(Request $request, $id)
@@ -223,6 +230,31 @@ class AbastosOrderController extends Controller
         \Illuminate\Support\Facades\Cache::forget('business_settings_config_keys');
 
         Toastr::success('Configuración de envío de Tootli Abastos actualizada correctamente.');
+        return back();
+    }
+
+    public function assignSellerStore(Request $request, $id)
+    {
+        $request->validate([
+            'store_id' => 'required|exists:stores,id'
+        ]);
+
+        $order = Order::where('is_abastos', 1)->findOrFail($id);
+
+        if ($order->user_id == null || $order->user_id == $order->store_id) {
+            $order->user_id = $order->store_id;
+        }
+        $order->store_id = $request->store_id;
+
+        $sellerStore = Store::withoutGlobalScopes()->find($request->store_id);
+        if ($sellerStore) {
+            $order->zone_id = $sellerStore->zone_id;
+            $order->module_id = $sellerStore->module_id;
+        }
+
+        $order->save();
+
+        Toastr::success('Tienda vendedora asignada correctamente.');
         return back();
     }
 }

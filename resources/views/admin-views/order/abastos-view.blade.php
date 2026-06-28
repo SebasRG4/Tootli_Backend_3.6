@@ -173,10 +173,10 @@
                     </div>
                 </div>
 
-                <!-- Store Info Card -->
+                <!-- Buyer Store Info Card -->
                 <div class="card mb-3">
                     <div class="card-header border-0">
-                        <h4 class="card-header-title">Información de la Tienda</h4>
+                        <h4 class="card-header-title">Tienda Compradora (Cliente)</h4>
                     </div>
                     <div class="card-body">
                         @if ($order->store)
@@ -202,10 +202,62 @@
                     </div>
                 </div>
 
+                <!-- Seller Store Info Card -->
+                <div class="card mb-3">
+                    <div class="card-header border-0">
+                        <h4 class="card-header-title">Tienda Vendedora (Tootli Abastos)</h4>
+                    </div>
+                    <div class="card-body">
+                        @if ($order->user_id && $order->user_id != $order->store_id && $order->seller_store)
+                            <div class="media align-items-center mb-3">
+                                <div class="avatar avatar-circle mr-3">
+                                    <img class="avatar-img onerror-image"
+                                        src="{{ $order->seller_store->logo_full_url }}"
+                                        data-onerror-image="{{ asset('assets/admin/img/160x160/img1.jpg') }}"
+                                        alt="Logo">
+                                </div>
+                                <div class="media-body">
+                                    <span class="text-body font-bold text-hover-primary d-block">
+                                        {{ $order->seller_store->name }}
+                                    </span>
+                                    <span class="d-block text-muted fz-12px">Tienda ID: #{{ $order->seller_store->id }}</span>
+                                    <span class="d-block text-muted fz-12px">Teléfono: {{ $order->seller_store->phone }}</span>
+                                    <span class="d-block text-muted fz-12px">Dirección: {{ $order->seller_store->address }}</span>
+                                </div>
+                            </div>
+                        @else
+                            <div class="alert alert-warning py-2 mb-3">
+                                <i class="tio-warning-outined"></i> Tienda vendedora no asignada. Este pedido se muestra en el Home del comprador.
+                            </div>
+                        @endif
+
+                        <!-- Formulario de Asignación / Cambio de Tienda Vendedora -->
+                        <form action="{{ route('admin.abastos.order.assign-seller-store', [$order->id]) }}" method="post">
+                            @csrf
+                            <div class="form-group mb-0">
+                                <label for="store_id" class="fz-12px font-semibold text-dark">Asignar/Cambiar Tienda Vendedora:</label>
+                                <div class="input-group">
+                                    <select name="store_id" id="store_id" class="form-control form-control-sm" required>
+                                        <option value="" disabled selected>Seleccione una tienda...</option>
+                                        @foreach($groceryStores as $gStore)
+                                            <option value="{{ $gStore->id }}" {{ ($order->store_id == $gStore->id || (isset($order->seller_store) && $order->seller_store->id == $gStore->id)) ? 'selected' : '' }}>
+                                                {{ $gStore->name }} (ID: #{{ $gStore->id }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-sm btn-primary">Asignar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
                 <!-- Customer Info Card -->
                 <div class="card">
                     <div class="card-header border-0">
-                        <h4 class="card-header-title">Información del Vendedor</h4>
+                        <h4 class="card-header-title">Comprador (Representante)</h4>
                     </div>
                     <div class="card-body">
                         @if ($order->store && $order->store->vendor)
