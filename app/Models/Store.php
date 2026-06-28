@@ -916,8 +916,8 @@ class Store extends Model
      */
     public function scopeWithOpen($query, $longitude, $latitude): void
     {
-        $longitude = (float) $longitude;
-        $latitude = (float) $latitude;
+        $longitude = (float) str_replace('"', '', (string) $longitude);
+        $latitude = (float) str_replace('"', '', (string) $latitude);
         $query->selectRaw('*, IF(((select count(*) from `store_schedule` where `stores`.`id` = `store_schedule`.`store_id` and `store_schedule`.`day` = ' . now()->dayOfWeek . ' and `store_schedule`.`opening_time` < "' . now()->format('H:i:s') . '" and `store_schedule`.`closing_time` >"' . now()->format('H:i:s') . '") > 0), true, false) as open, 
         LEAST(
             ST_Distance_Sphere(point(longitude, latitude), point(' . $longitude . ', ' . $latitude . ')),
@@ -926,8 +926,8 @@ class Store extends Model
     }
     public function scopeWithOpenWithDeliveryTime($query, $longitude, $latitude): void
     {
-        $longitude = (float) $longitude;
-        $latitude = (float) $latitude;
+        $longitude = (float) str_replace('"', '', (string) $longitude);
+        $latitude = (float) str_replace('"', '', (string) $latitude);
         $query->selectRaw('*, IF(((select count(*) from `store_schedule` where `stores`.`id` = `store_schedule`.`store_id` and `store_schedule`.`day` = ' . now()->dayOfWeek . ' and `store_schedule`.`opening_time` < "' . now()->format('H:i:s') . '" and `store_schedule`.`closing_time` >"' . now()->format('H:i:s') . '") > 0), true, false) as open, 
         LEAST(
             ST_Distance_Sphere(point(longitude, latitude), point(' . $longitude . ', ' . $latitude . ')),
