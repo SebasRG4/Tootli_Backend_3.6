@@ -417,15 +417,22 @@ class SaboresCiudadController extends Controller
             ->whereIn('id', $latestWishlistQuery)->get()->keyBy('store_id');
 
         // 3. Reviews with Images (Eager Load in bulk)
-        $allRecentReviews = Review::with('customer:id,f_name')
-            ->whereIn('store_id', $storeIds)
+        $allRecentReviews = Review::with(['customer:id,f_name', 'item:id,store_id'])
+            ->where(function ($query) use ($storeIds) {
+                $query->whereIn('store_id', $storeIds)
+                    ->orWhereHas('item', function ($q) use ($storeIds) {
+                        $q->whereIn('store_id', $storeIds);
+                    });
+            })
             ->active()
             ->whereNotNull('attachment')
             ->where('attachment', '!=', '[]')
             ->latest()
             ->take(300)
             ->get()
-            ->groupBy('store_id');
+            ->groupBy(function ($review) {
+                return $review->store_id ?? ($review->item ? $review->item->store_id : null);
+            });
 
         // Calculate data for each store using pre-fetched collections
         $stores = $stores->map(function ($store) {
@@ -734,8 +741,13 @@ class SaboresCiudadController extends Controller
         // REVIEW IMAGES LOGIC (Copied from getStoresForMap)
         // ---------------------------------------------------------
         $review_images = [];
-        $recent_reviews = Review::with('customer:id,f_name')
-            ->where('store_id', $store->id)
+        $recent_reviews = Review::with(['customer:id,f_name', 'item'])
+            ->where(function ($query) use ($store) {
+                $query->where('store_id', $store->id)
+                    ->orWhereHas('item', function ($q) use ($store) {
+                        $q->where('store_id', $store->id);
+                    });
+            })
             ->active()
             ->whereNotNull('attachment')
             ->where('attachment', '!=', '[]')
@@ -1033,7 +1045,12 @@ class SaboresCiudadController extends Controller
         $offset = (int) ($request->query('offset') ?? 1);
 
         $reviews = Review::with(['customer', 'item'])
-            ->where('store_id', $store_id)
+            ->where(function ($query) use ($store_id) {
+                $query->where('store_id', $store_id)
+                    ->orWhereHas('item', function ($q) use ($store_id) {
+                        $q->where('store_id', $store_id);
+                    });
+            })
             ->active()
             ->latest()
             ->paginate($limit, ['*'], 'page', $offset);
