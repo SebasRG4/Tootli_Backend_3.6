@@ -7,10 +7,9 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
+	"tootli.mx/worker/config"
 	"tootli.mx/worker/jobs"
 )
-
-const queueKey = "6ammart1767732708app_envlive_database_tootli:go_jobs"
 
 // Worker listens to a Redis list queue and processes jobs concurrently
 type Worker struct {
@@ -31,6 +30,7 @@ func New(client *redis.Client, concurrency int) *Worker {
 
 // Start begins the blocking poll loop. It returns when ctx is cancelled.
 func (w *Worker) Start(ctx context.Context) {
+	queueKey := config.PrefixedKey("tootli:go_jobs")
 	log.Printf("[Worker] Starting — concurrency: %d, queue: %s\n", w.concurrency, queueKey)
 
 	for {

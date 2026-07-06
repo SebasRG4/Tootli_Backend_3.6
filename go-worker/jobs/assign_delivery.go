@@ -7,6 +7,7 @@ import (
 	"log"
 	"math"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -22,13 +23,6 @@ type AssignDeliveryPayload struct {
 	ZoneID  uint `json:"zone_id"`
 	Attempt int  `json:"attempt"` // Which wave in the cascade this is
 }
-
-// maxAssignRadiusKm is the maximum distance a driver can be from the store to be eligible.
-const maxAssignRadiusKm = 5.0
-
-// heartbeatTTL is the max age allowed for a driver heartbeat. Must match the TTL
-// set by Laravel's DeliveryHistory::recordLocationForDeliveryMan (currently 300 s / 5 min).
-const heartbeatTTL = 5 * time.Minute
 
 func init() {
 	Register("assign_delivery", handleAssignDelivery)
@@ -67,6 +61,32 @@ func handleAssignDelivery(ctx context.Context, raw json.RawMessage) error {
 	storeLat, _ := strconv.ParseFloat(store.Latitude, 64)
 	storeLng, _ := strconv.ParseFloat(store.Longitude, 64)
 
+	// Load dynamic parameter values from business_settings (Fase 3)
+	maxAssignRadiusKm := 5.0
+	var radiusSetting models.BusinessSetting
+	if config.DB.Where("`key` = ?", "dm_max_distance").First(&radiusSetting).Error == nil {
+		if val, err := strconv.ParseFloat(radiusSetting.Value, 64); err == nil && val > 0 {
+			maxAssignRadiusKm = val
+		}
+	}
+
+	waveWaitSeconds := 30
+	var waveWaitSetting models.BusinessSetting
+	if config.DB.Where("`key` = ?", "wave_wait_time").First(&waveWaitSetting).Error == nil {
+		if val, err := strconv.Atoi(waveWaitSetting.Value); err == nil && val > 0 {
+			waveWaitSeconds = val
+		}
+	}
+
+	heartbeatSeconds := 300
+	var heartbeatSetting models.BusinessSetting
+	if config.DB.Where("`key` = ?", "dm_heartbeat_ttl").First(&heartbeatSetting).Error == nil {
+		if val, err := strconv.Atoi(heartbeatSetting.Value); err == nil && val > 0 {
+			heartbeatSeconds = val
+		}
+	}
+	heartbeatTTL := time.Duration(heartbeatSeconds) * time.Second
+
 	// ── UBER/RAPPI STYLE: Redis GEOSEARCH ────────────────────────────────────
 	// Instead of fetching all drivers + running Haversine in a loop (O(n) SQL),
 	// we ask Redis for the IDs of drivers within the radius in O(log N).
@@ -86,7 +106,7 @@ func handleAssignDelivery(ctx context.Context, raw json.RawMessage) error {
 	}
 
 	// 3. Redis Blacklist (drivers who rejected/ignored this order)
-	blacklistKey := fmt.Sprintf("order:%d:rejected", order.ID)
+	blacklistKey := config.PrefixedKey(fmt.Sprintf("order:%d:rejected", order.ID))
 	rejectedIDs, _ := config.Redis.SMembers(ctx, blacklistKey).Result()
 	rejectedMap := make(map[uint]bool)
 	for _, idStr := range rejectedIDs {
@@ -115,7 +135,11 @@ func handleAssignDelivery(ctx context.Context, raw json.RawMessage) error {
 		highValueThreshold, _ = strconv.ParseFloat(hvSetting.Value, 64)
 	}
 
-	isHighValue := order.OrderAmount >= highValueThreshold
+	var strategySetting models.BusinessSetting
+	highValueStrategy := "assign_any"
+	if config.DB.Where("`key` = ?", "high_value_strategy").First(&strategySetting).Error == nil {
+		highValueStrategy = strategySetting.Value
+	}
 
 	var candidates []ScoredDM
 
@@ -128,7 +152,7 @@ func handleAssignDelivery(ctx context.Context, raw json.RawMessage) error {
 		// Even though GEOSEARCH gives us proximity, we double-check the
 		// heartbeat key. If a driver's app crashed without removing them from
 		// the geo index, the missing heartbeat key catches it.
-		heartbeatKey := fmt.Sprintf("dm:%d:heartbeat", dmID)
+		heartbeatKey := config.PrefixedKey(fmt.Sprintf("dm:%d:heartbeat", dmID))
 		ttlResult := config.Redis.TTL(ctx, heartbeatKey)
 		if ttlResult.Err() != nil || ttlResult.Val() <= 0 {
 			log.Printf("[assign_delivery] Skipping DM #%d: heartbeat expired (offline > %s)", dmID, heartbeatTTL)
@@ -147,11 +171,8 @@ func handleAssignDelivery(ctx context.Context, raw json.RawMessage) error {
 			continue
 		}
 
-		// Max concurrent orders
-		if dm.CurrentOrders >= 2 {
-			log.Printf("[assign_delivery] Skipping DM #%d: max concurrent orders (%d)", dm.ID, dm.CurrentOrders)
-			continue
-		}
+		// Resolve limits for candidate's tier
+		limit := getTierLimit(dm.DmTier)
 
 		// Workload estimate (minutes of pending travel) from active orders
 		var activeOrders []models.Order
@@ -172,20 +193,24 @@ func handleAssignDelivery(ctx context.Context, raw json.RawMessage) error {
 			continue
 		}
 
-		// Cash capacity check
+		// Cash capacity check (with Relaxation Zone & High Value Strategy)
 		var wallet models.DeliveryManWallet
 		config.DB.Where("delivery_man_id = ?", dm.ID).First(&wallet)
-		collectedCash := wallet.CollectedCash
+		collectedCash := float64(wallet.CollectedCash)
 
-		if order.PaymentMethod == "cash_on_delivery" {
-			if float64(collectedCash)+order.OrderAmount > cashLimit && !isHighValue {
-				continue
-			}
+		// Evaluate eligibility using the testable pure function
+		eligible, reason := EvaluateEligibility(dm, order, limit, cashLimit, highValueThreshold, highValueStrategy, collectedCash)
+		if !eligible {
+			log.Printf("[assign_delivery] Skipping DM #%d: %s", dm.ID, reason)
+			continue
+		}
+		if reason != "" {
+			log.Printf("[assign_delivery] DM #%d eligible: %s", dm.ID, reason)
 		}
 
 		// Score: lower is better
 		// score = distance(km) + workload_penalty + concurrent_orders_penalty + cash_penalty
-		score := distKm + (totalPendingTime * 0.5) + float64(dm.CurrentOrders)*1.5 + (float64(collectedCash) * 0.8)
+		score := distKm + (totalPendingTime * 0.5) + float64(dm.CurrentOrders)*1.5 + (collectedCash * 0.8)
 
 		log.Printf("[assign_delivery] DM #%d | dist=%.2f km | score=%.2f", dm.ID, distKm, score)
 
@@ -233,10 +258,10 @@ func handleAssignDelivery(ctx context.Context, raw json.RawMessage) error {
 		log.Printf("[assign_delivery] Warning: no FCM tokens for Order #%d\n", payload.OrderID)
 	}
 
-	// 8. Schedule next wave (30 s)
-	expireTime := time.Now().Add(30 * time.Second).Unix()
+	// 8. Schedule next wave
+	expireTime := time.Now().Add(time.Duration(waveWaitSeconds) * time.Second).Unix()
 	waveData, _ := json.Marshal(payload)
-	config.Redis.ZAdd(ctx, "wave_queue", redis.Z{
+	config.Redis.ZAdd(ctx, config.PrefixedKey("wave_queue"), redis.Z{
 		Score:  float64(expireTime),
 		Member: waveData,
 	})
@@ -261,7 +286,7 @@ func geoSearchNearbyDrivers(ctx context.Context, lng, lat, radiusKm float64) (ma
 		WithDist:  true,
 	}
 
-	results, err := config.Redis.GeoSearchLocation(ctx, "dm:geo:locations", q).Result()
+	results, err := config.Redis.GeoSearchLocation(ctx, config.PrefixedKey("dm:geo:locations"), q).Result()
 	if err != nil {
 		return nil, fmt.Errorf("GEOSEARCH failed: %w", err)
 	}
@@ -286,4 +311,115 @@ func haversineKm(lat1, lng1, lat2, lng2 float64) float64 {
 		math.Cos(lat1*math.Pi/180)*math.Cos(lat2*math.Pi/180)*
 			math.Sin(dLng/2)*math.Sin(dLng/2)
 	return R * 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a))
+}
+
+func normalizeTier(tier string) string {
+	t := strings.ToLower(strings.TrimSpace(tier))
+	switch t {
+	case "new", "standard", "pro", "restricted":
+		return t
+	default:
+		return "standard"
+	}
+}
+
+func floatPtr(f float64) *float64 {
+	return &f
+}
+
+func getTierLimit(tier string) models.DmTierLimit {
+	tier = normalizeTier(tier)
+	var limit models.DmTierLimit
+	if err := config.DB.Where("tier = ?", tier).First(&limit).Error; err == nil {
+		return limit
+	}
+	// Synthetic fallbacks matching Laravel DmTierLimit::syntheticFallback
+	var maxC int
+	var maxCash float64
+	var maxOrder *float64
+	switch tier {
+	case "new":
+		maxC = 1
+		maxCash = 4000.0
+		maxOrder = floatPtr(500.0)
+	case "standard":
+		maxC = 10
+		maxCash = 12000.0
+		maxOrder = nil
+	case "pro":
+		maxC = 10
+		maxCash = 20000.0
+		maxOrder = nil
+	case "restricted":
+		maxC = 1
+		maxCash = 3000.0
+		maxOrder = floatPtr(400.0)
+	default:
+		maxC = 10
+		maxCash = 12000.0
+		maxOrder = nil
+	}
+	return models.DmTierLimit{
+		Tier:                tier,
+		MaxConcurrentOrders: maxC,
+		MaxCashCod:          &maxCash,
+		MaxOrderValueCod:    maxOrder,
+	}
+}
+
+// EvaluateEligibility checks unified eligibility rules for a driver (Laravel's DeliveryEligibilityService match)
+func EvaluateEligibility(dm models.DeliveryMan, order models.Order, limit models.DmTierLimit, cashLimit float64, highValueThreshold float64, highValueStrategy string, collectedCash float64) (bool, string) {
+	// 1. Account status validation (Status == 1 is active, 0 is suspended)
+	if dm.Status != 1 {
+		return false, "account suspended (status=0)"
+	}
+
+	// 2. Application status validation (must be 'approved')
+	if dm.ApplicationStatus != "approved" {
+		return false, fmt.Sprintf("account application not approved (%s)", dm.ApplicationStatus)
+	}
+
+	// Must be active (online check)
+	if dm.Active != 1 {
+		return false, "offline (active=0)"
+	}
+
+	// 3. Max concurrent orders check according to tier limits
+	if dm.CurrentOrders >= limit.MaxConcurrentOrders {
+		return false, fmt.Sprintf("max concurrent orders (%d) reached for tier %s", dm.CurrentOrders, limit.Tier)
+	}
+
+	// 4. Max COD single order value limit per tier
+	if order.PaymentMethod == "cash_on_delivery" && limit.MaxOrderValueCod != nil {
+		if order.OrderAmount > *limit.MaxOrderValueCod {
+			return false, fmt.Sprintf("order amount (%.2f) exceeds max COD order value (%.2f) for tier %s", order.OrderAmount, *limit.MaxOrderValueCod, limit.Tier)
+		}
+	}
+
+	// Cash capacity check (with Relaxation Zone & High Value Strategy)
+	if order.PaymentMethod == "cash_on_delivery" {
+		var maxCash float64 = 0
+		if limit.MaxCashCod != nil {
+			maxCash = *limit.MaxCashCod
+		}
+		effectiveMaxCash := maxCash
+		if cashLimit > 0 && maxCash > 0 {
+			effectiveMaxCash = math.Min(cashLimit, maxCash)
+		} else if maxCash == 0 {
+			effectiveMaxCash = cashLimit
+		}
+
+		if collectedCash >= effectiveMaxCash {
+			// Relaxation Zone: allow if below highValueThreshold
+			if order.OrderAmount < highValueThreshold {
+				return true, fmt.Sprintf("over cash limit (%.2f >= %.2f), but allowed due to Relaxation Zone (order amount %.2f < %.2f)", collectedCash, effectiveMaxCash, order.OrderAmount, highValueThreshold)
+			} else if highValueStrategy == "assign_any" || highValueStrategy == "relaxed_cash" {
+				return true, fmt.Sprintf("over cash limit (%.2f >= %.2f), but allowed due to high value strategy '%s'", collectedCash, effectiveMaxCash, highValueStrategy)
+			} else {
+				return false, fmt.Sprintf("cash limit exceeded (%.2f >= %.2f) and high value order", collectedCash, effectiveMaxCash)
+			}
+		}
+	}
+
+	return true, ""
 }

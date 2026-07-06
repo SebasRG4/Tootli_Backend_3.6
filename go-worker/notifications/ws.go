@@ -5,20 +5,25 @@ import (
 	"log"
 
 	pusher "github.com/pusher/pusher-http-go/v5"
+	"tootli.mx/worker/config"
 )
 
 var PusherClient *pusher.Client
 
 // InitPusher initializes the Pusher client connecting to Soketi
 func InitPusher() {
-	PusherClient = &pusher.Client{
-		AppID:   "tootli",
-		Key:     "tootli-key",
-		Secret:  "tootli-secret",
-		Cluster: "mt1",
-		Host:    "soketi:6001",
+	if config.GlobalConfig == nil {
+		log.Println("[Pusher] Warning: GlobalConfig is nil. Skipping initialization.")
+		return
 	}
-	log.Println("[Pusher] Successfully initialized WebSocket client (Soketi)")
+	PusherClient = &pusher.Client{
+		AppID:   config.GlobalConfig.PusherAppID,
+		Key:     config.GlobalConfig.PusherKey,
+		Secret:  config.GlobalConfig.PusherSecret,
+		Cluster: config.GlobalConfig.PusherCluster,
+		Host:    config.GlobalConfig.PusherHost,
+	}
+	log.Printf("[Pusher] Successfully initialized WebSocket client (Host: %s)\n", config.GlobalConfig.PusherHost)
 }
 
 // SendPusherDeliveryOffer sends a real-time WebSocket event to a specific delivery man

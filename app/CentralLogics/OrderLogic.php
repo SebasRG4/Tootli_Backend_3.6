@@ -854,19 +854,27 @@ class OrderLogic
         if (in_array($order->payment_method, ['cash_on_delivery', 'card_on_delivery'], true)) {
             return false;
         }
+
+        $is_buy_and_deliver = ($order->order_type == 'parcel' && $order->parcel_category?->buy_and_deliver == 1);
+        $refund_amount = $order->order_amount;
+        if ($is_buy_and_deliver) {
+            $refund_amount = (float)($order->parcel_item_estimated_price ?? 0);
+            $refund_amount = min($refund_amount, $order->order_amount);
+        }
+
         if (($order->payment_status == "paid")) {
 
-            $adminWallet->digital_received = $adminWallet->digital_received - $order->order_amount;
+            $adminWallet->digital_received = $adminWallet->digital_received - $refund_amount;
             $adminWallet->save();
             if (BusinessSetting::where('key', 'wallet_add_refund')->first()->value == 1 && $order->is_guest == 0) {
-                CustomerLogic::create_wallet_transaction($order->user_id, $order->order_amount, 'order_refund', $order->id);
+                CustomerLogic::create_wallet_transaction($order->user_id, $refund_amount, 'order_refund', $order->id);
             }
         } elseif (($order->payment_status == "partially_paid")) {
-
-            $adminWallet->digital_received = $adminWallet->digital_received - $order->partially_paid_amount;
+            $actual_refund = min($order->partially_paid_amount, $refund_amount);
+            $adminWallet->digital_received = $adminWallet->digital_received - $actual_refund;
             $adminWallet->save();
             if (BusinessSetting::where('key', 'wallet_add_refund')->first()->value == 1 && $order->is_guest == 0) {
-                CustomerLogic::create_wallet_transaction($order->user_id, $order->partially_paid_amount, 'order_refund', $order->id);
+                CustomerLogic::create_wallet_transaction($order->user_id, $actual_refund, 'order_refund', $order->id);
             }
         }
         return true;
@@ -1151,6 +1159,14 @@ class OrderLogic
             if ($dm) {
                 $dm->current_orders = $dm->current_orders > 1 ? $dm->current_orders - 1 : 0;
                 $dm->save();
+
+                // Pay driver for Buy and Deliver cancellation if canceled before pickup
+                if ($order->parcel_category?->buy_and_deliver == 1 && $dm->earning == 1 && !in_array($orderOldStatus, ['picked_up'])) {
+                    $dmWallet = DeliveryManWallet::firstOrNew(['delivery_man_id' => $dm->id]);
+                    $net_earning = self::dm_net_earning($order);
+                    $dmWallet->total_earning = $dmWallet->total_earning + $net_earning + $order->dm_tips;
+                    $dmWallet->save();
+                }
             }
         }
 
@@ -1182,6 +1198,7 @@ class OrderLogic
                 $parcelCancellation->return_date = now()->addDays((int) $parcel_return_time_fee['parcel_return_time'] ?? 1);
             }
         } else {
+            $is_buy_and_deliver = ($order->order_type == 'parcel' && $order->parcel_category?->buy_and_deliver == 1);
             if ($order->payment_status == 'paid' && $order->is_guest == 0) {
                 if (Helpers::get_business_settings('wallet_status') == 1 && Helpers::get_business_settings('wallet_add_refund') == 1) {
                     $refunded = self::refund_before_delivered($order);
@@ -1189,14 +1206,14 @@ class OrderLogic
                         self::parcelRefundNotification($order, true);
                     }
                 } else {
-                    $parcelCancellation->is_delivery_charge_refundable = 1;
+                    $parcelCancellation->is_delivery_charge_refundable = $is_buy_and_deliver ? 0 : 1;
                     $code = 'wallet_failed';
                     $msg = translate('messages.Parcel_canceled_successfully_contact_admin_for_refund');
                 }
             } elseif ($order->payment_status == 'paid' && $order->is_guest == 1) {
                 $code = 'wallet_failed';
                 $msg = translate('messages.Parcel_canceled_successfully_contact_admin_for_refund');
-                $parcelCancellation->is_delivery_charge_refundable = 1;
+                $parcelCancellation->is_delivery_charge_refundable = $is_buy_and_deliver ? 0 : 1;
             }
         }
 

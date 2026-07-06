@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Redis;
 
 $orderId = 1; // Un ID de orden valido
 $payload = [
-    'job' => 'assign_delivery',
+    'type' => 'assign_delivery',
     'data' => [
         'order_id' => $orderId,
         'zone_id'  => 2,

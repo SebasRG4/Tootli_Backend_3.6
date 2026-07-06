@@ -14,6 +14,7 @@ type Config struct {
 	RedisAddr         string
 	RedisPassword     string
 	RedisDB           int
+	RedisPrefix       string
 	WorkerConcurrency int
 
 	// Database
@@ -30,6 +31,13 @@ type Config struct {
 	UltraMsgInstance string
 	UltraMsgToken    string
 	AdminWhatsApp    string
+
+	// Pusher / Soketi WebSockets
+	PusherAppID   string
+	PusherKey     string
+	PusherSecret  string
+	PusherCluster string
+	PusherHost    string
 }
 
 // Global instances
@@ -44,6 +52,7 @@ func Load() *Config {
 		RedisAddr:         getEnv("REDIS_HOST", "127.0.0.1") + ":" + getEnv("REDIS_PORT", "6379"),
 		RedisPassword:     getEnv("REDIS_PASSWORD", ""),
 		RedisDB:           0,
+		RedisPrefix:       getEnv("REDIS_PREFIX", ""),
 		WorkerConcurrency: 5,
 
 		DBHost:     getEnv("DB_HOST", "127.0.0.1"),
@@ -58,6 +67,12 @@ func Load() *Config {
 		UltraMsgInstance: getEnv("ULTRAMSG_INSTANCE", "instance173998"),
 		UltraMsgToken:    getEnv("ULTRAMSG_TOKEN", "31h6fqjt2xlkblkb"),
 		AdminWhatsApp:    getEnv("ADMIN_WHATSAPP_NUMBER", "+527297706434"),
+
+		PusherAppID:   getEnv("PUSHER_APP_ID", "tootli"),
+		PusherKey:     getEnv("PUSHER_APP_KEY", "tootli-key"),
+		PusherSecret:  getEnv("PUSHER_APP_SECRET", "tootli-secret"),
+		PusherCluster: getEnv("PUSHER_APP_CLUSTER", "mt1"),
+		PusherHost:    getEnv("PUSHER_HOST", "soketi") + ":" + getEnv("PUSHER_PORT", "6001"),
 	}
 	GlobalConfig = cfg
 	InternalSecret = cfg.InternalSecret
@@ -84,4 +99,12 @@ func getEnv(key, fallback string) string {
 		return val
 	}
 	return fallback
+}
+
+// PrefixedKey prepends the configured RedisPrefix to the given key
+func PrefixedKey(key string) string {
+	if GlobalConfig != nil {
+		return GlobalConfig.RedisPrefix + key
+	}
+	return key
 }

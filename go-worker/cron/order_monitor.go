@@ -91,7 +91,7 @@ func processExpiredOrders(ctx context.Context) {
 
 	for _, order := range aboutToExpireOrders {
 		// Evitar spam de alertas de aviso de cancelación (una sola vez por pedido)
-		lockKey := fmt.Sprintf("order_cancel_warning_sent:%d", order.ID)
+		lockKey := config.PrefixedKey(fmt.Sprintf("order_cancel_warning_sent:%d", order.ID))
 		val, _ := config.Redis.Get(ctx, lockKey).Result()
 		if val != "" {
 			continue

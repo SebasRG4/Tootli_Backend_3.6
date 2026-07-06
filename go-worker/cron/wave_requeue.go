@@ -41,7 +41,7 @@ func processExpiredWaves(ctx context.Context) {
 	now := time.Now().Unix()
 
 	// Get all members with score (timestamp) <= now
-	members, err := config.Redis.ZRangeByScore(ctx, "wave_queue", &redis.ZRangeBy{
+	members, err := config.Redis.ZRangeByScore(ctx, config.PrefixedKey("wave_queue"), &redis.ZRangeBy{
 		Min: "-inf",
 		Max: fmt.Sprintf("%d", now),
 	}).Result()
@@ -53,19 +53,19 @@ func processExpiredWaves(ctx context.Context) {
 	for _, m := range members {
 		var payload jobs.AssignDeliveryPayload
 		if err := json.Unmarshal([]byte(m), &payload); err != nil {
-			config.Redis.ZRem(ctx, "wave_queue", m)
+			config.Redis.ZRem(ctx, config.PrefixedKey("wave_queue"), m)
 			continue
 		}
 
 		// Verify if order is still unassigned
 		var order models.Order
 		if err := config.DB.First(&order, payload.OrderID).Error; err != nil {
-			config.Redis.ZRem(ctx, "wave_queue", m)
+			config.Redis.ZRem(ctx, config.PrefixedKey("wave_queue"), m)
 			continue
 		}
 
 		if order.DeliveryManID != nil || order.OrderStatus == "canceled" || order.OrderStatus == "delivered" {
-			config.Redis.ZRem(ctx, "wave_queue", m)
+			config.Redis.ZRem(ctx, config.PrefixedKey("wave_queue"), m)
 			continue
 		}
 
@@ -83,9 +83,9 @@ func processExpiredWaves(ctx context.Context) {
 		rawJob, _ := json.Marshal(jobPayload)
 
 		// Remove old from ZSET
-		config.Redis.ZRem(ctx, "wave_queue", m)
+		config.Redis.ZRem(ctx, config.PrefixedKey("wave_queue"), m)
 
 		// RPush to the main worker queue to reuse concurrency context
-		config.Redis.RPush(ctx, "6ammart1767732708app_envlive_database_tootli:go_jobs", rawJob)
+		config.Redis.RPush(ctx, config.PrefixedKey("tootli:go_jobs"), rawJob)
 	}
 }

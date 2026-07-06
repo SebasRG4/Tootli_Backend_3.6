@@ -118,7 +118,7 @@ func sendInactivityAlert(ctx context.Context, order models.Order) {
 	}
 
 	// Evitar spam de alertas (una cada 4 minutos máximo por pedido)
-	lockKey := fmt.Sprintf("alert_sent:%d", order.ID)
+	lockKey := config.PrefixedKey(fmt.Sprintf("alert_sent:%d", order.ID))
 	val, _ := config.Redis.Get(ctx, lockKey).Result()
 	if val != "" {
 		return
@@ -168,7 +168,7 @@ func unassignOrder(ctx context.Context, order models.Order) {
 	dmID := *order.DeliveryManID
 
 	// 1. Blacklist temporal para que el worker no se lo vuelva a asignar de inmediato
-	rejectedKey := fmt.Sprintf("order:%d:rejected", order.ID)
+	rejectedKey := config.PrefixedKey(fmt.Sprintf("order:%d:rejected", order.ID))
 	config.Redis.SAdd(ctx, rejectedKey, dmID)
 	config.Redis.Expire(ctx, rejectedKey, 10*time.Minute)
 
@@ -198,7 +198,7 @@ func unassignOrder(ctx context.Context, order models.Order) {
 	payloadJSON, _ := json.Marshal(payload)
 	score := float64(time.Now().Add(5 * time.Second).Unix())
 
-	config.Redis.ZAdd(ctx, "wave_queue", redis.Z{
+	config.Redis.ZAdd(ctx, config.PrefixedKey("wave_queue"), redis.Z{
 		Score:  score,
 		Member: payloadJSON,
 	})

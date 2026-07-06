@@ -15,6 +15,9 @@ type DeliveryMan struct {
 	Type               string    `gorm:"column:type"` // e.g. "zone_wise", "restaurant_wise"
 	StoreID            *uint     `gorm:"column:store_id"`
 	Active             int       `gorm:"column:active"` // 1 = active, 0 = inactive
+	Status             int       `gorm:"column:status"` // 1 = active, 0 = suspended
+	ApplicationStatus  string    `gorm:"column:application_status"` // 'approved', 'denied', 'pending'
+	DmTier             string    `gorm:"column:dm_tier"` // 'new', 'standard', 'pro', 'restricted'
 	Earning            int       `gorm:"column:earning"`
 	CurrentOrders      int       `gorm:"column:current_orders"`
 	AssignedOrderCount int       `gorm:"column:assigned_order_count"`
