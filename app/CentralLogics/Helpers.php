@@ -696,8 +696,66 @@ class Helpers
         $storage = [];
         if ($multi_data == true) {
             if ($data instanceof \Illuminate\Support\Collection || is_array($data)) {
-                \Illuminate\Database\Eloquent\Collection::make($data)->loadMissing(['store.schedules', 'store.storeConfig']);
+                $collection = \Illuminate\Database\Eloquent\Collection::make($data);
+                $collection->loadMissing([
+                    'store.schedules',
+                    'store.storeConfig',
+                    'store.locations',
+                    'store.discount',
+                    'store.campaigns',
+                    'store.zone',
+                    'module',
+                    'nutritions',
+                    'allergies',
+                    'generic',
+                    'taxVats',
+                    'ecommerce_item_details.brand',
+                    'pharmacy_item_details.common_condition'
+                ]);
+            } else {
+                $collection = collect();
             }
+
+            // 1. Batch Category Lookup
+            $categoryIds = [];
+            foreach ($data as $item) {
+                $decoded = json_decode($item['category_ids'] ?? '[]') ?? [];
+                foreach ($decoded as $value) {
+                    if (isset($value->id)) {
+                        $categoryIds[] = $value->id;
+                    }
+                }
+            }
+            $categoryIds = array_unique($categoryIds);
+            $categoriesMapped = count($categoryIds) > 0 ? Category::whereIn('id', $categoryIds)->pluck('name', 'id')->toArray() : [];
+
+            // 2. Batch AddOn Lookup
+            $addonIds = [];
+            foreach ($data as $item) {
+                $decoded = json_decode($item['add_ons'] ?? '[]', true) ?? [];
+                $addonIds = array_merge($addonIds, $decoded);
+            }
+            $addonIds = array_unique($addonIds);
+            $addonsFetched = count($addonIds) > 0 ? AddOn::whereIn('id', $addonIds)->active()->get() : collect();
+
+            // 3. Batch FlashSale Lookup
+            $itemIds = [];
+            foreach ($data as $item) {
+                $itemIds[] = $item['id'];
+            }
+            $runningFlashSales = count($itemIds) > 0 ? FlashSaleItem::Active()->whereHas('flashSale', function ($query) {
+                $query->Active()->Running();
+            })->whereIn('item_id', $itemIds)->get()->keyBy('item_id') : collect();
+
+            // 4. Batch Tax Lookup
+            $taxIds = [];
+            foreach ($data as $item) {
+                $itemTaxIds = $item?->taxVats ? $item->taxVats->pluck('tax_id')->toArray() : [];
+                $taxIds = array_merge($taxIds, $itemTaxIds);
+            }
+            $taxIds = array_unique($taxIds);
+            $taxesFetched = count($taxIds) > 0 ? \Modules\TaxModule\Entities\Tax::whereIn('id', $taxIds)->get(['id', 'name', 'tax_rate'])->keyBy('id') : collect();
+
             foreach ($data as $item) {
                 $variations = [];
                 if ($item->title) {
@@ -723,14 +781,26 @@ class Helpers
                 }
                 $item['recommended'] = (int) $item->recommended;
                 $categories = [];
-                foreach (json_decode($item['category_ids']) as $value) {
-                    $category_name = Category::where('id', $value->id)->pluck('name');
-                    $categories[] = ['id' => (string) $value->id, 'position' => $value->position, 'name' => data_get($category_name, '0', 'NA')];
+                $decodedCategories = json_decode($item['category_ids'] ?? '[]') ?? [];
+                foreach ($decodedCategories as $value) {
+                    if (isset($value->id)) {
+                        $categories[] = [
+                            'id' => (string) $value->id,
+                            'position' => $value->position,
+                            'name' => $categoriesMapped[$value->id] ?? 'NA'
+                        ];
+                    }
                 }
                 $item['category_ids'] = $categories;
                 $item['attributes'] = json_decode($item['attributes']);
                 $item['choice_options'] = json_decode($item['choice_options']);
-                $item['add_ons'] = self::addon_data_formatting(AddOn::whereIn('id', json_decode($item['add_ons'], true))->active()->get(), true, $trans, $local);
+
+                $itemAddonIds = json_decode($item['add_ons'] ?? '[]', true) ?? [];
+                $itemAddons = $addonsFetched->filter(function ($addon) use ($itemAddonIds) {
+                    return in_array($addon->id, $itemAddonIds);
+                });
+                $item['add_ons'] = self::addon_data_formatting($itemAddons, true, $trans, $local);
+
                 foreach (json_decode($item['variations'], true) ?? [] as $var) {
                     array_push($variations, [
                         'type' => $var['type'],
@@ -747,10 +817,8 @@ class Helpers
                 $item['store_status'] = (int) $item->store?->status;
                 $item['is_campaign'] = $item->store?->campaigns_count > 0 ? 1 : 0;
                 $item['zone_id'] = $item->store?->zone_id;
-                $running_flash_sale = FlashSaleItem::Active()->whereHas('flashSale', function ($query) {
-                    $query->Active()->Running();
-                })
-                    ->where(['item_id' => $item['id']])->first();
+
+                $running_flash_sale = $runningFlashSales->get($item['id']);
                 $item['flash_sale'] = (int) ((($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? 1 : 0));
                 $item['stock'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->available_stock : $item['stock'];
                 $discount_data = self::product_discount_calculate($item, $item['price'], $item->store, true);
@@ -783,16 +851,19 @@ class Helpers
 
                 $item->store['self_delivery_system'] = (int) $item->store->sub_self_delivery;
 
-                $item['nutritions_name'] = $item?->nutritions ? Nutrition::whereIn('id', $item?->nutritions->pluck('id'))->pluck('nutrition') : null;
-                $item['allergies_name'] = $item?->allergies ? Allergy::whereIn('id', $item?->allergies->pluck('id'))->pluck('allergy') : null;
-                $item['generic_name'] = $item?->generic ? GenericName::whereIn('id', $item?->generic->pluck('id'))->pluck('generic_name') : null;
+                $item['nutritions_name'] = $item?->nutritions ? $item->nutritions->pluck('nutrition') : null;
+                $item['allergies_name'] = $item?->allergies ? $item->allergies->pluck('allergy') : null;
+                $item['generic_name'] = $item?->generic ? $item->generic->pluck('generic_name') : null;
 
-
-                $item['tax_data'] = $item?->taxVats ? $item?->taxVats()->pluck('tax_id')->toArray() : [];
-
-                $item['tax_data'] = \Modules\TaxModule\Entities\Tax::whereIn('id', $item['tax_data'])->get(['id', 'name', 'tax_rate']);
+                $item['tax_data'] = $item?->taxVats ? $item->taxVats->pluck('tax_id')->toArray() : [];
+                $itemTaxes = [];
+                foreach ($item['tax_data'] as $taxId) {
+                    if ($taxesFetched->has($taxId)) {
+                        $itemTaxes[] = $taxesFetched->get($taxId);
+                    }
+                }
+                $item['tax_data'] = $itemTaxes;
                 unset($item['taxVats']);
-
 
                 unset($item['nutritions']);
                 unset($item['allergies']);
