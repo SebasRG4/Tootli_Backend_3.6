@@ -580,114 +580,45 @@ class ItemController extends Controller
             $item = Helpers::product_data_formatting($item, false, true, app()->getLocale());
             $item['store_details'] = $store;
 
-            $gemini_key = env('GEMINI_API_KEY');
             $ai_tags = null;
-            if ($gemini_key) {
-                $cacheKey = 'item_ai_tags_' . $item['id'];
-                $ai_tags = \Illuminate\Support\Facades\Cache::get($cacheKey);
-                if ($ai_tags === null) {
-                    try {
-                        $productName = trim($item['name'] ?? '');
-                        $productDesc = trim(strip_tags($item['description'] ?? ''));
-                        $prompt = "Actúa como un etiquetador analítico de productos de supermercado.
-Tu tarea es generar exactamente 3 etiquetas/tags cortas en español (máximo 2 a 3 palabras cada una) que describan las características específicas del siguiente producto, basándote ÚNICAMENTE en su nombre y descripción provistos.
+            $nameLower = strtolower($item['name'] ?? '');
+            $descLower = strtolower($item['description'] ?? '');
+            $combined = $nameLower . ' ' . $descLower;
 
-Nombre del producto: '{$productName}'
-Descripción del producto: '{$productDesc}'
-
-Reglas críticas:
-1. Cero etiquetas genéricas: NO uses términos comodín genéricos como 'Calidad superior', '100% natural', '1-2 personas', 'Familiar', 'Calidad Selección', '100% fresco' o 'Producto Premium' a menos que el nombre o descripción lo digan de forma literal y explícita.
-2. Extracción específica: Extrae información real y particular de los textos, como: ingredientes clave, tipo específico de corte o preparación, origen geográfico si se menciona, presentación/peso/volumen (ej. '500g', 'Lata', 'Botella'), sabor característico (ej. 'Picante', 'Dulce', 'Ahumado'), o beneficios específicos reales (ej. 'Sin gluten', 'Sin azúcar', 'Deshuesado').
-3. Formato: Cada etiqueta debe iniciar obligatoriamente con un emoji relevante, seguido de un espacio y el texto de la etiqueta.
-4. Salida: Responde ÚNICAMENTE con un arreglo JSON de strings conteniendo exactamente las 3 etiquetas con su respectivo emoji al inicio, sin bloques de código ni texto adicional.
-
-Ejemplos de extracción específica:
-- Para 'Pechuga de Pollo deshuesada Orgánica 500g' con descripción 'Pechuga fresca sin hueso': [\"🍗 Pechuga deshuesada\", \"🌱 Pollo Orgánico\", \"📦 Empaque de 500g\"]
-- Para 'Atún Dolores en Agua 140g' con descripción 'Atún aleta amarilla en agua bajo en grasa': [\"🐟 Atún en agua\", \"💪 Bajo en grasa\", \"🥗 Listo para comer\"]
-- Para 'Salsa Huichol Picante 190ml' con descripción 'Salsa picante tradicional de Nayarit': [\"🌶️ Salsa picante\", \"🇲🇽 Sabor Nayarit\", \"🔥 Nivel medio-alto\"]";
-
-                        $response = \Illuminate\Support\Facades\Http::timeout(30)->post(
-                            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $gemini_key,
-                            [
-                                'contents' => [
-                                    [
-                                        'parts' => [
-                                            ['text' => $prompt]
-                                        ]
-                                    ]
-                                ],
-                                'generationConfig' => [
-                                    'responseMimeType' => 'application/json',
-                                    'responseSchema' => [
-                                        'type' => 'ARRAY',
-                                        'items' => [
-                                            'type' => 'STRING'
-                                        ]
-                                    ],
-                                    'temperature' => 0.2
-                                ]
-                            ]
-                        );
-
-                        if ($response->successful()) {
-                            $resData = $response->json();
-                            if (isset($resData['candidates'][0]['content']['parts'][0]['text'])) {
-                                $responseText = trim($resData['candidates'][0]['content']['parts'][0]['text']);
-                                $parsedTags = json_decode($responseText, true);
-                                if (is_array($parsedTags) && count($parsedTags) >= 3) {
-                                    $ai_tags = array_slice($parsedTags, 0, 3);
-                                    \Illuminate\Support\Facades\Cache::forever($cacheKey, $ai_tags);
-                                }
-                            }
-                        } else {
-                            \Illuminate\Support\Facades\Log::error("Gemini Product Tags API Failure: Status " . $response->status() . " - Body: " . $response->body());
-                        }
-                    } catch (\Exception $e) {
-                        \Illuminate\Support\Facades\Log::error("Gemini Product Tags Error: " . $e->getMessage());
+            // Safe word-boundary check handling Spanish characters and optional plural 's'
+            $hasWord = function ($words, $text) {
+                if (!is_array($words)) {
+                    $words = [$words];
+                }
+                foreach ($words as $word) {
+                    $pattern = '/(?<!\p{L})' . preg_quote($word, '/') . '(s)?(?!\p{L})/iu';
+                    if (preg_match($pattern, $text)) {
+                        return true;
                     }
                 }
-            }
+                return false;
+            };
 
-            if (!$ai_tags) {
-                $nameLower = strtolower($item['name'] ?? '');
-                $descLower = strtolower($item['description'] ?? '');
-                $combined = $nameLower . ' ' . $descLower;
-
-                // Safe word-boundary check handling Spanish characters and optional plural 's'
-                $hasWord = function ($words, $text) {
-                    if (!is_array($words)) {
-                        $words = [$words];
-                    }
-                    foreach ($words as $word) {
-                        $pattern = '/(?<!\p{L})' . preg_quote($word, '/') . '(s)?(?!\p{L})/iu';
-                        if (preg_match($pattern, $text)) {
-                            return true;
-                        }
-                    }
-                    return false;
-                };
-
-                if ($hasWord(['carne', 'corte', 'res', 'asador', 'bife', 'arrachera', 'ribeye', 't-bone', 'picaña', 'sirloin', 'costilla', 'vacuno', 'bovino'], $combined)) {
-                    $ai_tags = ['🥩 Corte premium', '🔥 Ideal para asar', '👥 1-2 personas'];
-                } elseif ($hasWord(['pollo', 'pechuga', 'alitas', 'muslo', 'milanesa'], $combined)) {
-                    $ai_tags = ['🍗 Pollo fresco', '🍳 Alto en proteína', '👥 2-3 personas'];
-                } elseif ($hasWord(['cerdo', 'puerco', 'chuleta', 'tocino', 'longaniza'], $combined)) {
-                    $ai_tags = ['🐷 Cerdo de calidad', '🔥 Ideal para guisar', '👥 2-3 personas'];
-                } elseif ($hasWord(['atun', 'atún', 'salmon', 'salmón', 'filete', 'camaron', 'camarón', 'pescado', 'marisco'], $combined)) {
-                    $ai_tags = ['🐟 Pescado fresco', '🌊 Rico en Omega-3', '👥 1-2 personas'];
-                } elseif ($hasWord(['leche', 'queso', 'crema', 'yogur', 'mantequilla', 'lacteo', 'lácteo'], $combined)) {
-                    $ai_tags = ['🥛 Lácteo fresco', '🧀 Rico en calcio', '👪 Familiar'];
-                } elseif ($hasWord(['refresco', 'coca', 'jugo', 'cerveza', 'agua', 'bebida', 'soda'], $combined)) {
-                    $ai_tags = ['🥤 Bebida fría', '⚡ Refrescante', '🎉 Ideal para compartir'];
-                } elseif ($hasWord(['pan', 'tortilla', 'bolillo', 'telera', 'baguette'], $combined)) {
-                    $ai_tags = ['🍞 Horneado fresco', '🌾 Trigo natural', '🥖 Suave y crujiente'];
-                } elseif ($hasWord(['aguacate', 'limon', 'limón', 'manzana', 'platano', 'plátano', 'jitomate', 'cebolla', 'papa', 'verdura', 'fruta'], $combined)) {
-                    $ai_tags = ['🥑 100% fresco', '🥗 Rico en vitaminas', '🌱 Orgánico'];
-                } elseif ($hasWord(['arroz', 'frijol', 'aceite', 'pasta', 'harina', 'lata', 'salsa'], $combined)) {
-                    $ai_tags = ['🥫 Básico de alacena', '🍲 Alto rendimiento', '📦 Calidad garantizada'];
-                } else {
-                    $ai_tags = ['✨ Calidad Selección', '🍃 100% Frescura', '📦 Producto Premium'];
-                }
+            if ($hasWord(['carne', 'corte', 'res', 'asador', 'bife', 'arrachera', 'ribeye', 't-bone', 'picaña', 'sirloin', 'costilla', 'vacuno', 'bovino'], $combined)) {
+                $ai_tags = ['🥩 Corte premium', '🔥 Ideal para asar', '👥 1-2 personas'];
+            } elseif ($hasWord(['pollo', 'pechuga', 'alitas', 'muslo', 'milanesa'], $combined)) {
+                $ai_tags = ['🍗 Pollo fresco', '🍳 Alto en proteína', '👥 2-3 personas'];
+            } elseif ($hasWord(['cerdo', 'puerco', 'chuleta', 'tocino', 'longaniza'], $combined)) {
+                $ai_tags = ['🐷 Cerdo de calidad', '🔥 Ideal para guisar', '👥 2-3 personas'];
+            } elseif ($hasWord(['atun', 'atún', 'salmon', 'salmón', 'filete', 'camaron', 'camarón', 'pescado', 'marisco'], $combined)) {
+                $ai_tags = ['🐟 Pescado fresco', '🌊 Rico en Omega-3', '👥 1-2 personas'];
+            } elseif ($hasWord(['leche', 'queso', 'crema', 'yogur', 'mantequilla', 'lacteo', 'lácteo'], $combined)) {
+                $ai_tags = ['🥛 Lácteo fresco', '🧀 Rico en calcio', '👪 Familiar'];
+            } elseif ($hasWord(['refresco', 'coca', 'jugo', 'cerveza', 'agua', 'bebida', 'soda'], $combined)) {
+                $ai_tags = ['🥤 Bebida fría', '⚡ Refrescante', '🎉 Ideal para compartir'];
+            } elseif ($hasWord(['pan', 'tortilla', 'bolillo', 'telera', 'baguette'], $combined)) {
+                $ai_tags = ['🍞 Horneado fresco', '🌾 Trigo natural', '🥖 Suave y crujiente'];
+            } elseif ($hasWord(['aguacate', 'limon', 'limón', 'manzana', 'platano', 'plátano', 'jitomate', 'cebolla', 'papa', 'verdura', 'fruta'], $combined)) {
+                $ai_tags = ['🥑 100% fresco', '🥗 Rico en vitaminas', '🌱 Orgánico'];
+            } elseif ($hasWord(['arroz', 'frijol', 'aceite', 'pasta', 'harina', 'lata', 'salsa'], $combined)) {
+                $ai_tags = ['🥫 Básico de alacena', '🍲 Alto rendimiento', '📦 Calidad garantizada'];
+            } else {
+                $ai_tags = ['✨ Calidad Selección', '🍃 100% Frescura', '📦 Producto Premium'];
             }
 
             $item['ai_tags'] = $ai_tags;
