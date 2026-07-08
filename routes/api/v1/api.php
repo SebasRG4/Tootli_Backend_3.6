@@ -720,5 +720,25 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         Route::post('{id}/set-default', 'SavedCardController@setDefault');
         Route::post('{id}/create-token', 'SavedCardController@createToken');
     });
+
+    // Service Jobs & Bids Marketplace Routes
+    Route::group(['prefix' => 'service-jobs', 'middleware' => 'auth:api'], function () {
+        Route::post('create', 'ServiceJobController@store');
+        Route::get('open', 'ServiceJobController@index');
+        Route::get('my-jobs', 'ServiceJobController@myJobs');
+        Route::post('{job_id}/bid', 'ServiceJobController@storeBid');
+        Route::get('{job_id}/bids', 'ServiceJobController@getBids');
+        Route::post('bids/{bid_id}/accept', 'ServiceJobController@acceptBid');
+        Route::post('{job_id}/complete', 'ServiceJobController@completeJob');
+    });
+
+    // Custom Escrow Protected Transactions Routes (PayPal-style Buy/Sell)
+    Route::group(['prefix' => 'protected-transactions', 'middleware' => 'auth:api'], function () {
+        Route::get('/', 'ProtectedTransactionController@index');
+        Route::post('create', 'ProtectedTransactionController@store');
+        Route::post('{id}/pay', 'ProtectedTransactionController@pay');
+        Route::post('{id}/complete', 'ProtectedTransactionController@complete');
+        Route::post('{id}/cancel', 'ProtectedTransactionController@cancel');
+    });
 });
 
