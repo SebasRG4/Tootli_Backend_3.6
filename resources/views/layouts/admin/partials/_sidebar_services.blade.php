@@ -83,7 +83,7 @@
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.all') }}
                                         <span class="badge badge-soft-info badge-pill ml-1">
-                                            {{ \App\Models\Order::module(Config::get('module.current_module_id'))->count() }}
+                                            {{ \App\Models\Order::query()->module(Config::get('module.current_module_id'))->count() }}
                                         </span>
                                     </span>
                                 </a>
@@ -94,7 +94,7 @@
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.pending') }}
                                         <span class="badge badge-soft-warning badge-pill ml-1">
-                                            {{ \App\Models\Order::Pending()->module(Config::get('module.current_module_id'))->count() }}
+                                            {{ \App\Models\Order::query()->Pending()->module(Config::get('module.current_module_id'))->count() }}
                                         </span>
                                     </span>
                                 </a>
@@ -105,7 +105,7 @@
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.accepted') }}
                                         <span class="badge badge-soft-success badge-pill ml-1">
-                                            {{ \App\Models\Order::where('order_status', 'accepted')->module(Config::get('module.current_module_id'))->count() }}
+                                            {{ \App\Models\Order::query()->where('order_status', 'accepted')->module(Config::get('module.current_module_id'))->count() }}
                                         </span>
                                     </span>
                                 </a>
@@ -116,7 +116,7 @@
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.completed') }}
                                         <span class="badge badge-soft-success badge-pill ml-1">
-                                            {{ \App\Models\Order::where('order_status', 'delivered')->module(Config::get('module.current_module_id'))->count() }}
+                                            {{ \App\Models\Order::query()->where('order_status', 'delivered')->module(Config::get('module.current_module_id'))->count() }}
                                         </span>
                                     </span>
                                 </a>
