@@ -27,19 +27,6 @@ class FareIntelligenceService
      */
     public function getDynamicFare(int $zoneId, float $distanceKm, int $durationMin, string $vehicleType): float
     {
-        if (!config('services.taxi_ai.enabled', false)) {
-            // AI is disabled: calculate and return standard static fare
-            $config = TaxiFareConfig::where('zone_id', $zoneId)
-                ->whereHas('vehicleType', fn($q) => $q->where('slug', $vehicleType))
-                ->first();
-
-            if ($config) {
-                $calc = $config->calculateFare($distanceKm, $durationMin);
-                return $calc['total'];
-            }
-            return 100.00; // Default flat rate fallback if no config exists
-        }
-
         $params = [
             'zone_id' => $zoneId,
             'distance_km' => $distanceKm,
