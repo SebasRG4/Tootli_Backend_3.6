@@ -470,10 +470,13 @@ class TaxiController extends Controller
         );
 
         try {
-            $response = file_get_contents($url);
-            $data = json_decode($response, true);
+            $response = \Illuminate\Support\Facades\Http::timeout(3.0)->get($url);
+            if ($response->failed()) {
+                return null;
+            }
+            $data = $response->json();
 
-            if ($data['status'] !== 'OK' || empty($data['routes'])) {
+            if (($data['status'] ?? '') !== 'OK' || empty($data['routes'])) {
                 return null;
             }
 

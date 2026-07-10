@@ -88,4 +88,12 @@ return [
         'url' => env('OSRM_BASE_URL', 'http://127.0.0.1:5000'),
     ],
 
+    'taxi_ai' => [
+        'enabled' => env('TAXI_AI_ENABLED', false),
+        'primary_url' => env('TAXI_AI_PRIMARY_URL', 'https://ai-primary.tootli.com/predict-fare'),
+        'secondary_url' => env('TAXI_AI_SECONDARY_URL', 'https://ai-secondary.tootli.com/predict-fare'),
+        'api_key' => env('TAXI_AI_API_KEY', 'default_secret_key'),
+        'safety_multiplier' => env('TAXI_AI_SAFETY_MULTIPLIER', 1.5),
+    ],
+
 ];
