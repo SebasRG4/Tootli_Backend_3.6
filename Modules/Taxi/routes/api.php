@@ -27,6 +27,7 @@ Route::group(['prefix' => 'taxi'], function () {
 
     // User routes (authenticated)
     Route::group(['middleware' => 'auth:api'], function () {
+        Route::get('nearby-drivers', [TaxiController::class, 'getNearbyDrivers']);
         Route::post('request-ride', [TaxiController::class, 'requestRide']);
         Route::get('ride/{id}', [TaxiController::class, 'getRide']);
         Route::post('ride/{id}/cancel', [TaxiController::class, 'cancelRide']);

@@ -49,6 +49,61 @@ class TaxiController extends Controller
     }
 
     /**
+     * Get nearby available taxi drivers
+     */
+    public function getNearbyDrivers(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'lat' => 'required|numeric',
+            'lng' => 'required|numeric',
+            'radius' => 'nullable|numeric', // in km, default to 5km
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $lat = $request->lat;
+        $lng = $request->lng;
+        $radius = $request->radius ?? 5; // Default 5km
+
+        $drivers = DeliveryMan::with(['last_location', 'vehicle'])
+            ->taxiAvailable()
+            ->get()
+            ->filter(function ($driver) use ($lat, $lng, $radius) {
+                $location = $driver->last_location;
+                if (!$location) {
+                    return false;
+                }
+                
+                // Haversine formula distance calculation
+                $earthRadius = 6371; // km
+                $latDiff = deg2rad($location->latitude - $lat);
+                $lngDiff = deg2rad($location->longitude - $lng);
+                $a = sin($latDiff / 2) * sin($latDiff / 2) +
+                    cos(deg2rad($lat)) * cos(deg2rad($location->latitude)) *
+                    sin($lngDiff / 2) * sin($lngDiff / 2);
+                $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+                $distance = $earthRadius * $c;
+
+                return $distance <= $radius;
+            })
+            ->map(function ($driver) {
+                return [
+                    'id' => $driver->id,
+                    'name' => $driver->full_name,
+                    'latitude' => (float)$driver->last_location->latitude,
+                    'longitude' => (float)$driver->last_location->longitude,
+                    'bearing' => (float)($driver->last_location->bearing ?? 0.0),
+                    'vehicle_type' => $driver->vehicle?->type ?? 'economy',
+                ];
+            })
+            ->values();
+
+        return response()->json(['drivers' => $drivers]);
+    }
+
+    /**
      * Estimate fare for a ride
      */
     public function estimateFare(Request $request): JsonResponse
