@@ -251,6 +251,7 @@ class TaxiController extends Controller
             'passenger_name' => 'nullable|string|required_if:is_for_another_person,true',
             'passenger_phone' => 'nullable|string|required_if:is_for_another_person,true',
             'passenger_address_details' => 'nullable|string',
+            'tip' => 'nullable|numeric|min:0',
         ]);
 
         if ($validator->fails()) {
@@ -317,6 +318,9 @@ class TaxiController extends Controller
             $estimatedFare = round($baseFare * $weatherMultiplier, 2);
             $surgeMultiplier = $weatherMultiplier;
         }
+        
+        $tip = (float) ($request->tip ?? 0.00);
+        $estimatedFare += $tip;
 
         // Create the ride
         $ride = TaxiRide::create([
@@ -335,6 +339,7 @@ class TaxiController extends Controller
             'surge_multiplier' => $surgeMultiplier,
             'payment_method' => $request->payment_method ?? 'cash',
             'status' => TaxiRide::STATUS_PENDING,
+            'tip' => $tip,
             // Third party passenger data
             'is_for_another_person' => $request->is_for_another_person ?? false,
             'passenger_name' => $request->passenger_name,
