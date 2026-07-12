@@ -345,7 +345,7 @@ class TaxiController extends Controller
             'dropoff_lat' => $request->dropoff_lat,
             'dropoff_lng' => $request->dropoff_lng,
             'dropoff_address' => $request->dropoff_address,
-            'vehicle_type_id' => $vehicleType->id,
+            'vehicle_type' => $vehicleType->slug,
             'estimated_distance_km' => $distance,
             'estimated_duration_min' => $estimatedDuration,
             'estimated_fare' => $estimatedFare,
