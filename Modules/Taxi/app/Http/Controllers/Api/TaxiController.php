@@ -165,17 +165,22 @@ class TaxiController extends Controller
                 ->first();
         }
 
+        // Get weather condition and pricing multiplier
+        $weatherService = app(\App\Services\WeatherService::class);
+        $weatherInfo = $weatherService->getWeatherInfo((float) $request->pickup_lat, (float) $request->pickup_lng);
+        $weatherMultiplier = $weatherInfo['multiplier'];
+
         if (!$fareConfig) {
             $fareBreakdown = [
                 'base_fare' => 25.00,
                 'distance_charge' => round($distance * 8, 2),
                 'time_charge' => round($estimatedDuration * 2, 2),
                 'subtotal' => 0,
-                'surge_multiplier' => 1.0,
+                'surge_multiplier' => $weatherMultiplier,
                 'total' => 0,
             ];
             $fareBreakdown['subtotal'] = $fareBreakdown['base_fare'] + $fareBreakdown['distance_charge'] + $fareBreakdown['time_charge'];
-            $fareBreakdown['total'] = max($fareBreakdown['subtotal'], 35);
+            $fareBreakdown['total'] = round(max($fareBreakdown['subtotal'] * $weatherMultiplier, 35), 2);
         } else {
             // Use Dynamic AI/ML Fare Calculation
             $fareIntelligence = app(\App\Services\FareIntelligenceService::class);
@@ -186,9 +191,12 @@ class TaxiController extends Controller
                 (string) $vehicleTypeSlug
             );
 
+            // Apply weather multiplier to the dynamic total
+            $finalTotal = round($dynamicTotal * $weatherMultiplier, 2);
+
             // Still get breakdown for UI transparency (using standard formula but adjusting total)
-            $fareBreakdown = $fareConfig->calculateFare($distance, $estimatedDuration, 1.0);
-            $fareBreakdown['total'] = $dynamicTotal;
+            $fareBreakdown = $fareConfig->calculateFare($distance, $estimatedDuration, $weatherMultiplier);
+            $fareBreakdown['total'] = $finalTotal;
             $fareBreakdown['is_dynamic'] = true;
         }
 
@@ -210,6 +218,7 @@ class TaxiController extends Controller
             'max_passengers' => $maxPassengers,
             'vehicle_image_url' => $vehicleImageUrl,
             'fare' => $fareBreakdown,
+            'weather' => $weatherInfo,
             'available_drivers' => $availableDrivers,
             'pickup' => [
                 'lat' => $request->pickup_lat,
@@ -282,6 +291,11 @@ class TaxiController extends Controller
         );
         $estimatedDuration = ceil(($distance / 30) * 60);
 
+        // Get weather condition and pricing multiplier
+        $weatherService = app(\App\Services\WeatherService::class);
+        $weatherInfo = $weatherService->getWeatherInfo((float) $request->pickup_lat, (float) $request->pickup_lng);
+        $weatherMultiplier = $weatherInfo['multiplier'];
+
         $fareConfig = TaxiFareConfig::active()
             ->forZone($zoneId)
             ->forVehicleType($vehicleType->id)
@@ -296,10 +310,12 @@ class TaxiController extends Controller
                 (int) $estimatedDuration,
                 (string) $vehicleTypeSlug
             );
-            $surgeMultiplier = 1.0; // Handled within AI service
+            $estimatedFare = round($estimatedFare * $weatherMultiplier, 2);
+            $surgeMultiplier = $weatherMultiplier;
         } else {
-            $estimatedFare = max(25 + ($distance * 8) + ($estimatedDuration * 2), 35);
-            $surgeMultiplier = 1.0;
+            $baseFare = max(25 + ($distance * 8) + ($estimatedDuration * 2), 35);
+            $estimatedFare = round($baseFare * $weatherMultiplier, 2);
+            $surgeMultiplier = $weatherMultiplier;
         }
 
         // Create the ride

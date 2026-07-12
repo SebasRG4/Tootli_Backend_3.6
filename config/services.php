@@ -96,4 +96,9 @@ return [
         'safety_multiplier' => env('TAXI_AI_SAFETY_MULTIPLIER', 1.5),
     ],
 
+    'weather' => [
+        'api_key' => env('OPENWEATHER_API_KEY'),
+        'mock' => env('MOCK_WEATHER'),
+    ],
+
 ];
