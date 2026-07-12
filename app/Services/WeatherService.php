@@ -38,7 +38,8 @@ class WeatherService
                         'lat' => $lat,
                         'lon' => $lng,
                         'appid' => $this->apiKey,
-                        'units' => 'metric'
+                        'units' => 'metric',
+                        'lang' => 'es'
                     ]);
 
                     if ($response->successful()) {

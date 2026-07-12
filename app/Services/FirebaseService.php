@@ -37,8 +37,8 @@ class FirebaseService
     {
         $user = $trip->user;
 
-        if (!$user->cm_firebase_token) {
-            Log::info('User has no FCM token: ' . $user->id);
+        if (!$user || !$user->cm_firebase_token) {
+            Log::info('User has no FCM token or user not found');
             return null;
         }
 
@@ -49,7 +49,8 @@ class FirebaseService
             'notification' => [
                 'title' => '🚗 ¡Conductor en camino!',
                 'body' => $driverName . ' llegará en ' . ($trip->eta_minutes ?? 'unos') . ' minutos',
-                'sound' => 'default',
+                'sound' => 'driver_found.wav',
+                'android_channel_id' => 'driver_found_channel',
             ],
             'data' => [
                 'type' => 'driver_accepted',
@@ -57,6 +58,38 @@ class FirebaseService
                 'driver_name' => $driverName,
                 'eta_minutes' => (string) ($trip->eta_minutes ?? 0),
                 'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+                'sound' => 'driver_found.wav',
+                'channel_id' => 'driver_found_channel',
+            ],
+            'priority' => 'high',
+        ]);
+    }
+
+    /**
+     * Send notification when search times out (no driver found)
+     */
+    public static function sendSearchTimeoutNotification($trip)
+    {
+        $user = $trip->user;
+
+        if (!$user || !$user->cm_firebase_token) {
+            return null;
+        }
+
+        return self::send([
+            'to' => $user->cm_firebase_token,
+            'notification' => [
+                'title' => '🚫 Sin conductores disponibles',
+                'body' => 'Lamentablemente no encontramos un conductor cerca en este momento.',
+                'sound' => 'no_driver.wav',
+                'android_channel_id' => 'no_driver_channel',
+            ],
+            'data' => [
+                'type' => 'ride_timeout',
+                'ride_id' => (string) $trip->id,
+                'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+                'sound' => 'no_driver.wav',
+                'channel_id' => 'no_driver_channel',
             ],
             'priority' => 'high',
         ]);

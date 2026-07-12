@@ -10,6 +10,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         \App\Console\Commands\SendNightlyDebtReminders::class,
         \App\Console\Commands\CheckScheduledDrivers::class,
+        \App\Console\Commands\CancelTimeoutTaxiRides::class,
     ];
 
     /**
@@ -27,6 +28,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('order:incentivize')->everyMinute();
         $schedule->command('app:cart-marketing-reminders')->everyMinute();
         $schedule->command('order:check-scheduled-drivers')->everyMinute();
+        $schedule->command('taxi:cancel-timeout-rides')->everyMinute();
     }
 
     /**
