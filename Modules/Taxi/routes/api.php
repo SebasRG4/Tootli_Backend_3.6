@@ -31,6 +31,7 @@ Route::group(['prefix' => 'taxi'], function () {
         Route::post('request-ride', [TaxiController::class, 'requestRide']);
         Route::get('ride/{id}', [TaxiController::class, 'getRide']);
         Route::post('ride/{id}/cancel', [TaxiController::class, 'cancelRide']);
+        Route::post('ride/{id}/apply-admin-incentive', [TaxiController::class, 'applyAdminIncentive']);
         Route::get('ride/{id}/tracking', [TaxiRideController::class, 'tracking']);
         Route::get('ride/{id}/details', [TaxiRideController::class, 'show']);
         Route::post('ride/{id}/rate', [TaxiController::class, 'rateRide']);

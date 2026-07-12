@@ -321,15 +321,19 @@ class TaxiController extends Controller
         }
         
         $tip = (float) ($request->tip ?? 0.00);
-        $estimatedFare += $tip;
         
         $failedAttempts = (int) ($request->failed_attempts ?? 0);
         $adminIncentive = 0.00;
         if ($failedAttempts === 1) {
-            // Platform bonus: 10% of fare, capped at $20 MXN
+            // Platform bonus (100%): 10% of fare, capped at $20 MXN
             $adminIncentive = round(min($estimatedFare * 0.10, 20.00), 2);
-            $estimatedFare += $adminIncentive;
+        } elseif ($failedAttempts >= 2) {
+            // Platform bonus (50%): 5% of fare, capped at $10 MXN
+            $adminIncentive = round(min($estimatedFare * 0.05, 10.00), 2);
         }
+
+        // Final offered fare to drivers: Tarifa Principal + Tip + Admin Incentive
+        $estimatedFare += $tip + $adminIncentive;
 
         // Create the ride
         $ride = TaxiRide::create([
@@ -799,5 +803,42 @@ class TaxiController extends Controller
             'original_fare' => $request->fare_amount,
             'final_fare' => round($finalFare, 2),
         ]);
+    }
+
+    /**
+     * Apply admin incentive to a ride at 30 seconds mark
+     */
+    public function applyAdminIncentive($id): JsonResponse
+    {
+        try {
+            $ride = TaxiRide::findOrFail($id);
+
+            // Only apply if pending and no admin incentive is set yet
+            if ($ride->status === TaxiRide::STATUS_PENDING && (float) ($ride->admin_incentive ?? 0.00) === 0.00) {
+                // Compute 10% of the estimated_fare, capped at $20 MXN
+                $adminIncentive = round(min($ride->estimated_fare * 0.10, 20.00), 2);
+
+                $ride->admin_incentive = $adminIncentive;
+                $ride->estimated_fare += $adminIncentive;
+                $ride->save();
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Incentivo del admin aplicado con éxito',
+                    'admin_incentive' => $adminIncentive,
+                    'new_fare' => $ride->estimated_fare,
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'No se puede aplicar el incentivo del admin en este estado o ya fue aplicado.',
+            ], 400);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al aplicar incentivo: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }
