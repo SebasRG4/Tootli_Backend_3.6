@@ -20,6 +20,20 @@ use Modules\Taxi\Http\Controllers\Api\TaxiServiceController;
 // Taxi module routes
 Route::group(['prefix' => 'taxi'], function () {
     // Public routes
+    Route::get('db-test', function () {
+        try {
+            \Illuminate\Support\Facades\DB::connection()->getPdo();
+            return response()->json([
+                'status' => 'success',
+                'columns' => \Illuminate\Support\Facades\Schema::getColumnListing('taxi_rides')
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+        }
+    });
     Route::get('vehicle-types', [TaxiController::class, 'getVehicleTypes']);
     Route::post('estimate-fare', [TaxiController::class, 'estimateFare']);
     Route::get('coupon/list', [TaxiController::class, 'getCoupons']); // Public - guest can view coupons
