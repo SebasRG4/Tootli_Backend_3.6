@@ -1481,4 +1481,21 @@ class ConfigController extends Controller
 
         return response()->json($analytics ?? [], 200);
     }
+
+    public function getWeather(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'lat' => 'required',
+            'lng' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $weatherService = app(\App\Services\WeatherService::class);
+        $weatherInfo = $weatherService->getWeatherInfo((float) $request->lat, (float) $request->lng);
+
+        return response()->json($weatherInfo, 200);
+    }
 }

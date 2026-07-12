@@ -412,6 +412,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         Route::get('geocode-api', 'ConfigController@geocode_api');
         Route::get('get-PaymentMethods', 'ConfigController@getPaymentMethods');
         Route::get('get-analytic-scripts', 'ConfigController@analyticScripts');
+        Route::get('weather', 'ConfigController@getWeather');
 
     });
 
