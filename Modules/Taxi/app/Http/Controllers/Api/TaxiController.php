@@ -252,6 +252,7 @@ class TaxiController extends Controller
             'passenger_phone' => 'nullable|string|required_if:is_for_another_person,true',
             'passenger_address_details' => 'nullable|string',
             'tip' => 'nullable|numeric|min:0',
+            'failed_attempts' => 'nullable|integer|min:0',
         ]);
 
         if ($validator->fails()) {
@@ -321,6 +322,14 @@ class TaxiController extends Controller
         
         $tip = (float) ($request->tip ?? 0.00);
         $estimatedFare += $tip;
+        
+        $failedAttempts = (int) ($request->failed_attempts ?? 0);
+        $adminIncentive = 0.00;
+        if ($failedAttempts === 1) {
+            // Platform bonus: 10% of fare, capped at $20 MXN
+            $adminIncentive = round(min($estimatedFare * 0.10, 20.00), 2);
+            $estimatedFare += $adminIncentive;
+        }
 
         // Create the ride
         $ride = TaxiRide::create([
@@ -340,6 +349,7 @@ class TaxiController extends Controller
             'payment_method' => $request->payment_method ?? 'cash',
             'status' => TaxiRide::STATUS_PENDING,
             'tip' => $tip,
+            'admin_incentive' => $adminIncentive,
             // Third party passenger data
             'is_for_another_person' => $request->is_for_another_person ?? false,
             'passenger_name' => $request->passenger_name,

@@ -742,4 +742,3 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         Route::post('{id}/cancel', 'ProtectedTransactionController@cancel');
     });
 });
-
