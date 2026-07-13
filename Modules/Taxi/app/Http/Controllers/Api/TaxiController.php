@@ -200,9 +200,12 @@ class TaxiController extends Controller
             $fareBreakdown['is_dynamic'] = true;
         }
 
-        // Count available drivers nearby (using unified DeliveryMan model)
+        // Count available drivers nearby for this specific vehicle type
         $availableDrivers = DeliveryMan::canTaxi()
             ->taxiAvailable()
+            ->whereHas('vehicle', function ($query) use ($vehicleTypeSlug) {
+                $query->where('type', $vehicleTypeSlug);
+            })
             ->count();
 
         // Get max passengers and image from vehicle type
