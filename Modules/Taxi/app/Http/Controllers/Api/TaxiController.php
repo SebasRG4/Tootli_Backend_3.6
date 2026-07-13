@@ -155,14 +155,21 @@ class TaxiController extends Controller
         // Get vehicle type by slug
         $vehicleType = TaxiVehicleType::where('slug', $vehicleTypeSlug)->active()->first();
 
-        // Get fare config for zone and vehicle type
+        // Get fare config for zone and vehicle type (fallback to any zone if zoneId is null)
         $fareConfig = null;
         if ($vehicleType) {
-            $fareConfig = TaxiFareConfig::active()
-                ->forZone($zoneId)
+            $query = TaxiFareConfig::active()
                 ->forVehicleType($vehicleType->id)
-                ->with('vehicleType')
-                ->first();
+                ->with('vehicleType');
+
+            if ($zoneId) {
+                $fareConfig = (clone $query)->forZone($zoneId)->first();
+            }
+
+            // Fallback: pick any active config for this vehicle type if zone-specific not found
+            if (!$fareConfig) {
+                $fareConfig = $query->first();
+            }
         }
 
         // Get weather condition and pricing multiplier
@@ -182,22 +189,22 @@ class TaxiController extends Controller
             $fareBreakdown['subtotal'] = $fareBreakdown['base_fare'] + $fareBreakdown['distance_charge'] + $fareBreakdown['time_charge'];
             $fareBreakdown['total'] = round(max($fareBreakdown['subtotal'] * $weatherMultiplier, 35), 2);
         } else {
-            // Use Dynamic AI/ML Fare Calculation
+            // Get static fare total (WITHOUT weather, since we apply it below)
             $fareIntelligence = app(\App\Services\FareIntelligenceService::class);
-            $dynamicTotal = $fareIntelligence->getDynamicFare(
+            $staticTotal = $fareIntelligence->getDynamicFare(
                 (int) $zoneId,
                 (float) $distance,
                 (int) $estimatedDuration,
                 (string) $vehicleTypeSlug
             );
 
-            // Apply weather multiplier to the dynamic total
-            $finalTotal = round($dynamicTotal * $weatherMultiplier, 2);
+            // Apply weather multiplier ONCE to the static total
+            $finalTotal = round($staticTotal * $weatherMultiplier, 2);
 
-            // Still get breakdown for UI transparency (using standard formula but adjusting total)
-            $fareBreakdown = $fareConfig->calculateFare($distance, $estimatedDuration, $weatherMultiplier);
+            // Get breakdown for UI transparency (no weather in breakdown formula, apply manually)
+            $fareBreakdown = $fareConfig->calculateFare($distance, $estimatedDuration);
+            $fareBreakdown['surge_multiplier'] = $weatherMultiplier;
             $fareBreakdown['total'] = $finalTotal;
-            $fareBreakdown['is_dynamic'] = true;
         }
 
         // Count available drivers nearby for this specific vehicle type
