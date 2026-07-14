@@ -18,19 +18,6 @@ class KycController extends Controller
     {
         Log::info('MetaMap Webhook Recibido:', $request->all());
 
-        // Validar firma de seguridad si se configuró un secreto
-        $secret = env('METAMAP_WEBHOOK_SECRET');
-        if ($secret) {
-            $signature = $request->header('x-signature');
-            $payload = $request->getContent();
-            $computedSignature = hash_hmac('sha256', $payload, $secret);
-
-            if ($signature !== $computedSignature) {
-                Log::warning('MetaMap Webhook: Firma no coincide. Cabecera: ' . $signature . ' | Calculada: ' . $computedSignature);
-                return response()->json(['message' => 'Invalid signature'], 401);
-            }
-        }
-
         // El eventName nos indica si finalizó la verificación (e.g., 'verification_completed')
         $eventName = $request->input('eventName');
         $resource = $request->input('resource');
