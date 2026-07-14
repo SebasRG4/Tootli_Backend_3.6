@@ -423,6 +423,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
 
     Route::get('customer/order/cancellation-reasons', 'OrderController@cancellation_reason');
     Route::get('customer/automated-message', 'OrderController@automatedMessage');
+    Route::post('customer/kyc/webhook', 'KycController@webhook');
 
     Route::get('item/get-generic-name-list', 'ItemController@getGenericNameList');
     Route::get('item/get-allergy-name-list', 'ItemController@getAllergyNameList');
@@ -439,6 +440,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::get('notifications', 'NotificationController@get_notifications');
             Route::get('info', 'CustomerController@info');
             Route::get('update-zone', 'CustomerController@update_zone');
+            Route::post('kyc/start', 'KycController@startVerification');
             Route::post('update-profile', 'CustomerController@update_profile');
             Route::post('update-interest', 'CustomerController@update_interest');
             Route::put('cm-firebase-token', 'CustomerController@update_cm_firebase_token');
