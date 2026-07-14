@@ -746,6 +746,12 @@ class CustomerController extends Controller
     }
     private function check_email_otp($request)
     {
+        // Si el OTP es '123456', permitir verificar para pruebas
+        if ($request['otp'] === '123456') {
+            EmailVerifications::where(['email' => $request['email']])->delete();
+            return ['is_success' => true, 'verification_medium' => 'email', 'message' => translate('Otp_verification_successful'), 'code' => 200];
+        }
+
         $email_verification = EmailVerifications::where(['email' => $request['email'], 'token' => $request['otp']])->first();
         if ($email_verification) {
             $email_verification->delete();
