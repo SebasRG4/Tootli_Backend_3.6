@@ -600,7 +600,99 @@ class DeliverymanController extends Controller
         }
 
         $formattedOrders = Helpers::dm_order_data_formatting($orders, true);
+
+        // Append active Taxi Ride if assigned to driver
+        if ($dm && $dm->can_drive_taxi) {
+            try {
+                $activeTaxiRides = \Modules\Taxi\Models\TaxiRide::with('user')
+                    ->where('delivery_man_id', $dm->id)
+                    ->whereIn('status', ['accepted', 'arriving', 'arrived', 'in_progress'])
+                    ->get();
+
+                $formattedList = is_array($formattedOrders) ? $formattedOrders : iterator_to_array($formattedOrders);
+
+                foreach ($activeTaxiRides as $taxiRide) {
+                    $formattedList[] = self::formatTaxiRideToOrder($taxiRide);
+                }
+
+                $formattedOrders = $formattedList;
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Error appending active taxi rides to current-orders: ' . $e->getMessage());
+            }
+        }
+
         return response()->json($formattedOrders, 200);
+    }
+
+    public static function formatTaxiRideToOrder($ride)
+    {
+        $customerName = $ride->user ? ($ride->user->f_name . ' ' . $ride->user->l_name) : ($ride->passenger_name ?? 'Cliente');
+        $customerPhone = $ride->user ? $ride->user->phone : ($ride->passenger_phone ?? '');
+        $customerImage = $ride->user ? $ride->user->image_full_url : null;
+
+        $pickupObj = [
+            'contact_person_name' => $customerName,
+            'contact_person_number' => $customerPhone,
+            'address_type' => 'pickup',
+            'latitude' => (string) $ride->pickup_lat,
+            'longitude' => (string) $ride->pickup_lng,
+            'address' => $ride->pickup_address ?? 'Origen de viaje',
+        ];
+
+        $dropoffObj = [
+            'contact_person_name' => $ride->passenger_name ?? $customerName,
+            'contact_person_number' => $ride->passenger_phone ?? $customerPhone,
+            'address_type' => 'dropoff',
+            'latitude' => (string) $ride->dropoff_lat,
+            'longitude' => (string) $ride->dropoff_lng,
+            'address' => $ride->dropoff_address ?? 'Destino de viaje',
+        ];
+
+        $statusMap = [
+            'pending' => 'pending',
+            'accepted' => 'accepted',
+            'arriving' => 'processing',
+            'arrived' => 'handover',
+            'in_progress' => 'picked_up',
+            'completed' => 'delivered',
+            'cancelled' => 'canceled',
+        ];
+        $orderStatus = $statusMap[$ride->status] ?? $ride->status;
+
+        return [
+            'id' => $ride->id,
+            'user_id' => $ride->user_id,
+            'order_amount' => (float) $ride->estimated_fare,
+            'coupon_discount_amount' => 0,
+            'coupon_discount_title' => null,
+            'payment_status' => $ride->payment_status ?? 'unpaid',
+            'order_status' => $orderStatus,
+            'total_tax_amount' => 0,
+            'payment_method' => $ride->payment_method ?? 'cash',
+            'transaction_reference' => $ride->transaction_id,
+            'delivery_charge' => (float) $ride->estimated_fare,
+            'delivery_address' => $pickupObj,
+            'receiver_details' => $dropoffObj,
+            'created_at' => $ride->created_at ? $ride->created_at->toIso8601String() : now()->toIso8601String(),
+            'updated_at' => $ride->updated_at ? $ride->updated_at->toIso8601String() : now()->toIso8601String(),
+            'order_type' => 'taxi',
+            'module_type' => 'taxi',
+            'store_id' => null,
+            'zone_id' => $ride->zone_id,
+            'vehicle_id' => null,
+            'distance' => (float) $ride->estimated_distance_km,
+            'is_taxi' => true,
+            'taxi_ride_id' => $ride->id,
+            'details_count' => 1,
+            'customer' => $ride->user ? [
+                'id' => $ride->user->id,
+                'f_name' => $ride->user->f_name,
+                'l_name' => $ride->user->l_name,
+                'phone' => $ride->user->phone,
+                'email' => $ride->user->email,
+                'image_full_url' => $customerImage,
+            ] : null,
+        ];
     }
 
     public function get_latest_orders(Request $request)
@@ -678,9 +770,52 @@ class DeliverymanController extends Controller
             $orders = $filtered;
         }
 
-        $orders = Helpers::dm_order_data_formatting($orders, true);
+        $formattedOrders = Helpers::dm_order_data_formatting($orders, true);
 
-        return response()->json($orders, 200);
+        // Include pending Taxi Rides if driver is eligible for taxi
+        if ($dm && $dm->can_drive_taxi && $dm->taxi_is_verified && $dm->taxi_active && $dm->status && $dm->active) {
+            try {
+                $lastLocation = $dm->last_location;
+                $taxiQuery = \Modules\Taxi\Models\TaxiRide::with('user')
+                    ->where('status', 'pending')
+                    ->whereNull('delivery_man_id')
+                    ->where('created_at', '>=', now()->subMinutes(15));
+
+                if ($dm->zone_id) {
+                    $taxiQuery->where('zone_id', $dm->zone_id);
+                }
+
+                $pendingTaxiRides = $taxiQuery->get();
+
+                $formattedOrdersList = is_array($formattedOrders) ? $formattedOrders : iterator_to_array($formattedOrders);
+
+                foreach ($pendingTaxiRides as $ride) {
+                    if ($lastLocation) {
+                        $lat1 = deg2rad((float) $lastLocation->latitude);
+                        $lon1 = deg2rad((float) $lastLocation->longitude);
+                        $lat2 = deg2rad((float) $ride->pickup_lat);
+                        $lon2 = deg2rad((float) $ride->pickup_lng);
+                        $dlat = $lat2 - $lat1;
+                        $dlon = $lon2 - $lon1;
+                        $a = sin($dlat / 2) ** 2 + cos($lat1) * cos($lat2) * sin($dlon / 2) ** 2;
+                        $distKm = 2 * 6371 * asin(sqrt($a));
+
+                        if ($distKm > 5.0) {
+                            continue;
+                        }
+                    }
+
+                    $formattedTaxi = self::formatTaxiRideToOrder($ride);
+                    $formattedOrdersList[] = $formattedTaxi;
+                }
+
+                $formattedOrders = $formattedOrdersList;
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Error appending taxi rides to latest-orders: ' . $e->getMessage());
+            }
+        }
+
+        return response()->json($formattedOrders, 200);
     }
 
     public function ignore_order(Request $request)
@@ -780,7 +915,7 @@ class DeliverymanController extends Controller
     public function accept_order(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'order_id' => 'required|exists:orders,id',
+            'order_id' => 'required|numeric',
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
@@ -821,7 +956,36 @@ class DeliverymanController extends Controller
                 ->whereNull('delivery_man_id')
                 ->dmOrder()
                 ->first();
+
             if (! $order) {
+                // Check if this is a pending TaxiRide
+                $taxiRide = \Modules\Taxi\Models\TaxiRide::where('id', $request['order_id'])
+                    ->where('status', 'pending')
+                    ->whereNull('delivery_man_id')
+                    ->first();
+
+                if ($taxiRide) {
+                    if (!$dm->can_drive_taxi || !$dm->taxi_is_verified || !$dm->taxi_active) {
+                        return response()->json([
+                            'errors' => [
+                                ['code' => 'taxi_not_eligible', 'message' => translate('messages.Taxi service is not active or verified for your account')],
+                            ],
+                        ], 403);
+                    }
+
+                    $taxiRide->delivery_man_id = $dm->id;
+                    $taxiRide->status = 'accepted';
+                    $taxiRide->accepted_at = now();
+                    $taxiRide->save();
+
+                    $dm->current_orders = $dm->current_orders + 1;
+                    $dm->save();
+
+                    \App\Services\FirebaseService::sendDriverAcceptedNotification($taxiRide);
+
+                    return response()->json(['message' => translate('messages.order_accepted_successfully')], 200);
+                }
+
                 return response()->json([
                     'errors' => [
                         [
@@ -1053,7 +1217,54 @@ class DeliverymanController extends Controller
 
         $this->deliveryCancelMeta = null;
 
-        if (!$order || (!$order->store && $order->order_type != 'parcel')) {
+        if (!$order) {
+            $taxiRide = \Modules\Taxi\Models\TaxiRide::where(['id' => $request['order_id'], 'delivery_man_id' => $dm['id']])->first();
+            if ($taxiRide) {
+                $statusMap = [
+                    'processing' => 'arriving',
+                    'handover' => 'arrived',
+                    'picked_up' => 'in_progress',
+                    'delivered' => 'completed',
+                    'canceled' => 'cancelled',
+                ];
+                $newTaxiStatus = $statusMap[$request['status']] ?? $request['status'];
+
+                $taxiRide->status = $newTaxiStatus;
+
+                if ($newTaxiStatus === 'arrived') {
+                    $taxiRide->arrived_at = now();
+                } elseif ($newTaxiStatus === 'in_progress') {
+                    $taxiRide->started_at = now();
+                } elseif ($newTaxiStatus === 'completed') {
+                    $taxiRide->completed_at = now();
+                    $taxiRide->final_fare = $taxiRide->estimated_fare;
+                    $taxiRide->payment_status = 'paid';
+                    $dm->current_orders = $dm->current_orders > 1 ? $dm->current_orders - 1 : 0;
+                    $dm->save();
+                    \App\Services\FirebaseService::sendRideCompletedNotification($taxiRide);
+                } elseif ($newTaxiStatus === 'cancelled') {
+                    $taxiRide->cancelled_at = now();
+                    $taxiRide->cancelled_by = 'driver';
+                    $taxiRide->cancellation_reason = $request->reason ?? 'Cancelled by driver';
+                    $dm->current_orders = $dm->current_orders > 1 ? $dm->current_orders - 1 : 0;
+                    $dm->save();
+                    \App\Services\FirebaseService::sendRideCancelledNotification($taxiRide, 'driver');
+                } elseif ($newTaxiStatus === 'arriving') {
+                    \App\Services\FirebaseService::sendDriverArrivingNotification($taxiRide);
+                }
+
+                $taxiRide->save();
+                return response()->json(['message' => translate('messages.order_status_updated_successfully')], 200);
+            }
+
+            return response()->json([
+                'errors' => [
+                    ['code' => 'not_found', 'message' => translate('messages.you_can_not_change_the_status_of_this_order')],
+                ],
+            ], 403);
+        }
+
+        if (!$order->store && $order->order_type != 'parcel') {
             return response()->json([
                 'errors' => [
                     ['code' => 'not_found', 'message' => translate('messages.you_can_not_change_the_status_of_this_order')],
@@ -1465,6 +1676,12 @@ class DeliverymanController extends Controller
                 ->orWhere('delivery_man_id', $dm['id']);
         })->Notpos()->first();
         if (!$order) {
+            $taxiRide = \Modules\Taxi\Models\TaxiRide::with('user')->where('id', $request['order_id'])->first();
+            if ($taxiRide) {
+                $formattedTaxi = self::formatTaxiRideToOrder($taxiRide);
+                return response()->json([$formattedTaxi], 200);
+            }
+
             return response()->json([
                 'errors' => [
                     ['code' => 'order', 'message' => translate('messages.not_found')],
@@ -1511,7 +1728,13 @@ class DeliverymanController extends Controller
             })
             ->Notpos()
             ->first();
+
         if (!$order) {
+            $taxiRide = \Modules\Taxi\Models\TaxiRide::with('user')->where('id', $request['order_id'])->first();
+            if ($taxiRide) {
+                return response()->json(self::formatTaxiRideToOrder($taxiRide), 200);
+            }
+
             return response()->json([
                 'errors' => [
                     ['code' => 'order', 'message' => translate('messages.not_found')],

@@ -371,8 +371,22 @@ class TaxiController extends Controller
             'passenger_address_details' => $request->passenger_address_details,
         ]);
 
-        // TODO: Dispatch event to notify nearby drivers (WebSocket)
-        // event(new RideRequested($ride));
+        // Dispatch push notification to nearby eligible drivers
+        try {
+            $eligibleDrivers = \App\Models\DeliveryMan::canTaxi()
+                ->where('taxi_active', 1)
+                ->where('active', 1)
+                ->where('status', 1)
+                ->get();
+
+            foreach ($eligibleDrivers as $driver) {
+                if ($driver->fcm_token) {
+                    \App\Services\FirebaseService::sendNewTaxiRideRequestNotification($ride, $driver->fcm_token);
+                }
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error sending taxi ride push notifications: ' . $e->getMessage());
+        }
 
         return response()->json([
             'message' => 'Ride requested successfully',

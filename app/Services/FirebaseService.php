@@ -244,4 +244,39 @@ class FirebaseService
         // Send to admin topic
         return \App\CentralLogics\Helpers::send_push_notif_to_topic($data, 'admin_message', 'taxi_sos');
     }
+
+    /**
+     * Send notification to a driver when a new taxi ride request is available nearby
+     */
+    public static function sendNewTaxiRideRequestNotification($trip, $driverToken)
+    {
+        if (!$driverToken) {
+            return null;
+        }
+
+        $pickupAddress = $trip->pickup_address ?? 'Origen no especificado';
+        $fare = number_format($trip->estimated_fare, 2);
+
+        return self::send([
+            'to' => $driverToken,
+            'notification' => [
+                'title' => '🚗 ¡Nuevo Viaje Disponible! ($' . $fare . ')',
+                'body' => 'Recoger en: ' . $pickupAddress,
+                'sound' => 'order_request.wav',
+                'android_channel_id' => 'order_request_channel',
+            ],
+            'data' => [
+                'type' => 'taxi_request',
+                'title' => '🚗 ¡Nuevo Viaje Disponible!',
+                'body' => 'Recoger en: ' . $pickupAddress,
+                'order_id' => (string) $trip->id,
+                'ride_id' => (string) $trip->id,
+                'module_type' => 'taxi',
+                'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+                'sound' => 'order_request.wav',
+                'channel_id' => 'order_request_channel',
+            ],
+            'priority' => 'high',
+        ]);
+    }
 }
