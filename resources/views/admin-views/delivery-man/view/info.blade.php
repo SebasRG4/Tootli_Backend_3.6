@@ -408,12 +408,10 @@
     {{-- ╔══════════════════════════════════════════╗ --}}
     {{-- ║  SECCIÓN: VERIFICACIÓN DE IDENTIDAD KYC  ║ --}}
     {{-- ╚══════════════════════════════════════════╝ --}}
-    @php
-        $kycUserInfo = \App\Models\UserInfo::where('deliveryman_id', $deliveryMan->id)->first();
-        $kycUser = $kycUserInfo ? \App\Models\User::find($kycUserInfo->user_id) : \App\Models\User::where('email', $deliveryMan->email)->first();
-        $kycStatus = $kycUser->identity_verified ?? 'none';
-        $kycVerificationId = $kycUser->metamap_verification_id ?? null;
-    @endphp
+    @php($kycUserInfo = \App\Models\UserInfo::where('deliveryman_id', $deliveryMan->id)->first())
+    @php($kycUser = $kycUserInfo ? \App\Models\User::find($kycUserInfo->user_id) : \App\Models\User::where('email', $deliveryMan->email)->first())
+    @php($kycStatus = $kycUser?->identity_verified ?? 'none')
+    @php($kycVerificationId = $kycUser?->metamap_verification_id ?? null)
     <div class="content container-fluid pt-0">
         <div class="card">
             <div class="card-body p-xxl-20 p-3">
