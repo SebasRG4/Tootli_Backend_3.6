@@ -25,6 +25,25 @@ class KycController extends Controller
     {
         Log::info('MetaMap Webhook Recibido:', $request->all());
 
+        // ─── Validación de firma (opcional) ──────────────────────────────
+        // Si METAMAP_WEBHOOK_SECRET está configurado, validamos que el request
+        // venga genuinamente de MetaMap usando HMAC-SHA256 en el header x-signature.
+        $secret = env('METAMAP_WEBHOOK_SECRET');
+        if ($secret) {
+            $signature = $request->header('x-signature') ?? $request->header('x-metamap-signature') ?? '';
+            $payload   = $request->getContent();
+            $expected  = 'sha256=' . hash_hmac('sha256', $payload, $secret);
+
+            if (!hash_equals($expected, $signature)) {
+                Log::warning('MetaMap Webhook: Firma inválida. Posible request no autorizado.', [
+                    'expected'  => $expected,
+                    'received'  => $signature,
+                ]);
+                return response()->json(['message' => 'Invalid signature'], 403);
+            }
+        }
+        // ────────────────────────────────────────────────────────────────
+
         $eventName      = $request->input('eventName');
         $verificationId = $request->input('verificationId') ?? $request->input('id');
 
