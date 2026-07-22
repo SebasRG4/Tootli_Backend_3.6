@@ -152,6 +152,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::put('update-profile', 'DeliverymanController@update_profile');
             Route::post('submit-registration-revision', 'DeliverymanController@submitRegistrationRevision');
             Route::post('update-active-status', 'DeliverymanController@activeStatus');
+            Route::post('kyc/start', 'KycController@startVerificationDm');
             Route::get('current-orders', 'DeliverymanController@get_current_orders');
             Route::get('latest-orders', 'DeliverymanController@get_latest_orders');
             Route::post('record-location-data', 'DeliverymanController@record_location_data');

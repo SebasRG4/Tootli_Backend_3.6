@@ -217,6 +217,34 @@ class DeliverymanController extends Controller
         unset($dm['this_week_orders']);
         unset($dm['wallet']);
 
+        // ─── KYC: identity_verified ──────────────────────────────────────
+        // El campo identity_verified vive en el modelo User (tabla users).
+        // Buscamos el User vinculado al repartidor para exponer el estado KYC
+        // (incluyendo verificación cruzada: si ya se verificó como usuario → approved)
+        try {
+            $kycUser = null;
+
+            // 1. Vía UserInfo
+            if ($dm->userinfo) {
+                $kycUser = \App\Models\User::find($dm->userinfo->user_id);
+            }
+            // 2. Por teléfono
+            if (!$kycUser && $dm->phone) {
+                $kycUser = \App\Models\User::where('phone', $dm->phone)->first();
+            }
+            // 3. Por email
+            if (!$kycUser && $dm->email) {
+                $kycUser = \App\Models\User::where('email', $dm->email)->first();
+            }
+
+            $dm['identity_verified']       = $kycUser?->identity_verified       ?? 'none';
+            $dm['metamap_verification_id'] = $kycUser?->metamap_verification_id ?? null;
+        } catch (\Throwable) {
+            $dm['identity_verified']       = 'none';
+            $dm['metamap_verification_id'] = null;
+        }
+        // ────────────────────────────────────────────────────────────────
+
         return response()->json($dm, 200);
     }
 

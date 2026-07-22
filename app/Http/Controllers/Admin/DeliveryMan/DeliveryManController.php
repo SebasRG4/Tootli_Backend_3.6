@@ -285,6 +285,57 @@ class DeliveryManController extends BaseController
         return back();
     }
 
+    /**
+     * Actualizar manualmente el estado de verificación KYC (identidad) de un repartidor.
+     * Cambia el campo identity_verified en el User vinculado al DeliveryMan.
+     */
+    public function updateKycStatus(Request $request, int|string $id): RedirectResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'identity_verified' => 'required|in:approved,rejected,pending,none',
+        ]);
+
+        if ($validator->fails()) {
+            Toastr::error($validator->errors()->first());
+            return back();
+        }
+
+        $deliveryMan = $this->deliveryManRepo->getFirstWhere(params: ['id' => $id]);
+
+        if (!$deliveryMan) {
+            Toastr::error(translate('messages.not_found'));
+            return back();
+        }
+
+        // El campo identity_verified vive en el modelo User (tabla users)
+        // La relación es: DeliveryMan → UserInfo (deliveryman_id) → User (user_id)
+        $userInfo = \App\Models\UserInfo::where('deliveryman_id', $deliveryMan->id)->first();
+        $user = $userInfo ? \App\Models\User::find($userInfo->user_id) : null;
+
+        if (!$user) {
+            // Buscar por email como fallback
+            $user = \App\Models\User::where('email', $deliveryMan->email)->first();
+        }
+
+        if (!$user) {
+            Toastr::error(translate('messages.user_not_found'));
+            return back();
+        }
+
+        $user->identity_verified = $request->identity_verified;
+        $user->save();
+
+        $statusLabel = match($request->identity_verified) {
+            'approved' => translate('messages.approved'),
+            'rejected' => translate('messages.rejected'),
+            'pending'  => translate('messages.pending'),
+            default    => translate('messages.none'),
+        };
+
+        Toastr::success(translate('messages.kyc_status_updated_to') . ' ' . $statusLabel);
+        return back();
+    }
+
     public function updateTier(Request $request, int|string $id): RedirectResponse
     {
         $validator = Validator::make($request->all(), [

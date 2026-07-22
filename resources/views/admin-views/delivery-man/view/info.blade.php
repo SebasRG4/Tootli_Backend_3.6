@@ -405,6 +405,102 @@
         </div>
     </div>
 
+    {{-- ╔══════════════════════════════════════════╗ --}}
+    {{-- ║  SECCIÓN: VERIFICACIÓN DE IDENTIDAD KYC  ║ --}}
+    {{-- ╚══════════════════════════════════════════╝ --}}
+    @php
+        $kycUserInfo = \App\Models\UserInfo::where('deliveryman_id', $deliveryMan->id)->first();
+        $kycUser = $kycUserInfo ? \App\Models\User::find($kycUserInfo->user_id) : \App\Models\User::where('email', $deliveryMan->email)->first();
+        $kycStatus = $kycUser->identity_verified ?? 'none';
+        $kycVerificationId = $kycUser->metamap_verification_id ?? null;
+    @endphp
+    <div class="content container-fluid pt-0">
+        <div class="card">
+            <div class="card-body p-xxl-20 p-3">
+                <div class="d-flex align-items-center gap-2 mb-20 justify-content-between flex-wrap">
+                    <div class="d-flex align-items-center gap-2">
+                        <h5 class="mb-0 fs-16 fw-bold">Verificación KYC (Identidad)</h5>
+                        @if($kycStatus === 'approved')
+                            <span class="badge badge-soft-success fs-13">✔ Aprobada</span>
+                        @elseif($kycStatus === 'rejected')
+                            <span class="badge badge-soft-danger fs-13">✘ Rechazada</span>
+                        @elseif($kycStatus === 'pending')
+                            <span class="badge badge-soft-warning fs-13">⏳ Pendiente de revisión</span>
+                        @else
+                            <span class="badge badge-soft-secondary fs-13">— Sin verificar</span>
+                        @endif
+                    </div>
+                    @if($kycVerificationId)
+                        <a href="https://dashboard.getmati.com/verifications/{{ $kycVerificationId }}"
+                           target="_blank" class="btn btn-sm btn-outline-primary">
+                            <i class="tio-open-in-new mr-1"></i> Ver en MetaMap
+                        </a>
+                    @endif
+                </div>
+
+                @if($kycVerificationId)
+                    <div class="mb-3">
+                        <small class="text-muted">MetaMap Verification ID:</small>
+                        <code class="ml-1 fs-12">{{ $kycVerificationId }}</code>
+                    </div>
+                @else
+                    <p class="text-muted fs-13 mb-3">
+                        <i class="tio-info-outined mr-1"></i>
+                        El repartidor aún no ha completado el flujo de verificación MetaMap.
+                    </p>
+                @endif
+
+                {{-- Botones de verificación manual --}}
+                <div class="d-flex flex-wrap gap-2">
+                    {{-- Aprobar --}}
+                    <form action="{{ route('admin.users.delivery-man.kyc-status', $deliveryMan->id) }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="identity_verified" value="approved">
+                        <button type="submit"
+                            class="btn {{ $kycStatus === 'approved' ? 'btn-success' : 'btn-outline-success' }} py-2"
+                            {{ $kycStatus === 'approved' ? 'disabled' : '' }}>
+                            <i class="tio-checkmark-circle mr-1"></i> Aprobar
+                        </button>
+                    </form>
+
+                    {{-- Rechazar --}}
+                    <form action="{{ route('admin.users.delivery-man.kyc-status', $deliveryMan->id) }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="identity_verified" value="rejected">
+                        <button type="submit"
+                            class="btn {{ $kycStatus === 'rejected' ? 'btn--danger' : 'btn-outline-danger' }} py-2"
+                            {{ $kycStatus === 'rejected' ? 'disabled' : '' }}>
+                            <i class="tio-clear-circle mr-1"></i> Rechazar
+                        </button>
+                    </form>
+
+                    {{-- Marcar como pendiente --}}
+                    <form action="{{ route('admin.users.delivery-man.kyc-status', $deliveryMan->id) }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="identity_verified" value="pending">
+                        <button type="submit"
+                            class="btn {{ $kycStatus === 'pending' ? 'btn-warning' : 'btn-outline-warning' }} py-2"
+                            {{ $kycStatus === 'pending' ? 'disabled' : '' }}>
+                            <i class="tio-time mr-1"></i> Marcar pendiente
+                        </button>
+                    </form>
+
+                    {{-- Resetear --}}
+                    <form action="{{ route('admin.users.delivery-man.kyc-status', $deliveryMan->id) }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="identity_verified" value="none">
+                        <button type="submit"
+                            class="btn btn-outline-secondary py-2"
+                            {{ $kycStatus === 'none' ? 'disabled' : '' }}>
+                            <i class="tio-restore mr-1"></i> Resetear
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- ══════════ FIN SECCIÓN KYC ══════════ --}}
+
 
 
     <div class="content container-fluid pt-0">
