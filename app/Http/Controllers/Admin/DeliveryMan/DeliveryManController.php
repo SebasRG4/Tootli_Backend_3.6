@@ -286,6 +286,67 @@ class DeliveryManController extends BaseController
     }
 
     /**
+     * Encuentra o crea el modelo User vinculado a un DeliveryMan.
+     */
+    public static function findOrCreateUserForDeliveryMan($deliveryMan): ?\App\Models\User
+    {
+        if (!$deliveryMan) return null;
+
+        // 1. Vía UserInfo
+        $userInfo = \App\Models\UserInfo::where('deliveryman_id', $deliveryMan->id)->first();
+        if ($userInfo) {
+            $user = \App\Models\User::find($userInfo->user_id);
+            if ($user) return $user;
+        }
+
+        // 2. Por teléfono exacto
+        if ($deliveryMan->phone) {
+            $user = \App\Models\User::where('phone', $deliveryMan->phone)->first();
+            if ($user) return $user;
+
+            // 3. Por últimos 10 dígitos del teléfono (e.g. 7297706434 vs +527297706434)
+            $cleanPhone = preg_replace('/\D/', '', $deliveryMan->phone);
+            if (strlen($cleanPhone) >= 10) {
+                $last10 = substr($cleanPhone, -10);
+                $user = \App\Models\User::where('phone', 'LIKE', "%{$last10}")->first();
+                if ($user) return $user;
+            }
+        }
+
+        // 4. Por email
+        if ($deliveryMan->email) {
+            $user = \App\Models\User::where('email', $deliveryMan->email)->first();
+            if ($user) return $user;
+        }
+
+        // 5. Si no existe User, crearlo y vincularlo vía UserInfo
+        try {
+            $user = \App\Models\User::create([
+                'f_name' => $deliveryMan->f_name ?? 'Repartidor',
+                'l_name' => $deliveryMan->l_name ?? '',
+                'phone'  => $deliveryMan->phone,
+                'email'  => $deliveryMan->email,
+                'password' => $deliveryMan->password ?? bcrypt('12345678'),
+                'identity_verified' => 'none',
+            ]);
+
+            \App\Models\UserInfo::create([
+                'user_id' => $user->id,
+                'deliveryman_id' => $deliveryMan->id,
+                'f_name' => $deliveryMan->f_name,
+                'l_name' => $deliveryMan->l_name,
+                'phone' => $deliveryMan->phone,
+                'email' => $deliveryMan->email,
+            ]);
+
+            return $user;
+        } catch (\Throwable $e) {
+            \Log::error("Error creating User for DeliveryMan #{$deliveryMan->id}: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Actualizar manualmente el estado de verificación KYC (identidad) de un repartidor.
      * Cambia el campo identity_verified en el User vinculado al DeliveryMan.
      */
@@ -307,15 +368,7 @@ class DeliveryManController extends BaseController
             return back();
         }
 
-        // El campo identity_verified vive en el modelo User (tabla users)
-        // La relación es: DeliveryMan → UserInfo (deliveryman_id) → User (user_id)
-        $userInfo = \App\Models\UserInfo::where('deliveryman_id', $deliveryMan->id)->first();
-        $user = $userInfo ? \App\Models\User::find($userInfo->user_id) : null;
-
-        if (!$user) {
-            // Buscar por email como fallback
-            $user = \App\Models\User::where('email', $deliveryMan->email)->first();
-        }
+        $user = self::findOrCreateUserForDeliveryMan($deliveryMan);
 
         if (!$user) {
             Toastr::error(translate('messages.user_not_found'));
@@ -335,6 +388,7 @@ class DeliveryManController extends BaseController
         Toastr::success(translate('messages.kyc_status_updated_to') . ' ' . $statusLabel);
         return back();
     }
+
 
     public function updateTier(Request $request, int|string $id): RedirectResponse
     {

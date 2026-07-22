@@ -408,8 +408,7 @@
     {{-- ╔══════════════════════════════════════════╗ --}}
     {{-- ║  SECCIÓN: VERIFICACIÓN DE IDENTIDAD KYC  ║ --}}
     {{-- ╚══════════════════════════════════════════╝ --}}
-    @php($kycUserInfo = \App\Models\UserInfo::where('deliveryman_id', $deliveryMan->id)->first())
-    @php($kycUser = $kycUserInfo ? \App\Models\User::find($kycUserInfo->user_id) : \App\Models\User::where('email', $deliveryMan->email)->first())
+    @php($kycUser = \App\Http\Controllers\Admin\DeliveryMan\DeliveryManController::findOrCreateUserForDeliveryMan($deliveryMan))
     @php($kycStatus = $kycUser?->identity_verified ?? 'none')
     @php($kycVerificationId = $kycUser?->metamap_verification_id ?? null)
     <div class="content container-fluid pt-0">
