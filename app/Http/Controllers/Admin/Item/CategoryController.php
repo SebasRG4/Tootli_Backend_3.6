@@ -117,6 +117,12 @@ class CategoryController extends BaseController
         }
 
         Toastr::success($request['position'] == 0 ? translate('messages.category_added_successfully') : translate('messages.Sub_category_added_successfully'));
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'status' => true,
+                'message' => $request['position'] == 0 ? translate('messages.category_added_successfully') : translate('messages.Sub_category_added_successfully')
+            ]);
+        }
         return back();
     }
 
@@ -138,21 +144,27 @@ class CategoryController extends BaseController
         ]);
     }
 
-    public function updateStatus(Request $request): RedirectResponse
+    public function updateStatus(Request $request): RedirectResponse|JsonResponse
     {
         $this->categoryRepo->update(id: $request['id'], data: ['status' => $request['status']]);
         Toastr::success(translate('messages.category_status_updated'));
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json(['status' => true, 'message' => translate('messages.category_status_updated')]);
+        }
         return back();
     }
 
-    public function updateFeatured(Request $request): RedirectResponse
+    public function updateFeatured(Request $request): RedirectResponse|JsonResponse
     {
         $this->categoryRepo->update(id: $request['id'], data: ['featured' => $request['featured']]);
         Toastr::success(translate('messages.category_featured_updated'));
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json(['status' => true, 'message' => translate('messages.category_featured_updated')]);
+        }
         return back();
     }
 
-    public function update(CategoryUpdateRequest $request, string|int $id): RedirectResponse
+    public function update(CategoryUpdateRequest $request, string|int $id): RedirectResponse|JsonResponse
     {
         $mainCategory = $this->categoryRepo->getFirstWhere(params: ['id' => $id]);
         $category = $this->categoryRepo->update(id: $id, data: $this->categoryService->getUpdateData(request: $request, object: $mainCategory));
@@ -185,6 +197,12 @@ class CategoryController extends BaseController
 
 
         Toastr::success($category['position'] == 0 ? translate('messages.category_updated_successfully') : translate('messages.Sub_category_updated_successfully'));
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'status' => true,
+                'message' => $category['position'] == 0 ? translate('messages.category_updated_successfully') : translate('messages.Sub_category_updated_successfully')
+            ]);
+        }
         return redirect()->route('admin.category.add', ['position' => $mainCategory->position]);
     }
 
