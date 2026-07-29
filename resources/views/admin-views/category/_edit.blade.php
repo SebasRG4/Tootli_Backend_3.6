@@ -103,6 +103,22 @@
                     </div>
                 </div>
 
+                @if ($category->position == 1)
+                    <div class="form-group mb-3">
+                        <label class="input-label" for="parent_id_select">{{ translate('messages.main_category') }} <span class="text-danger">*</span></label>
+                        <select name="parent_id" id="parent_id_select" class="form-control" required>
+                            <option value="" disabled {{ $category->parent_id == 0 ? 'selected' : '' }}>{{ translate('Select Main Category') }}</option>
+                            @foreach($mainCategories as $mainCat)
+                                <option value="{{ $mainCat->id }}" {{ $category->parent_id == $mainCat->id ? 'selected' : '' }}>
+                                    {{ $mainCat->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                @else
+                    <input type="hidden" name="parent_id" value="0">
+                @endif
+
                 <div class="form-group mb-3">
                     <label class="input-label" for="">
                         {{ translate('messages.Priority') }}
