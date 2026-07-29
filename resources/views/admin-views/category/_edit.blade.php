@@ -145,7 +145,6 @@
                         </div>
                     </div>
                 @endif
-                @if ($category->position == 0 )
                     <div class="col-md-12">
                         <div class="bg--secondary rounded p-20 mb-20">
 
@@ -173,7 +172,6 @@
 
                         </div>
                     </div>
-                @endif
             </div>
 
         </div>

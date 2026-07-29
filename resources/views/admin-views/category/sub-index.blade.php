@@ -22,7 +22,7 @@
         <!-- End Page Header -->
         <div class="card">
             <div class="card-body">
-                <form action="{{route('admin.category.store')}}" method="post">
+                <form action="{{route('admin.category.store')}}" method="post" enctype="multipart/form-data">
                 @csrf
                     <div class="row">
                     @if($language)
@@ -91,6 +91,14 @@
                                     <option value="2">{{ translate('messages.High') }}</option>
                                 </select>
                             </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="input-label">{{translate('messages.image')}} <small class="text-danger">({{translate('messages.ratio')}} 1:1)</small></label>
+                            <div class="custom-file">
+                                <input type="file" name="image" id="customFileEg1" class="custom-file-input" accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                <label class="custom-file-label" for="customFileEg1">{{translate('messages.choose_file')}}</label>
+                            </div>
+                        </div>
 
                         <div class="col-sm-12">
                             <div class="btn--container justify-content-end">
