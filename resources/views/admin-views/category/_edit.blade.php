@@ -2,6 +2,7 @@
       class="d-flex flex-column h-100">
     @method('post')
     @csrf
+    <input type="hidden" name="parent_id" value="{{ $category->parent_id }}">
     <div>
         <div class="custom-offcanvas-header bg--secondary d-flex justify-content-between align-items-center px-3 py-3">
             <h3 class="mb-0">{{ $category->position == 0 ? translate('Edit_Category') : translate('Edit_Sub_Category') }}</h2>

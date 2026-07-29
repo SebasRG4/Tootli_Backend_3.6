@@ -45,7 +45,7 @@ class CategoryService
             'name' => $request->name[array_search('default', $request->lang)],
             'priority' => $request->priority??0,
             'status' => $request->status ?? 0,
-            'parent_id' =>$request->parent_id ?? 0,
+            'parent_id' => $request->parent_id ?? $object->parent_id ?? 0,
             'image' => $request->has('image') ? $this->updateAndUpload('category/', $object->image, 'png', $request->file('image')) : $object->image,
             'is_abastos' => $request->is_abastos ?? 0,
         ];
