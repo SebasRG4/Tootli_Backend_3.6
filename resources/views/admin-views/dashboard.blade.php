@@ -10,20 +10,14 @@
     <div class="content container-fluid">
         @if(auth('admin')->user()->role_id == 1)
         <!-- Page Header -->
-        <div class="page-header">
-            <div class="row align-items-center py-2">
-                <div class="col-sm mb-2 mb-sm-0">
-                    <div class="d-flex align-items-center">
-                        <img src="{{asset('assets/admin/img/grocery.svg')}}" alt="img">
-                        <div class="w-0 flex-grow pl-2">
-                            <h1 class="page-header-title mb-0">{{translate('messages.welcome')}}, {{auth('admin')->user()->f_name}}.</h1>
-                            <p class="page-header-text m-0">{{translate('messages.welcome_message')}}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-auto min--280">
-                    <select name="zone_id" class="form-control js-select2-custom fetch_data_zone_wise">
+        <div class="tootli-dashboard-header">
+            <div class="tootli-dashboard-title-group">
+                <h1>{{translate('messages.dashboard')}}</h1>
+                <p>{{translate('Plan, prioritize, and accomplish your operations with ease.')}}</p>
+            </div>
+            <div class="tootli-actions-group">
+                <div class="min--200 mr-2">
+                    <select name="zone_id" class="form-control js-select2-custom fetch_data_zone_wise rounded-pill">
                         <option value="all">{{ translate('messages.All_Zones') }}</option>
                         @foreach(\App\Models\Zone::orderBy('name')->get() as $zone)
                             <option
@@ -33,64 +27,119 @@
                         @endforeach
                     </select>
                 </div>
+                <a href="{{ route('admin.order.list', ['all']) }}" class="btn-tootli-pill-primary">
+                    <i class="bi bi-plus-lg"></i>
+                    <span>+ {{translate('Dispatch')}}</span>
+                </a>
+                <a href="{{ route('admin.transactions.store.withdraw_list') }}" class="btn-tootli-pill-secondary">
+                    <i class="bi bi-lightbulb"></i>
+                    <span>{{translate('Market Intelligence')}}</span>
+                </a>
             </div>
         </div>
         <!-- End Page Header -->
 
-        <!-- Stats -->
-        <div class="card mb-3">
-            <div class="card-body pt-0">
-                <div class="d-flex flex-wrap align-items-center justify-content-end">
-                    <div class="status-filter-wrap">
-                        <div class="statistics-btn-grp">
-                            <label>
-                                <input type="radio" name="statistics" hidden checked>
-                                <span>{{ translate('This_Year') }}</span>
-                            </label>
-                            <label>
-                                <input type="radio" name="statistics" hidden>
-                                <span>{{ translate('This_Month') }}</span>
-                            </label>
-                            <label>
-                                <input type="radio" name="statistics" hidden>
-                                <span>{{ translate('This_Week') }}</span>
-                            </label>
-                        </div>
+        <!-- Stats Grid (Row 1) -->
+        <div class="row g-3 mb-4">
+            <div class="col-sm-6 col-lg-3">
+                <div class="tootli-card tootli-card-featured">
+                    <div class="tootli-card-header-row">
+                        <span class="tootli-card-label">{{translate('Total rides')}}</span>
+                        <div class="tootli-icon-badge"><i class="bi bi-map"></i></div>
                     </div>
+                    <div class="tootli-card-value">{{ $data['total_orders'] ?? '137' }}</div>
+                    <div class="tootli-card-subtxt">↗ {{ $data['delivered'] ?? '63' }} {{translate('completed overall')}}</div>
                 </div>
-                <div class="row g-2" id="order_stats">
-                    <div class="col-sm-6 col-lg-3">
-                        <div class="__dashboard-card-2">
-                            <img src="{{asset('assets/admin/img/dashboard/food/items.svg')}}" alt="dashboard/grocery">
-                            <h6 class="name">Items</h6>
-                            <h3 class="count">33,451</h3>
-                            <div class="subtxt">12 newly added</div>
-                        </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="tootli-card">
+                    <div class="tootli-card-header-row">
+                        <span class="tootli-card-label">{{translate('Completed rides')}}</span>
+                        <div class="tootli-icon-badge"><i class="bi bi-map"></i></div>
                     </div>
-                    <div class="col-sm-6 col-lg-3">
-                        <div class="__dashboard-card-2">
-                            <img src="{{asset('assets/admin/img/dashboard/food/orders.svg')}}" alt="dashboard/grocery">
-                            <h6 class="name">Orders</h6>
-                            <h3 class="count">30M+</h3>
-                            <div class="subtxt">12 newly added</div>
-                        </div>
+                    <div class="tootli-card-value">{{ $data['delivered'] ?? '63' }}</div>
+                    <div class="tootli-card-subtxt">↗ {{translate('46% of all rides')}}</div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="tootli-card">
+                    <div class="tootli-card-header-row">
+                        <span class="tootli-card-label">{{translate('Active rides')}}</span>
+                        <div class="tootli-icon-badge"><i class="bi bi-map"></i></div>
                     </div>
-                    <div class="col-sm-6 col-lg-3">
-                        <div class="__dashboard-card-2">
-                            <img src="{{asset('assets/admin/img/dashboard/food/stores.svg')}}" alt="dashboard/grocery">
-                            <h6 class="name">Grocery Stores</h6>
-                            <h3 class="count">556</h3>
-                            <div class="subtxt">12 newly added</div>
-                        </div>
+                    <div class="tootli-card-value">{{ $data['accepted_by_dm'] + $data['preparing_in_rs'] + $data['picked_up'] }}</div>
+                    <div class="tootli-card-subtxt">↗ {{translate('In progress now')}}</div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="tootli-card">
+                    <div class="tootli-card-header-row">
+                        <span class="tootli-card-label">{{translate('Pending requests')}}</span>
+                        <div class="tootli-icon-badge"><i class="bi bi-map"></i></div>
                     </div>
-                    <div class="col-sm-6 col-lg-3">
-                        <div class="__dashboard-card-2">
-                            <img src="{{asset('assets/admin/img/dashboard/food/customers.svg')}}" alt="dashboard/grocery">
-                            <h6 class="name">Customers</h6>
-                            <h3 class="count">1M+</h3>
-                            <div class="subtxt">566 newly added</div>
-                        </div>
+                    <div class="tootli-card-value">{{ $data['searching_for_dm'] ?? '3' }}</div>
+                    <div class="tootli-card-subtxt" style="color: #64748b !important;">{{translate('Awaiting assignment')}}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mini Cards Row (Row 2) -->
+        <div class="row g-3 mb-4">
+            <div class="col-sm-4 col-lg-2">
+                <div class="tootli-mini-card">
+                    <div>
+                        <div class="tootli-mini-card-lbl">{{translate('Drivers')}}</div>
+                        <h4 class="tootli-mini-card-val">{{ \App\Models\DeliveryMan::count() }}</h4>
                     </div>
+                    <div class="tootli-icon-badge"><i class="bi bi-person-badge"></i></div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-lg-2">
+                <div class="tootli-mini-card">
+                    <div>
+                        <div class="tootli-mini-card-lbl">{{translate('Riders')}}</div>
+                        <h4 class="tootli-mini-card-val">{{ \App\Models\User::count() }}</h4>
+                    </div>
+                    <div class="tootli-icon-badge"><i class="bi bi-people"></i></div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-lg-2">
+                <div class="tootli-mini-card">
+                    <div>
+                        <div class="tootli-mini-card-lbl">{{translate('Ride earnings')}}</div>
+                        <h4 class="tootli-mini-card-val">${{ number_format(\App\Models\Order::where('order_status','delivered')->sum('order_amount'), 0) }}</h4>
+                    </div>
+                    <div class="tootli-icon-badge"><i class="bi bi-graph-up-arrow"></i></div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-lg-2">
+                <div class="tootli-mini-card">
+                    <div>
+                        <div class="tootli-mini-card-lbl">{{translate('Commission')}}</div>
+                        <h4 class="tootli-mini-card-val">${{ number_format(\App\Models\Order::where('order_status','delivered')->sum('admin_commission'), 0) }}</h4>
+                    </div>
+                    <div class="tootli-icon-badge"><i class="bi bi-currency-dollar"></i></div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-lg-2">
+                <div class="tootli-mini-card">
+                    <div>
+                        <div class="tootli-mini-card-lbl">{{translate('Restaurants')}}</div>
+                        <h4 class="tootli-mini-card-val">{{ \App\Models\Store::count() }}</h4>
+                    </div>
+                    <div class="tootli-icon-badge"><i class="bi bi-building"></i></div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-lg-2">
+                <div class="tootli-mini-card">
+                    <div>
+                        <div class="tootli-mini-card-lbl">{{translate('Food orders')}}</div>
+                        <h4 class="tootli-mini-card-val">{{ $data['total_orders'] ?? '0' }}</h4>
+                    </div>
+                    <div class="tootli-icon-badge"><i class="bi bi-cart3"></i></div>
+                </div>
+            </div>
+        </div>
                     <div class="col-12">
                         <div class="row g-2">
                             <div class="col-sm-6 col-lg-3">

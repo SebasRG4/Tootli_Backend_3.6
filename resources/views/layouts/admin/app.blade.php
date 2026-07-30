@@ -32,6 +32,7 @@ $countryCode = strtolower($country ? $country : 'auto');
     <link rel="stylesheet" href="{{asset('assets/admin/css/bootstrap-tour-standalone.min.css')}}">
     <link rel="stylesheet" href="{{asset('assets/admin/css/emogi-area.css')}}">
     <link rel="stylesheet" href="{{asset('assets/admin/css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/admin/css/tootli-admin-theme.css')}}?v=1.0">
 
     <link rel="stylesheet" href="{{asset('assets/admin/intltelinput/css/intlTelInput.css')}}">
     <link rel="stylesheet" href="{{asset('assets/admin/css/upload-single-image.css')}}">

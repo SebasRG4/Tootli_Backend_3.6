@@ -71,52 +71,60 @@
             </div>
         </div>
 
-        <!-- Stats -->
-        <div class="card mb-3">
-            <div class="card-body pt-0">
-                <div class="row g-2" id="order_stats">
-                    @php
-                        $totalDrivers = \Modules\Taxi\Models\TaxiDriver::count();
-                        $onlineDrivers = \Modules\Taxi\Models\TaxiDriver::where('status', 'available')->count();
-                        $totalVehicles = \Modules\Taxi\Models\TaxiVehicle::count();
-                        $totalRides = \Modules\Taxi\Models\TaxiRide::count();
-                        $pendingRides = \Modules\Taxi\Models\TaxiRide::where('status', 'pending')->count();
-                        $activeRides = \Modules\Taxi\Models\TaxiRide::whereIn('status', ['accepted', 'arriving', 'arrived', 'in_progress'])->count();
-                        $completedRides = \Modules\Taxi\Models\TaxiRide::where('status', 'completed')->count();
-                        $cancelledRides = \Modules\Taxi\Models\TaxiRide::where('status', 'cancelled')->count();
-                        $totalEarnings = \Modules\Taxi\Models\TaxiRide::where('status', 'completed')->sum('final_fare');
-                    @endphp
-                    <div class="col-sm-6 col-lg-3">
-                        <div class="__dashboard-card-2">
-                            <img src="{{asset('assets/admin/img/dashboard/grocery/customers.svg')}}" alt="dashboard">
-                            <h6 class="name">{{ translate('Drivers') }}</h6>
-                            <h3 class="count">{{ $totalDrivers }}</h3>
-                            <div class="subtxt text-success">{{ $onlineDrivers }} {{ translate('online') }}</div>
-                        </div>
+        <!-- Stats Grid (Row 1) -->
+        <div class="row g-3 mb-4">
+            @php
+                $totalDrivers = \Modules\Taxi\Models\TaxiDriver::count();
+                $onlineDrivers = \Modules\Taxi\Models\TaxiDriver::where('status', 'available')->count();
+                $totalVehicles = \Modules\Taxi\Models\TaxiVehicle::count();
+                $totalRides = \Modules\Taxi\Models\TaxiRide::count();
+                $pendingRides = \Modules\Taxi\Models\TaxiRide::where('status', 'pending')->count();
+                $activeRides = \Modules\Taxi\Models\TaxiRide::whereIn('status', ['accepted', 'arriving', 'arrived', 'in_progress'])->count();
+                $completedRides = \Modules\Taxi\Models\TaxiRide::where('status', 'completed')->count();
+                $cancelledRides = \Modules\Taxi\Models\TaxiRide::where('status', 'cancelled')->count();
+                $totalEarnings = \Modules\Taxi\Models\TaxiRide::where('status', 'completed')->sum('final_fare');
+            @endphp
+            <div class="col-sm-6 col-lg-3">
+                <div class="tootli-card tootli-card-featured">
+                    <div class="tootli-card-header-row">
+                        <span class="tootli-card-label">{{translate('Total rides')}}</span>
+                        <div class="tootli-icon-badge"><i class="bi bi-map"></i></div>
                     </div>
-                    <div class="col-sm-6 col-lg-3">
-                        <div class="__dashboard-card-2">
-                            <img src="{{asset('assets/admin/img/dashboard/food/orders.svg')}}" alt="dashboard">
-                            <h6 class="name">{{ translate('Total Rides') }}</h6>
-                            <h3 class="count">{{ $totalRides }}</h3>
-                            <div class="subtxt">{{ $activeRides }} {{ translate('active now') }}</div>
-                        </div>
+                    <div class="tootli-card-value">{{ $totalRides }}</div>
+                    <div class="tootli-card-subtxt">↗ {{ $completedRides }} {{translate('completed overall')}}</div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="tootli-card">
+                    <div class="tootli-card-header-row">
+                        <span class="tootli-card-label">{{translate('Completed rides')}}</span>
+                        <div class="tootli-icon-badge"><i class="bi bi-check-circle"></i></div>
                     </div>
-                    <div class="col-sm-6 col-lg-3">
-                        <div class="__dashboard-card-2">
-                            <img src="{{asset('assets/admin/img/dashboard/food/stores.svg')}}" alt="dashboard">
-                            <h6 class="name">{{ translate('Vehicles') }}</h6>
-                            <h3 class="count">{{ $totalVehicles }}</h3>
-                        </div>
+                    <div class="tootli-card-value">{{ $completedRides }}</div>
+                    <div class="tootli-card-subtxt">↗ {{ $totalRides > 0 ? round(($completedRides / $totalRides) * 100) : 0 }}% {{translate('of all rides')}}</div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="tootli-card">
+                    <div class="tootli-card-header-row">
+                        <span class="tootli-card-label">{{translate('Active rides')}}</span>
+                        <div class="tootli-icon-badge"><i class="bi bi-car-front-fill"></i></div>
                     </div>
-                    <div class="col-sm-6 col-lg-3">
-                        <div class="__dashboard-card-2">
-                            <img src="{{asset('assets/admin/img/dashboard/grocery/items.svg')}}" alt="dashboard">
-                            <h6 class="name">{{ translate('Earnings') }}</h6>
-                            <h3 class="count">{{\App\CentralLogics\Helpers::format_currency($totalEarnings)}}</h3>
-                            <div class="subtxt">{{ $completedRides }} {{ translate('trips') }}</div>
-                        </div>
+                    <div class="tootli-card-value">{{ $activeRides }}</div>
+                    <div class="tootli-card-subtxt">↗ {{translate('In progress now')}}</div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="tootli-card">
+                    <div class="tootli-card-header-row">
+                        <span class="tootli-card-label">{{translate('Pending requests')}}</span>
+                        <div class="tootli-icon-badge"><i class="bi bi-clock-history"></i></div>
                     </div>
+                    <div class="tootli-card-value">{{ $pendingRides }}</div>
+                    <div class="tootli-card-subtxt" style="color: #64748b !important;">{{translate('Awaiting assignment')}}</div>
+                </div>
+            </div>
+        </div>
                     <div class="col-12">
                         <div class="row g-2">
                             <div class="col-sm-6 col-lg-3">

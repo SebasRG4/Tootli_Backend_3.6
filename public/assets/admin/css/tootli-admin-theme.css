@@ -1,0 +1,442 @@
+/* Tootli Admin New Modern Theme - RapidTaxi / Modern Aesthetic */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --tootli-bg: #f4f6f5;
+    --tootli-green-dark: #174c3d;
+    --tootli-green-dark-hover: #133f33;
+    --tootli-green-light: #e8f2ee;
+    --tootli-green-accent: #10b981;
+    --tootli-card-bg: #ffffff;
+    --tootli-text-main: #0d1727;
+    --tootli-text-muted: #64748b;
+    --tootli-border: #e2e8f0;
+    --tootli-radius-card: 20px;
+    --tootli-radius-pill: 50px;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    background-color: var(--tootli-bg) !important;
+    color: var(--tootli-text-main) !important;
+}
+
+/* Overall Main Wrapper Padding & Canvas */
+main#content.main {
+    background-color: var(--tootli-bg) !important;
+    padding-top: 1rem !important;
+    padding-bottom: 2rem !important;
+}
+
+.content.container-fluid {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+}
+
+/* Navbar Vertical / Sidebar Styling */
+.navbar-vertical-aside {
+    background-color: #ffffff !important;
+    border-right: 1px solid var(--tootli-border) !important;
+}
+
+.navbar-vertical-aside .navbar-brand-wrapper {
+    padding: 1.25rem 1.5rem !important;
+}
+
+.navbar-vertical-aside .nav-subtitle {
+    font-size: 0.72rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.08em !important;
+    color: #94a3b8 !important;
+    text-transform: uppercase !important;
+    padding: 1rem 1.5rem 0.5rem 1.5rem !important;
+}
+
+.navbar-vertical-aside .nav-link {
+    border-radius: 14px !important;
+    margin: 0.15rem 0.85rem !important;
+    padding: 0.65rem 1rem !important;
+    font-weight: 500 !important;
+    color: #475569 !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.navbar-vertical-aside .nav-link:hover {
+    background-color: #f1f5f9 !important;
+    color: var(--tootli-green-dark) !important;
+}
+
+.navbar-vertical-aside .nav-item.active > .nav-link,
+.navbar-vertical-aside .nav-link.active {
+    background-color: var(--tootli-green-light) !important;
+    color: var(--tootli-green-dark) !important;
+    font-weight: 700 !important;
+}
+
+.navbar-vertical-aside .nav-indicator-icon {
+    font-size: 1.1rem !important;
+    margin-right: 0.75rem !important;
+    color: inherit !important;
+}
+
+.navbar-vertical-aside .badge-soft-success,
+.navbar-vertical-aside .badge-pill {
+    background-color: var(--tootli-green-dark) !important;
+    color: #ffffff !important;
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    border-radius: 50px !important;
+    padding: 0.25rem 0.55rem !important;
+}
+
+/* Floating Top Header Bar */
+header.navbar-fixed {
+    background-color: transparent !important;
+    padding: 0.75rem 1.5rem !important;
+}
+
+.navbar-floating-card {
+    background: #ffffff !important;
+    border-radius: var(--tootli-radius-pill) !important;
+    padding: 0.5rem 1rem 0.5rem 0.75rem !important;
+    box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid rgba(226, 232, 240, 0.8) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.btn-header-circle {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 50% !important;
+    background-color: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #334155 !important;
+    font-size: 1.1rem !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    padding: 0 !important;
+}
+
+.btn-header-circle:hover {
+    background-color: var(--tootli-green-light) !important;
+    color: var(--tootli-green-dark) !important;
+    border-color: #cbd5e1 !important;
+}
+
+/* Search Bar Input Pill */
+.header-search-wrapper {
+    position: relative !important;
+    flex: 1 !important;
+    max-width: 480px !important;
+    margin: 0 1rem !important;
+}
+
+.header-search-input {
+    width: 100% !important;
+    height: 44px !important;
+    border-radius: 50px !important;
+    background-color: #f1f5f9 !important;
+    border: 1px solid transparent !important;
+    padding: 0.5rem 3rem 0.5rem 3rem !important;
+    font-size: 0.92rem !important;
+    color: #0f172a !important;
+    transition: all 0.2s ease !important;
+}
+
+.header-search-input:focus {
+    background-color: #ffffff !important;
+    border-color: var(--tootli-green-dark) !important;
+    box-shadow: 0 0 0 3px rgba(23, 76, 61, 0.1) !important;
+    outline: none !important;
+}
+
+.header-search-icon {
+    position: absolute !important;
+    left: 1.15rem !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: #94a3b8 !important;
+    font-size: 1rem !important;
+    pointer-events: none !important;
+}
+
+.header-search-shortcut {
+    position: absolute !important;
+    right: 1.15rem !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    background: #e2e8f0 !important;
+    color: #64748b !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    padding: 0.15rem 0.45rem !important;
+    border-radius: 6px !important;
+    pointer-events: none !important;
+}
+
+/* Profile User Pill */
+.header-profile-pill {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.65rem !important;
+    padding: 0.25rem 0.85rem 0.25rem 0.35rem !important;
+    border-radius: 50px !important;
+    background-color: transparent !important;
+    cursor: pointer !important;
+    transition: background 0.2s ease !important;
+}
+
+.header-profile-pill:hover {
+    background-color: #f1f5f9 !important;
+}
+
+.header-avatar-circle {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50% !important;
+    background-color: var(--tootli-green-dark) !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1rem !important;
+}
+
+.header-user-info {
+    display: flex !important;
+    flex-direction: column !important;
+    line-height: 1.2 !important;
+}
+
+.header-user-name {
+    font-weight: 700 !important;
+    font-size: 0.88rem !important;
+    color: #0f172a !important;
+}
+
+.header-user-email {
+    font-size: 0.75rem !important;
+    color: #64748b !important;
+}
+
+/* Modern Dashboard Header Section */
+.tootli-dashboard-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-bottom: 2rem !important;
+    flex-wrap: wrap !important;
+    gap: 1rem !important;
+}
+
+.tootli-dashboard-title-group h1 {
+    font-size: 2.25rem !important;
+    font-weight: 800 !important;
+    color: #0d1727 !important;
+    letter-spacing: -0.03em !important;
+    margin-bottom: 0.25rem !important;
+}
+
+.tootli-dashboard-title-group p {
+    font-size: 1rem !important;
+    color: var(--tootli-text-muted) !important;
+    margin: 0 !important;
+}
+
+.tootli-actions-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+}
+
+.btn-tootli-pill-primary {
+    background-color: var(--tootli-green-dark) !important;
+    color: #ffffff !important;
+    border-radius: 50px !important;
+    padding: 0.65rem 1.35rem !important;
+    font-weight: 700 !important;
+    font-size: 0.92rem !important;
+    border: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    box-shadow: 0 4px 12px rgba(23, 76, 61, 0.2) !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+}
+
+.btn-tootli-pill-primary:hover {
+    background-color: var(--tootli-green-dark-hover) !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
+}
+
+.btn-tootli-pill-secondary {
+    background-color: #ffffff !important;
+    color: #1e293b !important;
+    border: 1.5px solid #cbd5e1 !important;
+    border-radius: 50px !important;
+    padding: 0.65rem 1.35rem !important;
+    font-weight: 600 !important;
+    font-size: 0.92rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+}
+
+.btn-tootli-pill-secondary:hover {
+    background-color: #f8fafc !important;
+    border-color: #94a3b8 !important;
+    color: #0f172a !important;
+}
+
+/* Stat Cards Modern Styling */
+.tootli-card {
+    background: #ffffff !important;
+    border-radius: var(--tootli-radius-card) !important;
+    padding: 1.5rem !important;
+    border: 1px solid rgba(226, 232, 240, 0.9) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02) !important;
+    transition: all 0.2s ease-in-out !important;
+    position: relative !important;
+    height: 100% !important;
+}
+
+.tootli-card:hover {
+    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Featured Stat Card (Dark Green) */
+.tootli-card-featured {
+    background-color: var(--tootli-green-dark) !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 10px 25px -5px rgba(23, 76, 61, 0.3) !important;
+}
+
+.tootli-card-featured .tootli-card-label {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.tootli-card-featured .tootli-card-value {
+    color: #ffffff !important;
+}
+
+.tootli-card-featured .tootli-card-subtxt {
+    color: #a7f3d0 !important;
+}
+
+.tootli-card-featured .tootli-icon-badge {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+}
+
+/* Stat Card Inner Content */
+.tootli-card-header-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-bottom: 0.75rem !important;
+}
+
+.tootli-card-label {
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    color: #64748b !important;
+    margin: 0 !important;
+}
+
+.tootli-icon-badge {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    background-color: var(--tootli-green-light) !important;
+    color: var(--tootli-green-dark) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.15rem !important;
+}
+
+.tootli-card-value {
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    line-height: 1.1 !important;
+    margin-bottom: 0.5rem !important;
+    letter-spacing: -0.02em !important;
+}
+
+.tootli-card-subtxt {
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    color: var(--tootli-green-accent) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.35rem !important;
+}
+
+/* Mini Cards Row */
+.tootli-mini-card {
+    background: #ffffff !important;
+    border-radius: 18px !important;
+    padding: 1.15rem 1.25rem !important;
+    border: 1px solid #e2e8f0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    height: 100% !important;
+}
+
+.tootli-mini-card-val {
+    font-size: 1.75rem !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    margin: 0 !important;
+}
+
+.tootli-mini-card-lbl {
+    font-size: 0.82rem !important;
+    font-weight: 600 !important;
+    color: #64748b !important;
+    margin-bottom: 0.2rem !important;
+}
+
+/* Activity Badge & Recent Orders List */
+.tootli-badge-id {
+    width: 42px !important;
+    height: 36px !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-weight: 800 !important;
+    font-size: 0.85rem !important;
+    color: #ffffff !important;
+}
+
+.tootli-badge-blue { background-color: #6366f1 !important; }
+.tootli-badge-orange { background-color: #f59e0b !important; }
+.tootli-badge-green { background-color: #10b981 !important; }
+.tootli-badge-pink { background-color: #ec4899 !important; }
+
+/* Custom Scrollbar & Utility Classes */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
