@@ -441,83 +441,124 @@ header.navbar-fixed {
     border-radius: 10px;
 }
 
-/* High Contrast Sidebar Improvements for Dark & Light Themes */
+/* Modern Clean White Sidebar System (RapidTaxi / Tootli UI) */
 aside.navbar-vertical-aside,
-.navbar-vertical-aside {
-    background-color: #004d28 !important; /* Elegant dark green background */
+.navbar-vertical-aside,
+.navbar-vertical,
+.js-navbar-vertical-aside {
+    background-color: #ffffff !important;
+    border-right: 1px solid #e2e8f0 !important;
 }
 
-/* Sidebar Section Headers */
+/* Sidebar Search Input Box */
+.navbar-vertical-aside .js-navbar-vertical-aside-menu-search,
+.navbar-vertical-aside .search--form-group,
+.navbar-vertical-aside .search--form-group input,
+.navbar-vertical-aside input.form-control,
+.navbar-vertical-aside input.search-input {
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 50px !important;
+    font-size: 0.9rem !important;
+}
+
+.navbar-vertical-aside input::placeholder,
+.navbar-vertical-aside .search--form-group input::placeholder {
+    color: #94a3b8 !important;
+}
+
+/* Sidebar Section Titles / Subtitles */
 .navbar-vertical-aside .nav-subtitle,
 .navbar-vertical-aside span.nav-subtitle,
-.navbar-vertical-aside .nav-subtitle-span {
-    color: #a7f3d0 !important; /* Bright mint green for uppercase headers */
-    font-size: 0.75rem !important;
+.navbar-vertical-aside .nav-subtitle-span,
+.navbar-vertical-aside .nav-subtitle-text,
+.navbar-vertical-aside .navbar-vertical-aside-has-menu .nav-subtitle,
+.navbar-vertical-aside .nav-sub-title {
+    color: #94a3b8 !important;
+    font-size: 0.72rem !important;
     font-weight: 800 !important;
     letter-spacing: 0.08em !important;
     text-transform: uppercase !important;
-    opacity: 0.95 !important;
+    padding: 1.15rem 1.25rem 0.45rem 1.25rem !important;
+    display: block !important;
 }
 
-/* Sidebar Menu Links and Texts */
+/* Sidebar Navigation Items & Text */
 .navbar-vertical-aside .nav-link,
 .navbar-vertical-aside .nav-link span,
 .navbar-vertical-aside .nav-text,
 .navbar-vertical-aside .text-truncate,
-.navbar-vertical-aside a {
-    color: #ffffff !important; /* Ultra crisp white text */
+.navbar-vertical-aside a,
+.navbar-vertical-aside .nav-link-title,
+.navbar-vertical-aside .navbar-vertical-aside-has-menu > a {
+    color: #334155 !important;
     font-weight: 600 !important;
     font-size: 0.92rem !important;
+    transition: all 0.2s ease-in-out !important;
 }
 
 /* Sidebar Icons */
 .navbar-vertical-aside .nav-icon,
 .navbar-vertical-aside .nav-indicator-icon,
 .navbar-vertical-aside i,
-.navbar-vertical-aside svg {
-    color: #34d399 !important; /* Bright emerald icon */
-    fill: #34d399 !important;
+.navbar-vertical-aside svg,
+.navbar-vertical-aside .tio-icon,
+.navbar-vertical-aside .nav-link-icon {
+    color: #64748b !important;
+    fill: #64748b !important;
     font-size: 1.15rem !important;
-    opacity: 1 !important;
+    transition: all 0.2s ease-in-out !important;
 }
 
-/* Sidebar Search Box */
-.navbar-vertical-aside .js-navbar-vertical-aside-menu-search,
-.navbar-vertical-aside .search--form-group input,
-.navbar-vertical-aside input.form-control {
-    background-color: rgba(255, 255, 255, 0.12) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.25) !important;
-    border-radius: 50px !important;
+/* Sidebar Item Hover State */
+.navbar-vertical-aside .nav-link:hover,
+.navbar-vertical-aside .nav-item:hover > .nav-link {
+    background-color: #f1f5f9 !important;
+    color: #006837 !important;
+    border-radius: 12px !important;
 }
 
-.navbar-vertical-aside input::placeholder {
-    color: rgba(255, 255, 255, 0.75) !important;
+.navbar-vertical-aside .nav-link:hover .text-truncate,
+.navbar-vertical-aside .nav-link:hover span,
+.navbar-vertical-aside .nav-link:hover .nav-icon,
+.navbar-vertical-aside .nav-link:hover i {
+    color: #006837 !important;
+    fill: #006837 !important;
 }
 
-/* Active & Hover Item Pills */
+/* Active Item Pill (Featured Soft Mint Card) */
 .navbar-vertical-aside .nav-item.active > .nav-link,
-.navbar-vertical-aside .nav-link.active {
-    background-color: rgba(255, 255, 255, 0.22) !important;
-    color: #ffffff !important;
+.navbar-vertical-aside .nav-link.active,
+.navbar-vertical-aside .navbar-vertical-aside-has-menu.active > .nav-link {
+    background-color: #e6f2ec !important;
+    color: #006837 !important;
     font-weight: 700 !important;
     border-radius: 12px !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    box-shadow: none !important;
 }
 
-.navbar-vertical-aside .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.12) !important;
-    color: #ffffff !important;
+.navbar-vertical-aside .nav-item.active > .nav-link .text-truncate,
+.navbar-vertical-aside .nav-item.active > .nav-link span,
+.navbar-vertical-aside .nav-link.active .text-truncate,
+.navbar-vertical-aside .nav-link.active span,
+.navbar-vertical-aside .nav-item.active > .nav-link .nav-icon,
+.navbar-vertical-aside .nav-item.active > .nav-link i,
+.navbar-vertical-aside .nav-link.active .nav-icon,
+.navbar-vertical-aside .nav-link.active i {
+    color: #006837 !important;
+    fill: #006837 !important;
 }
 
-/* Submenu items */
+/* Submenu Links */
 .navbar-vertical-aside .nav-sub .nav-link,
 .navbar-vertical-aside .nav-sub-link {
-    color: #e2e8f0 !important;
+    color: #475569 !important;
+    font-weight: 500 !important;
 }
 
 .navbar-vertical-aside .nav-sub .nav-link:hover,
-.navbar-vertical-aside .nav-sub-link.active {
-    color: #34d399 !important;
+.navbar-vertical-aside .nav-sub .nav-link.active {
+    color: #006837 !important;
+    font-weight: 700 !important;
 }
