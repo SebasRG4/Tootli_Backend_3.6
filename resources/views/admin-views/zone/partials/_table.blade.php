@@ -8,13 +8,13 @@
                                }'>
               <thead class="thead-light">
                   <tr>
-                      <th class="border-0">{{ translate('messages.SL') }}</th>
-                      <th class="border-0">{{ translate('messages.zone_Id') }}</th>
-                      <th class="border-0">{{ translate('messages.business_Zone_name') }}</th>
-                      <th class="border-0">{{ translate('messages.vendors') }}</th>
-                      <th class="border-0">{{ translate('messages.deliverymen') }}</th>
-                      <th class="border-0">{{ translate('messages.status') }}</th>
-                      <th class="border-0 text-center">{{ translate('messages.action') }}</th>
+                      <th class="border-0">{{ 'SL' }}</th>
+                      <th class="border-0">{{ 'identificación de zona' }}</th>
+                      <th class="border-0">{{ 'nombre de la zona comercial' }}</th>
+                      <th class="border-0">{{ 'vendedores' }}</th>
+                      <th class="border-0">{{ 'repartidores' }}</th>
+                      <th class="border-0">{{ 'estado' }}</th>
+                      <th class="border-0 text-center">{{ 'acción' }}</th>
                   </tr>
               </thead>
 
@@ -42,10 +42,10 @@
                                       data-id="status-{{ $zone['id'] }}" data-type="status"
                                       data-image-on='{{ asset('assets/admin/img/modal') }}/zone-status-on.png'
                                       data-image-off="{{ asset('assets/admin/img/modal') }}/zone-status-off.png"
-                                      data-title-on="{{ translate('Want_to_activate_this_Zone?') }}"
-                                      data-title-off="{{ translate('Want_to_deactivate_this_Zone?') }}"
-                                      data-text-on="<p>{{ translate('If_you_activate_this_zone,_Customers_can_see_all_stores_&_products_available_under_this_Zone_from_the_Customer_App_&_Website.') }}</p>"
-                                      data-text-off="<p>{{ translate('If_you_deactivate_this_zone,_Customers_Will_NOT_see_all_stores_&_products_available_under_this_Zone_from_the_Customer_App_&_Website.') }}</p>"
+                                      data-title-on="{{ '¿Quieres activar esta Zona?' }}"
+                                      data-title-off="{{ '¿Quieres desactivar esta Zona?' }}"
+                                      data-text-on="<p>{{ 'Si activa esta zona, los clientes pueden ver todas las tiendas y productos disponibles en esta zona desde la aplicación y el sitio web del cliente.' }}</p>"
+                                      data-text-off="<p>{{ 'Si desactiva esta zona, los clientes NO verán todas las tiendas y productos disponibles en esta zona desde la aplicación y el sitio web del cliente.' }}</p>"
                                       id="status-{{ $zone['id'] }}" {{ $zone->status ? 'checked' : '' }}>
                                   <span class="toggle-switch-label">
                                       <span class="toggle-switch-indicator"></span>
@@ -66,7 +66,7 @@
                                       <a href="{{ route('admin.business-settings.zone.module-setup', [$zone['id']]) }}"
                                           class="btn action-btn btn-outline-theme-dark " data-toggle="tooltip"
                                           data-placement="bottom"
-                                          data-original-title="{{ translate('messages.connect_module') }}">
+                                          data-original-title="{{ 'conectar el módulo' }}">
                                           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                                               xmlns="http://www.w3.org/2000/svg">
                                               <path
@@ -87,10 +87,10 @@
                                       <div class="popover __popover">
                                           <div class="arrow"></div>
                                           <h3 class="popover-header d-flex justify-content-between">
-                                              <span>{{ translate('messages.Important!') }}</span>
+                                              <span>{{ '¡Importante!' }}</span>
                                           </h3>
                                           <div class="popover-body">
-                                              {{ translate('The_Business_Zone_will_NOT_work_if_you_don’t_select_your_business_module_&_payment_method.') }}
+                                              {{ 'La Zona Comercial NO funcionará si no selecciona su módulo comercial y método de pago.' }}
                                           </div>
                                       </div>
                                       @endif
@@ -99,7 +99,7 @@
                                   <a href="{{ route('admin.business-settings.zone.surge-price.list', [$zone['id']]) }}"
                                       class="btn action-btn btn-outline-theme-light" data-toggle="tooltip"
                                       data-placement="bottom"
-                                      data-original-title="{{ translate('messages.surge_price') }}">
+                                      data-original-title="{{ 'aumento de precio' }}">
                                       <svg width="18" height="16" viewBox="0 0 18 16" fill="none"
                                           xmlns="http://www.w3.org/2000/svg">
                                           <path
@@ -118,31 +118,31 @@
                                           class="btn action-btn btn--primary btn-outline-primary rounded"
                                           data-toggle="dropdown" aria-expanded="false">
                                           <i class="tio-more-vertical" data-toggle="tooltip" data-placement="bottom"
-                                              data-original-title="{{ translate('messages.menu') }}"></i>
+                                              data-original-title="{{ 'menú' }}"></i>
                                       </button>
                                       <div class="dropdown-menu dropdown-menu-right">
                                           <a href="{{ route('admin.business-settings.zone.edit', [$zone['id']]) }}"
-                                              title="{{ translate('messages.edit_zone') }}"
+                                              title="{{ 'editar zona' }}"
                                               class="dropdown-item  px-3 border-bottom fs-14 d-flex align-items-center gap-1 justify-content-between">
-                                              {{ translate('Edit') }} <i class="tio-edit theme-clr-dark"></i>
+                                              {{ 'Editar' }} <i class="tio-edit theme-clr-dark"></i>
                                           </a>
                                           <a href="javascript:" data-id="zone-{{ $zone['id'] }}"
-                                              data-title="{{ translate('Want_to_Delete_this_Zone?') }}"
-                                              data-message="{{ translate('If_yes,_all_its_modules,_stores,_and_products_will_be_DELETED_FOREVER.') }}"
-                                              title="{{ translate('messages.delete_zone') }}"
+                                              data-title="{{ '¿Quieres eliminar esta zona?' }}"
+                                              data-message="{{ 'En caso afirmativo, todos sus módulos, tiendas y productos serán ELIMINADOS PARA SIEMPRE.' }}"
+                                              title="{{ 'eliminar zona' }}"
                                               class="dropdown-item px-3 border-bottom fs-14 d-flex align-items-center gap-1 justify-content-between status_form_alert">
-                                              {{ translate('Delete') }} <i class="tio-delete-outlined text-danger"></i>
+                                              {{ 'Borrar' }} <i class="tio-delete-outlined text-danger"></i>
                                           </a>
                                           @if ($digital_payment && $digital_payment['status'] == 1)
                                               <div
                                                   class="dropdown-item px-3 border-bottom fs-14 d-flex align-items-center gap-1 justify-content-between">
-                                                  {{ translate('Digital Payment') }}
+                                                  {{ 'Pago Digital' }}
                                                   <label class="toggle-switch toggle-switch-sm"
                                                       for="digital_paymentCheckbox{{ $zone->id }}">
                                                       <input type="checkbox"
                                                           data-id="digital_payment-{{ $zone['id'] }}"
-                                                          data-title="{{ $zone->digital_payment ? translate('Want_to_disable_‘Digital_Payment’?') : translate('Want_to_enable_‘Digital_Payment’?') }}"
-                                                          data-message="{{ $zone->digital_payment ? translate('If_yes,_the_digital_payment_option_will_be_hidden_during_checkout.') : translate('If_yes,_Customers_can_choose_the_‘Digital_Payment’_option_during_checkout.') }}"
+                                                          data-title="{{ $zone->digital_payment ? '¿Quiere desactivar el \'Pago digital\'?' : '¿Quiere habilitar el "Pago digital"?' }}"
+                                                          data-message="{{ $zone->digital_payment ? 'En caso afirmativo, la opción de pago digital estará oculta durante el proceso de pago.' : 'En caso afirmativo, los clientes pueden elegir la opción "Pago digital" durante el proceso de pago.' }}"
                                                           class="toggle-switch-input status_form_alert"
                                                           id="digital_paymentCheckbox{{ $zone->id }}"
                                                           {{ $zone->digital_payment ? 'checked' : '' }}>
@@ -159,13 +159,13 @@
                                           @if ($offline_payment && $offline_payment == 1)
                                               <div
                                                   class="dropdown-item px-3 border-bottom fs-14 d-flex align-items-center gap-1 justify-content-between">
-                                                  {{ translate('Offline Payment') }}
+                                                  {{ 'Pago sin conexión' }}
                                                   <label class="toggle-switch toggle-switch-sm"
                                                       for="offline_paymentCheckbox{{ $zone->id }}">
                                                       <input type="checkbox"
                                                           data-id="offline_payment-{{ $zone['id'] }}"
-                                                          data-title="{{ $zone->offline_payment ? translate('Want_to_disable_‘offline_Payment’?') : translate('Want_to_enable_‘offline_Payment’?') }}"
-                                                          data-message="{{ $zone->offline_payment ? translate('If_yes,_the_offline_payment_option_will_be_hidden_during_checkout.') : translate('If_yes,_Customers_can_choose_the_‘offline_Payment’_option_during_checkout.') }}"
+                                                          data-title="{{ $zone->offline_payment ? '¿Quiere desactivar el "Pago sin conexión"?' : '¿Quiere habilitar el "Pago sin conexión"?' }}"
+                                                          data-message="{{ $zone->offline_payment ? 'En caso afirmativo, la opción de pago sin conexión se ocultará durante el proceso de pago.' : 'En caso afirmativo, los Clientes pueden elegir la opción "Pago sin conexión" durante el proceso de pago.' }}"
                                                           class="toggle-switch-input status_form_alert"
                                                           id="offline_paymentCheckbox{{ $zone->id }}"
                                                           {{ $zone->offline_payment ? 'checked' : '' }}>
@@ -182,13 +182,13 @@
                                           @if ($config && $config['status'] == 1)
                                               <div
                                                   class="dropdown-item px-3 fs-14 d-flex align-items-center gap-1 justify-content-between">
-                                                  {{ translate('Cash On Delivery') }}
+                                                  {{ 'Contra reembolso' }}
                                                   <label class="toggle-switch toggle-switch-sm"
                                                       for="cashOnDeliveryCheckbox{{ $zone->id }}">
                                                       <input type="checkbox"
                                                           data-id="cash_on_delivery-{{ $zone['id'] }}"
-                                                          data-title="{{ $zone->cash_on_delivery ? translate('Want_to_disable_‘Cash_On_Delivery’?') : translate('Want_to_enable_‘Cash_On_Delivery’?') }}"
-                                                          data-message="{{ $zone->cash_on_delivery ? translate('If_yes,_the_Cash_on_Delivery_option_will_be_hidden_during_checkout.') : translate('If_yes,_Customers_can_choose_the_‘Cash_On_Delivery’_option_during_checkout.') }}"
+                                                          data-title="{{ $zone->cash_on_delivery ? '¿Quiere desactivar el "Pago contra reembolso"?' : '¿Quiere habilitar el "Pago contra reembolso"?' }}"
+                                                          data-message="{{ $zone->cash_on_delivery ? 'En caso afirmativo, la opción Contra reembolso se ocultará durante el proceso de pago.' : 'En caso afirmativo, los clientes pueden elegir la opción "Pago contra reembolso" durante el proceso de pago.' }}"
                                                           class="toggle-switch-input status_form_alert"
                                                           id="cashOnDeliveryCheckbox{{ $zone->id }}"
                                                           {{ $zone->cash_on_delivery ? 'checked' : '' }}>
@@ -225,7 +225,7 @@
           <div class="empty--data">
               <img src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
               <h5>
-                  {{ translate('no_data_found') }}
+                  {{ 'no se encontraron datos' }}
               </h5>
           </div>
       @endif

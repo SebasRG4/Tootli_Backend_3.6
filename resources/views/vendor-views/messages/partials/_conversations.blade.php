@@ -73,7 +73,7 @@
             @csrf
             <div class="quill-custom_">
                 <!-- <label for="msg" class="layer-msg"></label> -->
-                <textarea id="conv-textarea" class="form-control pr--180"  rows = "1" name="reply" placeholder="{{translate('Start a new message')}}"></textarea>
+                <textarea id="conv-textarea" class="form-control pr--180"  rows = "1" name="reply" placeholder="{{'Iniciar un nuevo mensaje'}}"></textarea>
                 <div class="upload__box">
                     <div class="upload__img-wrap"></div>
                     <div id="file-upload-filename" class="upload__file-wrap"></div>
@@ -89,7 +89,7 @@
                 </div>
 
                 <button type="submit"
-                        class="btn btn-primary btn--primary con-reply-btn">{{translate('messages.send')}}
+                        class="btn btn-primary btn--primary con-reply-btn">{{'enviar'}}
                 </button>
             </div>
         </form>
@@ -211,13 +211,13 @@
 
             },
             onExtensionErr: function() {
-                toastr.error('{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
+                toastr.error('{{ 'Por favor ingrese solo archivos tipo png o jpg' }}', {
                     CloseButton: true,
                     ProgressBar: true
                 });
             },
             onSizeErr: function() {
-                toastr.error('{{ translate('messages.file_size_too_big') }}', {
+                toastr.error('{{ 'tamaño de archivo demasiado grande' }}', {
                     CloseButton: true,
                     ProgressBar: true
                 });

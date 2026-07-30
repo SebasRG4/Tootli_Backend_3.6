@@ -21,32 +21,32 @@
                                     </div>
                                     <div class="text-dark mb-3">
                                         <h3 class="lh-base">
-                                            {{ translate('how_to_get_the_google_analytics_measurement_id') }}
+                                            {{ 'cómo obtener la identificación de medición de Google Analytics' }}
                                         </h3>
                                         <p class="opacity-75">
-                                            {{ translate('to_find_your_google_analytics_measurement_id,_log_into_your_google_analytics_account.') }}
-                                            {{ translate('go_to_admin_and_then_data_streams.') }}
-                                            {{ translate('select_your_web_data_stream_and_your_measurement_id_will_be_displayed.') }}
-                                            {{ translate('copy_it.') }}
+                                            {{ 'Para encontrar su ID de medición de Google Analytics, inicie sesión en su cuenta de Google Analytics.' }}
+                                            {{ 'vaya a administrador y luego a flujos de datos.' }}
+                                            {{ 'seleccione su flujo de datos web y se mostrará su identificación de medición.' }}
+                                            {{ 'cópialo.' }}
                                         </p>
                                     </div>
 
                                     <div class="text-dark mb-3">
                                         <h3 class="lh-base">
-                                            {{ translate('where_to_use_the_google_analytics_measurement_id') }}
+                                            {{ 'dónde utilizar la identificación de medición de Google Analytics' }}
                                         </h3>
                                         <p class="opacity-75">
-                                            {{ translate('open_the_marketing_tools_feature_in_your_admin_panel_and_follow_the_steps:') }}
+                                            {{ 'abra la función de herramientas de marketing en su panel de administración y siga los pasos:' }}
                                         </p>
                                         <ol class="d-flex flex-column gap-2 opacity-75">
                                             <li>
-                                                {{ translate('navigate_to_the_google_analytics_measurement_id_section_under_marketing_tools.') }}
+                                                {{ 'navegue hasta la sección de identificación de medición de Google Analytics en herramientas de marketing.' }}
                                             </li>
                                             <li>
-                                                {{ translate('turn_on_the_toggle_button.') }}
+                                                {{ 'encienda el botón de alternancia.' }}
                                             </li>
                                             <li>
-                                                {{ translate('paste_your_google_analytics_measurement_id_into_the_input_box_and_click_submit.') }}
+                                                {{ 'pegue su ID de medición de Google Analytics en el cuadro de entrada y haga clic en enviar.' }}
                                             </li>
                                         </ol>
                                     </div>

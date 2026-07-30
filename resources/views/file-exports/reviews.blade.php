@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-lg-12 text-center "><h1 >{{ translate('reviews') }}</h1></div>
+    <div class="col-lg-12 text-center "><h1 >{{ 'opiniones' }}</h1></div>
     <div class="col-lg-12">
 
 
@@ -7,11 +7,11 @@
     <table>
         <thead>
             <tr>
-                <th>{{ translate('review') }}</th>
+                <th>{{ 'revisar' }}</th>
                 <th></th>
                 <th></th>
                 <th>
-                    {{ translate('Total')  }}: {{ $data['data']->count() }}
+                    {{ 'Total'  }}: {{ $data['data']->count() }}
 
 
                 </th>
@@ -21,11 +21,11 @@
                 <th></th>
                 </tr>
             <tr>
-                <th>{{ translate('Search_Criteria') }}</th>
+                <th>{{ 'Criterios de búsqueda' }}</th>
                 <th></th>
                 <th></th>
                 <th>
-                    {{ translate('Search_Bar_Content')  }}: : {{  $data['search']  ??translate('N/A') }}
+                    {{ 'Contenido de la barra de búsqueda'  }}: : {{  $data['search']  ??'N / A' }}
                 </th>
                 <th> </th>
                 <th></th>
@@ -33,13 +33,13 @@
                 <th></th>
                 </tr>
         <tr>
-            <th class="border-0">{{translate('messages.#')}}</th>
-            <th class="border-0">{{translate('messages.Review_Id')}}</th>
-            <th class="border-0">{{translate('messages.item')}}</th>
-            <th class="border-0">{{translate('messages.order_id')}}</th>
-            <th class="border-0">{{translate('messages.reviewer')}}</th>
-            <th class="border-0">{{translate('messages.review')}}</th>
-            <th class="border-0">{{translate('messages.date')}}</th>
+            <th class="border-0">{{'#'}}</th>
+            <th class="border-0">{{'ID de revisión'}}</th>
+            <th class="border-0">{{'Producto'}}</th>
+            <th class="border-0">{{'identificación del pedido'}}</th>
+            <th class="border-0">{{'crítico'}}</th>
+            <th class="border-0">{{'revisar'}}</th>
+            <th class="border-0">{{'fecha'}}</th>
         </thead>
         <tbody>
         @foreach($data['data'] as $key => $review)
@@ -58,7 +58,7 @@
                     <span class="d-block font-size-sm text-body">({{Str::limit($review->customer->phone)}})</span>
                 </div>
             @else
-                {{translate('messages.customer_not_found')}}
+                {{'cliente no encontrado'}}
             @endif
         </td>
         <td>

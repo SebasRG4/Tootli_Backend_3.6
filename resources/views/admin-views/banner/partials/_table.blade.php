@@ -37,9 +37,9 @@
         </td>
         <td>
             <div class="btn--container justify-content-center">
-                <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.banner.edit',[$banner['id']])}}"title="{{translate('messages.edit_banner')}}"><i class="tio-edit"></i>
+                <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.banner.edit',[$banner['id']])}}"title="{{'editar banner'}}"><i class="tio-edit"></i>
                 </a>
-                <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="banner-{{$banner['id']}}" data-message="{{ translate('Want to delete this banner ?') }}"><i class="tio-delete-outlined"></i>
+                <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="banner-{{$banner['id']}}" data-message="{{ '¿Quieres eliminar este banner?' }}"><i class="tio-delete-outlined"></i>
                 </a>
                 <form action="{{route('admin.banner.delete',[$banner['id']])}}"
                             method="post" id="banner-{{$banner['id']}}">

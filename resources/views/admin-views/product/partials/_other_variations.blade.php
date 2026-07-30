@@ -3,21 +3,21 @@
                         <div class="card-header">
                             <h5 class="card-title">
                                 <span class="card-header-icon"><i class="tio-canvas-text"></i></span>
-                                <span>{{ translate('attribute') }}</span>
+                                <span>{{ 'atributo' }}</span>
                             </h5>
                         @if (isset($openai_config) && data_get($openai_config, 'status') == 1)
                         <button type="button" class="btn bg-white text-primary opacity-1 generate_btn_wrapper p-0 mb-2 other_variation_setup_auto_fill"
                             id="other_variation_setup_auto_fill" data-route="{{ route('admin.product.generate-other-variation-data') }}"
-                            data-error="{{ translate('Please provide an item name and description so the AI can generate a suitable variations.') }}"
+                            data-error="{{ 'Proporcione un nombre y una descripción del elemento para que la IA pueda generar variaciones adecuadas.' }}"
                             data-lang="en">
                             <div class="btn-svg-wrapper">
                                 <img width="18" height="18" class=""
                                     src="{{ asset('assets/admin/img/svg/blink-right-small.svg') }}" alt="">
                             </div>
                             <span class="ai-text-animation d-none" role="status">
-                                {{ translate('Just_a_second') }}
+                                {{ 'Un momento' }}
                             </span>
-                            <span class="btn-text">{{ translate('Generate') }}</span>
+                            <span class="btn-text">{{ 'Generar' }}</span>
                         </button>
                         @endif
                         </div>
@@ -26,10 +26,10 @@
                                 <div class="col-12">
                                     <div class="form-group mb-0 error-wrapper">
                                         <label class="input-label"
-                                            for="exampleFormControlSelect1">{{ translate('messages.attribute') }}<span
+                                            for="exampleFormControlSelect1">{{ 'atributo' }}<span
                                                 class="input-label-secondary"></span></label>
                                         <select name="attribute_id[]" id="choice_attributes"
-                                        data-placeholder="{{ translate('messages.Select_attribute') }}"
+                                        data-placeholder="{{ 'Seleccionar atributo' }}"
                                             class="form-control js-select2-custom" multiple="multiple">
                                             @foreach (\App\Models\Attribute::orderBy('name')->get() as $attribute)
                                                 <option value="{{ $attribute['id'] }}">{{ $attribute['name'] }}</option>

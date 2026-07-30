@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.react_site_setup'))
+@section('title', 'reaccionar configuración del sitio')
 
 @push('css_or_js')
 
@@ -12,7 +12,7 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-sm mb-sm-0">
-                    <h1 class="page-header-title">{{translate('React Site Setup')}}</h1>
+                    <h1 class="page-header-title">{{'Reaccionar configuración del sitio'}}</h1>
                 </div>
             </div>
         </div>
@@ -29,21 +29,21 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="react_license_code" class="form-label text-capitalize">{{translate('React license code')}}</label>
-                                <input id="react_license_code" type="text" placeholder="{{translate('React license code')}}" class="form-control h--45px" name="react_license_code"
+                                <label for="react_license_code" class="form-label text-capitalize">{{'Reaccionar código de licencia'}}</label>
+                                <input id="react_license_code" type="text" placeholder="{{'Reaccionar código de licencia'}}" class="form-control h--45px" name="react_license_code"
                                     value="{{env('APP_MODE')!='demo'?( $react_setup['react_license_code'] ?? ''):''}}" required>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="react_domain" class="form-label text-capitalize">{{translate('React Domain')}}</label>
-                                <input id="react_domain" type="text" placeholder="{{translate('React Domain')}}" class="form-control h--45px" name="react_domain"
+                                <label for="react_domain" class="form-label text-capitalize">{{'Dominio de reacción'}}</label>
+                                <input id="react_domain" type="text" placeholder="{{'Dominio de reacción'}}" class="form-control h--45px" name="react_domain"
                                     value="{{env('APP_MODE')!='demo'?( $react_setup['react_domain'] ?? ''):''}}" required>
                             </div>
                         </div>
                     </div>
                     <div class="text-right">
-                        <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}"  class="btn btn--primary mb-2 call-demo">{{translate('messages.save')}}</button>
+                        <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}"  class="btn btn--primary mb-2 call-demo">{{'ahorrar'}}</button>
                     </div>
                 </form>
             </div>

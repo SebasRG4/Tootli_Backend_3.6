@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.Vehicle_List'))
+@section('title','Lista de vehículos')
 
 @push('css_or_js')
 
@@ -12,12 +12,12 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-sm mb-2 mb-sm-0">
-                    <h1 class="page-header-title"><i class="tio-car"></i> {{translate('messages.vehicles_category_list')}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$vehicles->total()}}</span></h1>
+                    <h1 class="page-header-title"><i class="tio-car"></i> {{'lista de categorías de vehículos'}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$vehicles->total()}}</span></h1>
                 </div>
 
                 <div class="col-sm-auto">
                     <a class="btn btn--primary" href="{{route('admin.users.delivery-man.vehicle.create')}}">
-                        <i class="tio-add"></i> {{translate('messages.add_vehicle_category')}}
+                        <i class="tio-add"></i> {{'añadir categoría de vehículo'}}
                     </a>
                 </div>
             </div>
@@ -33,13 +33,13 @@
                             <form id="search-form">
                                 <!-- Search -->
                                 <div class="input--group input-group input-group-merge input-group-flush">
-                                    <input id="datatableSearch" type="search" name="search"  value="{{request()?->search}}"  class="form-control" placeholder="{{ translate('Ex_:_Search_by_type...') }}" aria-label="Search here">
+                                    <input id="datatableSearch" type="search" name="search"  value="{{request()?->search}}"  class="form-control" placeholder="{{ 'Ej: Buscar por tipo...' }}" aria-label="Search here">
                                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                                 </div>
                                 <!-- End Search -->
                             </form>
                             @if(request()->get('search'))
-                            <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                            <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{'reiniciar'}}</button>
                             @endif
 
                         </div>
@@ -55,14 +55,14 @@
                                }'>
                             <thead class="thead-light">
                             <tr>
-                                <th>{{ translate('messages.sl') }}</th>
-                                <th >{{translate('messages.Type')}}</th>
-                                <th >{{translate('messages.Total_Deliveryman')}}</th>
-                                <th >{{translate('messages.minimum_coverage_area')}} ({{ translate('messages.km') }}) </th>
-                                <th >{{translate('messages.Maximum_coverage_area')}} ({{ translate('messages.km') }})</th>
-                                <th >{{translate('messages.Extra_charges')}}  ({{ \App\CentralLogics\Helpers::currency_symbol() }})</th>
-                                <th>{{translate('messages.status')}}</th>
-                                <th class="text-center">{{translate('messages.action')}}</th>
+                                <th>{{ 'SL' }}</th>
+                                <th >{{'Tipo'}}</th>
+                                <th >{{'Repartidor total'}}</th>
+                                <th >{{'área de cobertura mínima'}} ({{ 'kilómetros' }}) </th>
+                                <th >{{'Área de cobertura máxima'}} ({{ 'kilómetros' }})</th>
+                                <th >{{'Cargos extra'}}  ({{ \App\CentralLogics\Helpers::currency_symbol() }})</th>
+                                <th>{{'estado'}}</th>
+                                <th class="text-center">{{'acción'}}</th>
                             </tr>
                             </thead>
 
@@ -99,10 +99,10 @@
                                             data-type="status"
                                             data-image-on="{{ asset('assets/admin/img/modal/mail-success.png') }}"
                                             data-image-off="{{ asset('assets/admin/img/modal/mail-warning.png') }}"
-                                            data-title-on="{{ translate('By_Turning_ON_Vehicle_Category!') }}"
-                                            data-title-off="{{ translate('By_Turning_OFF_Vehicle_Category!') }}"
-                                            data-text-on="<p>{{ translate('Turned_on_this_vehicle_category_extra_charge_will_be_added_on_the_delivery_charge_and_this_categories_deliverymen_can_receives_the_order.') }}</p>"
-                                            data-text-off="<p>{{ translate('Turned_off_this_vehicle_category_extra_charge_will_not_be_added_on_the_delivery_charge_and_this_categories_deliverymen_can_not_receives_the_order') }}</p>"
+                                            data-title-on="{{ '¡Activando la categoría de vehículo!' }}"
+                                            data-title-off="{{ '¡Apagando la categoría de vehículo!' }}"
+                                            data-text-on="<p>{{ 'Al activar esta categoría de vehículo, se agregará un cargo adicional al cargo de entrega y los repartidores de esta categoría pueden recibir el pedido.' }}</p>"
+                                            data-text-off="<p>{{ 'Desactivada esta categoría de vehículo, el cargo adicional no se agregará al cargo de entrega y los repartidores de esta categoría no pueden recibir el pedido.' }}</p>"
                                             class="toggle-switch-input dynamic-checkbox" id="stocksCheckbox{{$vehicle->id}}" {{$vehicle->status?'checked':''}}>
                                             <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
@@ -127,10 +127,10 @@
                                             class="btn action-btn btn--warning btn-outline-warning vehicle-info-show" ><i class="tio-visible"></i>
                                             </a>
                                             <a class="btn btn-sm btn--primary btn-outline-primary action-btn"
-                                                href="{{route('admin.users.delivery-man.vehicle.edit',[$vehicle['id']])}}" title="{{translate('messages.edit_vehicle_category')}}"><i class="tio-edit"></i>
+                                                href="{{route('admin.users.delivery-man.vehicle.edit',[$vehicle['id']])}}" title="{{'editar categoría de vehículo'}}"><i class="tio-edit"></i>
                                             </a>
                                             <a class="btn btn-sm btn--danger btn-outline-danger action-btn form-alert" href="javascript:"
-                                                data-id="vehicle-{{$vehicle['id']}}" data-message="{{translate('messages.Want_to_delete_this_vehicle_category')}}" title="{{translate('messages.delete_vehicle_category')}}"><i class="tio-delete-outlined"></i>
+                                                data-id="vehicle-{{$vehicle['id']}}" data-message="{{'Quiere eliminar esta categoría de vehículo'}}" title="{{'eliminar categoría de vehículo'}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{route('admin.users.delivery-man.vehicle.delete',['id' =>$vehicle['id']])}}"
                                                         method="post" id="vehicle-{{$vehicle['id']}}">
@@ -146,7 +146,7 @@
                         <div class="empty--data">
                             <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                             <h5>
-                                {{translate('no_data_found')}}
+                                {{'no se encontraron datos'}}
                             </h5>
                         </div>
                         @endif
@@ -182,37 +182,37 @@
                         <div class="mb-4" >
 
                             <div class="d-flex justify-content-center mb-2  align-items-center gap-2  fs-16">
-                                <span  class="text-dark">{{translate('Vehicle_Type')}}</span>
+                                <span  class="text-dark">{{'Tipo de vehículo'}}</span>
                                 :
                                 <span id="vehicle_type" class="font-semibold text-dark">  </span>
                             </div>
                             <div class="d-flex justify-content-center mb-2 align-items-center gap-2">
-                                <span  class="text-dark">{{translate('status')}}</span>
+                                <span  class="text-dark">{{'estado'}}</span>
                                 :
                                 <span id="status"></span>
                             </div>
 
                             <div class="bg-light border mt-4 p-4 rounded text-dark">
                                 <div class="d-flex justify-content-center  align-items-center gap-2">
-                                    <span>{{translate('minimum_coverage_area')}} ({{ translate('messages.km') }})</span>
+                                    <span>{{'área de cobertura mínima'}} ({{ 'kilómetros' }})</span>
                                     :
                                     <span class="font-semibold text-dark" id="starting_coverage_area"></span>
                                 </div>
                                 <div class="d-flex justify-content-center mb-2 mt-2 align-items-center gap-2">
-                                    <span>{{translate('maximum_coverage_area')}} ({{ translate('messages.km') }})</span>
+                                    <span>{{'área de cobertura máxima'}} ({{ 'kilómetros' }})</span>
                                     :
                                     <span class="font-semibold text-dark" id="maximum_coverage_area"></span>
                                 </div>
                                 <div class="d-flex justify-content-center  align-items-center gap-2">
-                                    <span>{{translate('extra_charges')}} ({{\App\CentralLogics\Helpers::currency_symbol()}})</span>
+                                    <span>{{'cargos extra'}} ({{\App\CentralLogics\Helpers::currency_symbol()}})</span>
                                     :
                                     <span class="font-semibold text-dark" id="extra_charges"></span>
                                 </div>
                             </div>
                         </div>
                         <div class="btn--container mt-2 mb-2 justify-content-center">
-                            <a href="#" id="delete_button" data-message="{{translate('messages.Want_to_delete_this_vehicle_category')}}" title="{{translate('messages.delete_vehicle')}}" class="btn btn--cancel min-w-120 form-alert">  {{translate("delete")}}  </a>
-                            <a href="#"  id="edit_button" type="button" class="btn btn--primary min-w-120" >{{translate('Edit')}}</a>
+                            <a href="#" id="delete_button" data-message="{{'Quiere eliminar esta categoría de vehículo'}}" title="{{'eliminar vehículo'}}" class="btn btn--cancel min-w-120 form-alert">  {{'borrar'}}  </a>
+                            <a href="#"  id="edit_button" type="button" class="btn btn--primary min-w-120" >{{'Editar'}}</a>
                         </div>
                     </div>
                 </div>
@@ -239,9 +239,9 @@
             $('.modal-body #delete_button').attr('data-id',  data.delete_button);
             $('.modal-body #edit_button').attr('href',  data.edit_button);
                 if(data.status == 1){
-                    $('.modal-body #status').text('{{ translate('messages.Active') }}').addClass('badge badge-soft-success');
+                    $('.modal-body #status').text('{{ 'Activo' }}').addClass('badge badge-soft-success');
                 } else{
-                    $('.modal-body #status').text('{{ translate('messages.Inactive') }}').addClass('badge badge-soft-danger');
+                    $('.modal-body #status').text('{{ 'Inactivo' }}').addClass('badge badge-soft-danger');
                 }
         $('#vehicledetailList').modal('show');
     })

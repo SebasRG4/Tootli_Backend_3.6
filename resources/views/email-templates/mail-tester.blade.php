@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>{{translate('Email Verification')}}</title>
+    <title>{{'Verificación de correo electrónico'}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style type="text/css">
         /**
@@ -104,7 +104,7 @@
 <!-- end preheader -->
 <div class="card">
     <div class="card-header">
-        {{translate('mail_received_successfully')}}.
+        {{'correo recibido exitosamente'}}.
     </div>
 </div>
 </body>

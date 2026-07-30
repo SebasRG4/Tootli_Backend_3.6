@@ -6,7 +6,7 @@
             <tr>
 
                 <th>
-                    {{ translate('Disbursement_List') }}
+                    {{ 'Lista de desembolsos' }}
                 </th>
                 <th></th>
                 <th></th>
@@ -14,7 +14,7 @@
                     @if($data['type'] == 'store')
                         {{ translate($data['is_provider'] ? 'Provider' : 'Store') }} - {{ $data['store'] }}
                     @else
-                        {{ translate('Delivery_man') }} - {{ $data['delivery_man'] }}
+                        {{ 'repartidor' }} - {{ $data['delivery_man'] }}
                     @endif
                 </th>
                 <th></th>
@@ -23,12 +23,12 @@
                 </th>
             </tr>
         <tr>
-            <th>{{ translate('sl') }}</th>
-            <th>{{ translate('id') }}</th>
-            <th>{{ translate('created_at') }}</th>
-            <th>{{ translate('amount') }}</th>
-            <th>{{ translate('Payment_method') }}</th>
-            <th>{{ translate('status') }}</th>
+            <th>{{ 'SL' }}</th>
+            <th>{{ 'identificación' }}</th>
+            <th>{{ 'creado en' }}</th>
+            <th>{{ 'cantidad' }}</th>
+            <th>{{ 'Método de pago' }}</th>
+            <th>{{ 'estado' }}</th>
 
         </thead>
         <tbody>
@@ -41,7 +41,7 @@
             {{\App\CentralLogics\Helpers::format_currency($disb['disbursement_amount'])}}
         </td>
         <td>
-            <div class="name">{{translate('payment_method')}} : {{$disb->withdraw_method->method_name}}</div>
+            <div class="name">{{'método de pago'}} : {{$disb->withdraw_method->method_name}}</div>
             @forelse(json_decode($disb->withdraw_method->method_fields, true) as $key=> $item)
             <br>
                 <div>

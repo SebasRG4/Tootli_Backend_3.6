@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.flutter_web_landing_page'))
+@section('title','página de inicio web de aleteo')
 
 @section('content')
 
@@ -12,11 +12,11 @@
                     <img src="{{asset('assets/admin/img/flutter.png')}}" class="w--15" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.flutter_web_landing_page') }}
+                    {{ 'página de inicio web de aleteo' }}
                 </span>
             </h1>
             <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#how-it-works">
-                <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
+                <strong class="mr-2">{{'¡Mira cómo funciona!'}}</strong>
                 <div>
                     <i class="tio-info-outined"></i>
                 </div>
@@ -43,14 +43,14 @@
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-sm-6">
-                        {{ translate('To view a list of all active zones on your Flutter Landing Page') }} <br class="d-none d-md-inline-block"> {{ translate('Enable the')}} <strong>{{ translate('`Available Zones`') }}</strong> {{translate('feature') }}
+                        {{ 'Para ver una lista de todas las zonas activas en su página de inicio de Flutter' }} <br class="d-none d-md-inline-block"> {{ 'Habilitar el'}} <strong>{{ '`Zonas disponibles`' }}</strong> {{'característica' }}
                     </div>
                     <div class="col-sm-6">
                         <label
                             class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
                                             <span class="pr-1 d-flex align-items-center switch--label">
                                                 <span class="line--limit-1 text--primary">
-                                                    {{translate('messages.available_zone') }}
+                                                    {{'zona disponible' }}
                                                 </span>
                                             </span>
                             <input type="checkbox"
@@ -58,10 +58,10 @@
                                    data-type="toggle"
                                    data-image-on="{{ asset('assets/admin/img/modal/dm-tips-on.png') }}"
                                    data-image-off="{{ asset('assets/admin/img/modal/dm-tips-off.png') }}"
-                                   data-title-on="<strong>{{ translate('messages.Want_to_enable_available_zone?') }}</strong>"
-                                   data-title-off="<strong>{{ translate('messages.Want_to_disable_available_zone?') }}</strong>"
-                                   data-text-on="<p>{{ translate('messages.If_you_enable_this,_available_zone_section_will_be_visible.') }}</p>"
-                                   data-text-off="<p>{{ translate('messages.If_you_disable_this,_available_zone_section_will_not_be_visible.') }}</p>"
+                                   data-title-on="<strong>{{ '¿Quieres habilitar la zona disponible?' }}</strong>"
+                                   data-title-off="<strong>{{ '¿Quieres desactivar la zona disponible?' }}</strong>"
+                                   data-text-on="<p>{{ 'Si habilita esto, la sección de zona disponible será visible.' }}</p>"
+                                   data-text-off="<p>{{ 'Si desactiva esto, la sección de zona disponible no será visible.' }}</p>"
                                    class="status toggle-switch-input dynamic-checkbox-toggle"
                                    value="1"
                                    name="available_zone_status" id="available_zone_status"
@@ -83,7 +83,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link lang_link active"
                                        href="#"
-                                       id="default-link">{{ translate('Default') }}</a>
+                                       id="default-link">{{ 'Por defecto' }}</a>
                                 </li>
                                 @foreach (json_decode($language) as $lang)
                                     <li class="nav-item">
@@ -99,22 +99,22 @@
                                  id="default-form">
                                 <div class="form-group">
                                     <label class="input-label"
-                                           for="default_title">{{ translate('messages.title') }}
-                                        ({{ translate('messages.Default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                           for="default_title">{{ 'título' }}
+                                        ({{ 'Por defecto' }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 50 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span>
                                     </label>
                                     <input type="text" name="available_zone_title[]" maxlength="50" id="default_title"
-                                           class="form-control" placeholder="{{ translate('messages.title') }}" value="{{$available_zone_title?->getRawOriginal('value')}}"
+                                           class="form-control" placeholder="{{ 'título' }}" value="{{$available_zone_title?->getRawOriginal('value')}}"
                                     >
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 <div class="form-group mb-0">
                                     <label class="input-label"
-                                           for="exampleFormControlInput1">{{ translate('messages.short_description') }} ({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_short_description_within_200_characters') }}">
+                                           for="exampleFormControlInput1">{{ 'breve descripción' }} ({{ 'por defecto' }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escriba la breve descripción dentro de 200 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <textarea type="text" name="available_zone_short_description[]" maxlength="200" placeholder="{{translate('messages.short_description')}}" class="form-control min-h-90px ckeditor">{{$available_zone_short_description?->getRawOriginal('value')}}</textarea>
+                                    <textarea type="text" name="available_zone_short_description[]" maxlength="200" placeholder="{{'breve descripción'}}" class="form-control min-h-90px ckeditor">{{$available_zone_short_description?->getRawOriginal('value')}}</textarea>
                                 </div>
                             </div>
                             @foreach (json_decode($language) as $lang)
@@ -144,21 +144,21 @@
                                      id="{{ $lang }}-form">
                                     <div class="form-group">
                                         <label class="input-label"
-                                               for="{{ $lang }}_title">{{ translate('messages.title') }}
-                                            ({{ strtoupper($lang) }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                               for="{{ $lang }}_title">{{ 'título' }}
+                                            ({{ strtoupper($lang) }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 50 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span>
                                         </label>
                                         <input type="text" name="available_zone_title[]" maxlength="50" id="{{ $lang }}_title"
-                                               class="form-control" value="{{ $available_zone_title_translate[$lang]['value']??'' }}" placeholder="{{ translate('messages.title') }}">
+                                               class="form-control" value="{{ $available_zone_title_translate[$lang]['value']??'' }}" placeholder="{{ 'título' }}">
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{ $lang }}">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                               for="exampleFormControlInput1">{{ translate('messages.short_description') }} ({{ strtoupper($lang) }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_short_description_within_200_characters') }}">
+                                               for="exampleFormControlInput1">{{ 'breve descripción' }} ({{ strtoupper($lang) }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escriba la breve descripción dentro de 200 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                        <textarea type="text" name="available_zone_short_description[]" maxlength="200" placeholder="{{translate('messages.short_description')}}" class="form-control min-h-90px ckeditor">{{ $available_zone_short_description_translate[$lang]['value']??'' }}</textarea>
+                                        <textarea type="text" name="available_zone_short_description[]" maxlength="200" placeholder="{{'breve descripción'}}" class="form-control min-h-90px ckeditor">{{ $available_zone_short_description_translate[$lang]['value']??'' }}</textarea>
                                     </div>
                                 </div>
                             @endforeach
@@ -166,16 +166,16 @@
                             <div id="default-form">
                                 <div class="form-group">
                                     <label class="input-label"
-                                           for="exampleFormControlInput1">{{ translate('messages.title') }} ({{ translate('messages.default') }})</label>
+                                           for="exampleFormControlInput1">{{ 'título' }} ({{ 'por defecto' }})</label>
                                     <input type="text" name="available_zone_title[]" class="form-control"
-                                           placeholder="{{ translate('messages.title') }}" >
+                                           placeholder="{{ 'título' }}" >
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 <div class="form-group mb-0">
                                     <label class="input-label"
-                                           for="exampleFormControlInput1">{{ translate('messages.short_description') }}
+                                           for="exampleFormControlInput1">{{ 'breve descripción' }}
                                     </label>
-                                    <textarea type="text" name="available_zone_short_description[]" placeholder="{{translate('messages.short_description')}}" class="form-control min-h-90px ckeditor"></textarea>
+                                    <textarea type="text" name="available_zone_short_description[]" placeholder="{{'breve descripción'}}" class="form-control min-h-90px ckeditor"></textarea>
                                 </div>
                             </div>
                         @endif
@@ -188,8 +188,8 @@
                         <div>
                             <div class="d-flex justify-content-center">
                                 <label class="text-dark d-block mb-4">
-                                    <strong>{{ translate('Related Image') }}</strong>
-                                    <small class="text-danger">* {{ translate('( Ratio 1:1 )') }}</small>
+                                    <strong>{{ 'Imagen relacionada' }}</strong>
+                                    <small class="text-danger">* {{ '(Relación 1:1)' }}</small>
                                 </label>
                             </div>
                             <div class="d-flex justify-content-center">
@@ -216,15 +216,15 @@
                     <div class="card-body d-flex">
                         <i class="mr-2 mt-3 text-danger tio-info-outined"></i>
                         <p class="fs-15 text-dark m-0">
-                            <strong>{{ translate('Note:') }}</strong> {{ translate('Customize the section by adding a title, short description, and images in the') }} <a href="{{ route('admin.business-settings.zone.home') }}" target="_blank" class="text--underline text-006AE5">{{ translate('Zone Setup') }}</a> {{ translate('section. All created zones will be automatically displayed on the Flutter Landing Page. The zones will be based on the Zone Display Name.') }}
+                            <strong>{{ 'Nota:' }}</strong> {{ 'Personalice la sección agregando un título, una breve descripción e imágenes en el' }} <a href="{{ route('admin.business-settings.zone.home') }}" target="_blank" class="text--underline text-006AE5">{{ 'Configuración de zona' }}</a> {{ 'sección. Todas las zonas creadas se mostrarán automáticamente en la página de inicio de Flutter. Las zonas se basarán en el nombre para mostrar de la zona.' }}
                         </p>
                     </div>
                 </div>
             </div>
             <div class="col-12">
                 <div class="btn--container justify-content-end">
-                    <button class="btn btn--reset" type="reset">{{translate('reset')}}</button>
-                    <button class="btn btn--primary" type="submit">{{translate('Save Information')}}</button>
+                    <button class="btn btn--reset" type="reset">{{'reiniciar'}}</button>
+                    <button class="btn btn--primary" type="submit">{{'Guardar información'}}</button>
                 </div>
             </div>
         </div>

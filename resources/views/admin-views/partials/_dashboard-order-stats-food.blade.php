@@ -2,33 +2,33 @@
     <div class="col-sm-6 col-lg-3">
         <div class="__dashboard-card-2">
             <img src="{{asset('assets/admin/img/dashboard/food/items.svg')}}" alt="dashboard/grocery">
-            <h6 class="name">{{ translate('messages.foods') }}</h6>
+            <h6 class="name">{{ 'alimentos' }}</h6>
             <h3 class="count">{{ $data['total_items'] }}</h3>
-            <div class="subtxt">{{ $data['new_items'] }} {{ translate('newly added') }}</div>
+            <div class="subtxt">{{ $data['new_items'] }} {{ 'recién agregado' }}</div>
         </div>
     </div>
     <div class="col-sm-6 col-lg-3">
         <div class="__dashboard-card-2">
             <img src="{{asset('assets/admin/img/dashboard/food/orders.svg')}}" alt="dashboard/grocery">
-            <h6 class="name">{{ translate('messages.orders') }}</h6>
+            <h6 class="name">{{ 'Pedidos' }}</h6>
             <h3 class="count">{{ $data['total_orders'] }}</h3>
-            <div class="subtxt">{{ $data['new_orders'] }} {{ translate('newly added') }}</div>
+            <div class="subtxt">{{ $data['new_orders'] }} {{ 'recién agregado' }}</div>
         </div>
     </div>
     <div class="col-sm-6 col-lg-3">
         <div class="__dashboard-card-2">
             <img src="{{asset('assets/admin/img/dashboard/food/stores.svg')}}" alt="dashboard/grocery">
-            <h6 class="name">{{ translate('messages.restaurants') }}</h6>
+            <h6 class="name">{{ 'restaurantes' }}</h6>
             <h3 class="count">{{ $data['total_stores'] }}</h3>
-            <div class="subtxt">{{ $data['new_stores'] }} {{ translate('newly added') }}</div>
+            <div class="subtxt">{{ $data['new_stores'] }} {{ 'recién agregado' }}</div>
         </div>
     </div>
     <div class="col-sm-6 col-lg-3">
         <div class="__dashboard-card-2">
             <img src="{{asset('assets/admin/img/dashboard/food/customers.svg')}}" alt="dashboard/grocery">
-            <h6 class="name">{{ translate('messages.customers') }}</h6>
+            <h6 class="name">{{ 'Clientes' }}</h6>
             <h3 class="count">{{ $data['total_customers'] }}</h3>
-            <div class="subtxt">{{ $data['new_customers'] }} {{ translate('newly added') }}</div>
+            <div class="subtxt">{{ $data['new_customers'] }} {{ 'recién agregado' }}</div>
         </div>
     </div>
     <div class="col-12">
@@ -38,7 +38,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                             <img src="{{asset('assets/admin/img/dashboard/grocery/unassigned.svg')}}" alt="dashboard" class="oder--card-icon">
-                            <span>{{translate('messages.unassigned_orders')}}</span>
+                            <span>{{'Pedidos Sin Asignar'}}</span>
                         </h6>
                         <span class="card-title text-3F8CE8">
                             {{$data['searching_for_dm']}}
@@ -52,7 +52,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                             <img src="{{asset('assets/admin/img/dashboard/grocery/accepted.svg')}}" alt="dashboard" class="oder--card-icon">
-                            <span>{{translate('Accepted by Delivery Man')}}</span>
+                            <span>{{'Aceptado por el repartidor'}}</span>
                         </h6>
                         <span class="card-title text-success">
                             {{$data['accepted_by_dm']}}
@@ -65,7 +65,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                             <img src="{{asset('assets/admin/img/dashboard/grocery/packaging.svg')}}" alt="dashboard" class="oder--card-icon">
-                            <span>{{translate('Cooking')}}</span>
+                            <span>{{'Cocinando'}}</span>
                         </h6>
                         <span class="card-title text-FFA800">
                             {{$data['preparing_in_rs']}}
@@ -79,7 +79,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                             <img src="{{asset('assets/admin/img/dashboard/grocery/out-for.svg')}}" alt="dashboard" class="oder--card-icon">
-                            <span>{{translate('Out for Delivery')}}</span>
+                            <span>{{'Fuera de entrega'}}</span>
                         </h6>
                         <span class="card-title text-success">
                             {{$data['picked_up']}}
@@ -93,7 +93,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                             <img src="{{asset('assets/admin/img/dashboard/grocery/delivered.svg')}}" alt="dashboard" class="oder--card-icon">
-                            <span>{{translate('messages.delivered')}}</span>
+                            <span>{{'Entregado'}}</span>
                         </h6>
                         <span class="card-title text-success">
                             {{$data['delivered']}}
@@ -107,7 +107,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                             <img src="{{asset('assets/admin/img/order-status/canceled.svg')}}" alt="dashboard" class="oder--card-icon">
-                            <span>{{translate('messages.canceled')}}</span>
+                            <span>{{'Cancelado'}}</span>
                         </h6>
                         <span class="card-title text-danger">
                             {{$data['canceled']}}
@@ -121,7 +121,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                             <img src="{{asset('assets/admin/img/order-status/refunded.svg')}}" alt="dashboard" class="oder--card-icon">
-                            <span>{{translate('messages.refunded')}}</span>
+                            <span>{{'Reembolsado'}}</span>
                         </h6>
                         <span class="card-title text-danger">
                             {{$data['refunded']}}
@@ -135,7 +135,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                             <img src="{{asset('assets/admin/img/order-status/payment-failed.svg')}}" alt="dashboard" class="oder--card-icon">
-                            <span>{{translate('messages.payment_failed')}}</span>
+                            <span>{{'pago fallido'}}</span>
                         </h6>
                         <span class="card-title text-danger">
                             {{$data['refund_requested']}}

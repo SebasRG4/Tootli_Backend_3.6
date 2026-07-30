@@ -9,7 +9,7 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-sm mb-2 mb-sm-0">
-                    <h1 class="page-header-title">{{translate('messages.deliveryman_reviews')}}</h1>
+                    <h1 class="page-header-title">{{'opiniones de repartidor'}}</h1>
                 </div>
             </div>
         </div>
@@ -35,11 +35,11 @@
                                }'>
                             <thead class="thead-light">
                             <tr>
-                                <th>{{translate('messages.#')}}</th>
-                                <th class="w-30p">{{translate('messages.deliveryman')}}</th>
-                                <th class="w-25p">{{translate('messages.customer')}}</th>
-                                <th>{{translate('messages.review')}}</th>
-                                <th>{{translate('messages.rating')}}</th>
+                                <th>{{'#'}}</th>
+                                <th class="w-30p">{{'Repartidor'}}</th>
+                                <th class="w-25p">{{'Cliente'}}</th>
+                                <th>{{'revisar'}}</th>
+                                <th>{{'clasificación'}}</th>
                             </tr>
                             </thead>
 
@@ -61,7 +61,7 @@
                                                 {{$review->customer->f_name}} {{$review->customer?->l_name}}
                                             </a>
                                             @else
-                                                {{translate('messages.customer_not_found')}}
+                                                {{'cliente no encontrado'}}
                                             @endif
 
                                         </td>
@@ -89,7 +89,7 @@
                         <div class="empty--data">
                             <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                             <h5>
-                                {{translate('no_data_found')}}
+                                {{'no se encontraron datos'}}
                             </h5>
                         </div>
                     @endif

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.admin_landing_page'))
+@section('title','página de inicio del administrador')
 
 @section('content')
 <div class="content container-fluid">
@@ -11,11 +11,11 @@
                     <img src="{{asset('assets/admin/img/landing.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.admin_landing_pages') }}
+                    {{ 'páginas de inicio de administración' }}
                 </span>
             </h1>
             <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#how-it-works">
-                <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
+                <strong class="mr-2">{{'¡Mira cómo funciona!'}}</strong>
                 <div>
                     <i class="tio-info-outined"></i>
                 </div>
@@ -36,7 +36,7 @@
             <li class="nav-item">
                 <a class="nav-link lang_link active"
                 href="#"
-                id="default-link">{{translate('messages.default')}}</a>
+                id="default-link">{{'por defecto'}}</a>
             </li>
             @foreach (json_decode($language) as $lang)
                 <li class="nav-item">
@@ -59,7 +59,7 @@
                             <span class="card-header-icon mr-2">
                                 <i class="tio-settings-outlined"></i>
                             </span>
-                            <span>{{translate('Counter Section')}}</span>
+                            <span>{{'Sección de mostrador'}}</span>
                         </span>
                         <label class="toggle-switch toggle-switch-sm m-0">
                             <input type="checkbox" name="status" id="counter_status"
@@ -67,10 +67,10 @@
                                    data-type="toggle"
                                    data-image-on="{{ asset('assets/admin/img/modal/counter-on.png') }}"
                                    data-image-off="{{ asset('assets/admin/img/modal/counter-off.png') }}"
-                                   data-title-on="{{ translate('By Turning ON Counter Section') }}"
-                                   data-title-off="{{ translate('By Turning OFF Counter Section') }}"
-                                   data-text-on="<p>{{ translate('Counter Section is enabled. You can now access its features and functionality') }}</p>"
-                                   data-text-off="<p>{{ translate('Counter section will be disabled. You can enable it in the settings to access its features and functionality') }}</p>"
+                                   data-title-on="{{ 'Encendiendo la sección del contador' }}"
+                                   data-title-off="{{ 'Apagando la sección del contador' }}"
+                                   data-text-on="<p>{{ 'La sección de contador está habilitada. Ahora puedes acceder a sus características y funcionalidades.' }}</p>"
+                                   data-text-off="<p>{{ 'La sección del contador quedará deshabilitada. Puede habilitarlo en la configuración para acceder a sus características y funcionalidades.' }}</p>"
                                    class="status toggle-switch-input dynamic-checkbox-toggle"
 
                                    value="1" {{(isset($counter) && $counter['status'])?'checked':''}}>
@@ -85,25 +85,25 @@
 
                         <div class="row g-3">
                             <div class="col-sm-6 col-lg-3">
-                                <label for="app_download_count_numbers" class="form-label">{{translate('Total App Download')}}</label>
-                                <input id="app_download_count_numbers" type="number" min="0" max="9999999999" name="app_download_count_numbers" value="{{ $counter['app_download_count_numbers'] ?? '' }}" placeholder="{{translate('Ex: 500')}}" class="form-control">
+                                <label for="app_download_count_numbers" class="form-label">{{'Descarga total de la aplicación'}}</label>
+                                <input id="app_download_count_numbers" type="number" min="0" max="9999999999" name="app_download_count_numbers" value="{{ $counter['app_download_count_numbers'] ?? '' }}" placeholder="{{'Ej: 500'}}" class="form-control">
                             </div>
                             <div class="col-sm-6 col-lg-3">
-                                <label for="seller_count_numbers" class="form-label">{{translate('Total Seller')}}</label>
-                                <input id="seller_count_numbers" type="number" min="0" max="9999999999" name="seller_count_numbers" value="{{ $counter['seller_count_numbers'] ?? '' }}" placeholder="{{translate('Ex: 500')}}" class="form-control">
+                                <label for="seller_count_numbers" class="form-label">{{'Vendedor total'}}</label>
+                                <input id="seller_count_numbers" type="number" min="0" max="9999999999" name="seller_count_numbers" value="{{ $counter['seller_count_numbers'] ?? '' }}" placeholder="{{'Ej: 500'}}" class="form-control">
                             </div>
                             <div class="col-sm-6 col-lg-3">
-                                <label for="deliveryman_count_numbers" class="form-label">{{translate('Total Delivery Man')}}</label>
-                                <input id="deliveryman_count_numbers" type="number" min="0" max="9999999999" name="deliveryman_count_numbers" value="{{ $counter['deliveryman_count_numbers'] ?? '' }}" placeholder="{{translate('Ex: 500')}}" class="form-control">
+                                <label for="deliveryman_count_numbers" class="form-label">{{'Repartidor Total'}}</label>
+                                <input id="deliveryman_count_numbers" type="number" min="0" max="9999999999" name="deliveryman_count_numbers" value="{{ $counter['deliveryman_count_numbers'] ?? '' }}" placeholder="{{'Ej: 500'}}" class="form-control">
                             </div>
                             <div class="col-sm-6 col-lg-3">
-                                <label for="customer_count_numbers" class="form-label">{{translate('Total Customer')}}</label>
-                                <input id="customer_count_numbers" type="number" min="0" max="9999999999" name="customer_count_numbers" value="{{ $counter['customer_count_numbers'] ?? '' }}" placeholder="{{translate('Ex: 500')}}" class="form-control">
+                                <label for="customer_count_numbers" class="form-label">{{'Cliente total'}}</label>
+                                <input id="customer_count_numbers" type="number" min="0" max="9999999999" name="customer_count_numbers" value="{{ $counter['customer_count_numbers'] ?? '' }}" placeholder="{{'Ej: 500'}}" class="form-control">
                             </div>
                         </div>
                         <div class="btn--container justify-content-end mt-20">
-                            <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
-                            <button type="submit"   class="btn btn--primary mb-2">{{translate('Save')}}</button>
+                            <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
+                            <button type="submit"   class="btn btn--primary mb-2">{{'Ahorrar'}}</button>
                         </div>
                     </div>
                 </div>
@@ -116,7 +116,7 @@
             <form action="{{ route('admin.business-settings.admin-landing-page-settings', 'download-app-section') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <h5 class="card-title mb-3 mt-3">
-                    <span class="card-header-icon mr-2"><i class="tio-settings-outlined"></i></span> <span>{{translate('Download User App Section Content')}}</span>
+                    <span class="card-header-icon mr-2"><i class="tio-settings-outlined"></i></span> <span>{{'Descargar el contenido de la sección de la aplicación del usuario'}}</span>
                 </h5>
                 <div class="card">
                     <div class="card-body">
@@ -127,24 +127,24 @@
                                 <div class="col-md-12 lang_form default-form">
                                     <div class="row g-3">
                                         <div class="col-12">
-                                            <label for="download_user_app_title" class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})<span
+                                            <label for="download_user_app_title" class="form-label">{{'Título'}} ({{ 'por defecto' }})<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
+                                                        data-original-title="{{ 'Escribe el título dentro de 20 caracteres.' }}">
                                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input id="download_user_app_title" type="text" maxlength="20" name="download_user_app_title[]" value="{{ $download_user_app_title?->getRawOriginal('value') }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                                <input id="download_user_app_title" type="text" maxlength="20" name="download_user_app_title[]" value="{{ $download_user_app_title?->getRawOriginal('value') }}" class="form-control" placeholder="{{'título aquí...'}}">
                                         </div>
                                         <div class="col-12">
-                                            <label for="download_user_app_sub_title" class="form-label">{{translate('Sub Title')}} ({{ translate('messages.default') }})<span
+                                            <label for="download_user_app_sub_title" class="form-label">{{'Subtítulo'}} ({{ 'por defecto' }})<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                                        data-original-title="{{ 'Escribe el título dentro de 50 caracteres.' }}">
                                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input id="download_user_app_sub_title" type="text" maxlength="50" name="download_user_app_sub_title[]" value="{{ $download_user_app_sub_title?->getRawOriginal('value') }}" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                                <input id="download_user_app_sub_title" type="text" maxlength="50" name="download_user_app_sub_title[]" value="{{ $download_user_app_sub_title?->getRawOriginal('value') }}" class="form-control" placeholder="{{'subtítulo aquí...'}}">
                                         </div>
                                     </div>
                                 </div>
@@ -175,24 +175,24 @@
                                     <div class="col-md-12 d-none lang_form" id="{{$lang}}-form1">
                                         <div class="row g-3">
                                             <div class="col-12">
-                                                <label for="download_user_app_title{{$lang}}" class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})<span
+                                                <label for="download_user_app_title{{$lang}}" class="form-label">{{'Título'}} ({{strtoupper($lang)}})<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
+                                                        data-original-title="{{ 'Escribe el título dentro de 20 caracteres.' }}">
                                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input id="download_user_app_title{{$lang}}" type="text" maxlength="20" name="download_user_app_title[]" value="{{ $download_user_app_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                                <input id="download_user_app_title{{$lang}}" type="text" maxlength="20" name="download_user_app_title[]" value="{{ $download_user_app_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{'título aquí...'}}">
                                             </div>
                                             <div class="col-12">
-                                                <label for="download_user_app_sub_title{{$lang}}" class="form-label">{{translate('Sub Title')}} ({{strtoupper($lang)}})<span
+                                                <label for="download_user_app_sub_title{{$lang}}" class="form-label">{{'Subtítulo'}} ({{strtoupper($lang)}})<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                                        data-original-title="{{ 'Escribe el título dentro de 50 caracteres.' }}">
                                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input id="download_user_app_sub_title{{$lang}}" type="text" maxlength="50" name="download_user_app_sub_title[]" value="{{ $download_user_app_sub_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                                <input id="download_user_app_sub_title{{$lang}}" type="text" maxlength="50" name="download_user_app_sub_title[]" value="{{ $download_user_app_sub_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{'subtítulo aquí...'}}">
                                             </div>
                                         </div>
                                     </div>
@@ -202,24 +202,24 @@
                                 <div class="col-md-12">
                                     <div class="row g-3">
                                         <div class="col-12">
-                                            <label for="download_user_app_title" class="form-label">{{translate('Title')}}<span
+                                            <label for="download_user_app_title" class="form-label">{{'Título'}}<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
+                                                        data-original-title="{{ 'Escribe el título dentro de 20 caracteres.' }}">
                                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input id="download_user_app_title" type="text" maxlength="20" name="download_user_app_title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                                <input id="download_user_app_title" type="text" maxlength="20" name="download_user_app_title[]" class="form-control" placeholder="{{'título aquí...'}}">
                                         </div>
                                         <div class="col-12">
-                                            <label for="download_user_app_sub_title" class="form-label">{{translate('Sub Title')}}<span
+                                            <label for="download_user_app_sub_title" class="form-label">{{'Subtítulo'}}<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                                        data-original-title="{{ 'Escribe el título dentro de 50 caracteres.' }}">
                                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input id="download_user_app_sub_title" type="text" maxlength="50" name="download_user_app_sub_title[]" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                                <input id="download_user_app_sub_title" type="text" maxlength="50" name="download_user_app_sub_title[]" class="form-control" placeholder="{{'subtítulo aquí...'}}">
                                         </div>
                                     </div>
                                 </div>
@@ -229,7 +229,7 @@
                             <div class="row g-3">
                                 <div class="col-md-7">
                                     <label class="form-label d-block mb-3">
-                                        {{ translate('messages.Banner') }}  <span class="text--primary">{{ translate('(size: 1:1)') }}</span>
+                                        {{ 'Bandera' }}  <span class="text--primary">{{ '(tamaño: 1:1)' }}</span>
                                         <div class="fs-12 opacity-70">
                                             {{ translate(IMAGE_FORMAT.' ' . 'Less Than 2MB') }}
                                         </div>
@@ -247,8 +247,8 @@
                                                 <span id="download_user_app_image" class="remove_image_button remove-image dynamic-checkbox"
                                                       data-id="download_user_app_image"
                                                       data-image-off="{{ asset('assets/admin/img/delete-confirmation.png') }}"
-                                                      data-title="{{translate('Warning!')}}"
-                                                      data-text="<p>{{translate('Are_you_sure_you_want_to_remove_this_image_?')}}</p>"
+                                                      data-title="{{'¡Advertencia!'}}"
+                                                      data-text="<p>{{'¿Estás seguro de que deseas eliminar esta imagen?'}}</p>"
                                                 > <i class="tio-clear"></i></span>
                                             @endif
                                         </div>
@@ -260,13 +260,13 @@
                             <div class="col-md-6">
                                 <h5 class="card-title mb-2">
                                     <img src="{{asset('assets/admin/img/playstore.png')}}" class="mr-2" alt="">
-                                    {{translate('Playstore Button')}}
+                                    {{'Botón de tienda de juegos'}}
                                 </h5>
                                 <div class="__bg-F8F9FC-card">
                                     <div class="form-group mb-md-0">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
                                             <label for="playstore_url" class="form-label text-capitalize m-0">
-                                                {{translate('Download Link')}}</label>
+                                                {{'Enlace de descarga'}}</label>
 
                                             <label class="toggle-switch toggle-switch-sm m-0">
                                                 <input type="checkbox" name="playstore_url_status"
@@ -275,10 +275,10 @@
                                                        data-type="toggle"
                                                        data-image-on="{{ asset('assets/admin/img/modal/play-store-on.png') }}"
                                                        data-image-off="{{ asset('assets/admin/img/modal/play-store-off.png') }}"
-                                                       data-title-on="{{ translate('Playstore Button Enabled for Delivery Man') }}"
-                                                       data-title-off="{{ translate('Playstore Button Disabled for Delivery Man') }}"
-                                                       data-text-on="<p>{{ translate('Playstore button is enabled now everyone can use or see the button') }}</p>"
-                                                       data-text-off="<p>{{ translate('Playstore button is disabled now no one can use or see the button') }}</p>"
+                                                       data-title-on="{{ 'Botón Playstore habilitado para repartidor' }}"
+                                                       data-title-off="{{ 'Botón Playstore deshabilitado para el repartidor' }}"
+                                                       data-text-on="<p>{{ 'El botón Playstore está habilitado ahora todos pueden usarlo o verlo' }}</p>"
+                                                       data-text-off="<p>{{ 'El botón Playstore está deshabilitado ahora nadie puede usarlo ni verlo' }}</p>"
                                                        class="status toggle-switch-input dynamic-checkbox-toggle"
 
                                                        value="1" {{(isset($download_user_app_links) && $download_user_app_links['playstore_url_status'])?'checked':''}}>
@@ -287,20 +287,20 @@
                                                 </span>
                                             </label>
                                         </div>
-                                        <input id="playstore_url" type="text" placeholder="{{translate('Ex: https://play.google.com/store/apps')}}" class="form-control h--45px" name="playstore_url" value="{{$download_user_app_links['playstore_url']??''}}">
+                                        <input id="playstore_url" type="text" placeholder="{{'Ej: https://play.google.com/store/apps'}}" class="form-control h--45px" name="playstore_url" value="{{$download_user_app_links['playstore_url']??''}}">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <h5 class="card-title mb-2">
                                     <img src="{{asset('assets/admin/img/ios.png')}}" class="mr-2" alt="">
-                                    {{translate('App Store Button')}}
+                                    {{'Botón de la tienda de aplicaciones'}}
                                 </h5>
                                 <div class="__bg-F8F9FC-card">
                                     <div class="form-group mb-md-0">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
                                             <label for="apple_store_url" class="form-label text-capitalize m-0">
-                                                {{translate('Download Link')}} </label>
+                                                {{'Enlace de descarga'}} </label>
 
                                             <label class="toggle-switch toggle-switch-sm m-0">
                                                 <input type="checkbox" name="apple_store_url_status"
@@ -309,10 +309,10 @@
                                                        data-type="toggle"
                                                        data-image-on="{{ asset('assets/admin/img/modal/apple-on.png') }}"
                                                        data-image-off="{{ asset('assets/admin/img/modal/apple-off.png') }}"
-                                                       data-title-on="{{ translate('App Store Button Enabled for Delivery Man') }}"
-                                                       data-title-off="{{ translate('App Store Button Disabled for Delivery Man') }}"
-                                                       data-text-on="<p>{{ translate('App Store button is enabled now everyone can use or see the button') }}</p>"
-                                                       data-text-off="<p>{{ translate('App Store button is disabled now no one can use or see the button') }}</p>"
+                                                       data-title-on="{{ 'Botón de App Store habilitado para el repartidor' }}"
+                                                       data-title-off="{{ 'Botón de App Store deshabilitado para el repartidor' }}"
+                                                       data-text-on="<p>{{ 'El botón App Store está habilitado ahora todos pueden usarlo o verlo' }}</p>"
+                                                       data-text-off="<p>{{ 'El botón App Store está deshabilitado ahora nadie puede usarlo ni verlo' }}</p>"
                                                        class="status toggle-switch-input dynamic-checkbox-toggle"
                                                        value="1" {{(isset($download_user_app_links) && $download_user_app_links['apple_store_url_status'])?'checked':''}}>
                                                 <span class="toggle-switch-label text mb-0">
@@ -320,14 +320,14 @@
                                                 </span>
                                             </label>
                                         </div>
-                                        <input id="apple_store_url" type="text" placeholder="{{translate('Ex: https://www.apple.com/app-store/')}}" class="form-control h--45px" name="apple_store_url" value="{{$download_user_app_links['apple_store_url']?? ''}}">
+                                        <input id="apple_store_url" type="text" placeholder="{{'Ejemplo: https://www.apple.com/app-store/'}}" class="form-control h--45px" name="apple_store_url" value="{{$download_user_app_links['apple_store_url']?? ''}}">
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="btn--container justify-content-end mt-20">
-                            <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
-                            <button type="submit"   class="btn btn--primary mb-2">{{translate('Save')}}</button>
+                            <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
+                            <button type="submit"   class="btn btn--primary mb-2">{{'Ahorrar'}}</button>
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.language'))
+@section('title','idioma')
 
 
 
@@ -13,7 +13,7 @@
                 <img src="{{ asset('assets/admin/img/business.png') }}" class="w--26" alt="">
             </span>
             <span>
-                {{ translate('messages.business_setup') }}
+                {{ 'configuración de negocios' }}
             </span>
         </h1>
         @include('admin-views.business-settings.partials.nav-menu')
@@ -25,14 +25,14 @@
                         <div class="row justify-content-between align-items-center flex-grow-1">
                             <div class="col-sm-4 col-md-6 col-lg-8 mb-2 mb-sm-0">
                                 <h5 class="mb-0 d-flex">
-                                    {{translate('language_list')}}
+                                    {{'lista de idiomas'}}
                                 </h5>
                             </div>
                             <div class="col-sm-8 col-md-6 col-lg-4">
                                 <div class="d-flex gap-10 justify-content-sm-end">
                                     <button class="btn btn--primary btn-icon-split" data-toggle="modal" data-target="#lang-modal">
                                         <i class="tio-add"></i>
-                                        <span class="text">{{translate('add_new_language')}}</span>
+                                        <span class="text">{{'agregar nuevo idioma'}}</span>
                                     </button>
                                 </div>
                             </div>
@@ -59,11 +59,11 @@
                             }'>
                             <thead class="thead-light">
                             <tr>
-                                <th>{{ translate('SL')}}</th>
-                                <th>{{translate('Code')}}</th>
-                                <th class="text-center">{{translate('status')}}</th>
-                                <th class="text-center">{{translate('default_status')}}</th>
-                                <th class="text-center">{{translate('action')}}</th>
+                                <th>{{ 'SL'}}</th>
+                                <th>{{'Código'}}</th>
+                                <th class="text-center">{{'estado'}}</th>
+                                <th class="text-center">{{'estado predeterminado'}}</th>
+                                <th class="text-center">{{'acción'}}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -145,7 +145,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">{{translate('new_language')}}</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">{{'nuevo idioma'}}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -158,7 +158,7 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label for="country-code"
-                                               class="col-form-label">{{translate('language')}}</label>
+                                               class="col-form-label">{{'idioma'}}</label>
                                                <select id="country-code" name="code" class="form-control js-select2-custom">
                                                 <option value="af">Afrikaans</option>
                                                 <option value="sq">Albanian - shqip</option>
@@ -309,7 +309,7 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-group">
-                                        <label for="direction" class="col-form-label">{{translate('direction')}} :</label>
+                                        <label for="direction" class="col-form-label">{{'dirección'}} :</label>
                                         <select id="direction" class="form-control" name="direction">
                                             <option value="ltr">LTR</option>
                                             <option value="rtl">RTL</option>
@@ -320,8 +320,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary"
-                                    data-dismiss="modal">{{translate('close')}}</button>
-                            <button type="submit" class="btn btn--primary">{{translate('Add')}} <i
+                                    data-dismiss="modal">{{'cerca'}}</button>
+                            <button type="submit" class="btn btn--primary">{{'Agregar'}} <i
                                     class="fa fa-plus"></i></button>
                         </div>
                     </form>
@@ -347,7 +347,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="form-group">
-{{--                                            <label for="lang_code" class="col-form-label">{{translate('language')}} ({{\App\CentralLogics\Helpers::get_language_name($data['code'])}})</label>--}}
+{{--                                            <label for="lang_code" class="col-form-label">{{'idioma'}} ({{\App\CentralLogics\Helpers::get_language_name($data['code'])}})</label>--}}
                                                    <input type="hidden" name="code" value="{{ $data['code'] }}">
 {{--                                                   <select id="lang_code" class="form-control js-select2-custom" disabled>--}}
 {{--                                                    <option value="af" {{ $data['code']== 'af'?'selected':'' }}>Afrikaans</option>--}}
@@ -499,15 +499,15 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="form-group">
-                                            <label for="direction-update" class="col-form-label">{{translate('direction')}} :</label>
+                                            <label for="direction-update" class="col-form-label">{{'dirección'}} :</label>
                                             <select id="direction-update" class="form-control" name="direction">
                                                 <option
                                                     value="ltr" {{isset($data['direction'])?$data['direction']=='ltr'?'selected':'':''}}>
-                                                   {{translate('LTR')}}
+                                                   {{'LTR'}}
                                                 </option>
                                                 <option
                                                     value="rtl" {{isset($data['direction'])?$data['direction']=='rtl'?'selected':'':''}}>
-                                                     {{translate('RTL')}}
+                                                     {{'RTL'}}
                                                 </option>
                                             </select>
                                         </div>
@@ -516,8 +516,8 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary"
-                                        data-dismiss="modal">{{translate('close')}}</button>
-                                <button type="submit" class="btn btn--primary">{{translate('update')}} <i
+                                        data-dismiss="modal">{{'cerca'}}</button>
+                                <button type="submit" class="btn btn--primary">{{'actualizar'}} <i
                                         class="fa fa-plus"></i></button>
                             </div>
                         </form>
@@ -537,12 +537,12 @@
             $(".delete").click(function (e) {
                 e.preventDefault();
                 Swal.fire({
-                    title: '{{translate('Are you sure to delete this')}}?',
-                    text: "{{translate('You will not be able to revert this')}}!",
+                    title: '{{'¿Estás seguro de eliminar esto?'}}?',
+                    text: "{{'No podrás revertir esto.'}}!",
                     showCancelButton: true,
                     confirmButtonColor: 'primary',
                     cancelButtonColor: 'secondary',
-                    confirmButtonText: '{{translate('Yes_delete it')}}!'
+                    confirmButtonText: '{{'si borrarlo'}}!'
                 }).then((result) => {
                     if (result.value) {
                         window.location.href = $(this).attr("id");
@@ -553,7 +553,7 @@
 
             $(".update-lang-status").click(function (e) {
                 e.preventDefault();
-                toastr.warning('{{translate('default language can not be updated! to update change the default language first!')}}');
+                toastr.warning('{{'¡El idioma predeterminado no se puede actualizar! Para actualizar, ¡cambie primero el idioma predeterminado!'}}');
             });
 
 
@@ -563,7 +563,7 @@
                 let mode = $(this).data('env-mode');
 
                 if(  (key === 0 ||  key === 1 ) &&  mode === 'demo' ){
-                    toastr.info('{{ translate('Update option is disabled for demo!') }}', {
+                    toastr.info('{{ '¡La opción de actualización está deshabilitada para la demostración!' }}', {
                         CloseButton: true,
                         ProgressBar: true
                     });
@@ -578,7 +578,7 @@
                     },
 
                     success: function () {
-                        toastr.success('{{translate('status_updated_successfully')}}');
+                        toastr.success('{{'estado actualizado exitosamente'}}');
                     }
                 });
             });

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('DB_clean'))
+@section('title', 'limpieza de base de datos')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -15,16 +15,16 @@
                 <img src="{{asset('assets/admin/img/cloud-database.png')}}" class="w--26" alt="">
             </span>
             <span>
-                {{translate('Clean database')}}
+                {{'Limpiar base de datos'}}
             </span>
         </h1>
     </div>
     <!-- End Page Header -->
         <div class="alert alert--danger alert-danger mb-3" role="alert">
             <span class="alert--icon"><i class="tio-info"></i></span>
-            <strong class="text--title">{{translate('note_:')}}</strong>
+            <strong class="text--title">{{'nota :'}}</strong>
             <span>
-                {{translate('This_page_contains_sensitive_information.Make_sure_before_changing.')}}
+                {{'Esta página contiene información confidencial. Asegúrese antes de cambiar.'}}
             </span>
         </div>
         <div class="card">
@@ -43,8 +43,8 @@
                         @endforeach
                     </div>
                     <div class="btn--container justify-content-end mt-4">
-                        <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                        <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}" class="btn btn--primary call-demo">{{translate('Clear')}}</button>
+                        <button type="reset" class="btn btn--reset">{{'reiniciar'}}</button>
+                        <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}" class="btn btn--primary call-demo">{{'Claro'}}</button>
                     </div>
                 </form>
             </div>
@@ -138,21 +138,21 @@
     $("form").on('submit',function(e) {
         e.preventDefault();
         Swal.fire({
-            title: '{{translate('Are you sure?')}}',
-            text: "{{translate('Sensitive_data! Make_sure_before_changing.')}}",
+            title: '{{'¿Está seguro?'}}',
+            text: "{{'¡Datos sensibles! Asegúrate antes de cambiar.'}}",
             type: 'warning',
             showCancelButton: true,
             cancelButtonColor: 'default',
             confirmButtonColor: '#FC6A57',
-            cancelButtonText: '{{ translate('messages.no') }}',
-            confirmButtonText: '{{ translate('messages.yes') }}',
+            cancelButtonText: '{{ 'No' }}',
+            confirmButtonText: '{{ 'Sí' }}',
             reverseButtons: true
         }).then((result) => {
             if (result.value) {
                 this.submit();
             }else{
                 e.preventDefault();
-                toastr.success("{{translate('Cancelled')}}");
+                toastr.success("{{'Cancelado'}}");
                 location.reload();
             }
         })

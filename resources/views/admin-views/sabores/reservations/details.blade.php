@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Reservation Details'))
+@section('title', 'Detalles de la reserva')
 
 @section('content')
     <div class="content container-fluid">
@@ -10,12 +10,12 @@
                 <div class="col-sm mb-2 mb-sm-0">
                     <h1 class="page-header-title">
                         <span class="page-header-icon"><i class="tio-calendar"></i></span>
-                        <span>{{ translate('Reservation') }} #{{ $reservation->confirmation_code }}</span>
+                        <span>{{ 'Reserva' }} #{{ $reservation->confirmation_code }}</span>
                     </h1>
                 </div>
                 <div class="col-sm-auto">
                     <a class="btn btn-icon btn-sm btn-ghost-secondary rounded-circle mr-1"
-                        href="{{ route('admin.sabores.reservations') }}" title="{{ translate('Back') }}">
+                        href="{{ route('admin.sabores.reservations') }}" title="{{ 'Atrás' }}">
                         <i class="tio-arrow-backward"></i>
                     </a>
                 </div>
@@ -27,45 +27,45 @@
                 <!-- Reservation Info Card -->
                 <div class="card mb-3">
                     <div class="card-header">
-                        <h4 class="card-header-title">{{ translate('Reservation Information') }}</h4>
+                        <h4 class="card-header-title">{{ 'Información de reserva' }}</h4>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <h6 class="text-cap">{{ translate('Confirmation Code') }}</h6>
+                                <h6 class="text-cap">{{ 'Código de confirmación' }}</h6>
                                 <span class="h3">{{ $reservation->confirmation_code }}</span>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <h6 class="text-cap">{{ translate('Status') }}</h6>
+                                <h6 class="text-cap">{{ 'Estado' }}</h6>
                                 @if($reservation->status == 'pending')
-                                    <span class="badge badge-soft-warning badge-pill">{{ translate('Pending') }}</span>
+                                    <span class="badge badge-soft-warning badge-pill">{{ 'Pendiente' }}</span>
                                 @elseif($reservation->status == 'confirmed')
-                                    <span class="badge badge-soft-success badge-pill">{{ translate('Confirmed') }}</span>
+                                    <span class="badge badge-soft-success badge-pill">{{ 'Confirmado' }}</span>
                                 @elseif($reservation->status == 'completed')
-                                    <span class="badge badge-soft-primary badge-pill">{{ translate('Completed') }}</span>
+                                    <span class="badge badge-soft-primary badge-pill">{{ 'Terminado' }}</span>
                                 @else
-                                    <span class="badge badge-soft-danger badge-pill">{{ translate('Cancelled') }}</span>
+                                    <span class="badge badge-soft-danger badge-pill">{{ 'Cancelado' }}</span>
                                 @endif
                             </div>
                             <div class="col-md-6 mb-3">
-                                <h6 class="text-cap">{{ translate('Date') }}</h6>
+                                <h6 class="text-cap">{{ 'Fecha' }}</h6>
                                 <p>{{ \Carbon\Carbon::parse($reservation->reservation_date)->format('l, F d, Y') }}</p>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <h6 class="text-cap">{{ translate('Time') }}</h6>
+                                <h6 class="text-cap">{{ 'Tiempo' }}</h6>
                                 <p>{{ \Carbon\Carbon::parse($reservation->reservation_time)->format('h:i A') }}</p>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <h6 class="text-cap">{{ translate('Party Size') }}</h6>
-                                <p><i class="tio-user"></i> {{ $reservation->party_size }} {{ translate('people') }}</p>
+                                <h6 class="text-cap">{{ 'Tamaño del grupo' }}</h6>
+                                <p><i class="tio-user"></i> {{ $reservation->party_size }} {{ 'gente' }}</p>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <h6 class="text-cap">{{ translate('Created At') }}</h6>
+                                <h6 class="text-cap">{{ 'Creado en' }}</h6>
                                 <p>{{ $reservation->created_at->format('M d, Y h:i A') }}</p>
                             </div>
                             @if($reservation->special_requests)
                                 <div class="col-12">
-                                    <h6 class="text-cap">{{ translate('Special Requests') }}</h6>
+                                    <h6 class="text-cap">{{ 'Solicitudes especiales' }}</h6>
                                     <p class="text-muted">{{ $reservation->special_requests }}</p>
                                 </div>
                             @endif
@@ -76,7 +76,7 @@
                 <!-- Customer Info Card -->
                 <div class="card mb-3">
                     <div class="card-header">
-                        <h4 class="card-header-title">{{ translate('Customer Information') }}</h4>
+                        <h4 class="card-header-title">{{ 'Información del cliente' }}</h4>
                     </div>
                     <div class="card-body">
                         <div class="media align-items-center">
@@ -92,7 +92,7 @@
                                     <i class="tio-email mr-2"></i>{{ $reservation->user->email }}
                                 </div>
                                 <div class="text-body">
-                                    <i class="tio-call-talking mr-2"></i>{{ $reservation->user->phone ?? translate('N/A') }}
+                                    <i class="tio-call-talking mr-2"></i>{{ $reservation->user->phone ?? 'N / A' }}
                                 </div>
                             </div>
                         </div>
@@ -102,7 +102,7 @@
                 <!-- Restaurant Info Card -->
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-header-title">{{ translate('Restaurant Information') }}</h4>
+                        <h4 class="card-header-title">{{ 'Información del restaurante' }}</h4>
                     </div>
                     <div class="card-body">
                         <div class="media align-items-center">
@@ -129,7 +129,7 @@
                 <!-- Actions Card -->
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-header-title">{{ translate('Actions') }}</h4>
+                        <h4 class="card-header-title">{{ 'Comportamiento' }}</h4>
                     </div>
                     <div class="card-body">
                         @if($reservation->status == 'pending')
@@ -138,7 +138,7 @@
                                 @csrf
                                 <input type="hidden" name="status" value="confirmed">
                                 <button type="submit" class="btn btn-success btn-block mb-2">
-                                    <i class="tio-checkmark-circle"></i> {{ translate('Confirm Reservation') }}
+                                    <i class="tio-checkmark-circle"></i> {{ 'Confirmar reservación' }}
                                 </button>
                             </form>
                             <form action="{{ route('admin.sabores.reservations.update-status', $reservation->id) }}"
@@ -146,7 +146,7 @@
                                 @csrf
                                 <input type="hidden" name="status" value="cancelled">
                                 <button type="submit" class="btn btn-danger btn-block">
-                                    <i class="tio-clear"></i> {{ translate('Cancel Reservation') }}
+                                    <i class="tio-clear"></i> {{ 'Cancelar reserva' }}
                                 </button>
                             </form>
                         @elseif($reservation->status == 'confirmed')
@@ -155,12 +155,12 @@
                                 @csrf
                                 <input type="hidden" name="status" value="completed">
                                 <button type="submit" class="btn btn-primary btn-block mb-2">
-                                    <i class="tio-done"></i> {{ translate('Mark as Completed') }}
+                                    <i class="tio-done"></i> {{ 'Marcar como completado' }}
                                 </button>
                             </form>
                         @else
                             <div class="alert alert-soft-secondary">
-                                {{ translate('No actions available for this reservation') }}
+                                {{ 'No hay acciones disponibles para esta reserva.' }}
                             </div>
                         @endif
                     </div>

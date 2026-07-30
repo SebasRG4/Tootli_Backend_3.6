@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-lg-12 text-center ">
-        <h1>{{ translate($data['taxSource']) }} {{ translate('Tax_Details_Report') }}</h1>
+        <h1>{{ translate($data['taxSource']) }} {{ 'Informe de detalles de impuestos' }}</h1>
     </div>
     <div class="col-lg-12">
 
@@ -9,29 +9,29 @@
         <table>
             <thead>
                 <tr>
-                    <th>{{ translate('Search_Criteria') }}</th>
+                    <th>{{ 'Criterios de búsqueda' }}</th>
                     <th></th>
                     <th></th>
                     <th>
 
                         <br>
-                        {{ translate('total_tax_amount') }} - {{\App\CentralLogics\Helpers::format_currency($data['total_tax_amount']) ?? 0 }}
+                        {{ 'monto total del impuesto' }} - {{\App\CentralLogics\Helpers::format_currency($data['total_tax_amount']) ?? 0 }}
                         <br>
-                        {{ translate('total_amount') }} - {{ \App\CentralLogics\Helpers::format_currency($data['total_amount']) }}
+                        {{ 'cantidad total' }} - {{ \App\CentralLogics\Helpers::format_currency($data['total_amount']) }}
 
                         @if ($data['from'])
                             <br>
-                            {{ translate('from') }} -
+                            {{ 'de' }} -
                             {{ $data['from'] ? Carbon\Carbon::parse($data['from'])->format('d M Y') : '' }}
                         @endif
                         @if ($data['to'])
                             <br>
-                            {{ translate('to') }} -
+                            {{ 'a' }} -
                             {{ $data['to'] ? Carbon\Carbon::parse($data['to'])->format('d M Y') : '' }}
                         @endif
                         <br>
 
-                        {{-- {{ translate('Search_Bar_Content') }}- {{ $data['search'] ?? translate('N/A') }} --}}
+                        {{-- {{ 'Contenido de la barra de búsqueda' }}- {{ $data['search'] ?? 'N / A' }} --}}
                         <br>
 
                     </th>
@@ -52,10 +52,10 @@
                         }
 
                     @endphp
-                    <th class="border-0">{{ translate('sl') }}</th>
-                    <th class="border-0">{{ translate('Order') }}</th>
+                    <th class="border-0">{{ 'SL' }}</th>
+                    <th class="border-0">{{ 'Orden' }}</th>
                     <th class="border-0">{{ translate($col) }}</th>
-                    <th class="border-0">{{ translate('Tax Amount') }}</th>
+                    <th class="border-0">{{ 'Monto del impuesto' }}</th>
             </thead>
             <tbody>
                 @foreach ($data['taxData'] as $key => $item)
@@ -86,7 +86,7 @@
 
                             <div class="d-flex flex-column gap-1">
                                 <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    {{ translate('Total') }} ({{ $totalTaxRate }}%):
+                                    {{ 'Total' }} ({{ $totalTaxRate }}%):
                                     <span>
                                         {{ \App\CentralLogics\Helpers::format_currency($totalTaxAmount) }}</span>
                                 </div>,

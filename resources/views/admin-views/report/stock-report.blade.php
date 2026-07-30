@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('low_stock_list'))
+@section('title','lista de existencias bajas')
 @section('low_stock_list')
 active
 @endsection
@@ -14,7 +14,7 @@ active
                 <img src="{{asset('assets/admin/img/report.png')}}" class="w--22" alt="">
             </span>
             <span>
-                {{translate('low_stock_list')}}
+                {{'lista de existencias bajas'}}
                 <span class="badge badge-soft-secondary" id="">{{ $items->total() }}</span>
             </span>
         </h1>
@@ -28,14 +28,14 @@ active
                 <form class="search-form">
                     <!-- Search -->
                     <div class="input-group input--group">
-                        <input id="datatableSearch" name="search" type="search" class="form-control" placeholder="{{translate('ex_:_search_name')}}" aria-label="{{translate('messages.search_here')}}" value="{{request()->query('search')}}">
+                        <input id="datatableSearch" name="search" type="search" class="form-control" placeholder="{{'ej: nombre de búsqueda'}}" aria-label="{{'buscar aquí'}}" value="{{request()->query('search')}}">
                         <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                     </div>
                     <!-- End Search -->
                 </form>
                 <div class="min--200">
                     <select name="zone_id" class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}" data-filter="zone_id" id="zone">
-                        <option value="all">{{translate('All Zones')}}</option>
+                        <option value="all">{{'Todas las zonas'}}</option>
                         @foreach(\App\Models\Zone::orderBy('name')->get() as $z)
                             <option value="{{$z['id']}}" {{isset($zone) && $zone->id == $z['id']?'selected':''}}>
                                 {{($z['name'])}}
@@ -44,11 +44,11 @@ active
                     </select>
                 </div>
                 <div class="min--200">
-                    <select name="store_id" data-placeholder="{{translate('messages.select_store')}}" class="js-data-example-ajax form-control set-filter" data-url="{{ url()->full() }}" data-filter="store_id">
+                    <select name="store_id" data-placeholder="{{'seleccionar tienda'}}" class="js-data-example-ajax form-control set-filter" data-url="{{ url()->full() }}" data-filter="store_id">
                         @if(isset($store))
                             <option value="{{$store->id}}" selected>{{$store->name}}</option>
                         @else
-                            <option value="all" selected>{{translate('messages.all_stores')}}</option>
+                            <option value="all" selected>{{'todas las tiendas'}}</option>
                         @endif
                     </select>
                 </div>
@@ -59,23 +59,23 @@ active
                                 "target": "#usersExportDropdown",
                                 "type": "css-animation"
                             }'>
-                        <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                        <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                     </a>
 
                     <div id="usersExportDropdown"
                         class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                        <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                        <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                         <a id="export-excel" class="dropdown-item" href="{{route('admin.transactions.report.stock-wise-report-export', ['type'=>'excel',request()->getQueryString()])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
                                 src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                 alt="Image Description">
-                            {{ translate('messages.excel') }}
+                            {{ 'sobresalir' }}
                         </a>
                         <a id="export-csv" class="dropdown-item" href="{{route('admin.transactions.report.stock-wise-report-export', ['type'=>'csv',request()->getQueryString()])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
                                 src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                 alt="Image Description">
-                            .{{ translate('messages.csv') }}
+                            .{{ 'csv' }}
                         </a>
                     </div>
                 </div>
@@ -106,12 +106,12 @@ active
                     }'>
                 <thead class="thead-light">
                     <tr>
-                        <th class="border-0">{{translate('sl')}}</th>
-                        <th class="border-0 w--2">{{translate('messages.name')}}</th>
-                        <th class="border-0 w--2">{{translate('messages.store')}}</th>
-                        <th class="border-0">{{translate('messages.zone')}}</th>
-                        <th class="border-0">{{translate('Current stock')}}</th>
-                        <th class="border-0">{{translate('messages.action')}}</th>
+                        <th class="border-0">{{'SL'}}</th>
+                        <th class="border-0 w--2">{{'nombre'}}</th>
+                        <th class="border-0 w--2">{{'Negocio'}}</th>
+                        <th class="border-0">{{'zona'}}</th>
+                        <th class="border-0">{{'Stock actual'}}</th>
+                        <th class="border-0">{{'acción'}}</th>
                     </tr>
                 </thead>
 
@@ -135,21 +135,21 @@ active
                             @if($item->store)
                             {{Str::limit($item->store->name,25,'...')}}
                             @else
-                            {{translate('messages.store_deleted')}}
+                            {{'tienda eliminada'}}
                             @endif
                         </td>
                         <td>
                             @if($item->store)
                             {{$item->store?->zone?->name}}
                             @else
-                            {{translate('messages.not_found')}}
+                            {{'extraviado'}}
                             @endif
                         </td>
                         <td>
                             {{$item->stock}}
                         </td>
                         <td>
-                            <a class="btn action-btn btn--primary btn-outline-primary update-quantity" href="javascript:" title="{{translate('messages.edit_quantity')}}" data-id="{{ $item->id }}" data-toggle="modal" data-target="#update-quantity"><i class="tio-edit"></i>
+                            <a class="btn action-btn btn--primary btn-outline-primary update-quantity" href="javascript:" title="{{'editar cantidad'}}" data-id="{{ $item->id }}" data-toggle="modal" data-target="#update-quantity"><i class="tio-edit"></i>
                             </a>
                         </td>
                     </tr>
@@ -167,7 +167,7 @@ active
             <div class="empty--data">
                 <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                 <h5>
-                    {{translate('no_data_found')}}
+                    {{'no se encontraron datos'}}
                 </h5>
             </div>
             @endif
@@ -189,8 +189,8 @@ active
                     @csrf
                     <div class="mt-2 rest-part w-100"></div>
                     <div class="btn--container justify-content-end">
-                        <button type="reset" data-dismiss="modal" aria-label="Close" class="btn btn--reset">{{translate('cancel')}}</button>
-                        <button type="submit" id="submit_new_customer" class="btn btn--primary">{{translate('update_stock')}}</button>
+                        <button type="reset" data-dismiss="modal" aria-label="Close" class="btn btn--reset">{{'Cancelar'}}</button>
+                        <button type="submit" id="submit_new_customer" class="btn btn--primary">{{'actualizar existencias'}}</button>
                     </div>
                 </form>
             </div>

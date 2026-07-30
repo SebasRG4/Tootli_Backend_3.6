@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title',translate('Update delivery-man'))
+@section('title','Actualizar repartidor')
 
 
 @section('content')
@@ -12,7 +12,7 @@
                     <img src="{{asset('assets/admin/img/edit.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.update_deliveryman')}}
+                    {{'actualizar repartidor'}}
                 </span>
             </h1>
         </div>
@@ -25,51 +25,51 @@
                     <div class="card">
                         <div class="card-header">
                             <h5 class="card-title">
-                                <i class="tio-user"></i> {{translate('messages.general_information')}}
+                                <i class="tio-user"></i> {{'información general'}}
                             </h5>
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-sm-6 col-md-4">
-                                    <label class="input-label" for="f_name">{{translate('messages.first_name')}}</label>
+                                    <label class="input-label" for="f_name">{{'nombre de pila'}}</label>
                                     <input type="text" id="f_name" value="{{$delivery_man['f_name']}}" name="f_name"
-                                        class="form-control" placeholder="{{translate('messages.first_name')}}"
+                                        class="form-control" placeholder="{{'nombre de pila'}}"
                                         required>
                                 </div>
                                 <div class="col-sm-6 col-md-4">
-                                    <label class="input-label" for="l_name">{{translate('messages.last_name')}}</label>
+                                    <label class="input-label" for="l_name">{{'apellido'}}</label>
                                     <input type="text" id="l_name" value="{{$delivery_man['l_name']}}" name="l_name"
-                                        class="form-control" placeholder="{{translate('messages.last_name')}}"
+                                        class="form-control" placeholder="{{'apellido'}}"
                                         required>
                                 </div>
                                 <div class="col-sm-6 col-md-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="email">{{translate('messages.email')}}</label>
+                                        <label class="input-label" for="email">{{'correo electrónico'}}</label>
                                         <input type="email" id="email" value="{{$delivery_man['email']}}" name="email" class="form-control"
-                                            placeholder="{{ translate('messages.Ex:') }} ex@example.com"
+                                            placeholder="{{ 'Ex:' }} ex@example.com"
                                             required>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-md-4">
-                                    <label class="input-label" for="identity_type">{{translate('messages.identity_type')}}</label>
+                                    <label class="input-label" for="identity_type">{{'tipo de identidad'}}</label>
                                     <select name="identity_type" id="identity_type" class="form-control">
                                         <option
                                             value="passport" {{$delivery_man['identity_type']=='passport'?'selected':''}}>
-                                            {{translate('messages.passport')}}
+                                            {{'pasaporte'}}
                                         </option>
                                         <option
                                             value="driving_license" {{$delivery_man['identity_type']=='driving_license'?'selected':''}}>
-                                            {{translate('messages.driving_license')}}
+                                            {{'carnet de conducir'}}
                                         </option>
-                                        <option value="nid" {{$delivery_man['identity_type']=='nid'?'selected':''}}>{{translate('messages.nid')}}
+                                        <option value="nid" {{$delivery_man['identity_type']=='nid'?'selected':''}}>{{'nid'}}
                                         </option>
                                     </select>
                                 </div>
                                 <div class="col-sm-6 col-md-4">
-                                    <label class="input-label" for="identity_number">{{translate('messages.identity_number')}}</label>
+                                    <label class="input-label" for="identity_number">{{'numero de identidad'}}</label>
                                     <input type="text" name="identity_number" id="identity_number" value="{{$delivery_man['identity_number']}}"
                                         class="form-control"
-                                        placeholder="{{ translate('messages.Ex:') }} DH-23434-LS"
+                                        placeholder="{{ 'Ex:' }} DH-23434-LS"
                                         required>
                                 </div>
                             </div>
@@ -79,8 +79,8 @@
                 <div class="col-md-6">
                     <div class="card h-100">
                         <div class="card-header">
-                            <h5 class="form-label m-0">{{translate('messages.identity_image')}}
-                            <small class="text-danger">* {{translate('messages.( Ratio 190x120 )')}}</small></h5>
+                            <h5 class="form-label m-0">{{'imagen de identidad'}}
+                            <small class="text-danger">* {{'(Relación 190x120)'}}</small></h5>
                         </div>
                         <div class="card-body d-flex flex-column">
                             <div class="form-group">
@@ -99,8 +99,8 @@
                 <div class="col-md-6">
                     <div class="card h-100">
                         <div class="card-header">
-                            <h5 class="form-label m-0">{{translate('messages.deliveryman_image')}}
-                            <small class="text-danger">* ( {{translate('messages.ratio')}} {{translate('1:1')}} )</small></h5>
+                            <h5 class="form-label m-0">{{'imagen del repartidor'}}
+                            <small class="text-danger">* ( {{'relación'}} {{'1:1'}} )</small></h5>
                         </div>
                         <div class="card-body d-flex flex-column">
                             <div class="my-auto">
@@ -113,7 +113,7 @@
                             <div class="custom-file mt-3">
                                 <input type="file" name="image" id="customFileEg1" class="custom-file-input read-url"
                                     accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                <label class="custom-file-label" for="customFileEg1">{{translate('messages.choose_file')}}</label>
+                                <label class="custom-file-label" for="customFileEg1">{{'elegir archivo'}}</label>
                             </div>
                         </div>
                     </div>
@@ -122,26 +122,26 @@
                     <div class="card">
                         <div class="card-header">
                             <h5 class="card-title">
-                                <i class="tio-user"></i> {{translate('messages.account_information')}}
+                                <i class="tio-user"></i> {{'información de cuenta'}}
                             </h5>
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-md-4 col-12">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="phone">{{translate('messages.phone')}}</label>
+                                        <label class="input-label" for="phone">{{'teléfono'}}</label>
                                         <input type="tel" id="phone" name="phone" value="{{$delivery_man['phone']}}" class="form-control"
-                                                placeholder="{{ translate('messages.Ex:') }} 017********"
+                                                placeholder="{{ 'Ex:' }} 017********"
                                                 required>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <div class="js-form-message form-group mb-0">
-                                        <label class="input-label" for="signupSrPassword">{{translate('messages.password')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-        data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"></span></label>
+                                        <label class="input-label" for="signupSrPassword">{{'Contraseña'}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+        data-original-title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"></span></label>
 
                                         <div class="input-group input-group-merge">
-                                            <input type="password" class="js-toggle-password form-control" name="password" id="signupSrPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"
+                                            <input type="password" class="js-toggle-password form-control" name="password" id="signupSrPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"
                                             placeholder="{{ translate('messages.password_length_placeholder', ['length' => '8+']) }}"
                                             aria-label="8+ characters required"
                                             data-msg="Your password is invalid. Please try again."
@@ -161,9 +161,9 @@
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <div class="js-form-message form-group mb-0">
-                                        <label class="input-label" for="signupSrConfirmPassword">{{translate('messages.confirm_password')}}</label>
+                                        <label class="input-label" for="signupSrConfirmPassword">{{'confirmar Contraseña'}}</label>
                                         <div class="input-group input-group-merge">
-                                        <input type="password" class="js-toggle-password form-control" name="confirmPassword" id="signupSrConfirmPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"
+                                        <input type="password" class="js-toggle-password form-control" name="confirmPassword" id="signupSrConfirmPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"
                                         placeholder="{{ translate('messages.password_length_placeholder', ['length' => '8+']) }}"
                                         aria-label="8+ characters required"
                                                 data-msg="Password does not match the confirm password."
@@ -187,8 +187,8 @@
                 </div>
                 <div class="col-12">
                     <div class="btn--container justify-content-end">
-                        <button type="reset" id="reset_btn" class="btn btn--reset location-reload" >{{translate('messages.reset')}}</button>
-                        <button type="submit" class="btn btn--primary">{{translate('messages.update')}}</button>
+                        <button type="reset" id="reset_btn" class="btn btn--reset location-reload" >{{'reiniciar'}}</button>
+                        <button type="submit" class="btn btn--primary">{{'actualizar'}}</button>
                     </div>
                 </div>
             </div>
@@ -227,7 +227,7 @@
                     image: '{{asset('assets/admin/img/400x400/img2.jpg')}}',
                     width: '100%'
                 },
-                dropFileLabel: "{{translate('Drop Here')}}",
+                dropFileLabel: "{{'Caer aquí'}}",
                 onAddRow: function (index, file) {
 
                 },
@@ -238,13 +238,13 @@
 
                 },
                 onExtensionErr: function () {
-                    toastr.error('{{translate('Please only input png or jpg type file')}}', {
+                    toastr.error('{{'Por favor ingrese solo archivos tipo png o jpg'}}', {
                         CloseButton: true,
                         ProgressBar: true
                     });
                 },
                 onSizeErr: function () {
-                    toastr.error('{{translate('File size too big')}}', {
+                    toastr.error('{{'Tamaño de archivo demasiado grande'}}', {
                         CloseButton: true,
                         ProgressBar: true
                     });

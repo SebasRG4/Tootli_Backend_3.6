@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.settings'))
+@section('title', 'Configuración')
 
 @section('3rd_party')
     active
@@ -17,7 +17,7 @@
                 <span class="page-header-icon">
                     <i class="tio-robot"></i>
                 </span>
-                <span>{{ translate('OpenAI_Configuration') }}
+                <span>{{ 'Configuración abierta AI' }}
                 </span>
             </h1>
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-5 mt-4 __gap-12px">
@@ -27,12 +27,12 @@
                         <li class="nav-item">
                             <a class="nav-link   {{ Request::is('admin/business-settings/open-ai') ? 'active' : '' }}"
                                 href="{{ route('admin.business-settings.openAI') }}"
-                                aria-disabled="true">{{ translate('AI Configuration') }}</a>
+                                aria-disabled="true">{{ 'Configuración de IA' }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {{ Request::is('admin/business-settings/open-ai-settings') ? 'active' : '' }}"
                                 href="{{ route('admin.business-settings.openAISettings') }}"
-                                aria-disabled="true">{{ translate('AI Settings') }}</a>
+                                aria-disabled="true">{{ 'Configuración de IA' }}</a>
                         </li>
                     </ul>
                     <!-- End Nav -->
@@ -48,7 +48,7 @@
                         <li class="nav-item mr-2 mr-md-4">
                             <a href="#mail-config" data-toggle="tab" class="nav-link pb-2 px-0 pb-sm-3 active">
                                 <img src="{{ asset('assets/admin/img/mail-config.png') }}" alt="">
-                                <span>{{ translate('OpenAI_Configuration') }}</span>
+                                <span>{{ 'Configuración abierta AI' }}</span>
                             </a>
                         </li>
 
@@ -56,7 +56,7 @@
                     <div class="py-1">
                         <div class="text--primary-2 d-flex flex-wrap align-items-center" type="button" data-toggle="modal"
                             data-target="#works-modal">
-                            <strong class="mr-2">{{ translate('How_it_Works') }}</strong>
+                            <strong class="mr-2">{{ 'Cómo funciona' }}</strong>
                             <div class="blinkings">
                                 <i class="tio-info-outined"></i>
                             </div>
@@ -79,24 +79,24 @@
                                     class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control mb-2">
                                     <span class="pr-1 d-flex align-items-center switch--label text--primary">
                                         <span class="line--limit-1">
-                                            {{ isset($data['status']) && $data['status'] == 1 ? translate('Turn_OFF') : translate('Turn_ON')  }}
+                                            {{ isset($data['status']) && $data['status'] == 1 ? 'Apagar' : 'Encender'  }}
                                         </span>
                                     </span>
                                     <input id="mail-config-disable" type="checkbox" data-id="mail-config-disable"
                                         data-type="status"
                                         data-image-on="{{ asset('assets/admin/img/modal/mail-success.png') }}"
                                         data-image-off="{{ asset('assets/admin/img/modal/mail-warning.png') }}"
-                                        data-title-on="{{ translate('Important!') }}"
-                                        data-title-off="{{ translate('Warning!') }}"
-                                        data-text-on="<p>{{ translate('You_can_user_the_power_of_OpenAI_to_generate_content.') }}</p>"
-                                        data-text-off="<p>{{ translate('All_the_AI_services_will_be_turned_off.') }}</p>"
+                                        data-title-on="{{ '¡Importante!' }}"
+                                        data-title-off="{{ '¡Advertencia!' }}"
+                                        data-text-on="<p>{{ 'Puede utilizar el poder de OpenAI para generar contenido.' }}</p>"
+                                        data-text-off="<p>{{ 'Todos los servicios de IA se desactivarán.' }}</p>"
                                         class="status toggle-switch-input dynamic-checkbox" name="status" value="1"
                                         {{ isset($data['status']) && $data['status'] == 1 ? 'checked' : '' }}>
                                     <span class="toggle-switch-label text p-0">
                                         <span class="toggle-switch-indicator"></span>
                                     </span>
                                 </label>
-                                {{-- <small>{{translate('*By_Turning_OFF_mail_configuration,_all_your_mailing_services_will_be_off.')}}</small> --}}
+                                {{-- <small>{{'*Al desactivar la configuración de correo, todos sus servicios de correo se desactivarán.'}}</small> --}}
                             </div>
                         </form>
                         <form
@@ -110,9 +110,9 @@
                                 <div class="row g-3">
                                     <div class="col-sm-12">
                                         <div class="form-group mb-0">
-                                            <label class="form-label">{{ translate('OpenAI_API_Key') }}</label><br>
+                                            <label class="form-label">{{ 'Clave API de OpenAI' }}</label><br>
                                             <input type="text"
-                                                placeholder="{{ translate('messages.Ex:') }} sk-proj-K0LhsdcbHJ......."
+                                                placeholder="{{ 'Ex:' }} sk-proj-K0LhsdcbHJ......."
                                                 class="form-control" name="OPENAI_API_KEY"
                                                 value="{{ env('APP_MODE') != 'demo' ? $data['OPENAI_API_KEY'] ?? '' : '' }}"
                                                 required>
@@ -121,9 +121,9 @@
 
                                     <div class="col-sm-12">
                                         <div class="form-group mb-0">
-                                            <label class="form-label">{{ translate('OpenAI_Organization') }}</label><br>
+                                            <label class="form-label">{{ 'Organización OpenAI' }}</label><br>
                                             <input type="text"
-                                                placeholder="{{ translate('messages.Ex:') }} org-xxxxxxxxxxx"
+                                                placeholder="{{ 'Ex:' }} org-xxxxxxxxxxx"
                                                 class="form-control" name="OPENAI_ORGANIZATION"
                                                 value="{{ env('APP_MODE') != 'demo' ? $data['OPENAI_ORGANIZATION'] ?? '' : '' }}"
                                                 required>
@@ -133,9 +133,9 @@
                                     <div class="col-sm-12">
                                         <div class="btn--container justify-content-end">
                                             <button type="reset"
-                                                class="btn btn--reset">{{ translate('messages.reset') }}</button>
+                                                class="btn btn--reset">{{ 'reiniciar' }}</button>
                                             <button type="{{ env('APP_MODE') != 'demo' ? 'submit' : 'button' }}"
-                                                class="btn btn--primary call-demo">{{ translate('messages.save') }}</button>
+                                                class="btn btn--primary call-demo">{{ 'ahorrar' }}</button>
                                         </div>
                                     </div>
                                 </div>
@@ -170,21 +170,21 @@
                                 <div class="text-center">
                                     <img src="{{ asset('assets/admin/img/mail-config/slide-4.png') }}"
                                         alt="" class="mb-20">
-                                    <h5 class="modal-title">{{ translate('Enable OpenAI Configuration') }}</h5>
+                                    <h5 class="modal-title">{{ 'Habilitar la configuración de OpenAI' }}</h5>
                                 </div>
                                 <ul class="px-3">
                                     <li>
-                                        {{ translate('Go to the OpenAI API platform and.') }}
+                                        {{ 'Vaya a la plataforma API OpenAI y.' }}
                                         <a href="https://platform.openai.com/docs/overview" target="_blank"
-                                            rel="noopener noreferrer">{{ translate('Sign up / Log in') }}</a>
+                                            rel="noopener noreferrer">{{ 'Registrarse / Iniciar sesión' }}</a>
                                     </li>
                                     <li>
-                                        {{ translate('Create a new API key and copy the API key.') }}
+                                        {{ 'Cree una nueva clave API y copie la clave API.' }}
                                     </li>
                                 </ul>
                                 <div class="btn-wrap">
                                     <button type="submit" class="btn btn--primary w-100"
-                                        data-dismiss="modal">{{ translate('Got It') }}</button>
+                                        data-dismiss="modal">{{ 'Entiendo' }}</button>
                                 </div>
                             </div>
                         </div>

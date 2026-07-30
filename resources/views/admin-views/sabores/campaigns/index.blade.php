@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Sabores Campaigns'))
+@section('title', 'Campañas Sabores')
 
 @push('css_or_js')
 
@@ -12,14 +12,14 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-sm mb-2 mb-sm-0">
-                    <h1 class="page-header-title"><i class="tio-layers-outlined"></i> {{translate('Sabores Campaigns')}}
+                    <h1 class="page-header-title"><i class="tio-layers-outlined"></i> {{'Campañas Sabores'}}
                         <span class="badge badge-soft-dark ml-2" id="itemCount">{{$campaigns->total()}}</span>
                     </h1>
                 </div>
 
                 <div class="col-sm-auto">
                     <a class="btn btn--primary" href="{{route('admin.campaign.add-new', 'basic')}}">
-                        <i class="tio-add"></i> {{translate('Add New Campaign')}}
+                        <i class="tio-add"></i> {{'Agregar nueva campaña'}}
                     </a>
                 </div>
             </div>
@@ -36,7 +36,7 @@
                             <form action="{{url()->current()}}" method="GET">
                                 <div class="input-group input--group">
                                     <input id="datatableSearch_" type="search" name="search" class="form-control"
-                                        placeholder="{{translate('Search by title')}}" aria-label="Search"
+                                        placeholder="{{'Buscar por título'}}" aria-label="Search"
                                         value="{{$search}}" required>
                                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                                 </div>
@@ -56,13 +56,13 @@
                                                }'>
                             <thead class="thead-light">
                                 <tr>
-                                    <th>{{translate('sl')}}</th>
-                                    <th style="width: 15%">{{translate('Title')}}</th>
-                                    <th style="width: 15%">{{translate('Image')}}</th>
-                                    <th>{{translate('Date')}}</th>
-                                    <th>{{translate('Time')}}</th>
-                                    <th>{{translate('Status')}}</th>
-                                    <th class="text-center">{{translate('Action')}}</th>
+                                    <th>{{'SL'}}</th>
+                                    <th style="width: 15%">{{'Título'}}</th>
+                                    <th style="width: 15%">{{'Imagen'}}</th>
+                                    <th>{{'Fecha'}}</th>
+                                    <th>{{'Tiempo'}}</th>
+                                    <th>{{'Estado'}}</th>
+                                    <th class="text-center">{{'Acción'}}</th>
                                 </tr>
                             </thead>
 
@@ -106,15 +106,15 @@
                                             <div class="btn--container justify-content-center">
                                                 <a class="btn action-btn btn--primary btn-outline-primary"
                                                     href="{{route('admin.campaign.view', ['basic', $campaign['id']])}}"
-                                                    title="{{translate('view')}}"><i class="tio-visible"></i>
+                                                    title="{{'vista'}}"><i class="tio-visible"></i>
                                                 </a>
                                                 <a class="btn action-btn btn--primary btn-outline-primary"
                                                     href="{{route('admin.campaign.edit', ['basic', $campaign['id']])}}"
-                                                    title="{{translate('edit')}}"><i class="tio-edit"></i>
+                                                    title="{{'editar'}}"><i class="tio-edit"></i>
                                                 </a>
                                                 <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                                                    onclick="form_alert('campaign-{{$campaign['id']}}','{{translate('Want to delete this item ?')}}')"
-                                                    title="{{translate('delete')}}"><i class="tio-delete-outlined"></i>
+                                                    onclick="form_alert('campaign-{{$campaign['id']}}','{{'¿Quieres eliminar este elemento?'}}')"
+                                                    title="{{'borrar'}}"><i class="tio-delete-outlined"></i>
                                                 </a>
                                                 <form action="{{route('admin.campaign.delete', [$campaign['id']])}}"
                                                     method="post" id="campaign-{{$campaign['id']}}">
@@ -130,7 +130,7 @@
                             <div class="empty--data">
                                 <img src="{{asset('/assets/admin/img/empty.png')}}" alt="public">
                                 <h5>
-                                    {{translate('no_data_found')}}
+                                    {{'no se encontraron datos'}}
                                 </h5>
                             </div>
                         @endif

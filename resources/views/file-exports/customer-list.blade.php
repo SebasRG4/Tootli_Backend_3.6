@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-lg-12 text-center "><h1 >{{ translate('customer_list') }}</h1></div>
+    <div class="col-lg-12 text-center "><h1 >{{ 'lista de clientes' }}</h1></div>
     <div class="col-lg-12">
 
 
@@ -7,15 +7,15 @@
     <table>
         <thead>
             <tr>
-                <th>{{ translate('Customer_Analytics') }}</th>
+                <th>{{ 'Análisis de clientes' }}</th>
                 <th></th>
                 <th></th>
                 <th>
-                    {{ translate('Total_Customer')  }}: {{ $data['customers']->count() }}
+                    {{ 'Cliente total'  }}: {{ $data['customers']->count() }}
                     <br>
-                    {{ translate('Active_Customer')  }}: {{ $data['customers']->where('status',1)->count() }}
+                    {{ 'Cliente activo'  }}: {{ $data['customers']->where('status',1)->count() }}
                     <br>
-                    {{ translate('Inactive_Customer')  }}: {{ $data['customers']->where('status',0)->count() }}
+                    {{ 'Cliente inactivo'  }}: {{ $data['customers']->where('status',0)->count() }}
 
                 </th>
                 <th> </th>
@@ -24,11 +24,11 @@
                 <th></th>
                 </tr>
             <tr>
-                <th>{{ translate('Search_Criteria') }}</th>
+                <th>{{ 'Criterios de búsqueda' }}</th>
                 <th></th>
                 <th></th>
                 <th>
-                    {{ translate('Search_Bar_Content')  }}: {{ $data['search'] ??translate('N/A') }}
+                    {{ 'Contenido de la barra de búsqueda'  }}: {{ $data['search'] ??'N / A' }}
                 </th>
                 <th> </th>
                 <th></th>
@@ -36,19 +36,19 @@
                 <th></th>
             </tr>
             <tr>
-                <th>{{ translate('Filter_Criteria') }}</th>
+                <th>{{ 'Criterios de filtrado' }}</th>
                 <th></th>
                 <th></th>
                 <th>
-                    {{ translate('Customer_Status')  }}: {{ $data['filter'] ?translate($data['filter']):translate('all') }}
+                    {{ 'Estado del cliente'  }}: {{ $data['filter'] ?translate($data['filter']):'todo' }}
                     <br>
-                    {{ translate('Sort_by')  }}: {{ $data['order_wise'] ??translate('N/A') }}
+                    {{ 'Ordenar por'  }}: {{ $data['order_wise'] ??'N / A' }}
                     <br>
-                    {{ translate('Show_Limit')  }}: {{ $data['show_limit'] ??translate('N/A') }}
+                    {{ 'Mostrar límite'  }}: {{ $data['show_limit'] ??'N / A' }}
                     <br>
-                    {{ translate('Order_Date_Range')  }}: {{ $data['order_date'] ??translate('N/A') }}
+                    {{ 'Rango de fechas del pedido'  }}: {{ $data['order_date'] ??'N / A' }}
                     <br>
-                    {{ translate('Join_Date_Range')  }}: {{ $data['join_date'] ??translate('N/A') }}
+                    {{ 'Unirse al rango de fechas'  }}: {{ $data['join_date'] ??'N / A' }}
                 </th>
                 <th> </th>
                 <th></th>
@@ -56,16 +56,16 @@
                 <th></th>
             </tr>
         <tr>
-            <th>{{ translate('sl') }}</th>
-            <th>{{ translate('first_name') }}</th>
-            <th>{{ translate('last_name') }}</th>
-            <th>{{ translate('phone') }}</th>
-            <th>{{ translate('email') }}</th>
-            <th>{{ translate('saved_address') }}</th>
-            <th>{{ translate('total_orders') }}</th>
-            <th>{{ translate('total_wallet_amount') }} </th>
-            <th>{{ translate('total_loyality_points') }} </th>
-            <th>{{ translate('status') }} </th>
+            <th>{{ 'SL' }}</th>
+            <th>{{ 'nombre de pila' }}</th>
+            <th>{{ 'apellido' }}</th>
+            <th>{{ 'teléfono' }}</th>
+            <th>{{ 'correo electrónico' }}</th>
+            <th>{{ 'dirección guardada' }}</th>
+            <th>{{ 'pedidos totales' }}</th>
+            <th>{{ 'monto total de la billetera' }} </th>
+            <th>{{ 'puntos totales de fidelidad' }} </th>
+            <th>{{ 'estado' }} </th>
         </thead>
         <tbody>
         @foreach($data['customers'] as $key => $customer)
@@ -84,7 +84,7 @@
         <td>{{ $customer['order_count'] }}</td>
         <td>{{ $customer['wallet_balance'] }}</td>
         <td>{{ $customer['loyalty_point'] }}</td>
-        <td>{{ $customer->status ? translate('messages.Active') : translate('messages.Inactive') }}</td>
+        <td>{{ $customer->status ? 'Activo' : 'Inactivo' }}</td>
             </tr>
         @endforeach
         </tbody>

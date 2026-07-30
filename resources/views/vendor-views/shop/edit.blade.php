@@ -18,7 +18,7 @@
             <h2 class="page-header-title text-capitalize">
                 <img class="w--26" src="{{asset('assets/admin/img/store.png')}}" alt="public">
                 <span>
-                    {{translate('messages.edit_'.$title.'_info')}}
+                    {{'editar \'.$título.\' información'}}
                 </span>
             </h1>
         </div>
@@ -38,7 +38,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link lang_link active"
                                     href="#"
-                                    id="default-link">{{ translate('Default') }}</a>
+                                    id="default-link">{{ 'Por defecto' }}</a>
                                 </li>
                                 @foreach (json_decode($language) as $lang)
                                     <li class="nav-item">
@@ -55,19 +55,19 @@
                                     id="default-form">
                                         <div class="form-group">
                                             <label class="input-label"
-                                                for="default_name">{{ translate('messages.name') }}
-                                                ({{ translate('messages.Default') }})
+                                                for="default_name">{{ 'nombre' }}
+                                                ({{ 'Por defecto' }})
                                             </label>
                                             <input type="text" name="name[]" id="default_name"
-                                                class="form-control" placeholder="{{ translate('messages.'.$title.'_name') }}" value="{{$shop->getRawOriginal('name')}}"
+                                                class="form-control" placeholder="{{ '\'.$título.\' nombre' }}" value="{{$shop->getRawOriginal('name')}}"
 
                                                  >
                                         </div>
                                         <input type="hidden" name="lang[]" value="default">
                                         <div class="form-group mb-0">
                                             <label class="input-label"
-                                                for="exampleFormControlInput1">{{ translate('messages.address') }} ({{ translate('messages.default') }})</label>
-                                            <textarea type="text" name="address[]" placeholder="{{translate('messages.'.$title)}}" class="form-control min-h-90px ckeditor">{{$shop->getRawOriginal('address')}}</textarea>
+                                                for="exampleFormControlInput1">{{ 'DIRECCIÓN' }} ({{ 'por defecto' }})</label>
+                                            <textarea type="text" name="address[]" placeholder="{{'\'.$title)}}" class="form-control min-h-90px ckeditor">{{$shop->getRawOriginal(\'dirección'}}</textarea>
                                         </div>
                                     </div>
                                         @foreach (json_decode($language) as $lang)
@@ -89,18 +89,18 @@
                                                 id="{{ $lang }}-form">
                                                 <div class="form-group">
                                                     <label class="input-label"
-                                                        for="{{ $lang }}_name">{{ translate('messages.name') }}
+                                                        for="{{ $lang }}_name">{{ 'nombre' }}
                                                         ({{ strtoupper($lang) }})
                                                     </label>
                                                     <input type="text" name="name[]" id="{{ $lang }}_name"
-                                                        class="form-control" value="{{ $translate[$lang]['name']??'' }}" placeholder="{{ translate('messages.store_name') }}"
+                                                        class="form-control" value="{{ $translate[$lang]['name']??'' }}" placeholder="{{ 'nombre de la tienda' }}"
                                                          >
                                                 </div>
                                                 <input type="hidden" name="lang[]" value="{{ $lang }}">
                                                 <div class="form-group mb-0">
                                                     <label class="input-label"
-                                                        for="exampleFormControlInput1">{{ translate('messages.address') }} ({{ strtoupper($lang) }})</label>
-                                                    <textarea type="text" name="address[]" placeholder="{{translate('messages.store')}}" class="form-control min-h-90px ckeditor">{{ $translate[$lang]['address']??'' }}</textarea>
+                                                        for="exampleFormControlInput1">{{ 'DIRECCIÓN' }} ({{ strtoupper($lang) }})</label>
+                                                    <textarea type="text" name="address[]" placeholder="{{'Negocio'}}" class="form-control min-h-90px ckeditor">{{ $translate[$lang]['address']??'' }}</textarea>
                                                 </div>
                                             </div>
                                         @endforeach
@@ -108,33 +108,33 @@
                                         <div id="default-form">
                                             <div class="form-group">
                                                 <label class="input-label"
-                                                    for="exampleFormControlInput1">{{ translate('messages.name') }} ({{ translate('messages.default') }})</label>
+                                                    for="exampleFormControlInput1">{{ 'nombre' }} ({{ 'por defecto' }})</label>
                                                 <input type="text" name="name[]" class="form-control"
-                                                    placeholder="{{ translate('messages.store_name') }}" required>
+                                                    placeholder="{{ 'nombre de la tienda' }}" required>
                                             </div>
                                             <input type="hidden" name="lang[]" value="default">
                                             <div class="form-group mb-0">
                                                 <label class="input-label"
-                                                    for="exampleFormControlInput1">{{ translate('messages.address') }}
+                                                    for="exampleFormControlInput1">{{ 'DIRECCIÓN' }}
                                                 </label>
-                                                <textarea type="text" name="address[]" placeholder="{{translate('messages.store')}}" class="form-control min-h-90px ckeditor"></textarea>
+                                                <textarea type="text" name="address[]" placeholder="{{'Negocio'}}" class="form-control min-h-90px ckeditor"></textarea>
                                             </div>
                                         </div>
                                     @endif
                                     {{-- <div class="form-group">
-                                        <label for="name">{{translate('messages.store_name')}} <span class="text-danger">*</span></label>
+                                        <label for="name">{{'nombre de la tienda'}} <span class="text-danger">*</span></label>
                                         <input type="text" name="name" value="{{$shop->name}}" class="form-control" id="name"
                                                 required>
                                     </div> --}}
                                     <div class="form-group mt-2">
-                                        <label for="name">{{translate('messages.contact_number')}}<span class="text-danger">*</span></label>
+                                        <label for="name">{{'número de contacto'}}<span class="text-danger">*</span></label>
                                         <input type="text" name="contact" value="{{$shop->phone}}" class="form-control" id="name"
                                                 required>
                                     </div>
                                 </div>
                                 {{-- <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="address">{{translate('messages.address')}}<span class="text-danger">*</span></label>
+                                        <label for="address">{{'DIRECCIÓN'}}<span class="text-danger">*</span></label>
                                         <textarea type="text" rows="4" name="address" value="" class="form-control" id="address"
                                                 required>{{$shop->address}}</textarea>
                                     </div>
@@ -147,7 +147,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h5 class="card-title font-regular">
-                                {{translate('messages.upload_logo')}}
+                                {{'subir logotipo'}}
                             </h5>
                         </div>
                         <div class="card-body d-flex flex-column pt-0">
@@ -159,7 +159,7 @@
                             <div class="custom-file">
                                 <input type="file" name="image" id="customFileUpload" class="custom-file-input"
                                     accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                <label class="custom-file-label" for="customFileUpload">{{translate('messages.choose_file')}}</label>
+                                <label class="custom-file-label" for="customFileUpload">{{'elegir archivo'}}</label>
                             </div>
                         </div>
                     </div>
@@ -168,7 +168,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h5 class="card-title font-regular">
-                                {{translate('messages.upload_cover_photo')}} <span class="text-danger">({{translate('messages.ratio')}} 2:1)</span>
+                                {{'subir foto de portada'}} <span class="text-danger">({{'relación'}} 2:1)</span>
                             </h5>
                         </div>
                         <div class="card-body d-flex flex-column pt-0">
@@ -180,15 +180,15 @@
                             <div class="custom-file">
                                 <input type="file" name="photo" id="coverImageUpload" class="custom-file-input"
                                     accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                <label class="custom-file-label" for="coverImageUpload">{{translate('messages.choose_file')}}</label>
+                                <label class="custom-file-label" for="coverImageUpload">{{'elegir archivo'}}</label>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="mt-3 justify-content-end btn--container">
-                <a class="btn btn--danger text-capitalize" href="{{route('vendor.shop.view')}}">{{translate('messages.cancel')}}</a>
-                <button type="submit" class="btn btn--primary text-capitalize" id="btn_update">{{translate('messages.update')}}</button>
+                <a class="btn btn--danger text-capitalize" href="{{route('vendor.shop.view')}}">{{'Cancelar'}}</a>
+                <button type="submit" class="btn btn--primary text-capitalize" id="btn_update">{{'actualizar'}}</button>
             </div>
         </form>
     </div>

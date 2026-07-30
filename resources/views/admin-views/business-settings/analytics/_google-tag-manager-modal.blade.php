@@ -21,33 +21,33 @@
                                     </div>
                                     <div class="text-dark mb-3">
                                         <h3 class="lh-base">
-                                            {{ translate('how_to_get_the_google_tag_manager_container_id') }}
+                                            {{ 'cómo obtener la identificación del contenedor del administrador de etiquetas de Google' }}
                                         </h3>
                                         <p class="opacity-75">
-                                            {{ translate('log_into_google_tag_manager') }}
-                                            {{ translate('open_the_container_you_wish_to_use.') }}
-                                            {{ translate('the_container_id_will_be_displayed_in_the_top_section_of_the_container_page_after_you_open_the_admin_tab.') }}
-                                            {{ translate('typically_it_comes_in_the_format_gtm-xxxxxx.') }}
-                                            {{ translate('copy_it.') }}
+                                            {{ 'iniciar sesión en el administrador de etiquetas de google' }}
+                                            {{ 'Abra el recipiente que desea utilizar.' }}
+                                            {{ 'La identificación del contenedor se mostrará en la sección superior de la página del contenedor después de abrir la pestaña de administración.' }}
+                                            {{ 'normalmente viene en el formato gtm-xxxxxx.' }}
+                                            {{ 'cópialo.' }}
                                         </p>
                                     </div>
 
                                     <div class="text-dark mb-3">
                                         <h3 class="lh-base">
-                                            {{ translate('where_to_use_the_google_tag_manager_container_id') }}
+                                            {{ 'dónde utilizar la identificación del contenedor del administrador de etiquetas de Google' }}
                                         </h3>
                                         <p class="opacity-75">
-                                            {{ translate('go_to_the_marketing_tools_section_in_your_admin_panel_and_complete_the_steps:') }}
+                                            {{ 'vaya a la sección de herramientas de marketing en su panel de administración y complete los pasos:' }}
                                         </p>
                                         <ol class="d-flex flex-column gap-2 opacity-75">
                                             <li>
-                                                {{ translate('navigate_to_the_google_tag_manager_container_id_section_under_marketing_tools.') }}
+                                                {{ 'navegue hasta la sección de identificación del contenedor del administrador de etiquetas de Google en herramientas de marketing.' }}
                                             </li>
                                             <li>
-                                                {{ translate('turn_on_the_toggle_button.') }}
+                                                {{ 'encienda el botón de alternancia.' }}
                                             </li>
                                             <li>
-                                                {{ translate('paste_your_google_tag_manager_container_id_into_the_input_box_and_click_submit.') }}
+                                                {{ 'pegue la identificación del contenedor de su administrador de etiquetas de Google en el cuadro de entrada y haga clic en enviar.' }}
                                             </li>
                                         </ol>
                                     </div>

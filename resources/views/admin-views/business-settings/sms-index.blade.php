@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.system_module_setup'))
+@section('title','configuración del módulo del sistema')
 
 @push('css_or_js')
 
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/sms.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.sms_gateway_setup')}}
+                    {{'configuración de puerta de enlace SMS'}}
                 </span>
             </h1>
             @include('admin-views.business-settings.partials.third-party-links')
@@ -30,10 +30,10 @@
                         <div class="card-body  d-flex flex-wrap  justify-content-around">
                             <h4  class="w-50 flex-grow-1 module-warning-text">
                                 <i class="tio-info-outined"></i>
-                                {{ translate('Your_current_sms_settings_are_disabled,_because_you_have_enabled_sms_gateway_addon,_To_visit_your_currently_active_sms_gateway_settings_please_follow_the_link.') }}
+                                {{ 'Su configuración de SMS actual está deshabilitada porque ha habilitado el complemento de puerta de enlace de SMS. Para visitar la configuración de su puerta de enlace de SMS actualmente activa, siga el enlace.' }}
                                 </h4>
                                 <div>
-                                    <a href="{{!empty($payment_url) ? $payment_url : ''}}" class="btn btn-outline-primary"> <i class="tio-settings"></i> {{translate('settings')}}</a>
+                                    <a href="{{!empty($payment_url) ? $payment_url : ''}}" class="btn btn-outline-primary"> <i class="tio-settings"></i> {{'Configuración'}}</a>
                                 </div>
                         </div>
                     </div>
@@ -58,14 +58,14 @@
                                                 name="status"
                                                 value="1" {{$data_values->where('key_name',$gateway->key_name)->first()->live_values['status']?'checked':''}}>
                                         <label
-                                            for="{{$gateway->key_name}}-active"> {{ translate('messages.Active') }}</label>
+                                            for="{{$gateway->key_name}}-active"> {{ 'Activo' }}</label>
                                     </div>
                                     <div class="custom-radio">
                                         <input type="radio" id="{{$gateway->key_name}}-inactive"
                                                 name="status"
                                                 value="0" {{$data_values->where('key_name',$gateway->key_name)->first()->live_values['status']?'':'checked'}}>
                                         <label
-                                            for="{{$gateway->key_name}}-inactive"> {{ translate('messages.Inactive') }}</label>
+                                            for="{{$gateway->key_name}}-inactive"> {{ 'Inactivo' }}</label>
                                     </div>
                                 </div>
 
@@ -76,10 +76,10 @@
                                 @foreach($data_values->where('key_name',$gateway->key_name)->first()->live_values as $key=>$value)
                                     @if(!in_array($key,$skip))
                                         <div class="form-floating mb-30 mt-30 text-capitalize">
-                                            <label for="{{$key}}" class="form-label">{{translate($key)}}  {{ $gateway->key_name == 'alphanet_sms' &&  $key == 'sender_id'? '('. translate('messages.Optional') .')' : '*'}}  </label>
+                                            <label for="{{$key}}" class="form-label">{{translate($key)}}  {{ $gateway->key_name == 'alphanet_sms' &&  $key == 'sender_id'? '('. 'Opcional' .')' : '*'}}  </label>
                                             <input id="{{$key}}" type="text" class="form-control"
                                                    name="{{$key}}"
-                                                   placeholder=" {{ $key == 'otp_template' ?  translate('Your_Security_Pin_is'). ' #OTP#' : translate($key) .' *'   }}    "
+                                                   placeholder=" {{ $key == 'otp_template' ?  'Su PIN de seguridad es'. ' #OTP#' : translate($key) .' *'   }}    "
                                                    value="{{env('APP_ENV')=='demo'?'':$value}}">
                                         </div>
                                     @endif
@@ -87,7 +87,7 @@
                             </div>
                             <div class="d-flex justify-content-end">
                                 <button type="submit" class="btn btn--primary demo_check">
-                                {{ translate('messages.Update') }}
+                                {{ 'Actualizar' }}
                                 </button>
                             </div>
                         </form>
@@ -113,18 +113,18 @@
                             <div>
                                 <div class="text-center">
                                     <img src="{{ asset('assets/admin/img/modal/order-delivery-verification-on.png') }}" class="mb-20">
-                                    <h5 class="modal-title" >{{ translate('messages.Note') }} </h5>
+                                    <h5 class="modal-title" >{{ 'Nota' }} </h5>
                                 </div>
                                 <div class="text-center">
                                     <p class="text--danger" >
-                                        {{ translate('Currently_Your_FireBase_OTP_System_is_Active.Users_won’t_get_any_OTP_from_this_SMS_Gateway' ) }}
+                                        {{ 'Actualmente su sistema FireBase OTP está activo. Los usuarios no recibirán ninguna OTP de esta puerta de enlace SMS' }}
                                     </p>
                                 </div>
                             </div>
                             <div class="btn--container justify-content-center">
-                                <button type="button"  data-dismiss="modal" class="btn btn--primary min-w-120 confirm-Status-Toggle" data-dismiss="modal" >{{translate('OK')}}</button>
+                                <button type="button"  data-dismiss="modal" class="btn btn--primary min-w-120 confirm-Status-Toggle" data-dismiss="modal" >{{'DE ACUERDO'}}</button>
                                 {{-- <button type="button" class="btn btn--cancel min-w-120" data-dismiss="modal">
-                                    {{translate("Cancel")}}
+                                    {{'Cancelar'}}
                                 </button> --}}
                             </div>
                         </div>

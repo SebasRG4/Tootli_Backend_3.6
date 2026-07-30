@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('FCM Settings'))
+@section('title', 'Configuración de FCM')
 
 @push('css_or_js')
 @endpush
@@ -13,7 +13,7 @@
                 <span class="page-header-icon">
                     <img src="{{ asset('assets/admin/img/firebase.png') }}" class="w--26" alt="">
                 </span>
-                <span>{{ translate('messages.firebase_push_notification_setup') }}
+                <span>{{ 'configuración de notificaciones push de Firebase' }}
                 </span>
             </h1>
         </div>
@@ -29,14 +29,14 @@
                             <a href="{{ route('admin.business-settings.fcm-index') }}"
                                 class="nav-link pb-2 px-0 pb-sm-3 active" data-slide="1">
                                 <img src="{{ asset('assets/admin/img/notify.png') }}" alt="">
-                                <span>{{ translate('Push Notification') }}</span>
+                                <span>{{ 'Notificación push' }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('admin.business-settings.fcm-config') }}" class="nav-link pb-2 px-0 pb-sm-3"
                                 data-slide="2">
                                 <img src="{{ asset('assets/admin/img/firebase2.png') }}" alt="">
-                                <span>{{ translate('Firebase Configuration') }}</span>
+                                <span>{{ 'Configuración de base de fuego' }}</span>
                             </a>
                         </li>
                     </ul>
@@ -44,14 +44,14 @@
                         <div class="tab--content">
                             <div class="item show text--primary-2 d-flex flex-wrap align-items-center" type="button"
                                 data-toggle="modal" data-target="#push-notify-modal">
-                                <strong class="mr-2">{{ translate('Read Documentation') }}</strong>
+                                <strong class="mr-2">{{ 'Leer documentación' }}</strong>
                                 <div class="blinkings">
                                     <i class="tio-info-outined"></i>
                                 </div>
                             </div>
                             <div class="item text--primary-2 d-flex flex-wrap align-items-center" type="button"
                                 data-toggle="modal" data-target="#firebase-modal">
-                                <strong class="mr-2">{{ translate('Where to get this information') }}</strong>
+                                <strong class="mr-2">{{ 'Dónde obtener esta información' }}</strong>
                                 <div class="blinkings">
                                     <i class="tio-info-outined"></i>
                                 </div>
@@ -84,14 +84,14 @@
                             <div class="col-sm-auto mb-5">
                                 <select name="module_type" class="form-control js-select2-custom set-filter"
                                     data-url="{{ url()->full() }}" data-filter="module_type"
-                                    title="{{ translate('messages.select_modules') }}">
+                                    title="{{ 'seleccionar módulos' }}">
                                     @foreach (config('module.module_type') as $module)
                                         <option value="{{ $module }}" {{ $mod_type == $module ? 'selected' : '' }}>
                                             {{ ucfirst(translate($module)) }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <small>{{ translate('*Select Module Here') }}</small>
+                                <small>{{ '*Seleccione el módulo aquí' }}</small>
                             </div>
                         </div>
                         <form action="{{ route('admin.business-settings.update-fcm-messages-rental') }}" method="post">
@@ -119,7 +119,7 @@
                                                 <div class="form-group">
                                                     <div class="d-flex flex-wrap justify-content-between mb-2">
                                                         <span class="d-block form-label">
-                                                            {{ translate('messages.trip_pending_messages') }}
+                                                            {{ 'mensajes de viaje pendiente' }}
                                                             ({{ strtoupper($lang) }})
                                                         </span>
                                                         @if ($lang == 'en')
@@ -130,10 +130,10 @@
                                                                     data-type="toggle"
                                                                     data-image-on="{{ asset('assets/admin/img/modal/pending-order-on.png') }}"
                                                                     data-image-off="{{ asset('assets/admin/img/modal/pending-order-off.png') }}"
-                                                                    data-title-on="{{ translate('By Turning ON Trip') }} <strong>{{ translate('pending Message') }}</strong>"
-                                                                    data-title-off="{{ translate('By Turning OFF Trip') }} <strong>{{ translate('pending Message') }}</strong>"
-                                                                    data-text-on="<p>{{ translate('User will get a clear message to know that the Trip is pending.') }}</p>"
-                                                                    data-text-off="<p>{{ translate('User cannot get a clear message to know that the Trip is pending or not.') }}</p>"
+                                                                    data-title-on="{{ 'Al activar el viaje' }} <strong>{{ 'Mensaje pendiente' }}</strong>"
+                                                                    data-title-off="{{ 'Desactivando el viaje' }} <strong>{{ 'Mensaje pendiente' }}</strong>"
+                                                                    data-text-on="<p>{{ 'El usuario recibirá un mensaje claro para saber que el viaje está pendiente.' }}</p>"
+                                                                    data-text-off="<p>{{ 'El usuario no puede recibir un mensaje claro para saber si el Viaje está pendiente o no.' }}</p>"
                                                                     class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
                                                                     name="trip_pending_message_status"
                                                                     data-textarea-name="trip_pending_message" value="1"
@@ -145,7 +145,7 @@
                                                             </label>
                                                         @endif
                                                     </div>
-                                                    <textarea name="trip_pending_message[]" placeholder="{{ translate('Write your message') }}"
+                                                    <textarea name="trip_pending_message[]" placeholder="{{ 'Escribe tu mensaje' }}"
                                                         class="form-control pending_messages"
                                                         @if ($lang == 'en') {{ $data ? ($data['status'] == 1 ? 'required' : '') : '' }} @endif>{!! isset($translate) && isset($translate[$lang])
                                                             ? $translate[$lang]['message']
@@ -172,7 +172,7 @@
                                                 <div class="form-group">
                                                     <div class="d-flex flex-wrap justify-content-between mb-2">
                                                         <span class="d-block form-label">
-                                                            {{ translate('messages.trip_confirm_message') }}
+                                                            {{ 'mensaje de confirmación de viaje' }}
                                                         </span>
                                                         @if ($lang == 'en')
                                                             <label
@@ -182,10 +182,10 @@
                                                                     data-type="toggle"
                                                                     data-image-on="{{ asset('assets/admin/img/modal/pending-order-on.png') }}"
                                                                     data-image-off="{{ asset('assets/admin/img/modal/pending-order-off.png') }}"
-                                                                    data-title-on="{{ translate('By Turning ON Trip') }} <strong>{{ translate('confirmation Message') }}</strong>"
-                                                                    data-title-off="{{ translate('By Turning OFF Trip') }} <strong>{{ translate('confirmation Message') }}</strong>"
-                                                                    data-text-on="<p>{{ translate('User will get a clear message to know that the trip is confirmed.') }}</p>"
-                                                                    data-text-off="<p>{{ translate('User cannot get a clear message to know that the trip is confirmed or not.') }}</p>"
+                                                                    data-title-on="{{ 'Al activar el viaje' }} <strong>{{ 'mensaje de confirmación' }}</strong>"
+                                                                    data-title-off="{{ 'Desactivando el viaje' }} <strong>{{ 'mensaje de confirmación' }}</strong>"
+                                                                    data-text-on="<p>{{ 'El usuario recibirá un mensaje claro para saber que el viaje está confirmado.' }}</p>"
+                                                                    data-text-off="<p>{{ 'El usuario no puede recibir un mensaje claro para saber si el viaje está confirmado o no.' }}</p>"
                                                                     class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
                                                                     name="trip_confirm_message_status"
                                                                     data-textarea-name="confirm_message" value="1"
@@ -197,7 +197,7 @@
                                                             </label>
                                                         @endif
                                                     </div>
-                                                    <textarea name="trip_confirm_message[]" placeholder="{{ translate('Write your message') }}"
+                                                    <textarea name="trip_confirm_message[]" placeholder="{{ 'Escribe tu mensaje' }}"
                                                         class="form-control confirm_message"
                                                         @if ($lang == 'en') {{ $data ? ($data['status'] == 1 ? 'required' : '') : '' }} @endif>{!! isset($translate_2) && isset($translate_2[$lang])
                                                             ? $translate_2[$lang]['message']
@@ -226,7 +226,7 @@
                                                     <div class="form-group">
                                                         <div class="d-flex flex-wrap justify-content-between mb-2">
                                                             <span class="d-block form-label">
-                                                                {{ translate('messages.trip_ongoing_message') }}
+                                                                {{ 'mensaje de viaje en curso' }}
                                                             </span>
                                                             @if ($lang == 'en')
                                                                 <label
@@ -236,10 +236,10 @@
                                                                         data-type="toggle"
                                                                         data-image-on="{{ asset('assets/admin/img/modal/pending-order-on.png') }}"
                                                                         data-image-off="{{ asset('assets/admin/img/modal/pending-order-off.png') }}"
-                                                                        data-title-on="{{ translate('By Turning ON Trip') }} <strong>{{ translate('Ongoing Message') }}</strong>"
-                                                                        data-title-off="{{ translate('By Turning OFF Trip') }} <strong>{{ translate('Ongoing Message') }}</strong>"
-                                                                        data-text-on="<p>{{ translate('User will get a clear message to know that the trip is Ongoing.') }}</p>"
-                                                                        data-text-off="<p>{{ translate('User cannot get a clear message to know that the trip is Ongoing or not.') }}</p>"
+                                                                        data-title-on="{{ 'Al activar el viaje' }} <strong>{{ 'Mensaje continuo' }}</strong>"
+                                                                        data-title-off="{{ 'Desactivando el viaje' }} <strong>{{ 'Mensaje continuo' }}</strong>"
+                                                                        data-text-on="<p>{{ 'El usuario recibirá un mensaje claro para saber que el viaje está en curso.' }}</p>"
+                                                                        data-text-off="<p>{{ 'El usuario no puede recibir un mensaje claro para saber si el viaje está en curso o no.' }}</p>"
                                                                         class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
                                                                         name="trip_ongoing_message_status"
                                                                         data-textarea-name="processing_message"
@@ -251,7 +251,7 @@
                                                                 </label>
                                                             @endif
                                                         </div>
-                                                        <textarea name="trip_ongoing_message[]" placeholder="{{ translate('Write your message') }}"
+                                                        <textarea name="trip_ongoing_message[]" placeholder="{{ 'Escribe tu mensaje' }}"
                                                             class="form-control processing_message"
                                                             @if ($lang == 'en') {{ $data ? ($data['status'] == 1 ? 'required' : '') : '' }} @endif>{!! isset($translate_3) && isset($translate_3[$lang])
                                                                 ? $translate_3[$lang]['message']
@@ -278,7 +278,7 @@
                                                     <div class="form-group">
                                                         <div class="d-flex flex-wrap justify-content-between mb-2">
                                                             <span class="d-block form-label">
-                                                                {{ translate('messages.trip_complete_message') }}
+                                                                {{ 'mensaje de viaje completo' }}
                                                             </span>
                                                             @if ($lang == 'en')
                                                                 <label
@@ -289,10 +289,10 @@
                                                                         data-type="toggle"
                                                                         data-image-on="{{ asset('assets/admin/img/modal/pending-order-on.png') }}"
                                                                         data-image-off="{{ asset('assets/admin/img/modal/pending-order-off.png') }}"
-                                                                        data-title-on="{{ translate('By Turning ON Trip') }} <strong>{{ translate('Trip complete Message') }}</strong>"
-                                                                        data-title-off="{{ translate('By Turning OFF Trip') }} <strong>{{ translate('Trip complete Message') }}</strong>"
-                                                                        data-text-on="<p>{{ translate('User will get a clear message to know that the trip is completed.') }}</p>"
-                                                                        data-text-off="<p>{{ translate('User cannot get a clear message to know that the trip is completed or not.') }}</p>"
+                                                                        data-title-on="{{ 'Al activar el viaje' }} <strong>{{ 'Mensaje de viaje completo' }}</strong>"
+                                                                        data-title-off="{{ 'Desactivando el viaje' }} <strong>{{ 'Mensaje de viaje completo' }}</strong>"
+                                                                        data-text-on="<p>{{ 'El usuario recibirá un mensaje claro para saber que el viaje se completó.' }}</p>"
+                                                                        data-text-off="<p>{{ 'El usuario no puede recibir un mensaje claro para saber si el viaje se completó o no.' }}</p>"
                                                                         class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
                                                                         name="trip_complete_message_status"
                                                                         data-textarea-name="trip_complete_message"
@@ -304,7 +304,7 @@
                                                                 </label>
                                                             @endif
                                                         </div>
-                                                        <textarea name="trip_complete_message[]" placeholder="{{ translate('Write your message') }}"
+                                                        <textarea name="trip_complete_message[]" placeholder="{{ 'Escribe tu mensaje' }}"
                                                             class="form-control trip_complete_message"
                                                             @if ($lang == 'en') {{ $data ? ($data['status'] == 1 ? 'required' : '') : '' }} @endif>{!! isset($translate_4) && isset($translate_4[$lang])
                                                                 ? $translate_4[$lang]['message']
@@ -334,7 +334,7 @@
                                                 <div class="form-group">
                                                     <div class="d-flex flex-wrap justify-content-between mb-2">
                                                         <span class="d-block form-label">
-                                                            {{ translate('messages.trip_cancel_message') }}
+                                                            {{ 'mensaje de cancelación de viaje' }}
                                                         </span>
                                                         @if ($lang == 'en')
                                                             <label
@@ -344,10 +344,10 @@
                                                                     data-type="toggle"
                                                                     data-image-on="{{ asset('assets/admin/img/modal/pending-order-on.png') }}"
                                                                     data-image-off="{{ asset('assets/admin/img/modal/pending-order-off.png') }}"
-                                                                    data-title-on="{{ translate('By Turning ON Trip') }} <strong>{{ translate('Cancel Message') }}</strong>"
-                                                                    data-title-off="{{ translate('By Turning OFF Trip') }} <strong>{{ translate('Cancel Message') }}</strong>"
-                                                                    data-text-on="<p>{{ translate('User will get a clear message to know that the trip is canceled.') }}</p>"
-                                                                    data-text-off="<p>{{ translate('User cannot get a clear message to know that the trip is canceled or not.') }}</p>"
+                                                                    data-title-on="{{ 'Al activar el viaje' }} <strong>{{ 'Cancelar mensaje' }}</strong>"
+                                                                    data-title-off="{{ 'Desactivando el viaje' }} <strong>{{ 'Cancelar mensaje' }}</strong>"
+                                                                    data-text-on="<p>{{ 'El usuario recibirá un mensaje claro para saber que el viaje está cancelado.' }}</p>"
+                                                                    data-text-off="<p>{{ 'El usuario no puede recibir un mensaje claro para saber si el viaje está cancelado o no.' }}</p>"
                                                                     class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
                                                                     name="trip_cancel_message_status"
                                                                     data-textarea-name="trip_cancel_message"
@@ -359,7 +359,7 @@
                                                             </label>
                                                         @endif
                                                     </div>
-                                                    <textarea name="trip_cancel_message[]" placeholder="{{ translate('Write your message') }}"
+                                                    <textarea name="trip_cancel_message[]" placeholder="{{ 'Escribe tu mensaje' }}"
                                                         class="form-control trip_cancel_message"
                                                         @if ($lang == 'en') {{ $data ? ($data['status'] == 1 ? 'required' : '') : '' }} @endif>{!! isset($translate_5) && isset($translate_5[$lang])
                                                             ? $translate_5[$lang]['message']
@@ -378,9 +378,9 @@
                                 @endforeach
                             @endif
                             <div class="btn--container justify-content-end">
-                                <button type="reset" class="btn btn--reset">{{ translate('messages.reset') }}</button>
+                                <button type="reset" class="btn btn--reset">{{ 'reiniciar' }}</button>
                                 <button type="submit"
-                                    class="btn btn--primary">{{ translate('messages.submit') }}</button>
+                                    class="btn btn--primary">{{ 'entregar' }}</button>
                             </div>
                         </form>
                     </div>
@@ -405,20 +405,20 @@
                                         <img src="{{ asset('assets/admin/img/email-templates/3.png') }}"
                                             alt="" class="mb-20">
                                         <h5 class="modal-title">
-                                            {{ translate('Write_a_message_in_the_Notification_Body') }}</h5>
+                                            {{ 'Escribir un mensaje en el cuerpo de la notificación' }}</h5>
                                     </div>
                                     <p>
-                                        {{ translate('you_can_add_your_message_using_placeholders_to_include_dynamic_content._Here_are_some_examples_of_placeholders_you_can_use:') }}
+                                        {{ 'puede agregar su mensaje usando marcadores de posición para incluir contenido dinámico. A continuación se muestran algunos ejemplos de marcadores de posición que puede utilizar:' }}
                                     </p>
                                     <ul>
                                         <li>
-                                            {userName}: {{ translate('the_name_of_the_user.') }}
+                                            {userName}: {{ 'el nombre del usuario.' }}
                                         </li>
                                         <li>
-                                            {storeName}: {{ translate('the_name_of_the_store.') }}
+                                            {storeName}: {{ 'el nombre de la tienda.' }}
                                         </li>
                                         <li>
-                                            {orderId}: {{ translate('the_order_id.') }}
+                                            {orderId}: {{ 'la identificación del pedido.' }}
                                         </li>
                                     </ul>
                                 </div>
@@ -429,14 +429,14 @@
                                         <img src="{{ asset('assets/admin/img/firebase/slide-4.png') }}"
                                             alt="" class="mb-20">
                                         <h5 class="modal-title">
-                                            {{ translate('Please Visit the Docs to Set FCM on Mobile Apps') }}</h5>
+                                            {{ 'Visite los documentos para configurar FCM en aplicaciones móviles' }}</h5>
                                     </div>
                                     <div class="text-center">
                                         <p>
-                                            {{ translate('Please check the documentation below for detailed instructions on setting up your mobile app to receive Firebase Cloud Messaging (FCM) notifications.') }}
+                                            {{ 'Consulte la documentación a continuación para obtener instrucciones detalladas sobre cómo configurar su aplicación móvil para recibir notificaciones de Firebase Cloud Messaging (FCM).' }}
                                         </p>
                                         <a href="https://docs.6amtech.com/docs-six-am-mart/mobile-apps/mandatory-setup"
-                                            target="_blank">{{ translate('Click Here') }}</a>
+                                            target="_blank">{{ 'Haga clic aquí' }}</a>
                                     </div>
                                 </div>
                             </div>

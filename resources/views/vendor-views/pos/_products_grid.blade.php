@@ -18,7 +18,7 @@
     <div class="search--no-found">
         <img src="{{ asset('assets/admin/img/search-icon.png') }}" alt="img">
         <p>
-            {{ translate('messages.no_products_on_store_pos_search') }}
+            {{ 'no hay productos en la búsqueda pos tienda' }}
         </p>
     </div>
 @endif

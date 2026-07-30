@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.admin_landing_page'))
+@section('title','página de inicio del administrador')
 
 @section('content')
 <div class="content container-fluid">
@@ -11,11 +11,11 @@
                     <img src="{{asset('assets/admin/img/landing.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.admin_landing_pages') }}
+                    {{ 'páginas de inicio de administración' }}
                 </span>
             </h1>
             <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#how-it-works">
-                <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
+                <strong class="mr-2">{{'¡Mira cómo funciona!'}}</strong>
                 <div>
                     <i class="tio-info-outined"></i>
                 </div>
@@ -35,7 +35,7 @@
             <li class="nav-item">
                 <a class="nav-link lang_link active"
                 href="#"
-                id="default-link">{{translate('messages.default')}}</a>
+                id="default-link">{{'por defecto'}}</a>
             </li>
             @foreach (json_decode($language) as $lang)
                 <li class="nav-item">
@@ -51,7 +51,7 @@
             <form action="{{ route('admin.business-settings.criteria-update',[$criteria['id']]) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <h5 class="card-title mb-3 mt-3">
-                    <span class="card-header-icon mr-2"><i class="tio-settings-outlined"></i></span> <span>{{translate('Special Criteria List Section ')}}</span>
+                    <span class="card-header-icon mr-2"><i class="tio-settings-outlined"></i></span> <span>{{'Sección de lista de criterios especiales'}}</span>
                 </h5>
                 <div class="card mb-3">
                     <div class="card-body">
@@ -59,17 +59,17 @@
                             <div class="row g-3">
                                 @if ($language)
                                 <div class="col-sm-6 lang_form default-form">
-                                    <label for="title" class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})<span
+                                    <label for="title" class="form-label">{{'Título'}} ({{ 'por defecto' }})<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
+                                                        data-original-title="{{ 'Escribe el título dentro de 40 caracteres.' }}">
                                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span><span class="form-label-secondary text-danger"
                                                                  data-toggle="tooltip" data-placement="right"
-                                                                 data-original-title="{{ translate('messages.Required.')}}"> *
+                                                                 data-original-title="{{ 'Requerido.'}}"> *
                                                 </span></label>
-                                                <input required id="title" type="text" maxlength="40" name="title[]" value="{{ $criteria['title']??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                                <input required id="title" type="text" maxlength="40" name="title[]" value="{{ $criteria['title']??'' }}" class="form-control" placeholder="{{'título aquí...'}}">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                     @foreach(json_decode($language) as $lang)
@@ -85,33 +85,33 @@
                                     }
                                 ?>
                                     <div class="col-sm-6 d-none lang_form" id="{{$lang}}-form1">
-                                        <label for="title{{$lang}}" class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})</label>
-                                        <input id="title{{$lang}}" type="text" name="title[]" value="{{ $translate[$lang]['title']??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                        <label for="title{{$lang}}" class="form-label">{{'Título'}} ({{strtoupper($lang)}})</label>
+                                        <input id="title{{$lang}}" type="text" name="title[]" value="{{ $translate[$lang]['title']??'' }}" class="form-control" placeholder="{{'título aquí...'}}">
                                     </div>
                                         <input type="hidden" name="lang[]" value="{{$lang}}">
                                     @endforeach
                                 @else
                                 <div class="col-sm-6">
-                                    <label for="title" class="form-label">{{translate('Title')}}<span
+                                    <label for="title" class="form-label">{{'Título'}}<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
+                                                        data-original-title="{{ 'Escribe el título dentro de 40 caracteres.' }}">
                                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input id="title" type="text" maxlength="40" name="title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                                <input id="title" type="text" maxlength="40" name="title[]" class="form-control" placeholder="{{'título aquí...'}}">
                                 </div>
                                     <input type="hidden" name="lang[]" value="default">
                                 @endif
                                 <div class="col-sm-6">
                                     <div>
 
-                                        <label class="form-label mb-3">{{translate('Criteria Icon/ Image')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate(IMAGE_FORMAT.' ' . 'Less Than 2MB') }}">
+                                        <label class="form-label mb-3">{{'Icono/imagen de criterios'}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate(IMAGE_FORMAT.' ' . 'Less Than 2MB') }}">
                                             <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                         </span>
                                             <span class="form-label-secondary text-danger"
                                                   data-toggle="tooltip" data-placement="right"
-                                                  data-original-title="{{ translate('messages.Required.')}}"> *
+                                                  data-original-title="{{ 'Requerido.'}}"> *
                                                 </span>
                                             <div class="fs-12 opacity-70">
                                                 {{ translate(IMAGE_FORMAT.' ' . 'Less Than 2MB') }}
@@ -130,8 +130,8 @@
                                                 <span id="fixed_header_image" class="remove_image_button remove-image dynamic-checkbox"
                                                       data-id="fixed_header_image"
                                                       data-image-off="{{ asset('assets/admin/img/delete-confirmation.png') }}"
-                                                      data-title="{{translate('Warning!')}}"
-                                                      data-text="<p>{{translate('Are_you_sure_you_want_to_remove_this_image_?')}}</p>"
+                                                      data-title="{{'¡Advertencia!'}}"
+                                                      data-text="<p>{{'¿Estás seguro de que deseas eliminar esta imagen?'}}</p>"
                                                 > <i class="tio-clear"></i></span>
                                                 @endif
                                             </div>
@@ -139,8 +139,8 @@
                                 </div>
                             </div>
                             <div class="btn--container justify-content-end mt-20">
-                                <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
-                                <button type="submit"   class="btn btn--primary mb-2">{{translate('messages.Update')}}</button>
+                                <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
+                                <button type="submit"   class="btn btn--primary mb-2">{{'Actualizar'}}</button>
                             </div>
                         </div>
                         </div>

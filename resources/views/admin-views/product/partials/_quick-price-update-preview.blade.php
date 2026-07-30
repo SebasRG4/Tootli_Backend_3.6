@@ -2,11 +2,11 @@
     <table class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
         <thead class="thead-light">
             <tr>
-                <th>{{ translate('Texto Original') }}</th>
-                <th>{{ translate('Artículo Detectado') }}</th>
-                <th>{{ translate('Precio Anterior') }}</th>
-                <th>{{ translate('Nuevo Precio') }}</th>
-                <th>{{ translate('Estado') }}</th>
+                <th>{{ 'Texto Original' }}</th>
+                <th>{{ 'Artículo detectado' }}</th>
+                <th>{{ 'Precio Anterior' }}</th>
+                <th>{{ 'Precio Nuevo' }}</th>
+                <th>{{ 'Estado' }}</th>
             </tr>
         </thead>
         <tbody>
@@ -17,7 +17,7 @@
                         @if($data['match_status'] == 'found')
                             <strong>{{ $data['db_item_name'] }}</strong>
                             @if($data['parsed_variation'])
-                                <br><small class="text-muted">{{ translate('Variación:') }} {{ $data['parsed_variation'] }}</small>
+                                <br><small class="text-muted">{{ 'Variación:' }} {{ $data['parsed_variation'] }}</small>
                             @endif
                             <input type="hidden" name="updates[{{$index}}][item_id]" value="{{ $data['db_item_id'] }}">
                             <input type="hidden" name="updates[{{$index}}][variation]" value="{{ $data['parsed_variation'] }}">
@@ -42,13 +42,13 @@
                     </td>
                     <td>
                         @if($data['match_status'] == 'found')
-                            <span class="badge badge-soft-success">{{ translate('Encontrado (Listo para actualizar)') }}</span>
+                            <span class="badge badge-soft-success">{{ 'Encontrado (Listo para actualizar)' }}</span>
                         @elseif($data['match_status'] == 'multiple_found')
-                            <span class="badge badge-soft-warning">{{ translate('Múltiples artículos con el mismo nombre. Usa un nombre más específico.') }}</span>
+                            <span class="badge badge-soft-warning">{{ 'Múltiples artículos con el mismo nombre. Usa un nombre más específico.' }}</span>
                         @elseif($data['match_status'] == 'not_found')
-                            <span class="badge badge-soft-danger">{{ translate('No encontrado en la base de datos') }}</span>
+                            <span class="badge badge-soft-danger">{{ 'No encontrado en la base de datos' }}</span>
                         @elseif($data['match_status'] == 'invalid_format')
-                            <span class="badge badge-soft-secondary">{{ translate('Formato inválido') }}</span>
+                            <span class="badge badge-soft-secondary">{{ 'Formato inválido' }}</span>
                         @endif
                     </td>
                 </tr>
@@ -59,6 +59,6 @@
 
 @if(count($previewData) == 0)
     <div class="text-center p-4">
-        <p class="mb-0">{{ translate('No se pudo extraer información del texto.') }}</p>
+        <p class="mb-0">{{ 'No se pudo extraer información del texto.' }}</p>
     </div>
 @endif

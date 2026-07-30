@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.Cashback_Offer'))
+@section('title','Oferta de reembolso')
 
 @section('content')
     <div class="content container-fluid">
@@ -11,11 +11,11 @@
                     <img src="{{asset('assets/admin/img/Create_Cashback_Offer.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.Create_Cashback_Offer')}}
+                    {{'Crear oferta de reembolso'}}
                 </span>
             </h1>
             {{-- <div class="text--primary-2 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#how-it-works">
-                <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
+                <strong class="mr-2">{{'¡Mira cómo funciona!'}}</strong>
                 <div class="blinkings">
                     <i class="tio-info-outined"></i>
                 </div>
@@ -36,7 +36,7 @@
                                         <li class="nav-item">
                                             <a class="nav-link lang_link active"
                                             href="#"
-                                            id="default-link">{{translate('messages.default')}}</a>
+                                            id="default-link">{{'por defecto'}}</a>
                                         </li>
                                         @foreach ($language as $lang)
                                             <li class="nav-item">
@@ -52,15 +52,15 @@
                                     <div class="lang_form" id="default-form">
                                         <div class="form-group">
                                             <label class="input-label"
-                                                for="default_title">{{ translate('messages.title') }}
-                                                ({{ translate('Default') }})
+                                                for="default_title">{{ 'título' }}
+                                                ({{ 'Por defecto' }})
                                                 <span class="form-label-secondary text-danger"
                                                       data-toggle="tooltip" data-placement="right"
-                                                      data-original-title="{{ translate('messages.Required.')}}"> *
+                                                      data-original-title="{{ 'Requerido.'}}"> *
                                             </span>
                                             </label>
                                             <input required type="text" value="{{ old('title.0') }}" name="title[]" maxlength="254" id="default_title"
-                                                class="form-control" placeholder="{{ translate('messages.Eid_Dhamaka') }}" >
+                                                class="form-control" placeholder="{{ 'Eid Dhamaka' }}" >
                                         </div>
                                         <input type="hidden" name="lang[]" value="default">
                                     </div>
@@ -69,11 +69,11 @@
                                                 id="{{ $lang }}-form">
                                                 <div class="form-group">
                                                     <label class="input-label"
-                                                        for="{{ $lang }}_title">{{ translate('messages.title') }}
+                                                        for="{{ $lang }}_title">{{ 'título' }}
                                                         ({{ strtoupper($lang) }})
                                                     </label>
                                                     <input type="text" name="title[]" maxlength="254"  value="{{ old('title.'.$key+1) }}" id="{{ $lang }}_title"
-                                                        class="form-control" placeholder="{{ translate('messages.Eid_Dhamaka') }}"
+                                                        class="form-control" placeholder="{{ 'Eid Dhamaka' }}"
                                                          >
                                                 </div>
                                                 <input type="hidden" name="lang[]" value="{{ $lang }}">
@@ -83,9 +83,9 @@
                                         <div id="default-form">
                                             <div class="form-group">
                                                 <label class="input-label"
-                                                    for="exampleFormControlInput1">{{ translate('messages.title') }} ({{ translate('messages.default') }})</label>
+                                                    for="exampleFormControlInput1">{{ 'título' }} ({{ 'por defecto' }})</label>
                                                 <input type="text" name="title[]" maxlength="254" class="form-control"
-                                                    placeholder="{{ translate('messages.Eid_Dhamaka') }}">
+                                                    placeholder="{{ 'Eid Dhamaka' }}">
                                             </div>
                                             <input type="hidden" name="lang[]" value="default">
                                         </div>
@@ -94,15 +94,15 @@
 
                                 <div class="col-md-4 col-lg-4 col-sm-6" id="customer_wise">
                                     <div class="form-group">
-                                        <label class="input-label" for="select_customer">{{translate('messages.select_customer')}}
+                                        <label class="input-label" for="select_customer">{{'seleccionar cliente'}}
                                             <span class="form-label-secondary text-danger"
                                                   data-toggle="tooltip" data-placement="right"
-                                                  data-original-title="{{ translate('messages.Required.')}}"> *
+                                                  data-original-title="{{ 'Requerido.'}}"> *
                                             </span></label>
                                         <select required name="customer_id[]" id="select_customer"
                                             class="form-control js-select2-custom"
-                                            multiple="multiple" data-placeholder="{{translate('messages.select_customer')}}">
-                                            <option   value="all">{{translate('messages.all')}} </option>
+                                            multiple="multiple" data-placeholder="{{'seleccionar cliente'}}">
+                                            <option   value="all">{{'todo'}} </option>
                                         @foreach(\App\Models\User::get(['id','f_name','l_name']) as $user)
                                             <option class="select_customer_option" value="{{$user->id}}" {{ (isset($customer) && is_numeric($customer) && ($customer == $user->id))?'selected':'' }}>{{$user->f_name.' '.$user->l_name}}</option>
                                         @endforeach
@@ -114,19 +114,19 @@
 
                                 <div class="col-md-4 col-lg-4 col-sm-6">
                                     <div class="form-group">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Cashback_Type')}} <span class="form-label-secondary text-danger"
+                                        <label class="input-label" for="exampleFormControlInput1">{{'Tipo de reembolso'}} <span class="form-label-secondary text-danger"
                                             data-toggle="tooltip" data-placement="right"
-                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            data-original-title="{{ 'Requerido.'}}"> *
                                             </span></label>
                                         <select name="cashback_type" class="form-control" id="cashback_type" required>
-                                            <option {{ old('cashback_type')  == 'percentage' ? "selected": '' }} value="percentage">{{translate('messages.percentage')}} (%)</option>
-                                            <option {{ old('cashback_type')  == 'amount' ? "selected": '' }}  value="amount">{{translate('messages.amount')}} {{ \App\CentralLogics\Helpers::currency_symbol() }}</option>
+                                            <option {{ old('cashback_type')  == 'percentage' ? "selected": '' }} value="percentage">{{'porcentaje'}} (%)</option>
+                                            <option {{ old('cashback_type')  == 'amount' ? "selected": '' }}  value="amount">{{'cantidad'}} {{ \App\CentralLogics\Helpers::currency_symbol() }}</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-lg-4 col-sm-6">
                                     <div class="form-group">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Cashback_Amount')}}
+                                        <label class="input-label" for="exampleFormControlInput1">{{'Monto del reembolso'}}
 
                                             <span class="{{ old('cashback_type')  == 'percentage' ||  old('cashback_type') == null  ? '': 'd-none' }} " id="percentage">(%)</span>
                                             <span  class=" {{ old('cashback_type')  == 'amount' && old('cashback_type') !== null ? '': 'd-none' }} " id='cuttency_symbol'>({{ \App\CentralLogics\Helpers::currency_symbol() }})
@@ -135,73 +135,73 @@
                                             <span
                                             class="input-label-secondary text--title" data-toggle="tooltip"
                                             data-placement="right"
-                                            data-original-title="{{ translate('Set_the_value_of_Cashback_percentage/_amount_which_will_transfer_to_the_customer_wallet_when_the__order_is_completed.') }}">
+                                            data-original-title="{{ 'Establezca el valor del porcentaje/monto del reembolso que se transferirá a la billetera del cliente cuando se complete el pedido.' }}">
                                             <i class="tio-info-outined"></i>
                                         </span>
                                         <span class="form-label-secondary text-danger"
                                         data-toggle="tooltip" data-placement="right"
-                                        data-original-title="{{ translate('messages.Required.')}}"> *
+                                        data-original-title="{{ 'Requerido.'}}"> *
                                         </span>
 
                                         </label>
-                                        <input type="number" value="{{  old('cashback_amount') }}" step="0.01" min="1" max="100"  placeholder="{{ translate('messages.Ex:_100') }}"  name="cashback_amount" id="Cash_back_amount" class="form-control" required>
+                                        <input type="number" value="{{  old('cashback_amount') }}" step="0.01" min="1" max="100"  placeholder="{{ 'Ej: 100' }}"  name="cashback_amount" id="Cash_back_amount" class="form-control" required>
                                     </div>
                                 </div>
 
                                 <div class="col-md-4 col-lg-4 col-sm-6">
                                     <div class="form-group">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Minimum_Purchase')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})
+                                        <label class="input-label" for="exampleFormControlInput1">{{'Compra Mínima'}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})
                                             <span class="form-label-secondary text-danger"
                                                   data-toggle="tooltip" data-placement="right"
-                                                  data-original-title="{{ translate('messages.Required.')}}"> *
+                                                  data-original-title="{{ 'Requerido.'}}"> *
                                             </span></label>
                                         <input type="number" step="0.01" id="min_purchase" value="{{  old('min_purchase') }}" required name="min_purchase" value="0" min="0" max="999999999999.99" class="form-control"
-                                             placeholder="{{ translate('messages.Ex:_100') }}">
+                                             placeholder="{{ 'Ej: 100' }}">
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-lg-4 col-sm-6">
                                     <div class="form-group">
-                                        <label class="input-label" for="max_discount">{{translate('messages.Max Cashback')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
-                                        <input type="number"   placeholder="{{ translate('messages.Ex:_100') }}" step="0.01" min="0" value="{{  old('cashback_type')  == 'percentage' ?  old('max_discount') : null }}" max="999999999999.99" name="max_discount" id="max_discount" class="form-control">
+                                        <label class="input-label" for="max_discount">{{'Reembolso máximo'}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
+                                        <input type="number"   placeholder="{{ 'Ej: 100' }}" step="0.01" min="0" value="{{  old('cashback_type')  == 'percentage' ?  old('max_discount') : null }}" max="999999999999.99" name="max_discount" id="max_discount" class="form-control">
                                     </div>
                                 </div>
 
                                 <div class="col-md-4 col-lg-4 col-sm-6">
                                     <div class="form-group">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Start_Date')}}
+                                        <label class="input-label" for="exampleFormControlInput1">{{'Fecha de inicio'}}
                                             <span class="form-label-secondary text-danger"
                                                   data-toggle="tooltip" data-placement="right"
-                                                  data-original-title="{{ translate('messages.Required.')}}"> *
+                                                  data-original-title="{{ 'Requerido.'}}"> *
                                             </span></label>
                                         <input type="date" name="start_date" value="{{  old('start_date') }}" class="form-control" id="date_from" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-lg-4 col-sm-6">
                                     <div class="form-group">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.End_Date')}}
+                                        <label class="input-label" for="exampleFormControlInput1">{{'Fecha de finalización'}}
                                             <span class="form-label-secondary text-danger"
                                                   data-toggle="tooltip" data-placement="right"
-                                                  data-original-title="{{ translate('messages.Required.')}}"> *
+                                                  data-original-title="{{ 'Requerido.'}}"> *
                                             </span></label>
                                         <input type="date" name="end_date"  value="{{  old('end_date') }}" class="form-control" id="date_to" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-lg-4 col-sm-6">
                                     <div class="form-group">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Limit_for_Same_User')}}
+                                        <label class="input-label" for="exampleFormControlInput1">{{'Límite para el mismo usuario'}}
                                             <span class="form-label-secondary text-danger"
                                                   data-toggle="tooltip" data-placement="right"
-                                                  data-original-title="{{ translate('messages.Required.')}}"> *
+                                                  data-original-title="{{ 'Requerido.'}}"> *
                                             </span></label>
                                         <input type="number" step="1" required  value="{{  old('same_user_limit') }}" name="same_user_limit" value="0" min="0" max="9999999" class="form-control"
-                                             placeholder="{{ translate('messages.Ex:_5') }}">
+                                             placeholder="{{ 'Ej: 5' }}">
                                     </div>
                                 </div>
 
                             </div>
                             <div class="btn--container justify-content-end">
-                                <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                                <button type="submit" class="btn btn--primary cashback-submit">{{translate('messages.submit')}}</button>
+                                <button type="reset" id="reset_btn" class="btn btn--reset">{{'reiniciar'}}</button>
+                                <button type="submit" class="btn btn--primary cashback-submit">{{'entregar'}}</button>
                             </div>
                         </form>
                     </div>
@@ -212,11 +212,11 @@
                 <div class="card">
                     <div class="card-header py-2 border-0">
                         <div class="search--button-wrapper">
-                            <h5 class="card-title">{{translate('messages.Cashback_List')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$cashbacks->total()}}</span></h5>
+                            <h5 class="card-title">{{'Lista de reembolsos'}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$cashbacks->total()}}</span></h5>
                             <form  class="search-form min--270">
                                 <!-- Search -->
                                 <div class="input-group input--group">
-                                    <input id="datatableSearch" type="search" name="search" value="{{ request()?->search }}" class="form-control" placeholder="{{ translate('messages.Ex_:_Search_by_title') }}" aria-label="{{translate('messages.search_here')}}">
+                                    <input id="datatableSearch" type="search" name="search" value="{{ request()?->search }}" class="form-control" placeholder="{{ 'Ej: buscar por título' }}" aria-label="{{'buscar aquí'}}">
                                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                                 </div>
                                 <!-- End Search -->
@@ -238,14 +238,14 @@
                                }'>
                             <thead class="thead-light">
                             <tr>
-                                <th class="border-0">{{translate('sl')}}</th>
-                                <th class="border-0">{{translate('messages.Name')}}</th>
-                                <th class="border-0">{{translate('messages.CashBack_Type')}}</th>
-                                <th class="border-0">{{translate('messages.Amount')}}</th>
-                                <th class="border-0">{{translate('messages.Duration')}}</th>
-                                <th class="border-0 text-center">{{translate('messages.Total_Used')}}</th>
-                                <th class="border-0">{{translate('messages.status')}}</th>
-                                <th class="border-0 text-center">{{translate('messages.action')}}</th>
+                                <th class="border-0">{{'SL'}}</th>
+                                <th class="border-0">{{'Nombre'}}</th>
+                                <th class="border-0">{{'Tipo de reembolso'}}</th>
+                                <th class="border-0">{{'Cantidad'}}</th>
+                                <th class="border-0">{{'Duración'}}</th>
+                                <th class="border-0 text-center">{{'Total usado'}}</th>
+                                <th class="border-0">{{'estado'}}</th>
+                                <th class="border-0 text-center">{{'acción'}}</th>
                             </tr>
                             </thead>
 
@@ -276,11 +276,11 @@
                                     <td>
                                         <div class="btn--container justify-content-center">
 
-                                            <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.users.cashback.update',[$bonus['id']])}}" title="{{translate('messages.edit_cashback')}}"><i class="tio-edit"></i>
+                                            <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.users.cashback.update',[$bonus['id']])}}" title="{{'editar reembolso'}}"><i class="tio-edit"></i>
                                             </a>
-                                            {{-- <a class="btn action-btn btn--primary btn-outline-primary edit_cashback" data-id="{{$bonus['id']}}"  href="javascript:;" title="{{translate('messages.edit_cashback')}}"><i class="tio-edit"></i>
+                                            {{-- <a class="btn action-btn btn--primary btn-outline-primary edit_cashback" data-id="{{$bonus['id']}}"  href="javascript:;" title="{{'editar reembolso'}}"><i class="tio-edit"></i>
                                             </a> --}}
-                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="bonus-{{$bonus['id']}}" data-message="{{ translate('Want_to_delete_this_Cashback_?') }}" title="{{translate('messages.delete_bonus')}}"><i class="tio-delete-outlined"></i>
+                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="bonus-{{$bonus['id']}}" data-message="{{ '¿Quieres eliminar este Cashback?' }}" title="{{'eliminar bono'}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{route('admin.users.cashback.delete',[$bonus['id']])}}"
                                             method="post" id="bonus-{{$bonus['id']}}">
@@ -303,7 +303,7 @@
                         <div class="empty--data">
                             <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                             <h5>
-                                {{translate('no_data_found')}}
+                                {{'no se encontraron datos'}}
                             </h5>
                         </div>
                         @endif
@@ -327,11 +327,11 @@
                             <div class="mb-20">
                                 <div class="text-center">
                                     <img src="{{asset('assets/admin/img/image_127.png')}}" alt="" class="mb-20">
-                                    <h5 class="modal-title">{{translate('Wallet_bonus_is_only_applicable_when_a_customer_add_fund_to_wallet_via_outside_payment_gateway_!')}}</h5>
+                                    <h5 class="modal-title">{{'¡El bono de billetera solo se aplica cuando un cliente agrega fondos a la billetera a través de una pasarela de pago externa!'}}</h5>
                                 </div>
                                 <ul>
                                     <li>
-                                        {{ translate('Customer_will_get_extra_amount_to_his_/_her_wallet_additionally_with_the_amount_he_/_she_added_from_other_payment_gateways._The_bonus_amount_will_be_deduct_from_admin_wallet_&_will_consider_as_admin_expense.') }}
+                                        {{ 'El cliente recibirá un monto adicional en su billetera además del monto que agregó desde otras pasarelas de pago. El monto del bono se deducirá de la billetera del administrador y se considerará un gasto administrativo.' }}
                                     </li>
                                 </ul>
                             </div>

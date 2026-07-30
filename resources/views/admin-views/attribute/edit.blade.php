@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.Update Attribute'))
+@section('title','Actualizar atributo')
 
 @push('css_or_js')
 
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/edit.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.attribute_update')}}
+                    {{'actualización de atributos'}}
                 </span>
             </h1>
         </div>
@@ -29,7 +29,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link lang_link active"
                                     href="#"
-                                    id="default-link">{{translate('messages.default')}}</a>
+                                    id="default-link">{{'por defecto'}}</a>
                                 </li>
                                 @foreach ($language as $lang)
                                     <li class="nav-item">
@@ -41,13 +41,13 @@
                             </ul>
                             <div class="lang_form" id="default-form">
                                 <div class="form-group">
-                                    <label class="input-label" for="default_title">{{translate('messages.name')}} ({{translate('messages.default')}})
+                                    <label class="input-label" for="default_title">{{'nombre'}} ({{'por defecto'}})
                                         <span class="form-label-secondary text-danger"
                                         data-toggle="tooltip" data-placement="right"
-                                        data-original-title="{{ translate('messages.Required.')}}"> *
+                                        data-original-title="{{ 'Requerido.'}}"> *
                                         </span>
                                     </label>
-                                    <input type="text" name="name[]" id="default_title" class="form-control" placeholder="{{translate('messages.updated_attribute')}}" value="{{$attribute?->getRawOriginal('name')}}">
+                                    <input type="text" name="name[]" id="default_title" class="form-control" placeholder="{{'atributo actualizado'}}" value="{{$attribute?->getRawOriginal('name')}}">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                             </div>
@@ -65,8 +65,8 @@
                                 ?>
                                 <div class="d-none lang_form" id="{{$lang}}-form">
                                     <div class="form-group">
-                                        <label class="input-label" for="{{$lang}}_title">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
-                                        <input type="text" name="name[]" id="{{$lang}}_title" class="form-control" placeholder="{{translate('messages.updated_attribute')}}" value="{{$translate[$lang]['name']??''}}">
+                                        <label class="input-label" for="{{$lang}}_title">{{'nombre'}} ({{strtoupper($lang)}})</label>
+                                        <input type="text" name="name[]" id="{{$lang}}_title" class="form-control" placeholder="{{'atributo actualizado'}}" value="{{$translate[$lang]['name']??''}}">
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
                                 </div>
@@ -74,15 +74,15 @@
                         @else
                         <div id="default-form">
                             <div class="form-group">
-                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{ translate('messages.default') }})</label>
-                                <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.updated_attribute')}}" value="{{$attribute['name']}}" maxlength="100">
+                                <label class="input-label" for="exampleFormControlInput1">{{'nombre'}} ({{ 'por defecto' }})</label>
+                                <input type="text" name="name[]" class="form-control" placeholder="{{'atributo actualizado'}}" value="{{$attribute['name']}}" maxlength="100">
                             </div>
                             <input type="hidden" name="lang[]" value="default">
                         </div>
                         @endif
                     <div class="btn--container justify-content-end">
-                        <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                        <button type="submit" class="btn btn--primary">{{translate('messages.update')}}</button>
+                        <button type="reset" class="btn btn--reset">{{'reiniciar'}}</button>
+                        <button type="submit" class="btn btn--primary">{{'actualizar'}}</button>
                     </div>
                 </form>
             </div>

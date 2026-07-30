@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Social Login Setup'))
+@section('title', 'Configuración de inicio de sesión social')
 
 
 @section('content')
@@ -12,7 +12,7 @@
                     <img src="{{asset('assets/admin/img/captcha.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('Social Login Setup')}}
+                    {{'Configuración de inicio de sesión social'}}
                 </span>
             </h1>
             @include('admin-views.business-settings.partials.third-party-links')
@@ -43,10 +43,10 @@
                                            data-type="toggle"
                                            data-image-on="{{asset('assets/admin/img/modal')}}/{{$socialLoginService['login_medium']}}-on.png"
                                            data-image-off="{{asset('assets/admin/img/modal')}}/{{$socialLoginService['login_medium']}}-off.png"
-                                           data-title-on="{{translate('messages.'.$socialLoginService['login_medium'])}} {{translate('Login Turned ON ')}}"
-                                           data-title-off="{{translate('messages.'.$socialLoginService['login_medium'])}} {{translate('Login Turned OFF ')}}"
-                                           data-text-on="<p>{{translate('messages.'.$socialLoginService['login_medium'])}} {{translate('Login is now enabled. Customers will be able to sign up or log in using their social media accounts.')}}</p>"
-                                           data-text-off="<p>{{translate('messages.'.$socialLoginService['login_medium'])}} {{translate('Login is now disabled. Customers will not be able to sign up or log in using their social media accounts. Please note that this may affect user experience and registration/login process.')}}</p>"
+                                           data-title-on="{{'\'.$socialLoginService[\'medio de inicio de sesión\'])}} {{translate(\'Inicio de sesión activado'}}"
+                                           data-title-off="{{'\'.$socialLoginService[\'medio de inicio de sesión\'])}} {{translate(\'Inicio de sesión desactivado'}}"
+                                           data-text-on="<p>{{'\'.$socialLoginService[\'medio de inicio de sesión\'])}} {{translate(\'El inicio de sesión ahora está habilitado. Los clientes podrán registrarse o iniciar sesión usando sus cuentas de redes sociales.'}}</p>"
+                                           data-text-off="<p>{{'\'.$socialLoginService[\'medio de inicio de sesión\'])}} {{translate(\'El inicio de sesión ahora está deshabilitado. Los clientes no podrán registrarse ni iniciar sesión usando sus cuentas de redes sociales. Tenga en cuenta que esto puede afectar la experiencia del usuario y el proceso de registro/inicio de sesión.'}}</p>"
                                            class="status toggle-switch-input dynamic-checkbox-toggle"
 
 
@@ -59,32 +59,32 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-end">
                                     <div class="text--primary-2 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#{{$socialLoginService['login_medium']}}-modal">
-                                        <strong class="mr-2 text--underline">{{translate('Credential Setup')}}</strong>
+                                        <strong class="mr-2 text--underline">{{'Configuración de credenciales'}}</strong>
                                         <div class="blinkings">
                                             <i class="tio-info-outined"></i>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">{{translate('messages.callback_uri')}}</label>
+                                    <label class="form-label">{{'uri de devolución de llamada'}}</label>
                                     <div class="position-relative">
                                         <span class="btn-right-fixed copy-to-clipboard" data-id="#id_{{$socialLoginService['login_medium']}}"><i class="tio-copy"></i></span>
                                         <span class="form-control h-unset" id="id_{{$socialLoginService['login_medium']}}">{{ url('/') }}/customer/auth/login/{{$socialLoginService['login_medium']}}/callback</span>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="client_id" class="form-label">{{translate('messages.client_id')}}</label>
+                                    <label for="client_id" class="form-label">{{'identificación del cliente'}}</label>
                                     <input id="client_id" type="text" class="form-control" name="client_id" value="{{ $socialLoginService['client_id'] }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="client_secret"
-                                        class="form-label">{{translate('messages.client_secret')}}</label>
+                                        class="form-label">{{'secreto del cliente'}}</label>
                                     <input id="client_secret" type="text" class="form-control" name="client_secret"
                                             value="{{ $socialLoginService['client_secret'] }}">
                                 </div>
                                 <div class="btn--container justify-content-end">
-                                    <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
-                                    <button type="submit" class="btn btn--primary mb-2 call-demo">{{translate('messages.save')}}</button>
+                                    <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
+                                    <button type="submit" class="btn btn--primary mb-2 call-demo">{{'ahorrar'}}</button>
                                 </div>
                                 </div>
                             </div>
@@ -114,10 +114,10 @@
                                                data-type="toggle"
                                                data-image-on="{{asset('assets/admin/img/modal')}}/{{$appleLoginService['login_medium']}}-on.png"
                                                data-image-off="{{asset('assets/admin/img/modal')}}/{{$appleLoginService['login_medium']}}-off.png"
-                                               data-title-on="{{translate('messages.'.$appleLoginService['login_medium'])}} {{translate('Login Turned ON ')}}"
-                                               data-title-off="{{translate('messages.'.$appleLoginService['login_medium'])}} {{translate('Login Turned OFF ')}}"
-                                               data-text-on="<p>{{translate('messages.'.$appleLoginService['login_medium'])}} {{translate('Login is now enabled. Customers will be able to sign up or log in using their social media accounts.')}}</p>"
-                                               data-text-off="<p>{{translate('messages.'.$appleLoginService['login_medium'])}} {{translate('Login is now disabled. Customers will not be able to sign up or log in using their social media accounts. Please note that this may affect user experience and registration/login process.')}}</p>"
+                                               data-title-on="{{'\'.$appleLoginService[\'medio de inicio de sesión\'])}} {{translate(\'Inicio de sesión activado'}}"
+                                               data-title-off="{{'\'.$appleLoginService[\'medio de inicio de sesión\'])}} {{translate(\'Inicio de sesión desactivado'}}"
+                                               data-text-on="<p>{{'\'.$appleLoginService[\'medio de inicio de sesión\'])}} {{translate(\'El inicio de sesión ahora está habilitado. Los clientes podrán registrarse o iniciar sesión usando sus cuentas de redes sociales.'}}</p>"
+                                               data-text-off="<p>{{'\'.$appleLoginService[\'medio de inicio de sesión\'])}} {{translate(\'El inicio de sesión ahora está deshabilitado. Los clientes no podrán registrarse ni iniciar sesión usando sus cuentas de redes sociales. Tenga en cuenta que esto puede afectar la experiencia del usuario y el proceso de registro/inicio de sesión.'}}</p>"
                                                class="status toggle-switch-input dynamic-checkbox-toggle"
 
 
@@ -130,7 +130,7 @@
                                 <div class="card-body text-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
                                     <div class="d-flex justify-content-end">
                                         <div class="text--primary-2 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#{{$appleLoginService['login_medium']}}-modal">
-                                            <strong class="mr-2 text--underline">{{translate('Credential Setup')}}</strong>
+                                            <strong class="mr-2 text--underline">{{'Configuración de credenciales'}}</strong>
                                             <div class="blinkings">
                                                 <i class="tio-info-outined"></i>
                                             </div>
@@ -138,49 +138,49 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="client_id"
-                                            class="form-label">{{translate('messages.client_id_for_web')}}</label>
+                                            class="form-label">{{'ID de cliente para web'}}</label>
                                         <input id="client_id" type="text" class="form-control" name="client_id"
                                             value="{{ $appleLoginService['client_id'] }}">
                                     </div>
                                     <div class="form-group">
                                         <label for="client_id_app"
-                                            class="form-label">{{translate('messages.client_id_for_app')}}</label>
+                                            class="form-label">{{'ID de cliente para la aplicación'}}</label>
                                         <input id="client_id_app" type="text" class="form-control" name="client_id_app"
                                             value="{{ $appleLoginService['client_id_app']??'' }}">
                                     </div>
                                     <div class="form-group">
                                         <label for="team_id"
-                                            class="form-label">{{translate('messages.team_id')}}</label>
+                                            class="form-label">{{'identificación del equipo'}}</label>
                                         <input id="team_id" type="text" class="form-control" name="team_id"
                                             value="{{ $appleLoginService['team_id'] }}">
                                     </div>
                                     <div class="form-group">
                                         <label for="key_id"
-                                            class="form-label">{{translate('messages.key_id')}}</label>
+                                            class="form-label">{{'identificación clave'}}</label>
                                         <input id="key_id" type="text" class="form-control" name="key_id"
                                             value="{{ $appleLoginService['key_id'] }}">
                                     </div>
                                     <div class="form-group">
                                         <label for="key_id"
-                                            class="form-label">{{translate('messages.redirect_url_for_flutter_web')}}</label>
+                                            class="form-label">{{'URL de redireccionamiento para Flutter Web'}}</label>
                                         <input id="redirect_url_flutter" type="url" class="form-control" name="redirect_url_flutter"
                                             value="{{ $appleLoginService['redirect_url_flutter']??'' }}">
                                     </div>
                                     <div class="form-group">
                                         <label for="key_id"
-                                            class="form-label">{{translate('messages.redirect_url_for_react_web')}}</label>
+                                            class="form-label">{{'URL de redireccionamiento para reaccionar web'}}</label>
                                         <input id="redirect_url_react" type="url" class="form-control" name="redirect_url_react"
                                             value="{{ $appleLoginService['redirect_url_react']??'' }}">
                                     </div>
                                     <div class="form-group">
                                         <label
-                                            class="form-label">{{translate('messages.service_file')}} {{ $appleLoginService['service_file']?translate('(Already Exists)'):'' }}</label>
+                                            class="form-label">{{'archivo de servicio'}} {{ $appleLoginService['service_file']?'(Ya existe)':'' }}</label>
                                         <input type="file" accept=".p8" class="form-control" name="service_file"
                                             value="{{ 'storage/app/public/apple-login/'.$appleLoginService['service_file'] }}">
                                     </div>
                                     <div class="btn--container justify-content-end">
-                                        <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
-                                        <button type="submit" class="btn btn--primary mb-2 call-demo">{{translate('messages.save')}}</button>
+                                        <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
+                                        <button type="submit" class="btn btn--primary mb-2 call-demo">{{'ahorrar'}}</button>
                                     </div>
                                 </div>
                             </form>
@@ -203,19 +203,19 @@
                     <div class="modal-body pb-0">
                         <div class="text-center mb-20">
                             <img src="{{asset('assets/admin/img/modal/google.png')}}" alt="" class="mb-20">
-                            <h5 class="modal-title">{{translate('messages.google_api_setup_instructions')}}</h5>
+                            <h5 class="modal-title">{{'instrucciones de configuración de la API de Google'}}</h5>
                         </div>
                         <ol>
-                            <li>{{translate('messages.go_to_the_credentials_page')}} ({{translate('messages.click')}} <a href="https://console.cloud.google.com/apis/credentials" target="_blank">{{translate('here')}}</a>)</li>
-                            <li>{{translate('messages.click')}} <b>{{translate('messages.create_credentials')}}</b> > <b>{{translate('messages.auth_client_id')}}</b>.</li>
-                            <li>{{translate('messages.select_the')}} <b>{{translate('messages.web_application')}}</b> {{translate('messages.type')}}.</li>
-                            <li>{{translate('messages.name_your_auth_client')}}</li>
-                            <li>{{translate('messages.click')}} <b>{{translate('messages.add_uri')}}</b> {{translate('messages.from')}} <b>{{translate('messages.authorized_redirect_uris')}}</b> , {{translate('messages.provide_the')}} <code>{{translate('messages.callback_uri')}}</code> {{translate('messages.from_below_and_click')}} <b>{{translate('messages.created')}}</b></li>
-                            <li>{{translate('messages.copy')}} <b>{{translate('messages.client_id')}}</b> {{translate('messages.and')}} <b>{{translate('messages.client_secret')}}</b>, {{translate('messages.past_in_the_input_field_below_and')}} <b>Save</b>.</li>
+                            <li>{{'ir a la página de credenciales'}} ({{'hacer clic'}} <a href="https://console.cloud.google.com/apis/credentials" target="_blank">{{'aquí'}}</a>)</li>
+                            <li>{{'hacer clic'}} <b>{{'crear credenciales'}}</b> > <b>{{'identificación del cliente de autenticación'}}</b>.</li>
+                            <li>{{'seleccione el'}} <b>{{'aplicación web'}}</b> {{'tipo'}}.</li>
+                            <li>{{'nombra tu cliente de autenticación'}}</li>
+                            <li>{{'hacer clic'}} <b>{{'agregar uri'}}</b> {{'de'}} <b>{{'uris de redireccionamiento autorizados'}}</b> , {{'proporcionar el'}} <code>{{'uri de devolución de llamada'}}</code> {{'desde abajo y haga clic'}} <b>{{'creado'}}</b></li>
+                            <li>{{'Copiar'}} <b>{{'identificación del cliente'}}</b> {{'y'}} <b>{{'secreto del cliente'}}</b>, {{'pasado en el campo de entrada a continuación y'}} <b>Save</b>.</li>
                         </ol>
                     </div>
                     <div class="modal-footer justify-content-center border-0">
-                        <button type="button" class="btn btn--primary w-100 mw-300px" data-dismiss="modal">{{translate('Got It')}}</button>
+                        <button type="button" class="btn btn--primary w-100 mw-300px" data-dismiss="modal">{{'Entiendo'}}</button>
                     </div>
                 </div>
             </div>
@@ -232,32 +232,32 @@
                     <div class="modal-body pb-0"><b></b>
                         <div class="text-center mb-20">
                             <img src="{{asset('assets/admin/img/modal/facebook.png')}}" alt="" class="mb-20">
-                            <h5 class="modal-title">{{translate('messages.facebook_api_set_instruction')}}</h5>
+                            <h5 class="modal-title">{{'instrucción de configuración de API de Facebook'}}</h5>
                         </div>
                         <ol>
-                            <li>{{translate('messages.goto_the_facebook_developer_page')}} (<a href="https://developers.facebook.com/apps/" target="_blank">{{translate('messages.click_here')}}</a>)</li>
-                            <li>{{translate('messages.goto')}} <b>{{translate('messages.get_started')}}</b> {{translate('messages.from_navbar')}}</li>
-                            <li>{{translate('messages.from_register_tab_press')}} <b>{{translate('messages.continue')}}</b> <small>({{translate('messages.if_needed')}})</small></li>
-                            <li>{{translate('messages.provide_primary_email_and_press')}} <b>{{translate('messages.confirm_email')}}</b> <small>({{translate('messages.if_needed')}})</small></li>
-                            <li>{{translate('messages.in_about_section_select')}} <b>{{translate('messages.other')}}</b> {{translate('messages.and_press')}} <b>{{translate('messages.complete_registration')}}</b></li>
+                            <li>{{'ir a la página de desarrollador de Facebook'}} (<a href="https://developers.facebook.com/apps/" target="_blank">{{'haga clic aquí'}}</a>)</li>
+                            <li>{{'ir a'}} <b>{{'empezar'}}</b> {{'desde la barra de navegación'}}</li>
+                            <li>{{'desde la pestaña de registro presione'}} <b>{{'continuar'}}</b> <small>({{'si es necesario'}})</small></li>
+                            <li>{{'proporcione el correo electrónico principal y presione'}} <b>{{'Confirmar correo electrónico'}}</b> <small>({{'si es necesario'}})</small></li>
+                            <li>{{'en la sección acerca de seleccionar'}} <b>{{'otro'}}</b> {{'y presione'}} <b>{{'registro completo'}}</b></li>
 
-                            <li><b>{{translate('messages.create_app')}}</b> > {{translate('messages.select_an_app_type_and_press')}} <b>{{translate('messages.next')}}</b></li>
-                            <li>{{translate('messages.complete_the_details_form_and_press')}} <b>{{translate('messages.create_app')}}</b></li><br/>
+                            <li><b>{{'crear aplicación'}}</b> > {{'seleccione un tipo de aplicación y presione'}} <b>{{'próximo'}}</b></li>
+                            <li>{{'Complete el formulario de detalles y presione'}} <b>{{'crear aplicación'}}</b></li><br/>
 
-                            <li>{{translate('messages.form')}} <b>{{translate('messages.facebook_login')}}</b> {{translate('messages.press')}} <b>{{translate('messages.set_up')}}</b></li>
-                            <li>{{translate('messages.select')}} <b>{{translate('messages.web')}}</b></li>
-                            <li>{{translate('messages.provide')}} <b>{{translate('messages.site_url')}}</b> <small>({{translate('messages.base_url_of_the_site')}}: https://example.com)</small> > <b>{{translate('messages.save')}}</b></li><br/>
-                            <li>{{translate('messages.now_go_to')}} <b>{{translate('messages.setting')}}</b> {{translate('messages.form')}} <b>{{translate('messages.facebook_login')}}</b> ({{translate('messages.left_sidebar')}})</li>
-                            <li>{{translate('messages.make_sure_to_check')}} <b>{{translate('messages.client_auth_login')}}</b> <small>({{translate('messages.must_on')}})</small></li>
-                            <li>{{translate('messages.provide')}} <code>{{translate('messages.valid_auth_redirect_uris')}}</code> {{translate('messages.from_below_and_click')}} <b>{{translate('messages.save_changes')}}</b></li>
+                            <li>{{'forma'}} <b>{{'iniciar sesión en facebook'}}</b> {{'prensa'}} <b>{{'configuración'}}</b></li>
+                            <li>{{'seleccionar'}} <b>{{'web'}}</b></li>
+                            <li>{{'proporcionar'}} <b>{{'URL del sitio'}}</b> <small>({{'URL base del sitio.'}}: https://example.com)</small> > <b>{{'ahorrar'}}</b></li><br/>
+                            <li>{{'ahora ve a'}} <b>{{'configuración'}}</b> {{'forma'}} <b>{{'iniciar sesión en facebook'}}</b> ({{'barra lateral izquierda'}})</li>
+                            <li>{{'asegúrese de comprobar'}} <b>{{'inicio de sesión de autenticación del cliente'}}</b> <small>({{'debe en'}})</small></li>
+                            <li>{{'proporcionar'}} <code>{{'uris de redirección de autenticación válida'}}</code> {{'desde abajo y haga clic'}} <b>{{'guardar cambios'}}</b></li>
 
-                            <li>{{translate('messages.now_go_to')}} <b>{{translate('messages.setting')}}</b> ({{translate('messages.from_left_sidebar')}}) > <b>{{translate('messages.basic')}}</b></li>
-                            <li>{{translate('messages.fill_the_form_and_press')}} <b>{{translate('messages.save_changes')}}</b></li>
-                            <li>{{translate('messages.now_copy')}} <b>{{translate('messages.client_id')}}</b> & <b>{{translate('messages.client_secret')}}</b>, {{translate('messages.past_in_the_input_field_below_and')}} <b>{{translate('messages.save')}}</b>.</li>
+                            <li>{{'ahora ve a'}} <b>{{'configuración'}}</b> ({{'desde la barra lateral izquierda'}}) > <b>{{'básico'}}</b></li>
+                            <li>{{'llena el formulario y presiona'}} <b>{{'guardar cambios'}}</b></li>
+                            <li>{{'ahora copia'}} <b>{{'identificación del cliente'}}</b> & <b>{{'secreto del cliente'}}</b>, {{'pasado en el campo de entrada a continuación y'}} <b>{{'ahorrar'}}</b>.</li>
                         </ol>
                     </div>
                     <div class="modal-footer justify-content-center border-0">
-                        <button type="button" class="btn btn--primary w-100 mw-300px" data-dismiss="modal">{{translate('Got It')}}</button>
+                        <button type="button" class="btn btn--primary w-100 mw-300px" data-dismiss="modal">{{'Entiendo'}}</button>
                     </div>
                 </div>
             </div>
@@ -274,21 +274,21 @@
                     <div class="modal-body pb-0"><b></b>
                         <div class="text-center mb-20">
                             <img src="{{asset('assets/admin/img/modal/apple.png')}}" alt="" class="mb-20">
-                            <h5 class="modal-title">{{translate('messages.apple_api_set_instruction')}}</h5>
+                            <h5 class="modal-title">{{'instrucción del conjunto de API de Apple'}}</h5>
                         </div>
                         <ol>
-                            <li>{{translate('Go to Apple Developer page')}} (<a href="https://developer.apple.com/account/resources/identifiers/list" target="_blank">{{translate('messages.click_here')}}</a>)</li>
-                            <li>{{translate('Here in top left corner you can see the')}} <b>{{ translate('Team ID') }}</b> {{ translate('[Apple_Developer_Account_Name - Team_ID]')}}</li>
-                            <li>{{translate('Click Plus icon -> select App IDs -> click on Continue')}}</li>
-                            <li>{{translate('Put a description and also identifier (identifier that used for app) and this is the')}} <b>{{ translate('Client ID') }}</b> </li>
-                            <li>{{translate('Click Continue and Download the file in device named AuthKey_ID.p8 (Store it safely and it is used for push notification)')}} </li>
-                            <li>{{translate('Again click Plus icon -> select Service IDs -> click on Continue')}} </li>
-                            <li>{{translate('Push a description and also identifier and Continue')}} </li>
-                            <li>{{translate('Download the file in device named')}} <b>{{ translate('AuthKey_KeyID.p8') }}</b> {{translate('[This is the Service Key ID file and also after AuthKey_ that is the Key ID]')}}</li>
+                            <li>{{'Ir a la página de desarrollador de Apple'}} (<a href="https://developer.apple.com/account/resources/identifiers/list" target="_blank">{{'haga clic aquí'}}</a>)</li>
+                            <li>{{'Aquí en la esquina superior izquierda puedes ver el'}} <b>{{ 'ID del equipo' }}</b> {{ '[Nombre de la cuenta de desarrollador de Apple: ID del equipo]'}}</li>
+                            <li>{{'Haga clic en el ícono Más -> seleccione ID de aplicaciones -> haga clic en Continuar'}}</li>
+                            <li>{{'Ponga una descripción y también un identificador (identificador que se usó para la aplicación) y este es el'}} <b>{{ 'ID de cliente' }}</b> </li>
+                            <li>{{'Haga clic en Continuar y descargue el archivo en el dispositivo llamado AuthKey ID.p8 (guárdelo de forma segura y se utilizará para notificaciones automáticas).'}} </li>
+                            <li>{{'Nuevamente haga clic en el ícono Más -> seleccione ID de servicio -> haga clic en Continuar'}} </li>
+                            <li>{{'Introduzca una descripción y también un identificador y Continuar'}} </li>
+                            <li>{{'Descargue el archivo en el dispositivo llamado'}} <b>{{ 'ID de clave de autenticación.p8' }}</b> {{'[Este es el archivo de ID de clave de servicio y también después de AuthKey que es el ID de clave]'}}</li>
                         </ol>
                     </div>
                     <div class="modal-footer justify-content-center border-0">
-                        <button type="button" class="btn btn--primary w-100 mw-300px" data-dismiss="modal">{{translate('Got It')}}</button>
+                        <button type="button" class="btn btn--primary w-100 mw-300px" data-dismiss="modal">{{'Entiendo'}}</button>
                     </div>
                 </div>
             </div>
@@ -298,16 +298,16 @@
             <div class="modal-dialog">
                 <div class="modal-content {{Session::get('direction') === "rtl" ? 'text-right' : 'text-left'}}">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">{{translate('messages.twitter_api_set_up_instructions')}}</h5>
+                        <h5 class="modal-title" id="staticBackdropLabel">{{'instrucciones de configuración de la API de Twitter'}}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body"><b></b>
-                        {{translate('messages.instruction_will_be_available_very_soon')}}
+                        {{'La instrucción estará disponible muy pronto.'}}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn--primary" data-dismiss="modal">{{translate('messages.close')}}</button>
+                        <button type="button" class="btn btn--primary" data-dismiss="modal">{{'cerca'}}</button>
                     </div>
                 </div>
             </div>
@@ -327,7 +327,7 @@
             $temp.val($(id).text()).select();
             document.execCommand("copy");
             $temp.remove();
-            toastr.success("{{translate('Copied to the clipboard')}}");
+            toastr.success("{{'Copiado al portapapeles'}}");
 
         });
 

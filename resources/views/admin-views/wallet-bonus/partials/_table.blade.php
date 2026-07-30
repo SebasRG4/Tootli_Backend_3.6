@@ -11,14 +11,14 @@
         }'>
     <thead class="thead-light">
         <tr>
-            <th class="border-0">{{translate('sl')}}</th>
-            <th class="border-0">{{translate('messages.bonus_title')}}</th>
-            <th class="border-0">{{translate('messages.bonus_info')}}</th>
-            <th class="border-0">{{translate('messages.bonus_amount')}}</th>
-            <th class="border-0">{{translate('messages.started_on')}}</th>
-            <th class="border-0">{{translate('messages.expires_on')}}</th>
-            <th class="border-0">{{translate('messages.status')}}</th>
-            <th class="border-0 text-center">{{translate('messages.action')}}</th>
+            <th class="border-0">{{'SL'}}</th>
+            <th class="border-0">{{'título de bonificación'}}</th>
+            <th class="border-0">{{'información de bonificación'}}</th>
+            <th class="border-0">{{'monto del bono'}}</th>
+            <th class="border-0">{{'comenzó el'}}</th>
+            <th class="border-0">{{'caduca el'}}</th>
+            <th class="border-0">{{'estado'}}</th>
+            <th class="border-0 text-center">{{'acción'}}</th>
         </tr>
     </thead>
 
@@ -31,8 +31,8 @@
                                     {{Str::limit($bonus['title'],25,'...')}}
                                     </span>
             </td>
-            <td>{{ translate('messages.minimum_add_amount') }} -    {{\App\CentralLogics\Helpers::format_currency($bonus['minimum_add_amount'])}} <br>
-                {{ translate('messages.maximum_bonus') }} - {{\App\CentralLogics\Helpers::format_currency($bonus['maximum_bonus_amount'])}}</td>
+            <td>{{ 'cantidad mínima agregada' }} -    {{\App\CentralLogics\Helpers::format_currency($bonus['minimum_add_amount'])}} <br>
+                {{ 'bonificación máxima' }} - {{\App\CentralLogics\Helpers::format_currency($bonus['maximum_bonus_amount'])}}</td>
             <td>{{$bonus->bonus_type == 'amount'?\App\CentralLogics\Helpers::format_currency($bonus['bonus_amount']): $bonus['bonus_amount'].' (%)'}}</td>
             <td>{{ \Carbon\Carbon::parse($bonus->start_date)->format('d M Y') }}</td>
             <td>{{ \Carbon\Carbon::parse($bonus->end_date)->format('d M Y') }}</td>
@@ -47,9 +47,9 @@
             <td>
                 <div class="btn--container justify-content-center">
 
-                    <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.users.customer.wallet.bonus.update',[$bonus['id']])}}" title="{{translate('messages.edit_bonus')}}"><i class="tio-edit"></i>
+                    <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.users.customer.wallet.bonus.update',[$bonus['id']])}}" title="{{'bono de edición'}}"><i class="tio-edit"></i>
                     </a>
-                    <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="bonus-{{$bonus['id']}}" data-message="{{ translate('Want to delete this bonus ?') }}" title="{{translate('messages.delete_bonus')}}"><i class="tio-delete-outlined"></i>
+                    <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="bonus-{{$bonus['id']}}" data-message="{{ '¿Quieres eliminar este bono?' }}" title="{{'eliminar bono'}}"><i class="tio-delete-outlined"></i>
                     </a>
                     <form action="{{route('admin.users.customer.wallet.bonus.delete',[$bonus['id']])}}"
                           method="post" id="bonus-{{$bonus['id']}}">

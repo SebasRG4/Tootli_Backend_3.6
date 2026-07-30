@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Campaign view'))
+@section('title', 'Vista de campaña')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -24,7 +24,7 @@
                 </div>
 
                 <div class="col-md-8">
-                    <h4>{{translate('messages.short_description')}} : </h4>
+                    <h4>{{'breve descripción'}} : </h4>
                     <p>{{$campaign->description}}</p>
                     <form action="{{route('admin.campaign.addstore', $campaign->id)}}" id="store-add-form" method="POST">
                         @csrf
@@ -46,14 +46,14 @@
                                             <option value="{{$store->id}}">{{$store->name}}</option>
                                         @endif
                                     @empty
-                                        <option value="">{{ translate('messages.no_data_found') }}</option>
+                                        <option value="">{{ 'no se encontraron datos' }}</option>
                                     @endforelse
                                 </select>
                             </div>
                             <div>
                                 <button type="submit" class="btn btn--primary font-weight-regular h--45px"><i
                                         class="tio-add-circle-outlined"></i>
-                                    {{translate('messages.add_store')}}</button>
+                                    {{'agregar tienda'}}</button>
                             </div>
                         </div>
                         <!-- End Search -->
@@ -82,14 +82,14 @@
                         }'>
                 <thead class="thead-light">
                     <tr>
-                        <th class="border-0">{{ translate('messages.SL') }}</th>
-                        <th class="border-0 w--15">{{translate('messages.logo')}}</th>
-                        <th class="border-0 w--2">{{translate('messages.store')}}</th>
-                        <th class="border-0 w--25">{{translate('messages.owner')}}</th>
-                        <th class="border-0">{{translate('messages.email')}}</th>
-                        <th class="border-0">{{translate('messages.phone')}}</th>
-                        <th class="border-0">{{translate('messages.status')}}</th>
-                        <th class="border-0">{{translate('messages.action')}}</th>
+                        <th class="border-0">{{ 'SL' }}</th>
+                        <th class="border-0 w--15">{{'logo'}}</th>
+                        <th class="border-0 w--2">{{'Negocio'}}</th>
+                        <th class="border-0 w--25">{{'dueño'}}</th>
+                        <th class="border-0">{{'correo electrónico'}}</th>
+                        <th class="border-0">{{'teléfono'}}</th>
+                        <th class="border-0">{{'estado'}}</th>
+                        <th class="border-0">{{'acción'}}</th>
                     </tr>
                 </thead>
 
@@ -123,19 +123,19 @@
                                 {{$store['phone']}}
                             </a>
                         </td>
-                        @php($status = $store->pivot ? $store->pivot->campaign_status : translate('messages.not_found'))
+                        @php($status = $store->pivot ? $store->pivot->campaign_status : 'extraviado')
                         <td class="text-capitalize">
                             @if ($status == 'pending')
                                 <span class="badge badge-soft-info">
-                                    {{ translate('messages.not_approved') }}
+                                    {{ 'no aprobado' }}
                                 </span>
                             @elseif($status == 'confirmed')
                                 <span class="badge badge-soft-success">
-                                    {{ translate('messages.confirmed') }}
+                                    {{ 'confirmado' }}
                                 </span>
                             @elseif($status == 'rejected')
                                 <span class="badge badge-soft-danger">
-                                    {{ translate('messages.rejected') }}
+                                    {{ 'rechazado' }}
                                 </span>
                             @else
                                 <span class="badge badge-soft-info">
@@ -149,16 +149,16 @@
                                 <div class="btn--container justify-content-center">
                                     <a class="btn btn-sm btn--primary btn-outline-primary action-btn status-change-alert"
                                         data-url="{{ route('admin.campaign.store_confirmation', [$campaign->id, $store->id, 'confirmed']) }}"
-                                        data-message="{{ translate('messages.you_want_to_confirm_this_store') }}"
+                                        data-message="{{ 'Quieres confirmar esta tienda' }}"
                                         class="toggle-switch-input" data-toggle="tooltip" data-placement="top"
-                                        title="{{translate('Approve')}}">
+                                        title="{{'Aprobar'}}">
                                         <i class="tio-done font-weight-bold"></i>
                                     </a>
                                     <a class="btn btn-sm btn--danger btn-outline-danger action-btn status-change-alert"
                                         href="javascript:"
                                         data-url="{{ route('admin.campaign.store_confirmation', [$campaign->id, $store->id, 'rejected']) }}"
-                                        data-message="{{ translate('messages.you_want_to_reject_this_store') }}"
-                                        data-toggle="tooltip" data-placement="top" title="{{translate('Deny')}}">
+                                        data-message="{{ 'quieres rechazar esta tienda' }}"
+                                        data-toggle="tooltip" data-placement="top" title="{{'Denegar'}}">
                                         <i class="tio-clear font-weight-bold"></i>
                                     </a>
                                     <div></div>
@@ -168,9 +168,9 @@
                                 <div class="btn--container justify-content-center">
                                     <a class="btn btn-sm btn--primary btn-outline-primary action-btn status-change-alert"
                                         data-url="{{ route('admin.campaign.store_confirmation', [$campaign->id, $store->id, 'confirmed']) }}"
-                                        data-message="{{ translate('messages.you_want_to_confirm_this_store') }}"
+                                        data-message="{{ 'Quieres confirmar esta tienda' }}"
                                         class="toggle-switch-input" data-toggle="tooltip" data-placement="top"
-                                        title="{{translate('Approve')}}">
+                                        title="{{'Aprobar'}}">
                                         <i class="tio-done font-weight-bold"></i>
                                     </a>
 
@@ -179,8 +179,8 @@
                                 <div class="btn--container justify-content-center">
                                     <a class="btn btn--danger btn-outline-danger action-btn form-alert" href="javascript:"
                                         data-id="campaign-{{$store->id}}"
-                                        data-message="{{translate('messages.want_to_remove_store')}}"
-                                        title="{{translate('messages.delete_campaign')}}"><i
+                                        data-message="{{'quiero eliminar la tienda'}}"
+                                        title="{{'eliminar campaña'}}"><i
                                             class="tio-delete-outlined"></i>
                                     </a>
 
@@ -221,14 +221,14 @@
             let message = $(this).data('message');
             event.preventDefault();
             Swal.fire({
-                title: '{{ translate('Are you sure?') }}',
+                title: '{{ '¿Está seguro?' }}',
                 text: message,
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{translate('messages.no')}}',
-                confirmButtonText: '{{translate('messages.yes')}}',
+                cancelButtonText: '{{'No'}}',
+                confirmButtonText: '{{'Sí'}}',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {

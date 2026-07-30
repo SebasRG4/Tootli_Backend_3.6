@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('login_page_setup'))
+@section('title','configuración de la página de inicio de sesión')
 
 @push('css_or_js')
 
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/app.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('login_setup')}}
+                    {{'configuración de inicio de sesión'}}
                 </span>
             </h1>
         </div>
@@ -23,10 +23,10 @@
 
         <ul class="nav nav-tabs border-0 nav--tabs nav--pills mb-4">
             <li class="nav-item">
-                <a class="nav-link active" href="{{ route('admin.business-settings.login-settings.index') }}">{{translate('Customer_Login')}}</a>
+                <a class="nav-link active" href="{{ route('admin.business-settings.login-settings.index') }}">{{'Inicio de sesión del cliente'}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.business-settings.login_url_page') }}">{{translate('panel_login_page_Url')}}</a>
+                <a class="nav-link" href="{{ route('admin.business-settings.login_url_page') }}">{{'URL de la página de inicio de sesión del panel'}}</a>
             </li>
         </ul>
 
@@ -36,10 +36,10 @@
                 <div class="card-header">
                     <div>
                         <h4 class="mb-1">
-                            {{translate('Setup Login Option')}}
+                            {{'Configurar la opción de inicio de sesión'}}
                         </h4>
                         <p class="fs-12 m-0">
-                            {{translate('The option you select customer will have the to option to login')}}
+                            {{'La opción que seleccione el cliente tendrá la opción de iniciar sesión.'}}
                         </p>
                     </div>
                 </div>
@@ -49,8 +49,8 @@
                         <div class="col-sm-6 col-md-4">
                             <label class="form-check form--check form--check--inline border rounded">
                                 <span class="user-select-none form-check-label flex-grow-1">
-                                    {{translate('Manual Login')}}
-                                    <span data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ translate('By enabling manual login, customers will get the option to create an account and log in using the necessary credentials & password in the app & website') }}">
+                                    {{'Iniciar sesión manualmente'}}
+                                    <span data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ 'Al habilitar el inicio de sesión manual, los clientes tendrán la opción de crear una cuenta e iniciar sesión utilizando las credenciales y contraseña necesarias en la aplicación y el sitio web.' }}">
                                         <i class="tio-info-outined"></i>
                                     </span>
                                 </span>
@@ -60,8 +60,8 @@
                         <div class="col-sm-6 col-md-4">
                             <label class="form-check form--check form--check--inline border rounded">
                                 <span class="user-select-none form-check-label flex-grow-1">
-                                    {{translate('OTP Login')}}
-                                    <span data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ translate('With OTP Login, customers can log in using their phone number. while new customers can create accounts instantly.') }}">
+                                    {{'Iniciar sesión OTP'}}
+                                    <span data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ 'Con OTP Login, los clientes pueden iniciar sesión utilizando su número de teléfono. mientras que los nuevos clientes pueden crear cuentas al instante.' }}">
                                         <i class="tio-info-outined"></i>
                                     </span>
                                 </span>
@@ -71,8 +71,8 @@
                         <div class="col-sm-6 col-md-4">
                             <label class="form-check form--check form--check--inline border rounded">
                                 <span class="user-select-none form-check-label flex-grow-1">
-                                    {{translate('Social Media Login')}}
-                                    <span data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ translate('With Social Login, customers can log in using social media credentials. while new customers can create accounts instantly.') }}">
+                                    {{'Inicio de sesión en redes sociales'}}
+                                    <span data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ 'Con Social Login, los clientes pueden iniciar sesión utilizando credenciales de redes sociales. mientras que los nuevos clientes pueden crear cuentas al instante.' }}">
                                         <i class="tio-info-outined"></i>
                                     </span>
                                 </span>
@@ -84,22 +84,22 @@
                     <div class="mb-4 social-media-login-container " style="display: {{ (isset($data['social_login_status']) && $data['social_login_status'] == '1')? '':'none' }}" id="social-login-area">
                         <div class="mb-3">
                             <h4 class="mb-1">
-                                {{translate('Social media login setup')}}
+                                {{'Configuración de inicio de sesión en redes sociales'}}
                             </h4>
                             <a href="{{route('admin.business-settings.third-party.social-login.view')}}" class="fs-12 c1 text-underline fw-semibold" target="_blank">
-                                {{translate('Connect 3rd party login system from here')}}
+                                {{'Conecte el sistema de inicio de sesión de terceros desde aquí'}}
                             </a>
                         </div>
                         <div class="bg-light p-4 rounded">
                             <h4 class="mb-1">
-                                {{translate('Choose social media')}}
+                                {{'Elige las redes sociales'}}
                             </h4>
                             <div class="row g-3">
                                 <div class="col-sm-6 col-md-4">
                                     <label class="form-check form--check form--check--inline border rounded">
                                         <span class="user-select-none form-check-label flex-grow-1">
-                                            {{translate('Google')}}
-                                            <span data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ translate('Enabling Google Login, customers can log in to the site using their existing Gmail credentials.') }}">
+                                            {{'Google'}}
+                                            <span data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ 'Al habilitar el inicio de sesión de Google, los clientes pueden iniciar sesión en el sitio utilizando sus credenciales de Gmail existentes.' }}">
                                                 <i class="tio-info-outined"></i>
                                             </span>
                                         </span>
@@ -109,8 +109,8 @@
                                 <div class="col-sm-6 col-md-4">
                                     <label class="form-check form--check form--check--inline border rounded">
                                         <span class="user-select-none form-check-label flex-grow-1">
-                                            {{translate('Facebook')}}
-                                            <span data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ translate('Enabling Facebook Login, customers can log in to the site using their existing Facebook credentials') }}">
+                                            {{'Facebook'}}
+                                            <span data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ 'Al habilitar el inicio de sesión con Facebook, los clientes pueden iniciar sesión en el sitio utilizando sus credenciales de Facebook existentes.' }}">
                                                 <i class="tio-info-outined"></i>
                                             </span>
                                         </span>
@@ -120,8 +120,8 @@
                                 <div class="col-sm-6 col-md-4">
                                     <label class="form-check form--check form--check--inline border rounded">
                                         <span class="user-select-none form-check-label flex-grow-1">
-                                            {{translate('Apple')}}
-                                            <span data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ translate('Enabling Apple Login, customers can log in to the site using their existing Apple login credentials, Only for Apple devices') }}">
+                                            {{'Manzana'}}
+                                            <span data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ 'Al habilitar el inicio de sesión de Apple, los clientes pueden iniciar sesión en el sitio utilizando sus credenciales de inicio de sesión de Apple existentes, solo para dispositivos Apple.' }}">
                                                 <i class="tio-info-outined"></i>
                                             </span>
                                         </span>
@@ -134,10 +134,10 @@
                     <div class="mb-4">
                         <div class="mb-3">
                             <h4 class="mb-1">
-                                {{translate('Verification')}}
+                                {{'Verificación'}}
                             </h4>
                             <p class="fs-12">
-                                {{translate('The option you select from below will need to verify by customer from customer app/website.')}}
+                                {{'La opción que seleccione a continuación deberá ser verificada por el cliente desde la aplicación/sitio web del cliente.'}}
                             </p>
                         </div>
                         <div class="bg-light p-4 rounded">
@@ -145,8 +145,8 @@
                                 <div class="col-sm-6 col-md-4">
                                     <label class="form-check form--check form--check--inline border rounded">
                                         <span class="user-select-none form-check-label flex-grow-1">
-                                            {{translate('Email Verification')}}
-                                            <span data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ translate('If Email verification is on, Customers must verify their email address with an OTP to complete the signup process.') }}">
+                                            {{'Verificación de correo electrónico'}}
+                                            <span data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ 'Si la verificación de correo electrónico está activada, los Clientes deben verificar su dirección de correo electrónico con una OTP para completar el proceso de registro.' }}">
                                                 <i class="tio-info-outined"></i>
                                             </span>
                                         </span>
@@ -156,8 +156,8 @@
                                 <div class="col-sm-6 col-md-4">
                                     <label class="form-check form--check form--check--inline border rounded">
                                         <span class="user-select-none form-check-label flex-grow-1 me-4 d-block">
-                                            {{translate('Phone Number Verification')}}
-                                            <span data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ translate('If Phone Number verification is on, Customers must verify their Phone Number with an OTP to complete the signup process.') }}">
+                                            {{'Verificación de número de teléfono'}}
+                                            <span data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ 'Si la verificación del número de teléfono está activada, los clientes deben verificar su número de teléfono con una OTP para completar el proceso de registro.' }}">
                                                 <i class="tio-info-outined"></i>
                                             </span>
                                         </span>
@@ -168,8 +168,8 @@
                         </div>
                     </div>
                     <div class="btn--container justify-content-end">
-                        <button type="reset" class="btn btn--reset">{{ translate('reset') }}</button>
-                        <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}" class="btn btn--primary {{env('APP_MODE')!='demo'?'':'call-demo'}}">{{translate('messages.submit')}}</button>
+                        <button type="reset" class="btn btn--reset">{{ 'reiniciar' }}</button>
+                        <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}" class="btn btn--primary {{env('APP_MODE')!='demo'?'':'call-demo'}}">{{'entregar'}}</button>
                     </div>
 
                 </div>
@@ -189,12 +189,12 @@
                 <div class="modal-body pb-0"><b></b>
                     <div class="text-center mb-20">
                         <img src="{{asset('assets/admin/img/modal/package-status-disable.png')}}" alt="" class="mb-20">
-                        <h5 class="modal-title">{{translate('Important Alert !')}}</h5>
+                        <h5 class="modal-title">{{'¡Alerta importante!'}}</h5>
                     </div>
-                    <p>{{ translate('At least one login method must remain active for the customer; otherwise, they will be unable to log in to the system') }}</p>
+                    <p>{{ 'Al menos un método de inicio de sesión debe permanecer activo para el cliente; de lo contrario, no podrán iniciar sesión en el sistema.' }}</p>
                 </div>
                 <div class="modal-footer justify-content-center border-0">
-                    <a type="button" class="btn btn--primary mw-300px" data-dismiss="modal">{{translate('okay')}}</a>
+                    <a type="button" class="btn btn--primary mw-300px" data-dismiss="modal">{{'bueno'}}</a>
                 </div>
             </div>
         </div>
@@ -211,12 +211,12 @@
                 <div class="modal-body pb-0"><b></b>
                     <div class="text-center mb-20">
                         <img src="{{asset('assets/admin/img/sms-configuration.svg')}}" alt="" class="mb-20 img--80">
-                        <h5 class="modal-title">{{translate('Set Up SMS Configuration First')}}</h5>
+                        <h5 class="modal-title">{{'Configure la configuración de SMS primero'}}</h5>
                     </div>
-                    <p>{{ translate('It looks like your SMS configuration is not set up yet. To enable the OTP system, please set up the SMS configuration first.') }}</p>
+                    <p>{{ 'Parece que tu configuración de SMS aún no está configurada. Para habilitar el sistema OTP, primero configure la configuración de SMS.' }}</p>
                 </div>
                 <div class="modal-footer justify-content-center border-0">
-                    <a type="button" class="btn btn--primary w-100 mw-300px" href="{{ route('admin.business-settings.third-party.sms-module') }}" target="_blank">{{translate('Go to SMS Configuration')}}</a>
+                    <a type="button" class="btn btn--primary w-100 mw-300px" href="{{ route('admin.business-settings.third-party.sms-module') }}" target="_blank">{{'Ir a Configuración de SMS'}}</a>
                 </div>
             </div>
         </div>
@@ -233,12 +233,12 @@
                 <div class="modal-body pb-0"><b></b>
                     <div class="text-center mb-20">
                         <img src="{{asset('assets/admin/img/modal/package-status-disable.png')}}" alt="" class="mb-20">
-                        <h5 class="modal-title">{{translate('Important Alert !')}}</h5>
+                        <h5 class="modal-title">{{'¡Alerta importante!'}}</h5>
                     </div>
-                    <p>{{ translate('If you are activating only social login as the login method, you must enable at least one option between Google and Facebook for Android users.') }}</p>
+                    <p>{{ 'Si activa solo el inicio de sesión social como método de inicio de sesión, debe habilitar al menos una opción entre Google y Facebook para usuarios de Android.' }}</p>
                 </div>
                 <div class="modal-footer justify-content-center border-0">
-                    <a type="button" class="btn btn--primary mw-300px" data-dismiss="modal">{{translate('okay')}}</a>
+                    <a type="button" class="btn btn--primary mw-300px" data-dismiss="modal">{{'bueno'}}</a>
                 </div>
             </div>
         </div>
@@ -254,12 +254,12 @@
                 <div class="modal-body pb-0"><b></b>
                     <div class="text-center mb-20">
                         <img src="{{asset('assets/admin/img/modal/package-status-disable.png')}}" alt="" class="mb-20">
-                        <h5 class="modal-title">{{translate('Important Alert !')}}</h5>
+                        <h5 class="modal-title">{{'¡Alerta importante!'}}</h5>
                     </div>
-                    <p>{{ translate('If you are activating social login as the login method, you must enable at least one option between Google, Facebook & Apple.') }}</p>
+                    <p>{{ 'Si está activando el inicio de sesión social como método de inicio de sesión, debe habilitar al menos una opción entre Google, Facebook y Apple.' }}</p>
                 </div>
                 <div class="modal-footer justify-content-center border-0">
-                    <a type="button" class="btn btn--primary mw-300px" data-dismiss="modal">{{translate('okay')}}</a>
+                    <a type="button" class="btn btn--primary mw-300px" data-dismiss="modal">{{'bueno'}}</a>
                 </div>
             </div>
         </div>
@@ -276,12 +276,12 @@
                 <div class="modal-body pb-0"><b></b>
                     <div class="text-center mb-20">
                         <img src="{{asset('assets/admin/img/modal/google.png')}}" alt="" class="mb-20">
-                        <h5 class="modal-title">{{translate('Set Up Google Configuration First')}}</h5>
+                        <h5 class="modal-title">{{'Configure la configuración de Google primero'}}</h5>
                     </div>
-                    <p>{{ translate('It looks like your Google Login configuration is not set up yet. To enable the Google Login option, please set up the Google configuration first.') }}</p>
+                    <p>{{ 'Parece que tu configuración de inicio de sesión de Google aún no está configurada. Para habilitar la opción de inicio de sesión de Google, primero configure la configuración de Google.' }}</p>
                 </div>
                 <div class="modal-footer justify-content-center border-0">
-                    <a type="button" class="btn btn--primary mw-300px" href="{{route('admin.business-settings.third-party.social-login.view')}}" target="_blank">{{translate('Go to Google Configuration')}}</a>
+                    <a type="button" class="btn btn--primary mw-300px" href="{{route('admin.business-settings.third-party.social-login.view')}}" target="_blank">{{'Ir a configuración de Google'}}</a>
                 </div>
             </div>
         </div>
@@ -298,12 +298,12 @@
                 <div class="modal-body pb-0"><b></b>
                     <div class="text-center mb-20">
                         <img src="{{asset('assets/admin/img/modal/facebook.png')}}" alt="" class="mb-20">
-                        <h5 class="modal-title">{{translate('Set Up Facebook Configuration First')}}</h5>
+                        <h5 class="modal-title">{{'Configure la configuración de Facebook primero'}}</h5>
                     </div>
-                    <p>{{ translate('It looks like your Facebook Login configuration is not set up yet. To enable the Facebook Login option, please set up the Facebook configuration first.') }}</p>
+                    <p>{{ 'Parece que tu configuración de inicio de sesión de Facebook aún no está configurada. Para habilitar la opción de inicio de sesión de Facebook, primero configure la configuración de Facebook.' }}</p>
                 </div>
                 <div class="modal-footer justify-content-center border-0">
-                    <a type="button" class="btn btn--primary mw-300px" href="{{route('admin.business-settings.third-party.social-login.view')}}" target="_blank">{{translate('Go to Facebook Configuration')}}</a>
+                    <a type="button" class="btn btn--primary mw-300px" href="{{route('admin.business-settings.third-party.social-login.view')}}" target="_blank">{{'Ir a configuración de Facebook'}}</a>
                 </div>
             </div>
         </div>
@@ -320,12 +320,12 @@
                 <div class="modal-body pb-0"><b></b>
                     <div class="text-center mb-20">
                         <img src="{{asset('assets/admin/img/modal/apple.png')}}" alt="" class="mb-20">
-                        <h5 class="modal-title">{{translate('Set Up Apple Configuration First')}}</h5>
+                        <h5 class="modal-title">{{'Configure la configuración de Apple primero'}}</h5>
                     </div>
-                    <p>{{ translate('It looks like your Apple Login configuration is not set up yet. To enable the Apple Login option, please set up the Apple configuration first.') }}</p>
+                    <p>{{ 'Parece que tu configuración de inicio de sesión de Apple aún no está configurada. Para habilitar la opción de inicio de sesión de Apple, primero configure la configuración de Apple.' }}</p>
                 </div>
                 <div class="modal-footer justify-content-center border-0">
-                    <a type="button" class="btn btn--primary mw-300px" href="{{route('admin.business-settings.third-party.social-login.view')}}" target="_blank">{{translate('Go to Apple Configuration')}}</a>
+                    <a type="button" class="btn btn--primary mw-300px" href="{{route('admin.business-settings.third-party.social-login.view')}}" target="_blank">{{'Ir a configuración de Apple'}}</a>
                 </div>
             </div>
         </div>
@@ -342,12 +342,12 @@
                 <div class="modal-body pb-0"><b></b>
                     <div class="text-center mb-20">
                         <img src="{{asset('assets/admin/img/sms-configuration.svg')}}" alt="" class="mb-20 img--80">
-                        <h5 class="modal-title">{{translate('Set Up SMS Configuration First')}}</h5>
+                        <h5 class="modal-title">{{'Configure la configuración de SMS primero'}}</h5>
                     </div>
-                    <p>{{ translate('It looks like your SMS configuration is not set up yet. To enable the phone verification, please set up the SMS configuration first.') }}</p>
+                    <p>{{ 'Parece que tu configuración de SMS aún no está configurada. Para habilitar la verificación del teléfono, primero configure la configuración de SMS.' }}</p>
                 </div>
                 <div class="modal-footer justify-content-center border-0">
-                    <a type="button" class="btn btn--primary w-100 mw-300px" href="{{ route('admin.business-settings.third-party.sms-module') }}" target="_blank">{{translate('Go to SMS Configuration')}}</a>
+                    <a type="button" class="btn btn--primary w-100 mw-300px" href="{{ route('admin.business-settings.third-party.sms-module') }}" target="_blank">{{'Ir a Configuración de SMS'}}</a>
                 </div>
             </div>
         </div>
@@ -364,12 +364,12 @@
                 <div class="modal-body pb-0"><b></b>
                     <div class="text-center mb-20">
                         <img src="{{asset('assets/admin/img/sms-configuration.svg')}}" alt="" class="mb-20 img--80">
-                        <h5 class="modal-title">{{translate('Set Up Email Configuration First')}}</h5>
+                        <h5 class="modal-title">{{'Configure primero la configuración del correo electrónico'}}</h5>
                     </div>
-                    <p>{{ translate('It looks like your Email configuration is not set up yet. To enable the email verification, please set up the SMS configuration first.') }}</p>
+                    <p>{{ 'Parece que tu configuración de correo electrónico aún no está configurada. Para habilitar la verificación por correo electrónico, primero configure la configuración de SMS.' }}</p>
                 </div>
                 <div class="modal-footer justify-content-center border-0">
-                    <a type="button" class="btn btn--primary w-100 mw-300px" href="{{ route('admin.business-settings.third-party.mail-config') }}" target="_blank">{{translate('Go to Mail Configuration')}}</a>
+                    <a type="button" class="btn btn--primary w-100 mw-300px" href="{{ route('admin.business-settings.third-party.mail-config') }}" target="_blank">{{'Ir a configuración de correo'}}</a>
                 </div>
             </div>
         </div>

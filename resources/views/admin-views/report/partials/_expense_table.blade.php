@@ -13,12 +13,12 @@
         <td>
             {{date('Y-m-d '.config('timeformat'),strtotime($exp->created_at))}}
         </td>
-        <td><label class="text-uppercase">{{translate("messages.{$exp['type']}")}}</label></td>
+        <td><label class="text-uppercase">{{'{$exp[\'tipo\']}'}}</label></td>
         <td class="text-center">
             @if (isset($exp->order->customer))
             {{ $exp->order->customer->f_name.' '.$exp->order->customer->l_name }}
             @else
-            <label class="badge badge-danger">{{translate('messages.invalid_customer_data')}}</label>
+            <label class="badge badge-danger">{{'datos de cliente no válidos'}}</label>
 
             @endif
         </td>

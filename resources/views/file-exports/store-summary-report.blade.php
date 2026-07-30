@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-lg-12 text-center "><h1 >{{ translate('store_summary_reports') }}</h1></div>
+    <div class="col-lg-12 text-center "><h1 >{{ 'informes resumidos de la tienda' }}</h1></div>
     <div class="col-lg-12">
 
 
@@ -7,13 +7,13 @@
     <table>
         <thead>
             <tr>
-                <th>{{ translate('Search_Criteria') }}</th>
+                <th>{{ 'Criterios de búsqueda' }}</th>
                 <th></th>
                 <th></th>
                 <th>
-                    {{ translate('filter')  }}- {{  translate($data['filter']) }}
+                    {{ 'filtrar'  }}- {{  translate($data['filter']) }}
                     <br>
-                    {{ translate('Search_Bar_Content')  }}- {{ $data['search'] ??translate('N/A') }}
+                    {{ 'Contenido de la barra de búsqueda'  }}- {{ $data['search'] ??'N / A' }}
 
                 </th>
                 <th> </th>
@@ -22,21 +22,21 @@
                 <th></th>
                 </tr>
             <tr>
-                <th>{{ translate('Analytics') }}</th>
+                <th>{{ 'Analítica' }}</th>
                 <th></th>
                 <th></th>
                 <th>
-                    {{ translate('new_registered_store')  }}- {{ $data['new_stores'] ??translate('N/A') }}
+                    {{ 'nueva tienda registrada'  }}- {{ $data['new_stores'] ??'N / A' }}
                     <br>
-                    {{ translate('total_orders')  }}- {{ $data['orders'] ??translate('N/A') }}
+                    {{ 'pedidos totales'  }}- {{ $data['orders'] ??'N / A' }}
                     <br>
-                    {{ translate('total_order_amount')  }}- {{ $data['total_order_amount'] ??translate('N/A') }}
+                    {{ 'monto total del pedido'  }}- {{ $data['total_order_amount'] ??'N / A' }}
                     <br>
-                    {{ translate('completed_orders')  }}- {{ $data['total_delivered'] ??translate('N/A') }}
+                    {{ 'pedidos completados'  }}- {{ $data['total_delivered'] ??'N / A' }}
                     <br>
-                    {{ translate('incomplete_orders')  }}- {{ $data['total_ongoing'] ??translate('N/A') }}
+                    {{ 'pedidos incompletos'  }}- {{ $data['total_ongoing'] ??'N / A' }}
                     <br>
-                    {{ translate('canceled_orders')  }}- {{ $data['total_canceled'] ??translate('N/A') }}
+                    {{ 'pedidos cancelados'  }}- {{ $data['total_canceled'] ??'N / A' }}
                 </th>
                 <th> </th>
                 <th></th>
@@ -44,15 +44,15 @@
                 <th></th>
             </tr>
             <tr>
-                <th>{{ translate('Payment_Statistics') }}</th>
+                <th>{{ 'Estadísticas de pago' }}</th>
                 <th></th>
                 <th></th>
                 <th>
-                    {{ translate('cash_payments')  }} - {{ $data['cash_payments'] ??translate('N/A') }}
+                    {{ 'pagos en efectivo'  }} - {{ $data['cash_payments'] ??'N / A' }}
                     <br>
-                    {{ translate('digital_payments')  }} - {{ $data['digital_payments'] ??translate('N/A') }}
+                    {{ 'pagos digitales'  }} - {{ $data['digital_payments'] ??'N / A' }}
                     <br>
-                    {{ translate('wallet_payments')  }} - {{ $data['wallet_payments'] ??translate('N/A') }}
+                    {{ 'pagos de billetera'  }} - {{ $data['wallet_payments'] ??'N / A' }}
                 </th>
                 <th> </th>
                 <th></th>
@@ -60,16 +60,16 @@
                 <th></th>
             </tr>
         <tr>
-            <th>{{ translate('sl') }}</th>
-            <th>{{translate('store_name')}}</th>
-            <th>{{translate('Total Order')}}</th>
-            <th>{{translate('Total Delivered Order')}}</th>
-            <th>{{translate('Total Amount')}}</th>
-            <th>{{translate('Completion Rate')}}</th>
-            <th>{{translate('Ongoing Rate')}}</th>
-            <th>{{translate('Cancelation Rate')}}</th>
-            <th>{{translate('Total_Refund_requests')}}</th>
-            <th>{{translate('Pending_Refund_requests')}}</th>
+            <th>{{ 'SL' }}</th>
+            <th>{{'nombre de la tienda'}}</th>
+            <th>{{'Orden total'}}</th>
+            <th>{{'Orden total entregada'}}</th>
+            <th>{{'Monto total'}}</th>
+            <th>{{'Tasa de finalización'}}</th>
+            <th>{{'Tarifa continua'}}</th>
+            <th>{{'Tasa de cancelación'}}</th>
+            <th>{{'Solicitudes de reembolso total'}}</th>
+            <th>{{'Solicitudes de reembolso pendientes'}}</th>
         </thead>
         <tbody>
         @foreach($data['stores'] as $key => $store)

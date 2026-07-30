@@ -43,7 +43,7 @@
                     <div class="search--form-group">
                         <button type="button" class="btn"><i class="tio-search"></i></button>
                         <input autocomplete="false" name="qq" type="text" class="form-control form--control"
-                            placeholder="{{ translate('Search Menu...') }}" id="search">
+                            placeholder="{{ 'Menú de búsqueda...' }}" id="search">
                         <div id="search-suggestions" class="flex-wrap mt-1"></div>
                     </div>
                 </form>
@@ -52,7 +52,7 @@
                     <!-- Business Settings -->
                     <li class="nav-item">
                         <small class="nav-subtitle"
-                            title="{{ translate('messages.business_settings') }}">{{ translate('messages.business_management') }}</small>
+                            title="{{ 'entornos empresariales' }}">{{ 'gestión empresarial' }}</small>
                         <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                     </li>
 
@@ -62,10 +62,10 @@
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/zone*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('admin.business-settings.zone.home') }}"
-                                title="{{ translate('messages.zone_setup') }}">
+                                title="{{ 'configuración de zona' }}">
                                 <i class="tio-city nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    {{ translate('messages.zone_setup') }} </span>
+                                    {{ 'configuración de zona' }} </span>
                             </a>
                         </li>
                     @endif
@@ -74,9 +74,9 @@
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/module') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" id="tourb-3"
-                                href="javascript:" title="{{ translate('messages.system_module_setup') }}">
+                                href="javascript:" title="{{ 'configuración del módulo del sistema' }}">
                                 <i class="tio-globe nav-icon"></i>
-                                <span class="text-truncate">{{ translate('messages.module_setup') }}</span>
+                                <span class="text-truncate">{{ 'configuración del módulo' }}</span>
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                 style="display:{{ Request::is('admin/business-settings/module*') ? 'block' : 'none' }}">
@@ -84,10 +84,10 @@
                                     class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/module/store') ? 'active' : '' }}">
                                     <a class="js-navbar-vertical-aside-menu-link nav-link"
                                         href="{{ route('admin.business-settings.module.create') }}"
-                                        title="{{ translate('messages.add_Business_Module') }}">
+                                        title="{{ 'agregar módulo de negocios' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate">
-                                            {{ translate('messages.add_Business_Module') }}
+                                            {{ 'agregar módulo de negocios' }}
                                         </span>
                                     </a>
                                 </li>
@@ -95,10 +95,10 @@
                                     class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/module') ? 'active' : '' }}">
                                     <a class="js-navbar-vertical-aside-menu-link nav-link"
                                         href="{{ route('admin.business-settings.module.index') }}"
-                                        title="{{ translate('messages.modules') }}">
+                                        title="{{ 'módulos' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate">
-                                            {{ translate('messages.modules') }}
+                                            {{ 'módulos' }}
                                         </span>
                                     </a>
                                 </li>
@@ -109,18 +109,18 @@
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/business-setup*') || Request::is('admin/business-settings/language*') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('admin.business-settings.business-setup') }}"
-                                title="{{ translate('messages.business_setup') }}">
+                                title="{{ 'configuración de negocios' }}">
                                 <span class="tio-settings nav-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.business_settings') }}</span>
+                                <span class="text-truncate">{{ 'entornos empresariales' }}</span>
                             </a>
                         </li>
                         @if (addon_published_status('TaxModule'))
                             <li class="navbar-vertical-aside-has-menu @yield('taxmodule')">
 
                                 <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" id="tourb-3"
-                                    href="javascript:" title="{{ translate('System_Tax') }}">
+                                    href="javascript:" title="{{ 'Impuesto del sistema' }}">
                                     <i class="tio-wallet nav-icon"></i>
-                                    <span class="text-truncate">{{ translate('System_Tax') }}</span>
+                                    <span class="text-truncate">{{ 'Impuesto del sistema' }}</span>
                                 </a>
 
 
@@ -128,20 +128,20 @@
 
                                     <li class="navbar-vertical-aside-has-menu @yield('tax_setup')">
                                         <a class="js-navbar-vertical-aside-menu-link nav-link"
-                                            href="{{ route('taxvat.index') }}" title="{{ translate('Create_Taxes') }}">
+                                            href="{{ route('taxvat.index') }}" title="{{ 'Crear impuestos' }}">
                                             <i class="tio-chart-line-up nav-icon"></i>
                                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                                {{ translate('Create_Taxes') }}
+                                                {{ 'Crear impuestos' }}
                                             </span>
                                         </a>
                                     </li>
                                     <li class="navbar-vertical-aside-has-menu @yield('tax_system_setup')">
                                         <a class="js-navbar-vertical-aside-menu-link nav-link"
                                             href="{{ route('taxvat.systemTaxvat', ['type' => 'vendor']) }}"
-                                            title="{{ translate('Setup_Taxes') }}">
+                                            title="{{ 'Impuestos de configuración' }}">
                                             <i class="tio-calculator nav-icon"></i>
                                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                                {{ translate('Setup_Taxes') }}
+                                                {{ 'Impuestos de configuración' }}
                                             </span>
                                         </a>
                                     </li>
@@ -160,39 +160,39 @@
                     @if (\App\CentralLogics\Helpers::module_permission_check('subscription'))
                         <li class="navbar-vertical-aside-has-menu @yield('subscription')">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" id="tourb-3"
-                                href="javascript:" title="{{ translate('messages.subscription_management') }}">
+                                href="javascript:" title="{{ 'gestión de suscripciones' }}">
                                 <i class="tio-crown nav-icon"></i>
-                                <span class="text-truncate">{{ translate('messages.subscription_management') }}</span>
+                                <span class="text-truncate">{{ 'gestión de suscripciones' }}</span>
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                 style="display:{{ Request::is('admin/business-settings/subscription*') ? 'block' : 'none' }}">
                                 <li class="navbar-vertical-aside-has-menu @yield('subscription_index')">
                                     <a class="js-navbar-vertical-aside-menu-link nav-link"
                                         href="{{ route('admin.business-settings.subscriptionackage.index') }}"
-                                        title="{{ translate('messages.subscription_Package') }}">
+                                        title="{{ 'paquete de suscripción' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate">
-                                            {{ translate('messages.subscription_Package') }}
+                                            {{ 'paquete de suscripción' }}
                                         </span>
                                     </a>
                                 </li>
                                 <li class="navbar-vertical-aside-has-menu  @yield('subscriberList')">
                                     <a class="js-navbar-vertical-aside-menu-link nav-link"
                                         href="{{ route('admin.business-settings.subscriptionackage.subscriberList') }}"
-                                        title="{{ translate('messages.Subscriber_List') }}">
+                                        title="{{ 'Lista de suscriptores' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate">
-                                            {{ translate('messages.Subscriber_List') }}
+                                            {{ 'Lista de suscriptores' }}
                                         </span>
                                     </a>
                                 </li>
                                 <li class="navbar-vertical-aside-has-menu  @yield('subscription_settings')">
                                     <a class="js-navbar-vertical-aside-menu-link nav-link"
                                         href="{{ route('admin.business-settings.subscriptionackage.settings') }}"
-                                        title="{{ translate('messages.settings') }}">
+                                        title="{{ 'Configuración' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate">
-                                            {{ translate('messages.settings') }}
+                                            {{ 'Configuración' }}
                                         </span>
                                     </a>
                                 </li>
@@ -205,10 +205,10 @@
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/pages*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
-                                title="{{ translate('messages.pages_setup') }}">
+                                title="{{ 'configuración de páginas' }}">
                                 <i class="tio-pages nav-icon"></i>
                                 <span
-                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.pages_&_social_media') }}</span>
+                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ 'páginas y redes sociales' }}</span>
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                 style="display:{{ Request::is('admin/business-settings/pages*') ? 'block' : 'none' }}">
@@ -217,9 +217,9 @@
                                     class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/pages/social-media') ? 'active' : '' }}">
                                     <a class="nav-link "
                                         href="{{ route('admin.business-settings.social-media.index') }}"
-                                        title="{{ translate('messages.Social Media') }}">
+                                        title="{{ 'Redes Sociales' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">{{ translate('messages.Social Media') }}</span>
+                                        <span class="text-truncate">{{ 'Redes Sociales' }}</span>
                                     </a>
                                 </li>
 
@@ -227,40 +227,40 @@
                                     class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/pages/admin-landing-page-settings*') ? 'active' : '' }}">
                                     <a class="nav-link "
                                         href="{{ route('admin.business-settings.admin-landing-page-settings', 'fixed-data') }}"
-                                        title="{{ translate('messages.admin_landing_page_settings') }}">
+                                        title="{{ 'configuración de la página de inicio del administrador' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span
-                                            class="text-truncate">{{ translate('messages.admin_landing_page') }}</span>
+                                            class="text-truncate">{{ 'página de inicio del administrador' }}</span>
                                     </a>
                                 </li>
                                 <li
                                     class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/pages/react-landing-page-settings*') ? 'active' : '' }}">
                                     <a class="nav-link "
                                         href="{{ route('admin.business-settings.react-landing-page-settings', 'header') }}"
-                                        title="{{ translate('messages.react_landing_page') }}">
+                                        title="{{ 'reaccionar página de inicio' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span
-                                            class="text-truncate">{{ translate('messages.react_landing_page') }}</span>
+                                            class="text-truncate">{{ 'reaccionar página de inicio' }}</span>
                                     </a>
                                 </li>
                                 <li
                                     class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/pages/flutter-landing-page-settings*') ? 'active' : '' }}">
                                     <a class="nav-link "
                                         href="{{ route('admin.business-settings.flutter-landing-page-settings', 'fixed-data') }}"
-                                        title="{{ translate('messages.flutter_landing_page') }}">
+                                        title="{{ 'página de inicio de aleteo' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span
-                                            class="text-truncate">{{ translate('messages.flutter_landing_page') }}</span>
+                                            class="text-truncate">{{ 'página de inicio de aleteo' }}</span>
                                     </a>
                                 </li>
 
                                 <li
                                     class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/pages/business-page*') ? 'active' : '' }}">
                                     <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
-                                        href="javascript:" title="{{ translate('messages.business_pages') }}">
+                                        href="javascript:" title="{{ 'paginas comerciales' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span
-                                            class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.business_pages') }}</span>
+                                            class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ 'paginas comerciales' }}</span>
                                     </a>
                                     <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                         style="display:{{ Request::is('admin/business-settings/pages/business-page*') ? 'block' : 'none' }}">
@@ -268,10 +268,10 @@
                                             class="nav-item {{ Request::is('admin/business-settings/pages/business-page/terms-and-conditions') ? 'active' : '' }}">
                                             <a class="nav-link "
                                                 href="{{ route('admin.business-settings.terms-and-conditions') }}"
-                                                title="{{ translate('messages.terms_and_condition') }}">
+                                                title="{{ 'términos y condiciones' }}">
                                                 <span class="tio-circle nav-indicator-icon"></span>
                                                 <span
-                                                    class="text-truncate">{{ translate('messages.terms_and_condition') }}</span>
+                                                    class="text-truncate">{{ 'términos y condiciones' }}</span>
                                             </a>
                                         </li>
 
@@ -279,10 +279,10 @@
                                             class="nav-item {{ Request::is('admin/business-settings/pages/business-page/privacy-policy') ? 'active' : '' }}">
                                             <a class="nav-link "
                                                 href="{{ route('admin.business-settings.privacy-policy') }}"
-                                                title="{{ translate('messages.privacy_policy') }}">
+                                                title="{{ 'política de privacidad' }}">
                                                 <span class="tio-circle nav-indicator-icon"></span>
                                                 <span
-                                                    class="text-truncate">{{ translate('messages.privacy_policy') }}</span>
+                                                    class="text-truncate">{{ 'política de privacidad' }}</span>
                                             </a>
                                         </li>
 
@@ -290,18 +290,18 @@
                                             class="nav-item {{ Request::is('admin/business-settings/pages/business-page/about-us') ? 'active' : '' }}">
                                             <a class="nav-link "
                                                 href="{{ route('admin.business-settings.about-us') }}"
-                                                title="{{ translate('messages.about_us') }}">
+                                                title="{{ 'sobre nosotros' }}">
                                                 <span class="tio-circle nav-indicator-icon"></span>
                                                 <span
-                                                    class="text-truncate">{{ translate('messages.about_us') }}</span>
+                                                    class="text-truncate">{{ 'sobre nosotros' }}</span>
                                             </a>
                                         </li>
                                         <li
                                             class="nav-item {{ Request::is('admin/business-settings/pages/business-page/refund') ? 'active' : '' }}">
                                             <a class="nav-link " href="{{ route('admin.business-settings.refund') }}"
-                                                title="{{ translate('messages.Refund Policy') }}">
+                                                title="{{ 'Política de reembolso' }}">
                                                 <span class="tio-circle nav-indicator-icon"></span>
-                                                <span class="text-truncate">{{ translate('Refund Policy') }}</span>
+                                                <span class="text-truncate">{{ 'Política de reembolso' }}</span>
                                             </a>
                                         </li>
 
@@ -309,10 +309,10 @@
                                             class="nav-item {{ Request::is('admin/business-settings/pages/business-page/cancelation') ? 'active' : '' }}">
                                             <a class="nav-link "
                                                 href="{{ route('admin.business-settings.cancelation') }}"
-                                                title="{{ translate('messages.Cancelation Policy') }}">
+                                                title="{{ 'Política de Cancelación' }}">
                                                 <span class="tio-circle nav-indicator-icon"></span>
                                                 <span
-                                                    class="text-truncate">{{ translate('Cancelation Policy') }}</span>
+                                                    class="text-truncate">{{ 'Política de Cancelación' }}</span>
                                             </a>
                                         </li>
 
@@ -321,9 +321,9 @@
                                             class="nav-item {{ Request::is('admin/business-settings/pages/business-page/shipping-policy') ? 'active' : '' }}">
                                             <a class="nav-link "
                                                 href="{{ route('admin.business-settings.shipping-policy') }}"
-                                                title="{{ translate('messages.shipping_policy') }}">
+                                                title="{{ 'política de envío' }}">
                                                 <span class="tio-circle nav-indicator-icon"></span>
-                                                <span class="text-truncate">{{ translate('Shipping Policy') }}</span>
+                                                <span class="text-truncate">{{ 'Política de envío' }}</span>
                                             </a>
                                         </li>
                                     </ul>
@@ -333,23 +333,23 @@
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/file-manager*') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('admin.business-settings.file-manager.index') }}"
-                                title="{{ translate('messages.gallery') }}">
+                                title="{{ 'galería' }}">
                                 <span class="tio-album nav-icon"></span>
-                                <span class="text-truncate text-capitalize">{{ translate('messages.gallery') }}</span>
+                                <span class="text-truncate text-capitalize">{{ 'galería' }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <small class="nav-subtitle"
-                                title="{{ translate('messages.business_settings') }}">{{ translate('messages.system_management') }}</small>
+                                title="{{ 'entornos empresariales' }}">{{ 'gestión del sistema' }}</small>
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/third-party*') || Request::is('admin/business-settings/fcm*') || Request::is('admin/business-settings/offline-payment*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
-                                title="{{ translate('messages.3rd_party_&_configurations') }}">
+                                title="{{ 'Configuraciones y terceros' }}">
                                 <span class="nav-icon tio-account-square-outlined"></span>
                                 <span
-                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.3rd_party_&_configurations') }}</span>
+                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ 'Configuraciones y terceros' }}</span>
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                 style="display:{{ Request::is('admin/business-settings/third-party*') || Request::is('admin/business-settings/fcm*') || Request::is('admin/business-settings/login-url-setup*') || Request::is('admin/business-settings/offline-payment*')|| Request::is('admin/business-settings/marketing/*') || Request::is('admin/business-settings/open-ai') || Request::is('admin/business-settings/open-ai-settings') ? 'block' : 'none' }}">
@@ -357,18 +357,18 @@
                                     class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/third-party*') ? 'active' : '' }}">
                                     <a class="nav-link "
                                         href="{{ route('admin.business-settings.third-party.payment-method') }}"
-                                        title="{{ translate('messages.3rd_party') }}">
+                                        title="{{ 'tercero' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">{{ translate('messages.3rd_party') }}</span>
+                                        <span class="text-truncate">{{ 'tercero' }}</span>
                                     </a>
                                 </li>
                                 <li
                                     class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/fcm*') ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('admin.business-settings.fcm-index') }}"
-                                        title="{{ translate('messages.firebase_notification') }}">
+                                        title="{{ 'notificación de base de fuego' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span
-                                            class="text-truncate">{{ translate('messages.firebase_notification') }}</span>
+                                            class="text-truncate">{{ 'notificación de base de fuego' }}</span>
                                     </a>
                                 </li>
 
@@ -376,27 +376,27 @@
                                     <li
                                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/offline*') ? 'active' : '' }}">
                                         <a class="nav-link " href="{{ route('admin.business-settings.offline') }}"
-                                            title="{{ translate('messages.Offline_Payment_Setup') }}">
+                                            title="{{ 'Configuración de pago sin conexión' }}">
                                             <span class="tio-circle nav-indicator-icon"></span>
                                             <span
-                                                class="text-truncate">{{ translate('messages.Offline_Payment_Setup') }}</span>
+                                                class="text-truncate">{{ 'Configuración de pago sin conexión' }}</span>
                                         </a>
                                     </li>
                                 @endif
 
                                 <li class="nav-item @yield('analytics_Script')">
                                     <a class="nav-link " href="{{ route('admin.business-settings.marketing.analytic') }}"
-                                        title="{{ translate('Analytics_Script') }}">
+                                        title="{{ 'Guión de análisis' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">{{ translate('Analytics_Script') }}</span>
+                                        <span class="text-truncate">{{ 'Guión de análisis' }}</span>
                                     </a>
                                 </li>
 
                                 <li class="nav-item @yield('openAI')">
                                     <a class="nav-link " href="{{route('admin.business-settings.openAI')}}"
-                                        title="{{ translate('AI_Setup') }}">
+                                        title="{{ 'Configuración de IA' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">{{ translate('AI_Setup') }}</span>
+                                        <span class="text-truncate">{{ 'Configuración de IA' }}</span>
                                     </a>
                                 </li>
 
@@ -406,19 +406,19 @@
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/donation-settings*') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('admin.business-settings.donation-settings') }}"
-                                title="{{ translate('Donation Settings') }}">
+                                title="{{ 'Configuración de donación' }}">
                                 <span class="tio-gift nav-icon"></span>
                                 <span
-                                    class="text-truncate text-capitalize">{{ translate('Donation Settings') }}</span>
+                                    class="text-truncate text-capitalize">{{ 'Configuración de donación' }}</span>
                             </a>
                         </li>
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/login-settings*') || Request::is('admin/business-settings/login-url-setup*') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('admin.business-settings.login-settings.index') }}"
-                                title="{{ translate('messages.login_setup') }}">
+                                title="{{ 'configuración de inicio de sesión' }}">
                                 <span class="tio-devices-apple nav-icon"></span>
                                 <span
-                                    class="text-truncate text-capitalize">{{ translate('messages.login_setup') }}</span>
+                                    class="text-truncate text-capitalize">{{ 'configuración de inicio de sesión' }}</span>
                             </a>
                         </li>
 
@@ -426,9 +426,9 @@
                             <li
                                 class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/rental-email-setup*') || Request::is('admin/business-settings/email-setup*') ? 'active' : '' }}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" id="tourb-3"
-                                    href="javascript:" title="{{ translate('messages.email_setup') }}">
+                                    href="javascript:" title="{{ 'configuración de correo electrónico' }}">
                                     <i class="tio-email nav-icon"></i>
-                                    <span class="text-truncate">{{ translate('messages.email_setup') }}</span>
+                                    <span class="text-truncate">{{ 'configuración de correo electrónico' }}</span>
                                 </a>
                                 <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                     style="display:{{ Request::is('admin/business-settings/rental-email-setup*') || Request::is('admin/business-settings/email-setup*') ? 'block' : 'none' }}">
@@ -437,10 +437,10 @@
                                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/email-setup*') ? 'active' : '' }}">
                                         <a class="js-navbar-vertical-aside-menu-link nav-link"
                                             href="{{ route('admin.business-settings.email-setup', ['admin', 'forgot-password']) }}"
-                                            title="{{ translate('messages.All_Modules') }}">
+                                            title="{{ 'Todos los módulos' }}">
                                             <span class="tio-circle nav-indicator-icon"></span>
                                             <span class="text-truncate">
-                                                {{ translate('messages.All_Modules') }}
+                                                {{ 'Todos los módulos' }}
                                             </span>
                                         </a>
                                     </li>
@@ -448,10 +448,10 @@
                                         class="navbar-vertical-aside-has-menu  {{ Request::is('admin/business-settings/rental-email-setup*') ? 'active' : '' }}">
                                         <a class="js-navbar-vertical-aside-menu-link nav-link"
                                             href="{{ route('admin.business-settings.rental-email-setup', ['admin', 'provider-registration']) }}"
-                                            title="{{ translate('messages.Rental_Module') }}">
+                                            title="{{ 'Módulo de Alquiler' }}">
                                             <span class="tio-circle nav-indicator-icon"></span>
                                             <span class="text-truncate">
-                                                {{ translate('messages.Rental_Module') }}
+                                                {{ 'Módulo de Alquiler' }}
                                             </span>
                                         </a>
                                     </li>
@@ -462,9 +462,9 @@
                                 class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/email-setup*') ? 'active' : '' }}">
                                 <a class="nav-link "
                                     href="{{ route('admin.business-settings.email-setup', ['admin', 'forgot-password']) }}"
-                                    title="{{ translate('messages.email_template') }}">
+                                    title="{{ 'plantilla de correo electrónico' }}">
                                     <span class="tio-email nav-icon"></span>
-                                    <span class="text-truncate">{{ translate('messages.email_template') }}</span>
+                                    <span class="text-truncate">{{ 'plantilla de correo electrónico' }}</span>
                                 </a>
                             </li>
                         @endif
@@ -472,9 +472,9 @@
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/app-settings*') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('admin.business-settings.app-settings') }}"
-                                title="{{ translate('messages.app_settings') }}">
+                                title="{{ 'configuración de la aplicación' }}">
                                 <span class="tio-android nav-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.app_settings') }}</span>
+                                <span class="text-truncate">{{ 'configuración de la aplicación' }}</span>
                             </a>
                         </li>
 
@@ -482,9 +482,9 @@
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/addon-activation*') ? 'active' : '' }}">
                             <a class="nav-link "
                                 href="{{ route('admin.business-settings.addon-activation.index') }}"
-                                title="{{ translate('messages.Addon_Activation') }}">
+                                title="{{ 'Activación de complementos' }}">
                                 <span class="tio-appointment nav-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.Addon_Activation') }}</span>
+                                <span class="text-truncate">{{ 'Activación de complementos' }}</span>
                             </a>
                         </li>
 
@@ -492,9 +492,9 @@
                         @if (addon_published_status('Rental'))
                             <li class="navbar-vertical-aside-has-menu @yield('notification_setup_type')">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" id="tourb-3"
-                                    href="javascript:" title="{{ translate('messages.notification_setup') }}">
+                                    href="javascript:" title="{{ 'configuración de notificación' }}">
                                     <i class="tio-crown nav-icon"></i>
-                                    <span class="text-truncate">{{ translate('messages.notification_setup') }}</span>
+                                    <span class="text-truncate">{{ 'configuración de notificación' }}</span>
                                 </a>
                                 <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                     style="display:{{ Request::is('admin/business-settings/notification-setup*') ? 'block' : 'none' }}">
@@ -502,20 +502,20 @@
                                     <li class="navbar-vertical-aside-has-menu @yield('notification_setup')">
                                         <a class="js-navbar-vertical-aside-menu-link nav-link"
                                             href="{{ route('admin.business-settings.notification_setup') }}"
-                                            title="{{ translate('messages.All_Modules') }}">
+                                            title="{{ 'Todos los módulos' }}">
                                             <span class="tio-circle nav-indicator-icon"></span>
                                             <span class="text-truncate">
-                                                {{ translate('messages.All_Modules') }}
+                                                {{ 'Todos los módulos' }}
                                             </span>
                                         </a>
                                     </li>
                                     <li class="navbar-vertical-aside-has-menu  @yield('notification_setup_rental')">
                                         <a class="js-navbar-vertical-aside-menu-link nav-link"
                                             href="{{ route('admin.business-settings.notification_setup', ['module' => 'rental']) }}"
-                                            title="{{ translate('messages.Rental_Module') }}">
+                                            title="{{ 'Módulo de Alquiler' }}">
                                             <span class="tio-circle nav-indicator-icon"></span>
                                             <span class="text-truncate">
-                                                {{ translate('messages.Rental_Module') }}
+                                                {{ 'Módulo de Alquiler' }}
                                             </span>
                                         </a>
                                     </li>
@@ -525,9 +525,9 @@
                             <li class="navbar-vertical-aside-has-menu  @yield('notification_setup')">
                                 <a class="nav-link "
                                     href="{{ route('admin.business-settings.notification_setup') }}"
-                                    title="{{ translate('messages.Notification_Channels') }} ">
+                                    title="{{ 'Canales de notificación' }} ">
                                     <span class="tio-snooze-notification  nav-icon"></span>
-                                    <span class="text-truncate">{{ translate('messages.Notification_Channels') }}
+                                    <span class="text-truncate">{{ 'Canales de notificación' }}
                                     </span>
                                 </a>
                             </li>
@@ -540,10 +540,10 @@
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/db-index') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('admin.business-settings.db-index') }}"
-                                title="{{ translate('messages.clean_database') }}">
+                                title="{{ 'limpiar base de datos' }}">
                                 <i class="tio-cloud nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    {{ translate('messages.clean_database') }}
+                                    {{ 'limpiar base de datos' }}
                                 </span>
                             </a>
                         </li>
@@ -552,19 +552,19 @@
                         @if (Route::has('admin.logs.index'))
                         <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/logs*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
-                                title="{{ translate('Seguridad') }}">
+                                title="{{ 'Seguridad' }}">
                                 <i class="tio-shield nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    {{ translate('Seguridad') }}
+                                    {{ 'Seguridad' }}
                                 </span>
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                 style="display:{{ Request::is('admin/logs*') ? 'block' : 'none' }}">
                                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/logs*') ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('admin.logs.index') }}"
-                                        title="{{ translate('Monitoreo de Logs') }}">
+                                        title="{{ 'Monitoreo de registros' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">{{ translate('Monitoreo de Logs') }}</span>
+                                        <span class="text-truncate">{{ 'Monitoreo de registros' }}</span>
                                     </a>
                                 </li>
                             </ul>
@@ -577,10 +577,10 @@
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/system-addon') ? 'show active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link"
                             href="{{ route('admin.business-settings.system-addon.index') }}"
-                            title="{{ translate('system_addons') }}">
+                            title="{{ 'complementos del sistema' }}">
                             <i class="tio-add-circle-outlined nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('system_addons') }}
+                                {{ 'complementos del sistema' }}
                             </span>
                         </a>
                     </li>
@@ -589,7 +589,7 @@
 
                     @if (count(config('addon_admin_routes')) > 0)
                         <li class="nav-item">
-                            <small class="nav-subtitle">{{ translate('messages.addon_menus') }}</small>
+                            <small class="nav-subtitle">{{ 'menús adicionales' }}</small>
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
                         <li
@@ -597,7 +597,7 @@
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:">
                                 <i class="tio-puzzle nav-icon"></i>
                                 <span
-                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('Addon Menus') }}</span>
+                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ 'Menús complementarios' }}</span>
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                 style="display: {{ Request::is('admin/payment/configuration/*') || Request::is('admin/sms/configuration/*') ? 'block' : 'none' }}">
@@ -663,7 +663,7 @@
             const $suggestionsList = $('#search-suggestions');
             const $rows = $('#navbar-vertical-content li');
             const $subrows = $('#navbar-vertical-content li ul li');
-            {{-- const suggestions = ['{{strtolower(translate('messages.zone'))  }}', '{{ strtolower(translate('messages.setting'))  }}', '{{ strtolower(translate('messages.pages')) }}', '{{ strtolower(translate('messages.3rd_party')) }}','{{ strtolower(translate('messages.system')) }}' ]; --}}
+            {{-- const suggestions = ['{{strtolower('zona')  }}', '{{ strtolower('configuración')  }}', '{{ strtolower('paginas') }}', '{{ strtolower('tercero') }}','{{ strtolower('sistema') }}' ]; --}}
             const focusInput = () => updateSuggestions($searchInput.val());
             const hideSuggestions = () => $suggestionsList.slideUp(700);
             const showSuggestions = () => $suggestionsList.slideDown(700);

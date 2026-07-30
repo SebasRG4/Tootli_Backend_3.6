@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.customer_settings'))
+@section('title', 'configuración del cliente')
 
 @push('css_or_js')
 @endpush
@@ -17,7 +17,7 @@
                             <img src="{{ asset('assets/admin/img/business.png') }}" class="w--26" alt="">
                         </span>
                         <span>
-                            {{ translate('business_setup') }}
+                            {{ 'configuración de negocios' }}
                         </span>
                     </h1>
                     @include('admin-views.business-settings.partials.nav-menu')
@@ -30,10 +30,10 @@
                                 <h5 class="card-title d-flex align-items-center">
                                     <img src="{{ asset('assets/admin/img/ic_round-campaign.png') }}" alt=""
                                         class="card-header-icon align-self-center mr-1">
-                                    <span>{{ translate('Customer_Setup') }}</span>
+                                    <span>{{ 'Configuración del cliente' }}</span>
                                     <span class="input-label-secondary" data-toggle="tooltip" data-placement="right"
-                                        data-original-title="{{ translate('messages.Here,_customers_can_store_their_refunded_order_amount,_referral_earnings,_and_loyalty_points.') }}">
-                                        <img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="{{ translate('messages.show_hide_food_menu') }}">
+                                        data-original-title="{{ 'Aquí, los clientes pueden almacenar el monto de su pedido reembolsado, las ganancias por referencias y los puntos de fidelidad.' }}">
+                                        <img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="{{ 'mostrar ocultar menú de comida' }}">
                                     </span>
                                 </h5>
                             </div>
@@ -43,19 +43,19 @@
                                         <div class="col-sm-6 col-lg-4">
                                             <div class="form-group mb-0">
                                                 <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control">
-                                                    <span class="pr-2">{{ translate('Customer_Wallet') }}
+                                                    <span class="pr-2">{{ 'Cartera del cliente' }}
                                                         <span class="input-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                              data-original-title="{{ translate('messages.With_this_feature,_customers_can_have_virtual_wallets_in_their_account_via_Customer_App_&_Website._They_can_also_earn_(via_referral,_refund,_loyalty_points,_or_cashback)_and_buy_with_the_wallet’s_amount.') }}">
-                                                            <img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="{{ translate('messages.show_hide_food_menu') }}">
+                                                              data-original-title="{{ 'Con esta función, los clientes pueden tener billeteras virtuales en su cuenta a través de la aplicación para clientes y el sitio web. También pueden ganar (mediante referencias, reembolsos, puntos de fidelidad o reembolsos) y comprar con el monto de la billetera.' }}">
+                                                            <img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="{{ 'mostrar ocultar menú de comida' }}">
                                                         </span>
                                                     </span>
                                                     <input type="checkbox" data-id="wallet_status" data-type="toggle"
                                                         data-image-on="{{ asset('assets/admin/img/modal/wallet-on.png') }}"
                                                         data-image-off="{{ asset('assets/admin/img/modal/wallet-off.png') }}"
-                                                        data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('the_Wallet_feature?') }}</strong>"
-                                                        data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('the_Wallet_feature?') }}</strong>"
-                                                        data-text-on="<p>{{ translate('messages.If_you_enable_this,_Customers_can_see_&_use_the_Wallet_option_from_their_profile_in_the_Customer_App_&_Website.') }}</p>"
-                                                        data-text-off="<p>{{ translate('messages.If_you_disable_this,_the_Wallet_feature_will_be_hidden_from_the_Customer_App_&_Website.') }}</p>"
+                                                        data-title-on="{{ 'Quiere habilitar' }} <strong>{{ 'la función Monedero?' }}</strong>"
+                                                        data-title-off="{{ 'Quiere deshabilitar' }} <strong>{{ 'la función Monedero?' }}</strong>"
+                                                        data-text-on="<p>{{ 'Si habilita esto, los Clientes pueden ver y usar la opción Monedero desde su perfil en la Aplicación y el Sitio web del Cliente.' }}</p>"
+                                                        data-text-off="<p>{{ 'Si desactiva esto, la función Wallet se ocultará de la aplicación y el sitio web del cliente.' }}</p>"
                                                         class="status toggle-switch-input dynamic-checkbox-toggle"
                                                         name="customer_wallet" id="wallet_status" value="1"
                                                         {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? 'checked' : '' }}>
@@ -71,15 +71,15 @@
                                                 <label
                                                     class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'text-muted' }}">
                                                     <span
-                                                        class="pr-2">{{ translate('Customer Can Earn & Buy From Referral') }}</span>
+                                                        class="pr-2">{{ 'El cliente puede ganar y comprar a partir de referencias' }}</span>
                                                     <input {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'disabled' }}
                                                      type="checkbox" data-id="ref_earning_status" data-type="toggle"
                                                         data-image-on="{{ asset('assets/admin/img/modal/referral-on.png') }}"
                                                         data-image-off="{{ asset('assets/admin/img/modal/referral-off.png') }}"
-                                                        data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Referral_Earning?') }}</strong>"
-                                                        data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Referral_Earning?') }}</strong>"
-                                                        data-text-on="<p>{{ translate('messages.If_you_enable_this,_Customers_can_earn_points_by_referring_others_to_sign_up_&_purchase_from_your_business.') }}</p>"
-                                                        data-text-off="<p>{{ translate('messages.If_you_disable_this,_the_referral-earning_feature_will_be_hidden_from_the_Customer_App_&_Website.') }}</p>"
+                                                        data-title-on="{{ 'Quiere habilitar' }} <strong>{{ '¿Ganancias por referencias?' }}</strong>"
+                                                        data-title-off="{{ 'Quiere deshabilitar' }} <strong>{{ '¿Ganancias por referencias?' }}</strong>"
+                                                        data-text-on="<p>{{ 'Si habilita esto, los clientes pueden ganar puntos al recomendar a otros para que se registren y compren en su empresa.' }}</p>"
+                                                        data-text-off="<p>{{ 'Si desactiva esto, la función de obtención de referencias se ocultará de la aplicación y el sitio web del cliente.' }}</p>"
                                                         class="status toggle-switch-input dynamic-checkbox-toggle "
                                                         name="ref_earning_status" id="ref_earning_status"
                                                         data-section="referrer-earning" value="1"
@@ -95,21 +95,21 @@
                                             <div class="form-group mb-0">
                                                 <label
                                                     class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'text-muted' }}">
-                                                    <span class="pr-2">{{ translate('messages.refund_to_wallet') }}<span
+                                                    <span class="pr-2">{{ 'reembolso a la billetera' }}<span
                                                             class="input-label-secondary" data-toggle="tooltip"
                                                             data-placement="right"
-                                                            data-original-title="{{ translate('messages.If_it’s_enabled,_Customers_will_automatically_receive_the_refunded_amount_in_their_wallets._But_if_it’s_disabled,_the_Admin_will_handle_the_Refund_Request_in_his_convenient_transaction_channel.') }}"><img
+                                                            data-original-title="{{ 'Si está habilitado, los Clientes recibirán automáticamente el monto reembolsado en sus billeteras. Pero si está deshabilitado, el administrador manejará la solicitud de reembolso en su conveniente canal de transacción.' }}"><img
                                                                 src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                                alt="{{ translate('messages.show_hide_food_menu') }}"></span></span>
+                                                                alt="{{ 'mostrar ocultar menú de comida' }}"></span></span>
                                                     <input type="checkbox"
                                                     {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'disabled' }}
                                                     data-id="refund_to_wallet" data-type="toggle"
                                                         data-image-on="{{ asset('assets/admin/img/modal/refund-on.png') }}"
                                                         data-image-off="{{ asset('assets/admin/img/modal/refund-off.png') }}"
-                                                        data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Refund_to_Wallet_feature?') }}</strong>"
-                                                        data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Refund_to_Wallet_feature?') }}</strong>"
-                                                        data-text-on="<p>{{ translate('messages.If_you_enable_this,_Customers_will_automatically_receive_the_refunded_amount_in_their_wallets.') }}</p>"
-                                                        data-text-off="<p>{{ translate('messages.If_you_disable_this,_the_Admin_will_handle_the_Refund_Request_in_his_convenient_transaction_channel.') }}</p>"
+                                                        data-title-on="{{ 'Quiere habilitar' }} <strong>{{ '¿Función de reembolso a Wallet?' }}</strong>"
+                                                        data-title-off="{{ 'Quiere deshabilitar' }} <strong>{{ '¿Función de reembolso a Wallet?' }}</strong>"
+                                                        data-text-on="<p>{{ 'Si habilita esto, los Clientes recibirán automáticamente el monto reembolsado en sus billeteras.' }}</p>"
+                                                        data-text-off="<p>{{ 'Si desactiva esto, el administrador manejará la solicitud de reembolso en su conveniente canal de transacciones.' }}</p>"
                                                         class="status toggle-switch-input dynamic-checkbox-toggle "
                                                         name="refund_to_wallet" id="refund_to_wallet" value="1"
                                                         {{ isset($data['wallet_add_refund']) && $data['wallet_add_refund'] == 1 ? 'checked' : '' }}>
@@ -124,22 +124,22 @@
                                             <div class="form-group mb-0">
                                                 <label
                                                     class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'text-muted' }}">
-                                                    <span class="pr-2">{{ translate('customer_can_add_fund_to_wallet') }}
+                                                    <span class="pr-2">{{ 'el cliente puede agregar fondos a la billetera' }}
                                                         <span class="input-label-secondary" data-toggle="tooltip"
                                                             data-placement="right"
-                                                            data-original-title="{{ translate('messages.With_this_feature,_customers_can_add_fund_to_wallet_if_the_payment_module_is_available.') }}">
+                                                            data-original-title="{{ 'Con esta función, los clientes pueden agregar fondos a la billetera si el módulo de pago está disponible.' }}">
                                                             <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                                alt="{{ translate('messages.add_fund_status') }}">
+                                                                alt="{{ 'agregar estado del fondo' }}">
                                                         </span>
                                                     </span>
                                                     <input {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'disabled' }}
                                                     type="checkbox" data-id="add_fund_status" data-type="toggle"
                                                         data-image-on="{{ asset('assets/admin/img/modal/wallet-on.png') }}"
                                                         data-image-off="{{ asset('assets/admin/img/modal/wallet-off.png') }}"
-                                                        data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('add_fund_to_Wallet_feature?') }}</strong>"
-                                                        data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('add_fund_to_Wallet_feature?') }}</strong>"
-                                                        data-text-on="<p>{{ translate('messages.If_you_enable_this,_Customers_can_add_fund_to_wallet_using_payment_module') }}</p>"
-                                                        data-text-off="<p>{{ translate('messages.If_you_disable_this,_add_fund_to_wallet_will_be_hidden_from_the_Customer_App_&_Website.') }}</p>"
+                                                        data-title-on="{{ 'Quiere habilitar' }} <strong>{{ '¿Agregar fondos a la función Wallet?' }}</strong>"
+                                                        data-title-off="{{ 'Quiere deshabilitar' }} <strong>{{ '¿Agregar fondos a la función Wallet?' }}</strong>"
+                                                        data-text-on="<p>{{ 'Si habilita esto, los clientes pueden agregar fondos a la billetera usando el módulo de pago' }}</p>"
+                                                        data-text-off="<p>{{ 'Si desactiva esto, agregar fondos a la billetera se ocultará en la aplicación y el sitio web del cliente.' }}</p>"
                                                         class="status toggle-switch-input dynamic-checkbox-toggle "
                                                         name="add_fund_status" id="add_fund_status" value="1"
                                                         {{ isset($data['add_fund_status']) && $data['add_fund_status'] == 1 ? 'checked' : '' }}>
@@ -156,15 +156,15 @@
                                                     class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control"
                                                     for="customer_loyalty_point">
                                                     <span
-                                                        class="pr-2">{{ translate('Customer Can Earn Loyalty Point') }}</span>
+                                                        class="pr-2">{{ 'El cliente puede ganar puntos de fidelidad' }}</span>
                                                     <input type="checkbox" data-id="customer_loyalty_point"
                                                         data-type="toggle"
                                                         data-image-on="{{ asset('assets/admin/img/modal/loyalty-on.png') }}"
                                                         data-image-off="{{ asset('assets/admin/img/modal/loyalty-off.png') }}"
-                                                        data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('Loyalty Point') }}</strong>"
-                                                        data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('Loyalty Point') }}</strong>"
-                                                        data-text-on="<p>{{ translate('Customer will see loyalty point option in his profile settings & can earn & convert this point to wallet money') }}</p>"
-                                                        data-text-off="<p>{{ translate('Customer will not see loyalty point option from his profile settings') }}</p>"
+                                                        data-title-on="{{ 'Quiere habilitar' }} <strong>{{ 'Punto de fidelización' }}</strong>"
+                                                        data-title-off="{{ 'Quiere deshabilitar' }} <strong>{{ 'Punto de fidelización' }}</strong>"
+                                                        data-text-on="<p>{{ 'El cliente verá la opción de puntos de fidelidad en la configuración de su perfil y podrá ganar y convertir este punto en dinero de billetera.' }}</p>"
+                                                        data-text-off="<p>{{ 'El cliente no verá la opción de puntos de fidelidad en la configuración de su perfil' }}</p>"
                                                         class="status toggle-switch-input dynamic-checkbox-toggle"
                                                         name="customer_loyalty_point" id="customer_loyalty_point"
                                                         data-section="loyalty-point-section" value="1"
@@ -185,21 +185,21 @@
                                                     class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
                                             <span class="pr-1 d-flex align-items-center switch--label">
                                                 <span class="line--limit-1">
-                                                    {{ translate('messages.Customer’s_Food_Preference') }}
+                                                    {{ 'Preferencia alimentaria del cliente' }}
                                                 </span>
                                                 <span class="form-label-secondary text-danger d-flex" data-toggle="tooltip"
                                                       data-placement="right"
-                                                      data-original-title="{{ translate('messages.If_this_feature_is_active,_customers_can_filter_food_according_to_their_preference_from_the_Customer_App_or_Website.') }}"><img
+                                                      data-original-title="{{ 'Si esta función está activa, los clientes pueden filtrar los alimentos según sus preferencias desde la aplicación del cliente o el sitio web.' }}"><img
                                                         src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                        alt="{{ translate('messages.veg_non_veg') }}"> * </span>
+                                                        alt="{{ 'vegetales no vegetales' }}"> * </span>
                                             </span>
                                                     <input type="checkbox" data-id="vnv1" data-type="toggle"
                                                            data-image-on="{{ asset('assets/admin/img/modal/veg-on.png') }}"
                                                            data-image-off="{{ asset('assets/admin/img/modal/veg-off.png') }}"
-                                                           data-title-on="{{ translate('messages.Want_to_enable_the') }} <strong>{{ translate('messages.‘Veg/Non-Veg’_feature?') }}</strong>"
-                                                           data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.the_Veg/Non-Veg_Feature?') }}</strong>"
-                                                           data-text-on="<p>{{ translate('messages.If_you_enable_this,_customers_can_filter_food_items_by_choosing_food_from_the_Veg/Non-Veg_feature.') }}</p>"
-                                                           data-text-off="<p>{{ translate('messages.If_you_disable_this,_the_Veg/Non-Veg_feature_will_be_hidden_in_the_Customer_App_&_Website.') }}</p>"
+                                                           data-title-on="{{ 'Quiere habilitar el' }} <strong>{{ '¿Función \'vegetal/no vegetariana\'?' }}</strong>"
+                                                           data-title-off="{{ 'Quiere deshabilitar' }} <strong>{{ 'la función vegetariana/no vegetariana?' }}</strong>"
+                                                           data-text-on="<p>{{ 'Si habilita esto, los clientes pueden filtrar los alimentos eligiendo alimentos de la función Vegetal/No vegetariano.' }}</p>"
+                                                           data-text-off="<p>{{ 'Si desactiva esto, la función Vegetal/No vegetariano se ocultará en la aplicación y el sitio web del cliente.' }}</p>"
                                                            class="status toggle-switch-input dynamic-checkbox-toggle" value="1"
                                                            name="vnv" id="vnv1" {{ $vnv == 1 ? 'checked' : '' }}>
                                                     <span class="toggle-switch-label text">
@@ -217,22 +217,22 @@
                                                     class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
                                             <span class="pr-1 d-flex align-items-center switch--label">
                                                 <span class="line--limit-1">
-                                                    {{translate('messages.guest_checkout') }}
+                                                    {{'pago de invitado' }}
                                                 </span>
                                                 <span class="form-label-secondary text-danger d-flex" data-toggle="tooltip"
                                                       data-placement="right"
-                                                      data-original-title="{{ translate('messages.If_enabled,_customers_do_not_have_to_login_while_checking_out_orders.')}}"><img
+                                                      data-original-title="{{ 'Si está habilitado, los clientes no tienen que iniciar sesión mientras revisan los pedidos.'}}"><img
                                                         src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                        alt="{{ translate('messages.customer_varification_toggle') }}"> *
+                                                        alt="{{ 'alternancia de variación del cliente' }}"> *
                                                 </span>
                                             </span>
                                                     <input type="checkbox" data-id="guest_checkout_status" data-type="toggle"
                                                            data-image-on="{{ asset('assets/admin/img/modal/dm-tips-on.png') }}"
                                                            data-image-off="{{ asset('assets/admin/img/modal/dm-tips-off.png') }}"
-                                                           data-title-on="<strong>{{ translate('messages.Want_to_enable_guest_checkout?') }}</strong>"
-                                                           data-title-off="<strong>{{ translate('messages.Want_to_disable_guest_checkout?') }}</strong>"
-                                                           data-text-on="<p>{{ translate('messages.If_you_enable_this,_guest_checkout_will_be_visible_when_customer_is_not_logged_in.') }}</p>"
-                                                           data-text-off="<p>{{ translate('messages.If_you_disable_this,_guest_checkout_will_not_be_visible_when_customer_is_not_logged_in.') }}</p>"
+                                                           data-title-on="<strong>{{ '¿Quieres habilitar el pago como invitado?' }}</strong>"
+                                                           data-title-off="<strong>{{ '¿Quieres desactivar el pago como invitado?' }}</strong>"
+                                                           data-text-on="<p>{{ 'Si habilita esto, el pago como invitado será visible cuando el cliente no haya iniciado sesión.' }}</p>"
+                                                           data-text-off="<p>{{ 'Si desactiva esto, el pago como invitado no será visible cuando el cliente no haya iniciado sesión.' }}</p>"
                                                            class="status toggle-switch-input dynamic-checkbox-toggle" value="1"
                                                            name="guest_checkout_status" id="guest_checkout_status" {{ $guest_checkout_status == 1 ? 'checked' : '' }}>
                                                     <span class="toggle-switch-label text">
@@ -249,22 +249,22 @@
                                                 <label class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
                                                     <span class="pr-1 d-flex align-items-center switch--label">
                                                         <span class="line--limit-1">
-                                                            {{translate('messages.country_picker') }}
+                                                            {{'selector de país' }}
                                                         </span>
                                                         <span class="form-label-secondary text-danger d-flex" data-toggle="tooltip"
                                                               data-placement="right"
-                                                              data-original-title="{{ translate('messages.If_you_enable_this_option,_in_all_phone_no_field_will_show_a_country_picker_list.')}}"><img
+                                                              data-original-title="{{ 'Si habilita esta opción, en todos los teléfonos ningún campo mostrará una lista de selección de países.'}}"><img
                                                                 src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                                alt="{{ translate('messages.customer_varification_toggle') }}">
+                                                                alt="{{ 'alternancia de variación del cliente' }}">
                                                         </span>
                                                     </span>
                                                     <input type="checkbox" data-id="country_picker_status" data-type="toggle"
                                                            data-image-on="{{ asset('assets/admin/img/modal/mail-success.png') }}"
                                                            data-image-off="{{ asset('assets/admin/img/modal/mail-warning.png') }}"
-                                                           data-title-on="<strong>{{ translate('messages.Want_to_enable_country_picker?') }}</strong>"
-                                                           data-title-off="<strong>{{ translate('messages.Want_to_disable_country_picker?') }}</strong>"
-                                                           data-text-on="<p>{{ translate('messages.If_you_enable_this,_user_can_select_country_from_country_picker') }}</p>"
-                                                           data-text-off="<p>{{ translate('messages.If_you_disable_this,_user_can_not_select_country_from_country_picker,_default_country_will_be_selected') }}</p>"
+                                                           data-title-on="<strong>{{ '¿Quieres habilitar el selector de países?' }}</strong>"
+                                                           data-title-off="<strong>{{ '¿Quieres desactivar el selector de países?' }}</strong>"
+                                                           data-text-on="<p>{{ 'Si habilita esto, el usuario puede seleccionar el país desde el selector de países.' }}</p>"
+                                                           data-text-off="<p>{{ 'Si desactiva esto, el usuario no podrá seleccionar el país en el selector de países; se seleccionará el país predeterminado' }}</p>"
                                                            class="status toggle-switch-input dynamic-checkbox-toggle" value="1"
                                                            name="country_picker_status" id="country_picker_status" {{ $country_picker_status == 1 ? 'checked' : '' }}>
                                                     <span class="toggle-switch-label text">
@@ -283,7 +283,7 @@
                                 <h5 class="card-title">
                                     <img src="{{ asset('assets/admin/img/loyalty.png') }}" alt=""
                                         class="card-header-icon align-self-center mr-1">
-                                    <span>{{ translate('Customer_Loyalty_Point_Settings') }}</span>
+                                    <span>{{ 'Configuración de puntos de fidelización de clientes' }}</span>
                                 </h5>
                             </div>
                             <div class="card-body">
@@ -293,7 +293,7 @@
                                             <div class="form-group mb-0">
                                                 <label class="input-label" for="loyalty_point_exchange_rate">1
                                                     {{ \App\CentralLogics\Helpers::currency_code() }}
-                                                    {{ translate('equivalent point amount') }}</label>
+                                                    {{ 'cantidad de puntos equivalente' }}</label>
                                                 <input {{ isset($data['loyalty_point_status']) && $data['loyalty_point_status'] == 1 ? 'required' : 'readonly' }}
                                                 id="loyalty_point_exchange_rate" type="number" class="form-control" name="loyalty_point_exchange_rate" step=".001" min="0"
                                                     value="{{ $data['loyalty_point_exchange_rate'] ?? '0' }}">
@@ -302,13 +302,13 @@
                                         <div class="col-sm-6 col-lg-4">
                                             <div class="form-group mb-0">
                                                 <label class="input-label" for="item_purchase_point">
-                                                    {{ translate('Loyalty_Point_Earn_Per_Order') }} (%)
+                                                    {{ 'Puntos de fidelidad ganados por pedido' }} (%)
                                                     <small class="text-danger">
                                                         <span class="input-label-secondary"
                                                             data-toggle="tooltip" data-placement="right"
-                                                            data-original-title="{{ translate('messages.On_every_purchase_this_percent_of_amount_will_be_added_as_loyalty_point_on_his_account') }}"><img
+                                                            data-original-title="{{ 'En cada compra, este porcentaje del monto se agregará como punto de fidelidad en su cuenta.' }}"><img
                                                                 src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                                alt="{{ translate('messages.On_every_purchase_this_percent_of_amount_will_be_added_as_loyalty_point_on_his_account') }}">
+                                                                alt="{{ 'En cada compra, este porcentaje del monto se agregará como punto de fidelidad en su cuenta.' }}">
                                                         </span>*
                                                     </small>
                                                 </label>
@@ -319,7 +319,7 @@
                                         <div class="col-sm-6 col-lg-4">
                                             <div class="form-group mb-0">
                                                 <label class="input-label" for="minimum_transfer_point">
-                                                    {{ translate('Minimum_Point_Required_To_Convert') }}
+                                                    {{ 'Punto mínimo requerido para convertir' }}
                                                 </label>
                                                 <input {{ isset($data['loyalty_point_status']) && $data['loyalty_point_status'] == 1 ? 'required' : 'readonly' }} id="minimum_transfer_point"
                                                        type="number" class="form-control" name="minimun_transfer_point" min="0" step=".001" value="{{ $data['loyalty_point_minimum_point'] ?? '0' }}">
@@ -335,12 +335,12 @@
                                     <img src="{{ asset('assets/admin/img/loyalty.png') }}" alt=""
                                         class="card-header-icon align-self-center mr-1">
                                     <span>
-                                        {{ translate('Customer_Referral_Earning_Settings') }}
+                                        {{ 'Configuración de ganancias por referencias de clientes' }}
                                     </span>
                                     <span class="input-label-secondary" data-toggle="tooltip" data-placement="right"
-                                        data-original-title="{{ translate('messages.Existing_Customers_can_share_a_referral_code_with_others_to_earn_a_referral_bonus._For_this,_the_new_user_MUST_sign_up_using_the_referral_code_and_make_their_first_purchase.') }}">
+                                        data-original-title="{{ 'Los clientes existentes pueden compartir un código de referencia con otros para ganar un bono por recomendación. Para ello, el nuevo usuario DEBE registrarse utilizando el código de referencia y realizar su primera compra.' }}">
                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                            alt="{{ translate('messages.show_hide_food_menu') }}">
+                                            alt="{{ 'mostrar ocultar menú de comida' }}">
                                     </span>
                                 </h5>
                             </div>
@@ -354,11 +354,11 @@
                                                     <img src="{{ asset('assets/admin/img/referral.png') }}"
                                                         alt="" class="card-header-icon align-self-center mr-1">
                                                     <span>
-                                                        {{ translate('Who_Share_the_code') }}
+                                                        {{ 'Quién comparte el código' }}
                                                     </span>
                                                 </h4>
                                                 <p>
-                                                    {{ translate('Customers_will_receive_this_wallet_balance_rewards_for_sharing_their_referral_code_with_friends,_who_use_the_code_when_signing_up_and_completing_their_first_order.') }}
+                                                    {{ 'Los clientes recibirán recompensas de saldo de billetera por compartir su código de referencia con amigos, quienes usan el código al registrarse y completar su primer pedido.' }}
                                                 </p>
                                             </div>
                                         </div>
@@ -367,7 +367,7 @@
                                                 <div class="card-body">
                                                     <div class="form-group mb-0">
                                                         <label class="input-label" for="ref_earning_exchange_rate">
-                                                            {{ translate('Earning Per Referral') }}
+                                                            {{ 'Ganancia por referencia' }}
                                                             {{ \App\CentralLogics\Helpers::currency_code() }}
                                                         </label>
                                                         <input {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'readonly' }}
@@ -388,11 +388,11 @@
                                                     <img src="{{ asset('assets/admin/img/Who_Use_the_code.png') }}"
                                                         alt="" class="card-header-icon align-self-center mr-1">
                                                     <span>
-                                                        {{ translate('Who_Use_the_code') }}
+                                                        {{ '¿Quién usa el código?' }}
                                                     </span>
                                                 </h4>
                                                 <p>
-                                                    {{ translate('By_applying_the_referral_code_during_signup_and_when_making_their_first_purchase,_customers_will_enjoy_a_discount_for_a_limited_time.') }}
+                                                    {{ 'Al aplicar el código de referencia durante el registro y al realizar su primera compra, los clientes disfrutarán de un descuento por tiempo limitado.' }}
                                                 </p>
                                             </div>
                                         </div>
@@ -404,12 +404,12 @@
                                                             <label
                                                                 class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'text-muted' }}">
                                                                 <span
-                                                                    class="pr-2">{{ translate('Customer_will_get_Discount_on_first_order ') }}
+                                                                    class="pr-2">{{ 'El cliente obtendrá un descuento en el primer pedido.' }}
                                                                     <span class="input-label-secondary" data-toggle="tooltip"
                                                                         data-placement="right"
-                                                                        data-original-title="{{ translate('messages.Configure_discounts_for_newly_registered_users_who_sign_up_with_a_referral_code._Customize_the_discount_type_and_amount_to_incentivize_referrals_and_encourage_user_engagement.') }}">
+                                                                        data-original-title="{{ 'Configure descuentos para usuarios recién registrados que se registren con un código de referencia. Personalice el tipo y el monto del descuento para incentivar las referencias y fomentar la participación de los usuarios.' }}">
                                                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                                            alt="{{ translate('messages.show_hide_food_menu') }}">
+                                                                            alt="{{ 'mostrar ocultar menú de comida' }}">
                                                                     </span>
                                                                 </span>
                                                                 <input {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'disabled' }}
@@ -417,10 +417,10 @@
                                                                     data-type="toggle"
                                                                     data-image-on="{{ asset('assets/admin/img/modal/basic_campaign_on.png') }}"
                                                                     data-image-off="{{ asset('assets/admin/img/modal/basic_campaign_off.png') }}"
-                                                                    data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.new_customer_discount?') }}</strong>"
-                                                                    data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.new_customer_discount?') }}</strong>"
-                                                                    data-text-on="<p>{{ translate('messages.If_you_enable_this,_Customers_will_get_discount_on_first_order.') }}</p>"
-                                                                    data-text-off="<p>{{ translate('mo.If_you_disable_this,_Customers_won’t_get_any_discount_on_first_order.') }}</p>"
+                                                                    data-title-on="{{ 'Quiere habilitar' }} <strong>{{ '¿Descuento para nuevos clientes?' }}</strong>"
+                                                                    data-title-off="{{ 'Quiere deshabilitar' }} <strong>{{ '¿Descuento para nuevos clientes?' }}</strong>"
+                                                                    data-text-on="<p>{{ 'Si habilita esto, los clientes obtendrán un descuento en el primer pedido.' }}</p>"
+                                                                    data-text-off="<p>{{ 'mo. Si desactiva esto, los clientes no obtendrán ningún descuento en el primer pedido.' }}</p>"
                                                                     class="status toggle-switch-input dynamic-checkbox-toggle "
                                                                     name="new_customer_discount_status"
                                                                     id="new_customer_discount_status" value="1"
@@ -436,7 +436,7 @@
                                                         <div class="col-8 mt-3">
                                                             <div class="form-group mb-0">
                                                                 <label class="input-label" for="new_customer_discount_amount">
-                                                                    {{ translate('Discount_Amount') }}
+                                                                    {{ 'Cantidad de descuento' }}
     
                                                                     <span class="{{  data_get($data, 'new_customer_discount_amount_type') != 'amount'  ? '': 'd-none' }} " id="percentage">(%)</span>
                                                                     <span  class=" {{  data_get($data, 'new_customer_discount_amount_type') == 'amount' ? '': 'd-none' }} " id='cuttency_symbol'>({{ \App\CentralLogics\Helpers::currency_symbol() }})
@@ -446,9 +446,9 @@
                                                                     <span
                                                                         class="input-label-secondary" data-toggle="tooltip"
                                                                         data-placement="right"
-                                                                        data-original-title="{{ translate('Enter_the_discount_value_for_referral-based_new_user_registrations.') }}">
+                                                                        data-original-title="{{ 'Ingrese el valor del descuento para registros de nuevos usuarios basados ​​en referencias.' }}">
                                                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                                            alt="{{ translate('messages.show_hide_food_menu') }}">
+                                                                            alt="{{ 'mostrar ocultar menú de comida' }}">
                                                                     </span>
                                                                 </label>
                                                                 <input id="new_customer_discount_amount" type="number" step=".001" min="0"
@@ -463,8 +463,8 @@
                                                                 {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 && data_get($data, 'new_customer_discount_status') == 1 ? 'required' : 'disabled' }}
     
                                                                 >
-                                                                    <option {{ data_get($data, 'new_customer_discount_amount_type') == 'percentage' ? "selected": '' }} value="percentage">{{translate('messages.percentage')}} (%)</option>
-                                                                    <option {{ data_get($data, 'new_customer_discount_amount_type') == 'amount' ? "selected": '' }}  value="amount">{{translate('messages.amount')}} {{ \App\CentralLogics\Helpers::currency_symbol() }}</option>
+                                                                    <option {{ data_get($data, 'new_customer_discount_amount_type') == 'percentage' ? "selected": '' }} value="percentage">{{'porcentaje'}} (%)</option>
+                                                                    <option {{ data_get($data, 'new_customer_discount_amount_type') == 'amount' ? "selected": '' }}  value="amount">{{'cantidad'}} {{ \App\CentralLogics\Helpers::currency_symbol() }}</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -474,12 +474,12 @@
                                                         <div class="col-8 mt-3">
                                                             <div class="form-group mb-0">
                                                                 <label class="input-label" for="new_customer_discount_amount_validity">
-                                                                    {{ translate('validity') }}
+                                                                    {{ 'validez' }}
                                                                     <span class="input-label-secondary" data-toggle="tooltip"
                                                                         data-placement="right"
-                                                                        data-original-title="{{ translate('Set_how_long_the_discount_remains_active_after_registration.') }}">
+                                                                        data-original-title="{{ 'Establece cuánto tiempo permanece activo el descuento después del registro.' }}">
                                                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                                            alt="{{ translate('messages.show_hide_food_menu') }}">
+                                                                            alt="{{ 'mostrar ocultar menú de comida' }}">
                                                                     </span>
                                                                 </label>
                                                                 <input id="new_customer_discount_amount_validity" type="number" step="1" min="0" max="999"
@@ -491,9 +491,9 @@
                                                         <div class="col-4 mt-3">
                                                             <div class="form-group  mb-0">
                                                                 <select name="new_customer_discount_validity_type" class="form-control mt-5" id="new_customer_discount_validity_type"  {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 &&  data_get($data, 'new_customer_discount_status') == 1 ? 'required' : 'disabled' }}>
-                                                                    <option {{ data_get($data, 'new_customer_discount_validity_type') == 'day' ? "selected": '' }} value="day">{{translate('messages.day')}}</option>
-                                                                    <option {{ data_get($data, 'new_customer_discount_validity_type') == 'month' ? "selected": '' }}  value="month">{{translate('messages.month')}} </option>
-                                                                    <option {{ data_get($data, 'new_customer_discount_validity_type') == 'year' ? "selected": '' }}  value="year">{{translate('messages.year')}} </option>
+                                                                    <option {{ data_get($data, 'new_customer_discount_validity_type') == 'day' ? "selected": '' }} value="day">{{'día'}}</option>
+                                                                    <option {{ data_get($data, 'new_customer_discount_validity_type') == 'month' ? "selected": '' }}  value="month">{{'mes'}} </option>
+                                                                    <option {{ data_get($data, 'new_customer_discount_validity_type') == 'year' ? "selected": '' }}  value="year">{{'año'}} </option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -517,9 +517,9 @@
                 <div class="container-fluid">
                     <div class="btn--container justify-content-end py-3">
                         <button type="reset" id="reset_btn"
-                            class="btn btn--reset location-reload">{{ translate('reset') }}</button>
+                            class="btn btn--reset location-reload">{{ 'reiniciar' }}</button>
                         <button type="submit" id="submit"
-                            class="btn btn--primary">{{ translate('Save Information') }}</button>
+                            class="btn btn--primary">{{ 'Guardar información' }}</button>
                     </div>
                 </div>
             </div>

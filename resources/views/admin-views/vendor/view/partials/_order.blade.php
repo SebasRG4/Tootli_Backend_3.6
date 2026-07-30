@@ -34,17 +34,17 @@
             </a>
         </div>
         @else
-            <label class="badge badge-danger">{{translate('messages.invalid_customer_data')}}</label>
+            <label class="badge badge-danger">{{'datos de cliente no válidos'}}</label>
         @endif
     </td>
     <td>
         @if($order->payment_status=='paid')
             <span class="badge badge-soft-success">
-            {{translate('messages.paid')}}
+            {{'pagado'}}
             </span>
         @else
             <span class="badge badge-soft-danger">
-            {{translate('messages.unpaid')}}
+            {{'no pagado'}}
             </span>
         @endif
     </td>
@@ -52,23 +52,23 @@
     <td class="text-capitalize text-center">
         @if($order['order_status']=='pending')
             <span class="badge badge-soft-info">
-            {{translate('messages.pending')}}
+            {{'Pendiente'}}
             </span>
         @elseif($order['order_status']=='confirmed')
             <span class="badge badge-soft-info">
-            {{translate('messages.confirmed')}}
+            {{'confirmado'}}
             </span>
         @elseif($order['order_status']=='processing')
             <span class="badge badge-soft-warning">
-            {{translate('messages.processing')}}
+            {{'tratamiento'}}
             </span>
         @elseif($order['order_status']=='out_for_delivery')
             <span class="badge badge-soft-warning">
-            {{translate('messages.out_for_delivery')}}
+            {{'En Camino de Entrega'}}
             </span>
         @elseif($order['order_status']=='delivered')
             <span class="badge badge-soft-success">
-            {{translate('messages.delivered')}}
+            {{'Entregado'}}
             </span>
         @else
             <span class="badge badge-soft-danger">

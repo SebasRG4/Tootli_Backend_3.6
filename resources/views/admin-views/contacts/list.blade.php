@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.Contact Messages'))
+@section('title','Mensajes de contacto')
 
 @push('css_or_js')
 
@@ -13,7 +13,7 @@
             <div class="mb-3">
                 <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
                     <img width="20" src="{{asset('assets/back-end/img/message.png')}}" alt="">
-                    {{translate('messages.all_message_lists')}}
+                    {{'todas las listas de mensajes'}}
                 </h2>
             </div>
             <!-- End Page Title -->
@@ -24,17 +24,17 @@
                     <div class="card-header py-2 border-0">
                         <div class="search--button-wrapper">
                             <h5 class="card-title">
-                                {{translate('messages.message_lists')}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$contacts->total()}}</span>
+                                {{'listas de mensajes'}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$contacts->total()}}</span>
                             </h5>
                             <form class="search-form">
                                 <div class="input-group input--group">
                                     <input  type="search" name="search" class="form-control"
-                                    placeholder="{{translate('ex_: search_by_name,_email,_or_subject')}}" aria-label="{{translate('messages.search')}}" value="{{request()?->search}}" >
+                                    placeholder="{{'ej: buscar por nombre, correo electrónico o asunto'}}" aria-label="{{'buscar'}}" value="{{request()?->search}}" >
                                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                                 </div>
                             </form>
                            @if(request()->get('search'))
-                                <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                                <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{'reiniciar'}}</button>
                                 @endif
 
 
@@ -46,25 +46,25 @@
                                                         "target": "#usersExportDropdown",
                                                         "type": "css-animation"
                                                     }'>
-                                    <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                                    <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                                 </a>
 
                                 <div id="usersExportDropdown"
                                      class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                                    <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                                    <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                                     <a id="export-excel" class="dropdown-item"
                                        href="{{route('admin.users.contact.exportList', ['type'=>'excel',request()->getQueryString()])}}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                              src="{{ asset('assets/admin/svg/components/excel.svg') }}"
                                              alt="Image Description">
-                                        {{ translate('messages.excel') }}
+                                        {{ 'sobresalir' }}
                                     </a>
                                     <a id="export-csv" class="dropdown-item"
                                        href="{{route('admin.users.contact.exportList', ['type'=>'csv',request()->getQueryString()])}}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                              src="{{ asset('assets/admin/svg/components/placeholder-csv-format.svg') }}"
                                              alt="Image Description">
-                                        .{{ translate('messages.csv') }}
+                                        .{{ 'csv' }}
                                     </a>
                                 </div>
                             </div>
@@ -86,12 +86,12 @@
                                }'>
                             <thead class="thead-light">
                             <tr class="text-center">
-                                <th class="border-0">{{translate('messages.sl')}}</th>
-                                <th class="border-0">{{translate('messages.name')}}</th>
-                                <th class="border-0">{{translate('messages.email')}}</th>
-                                <th class="border-0">{{translate('messages.subject')}}</th>
-                                <th class="border-0">{{translate('messages.Seen/Unseen')}}</th>
-                                <th class="border-0">{{translate('messages.action')}}</th>
+                                <th class="border-0">{{'SL'}}</th>
+                                <th class="border-0">{{'nombre'}}</th>
+                                <th class="border-0">{{'correo electrónico'}}</th>
+                                <th class="border-0">{{'sujeto'}}</th>
+                                <th class="border-0">{{'Visto/no visto'}}</th>
+                                <th class="border-0">{{'acción'}}</th>
                             </tr>
 
                             </thead>
@@ -122,17 +122,17 @@
                                     <td class="text-center">
                                         <span class="font-size-sm text-body mr-3">
                                             @if($contact->seen==1)
-                                            <label class="badge badge-soft-success mb-0">{{translate('messages.Seen')}}</label>
+                                            <label class="badge badge-soft-success mb-0">{{'Visto'}}</label>
                                         @else
-                                            <label class="badge badge-soft-info mb-0">{{translate('messages.Not_Seen_Yet')}}</label>
+                                            <label class="badge badge-soft-info mb-0">{{'Aún no visto'}}</label>
                                         @endif
                                         </span>
                                     </td>
                                     <td>
                                         <div class="btn--container justify-content-center">
-                                            <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.users.contact.contact-view',[$contact['id']])}}" title="{{translate('messages.edit')}}"><i class="tio-invisible"></i>
+                                            <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.users.contact.contact-view',[$contact['id']])}}" title="{{'editar'}}"><i class="tio-invisible"></i>
                                             </a>
-                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="contact-{{$contact['id']}}" data-message="{{ translate('messages.Want to delete this message?') }}" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
+                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="contact-{{$contact['id']}}" data-message="{{ '¿Quieres eliminar este mensaje?' }}" title="{{'borrar'}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{route('admin.users.contact.contact-delete',[$contact['id']])}}"
                                                     method="post" id="contact-{{$contact['id']}}">
@@ -155,7 +155,7 @@
                     <div class="empty--data">
                         <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
-                            {{translate('messages.no_data_found')}}
+                            {{'no se encontraron datos'}}
                         </h5>
                     </div>
                     @endif

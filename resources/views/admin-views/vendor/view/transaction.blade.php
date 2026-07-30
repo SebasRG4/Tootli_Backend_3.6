@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',$store->name."'s ".translate('messages.transactions'))
+@section('title',$store->name."'s ".'actas')
 
 @push('css_or_js')
     <!-- Custom styles for this page -->
@@ -17,17 +17,17 @@
                     <li class="nav-item">
                         @php($account_transaction = \App\Models\AccountTransaction::where('from_type', 'store')->where('type', 'collected')->where('from_id', $store->id)->count())
                         @php($account_transaction = isset($account_transaction) ? $account_transaction : 0)
-                        <a class="nav-link text-capitalize {{$sub_tab=='cash'?'active':''}}" href="{{route('admin.store.view', ['store'=>$store->id, 'tab'=> 'transaction', 'sub_tab'=>'cash'])}}"  aria-disabled="true">{{translate('cash_transaction')}} ({{$account_transaction}})</a>
+                        <a class="nav-link text-capitalize {{$sub_tab=='cash'?'active':''}}" href="{{route('admin.store.view', ['store'=>$store->id, 'tab'=> 'transaction', 'sub_tab'=>'cash'])}}"  aria-disabled="true">{{'transacción en efectivo'}} ({{$account_transaction}})</a>
                     </li>
                     <li class="nav-item">
                         @php($digital_transaction = \App\Models\OrderTransaction::where('vendor_id', $store->vendor->id)->count())
                         @php($digital_transaction = isset($digital_transaction) ? $digital_transaction : 0)
-                        <a class="nav-link text-capitalize {{$sub_tab=='digital'?'active':''}}" href="{{route('admin.store.view', ['store'=>$store->id, 'tab'=> 'transaction', 'sub_tab'=>'digital'])}}"  aria-disabled="true">{{translate('order_transactions')}} ({{$digital_transaction}})</a>
+                        <a class="nav-link text-capitalize {{$sub_tab=='digital'?'active':''}}" href="{{route('admin.store.view', ['store'=>$store->id, 'tab'=> 'transaction', 'sub_tab'=>'digital'])}}"  aria-disabled="true">{{'ordenar transacciones'}} ({{$digital_transaction}})</a>
                     </li>
                     <li class="nav-item">
                         @php($withdraw_transaction = \App\Models\WithdrawRequest::where('vendor_id',$store->vendor->id)->count())
                         @php($withdraw_transaction = isset($withdraw_transaction) ? $withdraw_transaction : 0)
-                        <a class="nav-link text-capitalize {{$sub_tab=='withdraw'?'active':''}}" href="{{route('admin.store.view', ['store'=>$store->id, 'tab'=> 'transaction', 'sub_tab'=>'withdraw'])}}"  aria-disabled="true">{{translate('withdraw_transactions')}} ({{$withdraw_transaction}})</a>
+                        <a class="nav-link text-capitalize {{$sub_tab=='withdraw'?'active':''}}" href="{{route('admin.store.view', ['store'=>$store->id, 'tab'=> 'transaction', 'sub_tab'=>'withdraw'])}}"  aria-disabled="true">{{'retirar transacciones'}} ({{$withdraw_transaction}})</a>
                     </li>
                 </ul>
                 <!-- Unfold -->
@@ -37,50 +37,50 @@
                             "target": "#usersExportDropdown",
                             "type": "css-animation"
                         }'>
-                        <i class="tio-download-to mr-1"></i> {{translate('messages.export')}}
+                        <i class="tio-download-to mr-1"></i> {{'exportar'}}
                     </a>
 
                     <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                        <span class="dropdown-header">{{translate('messages.download_options')}}</span>
+                        <span class="dropdown-header">{{'opciones de descarga'}}</span>
                         @if($sub_tab=='cash')
                         <a id="export-excel" class="dropdown-item" href="{{route('admin.store.cash_export', ['type'=>'excel', 'store_id'=>$store->id]) }}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{asset('assets/admin')}}/svg/components/excel.svg"
                                     alt="Image Description">
-                            {{translate('messages.excel')}}
+                            {{'sobresalir'}}
                         </a>
                         <a id="export-csv" class="dropdown-item" href="{{route('admin.store.cash_export', ['type'=>'csv', 'store_id'=>$store->id])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{asset('assets/admin')}}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
-                            .{{translate('messages.csv')}}
+                            .{{'csv'}}
                         </a>
                         @elseif ($sub_tab=='digital')
                         <a id="export-excel" class="dropdown-item" href="{{route('admin.store.order_export', ['type'=>'excel', 'store_id'=>$store->id])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{asset('assets/admin')}}/svg/components/excel.svg"
                                     alt="Image Description">
-                            {{translate('messages.excel')}}
+                            {{'sobresalir'}}
                         </a>
                         <a id="export-csv" class="dropdown-item" href="{{route('admin.store.order_export', ['type'=>'csv', 'store_id'=>$store->id])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{asset('assets/admin')}}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
-                            .{{translate('messages.csv')}}
+                            .{{'csv'}}
                         </a>
                         @elseif ($sub_tab=='withdraw')
                         <a id="export-excel" class="dropdown-item" href="{{route('admin.store.withdraw_trans_export', ['type'=>'excel', 'store_id'=>$store->id])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{asset('assets/admin')}}/svg/components/excel.svg"
                                     alt="Image Description">
-                            {{translate('messages.excel')}}
+                            {{'sobresalir'}}
                         </a>
                         <a id="export-csv" class="dropdown-item" href="{{route('admin.store.withdraw_trans_export', ['type'=>'csv', 'store_id'=>$store->id])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{asset('assets/admin')}}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
-                            .{{translate('messages.csv')}}
+                            .{{'csv'}}
                         </a>
                         @endif
                     </div>

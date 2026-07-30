@@ -20,32 +20,32 @@
                                     </div>
                                     <div class="text-dark mb-3">
                                         <h3 class="lh-base">
-                                            {{ translate('how_to_get_the_meta_pixel_id') }}
+                                            {{ 'cómo obtener la identificación del metapíxel' }}
                                         </h3>
                                         <p class="opacity-75">
-                                            {{ translate('to_get_your_meta_pixel_id,_log_into_your_meta_business_manager_account.') }}
-                                            {{ translate('go_to_the_events_manager,_select_your_desired_business_account,_and_find_data_sources.') }}
-                                            {{ translate('your_pixel_id_will_be_shown_in_the_detailed_section_of_the_property_you_select.') }}
-                                            {{ translate('simply_copy_the_pixel_id_from_there.') }}
+                                            {{ 'Para obtener su ID de metapíxel, inicie sesión en su cuenta de administrador de metanegocios.' }}
+                                            {{ 'vaya al administrador de eventos, seleccione la cuenta comercial que desee y busque fuentes de datos.' }}
+                                            {{ 'su identificación de píxel se mostrará en la sección detallada de la propiedad que seleccione.' }}
+                                            {{ 'simplemente copie la identificación del píxel desde allí.' }}
                                         </p>
                                     </div>
 
                                     <div class="text-dark mb-3">
                                         <h3 class="lh-base">
-                                            {{ translate('where_to_use_the_meta_pixel_id') }}
+                                            {{ 'dónde usar la identificación del metapíxel' }}
                                         </h3>
                                         <p class="opacity-75">
-                                            {{ translate('find_the_marketing_tools_feature_from_your_admin_panel_and_follow_the_instructions:') }}
+                                            {{ 'busque la función de herramientas de marketing en su panel de administración y siga las instrucciones:' }}
                                         </p>
                                         <ol class="d-flex flex-column gap-2 opacity-75">
                                             <li>
-                                                {{ translate('navigate_to_the_meta_pixel_id_section_under_the_marketing_tools_feature.') }}
+                                                {{ 'navegue hasta la sección de identificación de metapíxel en la función de herramientas de marketing.' }}
                                             </li>
                                             <li>
-                                                {{ translate('turn_on_the_toggle_button.') }}
+                                                {{ 'encienda el botón de alternancia.' }}
                                             </li>
                                             <li>
-                                                {{ translate('paste_your_meta_pixel_id_into_the_input_box_and_click_submit.') }}
+                                                {{ 'pegue su ID de metapíxel en el cuadro de entrada y haga clic en enviar.' }}
                                             </li>
                                         </ol>
                                     </div>

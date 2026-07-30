@@ -7,14 +7,14 @@
                         <span class="card-header-icon mr-2">
                             <i class="tio-tune-horizontal"></i>
                         </span>
-                        <span> {{ translate('Store_&_Category_Info') }} </span>
+                        <span> {{ 'Información de tienda y categoría' }} </span>
                     </h5>
                     @if (isset($openai_config) && data_get($openai_config, 'status') == 1)
                         <button type="button"
                             class="btn bg-white text-primary opacity-1 generate_btn_wrapper p-0 mb-2 general_setup_auto_fill"
                             id="general_setup_auto_fill"
                             data-route="{{ route('admin.product.general-setup-auto-fill') }}"
-                            data-error="{{ translate('Please provide an item name and description so the AI can generate a suitable data.') }}"
+                            data-error="{{ 'Proporcione un nombre y una descripción del elemento para que la IA pueda generar datos adecuados.' }}"
                             data-restaurant-id=""
                             data-lang="en">
                             <div class="btn-svg-wrapper">
@@ -23,9 +23,9 @@
                                     alt="">
                             </div>
                             <span class="ai-text-animation d-none" role="status">
-                                {{ translate('Just_a_second') }}
+                                {{ 'Un momento' }}
                             </span>
-                            <span class="btn-text">{{ translate('Generate') }}</span>
+                            <span class="btn-text">{{ 'Generar' }}</span>
                         </button>
                     @endif
 
@@ -46,15 +46,15 @@
                             <div class="col-sm-6 col-lg-3">
 
                                 <div class="form-group mb-0 error-wrapper">
-                                    <label class="input-label" for="store_id">{{ translate('messages.store') }} <span
+                                    <label class="input-label" for="store_id">{{ 'Negocio' }} <span
                                             class="form-label-secondary text-danger" data-toggle="tooltip"
                                             data-placement="right"
-                                            data-original-title="{{ translate('messages.Required.') }}"> *
+                                            data-original-title="{{ 'Requerido.' }}"> *
                                         </span><span class="input-label-secondary"></span></label>
                                     <select name="store_id" id="store_id"
-                                        title="{{ translate('messages.select_store') }}"
+                                        title="{{ 'seleccionar tienda' }}"
                                         {{ isset(request()->product_gellary) == false ? 'required' : '' }}
-                                        data-placeholder="{{ translate('messages.select_store') }}"
+                                        data-placeholder="{{ 'seleccionar tienda' }}"
                                         class="js-data-example-ajax form-control">
                                         @if (isset($product->store) && request()->product_gellary != 1)
                                             <option value="{{ $product->store_id }}" selected="selected">
@@ -72,13 +72,13 @@
                             <div class="col-sm-6 col-lg-{{ $column }}">
                                 <div class="form-group mb-0 error-wrapper">
                                     <label class="input-label"
-                                        for="exampleFormControlSelect1">{{ translate('messages.category') }}<span
+                                        for="exampleFormControlSelect1">{{ 'categoría' }}<span
                                             class="form-label-secondary text-danger" data-toggle="tooltip"
                                             data-placement="right"
-                                            data-original-title="{{ translate('messages.Required.') }}"> *
+                                            data-original-title="{{ 'Requerido.' }}"> *
                                         </span></label>
                                     <select name="category_id" id="category_id"
-                                        data-placeholder="{{ translate('Select_Category') }}"
+                                        data-placeholder="{{ 'Seleccionar categoría' }}"
                                         @if (!Auth::guard('admin')->check()) data-url="{{ url('/') }}/vendor-panel/item/get-categories?parent_id=" data-id="sub-categories" @endif
                                         class="form-control js-data-example-ajax get-request" required>
 
@@ -93,13 +93,13 @@
                             <div class="col-sm-6 col-lg-4">
                                 <div class="form-group mb-0 error-wrapper">
                                     <label class="input-label"
-                                        for="exampleFormControlSelect1">{{ translate('messages.category') }}<span
+                                        for="exampleFormControlSelect1">{{ 'categoría' }}<span
                                             class="input-label-secondary">*</span></label>
                                     <select name="category_id" id="category_id"
                                         class="form-control js-select2-custom get-request"
                                         data-url="{{ url('/') }}/vendor-panel/item/get-categories?parent_id="
                                         data-id="sub-categories">
-                                        <option value="">---{{ translate('messages.select') }}---</option>
+                                        <option value="">---{{ 'seleccionar' }}---</option>
                                         @foreach($categories as $category)
                                                 <option
                                                     value="{{$category['id']}}" {{ isset($product) && $category->id==$product_category[0]->id ? 'selected' : ''}} >{{$category['name']}}</option>
@@ -117,16 +117,16 @@
 
                             <div class="form-group mb-0 error-wrapper">
                                 <label class="input-label"
-                                    for="exampleFormControlSelect1">{{ translate('messages.sub_category') }}<span
+                                    for="exampleFormControlSelect1">{{ 'subcategoría' }}<span
                                         class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                        data-original-title="{{ translate('messages.category_required_warning') }}"><img
+                                        data-original-title="{{ 'categoría requerida advertencia' }}"><img
                                             src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                            alt="{{ translate('messages.category_required_warning') }}"></span></label>
+                                            alt="{{ 'categoría requerida advertencia' }}"></span></label>
 
 
 
                                 <select name="sub_category_id"
-                                    data-placeholder="{{ translate('Select_Sub_Category') }}"
+                                    data-placeholder="{{ 'Seleccionar subcategoría' }}"
                                     class="js-data-example-ajax form-control" id="sub-categories">
                                     @if (isset($sub_category))
                                         <option value="{{ $sub_category['id'] }}">{{ $sub_category['name'] }}
@@ -140,20 +140,20 @@
 
                         <div class="col-sm-6 col-lg-{{ $column }}">
                             <div class="form-group mb-0 error-wrapper">
-                                <label class="input-label" for="priority">{{ translate('Prioridad') }}</label>
+                                <label class="input-label" for="priority">{{ 'prioridad' }}</label>
                                 <input type="number" min="0" name="priority" id="priority" class="form-control" 
-                                    value="{{ old('priority', $product->priority ?? 0) }}" placeholder="{{ translate('0') }}">
+                                    value="{{ old('priority', $product->priority ?? 0) }}" placeholder="{{ '0' }}">
                             </div>
                         </div>
 
                         <div class="col-sm-6 col-lg-{{ $column }}">
                             <div class="form-group mb-0 error-wrapper">
-                                <label class="input-label" for="barcode">{{ translate('Código de Barras') }}</label>
+                                <label class="input-label" for="barcode">{{ 'Código de Barras' }}</label>
                                 <div class="input-group">
                                     <input type="text" name="barcode" id="barcode" class="form-control" 
-                                        value="{{ old('barcode', $product->barcode ?? '') }}" placeholder="{{ translate('Ej. 7501011110022') }}">
+                                        value="{{ old('barcode', $product->barcode ?? '') }}" placeholder="{{ 'Ej. 7501011110022' }}">
                                     <div class="input-group-append">
-                                        <button type="button" class="btn btn-outline-secondary" onclick="openBarcodeScanner('barcode')" title="{{ translate('Escanear con cámara') }}">
+                                        <button type="button" class="btn btn-outline-secondary" onclick="openBarcodeScanner('barcode')" title="{{ 'Escanear con cámara' }}">
                                             <i class="tio-camera"></i>
                                         </button>
                                     </div>
@@ -165,17 +165,17 @@
                             <div class="col-sm-6 col-lg-{{ $column }}" id="veg_input">
                                 <div class="form-group mb-0 error-wrapper">
                                     <label class="input-label"
-                                        for="exampleFormControlInput1">{{ translate('messages.item_type') }} <span
+                                        for="exampleFormControlInput1">{{ 'tipo de artículo' }} <span
                                             class="form-label-secondary text-danger" data-toggle="tooltip"
                                             data-placement="right"
-                                            data-original-title="{{ translate('messages.Required.') }}"> *
+                                            data-original-title="{{ 'Requerido.' }}"> *
                                         </span></label>
                                     <select name="veg" id="veg" class="form-control js-select2-custom"
                                         required>
                                         <option {{ isset($product) && $product->veg == 1 ? 'selected' : '' }}
-                                            value="1">{{ translate('messages.veg') }}</option>
+                                            value="1">{{ 'verduras' }}</option>
                                         <option {{ isset($product) && $product->veg == 0 ? 'selected' : '' }}
-                                            value="0">{{ translate('messages.non_veg') }}</option>
+                                            value="0">{{ 'no vegetariano' }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -190,10 +190,10 @@
 
                                 <div class="form-group mb-0 error-wrapper">
                                     <label class="input-label"
-                                        for="condition_id">{{ translate('messages.Suitable_For') }}<span
+                                        for="condition_id">{{ 'Adecuado para' }}<span
                                             class="input-label-secondary"></span></label>
                                     <select name="condition_id" id="condition_id"
-                                        data-placeholder="{{ translate('messages.Select_Condition') }}"
+                                        data-placeholder="{{ 'Seleccionar condición' }}"
                                         class="js-data-example-ajax form-control">
 
                                         @if (isset($product?->pharmacy_item_details?->common_condition_id))
@@ -213,10 +213,10 @@
 
                             <div class="col-sm-6 col-lg-{{ $column }}" id="brand_input">
                                 <div class="form-group mb-0 error-wrapper">
-                                    <label class="input-label" for="brand_id">{{ translate('messages.Brand') }}<span
+                                    <label class="input-label" for="brand_id">{{ 'Marca' }}<span
                                             class="input-label-secondary"></span></label>
                                     <select name="brand_id" id="brand_id"
-                                        data-placeholder="{{ translate('messages.Select_brand') }}"
+                                        data-placeholder="{{ 'Seleccionar marca' }}"
                                         class="js-data-example-ajax form-control">
                                         @if (isset($product->ecommerce_item_details?->brand_id))
                                             <option value="{{ $product->ecommerce_item_details->brand_id }}"
@@ -235,9 +235,9 @@
                             <div class="col-sm-6 col-lg-{{ $column }}" id="unit_input">
                                 <div class="form-group mb-0 error-wrapper">
                                     <label class="input-label text-capitalize"
-                                        for="unit">{{ translate('messages.unit') }}</label>
+                                        for="unit">{{ 'unidad' }}</label>
                                     <select name="unit" id="unit"
-                                        data-placeholder="{{ translate('messages.select_unit') }}"
+                                        data-placeholder="{{ 'seleccionar unidad' }}"
                                         class="form-control js-select2-custom">
                                         @foreach (\App\Models\Unit::get(['id', 'unit']) as $unit)
                                             <option value="{{ $unit->id }}"
@@ -263,16 +263,16 @@
 
                             <div class="col-sm-6 col-lg-6 error-wrapper" id="nutrition">
                                 <label class="input-label" for="">
-                                    {{ translate('Nutrition') }}
+                                    {{ 'Nutrición' }}
                                     <span class="input-label-secondary"
-                                        title="{{ translate('Specify the necessary keywords relating to energy values for the item and type this content & press enter.') }}"
+                                        title="{{ 'Especifique las palabras clave necesarias relacionadas con los valores energéticos del artículo, escriba este contenido y presione Intro.' }}"
                                         data-toggle="tooltip">
                                         <i class="tio-info-outined"></i>
                                     </span>
                                 </label>
                                 <select name="nutritions[]" id="nutritions_input"
                                     class="form-control multiple-select2"
-                                    data-placeholder="{{ translate('messages.Type your content and press enter') }}"
+                                    data-placeholder="{{ 'Escribe tu contenido y presiona enter.' }}"
                                     multiple>
                                     @php($nutritions = \App\Models\Nutrition::select(['id','nutrition'])->get() ?? [])
                                     @foreach ($nutritions as $nutrition)
@@ -286,15 +286,15 @@
 
                             <div class="col-sm-6 col-lg-6 error-wrapper" id="allergy">
                                 <label class="input-label" for="">
-                                    {{ translate('Allegren Ingredients') }}
+                                    {{ 'Ingredientes Allegren' }}
                                     <span class="input-label-secondary"
-                                        title="{{ translate('Specify the ingredients of the item which can make a reaction as an allergen and type this content & press enter.') }}"
+                                        title="{{ 'Especifique los ingredientes del artículo que pueden provocar una reacción como alérgeno, escriba este contenido y presione Intro.' }}"
                                         data-toggle="tooltip">
                                         <i class="tio-info-outined"></i>
                                     </span>
                                 </label>
                                 <select name="allergies[]" class="form-control multiple-select2" id="allergy_input"
-                                    data-placeholder="{{ translate('messages.Type your content and press enter') }}"
+                                    data-placeholder="{{ 'Escribe tu contenido y presiona enter.' }}"
                                     multiple>
                                     @php($allergies = \App\Models\Allergy::select(['id','allergy'])->get() ?? [])
 
@@ -316,7 +316,7 @@
                                     id="is_abastos"
                                     {{ (isset($product) && $product->is_abastos == 1) || request()->query('is_abastos') == 1 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="is_abastos">
-                                    {{ translate('messages.exclusive_for_tootli_abastos') }}
+                                    {{ 'exclusivo para tootli abastos' }}
                                 </label>
                             </div>
                             @if(request()->query('is_abastos') == 1)
@@ -332,7 +332,7 @@
                                         id="is_halal"
                                         {{ isset($product) && $product->is_halal == 1 ? 'checked' : (isset($temp_product) && $temp_product == 1 && $product->is_halal == 1 ? 'checked' : '') }}>
                                     <label class="form-check-label" for="is_halal">
-                                        {{ translate('messages.Is_It_Halal') }}
+                                        {{ '¿Es halal?' }}
                                     </label>
                                 </div>
                             </div>
@@ -344,7 +344,7 @@
                                         id="is_promotional"
                                         {{ isset($product) && $product->is_promotional == 1 ? 'checked' : (isset($temp_product) && $temp_product == 1 && $product->is_promotional == 1 ? 'checked' : '') }}>
                                     <label class="form-check-label" for="is_promotional">
-                                        {{ translate('Promocional') }}
+                                        {{ 'Promocional' }}
                                     </label>
                                 </div>
                             </div>
@@ -352,9 +352,9 @@
                         @if (Config::get('module.current_module_type') == 'pharmacy')
                             <div class="col-sm-6 col-lg--6 error-wrapper" id="generic_name">
                                 <label class="input-label" for="sub-categories">
-                                    {{ translate('generic_name') }}
+                                    {{ 'nombre genérico' }}
                                     <span class="input-label-secondary"
-                                        title="{{ translate('Specify the medicine`s active ingredient that makes it work') }}"
+                                        title="{{ 'Especificar el ingrediente activo del medicamento que lo hace funcionar.' }}"
                                         data-toggle="tooltip">
                                         <i class="tio-info-outined"></i>
                                     </span>
@@ -380,7 +380,7 @@
                                         id="is_basic_medicine"
                                         {{ isset($product) && $product->pharmacy_item_details?->is_basic == 1 ? 'checked' : (isset($temp_product) && $temp_product == 1 && $product->basic == 1 ? 'checked' : '') }}>
                                     <label class="form-check-label" for="is_basic_medicine">
-                                        {{ translate('messages.Is_Basic_Medicine') }}
+                                        {{ 'es la medicina basica' }}
                                     </label>
                                 </div>
                             </div>
@@ -391,7 +391,7 @@
                                         value="1" id="prescription_required"
                                         {{ isset($product) && $product->pharmacy_item_details?->is_prescription_required == 1 ? 'checked' : (isset($temp_product) && $temp_product == 1 && $product->is_prescription_required == 1 ? 'checked' : '') }}>
                                     <label class="form-check-label" for="prescription_required">
-                                        {{ translate('messages.is_prescription_required') }}
+                                        {{ '¿Se requiere receta médica?' }}
                                     </label>
                                 </div>
                             </div>
@@ -403,7 +403,7 @@
                                         id="is_organic"
                                         {{ isset($product) && $product->organic == 1 ? 'checked' : '' }}>
                                     <label class="form-check-label" for="is_organic">
-                                        {{ translate('messages.is_organic') }}
+                                        {{ 'es organico' }}
                                     </label>
                                 </div>
                             </div>
@@ -412,11 +412,11 @@
                         @if (Config::get('module.current_module_type') == 'grocery' || Config::get('module.current_module_type') == 'ecommerce')
                             <div class="col-sm-6 col-lg-4 error-wrapper">
                                 <div class="form-group mb-0">
-                                    <label class="input-label" for="delivery_time_type">{{ translate('messages.delivery_time_type') }}</label>
+                                    <label class="input-label" for="delivery_time_type">{{ 'tipo de tiempo de entrega' }}</label>
                                     <select name="delivery_time_type" id="delivery_time_type" class="form-control js-select2-custom">
-                                        <option value="standard" {{ isset($product) && $product->delivery_time_type == 'standard' ? 'selected' : '' }}>{{ translate('messages.standard') }}</option>
-                                        <option value="minutes" {{ isset($product) && $product->delivery_time_type == 'minutes' ? 'selected' : '' }}>{{ translate('messages.minutes') }}</option>
-                                        <option value="next_day" {{ isset($product) && $product->delivery_time_type == 'next_day' ? 'selected' : '' }}>{{ translate('messages.next_day') }}</option>
+                                        <option value="standard" {{ isset($product) && $product->delivery_time_type == 'standard' ? 'selected' : '' }}>{{ 'estándar' }}</option>
+                                        <option value="minutes" {{ isset($product) && $product->delivery_time_type == 'minutes' ? 'selected' : '' }}>{{ 'minutos' }}</option>
+                                        <option value="next_day" {{ isset($product) && $product->delivery_time_type == 'next_day' ? 'selected' : '' }}>{{ 'día siguiente' }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -425,34 +425,34 @@
                         @if (Config::get('module.current_module_type') != 'food')
                             <div class="col-sm-6 col-lg-3 error-wrapper">
                                 <div class="form-group mb-0">
-                                    <label class="input-label" for="length">{{ translate('Largo (cm)') }}</label>
+                                    <label class="input-label" for="length">{{ 'Longitud (cm)' }}</label>
                                     <input type="number" min="0" step="0.1" name="length" id="length" class="form-control" 
-                                        value="{{ old('length', $product->length ?? 0) }}" placeholder="{{ translate('0') }}">
+                                        value="{{ old('length', $product->length ?? 0) }}" placeholder="{{ '0' }}">
                                 </div>
                             </div>
                             <div class="col-sm-6 col-lg-3 error-wrapper">
                                 <div class="form-group mb-0">
-                                    <label class="input-label" for="width">{{ translate('Ancho (cm)') }}</label>
+                                    <label class="input-label" for="width">{{ 'Ancho (cm)' }}</label>
                                     <input type="number" min="0" step="0.1" name="width" id="width" class="form-control" 
-                                        value="{{ old('width', $product->width ?? 0) }}" placeholder="{{ translate('0') }}">
+                                        value="{{ old('width', $product->width ?? 0) }}" placeholder="{{ '0' }}">
                                 </div>
                             </div>
                             <div class="col-sm-6 col-lg-3 error-wrapper">
                                 <div class="form-group mb-0">
-                                    <label class="input-label" for="height">{{ translate('Alto (cm)') }}</label>
+                                    <label class="input-label" for="height">{{ 'alto (cm)' }}</label>
                                     <input type="number" min="0" step="0.1" name="height" id="height" class="form-control" 
-                                        value="{{ old('height', $product->height ?? 0) }}" placeholder="{{ translate('0') }}">
+                                        value="{{ old('height', $product->height ?? 0) }}" placeholder="{{ '0' }}">
                                 </div>
                             </div>
                             <div class="col-sm-6 col-lg-3 error-wrapper">
                                 <div class="form-group mb-0">
-                                    <label class="input-label" for="requires_large_vehicle">{{ translate('Envío Pesado') }}</label>
+                                    <label class="input-label" for="requires_large_vehicle">{{ 'Envío Pesado' }}</label>
                                     <div class="form-check mt-2">
                                         <input class="form-check-input" name="requires_large_vehicle" type="checkbox" value="1"
                                             id="requires_large_vehicle"
                                             {{ isset($product) && $product->requires_large_vehicle == 1 ? 'checked' : '' }}>
                                         <label class="form-check-label" for="requires_large_vehicle">
-                                            {{ translate('¿Requiere auto/camioneta?') }}
+                                            {{ '¿Necesitas auto/camioneta?' }}
                                         </label>
                                     </div>
                                 </div>
@@ -477,16 +477,16 @@
                                 <span class="card-header-icon mr-2">
                                     <i class="tio-dashboard-outlined"></i>
                                 </span>
-                                <span>{{ translate('messages.addon') }}</span>
+                                <span>{{ 'Añadir' }}</span>
                             </h5>
                         </div>
                         <div class="card-body error-wrapper">
                             <label class="input-label"
-                                for="exampleFormControlSelect1">{{ translate('Select_Add-on') }}<span
+                                for="exampleFormControlSelect1">{{ 'Seleccionar complemento' }}<span
                                     class="input-label-secondary" data-toggle="tooltip" data-placement="right"
-                                    data-original-title="{{ translate('messages.The_selected_addon’s_will_be_displayed_in_this_food_details') }}"><img
+                                    data-original-title="{{ 'Los complementos seleccionados se mostrarán en los detalles de esta comida.' }}"><img
                                         src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                        alt="{{ translate('messages.The_selected_addon’s_will_be_displayed_in_this_food_details') }}"></span></label>
+                                        alt="{{ 'Los complementos seleccionados se mostrarán en los detalles de esta comida.' }}"></span></label>
                             <select name="addon_ids[]" class="form-control border js-select2-custom"
                                 multiple="multiple" id="add_on">
 
@@ -504,7 +504,7 @@
                         <div class="card-header">
                             <h5 class="card-title">
                                 <span class="card-header-icon"><i class="tio-puzzle"></i></span>
-                                <span>{{ translate('addon') }}</span>
+                                <span>{{ 'Añadir' }}</span>
                             </h5>
                         </div>
                         <div class="card-body pb-0">
@@ -512,7 +512,7 @@
                                 <div class="col-12">
                                     <div class="form-group error-wrapper">
                                         <label class="input-label"
-                                            for="exampleFormControlSelect1">{{ translate('messages.addon') }}<span
+                                            for="exampleFormControlSelect1">{{ 'Añadir' }}<span
                                                 class="input-label-secondary"></span></label>
                                         <select name="addon_ids[]" class="form-control js-select2-custom" id="add_on"
                                             multiple="multiple">
@@ -539,7 +539,7 @@
                     <div class="card-header">
                         <h5 class="card-title">
                             <span class="card-header-icon mr-2"><i class="tio-date-range"></i></span>
-                            <span>{{ translate('time_schedule') }}</span>
+                            <span>{{ 'horario' }}</span>
                         </h5>
                     </div>
                     <div class="card-body">
@@ -547,25 +547,25 @@
                             <div class="col-sm-6">
                                 <div class="form-group mb-0 error-wrapper">
                                     <label class="input-label"
-                                        for="exampleFormControlInput1">{{ translate('messages.available_time_starts') }}<span
+                                        for="exampleFormControlInput1">{{ 'comienza el tiempo disponible' }}<span
                                             class="form-label-secondary text-danger" data-toggle="tooltip"
                                             data-placement="right"
-                                            data-original-title="{{ translate('messages.Required.') }}">
+                                            data-original-title="{{ 'Requerido.' }}">
                                             *
                                         </span></label>
                                     <input type="time" name="available_time_starts"
                                         value="{{ isset($product) ? $product?->available_time_starts : old('available_time_starts') }}"
                                         class="form-control" id="available_time_starts"
-                                        placeholder="{{ translate('messages.Ex:_10:30_am') }} " required>
+                                        placeholder="{{ 'Ej: 10:30 am' }} " required>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group mb-0 error-wrapper">
                                     <label class="input-label"
-                                        for="exampleFormControlInput1">{{ translate('messages.available_time_ends') }}<span
+                                        for="exampleFormControlInput1">{{ 'finaliza el tiempo disponible' }}<span
                                             class="form-label-secondary text-danger" data-toggle="tooltip"
                                             data-placement="right"
-                                            data-original-title="{{ translate('messages.Required.') }}">
+                                            data-original-title="{{ 'Requerido.' }}">
                                             *
                                         </span></label>
                                     <input type="time" name="available_time_ends" class="form-control"
@@ -589,7 +589,7 @@
                 <div class="card-header">
                     <h5 class="card-title">
                         <span class="card-header-icon mr-2"><i class="tio-label"></i></span>
-                        <span>{{ translate('Seaech_Tags') }}</span>
+                        <span>{{ 'Etiquetas de búsqueda' }}</span>
                     </h5>
                 </div>
                 <div class="card-body">
@@ -599,14 +599,14 @@
                         <div class="form-group error-wrapper">
                             @php($tags = \App\Models\Tag::whereIn('id', json_decode($product?->tag_ids))->get('tag'))
                             <input type="text" class="form-control" id="tags" name="tags"
-                                placeholder="{{ translate('messages.search_tags') }}"
+                                placeholder="{{ 'etiquetas de búsqueda' }}"
                                 value="@foreach ($tags as $c) {{ $c->tag . ',' }} @endforeach"
                                 data-role="tagsinput">
                         </div>
                     @else
                         <div class="form-group error-wrapper">
                             <input type="text" class="form-control" id="tags" name="tags"
-                                placeholder="{{ translate('messages.search_tags') }}"
+                                placeholder="{{ 'etiquetas de búsqueda' }}"
                                 @if (isset($product)) value="@foreach ($product->tags as $c) {{ $c->tag . ',' }} @endforeach" @endif
                                 data-role="tagsinput">
                         </div>

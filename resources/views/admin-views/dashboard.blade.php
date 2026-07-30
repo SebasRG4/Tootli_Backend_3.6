@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',\App\Models\BusinessSetting::where(['key'=>'business_name'])->first()->value??translate('messages.dashboard'))
+@section('title',\App\Models\BusinessSetting::where(['key'=>'business_name'])->first()->value??'Panel de Control')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -12,13 +12,13 @@
         <!-- Page Header -->
         <div class="tootli-dashboard-header">
             <div class="tootli-dashboard-title-group">
-                <h1>{{translate('messages.dashboard')}}</h1>
-                <p>{{translate('Plan, prioritize, and accomplish your operations with ease.')}}</p>
+                <h1>{{'Panel de Control'}}</h1>
+                <p>{{'Planifique, priorice y realice sus operaciones con facilidad.'}}</p>
             </div>
             <div class="tootli-actions-group">
                 <div class="min--200 mr-2">
                     <select name="zone_id" class="form-control js-select2-custom fetch_data_zone_wise rounded-pill">
-                        <option value="all">{{ translate('messages.All_Zones') }}</option>
+                        <option value="all">{{ 'Todas las Zonas' }}</option>
                         @foreach(\App\Models\Zone::orderBy('name')->get() as $zone)
                             <option
                                 value="{{$zone['id']}}" {{$params['zone_id'] == $zone['id']?'selected':''}}>
@@ -29,11 +29,11 @@
                 </div>
                 <a href="{{ route('admin.order.list', ['all']) }}" class="btn-tootli-pill-primary">
                     <i class="bi bi-plus-lg"></i>
-                    <span>+ {{translate('Dispatch')}}</span>
+                    <span>+ {{'Despacho'}}</span>
                 </a>
                 <a href="{{ route('admin.transactions.store.withdraw_list') }}" class="btn-tootli-pill-secondary">
                     <i class="bi bi-lightbulb"></i>
-                    <span>{{translate('Market Intelligence')}}</span>
+                    <span>{{'Inteligencia de Mercado'}}</span>
                 </a>
             </div>
         </div>
@@ -44,41 +44,41 @@
             <div class="col-sm-6 col-lg-3">
                 <div class="tootli-card tootli-card-featured">
                     <div class="tootli-card-header-row">
-                        <span class="tootli-card-label">{{translate('Total rides')}}</span>
+                        <span class="tootli-card-label">{{'Viajes Totales'}}</span>
                         <div class="tootli-icon-badge"><i class="bi bi-map"></i></div>
                     </div>
                     <div class="tootli-card-value">{{ $data['total_orders'] ?? '137' }}</div>
-                    <div class="tootli-card-subtxt">↗ {{ $data['delivered'] ?? '63' }} {{translate('completed overall')}}</div>
+                    <div class="tootli-card-subtxt">↗ {{ $data['delivered'] ?? '63' }} {{'completados en total'}}</div>
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3">
                 <div class="tootli-card">
                     <div class="tootli-card-header-row">
-                        <span class="tootli-card-label">{{translate('Completed rides')}}</span>
+                        <span class="tootli-card-label">{{'Viajes Completados'}}</span>
                         <div class="tootli-icon-badge"><i class="bi bi-map"></i></div>
                     </div>
                     <div class="tootli-card-value">{{ $data['delivered'] ?? '63' }}</div>
-                    <div class="tootli-card-subtxt">↗ {{translate('46% of all rides')}}</div>
+                    <div class="tootli-card-subtxt">↗ {{'46% de todos los viajes'}}</div>
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3">
                 <div class="tootli-card">
                     <div class="tootli-card-header-row">
-                        <span class="tootli-card-label">{{translate('Active rides')}}</span>
+                        <span class="tootli-card-label">{{'Viajes Activos'}}</span>
                         <div class="tootli-icon-badge"><i class="bi bi-map"></i></div>
                     </div>
                     <div class="tootli-card-value">{{ $data['accepted_by_dm'] + $data['preparing_in_rs'] + $data['picked_up'] }}</div>
-                    <div class="tootli-card-subtxt">↗ {{translate('In progress now')}}</div>
+                    <div class="tootli-card-subtxt">↗ {{'En curso ahora'}}</div>
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3">
                 <div class="tootli-card">
                     <div class="tootli-card-header-row">
-                        <span class="tootli-card-label">{{translate('Pending requests')}}</span>
+                        <span class="tootli-card-label">{{'Solicitudes Pendientes'}}</span>
                         <div class="tootli-icon-badge"><i class="bi bi-map"></i></div>
                     </div>
                     <div class="tootli-card-value">{{ $data['searching_for_dm'] ?? '3' }}</div>
-                    <div class="tootli-card-subtxt" style="color: #64748b !important;">{{translate('Awaiting assignment')}}</div>
+                    <div class="tootli-card-subtxt" style="color: #64748b !important;">{{'Esperando asignación'}}</div>
                 </div>
             </div>
         </div>
@@ -88,7 +88,7 @@
             <div class="col-sm-4 col-lg-2">
                 <div class="tootli-mini-card">
                     <div>
-                        <div class="tootli-mini-card-lbl">{{translate('Drivers')}}</div>
+                        <div class="tootli-mini-card-lbl">{{'Repartidores'}}</div>
                         <h4 class="tootli-mini-card-val">{{ \App\Models\DeliveryMan::count() }}</h4>
                     </div>
                     <div class="tootli-icon-badge"><i class="bi bi-person-badge"></i></div>
@@ -97,7 +97,7 @@
             <div class="col-sm-4 col-lg-2">
                 <div class="tootli-mini-card">
                     <div>
-                        <div class="tootli-mini-card-lbl">{{translate('Riders')}}</div>
+                        <div class="tootli-mini-card-lbl">{{'Clientes'}}</div>
                         <h4 class="tootli-mini-card-val">{{ \App\Models\User::count() }}</h4>
                     </div>
                     <div class="tootli-icon-badge"><i class="bi bi-people"></i></div>
@@ -106,7 +106,7 @@
             <div class="col-sm-4 col-lg-2">
                 <div class="tootli-mini-card">
                     <div>
-                        <div class="tootli-mini-card-lbl">{{translate('Ride earnings')}}</div>
+                        <div class="tootli-mini-card-lbl">{{'Ganancias de Viajes'}}</div>
                         <h4 class="tootli-mini-card-val">${{ number_format(\App\Models\Order::where('order_status','delivered')->sum('order_amount'), 0) }}</h4>
                     </div>
                     <div class="tootli-icon-badge"><i class="bi bi-graph-up-arrow"></i></div>
@@ -115,7 +115,7 @@
             <div class="col-sm-4 col-lg-2">
                 <div class="tootli-mini-card">
                     <div>
-                        <div class="tootli-mini-card-lbl">{{translate('Commission')}}</div>
+                        <div class="tootli-mini-card-lbl">{{'Comisión'}}</div>
                         <h4 class="tootli-mini-card-val">${{ number_format(\App\Models\Order::where('order_status','delivered')->sum('admin_commission'), 0) }}</h4>
                     </div>
                     <div class="tootli-icon-badge"><i class="bi bi-currency-dollar"></i></div>
@@ -124,7 +124,7 @@
             <div class="col-sm-4 col-lg-2">
                 <div class="tootli-mini-card">
                     <div>
-                        <div class="tootli-mini-card-lbl">{{translate('Restaurants')}}</div>
+                        <div class="tootli-mini-card-lbl">{{'Restaurantes'}}</div>
                         <h4 class="tootli-mini-card-val">{{ \App\Models\Store::count() }}</h4>
                     </div>
                     <div class="tootli-icon-badge"><i class="bi bi-building"></i></div>
@@ -133,7 +133,7 @@
             <div class="col-sm-4 col-lg-2">
                 <div class="tootli-mini-card">
                     <div>
-                        <div class="tootli-mini-card-lbl">{{translate('Food orders')}}</div>
+                        <div class="tootli-mini-card-lbl">{{'Pedidos de Comida'}}</div>
                         <h4 class="tootli-mini-card-val">{{ $data['total_orders'] ?? '0' }}</h4>
                     </div>
                     <div class="tootli-icon-badge"><i class="bi bi-cart3"></i></div>
@@ -147,7 +147,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                             <img src="{{asset('assets/admin/img/dashboard/food/items.svg')}}" alt="dashboard" class="oder--card-icon">
-                                            <span>{{translate('Pagos Repartidores Pendientes')}}</span>
+                                            <span>{{'Pendientes Pagos Repartidores'}}</span>
                                         </h6>
                                         <span class="card-title text-info">
                                             {{ \App\Models\DeliveryManOfflinePayment::where('status', 'pending')->count() }}
@@ -161,7 +161,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                             <img src="{{asset('assets/admin/img/dashboard/food/unassigned.svg')}}" alt="dashboard" class="oder--card-icon">
-                                            <span>{{translate('messages.unassigned_orders')}}</span>
+                                            <span>{{'Pedidos Sin Asignar'}}</span>
                                         </h6>
                                         <span class="card-title text-3F8CE8">
                                             {{$data['searching_for_dm']}}
@@ -175,7 +175,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                             <img src="{{asset('assets/admin/img/dashboard/food/accepted.svg')}}" alt="dashboard" class="oder--card-icon">
-                                            <span>{{translate('Accepted by Delivery Man')}}</span>
+                                            <span>{{'Aceptado por el repartidor'}}</span>
                                         </h6>
                                         <span class="card-title text-success">
                                             {{$data['accepted_by_dm']}}
@@ -188,7 +188,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                             <img src="{{asset('assets/admin/img/dashboard/food/packaging.svg')}}" alt="dashboard" class="oder--card-icon">
-                                            <span>{{translate('Packaging')}}</span>
+                                            <span>{{'Embalaje'}}</span>
                                         </h6>
                                         <span class="card-title text-FFA800">
                                             {{$data['preparing_in_rs']}}
@@ -202,7 +202,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                             <img src="{{asset('assets/admin/img/dashboard/food/out-for.svg')}}" alt="dashboard" class="oder--card-icon">
-                                            <span>{{translate('Out for Delivery')}}</span>
+                                            <span>{{'Fuera de entrega'}}</span>
                                         </h6>
                                         <span class="card-title text-success">
                                             {{$data['picked_up']}}
@@ -216,7 +216,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                             <img src="{{asset('assets/admin/img/dashboard/grocery/delivered.svg')}}" alt="dashboard" class="oder--card-icon">
-                                            <span>{{translate('messages.delivered')}}</span>
+                                            <span>{{'Entregado'}}</span>
                                         </h6>
                                         <span class="card-title text-success">
                                             {{$data['delivered']}}
@@ -230,7 +230,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                             <img src="{{asset('assets/admin/img/order-status/canceled.svg')}}" alt="dashboard" class="oder--card-icon">
-                                            <span>{{translate('messages.canceled')}}</span>
+                                            <span>{{'Cancelado'}}</span>
                                         </h6>
                                         <span class="card-title text-danger">
                                             {{$data['canceled']}}
@@ -244,7 +244,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                             <img src="{{asset('assets/admin/img/order-status/refunded.svg')}}" alt="dashboard" class="oder--card-icon">
-                                            <span>{{translate('messages.refunded')}}</span>
+                                            <span>{{'Reembolsado'}}</span>
                                         </h6>
                                         <span class="card-title text-danger">
                                             {{$data['refunded']}}
@@ -258,7 +258,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                             <img src="{{asset('assets/admin/img/order-status/payment-failed.svg')}}" alt="dashboard" class="oder--card-icon">
-                                            <span>{{translate('messages.payment_failed')}}</span>
+                                            <span>{{'pago fallido'}}</span>
                                         </h6>
                                         <span class="card-title text-danger">
                                             {{$data['refund_requested']}}
@@ -291,10 +291,10 @@
                             </div>
                             <select class="custom-select border-0 text-center w-auto ml-auto">
                                 <option>
-                                    {{translate('This Month')}}
+                                    {{'este mes'}}
                                 </option>
                                 <option>
-                                    {{translate('This Year')}}
+                                    {{'este año'}}
                                 </option>
                             </select>
                         </div>
@@ -308,16 +308,16 @@
                     <!-- Header -->
                     <div class="card-header border-0">
                         <h5 class="card-header-title">
-                            {{translate('User Statistics')}}
+                            {{'Estadísticas de usuario'}}
                         </h5>
                         <select class="custom-select border-0 text-center w-auto user_overview_stats_update" name="user_overview">
                             <option
                                 value="this_month" {{$params['user_overview'] == 'this_month'?'selected':''}}>
-                                {{translate('This month')}}
+                                {{'este mes'}}
                             </option>
                             <option
                                 value="overall" {{$params['user_overview'] == 'overall'?'selected':''}}>
-                                {{translate('messages.Overall')}}
+                                {{'En general'}}
                             </option>
                         </select>
                     </div>
@@ -330,7 +330,7 @@
                             <!-- Total Orders -->
                             <div class="total--orders">
                                 <h3 class="text-uppercase mb-xxl-2">{{ $data['customer'] + $data['stores'] + $data['delivery_man'] }}</h3>
-                                <span class="text-capitalize">{{translate('messages.total_users')}}</span>
+                                <span class="text-capitalize">{{'usuarios totales'}}</span>
                             </div>
                             <!-- Total Orders -->
                         </div>
@@ -338,19 +338,19 @@
                             <div class="chart--label">
                                 <span class="indicator chart-bg-1"></span>
                                 <span class="info">
-                                    {{translate('messages.customer')}} {{$data['customer']}}
+                                    {{'Cliente'}} {{$data['customer']}}
                                 </span>
                             </div>
                             <div class="chart--label">
                                 <span class="indicator chart-bg-2"></span>
                                 <span class="info">
-                                    {{translate('messages.store')}} {{$data['stores']}}
+                                    {{'Negocio'}} {{$data['stores']}}
                                 </span>
                             </div>
                             <div class="chart--label">
                                 <span class="indicator chart-bg-3"></span>
                                 <span class="info">
-                                    {{translate('messages.delivery_man')}} {{$data['delivery_man']}}
+                                    {{'Repartidor'}} {{$data['delivery_man']}}
                                 </span>
                             </div>
                         </div>
@@ -414,8 +414,8 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-sm mb-2 mb-sm-0">
-                    <h1 class="page-header-title">{{translate('messages.welcome')}}, {{auth('admin')->user()->f_name}}.</h1>
-                    <p class="page-header-text">{{translate('messages.employee_welcome_message')}}</p>
+                    <h1 class="page-header-title">{{'Bienvenido'}}, {{auth('admin')->user()->f_name}}.</h1>
+                    <p class="page-header-text">{{'mensaje de bienvenida al empleado'}}</p>
                 </div>
             </div>
         </div>
@@ -449,7 +449,7 @@
                 width: 320,
                 type: 'donut',
             },
-            labels: ['{{ translate('Customer') }}', '{{ translate('Store') }}', '{{ translate('Delivery man') }}'],
+            labels: ['{{ 'Cliente' }}', '{{ 'Almacenar' }}', '{{ 'repartidor' }}'],
             dataLabels: {
                 enabled: false,
                 style: {
@@ -501,7 +501,7 @@
         },
         xaxis: {
         //   type: 'datetime',
-          categories: ["{{ translate('Jan') }}", "{{ translate('Feb') }}", "{{ translate('Mar') }}", "{{ translate('Apr') }}", "{{ translate('May') }}", "{{ translate('Jun') }}", "{{ translate('Jul') }}", "{{ translate('Aug') }}", "{{ translate('Sep') }}", "{{ translate('Oct') }}", "{{ translate('Nov') }}", "{{ translate('Dec') }}" ]
+          categories: ["{{ 'Ene' }}", "{{ 'Feb' }}", "{{ 'Mar' }}", "{{ 'Abr' }}", "{{ 'Puede' }}", "{{ 'Jun' }}", "{{ 'Jul' }}", "{{ 'Ago' }}", "{{ 'Sep' }}", "{{ 'Oct' }}", "{{ 'Nov' }}", "{{ 'Dic' }}" ]
         },
         tooltip: {
           x: {

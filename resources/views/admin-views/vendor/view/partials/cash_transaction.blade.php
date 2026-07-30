@@ -4,12 +4,12 @@
             class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
             <thead class="thead-light">
                 <tr>
-                    <th class="border-0">{{translate('sl')}}</th>
-                    <th class="border-0">{{translate('messages.received_at')}}</th>
-                    <th class="border-0">{{translate('messages.balance_before_transaction')}}</th>
-                    <th class="border-0">{{translate('messages.amount')}}</th>
-                    <th class="border-0">{{translate('messages.reference')}}</th>
-                    {{-- <th class="border-0">{{translate('messages.action')}}</th> --}}
+                    <th class="border-0">{{'SL'}}</th>
+                    <th class="border-0">{{'recibido en'}}</th>
+                    <th class="border-0">{{'saldo antes de la transacción'}}</th>
+                    <th class="border-0">{{'cantidad'}}</th>
+                    <th class="border-0">{{'referencia'}}</th>
+                    {{-- <th class="border-0">{{'acción'}}</th> --}}
                 </tr>
             </thead>
             <tbody>
@@ -39,7 +39,7 @@
 <div class="empty--data">
     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
     <h5>
-        {{translate('no_data_found')}}
+        {{'no se encontraron datos'}}
     </h5>
 </div>
 @endif

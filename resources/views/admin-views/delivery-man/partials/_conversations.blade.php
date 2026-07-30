@@ -22,7 +22,7 @@
             @php($created_for=0)
             @forelse($conversations as $con)
                     @if ( Carbon\Carbon::parse($con?->created_at)->format('Y-m-d') == now()->format('Y-m-d') && $count == 0)
-                        <div class="d-flex justify-content-center">{{ translate('Today').' '. \App\CentralLogics\Helpers::time_format($con?->created_at) }}</div>
+                        <div class="d-flex justify-content-center">{{ 'Hoy'.' '. \App\CentralLogics\Helpers::time_format($con?->created_at) }}</div>
                         @php($count=1)
                     @elseif(Carbon\Carbon::parse($con?->created_at)->format('Y-m-d') != $created_for && $count == 0)
                         <div class="d-flex justify-content-center">{{  \App\CentralLogics\Helpers::time_date_format($con?->created_at) }}</div>
@@ -72,7 +72,7 @@
                 <div class="empty-conversation-content d-flex flex-column align-items-center gap-3">
                     <img width="128" height="128" src="{{asset('assets/admin/img/icons/empty-conversation.png')}}" alt="public">
                     <h5 class="text-muted">
-                        {{translate('no_conversation_found')}}
+                        {{'no se encontró ninguna conversación'}}
                     </h5>
                 </div>
 
@@ -84,16 +84,16 @@
 
 
     <div class="mt-auto d-flex justify-content-center fs-12 font-medium text-dark p-3">
-        {{ translate('You_can’t_reply_to_this_conversation.') }} &nbsp;
+        {{ 'No puedes responder a esta conversación.' }} &nbsp;
         <div class="text-danger d-inline-block learn-more-wrap cursor-pointer">
-            {{ translate('Learn_more') }}
+            {{ 'Más información' }}
 
             <div class="learn-more-content p-4">
                 <div class="d-flex align-items-center gap-2 mb-3">
                     <img class="rounded-circle" width="20" height="20" src="{{asset('assets/admin/img/icons/info-icon.png')}}" alt="">
-                    <h6 class="mb-0"> {{ translate('Learn_more') }}</h6>
+                    <h6 class="mb-0"> {{ 'Más información' }}</h6>
                 </div>
-                <p class="mb-0 text-muted text-normal">{{ translate('You can’t chat with deliveryman because it’s delivery man previous chat history, only you can monitor or view their conversation to avoid unexpected situation.')}}</p>
+                <p class="mb-0 text-muted text-normal">{{ 'No puedes chatear con el repartidor porque es el historial de chat anterior del repartidor, solo tú puedes monitorear o ver su conversación para evitar situaciones inesperadas.'}}</p>
             </div>
         </div>
     </div>

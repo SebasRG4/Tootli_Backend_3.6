@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Store Report'))
+@section('title', 'Informe de la tienda')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -16,10 +16,10 @@
                 <img src="{{ asset('assets/admin/img/store-report.svg') }}" class="page-header-icon" alt="">
                 <div class="w-0 flex-grow-1 pl-3">
                     <h1 class="page-header-title m-0">
-                        {{ translate('Store Wise Report') }}
+                        {{ 'Informe inteligente de la tienda' }}
                     </h1>
                     <span>
-                        {{ translate('Monitor_store’s_business_analytics_&_Reports') }}
+                        {{ 'Supervise los análisis e informes comerciales de la tienda' }}
                     </span>
                 </div>
             </div>
@@ -30,29 +30,29 @@
         <ul class="nav nav-tabs page-header-tabs mb-2">
             <li class="nav-item">
                 <a href="{{ route('admin.transactions.report.store-summary-report') }}"
-                    class="nav-link">{{ translate('Summary Report') }}</a>
+                    class="nav-link">{{ 'Informe resumido' }}</a>
             </li>
             <li class="nav-item">
                 <a href="{{ route('admin.transactions.report.store-sales-report') }}"
-                    class="nav-link">{{ translate('Sales Report') }}</a>
+                    class="nav-link">{{ 'Informe de ventas' }}</a>
             </li>
             <li class="nav-item">
                 <a href="{{ route('admin.transactions.report.store-order-report') }}"
-                    class="nav-link active">{{ translate('Order Report') }}</a>
+                    class="nav-link active">{{ 'Informe de pedido' }}</a>
             </li>
         </ul>
 
         <div class="card filter--card">
             <div class="card-body p-xl-5">
                 <h5 class="form-label m-0 mb-3">
-                    {{ translate('Filter Data') }}
+                    {{ 'Filtrar datos' }}
                 </h5>
                 <form action="{{ route('admin.transactions.report.set-date') }}" method="post">
                     @csrf
                     <div class="row g-3">
                         <div class="col-md-4 col-sm-6">
                             <select name="zone_id" class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}" data-filter="zone_id" id="zone">
-                                <option value="all">{{ translate('messages.All_Zones') }}</option>
+                                <option value="all">{{ 'Todas las Zonas' }}</option>
                                 @foreach (\App\Models\Zone::orderBy('name')->get() as $z)
                                     <option value="{{ $z['id'] }}"
                                         {{ isset($zone) && $zone->id == $z['id'] ? 'selected' : '' }}>
@@ -63,30 +63,30 @@
                         </div>
                         <div class="col-md-4 col-sm-6">
                             <select name="store_id"
-                                data-placeholder="{{ translate('messages.select_store') }}"
+                                data-placeholder="{{ 'seleccionar tienda' }}"
                                 class="js-data-example-ajax form-control set-filter" data-url="{{ url()->full() }}" data-filter="store_id">
                                 @if (isset($store))
                                     <option value="{{ $store->id }}" selected>{{ $store->name }}</option>
                                 @else
-                                    <option value="all" selected>{{ translate('messages.all_stores') }}</option>
+                                    <option value="all" selected>{{ 'todas las tiendas' }}</option>
                                 @endif
                             </select>
                         </div>
                         <div class="col-md-4 col-sm-6">
                             <select class="form-control set-filter" data-url="{{ url()->full() }}" data-filter="filter" name="filter">
                                 <option value="all_time" {{ isset($filter) && $filter == 'all_time' ? 'selected' : '' }}>
-                                    {{ translate('messages.All Time') }}</option>
+                                    {{ 'Todo el tiempo' }}</option>
                                 <option value="this_year" {{ isset($filter) && $filter == 'this_year' ? 'selected' : '' }}>
-                                    {{ translate('messages.This Year') }}</option>
+                                    {{ 'este año' }}</option>
                                 <option value="previous_year"
-                                    {{ isset($filter) && $filter == 'previous_year' ? 'selected' : '' }}>{{ translate('messages.Previous Year') }}
+                                    {{ isset($filter) && $filter == 'previous_year' ? 'selected' : '' }}>{{ 'Año anterior' }}
                                 </option>
                                 <option value="this_month"
-                                    {{ isset($filter) && $filter == 'this_month' ? 'selected' : '' }}>{{ translate('messages.This Month') }}</option>
+                                    {{ isset($filter) && $filter == 'this_month' ? 'selected' : '' }}>{{ 'este mes' }}</option>
                                 <option value="this_week" {{ isset($filter) && $filter == 'this_week' ? 'selected' : '' }}>
-                                    {{ translate('messages.This Week') }}</option>
+                                    {{ 'Esta semana' }}</option>
                                 <option value="custom" {{ isset($filter) && $filter == 'custom' ? 'selected' : '' }}>
-                                    {{ translate('Custom') }}</option>
+                                    {{ 'Costumbre' }}</option>
                             </select>
                         </div>
                         @if (isset($filter) && $filter == 'custom')
@@ -101,7 +101,7 @@
                                 required>
                         </div>
                         <div class="col-md-4 col-sm-6">
-                            <button type="submit" class="btn btn--primary btn-block">{{ translate('show_data') }}</button>
+                            <button type="submit" class="btn btn--primary btn-block">{{ 'mostrar datos' }}</button>
                         </div>
                         @endif
                     </div>
@@ -116,7 +116,7 @@
                     <img src="{{ asset('assets/admin/img/report/cart.svg') }}" alt="">
                     <div class="info">
                         <h4 class="subtitle">{{ $orders->total() }}</h4>
-                        <h6 class="subtext">{{ translate('messages.Total Order') }}</h6>
+                        <h6 class="subtext">{{ 'Orden total' }}</h6>
                     </div>
                 </div>
                 <div class="left-content-card">
@@ -124,23 +124,23 @@
                     <div class="info">
                         <h4 class="subtitle">{{ \App\CentralLogics\Helpers::number_format_short($total_order_amount) }}
                         </h4>
-                        <h6 class="subtext">{{ translate('messages.total_order_amount') }}</h6>
+                        <h6 class="subtext">{{ 'monto total del pedido' }}</h6>
                     </div>
                     <div class="coupon__discount w-100 text-right d-flex justify-content-between">
                         <div>
                             <strong class="text-danger">{{ \App\CentralLogics\Helpers::number_format_short($total_canceled) }}</strong>
-                            <div>{{ translate('messages.canceled') }}</div>
+                            <div>{{ 'Cancelado' }}</div>
                         </div>
                         <div>
                             <strong>{{ \App\CentralLogics\Helpers::number_format_short($total_ongoing) }}</strong>
                             <div>
-                                {{ translate('Incomplete') }}
+                                {{ 'Incompleto' }}
                             </div>
                         </div>
                         <div>
                             <strong class="text-success">{{ \App\CentralLogics\Helpers::number_format_short($total_delivered) }}</strong>
                             <div>
-                                {{ translate('Completed') }}
+                                {{ 'Terminado' }}
                             </div>
                         </div>
                     </div>
@@ -151,17 +151,17 @@
                         <h4 class="subtitle">
                             {{ \App\CentralLogics\Helpers::number_format_short($total_coupon_discount + $total_product_discount) }}
                         </h4>
-                        <h6 class="subtext">{{ translate('Total Discount Given') }}</h6>
+                        <h6 class="subtext">{{ 'Descuento total otorgado' }}</h6>
                     </div>
                     <div class="coupon__discount w-100 text-right d-flex justify-content-between">
                         <div>
                             <strong>{{ \App\CentralLogics\Helpers::number_format_short($total_coupon_discount) }}</strong>
-                            <div>{{ translate('messages.coupon_discount') }}</div>
+                            <div>{{ 'cupón de descuento' }}</div>
                         </div>
                         <div>
                             <strong>{{ \App\CentralLogics\Helpers::number_format_short($total_product_discount) }}</strong>
                             <div>
-                                {{ translate('Product Discount') }}
+                                {{ 'Descuento de producto' }}
                             </div>
                         </div>
                     </div>
@@ -169,12 +169,12 @@
             </div>
             <div class="center-chart-area">
                 <div class="center-chart-header">
-                    <h4 class="title">{{ translate('Total Orders') }}</h4>
-                    <h5 class="subtitle">{{ translate('Average Order Value :') }}
+                    <h4 class="title">{{ 'Órdenes totales' }}</h4>
+                    <h5 class="subtitle">{{ 'Valor promedio del pedido:' }}
                         {{ $orders->count() > 0 ? \App\CentralLogics\Helpers::number_format_short($total_order_amount / $orders->total()) : 0 }}
                         <span class="input-label-secondary text--title" data-toggle="tooltip"
                     data-placement="right"
-                    data-original-title="{{ translate('Average Value of all type of orders.') }}">
+                    data-original-title="{{ 'Valor medio de todo tipo de pedidos.' }}">
                     <i class="tio-info-outined"></i>
                 </span>
                     </h5>
@@ -244,7 +244,7 @@
                 <div class="card h-100 bg-white payment-statistics-shadow">
                     <div class="card-header border-0 ">
                         <h5 class="card-title">
-                            <span>{{ translate('order statistics') }}</span>
+                            <span>{{ 'estadísticas de pedidos' }}</span>
                         </h5>
                     </div>
                     <div class="card-body px-0 pt-0">
@@ -254,26 +254,26 @@
                             <div class="total--orders">
                                 <h3>{{ $orders->total() }}
                                 </h3>
-                                <span>{{ translate('messages.orders') }}</span>
+                                <span>{{ 'Pedidos' }}</span>
                             </div>
                             <!-- Total Orders -->
                         </div>
                         <div class="apex-legends">
                             <div class="before-bg-107980">
-                                <span>{{ translate('Total_canceled') }}
+                                <span>{{ 'Total cancelado' }}
                                     ({{ $total_canceled_count }})</span>
                             </div>
                             <div class="before-bg-56B98F">
-                                <span>{{ translate('Total_ongoing') }} (
+                                <span>{{ 'Total en curso' }} (
                                     {{ $total_ongoing_count }})</span>
                             </div>
                             <div class="before-bg-E5F5F1">
-                                <span>{{ translate('Total_delivered') }}
+                                <span>{{ 'Total entregado' }}
                                     ({{ $total_delivered_count }})</span>
                             </div>
                         </div>
                         <div class="earning-statistics-content mt-3">
-                            <a href="{{ route('admin.order.list', ['all']) }}" class="trx-btn">{{ translate('View All Orders') }}</a>
+                            <a href="{{ route('admin.order.list', ['all']) }}" class="trx-btn">{{ 'Ver todos los pedidos' }}</a>
                         </div>
                     </div>
                 </div>
@@ -284,14 +284,14 @@
         <div class="mt-11px card">
             <div class="card-header border-0 py-2">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title">{{ translate('Total Sales') }}</h5>
+                    <h5 class="card-title">{{ 'Ventas totales' }}</h5>
                     <form class="search-form">
                         <!-- Search -->
                         {{-- @csrf --}}
                         <div class="input-group input--group">
                             <input id="datatableSearch_" type="search" name="search" class="form-control"
-                                placeholder="{{ translate('Search by ID..') }}"
-                                aria-label="{{ translate('messages.search') }}" value="{{ request()?->search ?? null}}" required>
+                                placeholder="{{ 'Buscar por DNI..' }}"
+                                aria-label="{{ 'buscar' }}" value="{{ request()?->search ?? null}}" required>
                             <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
 
                         </div>
@@ -305,25 +305,25 @@
                                 "target": "#usersExportDropdown",
                                 "type": "css-animation"
                             }'>
-                            <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                            <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                         </a>
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                            <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                            <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                             <a id="export-excel" class="dropdown-item"
                                 href="{{ route('admin.transactions.report.store-order-report-export', ['type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
-                                {{ translate('messages.excel') }}
+                                {{ 'sobresalir' }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
                                 href="{{ route('admin.transactions.report.store-order-report-export', ['type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
-                                .{{ translate('messages.csv') }}
+                                .{{ 'csv' }}
                             </a>
                         </div>
                     </div>
@@ -335,20 +335,20 @@
                     <table class="table table-borderless middle-align __txt-14px">
                         <thead class="thead-light white--space-false">
                             <tr>
-                                <th class="border-top border-bottom text-capitalize">{{ translate('SL') }}</th>
-                                <th class="border-top border-bottom text-capitalize">{{ translate('Order ID') }}</th>
-                                <th class="border-top border-bottom text-capitalize">{{ translate('Order Date') }}</th>
-                                <th class="border-top border-bottom text-capitalize">{{ translate('Customer Info') }}</th>
-                                <th class="border-top border-bottom text-capitalize">{{ translate('Total Amount') }}</th>
+                                <th class="border-top border-bottom text-capitalize">{{ 'SL' }}</th>
+                                <th class="border-top border-bottom text-capitalize">{{ 'ID de pedido' }}</th>
+                                <th class="border-top border-bottom text-capitalize">{{ 'Fecha del pedido' }}</th>
+                                <th class="border-top border-bottom text-capitalize">{{ 'Información del cliente' }}</th>
+                                <th class="border-top border-bottom text-capitalize">{{ 'Monto total' }}</th>
                                 <th class="border-top border-bottom text-capitalize text-center">
-                                    {{ translate('Discount') }}</th>
-                                <th class="border-top border-bottom text-capitalize text-center">{{ translate('Tax') }}
+                                    {{ 'Descuento' }}</th>
+                                <th class="border-top border-bottom text-capitalize text-center">{{ 'Impuesto' }}
                                 </th>
                                 <th class="border-top border-bottom text-capitalize text-center">
-                                    {{ translate('Delivery Charge') }}</th>
+                                    {{ 'Cargo de entrega' }}</th>
                                 <th class="border-top border-bottom text-capitalize text-center">
-                                    {{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge') }}</th>
-                                <th class="border-top border-bottom text-capitalize text-center">{{ translate('Action') }}
+                                    {{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??'cargo adicional' }}</th>
+                                <th class="border-top border-bottom text-capitalize text-center">{{ 'Acción' }}
                                 </th>
                             </tr>
                         </thead>
@@ -384,7 +384,7 @@
                                             <div>{{ $order->customer['phone'] }}</div>
                                         </a>
                                         @else
-                                            <label class="badge badge-danger">{{ translate('messages.invalid_customer_data') }}</label>
+                                            <label class="badge badge-danger">{{ 'datos de cliente no válidos' }}</label>
                                         @endif
                                     </td>
                                     <td>
@@ -394,11 +394,11 @@
                                             </div>
                                             @if ($order->payment_status == 'paid')
                                                 <strong class="text-success">
-                                                    {{ translate('messages.paid') }}
+                                                    {{ 'pagado' }}
                                                 </strong>
                                             @else
                                                 <strong class="text-danger">
-                                                    {{ translate('messages.unpaid') }}
+                                                    {{ 'no pagado' }}
                                                 </strong>
                                             @endif
                                         </div>
@@ -446,7 +446,7 @@
                     <div class="empty--data">
                         <img src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
                         <h5>
-                            {{ translate('no_data_found') }}
+                            {{ 'no se encontraron datos' }}
                         </h5>
                     </div>
                 @endif
@@ -483,9 +483,9 @@
                 width: 320,
                 type: 'donut',
             },
-            labels: ['{{ translate('Total canceled') }} ({{ $total_canceled_count}})',
-                '{{ translate('Total ongoing') }} ({{ $total_ongoing_count}})',
-                '{{ translate('Total delivered') }}  ({{ $total_delivered_count }})'
+            labels: ['{{ 'Total cancelado' }} ({{ $total_canceled_count}})',
+                '{{ 'Total en curso' }} ({{ $total_ongoing_count}})',
+                '{{ 'Total entregado' }}  ({{ $total_delivered_count }})'
             ],
             dataLabels: {
                 enabled: false,

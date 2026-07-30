@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Edit Restaurant'))
+@section('title', 'Editar restaurante')
 
 @section('content')
     <div class="content container-fluid">
@@ -10,7 +10,7 @@
                 <div class="col-sm mb-2 mb-sm-0">
                     <h1 class="page-header-title">
                         <span class="page-header-icon"><i class="tio-edit"></i></span>
-                        <span>{{ translate('Edit Restaurant') }} - {{ $restaurant->name }}</span>
+                        <span>{{ 'Editar restaurante' }} - {{ $restaurant->name }}</span>
                     </h1>
                 </div>
                 <div class="col-sm-auto">
@@ -28,15 +28,15 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-header-title">{{ translate('Sabores de la Ciudad Settings') }}</h4>
+                            <h4 class="card-header-title">{{ 'Ajustes de Sabores de la Ciudad' }}</h4>
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                    <label class="input-label" for="cuisine_names">{{ translate('Cuisine Names') }}</label>
+                                    <label class="input-label" for="cuisine_names">{{ 'Nombres de cocina' }}</label>
                                     <div class="form-group">
                                         <div class="d-flex flex-wrap border rounded p-2" id="tags-container" style="background-color: #fff;">
                                             <!-- Tags will be injected here -->
-                                            <input type="text" id="tag-input" class="border-0 flex-grow-1" style="outline: none; min-width: 150px;" placeholder="{{ translate('Type and hit Enter') }}">
+                                            <input type="text" id="tag-input" class="border-0 flex-grow-1" style="outline: none; min-width: 150px;" placeholder="{{ 'Escribe y presiona Enter' }}">
                                         </div>
                                         @php
                                             $cuisineNames = old('cuisine_names', $restaurant->cuisine_names);
@@ -76,7 +76,7 @@
                                                     
                                                     // MAX TAGS CHECK
                                                     if (tags.length >= 3) {
-                                                        toastr.warning('{{ translate('Maximum 3 tags allowed') }}', {
+                                                        toastr.warning('{{ 'Máximo 3 etiquetas permitidas' }}', {
                                                             CloseButton: true,
                                                             ProgressBar: true
                                                         });
@@ -117,10 +117,10 @@
 
                                 <!-- Icono del pin en mapa (app Sabores) -->
                                 <div class="col-md-6 mb-3">
-                                    <label class="input-label" for="sabores_map_emoji">{{ translate('Map marker emoji (Sabores)') }}</label>
+                                    <label class="input-label" for="sabores_map_emoji">{{ 'Emoji marcador de mapa (Sabores)' }}</label>
                                     <select name="sabores_map_emoji" id="sabores_map_emoji" class="form-control"
                                             style="font-size: 1.35rem; line-height: 2rem;">
-                                        <option value="">{{ translate('Automatic by cuisine or name') }}</option>
+                                        <option value="">{{ 'Automático por cocina o nombre' }}</option>
                                         @foreach(config('sabores.map_marker_emojis', []) as $mapEmoji)
                                             <option value="{{ $mapEmoji }}"
                                                 @selected(old('sabores_map_emoji', $restaurant->sabores_map_emoji) === $mapEmoji)>
@@ -128,26 +128,26 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                    <small class="text-muted d-block mt-1">{{ translate('Shown on the city map pin for this restaurant.') }}</small>
+                                    <small class="text-muted d-block mt-1">{{ 'Se muestra en el pin del mapa de la ciudad de este restaurante.' }}</small>
                                 </div>
 
                                 <!-- Average Ticket -->
                                 <div class="col-md-6 mb-3">
                                     <label class="input-label" for="average_ticket">
-                                        {{ translate('Average Ticket') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})
-                                        <span class="input-label-secondary" title="{{ translate('Average cost per person') }}">
+                                        {{ 'Boleto promedio' }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})
+                                        <span class="input-label-secondary" title="{{ 'Costo promedio por persona' }}">
                                             <i class="tio-info-outined"></i>
                                         </span>
                                     </label>
                                     <input type="number" step="0.01" min="0" name="average_ticket" 
                                            class="form-control" id="average_ticket" 
                                            value="{{ old('average_ticket', $restaurant->average_ticket) }}"
-                                           placeholder="{{ translate('e.g., 25.00') }}">
+                                           placeholder="{{ 'por ejemplo, 25.00' }}">
                                 </div>
 
                                 <!-- Serves Alcohol -->
                                 <div class="col-md-6 mb-3">
-                                    <label class="input-label d-block">{{ translate('Serves Alcohol') }}</label>
+                                    <label class="input-label d-block">{{ 'Sirve alcohol' }}</label>
                                     <label class="toggle-switch toggle-switch-sm" for="serves_alcohol">
                                         <input type="checkbox" class="toggle-switch-input" 
                                                id="serves_alcohol" name="serves_alcohol" 
@@ -160,7 +160,7 @@
 
                                 <!-- Accepts Reservations -->
                                 <div class="col-md-6 mb-3">
-                                    <label class="input-label d-block">{{ translate('Accepts Reservations') }}</label>
+                                    <label class="input-label d-block">{{ 'Acepta Reservas' }}</label>
                                     <label class="toggle-switch toggle-switch-sm" for="accepts_reservations">
                                         <input type="checkbox" class="toggle-switch-input" 
                                                id="accepts_reservations" name="accepts_reservations" 
@@ -173,7 +173,7 @@
 
                                 <!-- Exclude from Sabores de la Ciudad -->
                                 <div class="col-md-6 mb-3">
-                                    <label class="input-label d-block">{{ translate('Exclude from Sabores de la Ciudad (e.g., Dark Kitchens)') }}</label>
+                                    <label class="input-label d-block">{{ 'Excluir de Sabores de la Ciudad (por ejemplo, Dark Kitchens)' }}</label>
                                     <label class="toggle-switch toggle-switch-sm" for="exclude_from_sabores">
                                         <input type="checkbox" class="toggle-switch-input" 
                                                id="exclude_from_sabores" name="exclude_from_sabores" 
@@ -186,29 +186,29 @@
 
                                 <!-- Event Settings -->
                                 <div class="col-md-12 mt-4 mb-2">
-                                    <h4 class="text-primary"><i class="tio-calendar"></i> {{ translate('Sabores Event Settings') }}</h4>
+                                    <h4 class="text-primary"><i class="tio-calendar"></i> {{ 'Configuración del evento Sabores' }}</h4>
                                     <hr class="mt-1 mb-3">
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label class="input-label" for="event_title">{{ translate('Event Title') }}</label>
+                                    <label class="input-label" for="event_title">{{ 'Título del evento' }}</label>
                                     <input type="text" name="event_title" class="form-control" id="event_title" 
                                            value="{{ old('event_title', $restaurant->event_title) }}"
-                                           placeholder="{{ translate('e.g., Taco Fest, Live Jazz Night') }}">
+                                           placeholder="{{ 'por ejemplo, Taco Fest, Noche de Jazz en Vivo' }}">
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label class="input-label" for="event_date">{{ translate('Event Date') }}</label>
+                                    <label class="input-label" for="event_date">{{ 'Fecha del evento' }}</label>
                                     <input type="date" name="event_date" class="form-control" id="event_date" 
                                            value="{{ old('event_date', $restaurant->event_date ? \Carbon\Carbon::parse($restaurant->event_date)->format('Y-m-d') : '') }}">
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label class="input-label">{{ translate('Event Map Sticker (PNG background transparent recommended)') }}</label>
+                                    <label class="input-label">{{ 'Etiqueta adhesiva del mapa del evento (se recomienda fondo PNG transparente)' }}</label>
                                     <div class="custom-file">
                                         <input type="file" name="event_image" id="customFileEg1" class="custom-file-input"
                                                accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                        <label class="custom-file-label" for="customFileEg1">{{translate('Choose File')}}</label>
+                                        <label class="custom-file-label" for="customFileEg1">{{'Elija archivo'}}</label>
                                     </div>
                                     <div class="mt-2">
                                         <img id="viewerEvent" src="{{ $restaurant->event_image ? $restaurant->event_image_full_url : asset('assets/admin/img/400x400/img2.jpg') }}" alt="Event Sticker Image" class="img-thumbnail" style="max-height: 150px; object-fit: cover;">
@@ -216,11 +216,11 @@
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label class="input-label">{{ translate('Event Card Background Photo') }}</label>
+                                    <label class="input-label">{{ 'Foto de fondo de tarjeta de evento' }}</label>
                                     <div class="custom-file">
                                         <input type="file" name="event_card_image" id="customFileEg2" class="custom-file-input"
                                                accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                        <label class="custom-file-label" for="customFileEg2">{{translate('Choose File')}}</label>
+                                        <label class="custom-file-label" for="customFileEg2">{{'Elija archivo'}}</label>
                                     </div>
                                     <div class="mt-2">
                                         <img id="viewerEventCard" src="{{ $restaurant->event_card_image ? $restaurant->event_card_image_full_url : asset('assets/admin/img/400x400/img2.jpg') }}" alt="Event Card Image" class="img-thumbnail" style="max-height: 150px; object-fit: cover;">
@@ -230,14 +230,14 @@
                                 <!-- Google Address -->
                                 <div class="col-md-12 mb-3">
                                     <label class="input-label" for="google_address">
-                                        {{ translate('Google Address') }}
-                                        <span class="input-label-secondary" title="{{ translate('Address from Google Maps') }}">
+                                        {{ 'Dirección de Google' }}
+                                        <span class="input-label-secondary" title="{{ 'Dirección de Google Maps' }}">
                                             <i class="tio-info-outined"></i>
                                         </span>
                                     </label>
                                     <input type="text" name="google_address" class="form-control" id="google_address" 
                                            value="{{ old('google_address', $restaurant->google_address) }}"
-                                           placeholder="{{ translate('e.g., 1600 Amphitheatre Parkway, Mountain View, CA') }}">
+                                           placeholder="{{ 'por ejemplo, 1600 Amphitheatre Parkway, Mountain View, CA' }}">
                                            
                                     <input type="hidden" name="google_place_id" id="google_place_id" value="{{ old('google_place_id', $restaurant->google_place_id) }}">
                                 </div>
@@ -245,7 +245,7 @@
                                 <!-- Infrastructure Images -->
                                 <div class="col-12">
                                      <div class="form-group mb-0">
-                                        <label class="input-label">{{ translate('Infrastructure Images') }} ({{ translate('Ratio 1:1') }})</label>
+                                        <label class="input-label">{{ 'Imágenes de infraestructura' }} ({{ 'Relación 1:1' }})</label>
                                         <div class="row" id="infrastructure_images">
                                             @if(isset($restaurant->infrastructure_images_full_url) && count($restaurant->infrastructure_images_full_url) > 0)
                                                 @foreach($restaurant->infrastructure_images_full_url as $key => $img)
@@ -269,7 +269,7 @@
 
                                     <!-- Menu Images -->
                                     <div class="col-12 mt-4">
-                                        <label class="input-label">{{ translate('Menu Images') }} ({{ translate('Ratio 1:1') }})</label>
+                                        <label class="input-label">{{ 'Imágenes del menú' }} ({{ 'Relación 1:1' }})</label>
                                         <div class="row" id="menu_images">
                                             @if(isset($restaurant->menu_images_full_url) && count($restaurant->menu_images_full_url) > 0)
                                                 @foreach($restaurant->menu_images_full_url as $key => $img)
@@ -294,7 +294,7 @@
 
                                 <!-- Operating Hours -->
                                 <div class="col-12 mt-4">
-                                    <h4 class="mb-3">{{ translate('Operating Hours') }}</h4>
+                                    <h4 class="mb-3">{{ 'Horas de funcionamiento' }}</h4>
                                     <div class="row">
                                         @php
                                             $days = [
@@ -318,11 +318,11 @@
                                                     <h5 class="mb-2">{{ translate($day) }}</h5>
                                                     <div class="d-flex align-items-center justify-content-between">
                                                         <div class="form-group mb-0 mr-2 w-100">
-                                                            <label>{{ translate('Opening Time') }}</label>
+                                                            <label>{{ 'Hora de apertura' }}</label>
                                                             <input type="time" name="schedules[{{$key}}][opening_time]" class="form-control" value="{{ $open }}">
                                                         </div>
                                                         <div class="form-group mb-0 w-100">
-                                                            <label>{{ translate('Closing Time') }}</label>
+                                                            <label>{{ 'Hora de cierre' }}</label>
                                                             <input type="time" name="schedules[{{$key}}][closing_time]" class="form-control" value="{{ $close }}">
                                                         </div>
                                                     </div>
@@ -335,7 +335,7 @@
                         </div>
                         <div class="card-footer">
                             <button type="submit" class="btn btn-primary">
-                                <i class="tio-save"></i> {{ translate('Save Changes') }}
+                                <i class="tio-save"></i> {{ 'Guardar cambios' }}
                             </button>
                         </div>
                     </div>
@@ -373,7 +373,7 @@
                             toastr.success(response.message);
                         },
                         error: function(xhr) {
-                            toastr.error('{{ translate('Failed to update image order') }}');
+                            toastr.error('{{ 'No se pudo actualizar el orden de las imágenes' }}');
                         }
                     });
                 }
@@ -400,13 +400,13 @@
 
                 },
                 onExtensionErr: function(index, file) {
-                    toastr.error('{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
+                    toastr.error('{{ 'Por favor ingrese solo archivos tipo png o jpg' }}', {
                         CloseButton: true,
                         ProgressBar: true
                     });
                 },
                 onSizeErr: function(index, file) {
-                    toastr.error('{{ translate('messages.file_size_too_big') }}', {
+                    toastr.error('{{ 'tamaño de archivo demasiado grande' }}', {
                         CloseButton: true,
                         ProgressBar: true
                     });
@@ -452,13 +452,13 @@
                 onRenderedPreview: function(index) {},
                 onRemoveRow: function(index) {},
                 onExtensionErr: function(index, file) {
-                    toastr.error('{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
+                    toastr.error('{{ 'Por favor ingrese solo archivos tipo png o jpg' }}', {
                         CloseButton: true,
                         ProgressBar: true
                     });
                 },
                 onSizeErr: function(index, file) {
-                    toastr.error('{{ translate('messages.file_size_too_big') }}', {
+                    toastr.error('{{ 'tamaño de archivo demasiado grande' }}', {
                         CloseButton: true,
                         ProgressBar: true
                     });

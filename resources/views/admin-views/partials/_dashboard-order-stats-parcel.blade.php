@@ -2,7 +2,7 @@
     <a class="__card-1 bg-E6F6EE h-100" href="{{route('admin.parcel.orders',['all'])}}">
         <img src="{{asset('assets/admin/img/report/new/total.png')}}" class="icon" alt="report/new">
         <h3 class="title text-success">{{$data['total_orders']}}</h3>
-        <h6 class="subtitle font-regular">{{ translate('total_orders') }}</h6>
+        <h6 class="subtitle font-regular">{{ 'pedidos totales' }}</h6>
     </a>
 </div>
 <div class="col-lg-9">
@@ -14,7 +14,7 @@
                     <span style="height:{{$data['total_orders']>0?($data['searching_for_dm']*100)/$data['total_orders']:0}}%"></span>
             </span>
             <h4 class="title">{{$data['searching_for_dm']}}</h4>
-            <span class="subtitle font-regular">{{translate('unassigned_orders')}}</span>
+            <span class="subtitle font-regular">{{'Pedidos Sin Asignar'}}</span>
             <img src="{{asset('assets/admin/img/dashboard/1.png')}}" alt="img" class="resturant-icon top-50px">
             </a>
             <!-- End Card -->
@@ -26,7 +26,7 @@
                     <span style="height:{{$data['total_orders']>0?($data['picked_up']*100)/$data['total_orders']:0}}%"></span>
             </span>
             <h4 class="title">{{$data['picked_up']}}</h4>
-            <span class="subtitle font-regular">{{translate('out_for_delivery')}}</span>
+            <span class="subtitle font-regular">{{'En Camino de Entrega'}}</span>
             <img src="{{asset('assets/admin/img/dashboard/4.png')}}" alt="img" class="resturant-icon top-50px">
             </a>
             <!-- End Card -->
@@ -38,7 +38,7 @@
                     <span style="height:{{$data['total_orders']>0?($data['delivered']*100)/$data['total_orders']:0}}%"></span>
             </span>
             <h4 class="title text-success">{{$data['delivered']}}</h4>
-            <span class="subtitle font-regular">{{translate('delivered')}}</span>
+            <span class="subtitle font-regular">{{'Entregado'}}</span>
             <img src="{{asset('assets/admin/img/dashboard/2.png')}}" alt="img" class="resturant-icon top-50px">
             </a>
             <!-- End Card -->
@@ -50,7 +50,7 @@
                     <span style="height:{{$data['total_orders']>0?($data['refund_requested']*100)/$data['total_orders']:0}}%"></span>
             </span>
             <h4 class="title">{{$data['refund_requested']}}</h4>
-            <span class="subtitle font-regular">{{translate('Failed Orders')}}</span>
+            <span class="subtitle font-regular">{{'Órdenes fallidas'}}</span>
             <img src="{{asset('assets/admin/img/dashboard/5.png')}}" alt="img" class="resturant-icon top-50px">
             </a>
             <!-- End Card -->

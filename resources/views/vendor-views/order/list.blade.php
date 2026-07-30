@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title',translate('messages.Order List'))
+@section('title','Lista de pedidos')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/order.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate(str_replace('_',' ',$status))}} {{translate('messages.orders')}}
+                    {{translate(str_replace('_',' ',$status))}} {{'Pedidos'}}
                     <span class="badge badge-soft-dark ml-2">{{$orders->total()}}</span>
                 </span>
             </h1>
@@ -31,7 +31,7 @@
 
                             <!-- Search -->
                             <div class="input-group input--group">
-                                <input  type="search" value="{{  request()?->search ?? null }}" name="search" class="form-control" placeholder="{{translate('messages.ex_:_search_order_id')}}" aria-label="{{translate('messages.search')}}" >
+                                <input  type="search" value="{{  request()?->search ?? null }}" name="search" class="form-control" placeholder="{{'ej: ID de orden de búsqueda'}}" aria-label="{{'buscar'}}" >
                                 <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                             </div>
                             <!-- End Search -->
@@ -43,44 +43,44 @@
                                     "target": "#usersExportDropdown",
                                     "type": "css-animation"
                                 }'>
-                                <i class="tio-download-to mr-1"></i> {{translate('messages.export')}}
+                                <i class="tio-download-to mr-1"></i> {{'exportar'}}
                             </a>
 
                             <div id="usersExportDropdown"
                                     class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                                <span class="dropdown-header">{{translate('messages.options')}}</span>
+                                <span class="dropdown-header">{{'opciones'}}</span>
                                 <a id="export-copy" class="dropdown-item" href="javascript:">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
                                             src="{{asset('assets/admin/svg/illustrations/copy.svg')}}"
                                             alt="Image Description">
-                                    {{translate('messages.copy')}}
+                                    {{'Copiar'}}
                                 </a>
                                 <a id="export-print" class="dropdown-item" href="javascript:">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
                                             src="{{asset('assets/admin/svg/illustrations/print.svg')}}"
                                             alt="Image Description">
-                                    {{translate('messages.print')}}
+                                    {{'imprimir'}}
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <span
-                                    class="dropdown-header">{{translate('messages.download_options')}}</span>
+                                    class="dropdown-header">{{'opciones de descarga'}}</span>
                                 <a id="export-excel" class="dropdown-item" href="javascript:">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
                                             src="{{asset('assets/admin/svg/components/excel.svg')}}"
                                             alt="Image Description">
-                                    {{translate('messages.excel')}}
+                                    {{'sobresalir'}}
                                 </a>
                                 <a id="export-csv" class="dropdown-item" href="javascript:">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
                                             src="{{asset('assets/admin/svg/components/placeholder-csv-format.svg')}}"
                                             alt="Image Description">
-                                    .{{translate('messages.csv')}}
+                                    .{{'csv'}}
                                 </a>
                                 <a id="export-pdf" class="dropdown-item" href="javascript:">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
                                             src="{{asset('assets/admin/svg/components/pdf.svg')}}"
                                             alt="Image Description">
-                                    {{translate('messages.pdf')}}
+                                    {{'pdf'}}
                                 </a>
                             </div>
                         </div>
@@ -93,7 +93,7 @@
                                     "target": "#showHideDropdown",
                                     "type": "css-animation"
                                 }'>
-                                <i class="tio-table mr-1"></i> {{translate('messages.column')}} <span
+                                <i class="tio-table mr-1"></i> {{'columna'}} <span
                                     class="badge badge-soft-dark rounded-circle ml-1"></span>
                             </a>
 
@@ -101,7 +101,7 @@
                                 <div class="card card-sm">
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <span class="mr-2">{{translate('messages.order')}}</span>
+                                            <span class="mr-2">{{'Pedido'}}</span>
 
                                             <!-- Checkbox Switch -->
                                             <label class="toggle-switch toggle-switch-sm" for="toggleColumn_order">
@@ -115,7 +115,7 @@
                                         </div>
 
                                         <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <span class="mr-2">{{translate('messages.date')}}</span>
+                                            <span class="mr-2">{{'fecha'}}</span>
 
                                             <!-- Checkbox Switch -->
                                             <label class="toggle-switch toggle-switch-sm" for="toggleColumn_date">
@@ -129,7 +129,7 @@
                                         </div>
 
                                         <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <span class="mr-2">{{translate('messages.customer')}}</span>
+                                            <span class="mr-2">{{'Cliente'}}</span>
 
                                             <!-- Checkbox Switch -->
                                             <label class="toggle-switch toggle-switch-sm"
@@ -145,7 +145,7 @@
 
                                         <div class="d-flex justify-content-between align-items-center mb-3">
                                             <span
-                                                class="mr-2 text-capitalize">{{translate('messages.total_amount')}}</span>
+                                                class="mr-2 text-capitalize">{{'cantidad total'}}</span>
 
                                             <!-- Checkbox Switch -->
                                             <label class="toggle-switch toggle-switch-sm"
@@ -160,7 +160,7 @@
                                         </div>
 
                                         <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <span class="mr-2">{{translate('messages.order_status')}}</span>
+                                            <span class="mr-2">{{'estado del pedido'}}</span>
 
                                             <!-- Checkbox Switch -->
                                             <label class="toggle-switch toggle-switch-sm" for="toggleColumn_order_status">
@@ -174,7 +174,7 @@
                                         </div>
 
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <span class="mr-2">{{translate('messages.actions')}}</span>
+                                            <span class="mr-2">{{'comportamiento'}}</span>
 
                                             <!-- Checkbox Switch -->
                                             <label class="toggle-switch toggle-switch-sm"
@@ -209,14 +209,14 @@
                         <thead class="thead-light">
                         <tr>
                             <th class="border-0">
-                                {{translate('messages.#')}}
+                                {{'#'}}
                             </th>
-                            <th class="border-0 table-column-pl-0">{{translate('messages.order_id')}}</th>
-                            <th class="border-0">{{translate('messages.order_date')}}</th>
-                            <th class="border-0">{{translate('messages.customer_information')}}</th>
-                            <th class="border-0">{{translate('messages.total_amount')}}</th>
-                            <th class="border-0 text-center">{{translate('messages.order_status')}}</th>
-                            <th class="border-0 text-center">{{translate('messages.actions')}}</th>
+                            <th class="border-0 table-column-pl-0">{{'identificación del pedido'}}</th>
+                            <th class="border-0">{{'fecha del pedido'}}</th>
+                            <th class="border-0">{{'información del cliente'}}</th>
+                            <th class="border-0">{{'cantidad total'}}</th>
+                            <th class="border-0 text-center">{{'estado del pedido'}}</th>
+                            <th class="border-0 text-center">{{'comportamiento'}}</th>
                         </tr>
                         </thead>
 
@@ -230,7 +230,7 @@
                                     <a href="{{route('vendor.order.details',['id'=>$order['id']])}}">{{$order['id']}}</a>
                                     @if(!empty($order->tootli_direct))
                                         <div class="mt-1">
-                                            <span class="badge badge-soft-dark">{{ translate('messages.tootli_direct_order_badge') }}</span>
+                                            <span class="badge badge-soft-dark">{{ 'insignia de pedido directo de tootli' }}</span>
                                         </div>
                                     @endif
                                 </td>
@@ -257,7 +257,7 @@
                                     </div>
                                     @else
                                         <label
-                                            class="badge badge-danger">{{translate('messages.invalid_customer_data')}}</label>
+                                            class="badge badge-danger">{{'datos de cliente no válidos'}}</label>
                                     @endif
                                 </td>
                                 <td>
@@ -267,15 +267,15 @@
                                         </div>
                                         @if($order->payment_status=='paid')
                                         <strong class="text-success">
-                                            {{translate('messages.paid')}}
+                                            {{'pagado'}}
                                         </strong>
                                         @elseif($order->payment_status=='partially_paid')
                                         <strong class="text-success">
-                                            {{translate('messages.partially_paid')}}
+                                            {{'parcialmente pagado'}}
                                         </strong>
                                         @else
                                         <strong class="text-danger">
-                                            {{translate('messages.unpaid')}}
+                                            {{'no pagado'}}
                                         </strong>
                                         @endif
                                     </div>
@@ -283,27 +283,27 @@
                                 <td class="text-capitalize text-center">
                                     @if($order['order_status']=='pending')
                                         <span class="badge badge-soft-info">
-                                        {{translate('messages.pending')}}
+                                        {{'Pendiente'}}
                                         </span>
                                     @elseif($order['order_status']=='confirmed')
                                         <span class="badge badge-soft-info">
-                                        {{translate('messages.confirmed')}}
+                                        {{'confirmado'}}
                                         </span>
                                     @elseif($order['order_status']=='processing')
                                         <span class="badge badge-soft-warning">
-                                        {{translate('messages.processing')}}
+                                        {{'tratamiento'}}
                                         </span>
                                     @elseif($order['order_status']=='picked_up')
                                         <span class="badge badge-soft-warning">
-                                        {{translate('messages.out_for_delivery')}}
+                                        {{'En Camino de Entrega'}}
                                         </span>
                                     @elseif($order['order_status']=='delivered')
                                         <span class="badge badge-soft-success">
-                                        {{translate('messages.delivered')}}
+                                        {{'Entregado'}}
                                         </span>
                                     @elseif($order['order_status']=='failed')
                                         <span class="badge badge-soft-danger">
-                                        {{translate('messages.payment_failed')}}
+                                        {{'pago fallido'}}
                                         </span>
                                     @else
                                         <span class="badge badge-soft-danger">
@@ -312,15 +312,15 @@
                                     @endif
                                     @if($order['order_type']=='take_away')
                                         <div class="text-info mt-1">
-                                            {{ translate('Llevar') }}
+                                            {{ 'Llevar' }}
                                         </div>
                                     @elseif($order['order_type']=='dine_in')
                                         <div class="text-info mt-1">
-                                            {{ translate('En restaurante') }}
+                                            {{ 'En restaurante' }}
                                         </div>
                                     @else
                                         <div class="text-title mt-1">
-                                        {{ !empty($order->tootli_direct) ? translate('Domicilio (Tootli Direct)') : translate('messages.home Delivery') }}
+                                        {{ !empty($order->tootli_direct) ? 'Domicilio (Tootli Directo)' : 'entrega a domicilio' }}
                                         </div>
                                     @endif
                                 </td>
@@ -338,7 +338,7 @@
                     <div class="empty--data">
                         <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
-                            {{translate('no_data_found')}}
+                            {{'no se encontraron datos'}}
                         </h5>
                     </div>
                     @endif

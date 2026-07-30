@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.react_landing_page'))
+@section('title','reaccionar página de inicio')
 
 @section('content')
 <div class="content container-fluid">
@@ -11,11 +11,11 @@
                     <img src="{{asset('assets/admin/img/landing.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.react_landing_page') }}
+                    {{ 'reaccionar página de inicio' }}
                 </span>
             </h1>
             <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#how-it-works">
-                <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
+                <strong class="mr-2">{{'¡Mira cómo funciona!'}}</strong>
                 <div>
                     <i class="tio-info-outined"></i>
                 </div>
@@ -30,14 +30,14 @@
     <div class="card py-3 px-xxl-4 px-3 mb-20">
         <div class="d-flex flex-sm-nowrap flex-wrap gap-3 align-items-center justify-content-between">
             <div class="">
-                <h3 class="mb-1">{{ translate('High-light Section') }}</h3>
+                <h3 class="mb-1">{{ 'Sección destacada' }}</h3>
                 <p class="mb-0 gray-dark fs-12">
-                    {{ translate('See how your High-light Section will look to customers.') }}
+                    {{ 'Vea cómo se verá su sección destacada ante los clientes.' }}
                 </p>
             </div>
             <div class="max-w-300px ml-sm-auto">
                 <button type="button" class="btn btn-outline-primary py-2 fs-12 px-3 offcanvas-trigger" data-target="#high-light_section">
-                    <i class="tio-invisible"></i> {{ translate('Section Preview') }}
+                    <i class="tio-invisible"></i> {{ 'Vista previa de la sección' }}
                 </button>
             </div>
         </div>
@@ -47,63 +47,63 @@
         <form action="#0">
             <div class="card-body">
                 <div class="mb-20">
-                    <h3 class="mb-1">{{ translate('High-light Content Section ') }}</h3>
-                    <p class="mb-0 fs-12">{{ translate('Showcase the key features or achievements of your platform to build trust and engagement.') }}</p>
+                    <h3 class="mb-1">{{ 'Sección de contenido destacado' }}</h3>
+                    <p class="mb-0 fs-12">{{ 'Muestre las características clave o los logros de su plataforma para generar confianza y compromiso.' }}</p>
                 </div>
                 <div class="row g-3">
                     <div class="col-lg-8">
                         <div class="bg--secondary rounded h-100 p-xxl-4 p-3">
                             <ul class="nav nav-tabs mb-4 border-bottom">
                                 <li class="nav-item">
-                                    <a class="nav-link lang_link active" href="#" id="default-link">{{translate('messages.default')}}</a>
+                                    <a class="nav-link lang_link active" href="#" id="default-link">{{'por defecto'}}</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link lang_link" href="#" id="">{{translate('messages.English')}} ({{ translate('messages.EN') }})</a>
+                                    <a class="nav-link lang_link" href="#" id="">{{'Inglés'}} ({{ 'ES' }})</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link lang_link" href="#" id="">{{translate('messages.Arabic')}} ({{ translate('messages.(AR)') }})</a>
+                                    <a class="nav-link lang_link" href="#" id="">{{'árabe'}} ({{ '(ARKANSAS)' }})</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link lang_link" href="#" id="">{{translate('messages.Spanish')}} ({{ translate('messages.(ES)') }})</a>
+                                    <a class="nav-link lang_link" href="#" id="">{{'Español'}} ({{ '(ES)' }})</a>
                                 </li>
                             </ul>
                             <div class="row g-3">
                                 <div class="col-md-12 lang_form default-form">
                                     <div class="row g-1">
                                         <div class="col-12">
-                                            <label for="high_light_title" class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})
-                                                <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                            <label for="high_light_title" class="form-label">{{'Título'}} ({{ 'por defecto' }})
+                                                <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 50 caracteres.' }}">
                                                     <i class="tio-info color-A7A7A7"></i>
                                                 </span><span class="form-label-secondary text-danger"
                                                 data-toggle="tooltip" data-placement="right"
-                                                data-original-title="{{ translate('messages.Required.')}}"> *
+                                                data-original-title="{{ 'Requerido.'}}"> *
                                                 </span>
                                             </label>
-                                            <input id="high_light_title" type="text"  maxlength="50" name="high_light_title[]" value="" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                            <input id="high_light_title" type="text"  maxlength="50" name="high_light_title[]" value="" class="form-control" placeholder="{{'título aquí...'}}">
                                             <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/100</span>
                                         </div>
                                         <div class="col-12">
-                                            <label for="high_light_sub_title" class="form-label">{{translate('Sub Title')}} ({{ translate('messages.default') }})
-                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_200_characters') }}">
+                                            <label for="high_light_sub_title" class="form-label">{{'Subtítulo'}} ({{ 'por defecto' }})
+                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 200 caracteres.' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span><span class="form-label-secondary text-danger"
                                             data-toggle="tooltip" data-placement="right"
-                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            data-original-title="{{ 'Requerido.'}}"> *
                                             </span>
                                             </label>
-                                            <textarea id="high_light_sub_title" rows="2" type="text"  maxlength="200" name="high_light_sub_title[]" value="" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}"></textarea>
+                                            <textarea id="high_light_sub_title" rows="2" type="text"  maxlength="200" name="high_light_sub_title[]" value="" class="form-control" placeholder="{{'subtítulo aquí...'}}"></textarea>
                                             <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/200</span>
                                         </div>
                                         <div class="col-12">
-                                            <label for="download_button_name" class="form-label">{{translate('Button Name')}} ({{ translate('messages.default') }})
-                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_button_name_within_20_characters') }}">
+                                            <label for="download_button_name" class="form-label">{{'Nombre del botón'}} ({{ 'por defecto' }})
+                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escriba el nombre del botón dentro de 20 caracteres' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span><span class="form-label-secondary text-danger"
                                             data-toggle="tooltip" data-placement="right"
-                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            data-original-title="{{ 'Requerido.'}}"> *
                                             </span>
                                             </label>
-                                            <input id="download_button_name" type="text"  maxlength="20" name="download_button_name[]" value="" class="form-control" placeholder="{{translate('messages.Button Name')}}">
+                                            <input id="download_button_name" type="text"  maxlength="20" name="download_button_name[]" value="" class="form-control" placeholder="{{'Nombre del botón'}}">
                                             <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/20</span>
                                         </div>
                                     </div>
@@ -115,8 +115,8 @@
                         <div class="bg--secondary h-100 rounded p-md-4 p-3 d-center">
                             <div class="text-center">
                                 <div class="mb-4">
-                                    <h5 class="mb-1">{{ translate('Upload High-light Section Image') }}</h5>
-                                    <p class="mb-0 fs-12 gray-dark">{{ translate('Upload your High-light Section  Image') }}</p>
+                                    <h5 class="mb-1">{{ 'Cargar imagen de sección resaltada' }}</h5>
+                                    <p class="mb-0 fs-12 gray-dark">{{ 'Sube tu imagen de sección destacada' }}</p>
                                 </div>
                                 <div class="mx-auto text-center">
                                     <div class="upload-file_custom ratio-1 h-100px">
@@ -149,15 +149,15 @@
                                     </div>
                                 </div>
                                 <p class="fs-10 text-center mb-0 mt-lg-4 mt-3">
-                                    {{ translate('JPG, JPEG, PNG size : Max 2 MB')}} <span class="font-medium text-title">{{ translate('(1:1)')}}</span>
+                                    {{ 'Tamaño JPG, JPEG, PNG: máximo 2 MB'}} <span class="font-medium text-title">{{ '(1:1)'}}</span>
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="btn--container justify-content-end mt-20">
-                    <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
-                    <button type="submit"   class="btn btn--primary mb-2">{{translate('Save')}}</button>
+                    <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
+                    <button type="submit"   class="btn btn--primary mb-2">{{'Ahorrar'}}</button>
                 </div>
             </div>
         </form>
@@ -172,7 +172,7 @@
         <div>
             <div class="custom-offcanvas-header bg--secondary d-flex justify-content-between align-items-center px-3 py-3">
                 <div class="py-1">
-                    <h3 class="mb-0 line--limit-1">{{ translate('messages.High-light Section Preview') }}</h3>
+                    <h3 class="mb-0 line--limit-1">{{ 'Vista previa de la sección resaltada' }}</h3>
                 </div>
                 <button type="button" class="btn-close w-25px h-25px border rounded-circle d-center bg--secondary text-dark offcanvas-close fz-15px p-0"aria-label="Close">
                     &times;

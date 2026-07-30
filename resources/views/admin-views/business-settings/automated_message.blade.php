@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Automated_Message'))
+@section('title', 'Mensaje automatizado')
 
 @push('css_or_js')
 <link rel="stylesheet" href="{{asset('assets/admin/css/owl.min.css')}}">
@@ -15,7 +15,7 @@
                     <img src="{{ asset('assets/admin/img/business.png') }}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.business_setup') }}
+                    {{ 'configuración de negocios' }}
                 </span>
             </h1>
             @include('admin-views.business-settings.partials.nav-menu')
@@ -33,7 +33,7 @@
                         <ul class="nav nav-tabs nav--tabs d-block nav-slider owl-theme owl-carousel mb-4">
                             <li class="nav-item">
                                 <a class="nav-link lang_link1 active px-0" href="#"
-                                    id="default-link1">{{ translate('Default') }}</a>
+                                    id="default-link1">{{ 'Por defecto' }}</a>
                             </li>
                             @foreach ($language as $lang)
                                 <li class="nav-item">
@@ -48,18 +48,18 @@
 
 
                             <div class="col-md-12 lang_form1 default-form1">
-                                <label for="reason" class="form-label">{{ translate('Automated_Message/Reason') }}
-                                    ({{ translate('Default') }})
+                                <label for="reason" class="form-label">{{ 'Mensaje/motivo automatizado' }}
+                                    ({{ 'Por defecto' }})
 
                                     <span class="input-label-secondary text--title" data-toggle="tooltip"
                                     data-placement="right"
-                                    data-original-title="{{ translate('You_must_set_predefined_reasons_for_customers_to_select_This_will_guide_them_in_choosing_a_reason_when_reporting_any_issues_with_their_order.') }}">
+                                    data-original-title="{{ 'Debe establecer motivos predefinidos para que los clientes seleccionen. Esto los guiará a la hora de elegir un motivo al informar cualquier problema con su pedido.' }}">
                                         <i class="tio-info-outined"></i>
                                     </span>
 
                                 </label>
                                 <input id="reason" type="text" class="form-control h--45px" name="message[]" maxlength="255"
-                                    placeholder="{{ translate('Ex:Enter_the_message') }}">
+                                    placeholder="{{ 'Ej:Ingrese el mensaje' }}">
                                 <input type="hidden" name="lang[]" value="default">
                             </div>
 
@@ -67,10 +67,10 @@
                                 @foreach ($language as $lang)
                                     <div class="col-md-12 d-none lang_form1" id="{{ $lang }}-form1">
                                         <label for="reason{{ $lang }}"
-                                            class="form-label">{{ translate('Automated_Message/Reason') }}
+                                            class="form-label">{{ 'Mensaje/motivo automatizado' }}
                                             ({{ strtoupper($lang) }})</label>
                                         <input id="reason{{ $lang }}" type="text" class="form-control h--45px"
-                                            name="message[]" maxlength="255" placeholder="{{ translate('Ex:Enter_the_message') }}">
+                                            name="message[]" maxlength="255" placeholder="{{ 'Ej:Ingrese el mensaje' }}">
                                         <input type="hidden" name="lang[]" value="{{ $lang }}">
                                     </div>
                                 @endforeach
@@ -79,8 +79,8 @@
                         </div>
                         <div class="mt-3 btn--container justify-content-end">
                             <button type="reset" id="reset_btn"
-                                class="btn btn--reset">{{ translate('messages.reset') }}</button>
-                            <button type="submit" class="btn btn--primary">{{ translate('messages.Submit') }}</button>
+                                class="btn btn--reset">{{ 'reiniciar' }}</button>
+                            <button type="submit" class="btn btn--primary">{{ 'Entregar' }}</button>
                         </div>
 
                     </form>
@@ -94,7 +94,7 @@
             <div class="card-header border-0">
                 <div class="mx-1">
                     <h5 class="form-label mb-2">
-                        {{ translate('Total message') }}
+                        {{ 'mensaje total' }}
                         <span class="badge badge-soft-dark ml-2" id="itemCount">{{$messages->total()}}</span>
                     </h5>
                 </div>
@@ -104,15 +104,15 @@
                         <div class="input-group input--group">
                             <input id="datatableSearch" name="search" value="{{ request()?->search ?? null }}"
                                 type="search" class="form-control h--40px"
-                                placeholder="{{ translate('ex_:Search_by_message') }}"
-                                aria-label="{{ translate('messages.search_here') }}">
+                                placeholder="{{ 'ej:Buscar por mensaje' }}"
+                                aria-label="{{ 'buscar aquí' }}">
                             <button type="submit" class="btn btn--secondary h--40px"><i class="tio-search"></i></button>
                         </div>
                         <!-- End Search -->
                     </form>
                     @if (request()->get('search'))
                         <button type="reset" class="btn btn--primary ml-2 location-reload-to-base"
-                            data-url="{{ url()->full() }}">{{ translate('messages.reset') }}</button>
+                            data-url="{{ url()->full() }}">{{ 'reiniciar' }}</button>
                     @endif
                 </div>
                 <!-- End Row -->
@@ -132,10 +132,10 @@
                     }'>
                         <thead class="thead-light">
                             <tr>
-                                <th class="border-0">{{ translate('messages.SL') }}</th>
-                                <th class="border-0">{{ translate('messages.message') }}</th>
-                                <th class="border-0">{{ translate('messages.status') }}</th>
-                                <th class="border-0 text-center">{{ translate('messages.action') }}</th>
+                                <th class="border-0">{{ 'SL' }}</th>
+                                <th class="border-0">{{ 'mensaje' }}</th>
+                                <th class="border-0">{{ 'estado' }}</th>
+                                <th class="border-0 text-center">{{ 'acción' }}</th>
                             </tr>
                         </thead>
 
@@ -165,15 +165,15 @@
                                     <td>
                                         <div class="btn--container justify-content-center">
                                             <a class="btn btn-sm btn--primary btn-outline-primary action-btn edit-reason"
-                                                title="{{ translate('messages.edit') }}" data-toggle="modal"
+                                                title="{{ 'editar' }}" data-toggle="modal"
                                                 data-target="#add_update_reason_{{ $message->id }}"><i
                                                     class="tio-edit"></i>
                                             </a>
 
                                             <a class="btn btn-sm btn--danger btn-outline-danger action-btn form-alert"
                                                 href="javascript:" data-id="refund_reason-{{ $message['id'] }}"
-                                                data-message="{{ translate('Want to delete this message ?') }}"
-                                                title="{{ translate('messages.delete') }}">
+                                                data-message="{{ '¿Quieres eliminar este mensaje?' }}"
+                                                title="{{ 'borrar' }}">
                                                 <i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{ route('admin.business-settings.automated_message.destroy', [$message['id']]) }}"
@@ -190,7 +190,7 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="exampleModalLabel">
-                                                    {{ translate('messages.Automated_Message/Reason_Update') }}</label></h5>
+                                                    {{ 'Actualización automática de mensajes/motivos' }}</label></h5>
                                                 <button type="button" class="close" data-dismiss="modal"
                                                     aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
@@ -207,7 +207,7 @@
                                                         <li class="nav-item">
                                                             <a class="nav-link update-lang_link add_active active px-0"
                                                                 href="#"
-                                                                id="default-link">{{ translate('Default') }}</a>
+                                                                id="default-link">{{ 'Por defecto' }}</a>
                                                         </li>
                                                         @if ($language)
                                                             @foreach ($language as $lang)
@@ -226,8 +226,8 @@
                                                     <div class="form-group mb-3 add_active_2  update-lang_form"
                                                         id="default-form_{{ $message->id }}">
                                                         <label for="reason"
-                                                            class="form-label">{{ translate('Automated_Message/Reason') }}
-                                                            ({{ translate('messages.default') }}) </label>
+                                                            class="form-label">{{ 'Mensaje/motivo automatizado' }}
+                                                            ({{ 'por defecto' }}) </label>
                                                         <input id="reason" class="form-control" name='message[]'
                                                             value="{{ $message?->getRawOriginal('message') }}" maxlength="255"
                                                             type="text">
@@ -248,7 +248,7 @@
                                                             <div class="form-group mb-3 d-none update-lang_form"
                                                                 id="{{ $lang }}-langform_{{ $message->id }}">
                                                                 <label for="reason{{ $lang }}"
-                                                                    class="form-label">{{ translate('Automated_Message/Reason') }}
+                                                                    class="form-label">{{ 'Mensaje/motivo automatizado' }}
                                                                     ({{ strtoupper($lang) }})</label>
                                                                 <input id="reason{{ $lang }}"
                                                                     class="form-control" name='message[]' maxlength="255"
@@ -264,9 +264,9 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
-                                                        data-dismiss="modal">{{ translate('Close') }}</button>
+                                                        data-dismiss="modal">{{ 'Cerca' }}</button>
                                                     <button type="submit"
-                                                        class="btn btn-primary">{{ translate('Save_changes') }}</button>
+                                                        class="btn btn-primary">{{ 'Guardar cambios' }}</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -279,7 +279,7 @@
                         <div class="empty--data">
                             <img src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
                             <h5>
-                                {{ translate('no_data_found') }}
+                                {{ 'no se encontraron datos' }}
                             </h5>
                         </div>
                     @endif

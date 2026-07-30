@@ -5,7 +5,7 @@
     @csrf
     <div>
         <div class="custom-offcanvas-header bg--secondary d-flex justify-content-between align-items-center px-3 py-3">
-            <h3 class="mb-0">{{ translate('Edit_Faq') }}</h3>
+            <h3 class="mb-0">{{ 'Editar preguntas frecuentes' }}</h3>
             <button type="button"
                 class="btn-close w-25px h-25px border rounded-circle d-center bg--secondary offcanvas-close fz-15px p-0"
                 aria-label="Close">&times;</button>
@@ -13,12 +13,12 @@
         <div class="custom-offcanvas-body p-20">
             {{-- <div class="bg--secondary rounded p-20 mb-20">
                 <div class="mb-15">
-                    <h4 class="mb-0">{{ translate('Availability') }}</h4>
-                    <p class="fz-12px">{{ translate('If_you_turn_off_this_status_your_tax_calculation_will_effect') }}
+                    <h4 class="mb-0">{{ 'Disponibilidad' }}</h4>
+                    <p class="fz-12px">{{ 'Si desactiva este estado, se aplicará el cálculo de impuestos.' }}
                     </p>
                 </div>
                 <label class="border d-flex align-items-center bg-white-n justify-content-between rounded p-10px px-3">
-                    {{ translate('Status') }}
+                    {{ 'Estado' }}
                     <div class="toggle-switch ml-auto justify-content-end toggle-switch-sm" for="status">
                         <input type="checkbox" name="status" value="1"
                             {{ $faq['status'] ? 'checked' : '' }} class="toggle-switch-input" id="status">
@@ -38,7 +38,7 @@
                     <ul class="nav nav-tabs mb-4 border-0">
                         <li class="nav-item">
                             <a class="nav-link lang_link1 active" href="#"
-                                id="default-link">{{ translate('messages.default') }}</a>
+                                id="default-link">{{ 'por defecto' }}</a>
                         </li>
                         @foreach ($language as $lang)
                             <li class="nav-item">
@@ -54,18 +54,18 @@
                             <div class="form-group lang_form1" id="default-form1">
                                 <div class="col-md-12">
                                     <label class="input-label"
-                                        for="exampleFormControlInput1">{{ translate('Question') }}
-                                        ({{ translate('messages.default') }})
+                                        for="exampleFormControlInput1">{{ 'Pregunta' }}
+                                        ({{ 'por defecto' }})
 
                                         <span class="form-label-secondary text-danger" data-toggle="tooltip"
                                             data-placement="right"
-                                            data-original-title="{{ translate('messages.Required.') }}"> *
+                                            data-original-title="{{ 'Requerido.' }}"> *
                                         </span>
 
                                     </label>
                                     <input id="Reviewer_name" data-maxlength="150" type="text" name="question[]"
                                         class="form-control" value="{{ $faq?->getRawOriginal('question') }}"
-                                        placeholder="{{ translate('Ex: John') }}" required>
+                                        placeholder="{{ 'Ej: Juan' }}" required>
 
                                     <div class="d-flex justify-content-end">
                                         <span class="text-body-light text-counting text-right d-block mt-1">0/150</span>
@@ -73,18 +73,18 @@
                                 </div>
                                 <div class="col-md-12">
                                     <label class="input-label"
-                                        for="exampleFormControlInput1">{{ translate('messages.Answer') }}
-                                        ({{ translate('messages.default') }})
+                                        for="exampleFormControlInput1">{{ 'Respuesta' }}
+                                        ({{ 'por defecto' }})
                                         <span class="form-label-secondary text-danger" data-toggle="tooltip"
                                             data-placement="right"
-                                            data-original-title="{{ translate('messages.Required.') }}"> *
+                                            data-original-title="{{ 'Requerido.' }}"> *
                                         </span>
 
                                     </label>
 
                                     <textarea id="Reviewer_review" data-maxlength="100"
                                           type="text"
-                                        name="answer[]" class="form-control" placeholder="{{ translate('Ex: John') }}" required>{{ $faq?->getRawOriginal('answer') }}</textarea>
+                                        name="answer[]" class="form-control" placeholder="{{ 'Ej: Juan' }}" required>{{ $faq?->getRawOriginal('answer') }}</textarea>
 
                                     <div class="d-flex justify-content-end">
                                         <span class="text-body-light text-counting text-right d-block mt-1">0/500</span>
@@ -114,12 +114,12 @@
                                     <div class="col-md-12">
 
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('Question') }}
+                                            for="exampleFormControlInput1">{{ 'Pregunta' }}
                                             ({{ strtoupper($lang) }})
                                         </label>
                                         <input type="text" name="question[]"
                                             value="{{ $translate[$lang]['question'] ?? '' }}" class="form-control"
-                                            data-maxlength="150" placeholder="{{ translate('Question') }}"
+                                            data-maxlength="150" placeholder="{{ 'Pregunta' }}"
                                             maxlength="191">
                                         <div class="d-flex justify-content-end">
                                             <span class="text-body-light text-counting text-right d-block mt-1">0/150</span>
@@ -129,12 +129,12 @@
                                     <div class="col-md-12">
 
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('answer') }}
+                                            for="exampleFormControlInput1">{{ 'respuesta' }}
                                             ({{ strtoupper($lang) }})
                                         </label>
                                         <textarea type="text" name="answer[]"
                                             class="form-control"
-                                            data-maxlength="500" placeholder="{{ translate('messages.answer') }}"
+                                            data-maxlength="500" placeholder="{{ 'respuesta' }}"
                                             maxlength="191">{{ $translate[$lang]['answer'] ?? '' }}</textarea>
                                         <div class="d-flex justify-content-end">
                                             <span class="text-body-light text-counting text-right d-block mt-1">0/500</span>
@@ -158,7 +158,7 @@
     <div
         class="align-items-center bg-white bottom-0 d-flex gap-3 justify-content-center mt-auto offcanvas-footer p-3 position-sticky">
         <button type="button"
-            class="btn w-100 btn--secondary offcanvas-close h--40px">{{ translate('Cancel') }}</button>
-        <button type="submit" class="btn w-100 btn--primary h--40px">{{ translate('Update') }}</button>
+            class="btn w-100 btn--secondary offcanvas-close h--40px">{{ 'Cancelar' }}</button>
+        <button type="submit" class="btn w-100 btn--primary h--40px">{{ 'Actualizar' }}</button>
     </div>
 </form>

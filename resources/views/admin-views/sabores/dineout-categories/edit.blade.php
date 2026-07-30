@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Edit Dineout Category'))
+@section('title', 'Editar categoría de cena fuera')
 
 @push('css_or_js')
 @endpush
@@ -14,7 +14,7 @@
                     <i class="tio-edit"></i>
                 </span>
                 <span>
-                    {{ translate('Edit Dineout Category') }}
+                    {{ 'Editar categoría de cena fuera' }}
                 </span>
             </h1>
         </div>
@@ -28,32 +28,32 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="input-label" for="name">{{ translate('messages.name') }}</label>
+                                <label class="input-label" for="name">{{ 'nombre' }}</label>
                                 <input type="text" name="name" class="form-control" value="{{ $category->name }}"
-                                    placeholder="{{ translate('Ex: Fine Dining') }}" required>
+                                    placeholder="{{ 'Ej: buena comida' }}" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="input-label" for="image">{{ translate('Icon (Emoji)') }}</label>
+                                <label class="input-label" for="image">{{ 'Icono (Emoji)' }}</label>
                                 <input type="text" name="image" class="form-control" value="{{ $category->image }}"
-                                    placeholder="{{ translate('Ex: 🍽️') }}" required>
+                                    placeholder="{{ 'Ej: 🍽️' }}" required>
                                 <small
-                                    class="text-muted">{{ translate('Copy and paste an emoji here to use as an icon') }}</small>
+                                    class="text-muted">{{ 'Copie y pegue un emoji aquí para usarlo como ícono' }}</small>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="input-label" for="position">{{ translate('Position') }}</label>
+                                <label class="input-label" for="position">{{ 'Posición' }}</label>
                                 <input type="number" name="position" class="form-control" value="{{ $category->position }}"
-                                    placeholder="{{ translate('Ex: 1') }}">
+                                    placeholder="{{ 'Ej: 1' }}">
                             </div>
                         </div>
                     </div>
 
                     <div class="btn--container justify-content-end mt-3">
-                        <button type="reset" class="btn btn--reset">{{ translate('messages.reset') }}</button>
-                        <button type="submit" class="btn btn--primary">{{ translate('messages.update') }}</button>
+                        <button type="reset" class="btn btn--reset">{{ 'reiniciar' }}</button>
+                        <button type="submit" class="btn btn--primary">{{ 'actualizar' }}</button>
                     </div>
                 </form>
             </div>

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Dineout Categories'))
+@section('title', 'Categorías para cenar fuera')
 
 @push('css_or_js')
 @endpush
@@ -14,11 +14,11 @@
                     <i class="tio-category"></i>
                 </span>
                 <span>
-                    {{ translate('Dineout Categories') }}
+                    {{ 'Categorías para cenar fuera' }}
                 </span>
             </h1>
             <a href="{{ route('admin.sabores.dineout-categories.create') }}" class="btn btn--primary">
-                <i class="tio-add"></i> {{ translate('Add New Category') }}
+                <i class="tio-add"></i> {{ 'Agregar nueva categoría' }}
             </a>
         </div>
         <!-- End Page Header -->
@@ -26,15 +26,15 @@
         <div class="card mt-3">
             <div class="card-header py-2 border-0">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title">{{ translate('messages.category_list') }}<span
+                    <h5 class="card-title">{{ 'lista de categorías' }}<span
                             class="badge badge-soft-dark ml-2" id="itemCount">{{ $categories->total() }}</span></h5>
 
                     <form class="search-form w-340-lg">
                         <!-- Search -->
                         <div class="input-group input--group">
                             <input type="search" name="search" value="{{ request()?->search ?? null }}"
-                                class="form-control h-40" placeholder="{{ translate('Search categories') }}"
-                                aria-label="{{ translate('Search categories') }}">
+                                class="form-control h-40" placeholder="{{ 'Buscar categorías' }}"
+                                aria-label="{{ 'Buscar categorías' }}">
                             <button type="submit" class="btn btn--primary h-40"><i class="tio-search"></i></button>
                         </div>
                         <!-- End Search -->
@@ -52,13 +52,13 @@
                         }'>
                         <thead class="bg-table-head">
                             <tr>
-                                <th class=" text-title border-0">{{ translate('sl') }}</th>
-                                <th class=" text-title border-0 w--1">{{ translate('messages.name') }}</th>
-                                <th class=" text-title border-0 text-center">{{ translate('Icon') }}</th>
-                                <th class=" text-title border-0 text-center">{{ translate('Stores') }}</th>
-                                <th class=" text-title border-0 text-center">{{ translate('Position') }}</th>
-                                <th class=" text-title border-0 text-center">{{ translate('messages.status') }}</th>
-                                <th class=" text-title border-0 text-center">{{ translate('messages.action') }}</th>
+                                <th class=" text-title border-0">{{ 'SL' }}</th>
+                                <th class=" text-title border-0 w--1">{{ 'nombre' }}</th>
+                                <th class=" text-title border-0 text-center">{{ 'Icono' }}</th>
+                                <th class=" text-title border-0 text-center">{{ 'Víveres' }}</th>
+                                <th class=" text-title border-0 text-center">{{ 'Posición' }}</th>
+                                <th class=" text-title border-0 text-center">{{ 'estado' }}</th>
+                                <th class=" text-title border-0 text-center">{{ 'acción' }}</th>
                             </tr>
                         </thead>
 
@@ -76,7 +76,7 @@
                                     </td>
                                     <td class="text-center">
                                         <a href="{{ route('admin.sabores.dineout-categories.stores', $category->id) }}" class="badge badge-soft-info">
-                                            {{ $category->stores()->count() }} {{ translate('Stores') }}
+                                            {{ $category->stores()->count() }} {{ 'Víveres' }}
                                         </a>
                                     </td>
                                     <td class="text-center">
@@ -98,18 +98,18 @@
                                         <div class="btn--container justify-content-center">
                                             <a class="btn action-btn btn-outline-info"
                                                 href="{{ route('admin.sabores.dineout-categories.stores', $category->id) }}"
-                                                title="{{ translate('Assign Stores') }}">
+                                                title="{{ 'Asignar tiendas' }}">
                                                 <i class="tio-shop"></i>
                                             </a>
                                             <a class="btn action-btn btn-outline-primary"
                                                 href="{{ route('admin.sabores.dineout-categories.edit', $category->id) }}"
-                                                title="{{ translate('Edit') }}">
+                                                title="{{ 'Editar' }}">
                                                 <i class="tio-edit"></i>
                                             </a>
                                             <a class="btn action-btn btn--danger btn-outline-danger"
                                                 href="javascript:"
-                                                onclick="form_alert('category-{{ $category['id'] }}','{{ translate('Want to delete this category?') }}')"
-                                                title="{{ translate('Delete') }}">
+                                                onclick="form_alert('category-{{ $category['id'] }}','{{ '¿Quieres eliminar esta categoría?' }}')"
+                                                title="{{ 'Borrar' }}">
                                                 <i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{ route('admin.sabores.dineout-categories.delete', $category->id) }}"

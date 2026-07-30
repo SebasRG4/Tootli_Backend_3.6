@@ -1,5 +1,5 @@
 @extends('layouts.landing.app')
-@section('title', translate('messages.vendor_registration'))
+@section('title', 'registro de proveedores')
 @push('css_or_js')
     <link rel="stylesheet" href="{{ asset('assets/admin/css/toastr.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/admin/css/view-pages/vendor-registration.css') }}">

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.disbursement_report'))
+@section('title', 'informe de desembolso')
 
 @push('css_or_js')
 @endpush
@@ -12,14 +12,14 @@
             <span class="page-header-icon">
                 <img src="{{asset('assets/admin/img/report/new/disburstment.png')}}" class="w--22" alt="">
             </span>
-                <span>{{ translate('Disbursement_Report') }}</span>
+                <span>{{ 'Informe de desembolso' }}</span>
             </h1>
             <ul class="nav nav-tabs mb-4 border-0 pt-2">
                 <li class="nav-item">
-                    <a class="nav-link {{ $tab=='store'?'active':'' }}" href="{{ route('admin.transactions.report.disbursement_report',  ['tab' => 'store']) }}" >{{ translate('Store_Disbursements') }}</a>
+                    <a class="nav-link {{ $tab=='store'?'active':'' }}" href="{{ route('admin.transactions.report.disbursement_report',  ['tab' => 'store']) }}" >{{ 'Desembolsos de la tienda' }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ $tab=='delivery_man'?'active':'' }}" href="{{ route('admin.transactions.report.disbursement_report',  ['tab' => 'delivery_man']) }}">{{ translate('Delivery_Man_Disbursements') }}</a>
+                    <a class="nav-link {{ $tab=='delivery_man'?'active':'' }}" href="{{ route('admin.transactions.report.disbursement_report',  ['tab' => 'delivery_man']) }}">{{ 'Desembolsos del repartidor' }}</a>
                 </li>
             </ul>
         </div>
@@ -29,8 +29,8 @@
                 <img src="{{asset('assets/admin/img/report/new/trx1.png')}}" class="icon" alt="report/new">
                 <h3 class="title text-008958">{{\App\CentralLogics\Helpers::format_currency($pending)}}
                 </h3>
-                <h6 class="subtitle">{{ translate('Pending_Disbursements') }}</h6>
-                <div class="info-icon" data-toggle="tooltip" data-placement="top" data-original-title="{{ translate('All_the_pending_disbursement_requests_that_require_admin’s_action_(complete/cancel).') }}">
+                <h6 class="subtitle">{{ 'Desembolsos pendientes' }}</h6>
+                <div class="info-icon" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Todas las solicitudes de desembolso pendientes que requieren la acción del administrador (completar/cancelar).' }}">
                     <img src="{{asset('assets/admin/img/report/new/info1.png')}}" alt="report/new">
                 </div>
             </div>
@@ -39,8 +39,8 @@
                 <img src="{{asset('assets/admin/img/report/new/trx5.png')}}" class="icon" alt="report/new">
                 <h3 class="title text-FF7E0D">{{\App\CentralLogics\Helpers::format_currency($completed)}}
                 </h3>
-                <h6 class="subtitle">{{ translate('Completed_Disbursements') }}</h6>
-                <div class="info-icon" data-toggle="tooltip" data-placement="top" data-original-title="{{ translate('The_amount_of_disbursement_is_completed.') }}">
+                <h6 class="subtitle">{{ 'Desembolsos completados' }}</h6>
+                <div class="info-icon" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Se completa el monto del desembolso.' }}">
                     <img src="{{asset('assets/admin/img/report/new/info5.png')}}" alt="report/new">
                 </div>
             </div>
@@ -49,8 +49,8 @@
                 <img src="{{asset('assets/admin/img/report/new/trx3.png')}}" class="icon" alt="report/new">
                 <h3 class="title text-FF5A54">{{\App\CentralLogics\Helpers::format_currency($canceled)}}
                 </h3>
-                <h6 class="subtitle">{{ translate('Canceled_Transactions') }}</h6>
-                <div class="info-icon" data-toggle="tooltip" data-placement="top" data-original-title="{{ translate('See_all_the_canceled_disbursement_amounts_here.') }}">
+                <h6 class="subtitle">{{ 'Transacciones canceladas' }}</h6>
+                <div class="info-icon" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Consulta aquí todos los montos de desembolsos cancelados.' }}">
                     <img src="{{asset('assets/admin/img/report/new/info3.png')}}" alt="report/new">
                 </div>
             </div>
@@ -58,12 +58,12 @@
 
         <div class="card mb-20">
             <div class="card-body">
-                <h4 class="">{{ translate('Search_Data') }}</h4>
+                <h4 class="">{{ 'Buscar datos' }}</h4>
                 <form method="get">
                     <div class="row g-3">
                         <div class="col-sm-6 col-md-3">
                             <select name="zone_id" class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}" data-filter="zone_id" id="zone">
-                                <option value="all">{{ translate('messages.All_Zones') }}</option>
+                                <option value="all">{{ 'Todas las Zonas' }}</option>
                                 @foreach (\App\Models\Zone::orderBy('name')->get(['id','name']) as $z)
                                     <option value="{{ $z['id'] }}"
                                         {{ isset($zone) && $zone->id == $z['id'] ? 'selected' : '' }}>
@@ -75,9 +75,9 @@
                         @if($tab=='store')
                         <div class="col-sm-6 col-md-3">
                             <select name="module_id" class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}" data-filter="module_id"
-                                    title="{{ translate('messages.select_modules') }}">
+                                    title="{{ 'seleccionar módulos' }}">
                                 <option value="" {{ !request('module_id') ? 'selected' : '' }}>
-                                    {{ translate('messages.all_modules') }}</option>
+                                    {{ 'todos los módulos' }}</option>
                                 @foreach (\App\Models\Module::notParcel()->get() as $module)
                                     <option value="{{ $module->id }}"
                                         {{ request('module_id') == $module->id ? 'selected' : '' }}>
@@ -88,33 +88,33 @@
                         </div>
                         <div class="col-sm-6 col-md-3">
                             <select name="store_id" data-url="{{ url()->full() }}" data-filter="store_id"
-                                    data-placeholder="{{ translate('messages.select_store') }}"
+                                    data-placeholder="{{ 'seleccionar tienda' }}"
                                     class="js-data-example-ajax form-control set-filter">
                                 @if (isset($store))
                                     <option value="{{ $store->id }}" selected>{{ $store->name }}</option>
                                 @else
-                                    <option value="all" selected>{{ translate('messages.all_stores') }}</option>
+                                    <option value="all" selected>{{ 'todas las tiendas' }}</option>
                                 @endif
                             </select>
                         </div>
                         @else
                         <div class="col-sm-6 col-md-3">
                             <select name="deliveryman_id" id="deliveryman" data-url="{{ url()->full() }}" data-filter="deliveryman_id"
-                                    data-placeholder="{{ translate('messages.select_delivery_man') }}"
+                                    data-placeholder="{{ 'seleccionar repartidor' }}"
                                     class="js-data-example-ajax form-control set-filter">
                                 @if (isset($delivery_man))
                                     <option value="{{ $delivery_man->id }}" selected>{{ $delivery_man->name }}</option>
                                 @else
-                                    <option value="all" selected>{{ translate('messages.all_delivery_mans') }}</option>
+                                    <option value="all" selected>{{ 'todos los repartidores' }}</option>
                                 @endif
                             </select>
                         </div>
                         @endif
                         <div class="col-sm-6 col-md-3">
                             <select name="payment_method_id" data-url="{{ url()->full() }}" data-filter="payment_method_id"
-                                    data-placeholder="{{ translate('messages.select_payment_method') }}"
+                                    data-placeholder="{{ 'seleccione el método de pago' }}"
                                     class="form-control js-select2-custom set-filter">
-                                <option value="all">{{translate('All_Payment_Method')}}</option>
+                                <option value="all">{{'Todos los métodos de pago'}}</option>
                                 @foreach($withdrawal_methods as $item)
                                     <option value="{{$item['id']}}" {{ isset($payment_method_id) && $payment_method_id == $item['id'] ? 'selected' : '' }}>{{$item['method_name']}}</option>
                                 @endforeach
@@ -122,47 +122,47 @@
                         </div>
                         <div class="col-sm-6 col-md-3">
                             <select name="status" data-url="{{ url()->full() }}" data-filter="status"
-                                    data-placeholder="{{ translate('messages.select_status') }}"
+                                    data-placeholder="{{ 'seleccionar estado' }}"
                                     class="form-control js-select2-custom set-filter">
-                                <option value="all" {{ isset($status) && $status == 'all' ? 'selected' : '' }}>{{translate('All_status')}}</option>
-                                <option value="pending" {{ isset($status) && $status == 'pending' ? 'selected' : '' }}>{{ translate('pending') }}</option>
-                                <option value="completed" {{ isset($status) && $status == 'completed' ? 'selected' : '' }}>{{ translate('completed') }}</option>
-                                <option value="canceled" {{ isset($status) && $status == 'canceled' ? 'selected' : '' }}>{{ translate('canceled') }}</option>
+                                <option value="all" {{ isset($status) && $status == 'all' ? 'selected' : '' }}>{{'Todo el estado'}}</option>
+                                <option value="pending" {{ isset($status) && $status == 'pending' ? 'selected' : '' }}>{{ 'Pendiente' }}</option>
+                                <option value="completed" {{ isset($status) && $status == 'completed' ? 'selected' : '' }}>{{ 'terminado' }}</option>
+                                <option value="canceled" {{ isset($status) && $status == 'canceled' ? 'selected' : '' }}>{{ 'Cancelado' }}</option>
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-3">
                             <select class="form-control set-filter" name="filter" data-url="{{ url()->full() }}" data-filter="filter">
                                 <option value="all_time" {{ isset($filter) && $filter == 'all_time' ? 'selected' : '' }}>
-                                    {{ translate('messages.All_Time') }}</option>
+                                    {{ 'Todo el tiempo' }}</option>
                                 <option value="this_year" {{ isset($filter) && $filter == 'this_year' ? 'selected' : '' }}>
-                                    {{ translate('messages.This_Year') }}</option>
+                                    {{ 'Este Año' }}</option>
                                 <option value="previous_year"
                                     {{ isset($filter) && $filter == 'previous_year' ? 'selected' : '' }}>
-                                    {{ translate('messages.Previous_Year') }}</option>
+                                    {{ 'Año anterior' }}</option>
                                 <option value="this_month"
                                     {{ isset($filter) && $filter == 'this_month' ? 'selected' : '' }}>
-                                    {{ translate('messages.This_Month') }}</option>
+                                    {{ 'Este Mes' }}</option>
                                 <option value="this_week" {{ isset($filter) && $filter == 'this_week' ? 'selected' : '' }}>
-                                    {{ translate('messages.This_Week') }}</option>
+                                    {{ 'Esta Semana' }}</option>
                                 <option value="custom" {{ isset($filter) && $filter == 'custom' ? 'selected' : '' }}>
-                                    {{ translate('messages.Custom') }}</option>
+                                    {{ 'Costumbre' }}</option>
                             </select>
                         </div>
                         @if (isset($filter) && $filter == 'custom')
                             <div class="col-sm-6 col-md-3">
                                 <input type="date" name="from" id="from_date" class="form-control"
-                                       placeholder="{{ translate('Start_Date') }}"
+                                       placeholder="{{ 'Fecha de inicio' }}"
                                        value={{ $from ? $from  : '' }} required>
                             </div>
                             <div class="col-sm-6 col-md-3">
                                 <input type="date" name="to" id="to_date" class="form-control"
-                                       placeholder="{{ translate('End_Date') }}"
+                                       placeholder="{{ 'Fecha de finalización' }}"
                                        value={{ $to ? $to  : '' }}  required>
                             </div>
                         @endif
                         <div class="col-sm-6 col-md-3 ml-auto">
                             <button type="submit"
-                                    class="btn btn-primary btn-block">{{ translate('Filter') }}</button>
+                                    class="btn btn-primary btn-block">{{ 'Filtrar' }}</button>
                         </div>
                     </div>
                 </form>
@@ -172,12 +172,12 @@
         <div class="card-header border-0 py-2">
             <div class="search--button-wrapper">
                 <h2 class="card-title">
-                    {{ translate('Total_Disbursements') }} <span class="badge badge-soft-secondary ml-2" id="countItems">{{ $disbursements->total() }}</span>
+                    {{ 'Desembolsos totales' }} <span class="badge badge-soft-secondary ml-2" id="countItems">{{ $disbursements->total() }}</span>
                 </h2>
                 <form class="search-form">
                     <!-- Search -->
                     <div class="input--group input-group input-group-merge input-group-flush">
-                        <input class="form-control" value="{{ request()?->search  ?? null }}" placeholder="{{ translate('search_by_id') }}" name="search">
+                        <input class="form-control" value="{{ request()?->search  ?? null }}" placeholder="{{ 'buscar por identificación' }}" name="search">
                         <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                     </div>
                     <!-- End Search -->
@@ -189,18 +189,18 @@
                             "target": "#usersExportDropdown",
                             "type": "css-animation"
                         }'>
-                        <i class="tio-download-to mr-1"></i> {{translate('messages.export')}}
+                        <i class="tio-download-to mr-1"></i> {{'exportar'}}
                     </a>
                     <div id="usersExportDropdown"
                          class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                        <span class="dropdown-header">{{translate('messages.download_options')}}</span>
+                        <span class="dropdown-header">{{'opciones de descarga'}}</span>
                         <a id="export-excel" class="dropdown-item" href="{{route('admin.transactions.report.disbursement_report_export', ['type'=>'excel','tab'=>$tab,request()->getQueryString()])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2" src="{{asset('assets/admin')}}/svg/components/excel.svg" alt="Image Description">
-                            {{translate('messages.excel')}}
+                            {{'sobresalir'}}
                         </a>
                         <a id="export-csv" class="dropdown-item" href="{{route('admin.transactions.report.disbursement_report_export', ['type'=>'excel','tab'=>$tab,request()->getQueryString()])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2" src="{{asset('assets/admin')}}/svg/components/placeholder-csv-format.svg" alt="Image Description">
-                            {{translate('messages.csv')}}
+                            {{'csv'}}
                         </a>
                     </div>
                 </div>
@@ -212,20 +212,20 @@
                 <table class="table table-thead-bordered table-align-middle card-table">
                     <thead>
                     <tr>
-                        <th>{{ translate('sl') }}</th>
-                        <th>{{ translate('id') }}</th>
+                        <th>{{ 'SL' }}</th>
+                        <th>{{ 'identificación' }}</th>
                         @if($tab=='store')
-                        <th>{{ translate('Store_Info') }}</th>
+                        <th>{{ 'Información de la tienda' }}</th>
                         @else
-                        <th>{{ translate('Delivery_Man_Info') }}</th>
+                        <th>{{ 'Información del repartidor' }}</th>
                         @endif
-                        <th>{{ translate('created_at') }}</th>
-                        <th>{{ translate('Disburse_Amount') }}</th>
-                        <th>{{ translate('Payment_method') }}</th>
-                        <th>{{ translate('status') }}</th>
+                        <th>{{ 'creado en' }}</th>
+                        <th>{{ 'Monto desembolsado' }}</th>
+                        <th>{{ 'Método de pago' }}</th>
+                        <th>{{ 'estado' }}</th>
                         <th>
                             <div class="text-center">
-                                {{ translate('action') }}
+                                {{ 'acción' }}
                             </div>
                         </th>
                     </tr>
@@ -270,16 +270,16 @@
                             </td>
                             <td>
                                 <div>
-                                    {{$disbursement->withdraw_method?->method_name ?? translate('messages.N/A')}}
+                                    {{$disbursement->withdraw_method?->method_name ?? 'N / A'}}
                                 </div>
                             </td>
                             <td>
                                 @if($disbursement->status=='pending')
-                                    <label class="badge badge-soft-primary">{{ translate('pending') }}</label>
+                                    <label class="badge badge-soft-primary">{{ 'Pendiente' }}</label>
                                 @elseif($disbursement->status=='completed')
-                                    <label class="badge badge-soft-success">{{ translate('Completed') }}</label>
+                                    <label class="badge badge-soft-success">{{ 'Terminado' }}</label>
                                 @else
-                                    <label class="badge badge-soft-danger">{{ translate('canceled') }}</label>
+                                    <label class="badge badge-soft-danger">{{ 'Cancelado' }}</label>
                                 @endif
                             </td>
                             <td>
@@ -298,19 +298,19 @@
                                                 <i class="tio-clear"></i>
                                             </button>
                                             <div class="w-100 text-center">
-                                                <h2 class="mb-2">{{ translate('Payment_Information') }}</h2>
+                                                <h2 class="mb-2">{{ 'Información de pago' }}</h2>
                                                 <div>
-                                                    <span class="mr-2">{{ translate('Disbursement_ID') }}</span>
+                                                    <span class="mr-2">{{ 'ID de desembolso' }}</span>
                                                     <strong>#{{$disbursement->disbursement_id}}</strong>
                                                 </div>
                                                 <div class="mt-2">
-                                                    <span class="mr-2">{{ translate('status') }}</span>
+                                                    <span class="mr-2">{{ 'estado' }}</span>
                                                     @if($disbursement->status=='pending')
-                                                        <label class="badge badge-soft-primary">{{ translate('pending') }}</label>
+                                                        <label class="badge badge-soft-primary">{{ 'Pendiente' }}</label>
                                                     @elseif($disbursement->status=='completed')
-                                                        <label class="badge badge-soft-success">{{ translate('Completed') }}</label>
+                                                        <label class="badge badge-soft-success">{{ 'Terminado' }}</label>
                                                     @else
-                                                        <label class="badge badge-soft-danger">{{ translate('canceled') }}</label>
+                                                        <label class="badge badge-soft-danger">{{ 'Cancelado' }}</label>
                                                     @endif
                                                 </div>
                                             </div>
@@ -320,43 +320,43 @@
                                                 <div class="card-body">
                                                     <div class="d-flex flex-wrap payment-info-modal-info p-xl-4">
                                                         <div class="item">
-                                                            <h5>{{ translate('Store_Information') }}</h5>
+                                                            <h5>{{ 'Información de la tienda' }}</h5>
                                                             <ul class="item-list">
                                                                 <li class="d-flex flex-wrap">
-                                                                    <span class="name">{{ translate('name') }}</span>
+                                                                    <span class="name">{{ 'nombre' }}</span>
                                                                     <span>:</span>
                                                                     <strong>{{$disbursement?->store?->name}}</strong>
                                                                 </li>
                                                                 <li class="d-flex flex-wrap">
-                                                                    <span class="name">{{ translate('contact') }}</span>
+                                                                    <span class="name">{{ 'contacto' }}</span>
                                                                     <span>:</span>
                                                                     <strong>{{$disbursement?->store?->phone}}</strong>
                                                                 </li>
                                                             </ul>
                                                         </div>
                                                         <div class="item">
-                                                            <h5>{{ translate('Owner_Information') }}</h5>
+                                                            <h5>{{ 'Información del propietario' }}</h5>
                                                             <ul class="item-list">
                                                                 <li class="d-flex flex-wrap">
-                                                                    <span class="name">{{ translate('name') }}</span>
+                                                                    <span class="name">{{ 'nombre' }}</span>
                                                                     <span>:</span>
                                                                     <strong>{{$disbursement->store->vendor->f_name}} {{$disbursement->store->vendor->l_name}}</strong>
                                                                 </li>
                                                                 <li class="d-flex flex-wrap">
-                                                                    <span class="name">{{ translate('email') }}</span>
+                                                                    <span class="name">{{ 'correo electrónico' }}</span>
                                                                     <span>:</span>
                                                                     <strong>{{$disbursement->store->vendor->email}}</strong>
                                                                 </li>
                                                             </ul>
                                                         </div>
                                                         <div class="item w-100">
-                                                            <h5>{{ translate('Account_Information') }}</h5>
+                                                            <h5>{{ 'Información de la cuenta' }}</h5>
                                                             <ul class="item-list">
                                                                 <li class="d-flex flex-wrap">
-                                                                    <span class="name">{{ translate('payment_method') }}</span><strong>{{$disbursement->withdraw_method->method_name}}</strong>
+                                                                    <span class="name">{{ 'método de pago' }}</span><strong>{{$disbursement->withdraw_method->method_name}}</strong>
                                                                 </li>
                                                                 <li class="d-flex flex-wrap">
-                                                                    <span class="name">{{ translate('amount') }}</span>
+                                                                    <span class="name">{{ 'cantidad' }}</span>
                                                                     <strong>{{\App\CentralLogics\Helpers::format_currency($disbursement['disbursement_amount'])}}</strong>
                                                                 </li>
                                                                 @forelse(json_decode($disbursement->withdraw_method->method_fields, true) as $key=> $item)
@@ -386,19 +386,19 @@
                                                     <i class="tio-clear"></i>
                                                 </button>
                                                 <div class="w-100 text-center">
-                                                    <h2 class="mb-2">{{ translate('Payment_Information') }}</h2>
+                                                    <h2 class="mb-2">{{ 'Información de pago' }}</h2>
                                                     <div>
-                                                        <span class="mr-2">{{ translate('Disbursement_ID') }}</span>
+                                                        <span class="mr-2">{{ 'ID de desembolso' }}</span>
                                                         <strong>#{{$disbursement->disbursement_id}}</strong>
                                                     </div>
                                                     <div class="mt-2">
-                                                        <span class="mr-2">{{ translate('status') }}</span>
+                                                        <span class="mr-2">{{ 'estado' }}</span>
                                                         @if($disbursement->status=='pending')
-                                                            <label class="badge badge-soft-primary">{{ translate('pending') }}</label>
+                                                            <label class="badge badge-soft-primary">{{ 'Pendiente' }}</label>
                                                         @elseif($disbursement->status=='completed')
-                                                            <label class="badge badge-soft-success">{{ translate('Completed') }}</label>
+                                                            <label class="badge badge-soft-success">{{ 'Terminado' }}</label>
                                                         @else
-                                                            <label class="badge badge-soft-danger">{{ translate('canceled') }}</label>
+                                                            <label class="badge badge-soft-danger">{{ 'Cancelado' }}</label>
                                                         @endif
                                                     </div>
                                                 </div>
@@ -408,15 +408,15 @@
                                                     <div class="card-body">
                                                         <div class="d-flex flex-wrap payment-info-modal-info p-xl-4">
                                                             <div class="item">
-                                                                <h5>{{ translate('Delivery_Man_Information') }}</h5>
+                                                                <h5>{{ 'Información del repartidor' }}</h5>
                                                                 <ul class="item-list">
                                                                     <li class="d-flex flex-wrap">
-                                                                        <span class="name">{{ translate('name') }}</span>
+                                                                        <span class="name">{{ 'nombre' }}</span>
                                                                         <span>:</span>
                                                                         <strong>{{$disbursement->delivery_man->f_name.' '.$disbursement->delivery_man->l_name}}</strong>
                                                                     </li>
                                                                     <li class="d-flex flex-wrap">
-                                                                        <span class="name">{{ translate('contact') }}</span>
+                                                                        <span class="name">{{ 'contacto' }}</span>
                                                                         <span>:</span>
                                                                         <strong>{{$disbursement?->delivery_man?->phone}}</strong>
                                                                     </li>
@@ -426,13 +426,13 @@
 
                                                             </div>
                                                             <div class="item w-100">
-                                                                <h5>{{ translate('Account_Information') }}</h5>
+                                                                <h5>{{ 'Información de la cuenta' }}</h5>
                                                                 <ul class="item-list">
                                                                     <li class="d-flex flex-wrap">
-                                                                        <span class="name">{{ translate('payment_method') }}</span><strong>{{$disbursement->withdraw_method?->method_name ?? translate('messages.N/A')}}</strong>
+                                                                        <span class="name">{{ 'método de pago' }}</span><strong>{{$disbursement->withdraw_method?->method_name ?? 'N / A'}}</strong>
                                                                     </li>
                                                                     <li class="d-flex flex-wrap">
-                                                                        <span class="name">{{ translate('amount') }}</span>
+                                                                        <span class="name">{{ 'cantidad' }}</span>
                                                                         <strong>{{\App\CentralLogics\Helpers::format_currency($disbursement['disbursement_amount'])}}</strong>
                                                                     </li>
                                                                     @forelse(json_decode($disbursement->withdraw_method?->method_fields, true) ?? [] as $key=> $item)
@@ -463,7 +463,7 @@
                     <div class="empty--data">
                         <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
-                            {{translate('no_data_found')}}
+                            {{'no se encontraron datos'}}
                         </h5>
                     </div>
                 @endif

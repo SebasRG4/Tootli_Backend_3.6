@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ translate('Email_Template') }}</title>
+    <title>{{ 'Plantilla de correo electrónico' }}</title>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap');
@@ -173,16 +173,16 @@ width: 24px;
 
 
                     id="iconViewer" alt="">
-                        <h2 id="mail-title" class="mt-2">{{ $title?? translate('Main_Title_or_Subject_of_the_Mail') }}</h2>
-                        <div class="mb-2" id="mail-body">{!! $body?? translate('Hi_Sabrina,') !!}</div>
+                        <h2 id="mail-title" class="mt-2">{{ $title?? 'Título principal o asunto del correo' }}</h2>
+                        <div class="mb-2" id="mail-body">{!! $body?? 'Hola sabrina,' !!}</div>
                     </div>
                     <table class="bg-section p-10 w-100 text-center">
                         <thead>
                             <tr>
-                                <th>{{ translate('messages.SL') }}</th>
-                                <th>{{ translate('messages.transaction_id') }}</th>
-                                <th>{{ translate('messages.Time') }}</th>
-                                <th>{{ translate('messages.amount') }}</th>
+                                <th>{{ 'SL' }}</th>
+                                <th>{{ 'identificación de transacción' }}</th>
+                                <th>{{ 'Tiempo' }}</th>
+                                <th>{{ 'cantidad' }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -202,10 +202,10 @@ width: 24px;
                     @endif
                     <hr>
                     <div class="mb-2" id="mail-footer">
-                        {{ $footer_text ?? translate('Please_contact_us_for_any_queries,_we’re_always_happy_to_help.') }}
+                        {{ $footer_text ?? 'Comuníquese con nosotros para cualquier consulta, siempre estaremos encantados de ayudarle.' }}
                     </div>
                     <div>
-                        {{ translate('Thanks & Regards') }},
+                        {{ 'Gracias y saludos' }},
                     </div>
                     <div class="mb-4">
                         {{ $company_name }}
@@ -216,14 +216,14 @@ width: 24px;
                 <td>
                     <span class="privacy">
 @php($landing_data =\App\Models\DataSetting::where('type', 'admin_landing_page')->whereIn('key', ['shipping_policy_status','refund_policy_status','cancellation_policy_status'])->pluck('value','key')->toArray())
-                        <a href="{{ route('privacy-policy') }}" id="privacy-check" style="{{ (isset($data['privacy']) && $data['privacy'] == 1)?'':'display:none;' }}">{{ translate('Privacy_Policy')}}</a>
+                        <a href="{{ route('privacy-policy') }}" id="privacy-check" style="{{ (isset($data['privacy']) && $data['privacy'] == 1)?'':'display:none;' }}">{{ 'política de privacidad'}}</a>
                         @if (isset($landing_data['refund_policy_status']) && $landing_data['refund_policy_status']  == 1)
-                        <a href="{{ route('refund') }}" id="refund-check" style="{{ (isset($data['refund']) && $data['refund'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Refund_Policy') }}</a>
+                        <a href="{{ route('refund') }}" id="refund-check" style="{{ (isset($data['refund']) && $data['refund'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ 'Política de reembolso' }}</a>
                         @endif
                         @if (isset($landing_data['cancellation_policy_status']) && $landing_data['cancellation_policy_status']  == 1)
-                        <a href="{{ route('cancelation') }}" id="cancelation-check" style="{{ (isset($data['cancelation']) && $data['cancelation'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Cancelation_Policy') }}</a>
+                        <a href="{{ route('cancelation') }}" id="cancelation-check" style="{{ (isset($data['cancelation']) && $data['cancelation'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ 'Política de Cancelación' }}</a>
                         @endif
-                        <a href="{{ route('contact-us') }}" id="contact-check" style="{{ (isset($data['contact']) && $data['contact'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Contact_us') }}</a>
+                        <a href="{{ route('contact-us') }}" id="contact-check" style="{{ (isset($data['contact']) && $data['contact'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ 'Contáctenos' }}</a>
                     </span>
                     <span class="social" style="text-align:center">
                         @php($social_media = \App\Models\SocialMedia::active()->get())
@@ -236,7 +236,7 @@ width: 24px;
                         @endif
                     </span>
                     <span class="copyright" id="mail-copyright">
-                        {{ $copyright_text?? translate('Copyright 2023 6ammart. All right reserved') }}
+                        {{ $copyright_text?? 'Copyright 2023 6ammart. Todos los derechos reservados' }}
                     </span>
                 </td>
             </tr>

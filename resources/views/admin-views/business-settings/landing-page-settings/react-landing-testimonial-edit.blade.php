@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.react_landing_page'))
+@section('title','reaccionar página de inicio')
 
 @section('content')
     <div class="content container-fluid">
@@ -11,12 +11,12 @@
                     <img src="{{asset('assets/admin/img/landing.png')}}" class="w--20" alt="">
                 </span>
                     <span>
-                    {{ translate('messages.react_landing_page') }}
+                    {{ 'reaccionar página de inicio' }}
                 </span>
                 </h1>
                 <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal"
                      data-target="#how-it-works">
-                    <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
+                    <strong class="mr-2">{{'¡Mira cómo funciona!'}}</strong>
                     <div>
                         <i class="tio-info-outined"></i>
                     </div>
@@ -44,7 +44,7 @@
                                         <ul class="nav nav-tabs mb-4 border-bottom">
                                             <li class="nav-item">
                                                 <a class="nav-link lang_link active" href="#"
-                                                   id="testimonial-default-link">{{translate('messages.default')}}</a>
+                                                   id="testimonial-default-link">{{'por defecto'}}</a>
                                             </li>
                                             @foreach (json_decode($language) as $lang)
                                                 <li class="nav-item">
@@ -58,29 +58,29 @@
                                         <div class="row g-3 lang_form" id="testimonial-default-form">
                                             <div class="col-md-6">
                                                 <label for="name"
-                                                       class="form-label">{{translate('Reviewer Name')}}
-                                                    ({{ translate('messages.default') }})
+                                                       class="form-label">{{'Nombre del revisor'}}
+                                                    ({{ 'por defecto' }})
                                                     <span class="form-label-secondary" data-toggle="tooltip"
                                                           data-placement="right"
-                                                          data-original-title="{{ translate('Content...') }}">
+                                                          data-original-title="{{ 'Contenido...' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span>
                                                     <span class="form-label-secondary text-danger"
                                                           data-toggle="tooltip" data-placement="right"
-                                                          data-original-title="{{ translate('messages.Required.')}}"> *
+                                                          data-original-title="{{ 'Requerido.'}}"> *
                                                     </span>
                                                 </label>
                                                 <input id="name" type="text" name="name[]" value="{{$review?->name}}"
                                                        class="form-control"
-                                                       placeholder="{{translate('Ex:  John Doe')}}" required>
+                                                       placeholder="{{'Ej: John Doe'}}" required>
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="designation"
-                                                       class="form-label">{{translate('Designation')}}
-                                                    ({{ translate('messages.default') }})
+                                                       class="form-label">{{'Designación'}}
+                                                    ({{ 'por defecto' }})
                                                     <span class="form-label-secondary" data-toggle="tooltip"
                                                           data-placement="right"
-                                                          data-original-title="{{ translate('Content...') }}">
+                                                          data-original-title="{{ 'Contenido...' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span>
 
@@ -88,25 +88,25 @@
                                                 <input id="designation" value="{{$review?->designation}}" type="text"
                                                        name="designation[]"
                                                        class="form-control"
-                                                       placeholder="{{translate('Ex:  CTO')}}">
+                                                       placeholder="{{'Ej: CTO'}}">
                                             </div>
                                             <div class="col-md-12">
                                                 <label for="review"
-                                                       class="form-label">{{translate('messages.review')}}
-                                                    ({{ translate('messages.default') }})
+                                                       class="form-label">{{'revisar'}}
+                                                    ({{ 'por defecto' }})
                                                     <span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('Write_the_title_within_140_characters') }}">
+                                                        data-original-title="{{ 'Escribe el título dentro de 140 caracteres.' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span>
                                                     <span class="form-label-secondary text-danger"
                                                           data-toggle="tooltip" data-placement="right"
-                                                          data-original-title="{{ translate('messages.Required.')}}"> *
+                                                          data-original-title="{{ 'Requerido.'}}"> *
                                                     </span>
                                                 </label>
                                                 <textarea id="review" name="review[]" maxlength="200"
-                                                          placeholder="{{translate('Very Good Company')}}"
+                                                          placeholder="{{'Muy buena empresa'}}"
                                                           class="form-control h92px"
                                                           required>{{$review?->review}}</textarea>
                                                 <span
@@ -145,26 +145,26 @@
                                                  id="testimonial-{{$lang}}-form">
                                                 <div class="col-md-6">
                                                     <label for="name{{$lang}}"
-                                                           class="form-label">{{translate('Reviewer Name')}}
+                                                           class="form-label">{{'Nombre del revisor'}}
                                                         ({{strtoupper($lang)}})
                                                         <span class="form-label-secondary" data-toggle="tooltip"
                                                               data-placement="right"
-                                                              data-original-title="{{ translate('Content...') }}">
+                                                              data-original-title="{{ 'Contenido...' }}">
                                                     <i class="tio-info color-A7A7A7"></i>
                                                 </span>
                                                     </label>
                                                     <input id="name{{$lang}}" type="text" name="name[]"
                                                            value="{{$name_translate[$lang]['value']??''}}"
                                                            class="form-control"
-                                                           placeholder="{{translate('Ex:  John Doe')}}">
+                                                           placeholder="{{'Ej: John Doe'}}">
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="designation{{$lang}}"
-                                                           class="form-label">{{translate('Designation')}}
+                                                           class="form-label">{{'Designación'}}
                                                         ({{strtoupper($lang)}})
                                                         <span class="form-label-secondary" data-toggle="tooltip"
                                                               data-placement="right"
-                                                              data-original-title="{{ translate('Content...') }}">
+                                                              data-original-title="{{ 'Contenido...' }}">
                                                     <i class="tio-info color-A7A7A7"></i>
                                                 </span>
                                                     </label>
@@ -172,21 +172,21 @@
                                                            value="{{$designation_translate[$lang]['value'] ?? ''}}"
                                                            name="designation[]"
                                                            class="form-control"
-                                                           placeholder="{{translate('Ex:  CTO')}}">
+                                                           placeholder="{{'Ej: CTO'}}">
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="review{{$lang}}"
-                                                           class="form-label">{{translate('messages.review')}}
+                                                           class="form-label">{{'revisar'}}
                                                         ({{strtoupper($lang)}})
                                                         <span
                                                             class="form-label-secondary" data-toggle="tooltip"
                                                             data-placement="right"
-                                                            data-original-title="{{ translate('Write_the_title_within_140_characters') }}">
+                                                            data-original-title="{{ 'Escribe el título dentro de 140 caracteres.' }}">
                                                     <i class="tio-info color-A7A7A7"></i>
                                                 </span></label>
                                                     <textarea id="review{{$lang}}" name="review[]"
                                                               maxlength="200"
-                                                              placeholder="{{translate('Very Good Company')}}"
+                                                              placeholder="{{'Muy buena empresa'}}"
                                                               class="form-control h92px">{{$review_translate[$lang]['value']??''}}</textarea>
                                                     <span
                                                         class="text-right text-counting color-A7A7A7 d-block mt-1">0/200</span>
@@ -198,39 +198,39 @@
                                         <div class="row g-3">
                                             <div class="col-md-6">
                                                 <label for="name"
-                                                       class="form-label">{{translate('Reviewer Name')}}
+                                                       class="form-label">{{'Nombre del revisor'}}
                                                     <span class="form-label-secondary" data-toggle="tooltip"
                                                           data-placement="right"
-                                                          data-original-title="{{ translate('Content...') }}">
+                                                          data-original-title="{{ 'Contenido...' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span>
                                                 </label>
                                                 <input id="name" type="text" name="name[]" class="form-control"
-                                                       placeholder="{{translate('Ex:  John Doe')}}">
+                                                       placeholder="{{'Ej: John Doe'}}">
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="designation"
-                                                       class="form-label">{{translate('Designation')}}
+                                                       class="form-label">{{'Designación'}}
                                                     <span class="form-label-secondary" data-toggle="tooltip"
                                                           data-placement="right"
-                                                          data-original-title="{{ translate('Content...') }}">
+                                                          data-original-title="{{ 'Contenido...' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span>
                                                 </label>
                                                 <input id="designation" type="text" name="designation[]"
                                                        class="form-control"
-                                                       placeholder="{{translate('Ex:  CTO')}}">
+                                                       placeholder="{{'Ej: CTO'}}">
                                             </div>
                                             <div class="col-md-12">
                                                 <label for="review"
-                                                       class="form-label">{{translate('messages.review')}}<span
+                                                       class="form-label">{{'revisar'}}<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('Write_the_title_within_140_characters') }}">
+                                                        data-original-title="{{ 'Escribe el título dentro de 140 caracteres.' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span></label>
                                                 <textarea id="review" name="review[]" maxlength="200"
-                                                          placeholder="{{translate('Very Good Company')}}"
+                                                          placeholder="{{'Muy buena empresa'}}"
                                                           class="form-control h92px"></textarea>
                                                 <span
                                                     class="text-right text-counting color-A7A7A7 d-block mt-1">0/200</span>
@@ -244,8 +244,8 @@
                                 <div class="bg--secondary h-100 rounded p-md-4 p-3 d-center">
                                     <div class="text-center">
                                         <div class="mb-30">
-                                            <h5 class="mb-1">{{ translate('Reviewer Image') }}</h5>
-                                            <p class="mb-0 fs-12 gray-dark">{{ translate('Upload Reviewer Image') }}
+                                            <h5 class="mb-1">{{ 'Imagen del revisor' }}</h5>
+                                            <p class="mb-0 fs-12 gray-dark">{{ 'Cargar imagen del revisor' }}
                                             </p>
                                         </div>
                                         <div class="mx-auto text-center error-wrapper">
@@ -286,16 +286,16 @@
                                             </div>
                                         </div>
                                         <p class="fs-10 text-center mb-0 mt-lg-4 mt-3">
-                                            {{ translate('JPG, JPEG, PNG size : Max 2 MB')}} <span
-                                                class="font-medium text-title">{{ translate('(2:1)')}}</span>
+                                            {{ 'Tamaño JPG, JPEG, PNG: máximo 2 MB'}} <span
+                                                class="font-medium text-title">{{ '(2:1)'}}</span>
                                         </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="btn--container justify-content-end mt-20">
-                            <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
-                            <button type="submit" class="btn btn--primary mb-2">{{translate('Update')}}</button>
+                            <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
+                            <button type="submit" class="btn btn--primary mb-2">{{'Actualizar'}}</button>
                         </div>
                     </div>
                 </form>

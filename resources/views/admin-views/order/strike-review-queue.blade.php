@@ -1,11 +1,11 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.order_strike_review_queue_title'))
+@section('title', 'título de la cola de revisión de huelga de pedido')
 
 @section('content')
     <div class="content container-fluid">
         <div class="page-header">
-            <h1 class="page-header-title">{{ translate('messages.order_strike_review_queue_title') }}</h1>
+            <h1 class="page-header-title">{{ 'título de la cola de revisión de huelga de pedido' }}</h1>
         </div>
         <div class="card">
             <div class="card-body p-0">
@@ -13,12 +13,12 @@
                     <table class="table table-hover mb-0">
                         <thead class="thead-light">
                             <tr>
-                                <th>{{ translate('messages.order') }}</th>
-                                <th>{{ translate('messages.deliveryman') }}</th>
-                                <th>{{ translate('messages.Cancel_Reason') }}</th>
-                                <th>{{ translate('messages.order_strike_review_detail') }}</th>
-                                <th>{{ translate('messages.order_strike_review_evidence') }}</th>
-                                <th>{{ translate('messages.actions') }}</th>
+                                <th>{{ 'Pedido' }}</th>
+                                <th>{{ 'Repartidor' }}</th>
+                                <th>{{ 'Cancelar motivo' }}</th>
+                                <th>{{ 'detalle de revisión de huelga de pedido' }}</th>
+                                <th>{{ 'ordenar huelga revisar evidencia' }}</th>
+                                <th>{{ 'comportamiento' }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -37,7 +37,7 @@
                                         @endif
                                     </td>
                                     <td class="fs-12">
-                                        {{ $q->cancelReason?->reason ?? translate('messages.dm_cancel_reason_legacy') }}
+                                        {{ $q->cancelReason?->reason ?? 'dm cancelar motivo legado' }}
                                     </td>
                                     <td class="fs-12" style="max-width:220px;">{{ \Illuminate\Support\Str::limit($q->cancellation_detail, 120) }}</td>
                                     <td class="fs-12">
@@ -45,20 +45,20 @@
                                             GPS: {{ $q->evidence['lat'] }}, {{ $q->evidence['lng'] }}<br>
                                         @endif
                                         @if (!empty($q->evidence['photos']))
-                                            {{ count($q->evidence['photos']) }} {{ translate('messages.order_strike_review_photos') }}
+                                            {{ count($q->evidence['photos']) }} {{ 'Fotos de revisión de huelga de pedidos' }}
                                         @endif
                                         @if (!empty($q->evidence['audio']))
-                                            {{ translate('messages.order_strike_review_audio') }}
+                                            {{ 'audio de revisión de huelga de pedidos' }}
                                         @endif
                                     </td>
                                     <td>
                                         <form method="post" action="{{ route('admin.order.strike-review-queue.dismiss', $q->id) }}" class="mb-2">
                                             @csrf
                                             <input type="hidden" name="admin_note" value="">
-                                            <button type="submit" class="btn btn-sm btn-outline-secondary">{{ translate('messages.order_strike_review_dismiss') }}</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-secondary">{{ 'orden huelga revisión desestimar' }}</button>
                                         </form>
                                         <button type="button" class="btn btn-sm btn--primary" data-toggle="modal" data-target="#strikeModal{{ $q->id }}">
-                                            {{ translate('messages.order_strike_review_record_strike') }}
+                                            {{ 'huelga de orden revisión huelga récord' }}
                                         </button>
                                         <div class="modal fade" id="strikeModal{{ $q->id }}" tabindex="-1">
                                             <div class="modal-dialog">
@@ -66,12 +66,12 @@
                                                     <form method="post" action="{{ route('admin.order.strike-review-queue.record-strike', $q->id) }}">
                                                         @csrf
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title">{{ translate('messages.order_strike_review_record_strike') }} #{{ $q->order_id }}</h5>
+                                                            <h5 class="modal-title">{{ 'huelga de orden revisión huelga récord' }} #{{ $q->order_id }}</h5>
                                                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="form-group">
-                                                                <label>{{ translate('messages.dm_strike_type') }}</label>
+                                                                <label>{{ 'tipo de ataque dm' }}</label>
                                                                 <select name="delivery_incident_type_id" class="form-control" required>
                                                                     @foreach ($incidentTypes as $t)
                                                                         <option value="{{ $t->id }}">{{ $t->name }}</option>
@@ -79,17 +79,17 @@
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label>{{ translate('messages.Note') }}</label>
+                                                                <label>{{ 'Nota' }}</label>
                                                                 <textarea name="admin_note" class="form-control" rows="2" maxlength="2000">{{ $q->cancellation_detail }}</textarea>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label>{{ translate('messages.dm_strike_suspended_until_field') }}</label>
+                                                                <label>{{ 'huelga dm suspendida hasta el campo' }}</label>
                                                                 <input type="datetime-local" name="delivery_suspended_until" class="form-control">
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ translate('messages.cancel') }}</button>
-                                                            <button type="submit" class="btn btn--primary">{{ translate('submit') }}</button>
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'Cancelar' }}</button>
+                                                            <button type="submit" class="btn btn--primary">{{ 'entregar' }}</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -99,7 +99,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center text-muted py-4">{{ translate('messages.no_data_found') }}</td>
+                                    <td colspan="6" class="text-center text-muted py-4">{{ 'no se encontraron datos' }}</td>
                                 </tr>
                             @endforelse
                         </tbody>

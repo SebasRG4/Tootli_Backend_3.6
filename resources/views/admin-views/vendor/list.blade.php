@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('Store List'))
+@section('title','Lista de tiendas')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -10,7 +10,7 @@
     <div class="content container-fluid">
         <!-- Page Header -->
         <div class="page-header">
-            <h1 class="page-header-title"><i class="tio-filter-list"></i> {{translate('messages.stores')}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$stores->total()}}</span></h1>
+            <h1 class="page-header-title"><i class="tio-filter-list"></i> {{'Negocios'}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$stores->total()}}</span></h1>
             <div class="page-header-select-wrapper">
             </div>
         </div>
@@ -22,28 +22,28 @@
             <div class="col-xl-3 col-sm-6">
                 <div class="resturant-card card--bg-1">
                     <h4 class="title">{{$total_store}}</h4>
-                    <span class="subtitle">{{translate('messages.total_stores')}}</span>
+                    <span class="subtitle">{{'tiendas totales'}}</span>
                     <img class="resturant-icon" src="{{asset('assets/admin/img/total-store.png')}}" alt="store">
                 </div>
             </div>
             <div class="col-xl-3 col-sm-6">
                 <div class="resturant-card card--bg-2">
                     <h4 class="title">{{$active_stores}}</h4>
-                    <span class="subtitle">{{translate('messages.active_stores')}}</span>
+                    <span class="subtitle">{{'tiendas activas'}}</span>
                     <img class="resturant-icon" src="{{asset('assets/admin/img/active-store.png')}}" alt="store">
                 </div>
             </div>
             <div class="col-xl-3 col-sm-6">
                 <div class="resturant-card card--bg-3">
                     <h4 class="title">{{$inactive_stores}}</h4>
-                    <span class="subtitle">{{translate('messages.inactive_stores')}}</span>
+                    <span class="subtitle">{{'tiendas inactivas'}}</span>
                     <img class="resturant-icon" src="{{asset('assets/admin/img/close-store.png')}}" alt="store">
                 </div>
             </div>
             <div class="col-xl-3 col-sm-6">
                 <div class="resturant-card card--bg-4">
                     <h4 class="title">{{$recent_stores}}</h4>
-                    <span class="subtitle">{{translate('messages.newly_joined_stores')}}</span>
+                    <span class="subtitle">{{'tiendas recién unidas'}}</span>
                     <img class="resturant-icon" src="{{asset('assets/admin/img/add-store.png')}}" alt="store">
                 </div>
             </div>
@@ -54,7 +54,7 @@
             <li class="text--info">
                 <i class="tio-document-text-outlined"></i>
                 <div>
-                    <span>{{translate('messages.total_transactions')}}</span> <strong>{{$total_transaction}}</strong>
+                    <span>{{'transacciones totales'}}</span> <strong>{{$total_transaction}}</strong>
                 </div>
             </li>
 
@@ -63,7 +63,7 @@
                 <li class="text--success">
                     <i class="tio-checkmark-circle-outlined success--icon"></i>
                     <div>
-                        <span>{{translate('messages.commission_earned')}}</span> <strong>{{\App\CentralLogics\Helpers::format_currency($comission_earned)}}</strong>
+                        <span>{{'comisión ganada'}}</span> <strong>{{\App\CentralLogics\Helpers::format_currency($comission_earned)}}</strong>
                     </div>
                 </li>
             @endif
@@ -72,7 +72,7 @@
             <li class="text--danger">
                 <i class="tio-atm"></i>
                 <div>
-                    <span>{{translate('messages.total_store_withdraws')}}</span> <strong>{{\App\CentralLogics\Helpers::format_currency($store_withdraws)}}</strong>
+                    <span>{{'retiros totales de la tienda'}}</span> <strong>{{\App\CentralLogics\Helpers::format_currency($store_withdraws)}}</strong>
                 </div>
             </li>
         </ul>
@@ -83,12 +83,12 @@
             <!-- Header -->
             <div class="card-header py-2">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title">{{translate('messages.stores_list')}}</h5>
+                    <h5 class="card-title">{{'lista de tiendas'}}</h5>
 
                 @if(!isset(auth('admin')->user()->zone_id))
                 <div class="select-item min--280">
                     <select name="zone_id" class="form-control js-select2-custom set-filter" data-url="{{url()->full()}}" data-filter="zone_id">
-                        <option value="" {{!request('zone_id')?'selected':''}}>{{ translate('messages.All_Zones') }}</option>
+                        <option value="" {{!request('zone_id')?'selected':''}}>{{ 'Todas las Zonas' }}</option>
                         @foreach(\App\Models\Zone::orderBy('name')->get(['id','name']) as $z)
                             <option
                                 value="{{$z['id']}}" {{isset($zone) && $zone->id == $z['id']?'selected':''}}>
@@ -102,14 +102,14 @@
                                     <!-- Search -->
                         <div class="input-group input--group">
                             <input id="datatableSearch_" type="search" value="{{ request()?->search ?? null }}" name="search" class="form-control"
-                                    placeholder="{{translate('ex_:_Search_Store_Name')}}" aria-label="{{translate('messages.search')}}" >
+                                    placeholder="{{'ej: buscar nombre de tienda'}}" aria-label="{{'buscar'}}" >
                             <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
 
                         </div>
                         <!-- End Search -->
                     </form>
                     @if(request()->get('search'))
-                    <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                    <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{'reiniciar'}}</button>
                     @endif
 
 
@@ -120,24 +120,24 @@
                                     "target": "#usersExportDropdown",
                                     "type": "css-animation"
                                 }'>
-                            <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                            <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                         </a>
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
 
-                            <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                            <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                             <a id="export-excel" class="dropdown-item" href="{{route('admin.store.export', ['type'=>'excel',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
-                                {{ translate('messages.excel') }}
+                                {{ 'sobresalir' }}
                             </a>
                             <a id="export-csv" class="dropdown-item" href="{{route('admin.store.export', ['type'=>'csv',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
-                                .{{ translate('messages.csv') }}
+                                .{{ 'csv' }}
                             </a>
 
                         </div>
@@ -159,13 +159,13 @@
                         }'>
                     <thead class="thead-light">
                     <tr>
-                        <th class="border-0">{{translate('sl')}}</th>
-                        <th class="border-0">{{translate('messages.store_information')}}</th>
-                        <th class="border-0">{{translate('messages.owner_information')}}</th>
-                        <th class="border-0">{{translate('messages.zone')}}</th>
-                        <th class="text-uppercase border-0">{{translate('messages.featured')}}</th>
-                        <th class="text-uppercase border-0">{{translate('messages.status')}}</th>
-                        <th class="text-center border-0">{{translate('messages.action')}}</th>
+                        <th class="border-0">{{'SL'}}</th>
+                        <th class="border-0">{{'almacenar información'}}</th>
+                        <th class="border-0">{{'información del propietario'}}</th>
+                        <th class="border-0">{{'zona'}}</th>
+                        <th class="text-uppercase border-0">{{'presentado'}}</th>
+                        <th class="text-uppercase border-0">{{'estado'}}</th>
+                        <th class="text-center border-0">{{'acción'}}</th>
                     </tr>
                     </thead>
 
@@ -185,7 +185,7 @@
                                             {{Str::limit($store->name,20,'...')}}
                                             </div>
                                             <div class="font-light">
-                                                {{translate('messages.id')}}:{{$store->id}}
+                                                {{'identificación'}}:{{$store->id}}
                                             </div>
                                         </div>
                                     </a>
@@ -203,7 +203,7 @@
                                 </div>
                             </td>
                             <td>
-                                {{$store->zone?$store->zone->name:translate('messages.zone_deleted')}}
+                                {{$store->zone?$store->zone->name:'zona eliminada'}}
                             </td>
                             <td>
                                 <label class="toggle-switch toggle-switch-sm" for="featuredCheckbox{{$store->id}}">
@@ -218,16 +218,16 @@
                                 @if(isset($store->vendor->status))
                                     @if($store->vendor->status)
                                     <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$store->id}}">
-                                        <input type="checkbox" data-url="{{route('admin.store.status',[$store->id,$store->status?0:1])}}" data-message="{{translate('messages.you_want_to_change_this_store_status')}}" class="toggle-switch-input status_change_alert" id="stocksCheckbox{{$store->id}}" {{$store->status?'checked':''}}>
+                                        <input type="checkbox" data-url="{{route('admin.store.status',[$store->id,$store->status?0:1])}}" data-message="{{'quieres cambiar el estado de esta tienda'}}" class="toggle-switch-input status_change_alert" id="stocksCheckbox{{$store->id}}" {{$store->status?'checked':''}}>
                                         <span class="toggle-switch-label">
                                             <span class="toggle-switch-indicator"></span>
                                         </span>
                                     </label>
                                     @else
-                                    <span class="badge badge-soft-danger">{{translate('messages.denied')}}</span>
+                                    <span class="badge badge-soft-danger">{{'denegado'}}</span>
                                     @endif
                                 @else
-                                    <span class="badge badge-soft-danger">{{translate('messages.pending')}}</span>
+                                    <span class="badge badge-soft-danger">{{'Pendiente'}}</span>
                                 @endif
                             </td>
 
@@ -235,14 +235,14 @@
                                 <div class="btn--container justify-content-center">
                                     <a class="btn action-btn btn--warning btn-outline-warning"
                                             href="{{route('admin.store.view', $store->id)}}"
-                                            title="{{ translate('messages.view') }}"><i
+                                            title="{{ 'vista' }}"><i
                                                 class="tio-visible-outlined"></i>
                                         </a>
                                     <a class="btn action-btn btn--primary btn-outline-primary"
-                                    href="{{route('admin.store.edit',[$store['id']])}}" title="{{translate('messages.edit_store')}}"><i class="tio-edit"></i>
+                                    href="{{route('admin.store.edit',[$store['id']])}}" title="{{'editar tienda'}}"><i class="tio-edit"></i>
                                     </a>
                                     <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
-                                    data-id="vendor-{{$store['id']}}" data-message="{{translate('You want to remove this store')}}" title="{{translate('messages.delete_store')}}"><i class="tio-delete-outlined"></i>
+                                    data-id="vendor-{{$store['id']}}" data-message="{{'Quieres eliminar esta tienda'}}" title="{{'eliminar tienda'}}"><i class="tio-delete-outlined"></i>
                                     </a>
                                     <form action="{{route('admin.store.delete',[$store['id']])}}" method="post" id="vendor-{{$store['id']}}">
                                         @csrf @method('delete')
@@ -265,7 +265,7 @@
                 <div class="empty--data">
                     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
-                        {{translate('no_data_found')}}
+                        {{'no se encontraron datos'}}
                     </h5>
                 </div>
                 @endif
@@ -288,14 +288,14 @@
         function status_change_alert(url, message, e) {
             e.preventDefault();
             Swal.fire({
-                title: '{{ translate('Are you sure?') }}' ,
+                title: '{{ '¿Está seguro?' }}' ,
                 text: message,
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{translate('messages.no')}}',
-                confirmButtonText: '{{translate('messages.yes')}}',
+                cancelButtonText: '{{'No'}}',
+                confirmButtonText: '{{'Sí'}}',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {

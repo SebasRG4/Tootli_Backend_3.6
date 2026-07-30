@@ -5,55 +5,55 @@
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/dm/registration') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['dm','registration']) }}">
-                {{translate('New_Deliveryman_Registration')}}
+                {{'Nuevo Registro de Repartidor'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/dm/approve') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['dm','approve']) }}">
-                {{translate('New_Deliveryman_Approval')}}
+                {{'Aprobación de nuevo repartidor'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/dm/deny') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['dm','deny']) }}">
-                {{translate('New_Deliveryman_Rejection')}}
+                {{'Rechazo del nuevo repartidor'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/dm/suspend') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['dm','suspend']) }}">
-                    {{translate('Account_Suspension')}}
+                    {{'Suspensión de cuenta'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/dm/unsuspend') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['dm','unsuspend']) }}">
-                    {{translate('Account_Unsuspension')}}
+                    {{'Dessuspensión de cuenta'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/dm/cash-collect') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['dm','cash-collect']) }}">
-                    {{translate('Cash_Collection')}}
+                    {{'Cobro en efectivo'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/dm/forgot-password') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['dm','forgot-password']) }}">
-                    {{translate('Forgot_Password')}}
+                    {{'Has olvidado tu contraseña'}}
                 </a>
             </li>
               <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/dm/withdraw-approve') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['dm','withdraw-approve']) }}">
-                    {{translate('Withdraw_Approval')}}
+                    {{'Retirar aprobación'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/dm/withdraw-deny') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['dm','withdraw-deny']) }}">
-                    {{translate('Withdraw_Rejection')}}
+                    {{'Retirar el rechazo'}}
                 </a>
             </li>
         </ul>

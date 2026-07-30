@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.denied_deliveryman'))
+@section('title','repartidor negado')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -10,14 +10,14 @@
     <div class="content container-fluid">
         <!-- Page Header -->
         <div class="page-header">
-            <h1 class="page-header-title"><i class="tio-filter-list"></i> {{translate('messages.denied_delivery_man')}}</h1>
+            <h1 class="page-header-title"><i class="tio-filter-list"></i> {{'repartidor negado'}}</h1>
             <div class="page-header-select-wrapper">
                 @if(!isset(auth('admin')->user()->zone_id))
                 <div class="col-sm-auto min--240">
                     <select name="zone_id" class="form-control js-select2-custom set-filter"
                     data-filter="zone_id"
                             data-url="{{ url()->full() }}">
-                        <option value="all">{{ translate('messages.All_Zones') }}</option>
+                        <option value="all">{{ 'Todas las Zonas' }}</option>
                         @foreach(\App\Models\Zone::orderBy('name')->get() as $z)
                             <option
                                 value="{{$z['id']}}" {{isset($zone) && $zone->id == $z['id']?'selected':''}}>
@@ -34,10 +34,10 @@
                         <!-- Nav -->
                         <ul class="nav nav-tabs mb-3 border-0 nav--tabs">
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('admin.users.delivery-man.new') }}"   aria-disabled="true">{{translate('messages.pending_delivery_man')}}</a>
+                                <a class="nav-link" href="{{ route('admin.users.delivery-man.new') }}"   aria-disabled="true">{{'repartidor pendiente'}}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" href="{{ route('admin.users.delivery-man.deny') }}"  aria-disabled="true">{{translate('messages.denied_deliveryman')}}</a>
+                                <a class="nav-link active" href="{{ route('admin.users.delivery-man.deny') }}"  aria-disabled="true">{{'repartidor negado'}}</a>
                             </li>
                         </ul>
                         <!-- End Nav -->
@@ -53,17 +53,17 @@
             <div class="card-header py-2 border-0">
                 <div class="search--button-wrapper">
                     <h5 class="card-title">
-                        {{translate('messages.deliveryman_list')}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$deliveryMen->total()}}</span>
+                        {{'lista de repartidor'}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$deliveryMen->total()}}</span>
                     </h5>
                     <form class="search-form">
                             <div class="input-group input--group">
                                 <input  type="search" name="search_by" class="form-control"
-                                placeholder="{{translate('ex_: search_delivery_man_,_email_or_phone')}}" aria-label="{{translate('messages.search')}}" value="{{request()?->search_by}}" >
+                                placeholder="{{'ej: buscar repartidor, correo electrónico o teléfono'}}" aria-label="{{'buscar'}}" value="{{request()?->search_by}}" >
                                 <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                             </div>
                         </form>
                         @if(request()->get('search_by'))
-                        <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                        <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{'reiniciar'}}</button>
                         @endif
                 </div>
             </div>
@@ -80,13 +80,13 @@
                         }'>
                     <thead class="thead-light">
                     <tr>
-                        <th class="border-0 text-capitalize">{{translate('sl')}}</th>
-                        <th class="border-0 text-capitalize">{{translate('messages.name')}}</th>
-                        <th class="border-0 text-capitalize">{{translate('messages.contact_info')}}</th>
-                        <th class="border-0 text-capitalize">{{translate('messages.zone')}}</th>
-                        <th class="border-0 text-capitalize">{{translate('messages.job_type')}}</th>
-                        <th class="border-0 text-capitalize">{{translate('messages.join_request_date')}}</th>
-                        <th class="border-0 text-center text-capitalize">{{translate('messages.action')}}</th>
+                        <th class="border-0 text-capitalize">{{'SL'}}</th>
+                        <th class="border-0 text-capitalize">{{'nombre'}}</th>
+                        <th class="border-0 text-capitalize">{{'información de contacto'}}</th>
+                        <th class="border-0 text-capitalize">{{'zona'}}</th>
+                        <th class="border-0 text-capitalize">{{'tipo de trabajo'}}</th>
+                        <th class="border-0 text-capitalize">{{'fecha de solicitud de unión'}}</th>
+                        <th class="border-0 text-center text-capitalize">{{'acción'}}</th>
                     </tr>
                     </thead>
 
@@ -112,11 +112,11 @@
                                 @if($dm->zone)
                                 <label class="text--title font-medium mb-0">{{$dm->zone->name}}</label>
                                 @else
-                                <label class="text--title font-medium mb-0">{{translate('messages.zone_deleted')}}</label>
+                                <label class="text--title font-medium mb-0">{{'zona eliminada'}}</label>
                                 @endif
                             </td>
                             <td>
-                                {{ $dm->earning ==  1 ?  translate('messages.freelancer')  : translate('messages.salary_based')}}
+                                {{ $dm->earning ==  1 ?  'persona de libre dedicación'  : 'basado en salario'}}
                             </td>
                             <td>
                                 {{\App\CentralLogics\Helpers::time_date_format($dm->created_at )   }}
@@ -129,14 +129,14 @@
                                 <div class="col-md-12">
                                     <div class="btn--container justify-content-center">
                                         <a class="btn action-btn btn--primary btn-outline-primary request-alert" data-toggle="tooltip" data-placement="top"
-                                        data-original-title="{{ translate('messages.approve') }}"
-                                            data-url="{{route('admin.users.delivery-man.application',[$dm['id'],'approved'])}}" data-message="{{translate('messages.you_want_to_approve_this_application')}}"
+                                        data-original-title="{{ 'aprobar' }}"
+                                            data-url="{{route('admin.users.delivery-man.application',[$dm['id'],'approved'])}}" data-message="{{'quieres aprobar esta solicitud'}}"
                                             href="javascript:"><i class="tio-done font-weight-bold"></i> </a>
-                                            <a class="btn action-btn btn--primary btn-outline-primary"  data-toggle="tooltip" data-placement="top" data-original-title="{{ translate('messages.edit') }}" href="{{route('admin.users.delivery-man.edit',[$dm['id']])}}" ><i class="tio-edit"></i>
+                                            <a class="btn action-btn btn--primary btn-outline-primary"  data-toggle="tooltip" data-placement="top" data-original-title="{{ 'editar' }}" href="{{route('admin.users.delivery-man.edit',[$dm['id']])}}" ><i class="tio-edit"></i>
                                             </a>
                                         @if($dm->application_status !='denied')
                                         <a class="btn action-btn btn--danger btn-outline-danger request-alert" data-toggle="tooltip" data-placement="top"
-                                        data-original-title="{{ translate('messages.deny') }}" data-url="{{route('admin.users.delivery-man.application',[$dm['id'],'denied'])}}" data-message="{{translate('messages.you_want_to_deny_this_application')}}"
+                                        data-original-title="{{ 'denegar' }}" data-url="{{route('admin.users.delivery-man.application',[$dm['id'],'denied'])}}" data-message="{{'quieres rechazar esta solicitud'}}"
                                             href="javascript:"><i class="tio-clear font-weight-bold"></i></a>
                                         @endif
                                     </div>
@@ -159,7 +159,7 @@
                 <div class="empty--data">
                     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
-                        {{translate('no_data_found')}}
+                        {{'no se encontraron datos'}}
                     </h5>
                 </div>
                 @endif
@@ -176,14 +176,14 @@
         "use strict";
         function request_alert(url, message) {
             Swal.fire({
-                title: '{{translate('messages.are_you_sure')}}',
+                title: '{{'¿está seguro?'}}',
                 text: message,
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{translate('messages.no')}}',
-                confirmButtonText: '{{translate('messages.yes')}}',
+                cancelButtonText: '{{'No'}}',
+                confirmButtonText: '{{'Sí'}}',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {

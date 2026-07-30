@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title',translate('messages.flash_sales'))
+@section('title','ventas flash')
 
 @push('css_or_js')
 
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/condition.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.flash_sale_product_setup')}}
+                    {{'configuración de producto de venta flash'}}
                 </span>
             </h1>
         </div>
@@ -28,14 +28,14 @@
                     <div class="card-header py-2 border-0">
                         <div class="search--button-wrapper">
                             <h5 class="card-title">
-                                {{translate('messages.flash_sale_product_list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$items->total()}}</span>
+                                {{'lista de productos de venta flash'}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$items->total()}}</span>
                             </h5>
                             <form  class="search-form">
                                 <!-- Search -->
 
                                 <div class="input-group input--group">
                                     <input id="datatableSearch_" value="{{ request()?->search ?? null }}" type="search" name="search" class="form-control"
-                                            placeholder="{{translate('ex_:_name')}}" aria-label="Search" >
+                                            placeholder="{{'ej: nombre'}}" aria-label="Search" >
                                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                                 </div>
                                 <!-- End Search -->
@@ -53,14 +53,14 @@
                                }'>
                             <thead class="thead-light">
                             <tr class="text-center">
-                                <th class="border-0">{{translate('sl')}}</th>
-                                <th class="border-0">{{translate('messages.product')}}</th>
-                                <th class="border-0">{{translate('messages.Current_Stock')}}</th>
-                                <th class="border-0">{{translate('messages.Flash_sale_Qty')}}</th>
-                                <th class="border-0">{{translate('messages.Qty_Sold')}}</th>
-                                <th class="border-0">{{translate('messages.Discount')}}</th>
-                                <th class="border-0">{{translate('messages.Sold_Amount')}}</th>
-                                <th class="border-0">{{translate('messages.status')}}</th>
+                                <th class="border-0">{{'SL'}}</th>
+                                <th class="border-0">{{'producto'}}</th>
+                                <th class="border-0">{{'Existencias actuales'}}</th>
+                                <th class="border-0">{{'Cantidad de venta flash'}}</th>
+                                <th class="border-0">{{'Cantidad vendida'}}</th>
+                                <th class="border-0">{{'Descuento'}}</th>
+                                <th class="border-0">{{'Cantidad vendida'}}</th>
+                                <th class="border-0">{{'estado'}}</th>
                             </tr>
 
                             </thead>
@@ -111,11 +111,11 @@
                                     </td>
                                     <td class="text-center">
                                         @if($item['status'] == 0 || $item->flashSale->is_publish == 0)
-                                        <span class="badge badge-soft-info">{{ translate('off')}}</span>
+                                        <span class="badge badge-soft-info">{{ 'apagado'}}</span>
                                         @elseif($item->flashSale->is_publish == 1 && $t2->gte(now())  )
-                                        <span class="badge badge-soft-success"> {{ translate('running')}} </span>
+                                        <span class="badge badge-soft-success"> {{ 'correr'}} </span>
                                         @else
-                                        <span class="badge badge-soft-danger">{{ translate('expired')}}</span>
+                                        <span class="badge badge-soft-danger">{{ 'venció'}}</span>
                                         @endif
                                     </td>
 
@@ -134,7 +134,7 @@
                     <div class="empty--data">
                         <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
-                            {{translate('no_data_found')}}
+                            {{'no se encontraron datos'}}
                         </h5>
                     </div>
                     @endif

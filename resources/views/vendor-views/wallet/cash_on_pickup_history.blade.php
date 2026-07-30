@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title', translate('messages.historial_recolecciones_efectivo'))
+@section('title', 'historial recolecciones efectivo')
 
 @push('css_or_js')
 @endpush
@@ -16,7 +16,7 @@
                             <img src="{{asset('assets/admin/img/image_90.png')}}" alt="public">
                         </div>
                         <span>
-                            {{translate('messages.historial_recolecciones_efectivo')}}
+                            {{'historial recolecciones efectivo'}}
                         </span>
                     </h2>
                 </div>
@@ -46,14 +46,14 @@
                                 }' >
                     <thead class="thead-light">
                     <tr>
-                        <th>{{ translate('messages.sl') }}</th>
-                        <th>{{ translate('messages.order_id') }}</th>
-                        <th>{{ translate('messages.delivery_man') }}</th>
-                        <th>{{ translate('messages.Ticket_Total') }}</th>
-                        <th>{{ translate('messages.Amortized_Debt') }}</th>
-                        <th>{{ translate('messages.Cash_Received') }}</th>
-                        <th>{{ translate('messages.Payment_Time') }}</th>
-                        <th>{{ translate('messages.status') }}</th>
+                        <th>{{ 'SL' }}</th>
+                        <th>{{ 'identificación del pedido' }}</th>
+                        <th>{{ 'Repartidor' }}</th>
+                        <th>{{ 'Total de entradas' }}</th>
+                        <th>{{ 'Deuda Amortizada' }}</th>
+                        <th>{{ 'Efectivo recibido' }}</th>
+                        <th>{{ 'Tiempo de pago' }}</th>
+                        <th>{{ 'estado' }}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -74,7 +74,7 @@
                                     <span class="d-block font-weight-bold">{{ $wr->delivery_man->f_name }} {{ $wr->delivery_man->l_name }}</span>
                                     <small class="text-muted">{{ $wr->delivery_man->phone }}</small>
                                 @else
-                                    <span class="text-muted">{{ translate('messages.N/A') }}</span>
+                                    <span class="text-muted">{{ 'N / A' }}</span>
                                 @endif
                             </td>
                             <td>{{ \App\CentralLogics\Helpers::format_currency($food_cost) }}</td>
@@ -92,7 +92,7 @@
                                 <span class="d-block">{{ \App\CentralLogics\Helpers::time_date_format($wr['created_at'])}}</span>
                             </td>
                             <td>
-                                <label class="badge badge-soft-success">{{translate('messages.received')}}</label>
+                                <label class="badge badge-soft-success">{{'recibió'}}</label>
                             </td>
                         </tr>
                     @endforeach
@@ -102,7 +102,7 @@
                     <div class="empty--data">
                         <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
-                            {{translate('no_data_found')}}
+                            {{'no se encontraron datos'}}
                         </h5>
                     </div>
                 @endif

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.Update condition'))
+@section('title','Condición de actualización')
 
 @push('css_or_js')
 
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/edit.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{translate('messages.Common_Condition_Update')}}
+                    {{'Actualización de condiciones comunes'}}
                 </span>
             </h1>
         </div>
@@ -31,7 +31,7 @@
                                     <li class="nav-item">
                                         <a class="nav-link lang_link active"
                                         href="#"
-                                        id="default-link">{{translate('messages.default')}}</a>
+                                        id="default-link">{{'por defecto'}}</a>
                                     </li>
                                     @foreach ($language as $lang)
                                         <li class="nav-item">
@@ -46,8 +46,8 @@
                         <div class="col-12">
                             @if($language)
                                 <div class="form-group lang_form" id="default-form">
-                                    <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{ translate('messages.default') }})</label>
-                                    <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_condition')}}" maxlength="191" value="{{$condition?->getRawOriginal('name')}}">
+                                    <label class="input-label" for="exampleFormControlInput1">{{'nombre'}} ({{ 'por defecto' }})</label>
+                                    <input type="text" name="name[]" class="form-control" placeholder="{{'nueva condición'}}" maxlength="191" value="{{$condition?->getRawOriginal('name')}}">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 @foreach($language as $lang)
@@ -63,23 +63,23 @@
                                         }
                                     ?>
                                     <div class="form-group d-none lang_form" id="{{$lang}}-form">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
-                                        <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_condition')}}" maxlength="191" value="{{$translate[$lang]['name']??''}}">
+                                        <label class="input-label" for="exampleFormControlInput1">{{'nombre'}} ({{strtoupper($lang)}})</label>
+                                        <input type="text" name="name[]" class="form-control" placeholder="{{'nueva condición'}}" maxlength="191" value="{{$translate[$lang]['name']??''}}">
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
                                 @endforeach
                             @else
                                 <div class="form-group">
-                                    <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}}</label>
-                                    <input type="text" name="name" class="form-control" placeholder="{{translate('messages.new_condition')}}" value="{{$condition['name']}}" maxlength="191">
+                                    <label class="input-label" for="exampleFormControlInput1">{{'nombre'}}</label>
+                                    <input type="text" name="name" class="form-control" placeholder="{{'nueva condición'}}" value="{{$condition['name']}}" maxlength="191">
                                 </div>
                                 <input type="hidden" name="lang[]" value="{{$lang}}">
                             @endif
                         </div>
                     </div>
                     <div class="btn--container justify-content-end mt-20">
-                        <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                        <button type="submit" class="btn btn--primary">{{translate('messages.update')}}</button>
+                        <button type="reset" id="reset_btn" class="btn btn--reset">{{'reiniciar'}}</button>
+                        <button type="submit" class="btn btn--primary">{{'actualizar'}}</button>
                     </div>
                 </form>
             </div>

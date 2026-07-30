@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('Update campaign'))
+@section('title','Campaña de actualización')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -16,7 +16,7 @@
                     <img src="{{asset('assets/admin/img/edit.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.update_campaign')}}
+                    {{'campaña de actualización'}}
                 </span>
             </h1>
         </div>
@@ -34,7 +34,7 @@
                         <li class="nav-item">
                             <a class="nav-link lang_link active"
                             href="#"
-                            id="default-link">{{translate('messages.default')}}</a>
+                            id="default-link">{{'por defecto'}}</a>
                         </li>
                         @foreach (json_decode($language) as $lang)
                             <li class="nav-item">
@@ -53,19 +53,19 @@
                                 <span class="card-header-icon">
                                     <i class="tio-fastfood"></i>
                                 </span>
-                                <span>{{ translate('messages.Item Info') }}</span>
+                                <span>{{ 'Información del artículo' }}</span>
                             </h5>
                         </div>
                         <div class="card-body">
                             @if($language)
                             <div class="lang_form" id="default-form">
                                 <div class="form-group error-wrapper">
-                                    <label class="input-label" for="default_title">{{translate('messages.title')}} ({{ translate('messages.default') }})</label>
-                                    <input type="text" name="title[]" id="default_title" class="form-control" placeholder="{{translate('messages.new_food')}}" value="{{$campaign?->getRawOriginal('title')}}" required>
+                                    <label class="input-label" for="default_title">{{'título'}} ({{ 'por defecto' }})</label>
+                                    <input type="text" name="title[]" id="default_title" class="form-control" placeholder="{{'comida nueva'}}" value="{{$campaign?->getRawOriginal('title')}}" required>
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 <div class="form-group pt-2 mb-0 error-wrapper">
-                                    <label class="input-label" for="exampleFormControlInput1">{{translate('messages.short_description')}} ({{ translate('messages.default') }})</label>
+                                    <label class="input-label" for="exampleFormControlInput1">{{'breve descripción'}} ({{ 'por defecto' }})</label>
                                     <textarea type="text" name="description[]" class="form-control ckeditor min--height-200" required>{!! $campaign?->getRawOriginal('description') !!}</textarea>
                                 </div>
                             </div>
@@ -86,12 +86,12 @@
                                     ?>
                                     <div class="d-none lang_form" id="{{$lang}}-form">
                                         <div class="form-group error-wrapper">
-                                            <label class="input-label" for="{{$lang}}_title">{{translate('messages.title')}} ({{strtoupper($lang)}})</label>
-                                            <input type="text" name="title[]" id="{{$lang}}_title" class="form-control" placeholder="{{translate('messages.new_food')}}" value="{{$translate[$lang]['title']??''}}">
+                                            <label class="input-label" for="{{$lang}}_title">{{'título'}} ({{strtoupper($lang)}})</label>
+                                            <input type="text" name="title[]" id="{{$lang}}_title" class="form-control" placeholder="{{'comida nueva'}}" value="{{$translate[$lang]['title']??''}}">
                                         </div>
                                         <input type="hidden" name="lang[]" value="{{$lang}}">
                                         <div class="form-group pt-2 mb-0 error-wrapper">
-                                            <label class="input-label" for="exampleFormControlInput1">{{translate('messages.short_description')}} ({{strtoupper($lang)}})</label>
+                                            <label class="input-label" for="exampleFormControlInput1">{{'breve descripción'}} ({{strtoupper($lang)}})</label>
                                             <textarea type="text" name="description[]" class="form-control ckeditor min--height-200">{!! $translate[$lang]['description']??''!!}</textarea>
                                         </div>
                                     </div>
@@ -99,12 +99,12 @@
                             @else
                             <div id="default-form">
                                 <div class="form-group error-wrapper">
-                                    <label class="input-label" for="exampleFormControlInput1">{{translate('messages.title')}} ({{ translate('messages.default') }})</label>
-                                    <input type="text" name="title[]" class="form-control" placeholder="{{translate('messages.new_food')}}" value="{{$campaign['title']}}">
+                                    <label class="input-label" for="exampleFormControlInput1">{{'título'}} ({{ 'por defecto' }})</label>
+                                    <input type="text" name="title[]" class="form-control" placeholder="{{'comida nueva'}}" value="{{$campaign['title']}}">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 <div class="form-group pt-2 mb-0 error-wrapper">
-                                    <label class="input-label" for="exampleFormControlInput1">{{translate('messages.short_description')}}</label>
+                                    <label class="input-label" for="exampleFormControlInput1">{{'breve descripción'}}</label>
                                     <textarea type="text" name="description[]" class="form-control ckeditor min--height-200">{!! $campaign['description'] !!}</textarea>
                                 </div>
                             </div>
@@ -119,14 +119,14 @@
                                 <span class="card-header-icon">
                                     <i class="tio-comment-image-outlined"></i>
                                 </span>
-                                <span>{{ translate('messages.Item Image') }}</span>
+                                <span>{{ 'Imagen del artículo' }}</span>
                             </h5>
                         </div>
                         <div class="error-wrapper">
                             <div class="card-body d-flex flex-column">
                                 <label>
-                                    {{translate('messages.item_image')}}
-                                    <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1 )</small>
+                                    {{'imagen del artículo'}}
+                                    <small class="text-danger">* ( {{'relación'}} 1:1 )</small>
                                 </label>
 
                                 <div id="image-viewer-section" class="text-center py-3 my-auto">
@@ -136,7 +136,7 @@
                                 <div class="custom-file">
                                     <input type="file" name="image" id="customFileEg1" class="custom-file-input"
                                             accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                    <label class="custom-file-label" for="customFileEg1">{{translate('messages.choose_file')}}</label>
+                                    <label class="custom-file-label" for="customFileEg1">{{'elegir archivo'}}</label>
                                 </div>
                             </div>
                         </div>
@@ -150,20 +150,20 @@
                                 <span class="card-header-icon">
                                     <i class="tio-dashboard-outlined"></i>
                                 </span>
-                                <span>{{ translate('messages.Item Details') }}</span>
+                                <span>{{ 'Detalles del artículo' }}</span>
                             </h5>
                         </div>
                         <div class="card-body">
                             <div class="row g-2">
                                 <div class="col-md-3 col-sm-6">
                                     <div class="form-group mb-0 error-wrapper">
-                                        <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.store')}}<span
+                                        <label class="input-label" for="exampleFormControlSelect1">{{'Negocio'}}<span
                                                 class="input-label-secondary"></span></label>
-                                        <select name="store_id" class="js-data-example-ajax form-control" id="store_id"  data-toggle="tooltip" data-placement="right" data-original-title="{{translate('messages.select_store')}}" disabled>
+                                        <select name="store_id" class="js-data-example-ajax form-control" id="store_id"  data-toggle="tooltip" data-placement="right" data-original-title="{{'seleccionar tienda'}}" disabled>
                                             @if($campaign->store)
                                             <option value="{{$campaign->store->id}}" selected>{{$campaign->store->name}}</option>
                                             @else
-                                            <option selected disabled>{{translate('messages.select_store')}}</option>
+                                            <option selected disabled>{{'seleccionar tienda'}}</option>
                                             @endif
                                         </select>
                                     </div>
@@ -171,21 +171,21 @@
                                 </div>
                                 <div class="col-md-3 col-sm-6" id="stock_input">
                                     <div class="form-group mb-0 error-wrapper">
-                                        <label class="input-label" for="total_stock">{{translate('messages.total_stock')}}</label>
+                                        <label class="input-label" for="total_stock">{{'existencias totales'}}</label>
                                         <input type="number" class="form-control" name="current_stock" value="{{$campaign->stock}}" id="quantity">
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-3" id="maximum_cart_quantity">
                                     <div class="form-group mb-0 error-wrapper">
                                         <label class="input-label"
-                                            for="maximum_cart_quantity">{{ translate('messages.maximum_cart_quantity') }}</label>
+                                            for="maximum_cart_quantity">{{ 'cantidad máxima del carrito' }}</label>
                                         <input type="number" class="form-control" name="maximum_cart_quantity" value="{{$campaign->maximum_cart_quantity}}" min="0" id="cart_quantity">
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-6" id="addon_input">
                                     <div class="form-group mb-0 error-wrapper">
-                                        <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.addon')}}<span
-                                                class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('messages.store_required_warning')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.store_required_warning')}}"></span></label>
+                                        <label class="input-label" for="exampleFormControlSelect1">{{'Añadir'}}<span
+                                                class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{'almacenar advertencia requerida'}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{'almacenar advertencia requerida'}}"></span></label>
                                         <select name="addon_ids[]" id="add_on" class="form-control js-select2-custom" multiple="multiple">
                                             @foreach(\App\Models\AddOn::orderBy('name')->get() as $addon)
                                                 <option value="{{$addon['id']}}" {{in_array($addon->id,json_decode($campaign['add_ons'],true))?'selected':''}}>{{$addon['name']}}</option>
@@ -195,7 +195,7 @@
                                 </div>
                                 <div class="col-md-3 col-sm-6">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.category')}}<span
+                                        <label class="input-label" for="exampleFormControlSelect1">{{'categoría'}}<span
                                                 class="input-label-secondary">*</span></label>
                                         <select name="category_id" class="js-data-example-ajax form-control" id="category_id" required>
                                             @if($category)
@@ -206,8 +206,8 @@
                                 </div>
                                 <div class="col-md-3 col-sm-6">
                                     <div class="form-group mb-0 error-wrapper">
-                                        <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.sub_category')}}<span
-                                                class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('messages.category_required_warning')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.category_required_warning')}}"></span></label>
+                                        <label class="input-label" for="exampleFormControlSelect1">{{'subcategoría'}}<span
+                                                class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{'categoría requerida advertencia'}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{'categoría requerida advertencia'}}"></span></label>
                                         <select name="sub_category_id" class="js-data-example-ajax form-control" id="sub-categories">
                                             @if(isset($sub_category))
                                             <option value="{{$sub_category['id']}}" >{{$sub_category['name']}}</option>
@@ -217,24 +217,24 @@
                                 </div>
                                 <div class="col-md-3 co-sml-6">
                                     <div class="form-group error-wrapper" id="veg_non_veg">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.item_type')}}</label>
+                                        <label class="input-label" for="exampleFormControlInput1">{{'tipo de artículo'}}</label>
                                         <select name="veg" class="form-control js-select2-custom">
-                                            <option value="0" {{$campaign['veg']==0?'selected':''}}>{{translate('messages.non_veg')}}</option>
-                                            <option value="1" {{$campaign['veg']==1?'selected':''}}>{{translate('messages.veg')}}</option>
+                                            <option value="0" {{$campaign['veg']==0?'selected':''}}>{{'no vegetariano'}}</option>
+                                            <option value="1" {{$campaign['veg']==1?'selected':''}}>{{'verduras'}}</option>
                                         </select>
                                     </div>
                                 </div>
                                 @if(Config::get('module.current_module_type') == 'pharmacy')
                                 <div class="col-sm-6" id="generic_name">
                                     <label class="input-label" for="sub-categories">
-                                        {{translate('generic_name')}}
-                                        <span class="input-label-secondary" title="{{ translate('Specify the medicine`s active ingredient that makes it work') }}" data-toggle="tooltip">
+                                        {{'nombre genérico'}}
+                                        <span class="input-label-secondary" title="{{ 'Especificar el ingrediente activo del medicamento que lo hace funcionar.' }}" data-toggle="tooltip">
                                             <i class="tio-info-outined"></i>
                                         </span>
                                     </label>
                                     <div class="error-wrapper">
                                         <div class="dropdown suggestion_dropdown">
-                                            <input type="text" class="form-control" data-toggle="dropdown" placeholder="{{ translate('messages.Type your content here') }}" name="generic_name" value="{{ $campaign->generic->pluck('generic_name')->first() }}" autocomplete="off">
+                                            <input type="text" class="form-control" data-toggle="dropdown" placeholder="{{ 'Escribe tu contenido aquí' }}" name="generic_name" value="{{ $campaign->generic->pluck('generic_name')->first() }}" autocomplete="off">
                                             @if(count(\App\Models\GenericName::select(['generic_name'])->get())>0)
                                                 <div class="dropdown-menu">
                                                     @foreach (\App\Models\GenericName::select(['generic_name'])->get() as $generic_name)
@@ -256,12 +256,12 @@
 
                                     <div class="col-sm-6 error-wrapper" id="nutrition">
                                         <label class="input-label" for="sub-categories">
-                                            {{translate('Nutrition')}}
-                                            <span class="input-label-secondary" title="{{ translate('Specify the necessary keywords relating to energy values for the item.') }}" data-toggle="tooltip">
+                                            {{'Nutrición'}}
+                                            <span class="input-label-secondary" title="{{ 'Especifique las palabras clave necesarias relacionadas con los valores energéticos del artículo.' }}" data-toggle="tooltip">
                                                 <i class="tio-info-outined"></i>
                                             </span>
                                         </label>
-                                        <select name="nutritions[]" class="form-control multiple-select2" data-placeholder="{{ translate('messages.Type your content and press enter') }}" multiple>
+                                        <select name="nutritions[]" class="form-control multiple-select2" data-placeholder="{{ 'Escribe tu contenido y presiona enter.' }}" multiple>
                                             @foreach (\App\Models\Nutrition::all() as $nutrition)
                                                 <option value="{{ $nutrition->nutrition }}" {{ $campaign_nutritions->contains($nutrition->id) ? 'selected' : '' }}>{{ $nutrition->nutrition }}</option>
                                             @endforeach
@@ -271,12 +271,12 @@
 
                                     <div class="col-sm-6 error-wrapper" id="allergy">
                                         <label class="input-label" for="sub-categories">
-                                            {{translate('Allegren Ingredients')}}
-                                            <span class="input-label-secondary" title="{{ translate('Specify the ingredients of the item which can make a reaction as an allergen.') }}" data-toggle="tooltip">
+                                            {{'Ingredientes Allegren'}}
+                                            <span class="input-label-secondary" title="{{ 'Especifique los ingredientes del artículo que pueden provocar una reacción como alérgeno.' }}" data-toggle="tooltip">
                                                 <i class="tio-info-outined"></i>
                                             </span>
                                         </label>
-                                        <select name="allergies[]" class="form-control multiple-select2" data-placeholder="{{ translate('messages.Type your content and press enter') }}" multiple>
+                                        <select name="allergies[]" class="form-control multiple-select2" data-placeholder="{{ 'Escribe tu contenido y presiona enter.' }}" multiple>
                                             @foreach (\App\Models\Allergy::all() as $allergy)
                                                 <option value="{{ $allergy->allergy }}" {{ $campaign_allergies->contains($allergy->id) ? 'selected' : '' }}>{{ $allergy->allergy }}</option>
                                             @endforeach
@@ -295,7 +295,7 @@
                             <h5 class="card-title">
                                 <span class="card-header-icon"><i class="tio-dollar-outlined"></i></span>
                                 <span>
-                                    {{ translate('messages.amount') }}
+                                    {{ 'cantidad' }}
                                 </span>
                             </h5>
                         </div>
@@ -303,34 +303,34 @@
                             <div class="row g-2">
                                 <div class="col-md-3 col-sm-6">
                                     <div class="form-group mb-0 error-wrapper">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.price')}}</label>
+                                        <label class="input-label" for="exampleFormControlInput1">{{'precio'}}</label>
                                         <input type="number" min="1" max="999999999" step="0.01" value="{{$campaign->price}}" name="price" class="form-control"
-                                                placeholder="{{ translate('messages.Ex:') }} 100" required>
+                                                placeholder="{{ 'Ex:' }} 100" required>
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-6">
                                     <div class="form-group mb-0 error-wrapper">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.discount')}}<span class="input-label-secondary text--title" data-toggle="tooltip"
+                                        <label class="input-label" for="exampleFormControlInput1">{{'descuento'}}<span class="input-label-secondary text--title" data-toggle="tooltip"
                                             data-placement="right"
-                                            data-original-title="{{ translate('Currently you need to manage discount with store.') }}">
+                                            data-original-title="{{ 'Actualmente necesitas gestionar el descuento con la tienda.' }}">
                                             <i class="tio-info-outined"></i>
                                         </span></label>
                                         <input type="number" min="0" max="999999999" value="{{$campaign->discount}}" name="discount" class="form-control"
-                                                placeholder="{{ translate('messages.Ex:') }} 100" >
+                                                placeholder="{{ 'Ex:' }} 100" >
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-6">
                                     <div class="form-group mb-0 error-wrapper">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.discount_type')}}</label>
+                                        <label class="input-label" for="exampleFormControlInput1">{{'tipo de descuento'}}</label>
                                         <select name="discount_type" class="form-control js-select2-custom">
-                                            <option value="percent" {{$campaign->discount_type == 'percent'?'selected':''}}>{{translate('messages.percent')}}</option>
-                                            <option value="amount" {{$campaign->discount_type == 'amount'?'selected':''}}>{{translate('messages.amount')}}</option>
+                                            <option value="percent" {{$campaign->discount_type == 'percent'?'selected':''}}>{{'por ciento'}}</option>
+                                            <option value="amount" {{$campaign->discount_type == 'amount'?'selected':''}}>{{'cantidad'}}</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-3 co-sml-6">
                                     <div class="form-group mb-0 error-wrapper" id="unit_input">
-                                        <label class="input-label text-capitalize" for="unit">{{translate('messages.unit')}}</label>
+                                        <label class="input-label text-capitalize" for="unit">{{'unidad'}}</label>
                                         <select name="unit" class="form-control js-select2-custom">
                                             @foreach (\App\Models\Unit::all() as $unit)
                                                 <option value="{{$unit->id}}" {{$unit->id == $campaign->unit_id? 'selected':''}}>{{$unit->unit}}</option>
@@ -350,11 +350,11 @@
                                 <span class="card-header-icon mr-2">
                                     <i class="tio-canvas-text"></i>
                                 </span>
-                                <span>{{ translate('messages.Tax_Information') }}</span>
+                                <span>{{ 'Información fiscal' }}</span>
                             </h5>
                         </div>
                         <div class="card-body error-wrapper">
-                                <span class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rate') }}</span>
+                                <span class="mb-2 d-block title-clr fw-normal">{{ 'Seleccionar tasa impositiva' }}</span>
                                 <select name="tax_ids[]" required id="tax__rate" class="form-control js-select2-custom"
                                     multiple="multiple" placeholder="Type & Select Tax Rate">
                                     @foreach ($taxVats as $taxVat)
@@ -377,7 +377,7 @@
                                 <span class="card-header-icon">
                                     <i class="tio-canvas-text"></i>
                                 </span>
-                                <span> {{ translate('messages.food_variations') }}</span>
+                                <span> {{ 'variaciones de alimentos' }}</span>
                             </h5>
                         </div>
                         <div class="card-body">
@@ -396,7 +396,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-2">
-                                    <button type="button" class="btn btn-outline-success" id="add_new_option_button">{{translate('add_new_variation')}}</button>
+                                    <button type="button" class="btn btn-outline-success" id="add_new_option_button">{{'agregar nueva variación'}}</button>
                                 </div>
                             </div>
                         </div>
@@ -410,14 +410,14 @@
                                 <span class="card-header-icon">
                                     <i class="tio-canvas-text"></i>
                                 </span>
-                                <span>{{ translate('messages.Add Attribute') }}</span>
+                                <span>{{ 'Agregar atributo' }}</span>
                             </h5>
                         </div>
                         <div class="card-body pb-0">
                             <div class="row g-2">
                                 <div class="col-12">
                                     <div class="form-group mb-0 error-wrapper">
-                                        <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.attribute')}}<span class="input-label-secondary"></span></label>
+                                        <label class="input-label" for="exampleFormControlSelect1">{{'atributo'}}<span class="input-label-secondary"></span></label>
                                         <select name="attribute_id[]" id="choice_attributes" class="form-control js-select2-custom" multiple="multiple">
                                             @foreach(\App\Models\Attribute::orderBy('name')->get() as $attribute)
                                             <option value="{{$attribute['id']}}" {{in_array($attribute->id,json_decode($campaign['attributes'],true))?'selected':''}}>{{$attribute['name']}}</option>
@@ -446,32 +446,32 @@
                         <div class="card-header">
                             <h5 class="card-title">
                                 <span class="card-header-icon"><i class="tio-date-range"></i></span>
-                                <span>{{ translate('messages.time_schedule') }}</span>
+                                <span>{{ 'horario' }}</span>
                             </h5>
                         </div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-3 col-sm-6">
                                     <div class="form-group error-wrapper">
-                                        <label class="input-label" for="title">{{translate('messages.start_date')}}</label>
+                                        <label class="input-label" for="title">{{'fecha de inicio'}}</label>
                                         <input type="date" id="date_from" class="form-control" required="" name="start_date" value="{{$campaign->start_date->format('Y-m-d')}}">
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-6">
                                     <div class="form-group error-wrapper">
-                                        <label class="input-label" for="title">{{translate('messages.end_date')}}</label>
+                                        <label class="input-label" for="title">{{'fecha de finalización'}}</label>
                                         <input type="date" id="date_to" class="form-control" required="" name="end_date" value="{{$campaign->end_date->format('Y-m-d')}}">
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-6">
                                     <div class="form-group error-wrapper">
-                                        <label class="input-label" for="title">{{translate('messages.start_time')}}</label>
+                                        <label class="input-label" for="title">{{'hora de inicio'}}</label>
                                         <input type="time" id="start_time" class="form-control" name="start_time" value="{{$campaign->start_time->format('H:i')}}">
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-6">
                                     <div class="form-group error-wrapper">
-                                        <label class="input-label" for="title">{{translate('messages.end_time')}}</label>
+                                        <label class="input-label" for="title">{{'tiempo final'}}</label>
                                         <input type="time" id="end_time" class="form-control" name="end_time" value="{{$campaign->end_time->format('H:i')}}">
                                     </div>
                                 </div>
@@ -482,8 +482,8 @@
 
                 <div class="col-12">
                     <div class="btn--container justify-content-end mt-2">
-                        <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                        <button type="submit" class="btn btn--primary">{{translate('messages.update')}}</button>
+                        <button type="reset" id="reset_btn" class="btn btn--reset">{{'reiniciar'}}</button>
+                        <button type="submit" class="btn btn--primary">{{'actualizar'}}</button>
                     </div>
                 </div>
 
@@ -554,7 +554,7 @@
 
         function add_more_customer_choice_option(i, name) {
             let n = name.split(' ').join('');
-            $('#customer_choice_options').append('<div class="row gy-1"><div class="col-sm-3"><input type="hidden" name="choice_no[]" value="' + i + '"><input type="text" class="form-control" name="choice[]" value="' + n + '" placeholder="Choice Title" readonly></div><div class="col-sm-9"><input type="text" class="form-control combination_update" name="choice_options_' + i + '[]" placeholder="{{translate('messages.enter_choice_values')}}" data-role="tagsinput"></div></div>');
+            $('#customer_choice_options').append('<div class="row gy-1"><div class="col-sm-3"><input type="hidden" name="choice_no[]" value="' + i + '"><input type="text" class="form-control" name="choice[]" value="' + n + '" placeholder="Choice Title" readonly></div><div class="col-sm-9"><input type="text" class="form-control combination_update" name="choice_options_' + i + '[]" placeholder="{{'ingrese los valores de elección'}}" data-role="tagsinput"></div></div>');
             $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
         }
 
@@ -790,7 +790,7 @@
                             });
                         }
                     } else {
-                        toastr.success('{{ translate('messages.Campaign updated successfully') }}', {
+                        toastr.success('{{ 'Campaña actualizada con éxito' }}', {
                             CloseButton: true,
                             ProgressBar: true
                         });
@@ -871,12 +871,12 @@
             var add_option_view = `
                 <div class="card view_new_option mb-2" >
                     <div class="card-header">
-                        <label for="" id=new_option_name_` + count + `> {{ translate('add_new') }}</label>
+                        <label for="" id=new_option_name_` + count + `> {{ 'agregar nuevo' }}</label>
                     </div>
                     <div class="card-body">
                         <div class="row g-2">
                             <div class="col-lg-3 col-md-6">
-                                <label for="">{{ translate('name') }}</label>
+                                <label for="">{{ 'nombre' }}</label>
                                 <input required name=options[` + count +
                 `][name] class="form-control new_option_name" type="text" data-count="`+
                 count +`">
@@ -884,14 +884,14 @@
 
                             <div class="col-lg-3 col-md-6">
                                 <div class="form-group">
-                                    <label class="input-label text-capitalize d-flex alig-items-center"><span class="line--limit-1">{{ translate('messages.selcetion_type') }} </span>
+                                    <label class="input-label text-capitalize d-flex alig-items-center"><span class="line--limit-1">{{ 'tipo de selección' }} </span>
                                     </label>
                                     <div class="resturant-type-group border">
                                         <label class="form-check form--check mr-2 mr-md-4">
                                             <input class="form-check-input show_min_max" data-count="`+count+`" type="radio" value="multi"
                                             name="options[` + count + `][type]" id="type` + count + `" checked">
                                             <span class="form-check-label">
-                                                {{ translate('Multiple') }}
+                                                {{ 'Múltiple' }}
                 </span>
             </label>
 
@@ -899,7 +899,7 @@
                 <input class="form-check-input hide_min_max" data-count="`+count+`" type="radio" value="single"
                                             name="options[` + count + `][type]" id="type` + count + `">
                                             <span class="form-check-label">
-                                                {{ translate('Single') }}
+                                                {{ 'Soltero' }}
                 </span>
             </label>
         </div>
@@ -908,11 +908,11 @@
 <div class="col-12 col-lg-6">
     <div class="row g-2">
         <div class="col-sm-6 col-md-4">
-            <label for="">{{ translate('Min') }}</label>
+            <label for="">{{ 'mín.' }}</label>
                                         <input id="min_max1_` + count + `" required  name="options[` + count + `][min]" class="form-control" type="number" min="1">
                                     </div>
                                     <div class="col-sm-6 col-md-4">
-                                        <label for="">{{ translate('Max') }}</label>
+                                        <label for="">{{ 'máx.' }}</label>
                                         <input id="min_max2_` + count + `"   required name="options[` + count + `][max]" class="form-control" type="number" min="1">
                                     </div>
 
@@ -922,11 +922,11 @@
                                             <div>
                                                 <input id="options[` + count + `][required]" name="options[` +
                 count + `][required]" type="checkbox">
-                                                <label for="options[` + count + `][required]" class="m-0">{{ translate('Required') }}</label>
+                                                <label for="options[` + count + `][required]" class="m-0">{{ 'Requerido' }}</label>
                                             </div>
                                             <div>
                                                 <button type="button" class="btn btn-danger btn-sm delete_input_button"
-                                                    title="{{ translate('Delete') }}">
+                                                    title="{{ 'Borrar' }}">
                                                     <i class="tio-add-to-trash"></i>
                                                 </button>
                                             </div>
@@ -941,13 +941,13 @@
                                 <div  id="option_price_view_` + count + `">
                                     <div class="row g-3 add_new_view_row_class mb-3">
                                         <div class="col-md-4 col-sm-6">
-                                            <label for="">{{ translate('Option_name') }}</label>
+                                            <label for="">{{ 'Nombre de la opción' }}</label>
                                             <input class="form-control" required type="text" name="options[` +
                 count +
                 `][values][0][label]" id="">
                                         </div>
                                         <div class="col-md-4 col-sm-6">
-                                            <label for="">{{ translate('Additional_price') }}</label>
+                                            <label for="">{{ 'Precio adicional' }}</label>
                                             <input class="form-control" required type="number" min="0" step="0.01" name="options[` +
                 count + `][values][0][optionPrice]" id="">
                                         </div>
@@ -956,7 +956,7 @@
                                 <div class="row mt-3 p-3 mr-1 d-flex "  id="add_new_button_` + count +
                 `">
                                     <button type="button" class="btn btn-outline-primary add_new_row_button" data-count="`+
-                count +`" >{{ translate('Add_New_Option') }}</button>
+                count +`" >{{ 'Agregar nueva opción' }}</button>
                                 </div>
                             </div>
                         </div>
@@ -1019,12 +1019,12 @@
         var add_new_row_view = `
         <div class="row add_new_view_row_class mb-3 position-relative pt-3 pt-sm-0">
             <div class="col-md-4 col-sm-5">
-                    <label for="">{{ translate('Option_name') }}</label>
+                    <label for="">{{ 'Nombre de la opción' }}</label>
                     <input class="form-control" required type="text" name="options[` + data + `][values][` +
             countRow + `][label]" id="">
                 </div>
                 <div class="col-md-4 col-sm-5">
-                    <label for="">{{ translate('Additional_price') }}</label>
+                    <label for="">{{ 'Precio adicional' }}</label>
                     <input class="form-control"  required type="number" min="0" step="0.01" name="options[` +
             data +
             `][values][` + countRow + `][optionPrice]" id="">
@@ -1033,7 +1033,7 @@
                     <label class="d-none d-sm-block">&nbsp;</label>
                     <div class="mt-1">
                         <button type="button" class="btn btn-danger btn-sm deleteRow"
-                            title="{{ translate('Delete') }}">
+                            title="{{ 'Borrar' }}">
                             <i class="tio-add-to-trash"></i>
                         </button>
                     </div>

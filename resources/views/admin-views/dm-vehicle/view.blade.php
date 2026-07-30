@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('vehicle_view'))
+@section('title','vista del vehículo')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -17,7 +17,7 @@
                             <img src="{{ asset('assets/admin/img/delivery-man.png') }}" alt="public">
                         </div>
                         <span>
-                            {{ translate('vehicle_type') }}: {{$vehicle->type}}
+                            {{ 'tipo de vehículo' }}: {{$vehicle->type}}
                         </span>
                     </h1>
                 </div>
@@ -33,7 +33,7 @@
                     <!-- Header -->
                     <div class="card-header py-2">
                         <div class="search--button-wrapper">
-                            <h5 class="card-title">{{ translate('messages.deliveryman') }}<span
+                            <h5 class="card-title">{{ 'Repartidor' }}<span
                                     class="badge badge-soft-dark ml-2" id="itemCount">{{ $deliveryMen->total() }}</span>
                             </h5>
                         </div>
@@ -50,13 +50,13 @@
                                  "paging":false
                                }'>
                             <thead class="thead-light">
-                                <th class="text-capitalize">{{ translate('messages.sl') }}</th>
-                                <th class="text-capitalize w-20p">{{translate('messages.name')}}</th>
-                                <th class="text-capitalize">{{ translate('messages.contact') }}</th>
-                                {{-- <th class="text-capitalize">{{translate('messages.zone')}}</th> --}}
-                                <th class="text-capitalize text-center">{{ translate('Total Orders') }}</th>
-                                <th class="text-capitalize">{{translate('messages.availability_status')}}</th>
-                                <th class="text-capitalize text-center w-110px">{{translate('messages.action')}}</th>
+                                <th class="text-capitalize">{{ 'SL' }}</th>
+                                <th class="text-capitalize w-20p">{{'nombre'}}</th>
+                                <th class="text-capitalize">{{ 'contacto' }}</th>
+                                {{-- <th class="text-capitalize">{{'zona'}}</th> --}}
+                                <th class="text-capitalize text-center">{{ 'Órdenes totales' }}</th>
+                                <th class="text-capitalize">{{'estado de disponibilidad'}}</th>
+                                <th class="text-capitalize text-center w-110px">{{'acción'}}</th>
                             </thead>
 
                             <tbody id="set-rows">
@@ -94,32 +94,32 @@
                                         <td>
                                             <div>
                                                 <!-- Status -->
-                                                {{ translate('Currenty Assigned Orders') }} : {{$dm->current_orders}}
+                                                {{ 'Órdenes asignadas actualmente' }} : {{$dm->current_orders}}
                                                 <!-- Status -->
                                             </div>
                                             @if($dm->application_status == 'approved')
                                                 @if($dm->active)
                                                 <div>
-                                                    {{ translate('Active Status') }} : <strong class="text-primary text-capitalize">{{translate('messages.online')}}</strong>
+                                                    {{ 'Estado activo' }} : <strong class="text-primary text-capitalize">{{'en línea'}}</strong>
                                                 </div>
                                                 @else
                                                 <div>
-                                                    {{ translate('Active Status') }} : <strong class="text-secondary text-capitalize">{{translate('messages.offline')}}</strong>
+                                                    {{ 'Estado activo' }} : <strong class="text-secondary text-capitalize">{{'desconectado'}}</strong>
                                                 </div>
                                                 @endif
                                             @elseif ($dm->application_status == 'denied')
                                                 <div>
-                                                    {{ translate('Active Status') }} : <strong class="text-danger text-capitalize">{{translate('messages.denied')}}</strong>
+                                                    {{ 'Estado activo' }} : <strong class="text-danger text-capitalize">{{'denegado'}}</strong>
                                                 </div>
                                             @else
                                                 <div>
-                                                    {{ translate('Active Status') }} : <strong class="text-info text-capitalize">{{translate('messages.not_approved')}}</strong>
+                                                    {{ 'Estado activo' }} : <strong class="text-info text-capitalize">{{'no aprobado'}}</strong>
                                                 </div>
                                             @endif
                                         </td>
                                         <td>
                                             <div class="btn--container justify-content-center">
-                                                <a class="btn btn-sm btn--primary btn-outline-primary action-btn" href="{{route('admin.users.delivery-man.edit',[$dm['id']])}}" title="{{translate('messages.edit')}}"><i class="tio-edit"></i></a>
+                                                <a class="btn btn-sm btn--primary btn-outline-primary action-btn" href="{{route('admin.users.delivery-man.edit',[$dm['id']])}}" title="{{'editar'}}"><i class="tio-edit"></i></a>
                                             </div>
                                         </td>
                                     </tr>
@@ -131,7 +131,7 @@
                             <div class="empty--data">
                                 <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                                 <h5>
-                                    {{ translate('no_data_found') }}
+                                    {{ 'no se encontraron datos' }}
                                 </h5>
                             </div>
                         @endif

@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title',translate('messages.store_wallet'))
+@section('title','billetera de la tienda')
 
 @push('css_or_js')
 
@@ -17,7 +17,7 @@
                             <img src="{{asset('assets/admin/img/image_90.png')}}" alt="public">
                         </div>
                         <span>
-                            {{translate('messages.disbursement_method_setup')}}
+                            {{'configuración del método de desembolso'}}
                         </span>
                     </h2>
                 </div>
@@ -29,12 +29,12 @@
             <div class="card-header py-2">
                 <div class="search--button-wrapper">
                     <h3 class="card-title">
-                        {{ translate('disbursement_methods') }}<span class="badge badge-soft-secondary"  id="countfoods">{{ $vendor_withdrawal_methods->total() }}</span>
+                        {{ 'métodos de desembolso' }}<span class="badge badge-soft-secondary"  id="countfoods">{{ $vendor_withdrawal_methods->total() }}</span>
                     </h3>
                     <form >
                         <!-- Search -->
                         <div class="input-group input--group">
-                            <input id="datatableSearch_" type="search" name="search" class="form-control" placeholder="{{ translate('Ex : Search by name') }}"  value="{{ request()?->search ?? null }}" aria-label="Search">
+                            <input id="datatableSearch_" type="search" name="search" class="form-control" placeholder="{{ 'Ej: buscar por nombre' }}"  value="{{ request()?->search ?? null }}" aria-label="Search">
 
                             <button type="submit" class="btn btn--secondary">
                                 <i class="tio-search"></i>
@@ -45,7 +45,7 @@
                 </div>
                 &nbsp;
                 <div class="p--10px">
-                    <a class="btn btn--primary btn-outline-primary w-100" href="javascript:" data-toggle="modal" data-target="#balance-modal">{{translate('messages.add_new_method')}}</a>
+                    <a class="btn btn--primary btn-outline-primary w-100" href="javascript:" data-toggle="modal" data-target="#balance-modal">{{'agregar nuevo método'}}</a>
                 </div>
             </div>
             <div class="card-body p-0">
@@ -58,11 +58,11 @@
                         }'>
                         <thead class="thead-light">
                         <tr>
-                            <th>{{ translate('messages.sl') }}</th>
-                            <th>{{translate('messages.payment_method_name')}}</th>
-                            <th>{{translate('messages.payment_info')}}</th>
-                            <th>{{translate('messages.default')}}</th>
-                            <th class="w-100px text-center">{{translate('messages.action')}}</th>
+                            <th>{{ 'SL' }}</th>
+                            <th>{{'nombre del método de pago'}}</th>
+                            <th>{{'información de pago'}}</th>
+                            <th>{{'por defecto'}}</th>
+                            <th class="w-100px text-center">{{'acción'}}</th>
                         </tr>
                         </thead>
                         <tbody id="set-rows">
@@ -75,14 +75,14 @@
                                         @forelse(json_decode($e->method_fields, true) as $key=> $item)
                                             <h5 class="text-capitalize "> {{  translate($key) }}: {{$item}}</h5>
                                         @empty
-                                            <h5 class="text-capitalize"> {{translate('messages.No_Data_found')}}</h5>
+                                            <h5 class="text-capitalize"> {{'No se encontraron datos'}}</h5>
                                         @endforelse
                                     </div>
                                 </td>
                                 <td>
                                     <div class="d-flex">
                                         <div>
-                                            <label class="toggle-switch toggle-switch-sm mr-2" data-toggle="tooltip" data-placement="top" title="{{ translate('messages.make_default_method') }}" for="statusCheckbox{{$e->id}}">
+                                            <label class="toggle-switch toggle-switch-sm mr-2" data-toggle="tooltip" data-placement="top" title="{{ 'hacer método predeterminado' }}" for="statusCheckbox{{$e->id}}">
                                                 <input type="checkbox" data-url="{{route('vendor.wallet-method.default',[$e['id'],$e->is_default?0:1])}}" class="toggle-switch-input redirect-url" id="statusCheckbox{{$e->id}}" {{$e->is_default?'checked':''}}>
                                                 <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
@@ -96,7 +96,7 @@
                                     @if (auth('vendor_employee')->id()  != $e['id'])
                                         <div class="btn--container justify-content-center">
                                             <a class="btn btn-sm btn--danger btn-outline-danger action-btn form-alert" href="javascript:"
-                                               data-id="employee-{{$e['id']}}" data-message="{{translate('messages.Want_to_delete_this_method_info')}}" title="{{translate('messages.delete_method')}}"><i class="tio-delete-outlined"></i>
+                                               data-id="employee-{{$e['id']}}" data-message="{{'Quiere eliminar la información de este método'}}" title="{{'método de eliminación'}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{route('vendor.wallet-method.delete',[$e['id']])}}"
                                                   method="post" id="employee-{{$e['id']}}">
@@ -113,7 +113,7 @@
                         <div class="empty--data">
                             <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                             <h5>
-                                {{translate('no_data_found')}}
+                                {{'no se encontraron datos'}}
                             </h5>
                         </div>
                     @endif
@@ -137,7 +137,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">
-                            {{translate('messages.add_method')}}
+                            {{'agregar método'}}
                         </h5>
                         <button type="button" class="close" data-dismiss="modal">
                             <span aria-hidden="true" class="btn btn--circle btn-soft-danger text-danger"><ti class="tio-clear"></ti></span>
@@ -148,7 +148,7 @@
                             @csrf
                             <div class="">
                                 <select class="form-control" id="withdraw_method" name="withdraw_method" required>
-                                    <option value="" selected disabled>{{translate('Select_Disburse_Method')}}</option>
+                                    <option value="" selected disabled>{{'Seleccione el método de desembolso'}}</option>
                                     @foreach($withdrawal_methods as $item)
                                         <option value="{{$item['id']}}">{{$item['method_name']}}</option>
                                     @endforeach
@@ -158,8 +158,8 @@
                             </div>
                         </div>
                         <div class="modal-footer pt-0 border-0">
-                            <button type="button" class="btn btn--reset" data-dismiss="modal">{{translate('messages.cancel')}}</button>
-                            <button type="submit" id="submit_button" disabled class="btn btn--primary">{{translate('messages.Submit')}}</button>
+                            <button type="button" class="btn btn--reset" data-dismiss="modal">{{'Cancelar'}}</button>
+                            <button type="submit" id="submit_button" disabled class="btn btn--primary">{{'Entregar'}}</button>
                         </div>
                     </form>
                 </div>

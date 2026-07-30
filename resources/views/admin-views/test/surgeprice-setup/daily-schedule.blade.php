@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.new_page'))
+@section('title','nueva pagina')
 
 @push('css_or_js')
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -21,7 +21,7 @@
             <div class="card-body">
                 <ul class="nav nav-tabs mb-3">
                     <li class="nav-item">
-                        <a class="nav-link lang_link active" href="#" id="default-link">{{translate('messages.default')}}</a>
+                        <a class="nav-link lang_link active" href="#" id="default-link">{{'por defecto'}}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link lang_link" href="#" id="">English(EN)</a>
@@ -31,9 +31,9 @@
                     </li>
                 </ul>
                 <div class="form-group">
-                    <label class="input-label" for="surgePrice_default">{{translate('messages.Surge Price name (Default)')}}
+                    <label class="input-label" for="surgePrice_default">{{'Nombre del precio de aumento (predeterminado)'}}
                         <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right"
-                            data-original-title="{{ translate('Surge Price name (Default)') }}">
+                            data-original-title="{{ 'Nombre del precio de aumento (predeterminado)' }}">
                             <i class="tio-info fs-14 text-muted"></i>
                         </span>
                     </label>
@@ -41,9 +41,9 @@
                 </div>
                 <div class="form-group mb-0">
                     <div class="d-flex align-items-center gap-1 flex-wrap justify-content-between mb-2">
-                        <label class="input-label mb-0" for="surgePrice_default">{{translate('messages.Note for Customer (Default)')}}
+                        <label class="input-label mb-0" for="surgePrice_default">{{'Nota para el cliente (predeterminado)'}}
                             <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right"
-                                data-original-title="{{ translate('Note for Customer (Default)') }}">
+                                data-original-title="{{ 'Nota para el cliente (predeterminado)' }}">
                                 <i class="tio-info fs-14 text-muted"></i>
                             </span>
                         </label>
@@ -67,17 +67,17 @@
                 <div class="row g-4">
                     <div class="col-md-6">
                         <div>
-                            <label class="mb-2 d-block title-clr fw-normal">{{ translate('Module') }}</label>
+                            <label class="mb-2 d-block title-clr fw-normal">{{ 'Módulo' }}</label>
                             <select name="" id="module_selected" class="form-control h--45px js-select2-custom" multiple="multiple" placeholder="Module Select" data-placeholder="Module">
                                 <option></option>
-                                <option>{{ translate('messages.Food') }}</option>
-                                <option>{{ translate('messages.Pharmacy') }}</option>
+                                <option>{{ 'Alimento' }}</option>
+                                <option>{{ 'Farmacia' }}</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group mb-0">
-                            <label class="mb-2 d-block title-clr fw-normal">{{ translate('Price Increase Rate') }}</label>
+                            <label class="mb-2 d-block title-clr fw-normal">{{ 'Tasa de aumento de precio' }}</label>
                             <div class="custom-group-btn border">
                                 <div class="flex-sm-grow-1 w-100">
                                     <input id="discount_input" type="number" name="discount_price" class="form-control border-0 pl-unset"
@@ -129,7 +129,7 @@
                                 </div>
                                 <div class="bg--3 rounded px-3 py-2 d-inline-flex align-items-start gap-2 flex-wrap mt-20">
                                     <i class="tio-warning text-danger"></i>
-                                    <p class="m-0 max-w-353px">{{ translate('This surge price overlaps with another. Please change the module or reschedule to fix it.') }}</p>
+                                    <p class="m-0 max-w-353px">{{ 'Este aumento de precio se superpone con otro. Cambie el módulo o reprográmelo para solucionarlo.' }}</p>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -138,17 +138,17 @@
                                     <div class="shedule_item">
                                         <div class="bg-white p-sm-3 d-flex flex-column gap-3">
                                             <div>
-                                                <label class="form-label">{{ translate('Date Range') }}</label>
+                                                <label class="form-label">{{ 'Rango de fechas' }}</label>
                                                 <div class="position-relative date-range__custom">
                                                     <i class="tio-calendar-month icon-absolute-on-right"></i>
-                                                    <input type="text" class="form-control h-45 position-relative bg-transparent"   name="dates-top" placeholder="{{ translate('messages.Select_Date') }}">
+                                                    <input type="text" class="form-control h-45 position-relative bg-transparent"   name="dates-top" placeholder="{{ 'Seleccionar fecha' }}">
                                                 </div>
                                             </div>
                                             <div class="time-range-wrapper">
-                                                <label class="form-label">{{ translate('Time Range') }}</label>
+                                                <label class="form-label">{{ 'Rango de tiempo' }}</label>
                                                 <div class="position-relative cursor-pointer">
                                                     <i class="tio-time icon-absolute-on-right"></i>  
-                                                     <input type="text" class="form-control h-45 position-relative bg-transparent time-range-picker" name="time_range[]" placeholder="{{ translate('messages.Select_Time') }}">
+                                                     <input type="text" class="form-control h-45 position-relative bg-transparent time-range-picker" name="time_range[]" placeholder="{{ 'Seleccionar hora' }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -157,19 +157,19 @@
                                      <div class="shedule_item">
                                          <div class="bg-white p-sm-3 d-flex flex-column gap-3">
                                              <div class="cursor-pointer" data-toggle="modal" data-target="#weeklySelectDays_btn">
-                                                 <label class="form-label">{{ translate('Date Range') }}</label>
+                                                 <label class="form-label">{{ 'Rango de fechas' }}</label>
                                                  <div class="position-relative date-range__custom">
                                                      <i class="tio-calendar-month icon-absolute-on-right"></i>
                                                      <input type="text" class="form-control h-45 position-relative bg-transparent date-range-input-demo"
-                                                         name="dates[]" placeholder="{{ translate('messages.Select_Date') }}">
+                                                         name="dates[]" placeholder="{{ 'Seleccionar fecha' }}">
                                                  </div>
                                              </div>
                                              <p class="fs-12 m-0">Every week from <span class="font-semibold">Sunday & Monday</span></p>
                                              <div class="time-range-wrapper">
-                                                 <label class="form-label">{{ translate('Time Range') }}</label>
+                                                 <label class="form-label">{{ 'Rango de tiempo' }}</label>
                                                  <div class="position-relative cursor-pointer">
                                                      <i class="tio-time icon-absolute-on-right"></i>  
-                                                      <input type="text" class="form-control h-45 position-relative bg-transparent time-range-picker" name="time_range[]" placeholder="{{ translate('messages.Select_Time') }}">
+                                                      <input type="text" class="form-control h-45 position-relative bg-transparent time-range-picker" name="time_range[]" placeholder="{{ 'Seleccionar hora' }}">
                                                  </div>
                                              </div>
                                          </div>
@@ -178,11 +178,11 @@
                                      <div class="shedule_item">
                                          <div class="bg-white p-sm-3 d-flex flex-column gap-3">
                                              <div class="cursor-pointer" data-toggle="modal" data-target="#surgeCustom_sheduleBtn">
-                                                 <label class="form-label">{{ translate('Date & Time Select') }}</label>
+                                                 <label class="form-label">{{ 'Seleccionar fecha y hora' }}</label>
                                                  <div class="position-relative">
                                                      <i class="tio-calendar-month icon-absolute-on-right"></i>
                                                      <input type="text" class="form-control h-45 position-relative bg-transparent"
-                                                         name="" placeholder="{{ translate('messages.5 Days Repeated') }}">
+                                                         name="" placeholder="{{ '5 días repetidos' }}">
                                                  </div>
                                              </div>
                                              <p class="fs-12 m-20">Date range <span class="font-semibold">4 Jan, 2022</span> to <span class="font-semibold">21 Jan, 2024</span></p>
@@ -377,10 +377,10 @@
                     <p class="fz-12">Select the date range you want to repeat this cycle every week</p>
                 </div>
                 <div class="mb-20">
-                    <label class="form-label">{{ translate('Date Range') }}</label>
+                    <label class="form-label">{{ 'Rango de fechas' }}</label>
                     <div class="position-relative date-range__custom">
                         <i class="tio-calendar-month icon-absolute-on-right"></i>
-                        <input type="text" class="form-control h-45 position-relative bg-transparent"  name="dates" placeholder="{{ translate('messages.Select_Date') }}">
+                        <input type="text" class="form-control h-45 position-relative bg-transparent"  name="dates" placeholder="{{ 'Seleccionar fecha' }}">
                     </div>
                 </div>
                 <label class="form-check form--check mr-2 mr-md-4">
@@ -473,10 +473,10 @@
         <div class="modal-body-inner">            
             <div class="bg-light rounded p-3">
                <div class="time-range-wrapper">
-                    <label class="form-label">{{ translate('Change Time') }}</label>
+                    <label class="form-label">{{ 'Cambiar hora' }}</label>
                     <div class="position-relative cursor-pointer">
                         <i class="tio-time icon-absolute-on-right"></i>  
-                            <input type="text" class="form-control h-45 position-relative bg-transparent time-range-picker" name="time_range[]" placeholder="{{ translate('messages.Select_Time') }}">
+                            <input type="text" class="form-control h-45 position-relative bg-transparent time-range-picker" name="time_range[]" placeholder="{{ 'Seleccionar hora' }}">
                     </div>
                 </div>
             </div>

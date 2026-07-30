@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.Delivery Man Preview'))
+@section('title','Vista previa del repartidor')
 
 @section('content')
     <div class="content container-fluid">
@@ -17,7 +17,7 @@
         <div class="content">
             <!-- Page Header -->
             <div class="page-header">
-                <h1 class="page-header-title">{{ translate('messages.conversation_list') }}</h1>
+                <h1 class="page-header-title">{{ 'lista de conversaciones' }}</h1>
             </div>
             <!-- End Page Header -->
 
@@ -30,15 +30,15 @@
                                 <div class="input-group-prepend border-inline-end-0">
                                     <span class="input-group-text border-inline-end-0" id="basic-addon1"><i class="tio-search"></i></span>
                                 </div>
-                                <input type="text" class="form-control border-inline-start-0 pl-1" id="serach" placeholder="{{ translate('messages.search') }}" aria-label="Username"
+                                <input type="text" class="form-control border-inline-start-0 pl-1" id="serach" placeholder="{{ 'buscar' }}" aria-label="Username"
                                     aria-describedby="basic-addon1" autocomplete="off">
                             </div>
                         </div>
                         <!-- Body -->
                         <div class="card-body p-0 initial-19"  id="dm-conversation-list">
                             <div class="d-flex justify-content-start px-3 gap-4 mb-3 tab-button-group">
-                                <button id="customer_conversations" data-url="{{route('admin.users.delivery-man.preview', ['id'=>$deliveryMan->id, 'tab'=> 'conversation','conversation_with' =>'customer'])}}" class="{{ request()?->conversation_with != 'store' ? 'active' : 'redirect-url' }}">{{ translate('Customer') }}</button>
-                                <button id="store_conversations" data-url="{{route('admin.users.delivery-man.preview', ['id'=>$deliveryMan->id, 'tab'=> 'conversation','conversation_with' =>'store'])}}" class="{{ request()?->conversation_with == 'store' ? 'active' : 'redirect-url' }}">{{ translate('Store')}}</button>
+                                <button id="customer_conversations" data-url="{{route('admin.users.delivery-man.preview', ['id'=>$deliveryMan->id, 'tab'=> 'conversation','conversation_with' =>'customer'])}}" class="{{ request()?->conversation_with != 'store' ? 'active' : 'redirect-url' }}">{{ 'Cliente' }}</button>
+                                <button id="store_conversations" data-url="{{route('admin.users.delivery-man.preview', ['id'=>$deliveryMan->id, 'tab'=> 'conversation','conversation_with' =>'store'])}}" class="{{ request()?->conversation_with == 'store' ? 'active' : 'redirect-url' }}">{{ 'Almacenar'}}</button>
                             </div>
                             <div id="dm-conversation-list-search">
                                 @include('admin-views.delivery-man.partials._conversation_list')
@@ -54,7 +54,7 @@
                             <div class="empty-conversation-content d-flex flex-column align-items-center gap-2">
                                 <img width="120" height="120" src="{{asset('assets/admin/img/icons/empty-conversation.png')}}" alt="public">
                                 <h5 class="text-muted">
-                                    {{translate('no_conversation_found')}}
+                                    {{'no se encontró ninguna conversación'}}
                                 </h5>
                             </div>
                         </div>

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.about_us'))
+@section('title','sobre nosotros')
 
 @push('css_or_js')
 
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/privacy-policy.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.about_us')}}
+                    {{'sobre nosotros'}}
                 </span>
             </h1>
         </div>
@@ -34,7 +34,7 @@
                         <li class="nav-item">
                             <a class="nav-link lang_link active"
                             href="#"
-                            id="default-link">{{translate('messages.default')}}</a>
+                            id="default-link">{{'por defecto'}}</a>
                         </li>
 
                         @foreach (json_decode($language) as $lang)
@@ -48,13 +48,13 @@
                     @endif
                     <div class="lang_form" id="default-form">
                         <div class="form-group">
-                            <label for="about_title">{{ translate('messages.about_title') }}({{ translate('messages.Default') }})</label>
+                            <label for="about_title">{{ 'sobre el título' }}({{ 'Por defecto' }})</label>
                             <input type="text" id="about_title" name="about_title[]" class="form-control"
                               value="{{ $about_title?->getRawOriginal('value') ?? '' }}" >
                         </div>
 
                         <div class="form-group">
-                            <label for="about_us">{{ translate('messages.about_us_description') }}({{ translate('messages.Default') }})</label>
+                            <label for="about_us">{{ 'sobre nosotros descripción' }}({{ 'Por defecto' }})</label>
                             <textarea id="about_us" class="ckeditor form-control" name="about_us[]">{!! $about_us?->getRawOriginal('value') ?? '' !!}</textarea>
                         </div>
                         <input type="hidden" name="lang[]" value="default">
@@ -86,13 +86,13 @@
 
                             <div class="d-none lang_form" id="{{$lang}}-form">
                                 <div class="form-group">
-                                    <label for="about_title">{{ translate('messages.about_title') }}({{ $lang }})</label>
+                                    <label for="about_title">{{ 'sobre el título' }}({{ $lang }})</label>
                                     <input type="text" id="about_title" name="about_title[]" class="form-control"
                                     value="{{ $translate[$lang]['about_title'] ?? null }}" >
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="about_us{{$lang}}">{{ translate('messages.about_us_description') }}({{ $lang }})</label>
+                                    <label for="about_us{{$lang}}">{{ 'sobre nosotros descripción' }}({{ $lang }})</label>
                                     <textarea id="about_us{{$lang}}" class="ckeditor form-control" name="about_us[]">{!!  $translateDescription[$lang]['about_us'] ?? null !!}</textarea>
                                 </div>
                                 <input type="hidden" name="lang[]" value="{{$lang}}">
@@ -102,7 +102,7 @@
                         @endforelse
                     @endif
                     <div class="btn--container justify-content-end">
-                        <button type="submit" class="btn btn--primary">{{translate('messages.submit')}}</button>
+                        <button type="submit" class="btn btn--primary">{{'entregar'}}</button>
                     </div>
                 </form>
             </div>

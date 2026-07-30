@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('Product_Gallery'))
+@section('title','Galería de productos')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -17,7 +17,7 @@
                             <img src="{{asset('assets/admin/img/group.png')}}" class="w--22" alt="">
                         </span>
                         <span>
-                            {{translate('messages.Product_Gallery')}} <span class="badge badge-soft-dark ml-2" id="foodCount"></span>
+                            {{'Galería de productos'}} <span class="badge badge-soft-dark ml-2" id="foodCount"></span>
                         </span>
                     </h1>
                 </div>
@@ -34,30 +34,30 @@
                     <input type="hidden" value="1" name="product_gallery">
                     <div class="row g-2">
                         <div class="col-md-3 col-lg-3">
-                            <select name="store_id" id="store" data-url="{{url()->full()}}" data-placeholder="{{translate('messages.select_store')}}" class="js-data-example-ajax form-control store-filter" required title="Select Store" oninvalid="this.setCustomValidity('{{translate('messages.please_select_store')}}')">
+                            <select name="store_id" id="store" data-url="{{url()->full()}}" data-placeholder="{{'seleccionar tienda'}}" class="js-data-example-ajax form-control store-filter" required title="Select Store" oninvalid="this.setCustomValidity('{{'por favor seleccione tienda'}}')">
                                 @if($store)
                                     <option value="{{$store->id}}" selected>{{$store->name}}</option>
                                 @else
-                                    <option value="all" selected>{{translate('messages.all_stores')}}</option>
+                                    <option value="all" selected>{{'todas las tiendas'}}</option>
                                 @endif
                             </select>
                         </div>
                         <div class="col-md-3 col-lg-3">
-                            <select name="category_id" id="category_id" data-placeholder="{{ translate('messages.select_category') }}"
+                            <select name="category_id" id="category_id" data-placeholder="{{ 'seleccionar categoría' }}"
                                     class="js-data-example-ajax form-control set-filter" id="category_id"
                                     data-url="{{url()->full()}}" data-filter="category_id">
                                 @if($category)
                                     <option value="{{$category->id}}" selected>{{$category->name}}</option>
                                 @else
-                                    <option value="all" selected>{{translate('messages.all_category')}}</option>
+                                    <option value="all" selected>{{'toda la categoria'}}</option>
                                 @endif
                             </select>
                         </div>
                         <div class="col-md-4 col-lg-4">
-                            <input id="datatableSearch" type="search" value="{{  request()?->search ?? null }}" name="search" class="form-control h--42px" placeholder="{{translate('messages.ex_search_name')}}" aria-label="{{translate('messages.search_here')}}">
+                            <input id="datatableSearch" type="search" value="{{  request()?->search ?? null }}" name="search" class="form-control h--42px" placeholder="{{'ex nombre de búsqueda'}}" aria-label="{{'buscar aquí'}}">
                         </div>
                         <div class="col-md-2 col-lg-2 text-end">
-                            <button type="submit" class="btn btn--primary w-100 h-100">{{ translate('messages.search') }}</button>
+                            <button type="submit" class="btn btn--primary w-100 h-100">{{ 'buscar' }}</button>
                         </div>
                     </div>
                 </form>
@@ -75,7 +75,7 @@
         <div class="empty--data">
             <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
             <h5>
-                {{translate('no_data_found')}}
+                {{'no se encontraron datos'}}
             </h5>
         </div>
         @endif

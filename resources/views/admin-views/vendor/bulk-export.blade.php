@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.restaurant_bulk_export'))
+@section('title','exportación a granel para restaurantes')
 
 @push('css_or_js')
 
@@ -14,7 +14,7 @@
                     <img src="{{asset('assets/admin/img/resturant.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{translate('messages.export_stores')}}
+                    {{'tiendas de exportación'}}
                 </span>
             </h1>
         </div>
@@ -26,17 +26,17 @@
                             <div class="export-steps-item-2 h-100">
                                 <div class="top">
                                     <div>
-                                        <h3 class="fs-20">{{translate('Step 1')}}</h3>
+                                        <h3 class="fs-20">{{'Paso 1'}}</h3>
                                         <div>
-                                            {{translate('Select Data Type')}}
+                                            {{'Seleccionar tipo de datos'}}
                                         </div>
                                     </div>
                                     <img src="{{asset('assets/admin/img/bulk-export-1.png')}}" alt="">
                                 </div>
-                                <h4>{{ translate('Instruction') }}</h4>
+                                <h4>{{ 'Instrucción' }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                       {{ translate('Select_data_type_in_which_order_you_want_your_data_sorted_while_downloading.') }}
+                                       {{ 'Seleccione el tipo de datos en el orden en que desea que se ordenen sus datos durante la descarga.' }}
                                     </li>
 
 
@@ -47,21 +47,21 @@
                             <div class="export-steps-item-2 h-100">
                                 <div class="top">
                                     <div>
-                                        <h3 class="fs-20">{{translate('Step 2')}}</h3>
+                                        <h3 class="fs-20">{{'Paso 2'}}</h3>
                                         <div>
-                                            {{translate('Select Data Range by Date or ID and Export')}}
+                                            {{'Seleccione Rango de datos por fecha o ID y exporte'}}
                                         </div>
                                     </div>
                                     <img src="{{asset('assets/admin/img/bulk-export-2.png')}}" alt="">
                                 </div>
-                                <h4>{{ translate('Instruction') }}</h4>
+                                <h4>{{ 'Instrucción' }}</h4>
                                 <ul class="m-0 pl-4">
 
                                     <li>
-                                        {{ translate('The_file_will_be_downloaded_in_.xls_format') }}
+                                        {{ 'El archivo se descargará en formato .xls.' }}
                                     </li>
                                     <li>
-                                        {{ translate('Click_reset_if_you_want_to_clear_you_changes_and_want_to_download_in_default_sort_wise_data') }}
+                                        {{ 'Haga clic en restablecer si desea borrar sus cambios y desea descargar los datos ordenados de forma predeterminada' }}
                                     </li>
                                 </ul>
                             </div>
@@ -74,43 +74,43 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.type')}}<span
+                                <label class="input-label" for="exampleFormControlSelect1">{{'tipo'}}<span
                                         class="input-label-secondary"></span></label>
-                                <select name="type" id="type" data-placeholder="{{translate('messages.select_type')}}" class="form-control" required title="Select Type">
-                                    <option value="all">{{translate('messages.all_data')}}</option>
-                                    <option value="date_wise">{{translate('messages.date_wise')}}</option>
-                                    <option value="id_wise">{{translate('messages.id_wise')}}</option>
+                                <select name="type" id="type" data-placeholder="{{'seleccione tipo'}}" class="form-control" required title="Select Type">
+                                    <option value="all">{{'todos los datos'}}</option>
+                                    <option value="date_wise">{{'fecha sabia'}}</option>
+                                    <option value="id_wise">{{'identificación sabia'}}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group id_wise">
-                                <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.start_id')}}<span
+                                <label class="input-label" for="exampleFormControlSelect1">{{'identificación de inicio'}}<span
                                         class="input-label-secondary"></span></label>
                                 <input type="number" name="start_id" class="form-control">
                             </div>
                             <div class="form-group date_wise">
-                                <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.from_date')}}<span
+                                <label class="input-label" for="exampleFormControlSelect1">{{'desde la fecha'}}<span
                                         class="input-label-secondary"></span></label>
                                 <input type="date" name="from_date" id="date_from" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group id_wise">
-                                <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.end_id')}}<span
+                                <label class="input-label" for="exampleFormControlSelect1">{{'identificación final'}}<span
                                         class="input-label-secondary"></span></label>
                                 <input type="number" name="end_id" class="form-control">
                             </div>
                             <div class="form-group date_wise">
-                                <label class="input-label text-capitalize" for="exampleFormControlSelect1">{{translate('messages.to_date')}}<span
+                                <label class="input-label text-capitalize" for="exampleFormControlSelect1">{{'hasta la fecha'}}<span
                                         class="input-label-secondary"></span></label>
                                 <input type="date" name="to_date" id="date_to" class="form-control">
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="btn--container justify-content-end">
-                                <button class="btn btn--reset" id="reset-btn" type="reset">{{translate('messages.clear')}}</button>
-                                <button class="btn btn--primary" type="submit">{{translate('messages.export')}}</button>
+                                <button class="btn btn--reset" id="reset-btn" type="reset">{{'claro'}}</button>
+                                <button class="btn btn--primary" type="submit">{{'exportar'}}</button>
                             </div>
                         </div>
                     </div>

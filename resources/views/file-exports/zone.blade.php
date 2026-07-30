@@ -1,17 +1,17 @@
 
 <div class="row">
-    <div class="col-lg-12 text-center "><h1 > {{translate('Zone_List')}}
+    <div class="col-lg-12 text-center "><h1 > {{'Lista de zonas'}}
     </h1></div>
     <div class="col-lg-12">
 
     <table>
         <thead>
             <tr>
-                <th>{{ translate('Filter_Criteria') }}</th>
+                <th>{{ 'Criterios de filtrado' }}</th>
                 <th></th>
                 <th>
 
-                    {{ translate('Search_Bar_Content')  }}: {{ $data['search'] ?? translate('N/A') }}
+                    {{ 'Contenido de la barra de búsqueda'  }}: {{ $data['search'] ?? 'N / A' }}
 
                 </th>
                 <th> </th>
@@ -19,14 +19,14 @@
 
 
         <tr>
-            <th>{{ translate('sl') }}</th>
-            <th>{{ translate('Zone_Name') }}</th>
-            <th>{{ translate('Zone_ID') }}</th>
-            <th>{{ translate('Total_Stores') }}</th>
-            <th>{{ translate('Total_Deliverymen') }}</th>
-            <th>{{ translate('Digital_Payment') }}</th>
-            <th>{{ translate('Cash_On_Delivery') }}</th>
-            <th>{{ translate('Status') }}</th>
+            <th>{{ 'SL' }}</th>
+            <th>{{ 'Nombre de zona' }}</th>
+            <th>{{ 'ID de zona' }}</th>
+            <th>{{ 'Tiendas totales' }}</th>
+            <th>{{ 'Total de repartidores' }}</th>
+            <th>{{ 'Pago Digital' }}</th>
+            <th>{{ 'Contra reembolso' }}</th>
+            <th>{{ 'Estado' }}</th>
 
         </thead>
         <tbody>
@@ -42,9 +42,9 @@
 
             {{ $addon->deliverymen_count }}
         </td>
-        <td>{{ $addon?->digital_payment == 1 ? translate('Yes') : translate('No') }}</td>
-        <td>{{ $addon?->cash_on_delivery == 1 ? translate('Yes') : translate('No') }}</td>
-        <td>{{ $addon?->status == 1 ? translate('Active') : translate('Inactive') }}</td>
+        <td>{{ $addon?->digital_payment == 1 ? 'Sí' : 'No' }}</td>
+        <td>{{ $addon?->cash_on_delivery == 1 ? 'Sí' : 'No' }}</td>
+        <td>{{ $addon?->status == 1 ? 'Activo' : 'Inactivo' }}</td>
 
             </tr>
         @endforeach

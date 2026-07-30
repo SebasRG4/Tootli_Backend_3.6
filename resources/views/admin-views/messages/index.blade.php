@@ -2,7 +2,7 @@
 
 @php($messagesListUrl = $messagesListUrl ?? route('admin.message.list'))
 
-@section('title', isset($messagesPageTitle) ? translate($messagesPageTitle) : translate('Messages'))
+@section('title', isset($messagesPageTitle) ? translate($messagesPageTitle) : 'Mensajes')
 
 
 @section('content')
@@ -12,7 +12,7 @@
         <div class="page-header d-flex align-items-center gap-2 mb-2">
             <img width="20" height="20" src="{{asset('assets/admin/img/icons/conversation-icon.png')}}" alt="">
             <h1 class="page-header-title mb-0">
-                {{ isset($messagesPageTitle) ? translate($messagesPageTitle) : translate('messages.conversation_list') }}
+                {{ isset($messagesPageTitle) ? translate($messagesPageTitle) : 'lista de conversaciones' }}
             </h1>
         </div>
         <!-- End Page Header -->
@@ -28,7 +28,7 @@
                                         class="tio-search"></i></span>
                             </div>
                             <input type="text" class="form-control border-inline-start-0 pl-1" id="serach"
-                                placeholder="{{ translate('messages.search') }}" aria-label="Username"
+                                placeholder="{{ 'buscar' }}" aria-label="Username"
                                 aria-describedby="basic-addon1" autocomplete="off">
                         </div>
                     </div>
@@ -42,7 +42,7 @@
             </div>
             <div class="col-lg-8 col-nd-6" id="admin-view-conversation">
                 <div class="text-center mt-2">
-                    <h4 class="initial-29">{{ translate('messages.view_conversation') }}
+                    <h4 class="initial-29">{{ 'ver conversación' }}
                     </h4>
                 </div>
                 {{-- view here --}}

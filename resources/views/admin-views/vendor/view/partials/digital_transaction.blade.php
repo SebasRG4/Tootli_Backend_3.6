@@ -4,13 +4,13 @@
             class="table table-thead-bordered table-align-middle card-table">
             <thead class="thead-light">
                 <tr>
-                    <th class="w--1 border-0">{{translate('sl')}}</th>
-                    <th class="w--1 border-0">{{translate('messages.order_id')}}</th>
-                    <th class="w--2 border-0">{{translate('messages.total_order_amount')}}</th>
-                    <th class="w--3 border-0">{{translate('messages.store_earned')}}</th>
-                    <th class="w--1 border-0">{{translate('messages.admin_earned')}}</th>
-                    <th class="w--1 border-0">{{translate('messages.delivery_fee')}}</th>
-                    <th class="w--1 border-0">{{translate('messages.vat/tax')}}</th>
+                    <th class="w--1 border-0">{{'SL'}}</th>
+                    <th class="w--1 border-0">{{'identificación del pedido'}}</th>
+                    <th class="w--2 border-0">{{'monto total del pedido'}}</th>
+                    <th class="w--3 border-0">{{'tienda ganada'}}</th>
+                    <th class="w--1 border-0">{{'administrador ganado'}}</th>
+                    <th class="w--1 border-0">{{'tarifa de entrega'}}</th>
+                    <th class="w--1 border-0">{{'iva/impuesto'}}</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,7 +40,7 @@
 <div class="empty--data">
     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
     <h5>
-        {{translate('no_data_found')}}
+        {{'no se encontraron datos'}}
     </h5>
 </div>
 @endif

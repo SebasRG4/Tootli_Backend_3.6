@@ -1,17 +1,17 @@
 
 <div class="row">
-    <div class="col-lg-12 text-center "><h1 > {{translate('Coupon_List')}}
+    <div class="col-lg-12 text-center "><h1 > {{'Lista de cupones'}}
     </h1></div>
     <div class="col-lg-12">
 
     <table>
         <thead>
             <tr>
-                <th>{{ translate('Search_Criteria') }}</th>
+                <th>{{ 'Criterios de búsqueda' }}</th>
                 <th></th>
                 <th></th>
                 <th>
-                    {{ translate('Search_Bar_Content')  }}: {{ $data['search'] ??translate('N/A') }}
+                    {{ 'Contenido de la barra de búsqueda'  }}: {{ $data['search'] ??'N / A' }}
                 </th>
                 <th> </th>
                 <th></th>
@@ -21,18 +21,18 @@
 
 
         <tr>
-            <th>{{ translate('sl') }}</th>
-            <th>{{ translate('Coupon_Title') }}</th>
-            <th>{{ translate('Coupon_Code') }}</th>
-            <th>{{ translate('Module') }}</th>
-            <th>{{ translate('Coupon_Type') }}</th>
-            <th>{{ translate('Number_of_Uses') }}</th>
-            <th>{{ translate('Min_Purchase_Amount') }}</th>
-            <th>{{ translate('Max_Discount_Amount') }} </th>
-            <th>{{ translate('Discount_Type') }} </th>
-            <th>{{ translate('Discount') }} </th>
-            <th>{{ translate('Start_Date') }} </th>
-            <th>{{ translate('End_Date') }} </th>
+            <th>{{ 'SL' }}</th>
+            <th>{{ 'Título del cupón' }}</th>
+            <th>{{ 'Código de cupón' }}</th>
+            <th>{{ 'Módulo' }}</th>
+            <th>{{ 'Tipo de cupón' }}</th>
+            <th>{{ 'Número de usos' }}</th>
+            <th>{{ 'Monto mínimo de compra' }}</th>
+            <th>{{ 'Monto máximo de descuento' }} </th>
+            <th>{{ 'Tipo de descuento' }} </th>
+            <th>{{ 'Descuento' }} </th>
+            <th>{{ 'Fecha de inicio' }} </th>
+            <th>{{ 'Fecha de finalización' }} </th>
         </thead>
         <tbody>
         @foreach($data['data'] as $key => $coupon)

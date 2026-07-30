@@ -1,5 +1,5 @@
 @extends('layouts.admin.app')
-@section('title', translate('offline_Payment_Method'))
+@section('title', 'Método de pago fuera de línea')
 
 @push('css_or_js')
 
@@ -11,7 +11,7 @@
         <div class="mb-4 pb-2">
             <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
                 <img src="{{asset('assets/admin/img/3rd-party.png')}}" alt="">
-                {{translate('Offline_Payment_Method_Setup')}}
+                {{'Configuración del método de pago sin conexión'}}
             </h2>
         </div>
         <!-- End Page Title -->
@@ -21,13 +21,13 @@
                 <!-- Nav -->
                 <ul class="nav nav-tabs border-0 nav--tabs">
                     <li class="nav-item">
-                        <a class="nav-link {{ !request()->has('status') ? 'active':'' }}" href="{{route('admin.business-settings.offline')}}">{{ translate('all') }}</a>
+                        <a class="nav-link {{ !request()->has('status') ? 'active':'' }}" href="{{route('admin.business-settings.offline')}}">{{ 'todo' }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request('status') == 'active' ? 'active':'' }}" href="{{route('admin.business-settings.offline')}}?status=active">{{ translate('active') }}</a>
+                        <a class="nav-link {{ request('status') == 'active' ? 'active':'' }}" href="{{route('admin.business-settings.offline')}}?status=active">{{ 'activo' }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request('status') == 'inactive' ? 'active':'' }}" href="{{route('admin.business-settings.offline')}}?status=inactive">{{ translate('inactive') }}</a>
+                        <a class="nav-link {{ request('status') == 'inactive' ? 'active':'' }}" href="{{route('admin.business-settings.offline')}}?status=inactive">{{ 'inactivo' }}</a>
                     </li>
 
                 </ul>
@@ -50,14 +50,14 @@
                                                 <i class="tio-search"></i>
                                             </div>
                                         </div>
-                                        <input id="datatableSearch_" type="search" name="search" class="form-control" placeholder="{{ translate('search_by_name') }}" aria-label="Search by ID or name" value="{{ request('search') }}" required="">
-                                        <button type="submit" class="btn btn--primary input-group-text">{{ translate('search') }}</button>
+                                        <input id="datatableSearch_" type="search" name="search" class="form-control" placeholder="{{ 'buscar por nombre' }}" aria-label="Search by ID or name" value="{{ request('search') }}" required="">
+                                        <button type="submit" class="btn btn--primary input-group-text">{{ 'buscar' }}</button>
                                     </div>
                                 </form>
                                 <!-- End Search -->
                             </div>
                             <div class="col-sm-4 col-md-6 col-lg-8 d-flex justify-content-end">
-                                <a href="{{route('admin.business-settings.offline.new')}}" class="btn btn--primary"><i class="tio-add"></i> {{ translate('add_New_Method') }}</a>
+                                <a href="{{route('admin.business-settings.offline.new')}}" class="btn btn--primary"><i class="tio-add"></i> {{ 'agregar nuevo método' }}</a>
                             </div>
                         </div>
                         <!-- End Row -->
@@ -69,12 +69,12 @@
                             <table class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
                                 <thead class="thead-light thead-50 text-capitalize">
                                     <tr>
-                                        <th>{{ translate('SL') }}</th>
-                                        <th>{{ translate('payment_Method_Name') }}</th>
-                                        <th>{{ translate('payment_Info') }}</th>
-                                        <th>{{ translate('required_Info_From_Customer') }}</th>
-                                        <th>{{ translate('status') }}</th>
-                                        <th class="text-center">{{ translate('action') }}</th>
+                                        <th>{{ 'SL' }}</th>
+                                        <th>{{ 'Nombre del método de pago' }}</th>
+                                        <th>{{ 'información de pago' }}</th>
+                                        <th>{{ 'información requerida del cliente' }}</th>
+                                        <th>{{ 'estado' }}</th>
+                                        <th class="text-center">{{ 'acción' }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -103,10 +103,10 @@
                                                            data-type="status"
                                                            data-image-on="{{asset('assets/admin/img/modal/wallet-on.png')}}"
                                                            data-image-off=" {{asset('assets/admin/img/modal/wallet-off.png')}}"
-                                                           data-title-on="{{translate('Want_to_enable_this_offline_payment_method?')}}"
-                                                           data-title-off="{{translate('Want_to_disable_this_offline_payment_method?')}}"
-                                                           data-text-on="<p>{{translate('It_will_be_available_on_the_user_views.')}}</p>"
-                                                           data-text-off="<p>{{translate('It_will_be_hidden_from_the_user_views.')}}</p>"
+                                                           data-title-on="{{'¿Quieres habilitar este método de pago sin conexión?'}}"
+                                                           data-title-off="{{'¿Quieres desactivar este método de pago fuera de línea?'}}"
+                                                           data-text-on="<p>{{'Estará disponible en las vistas de los usuarios.'}}</p>"
+                                                           data-text-off="<p>{{'Estará oculto a la vista de los usuarios.'}}</p>"
                                                            class="status toggle-switch-input dynamic-checkbox"
                                                            id="status-{{$method->id}}" {{$method->status?'checked':''}}>
                                                     <span class="toggle-switch-label">
@@ -124,7 +124,7 @@
                                                     </a>
                                                     <button class="btn action-btn btn--danger btn-outline-danger form-alert" title="Delete"
                                                             data-id="delete-method_name-{{ $method->id }}"
-                                                            data-message="{{ translate('Want_to_delete_this_offline_payment_method') }}">
+                                                            data-message="{{ 'Quiere eliminar este método de pago fuera de línea' }}">
                                                         <i class="tio-delete-outlined"></i>
                                                     </button>
 
@@ -156,7 +156,7 @@
                             <div class="empty--data">
                                 <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                                 <h5>
-                                    {{translate('no_data_found')}}
+                                    {{'no se encontraron datos'}}
                                 </h5>
                             </div>
                             @endif

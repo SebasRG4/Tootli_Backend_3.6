@@ -1,7 +1,7 @@
 @php use App\CentralLogics\Helpers;use App\Models\DeliveryMan; @endphp
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.Review List'))
+@section('title','Lista de revisión')
 
 @section('content')
     <div class="content container-fluid">
@@ -12,7 +12,7 @@
                     <img src="{{asset('assets/admin/img/delivery-man.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.deliveryman_reviews')}}
+                    {{'opiniones de repartidor'}}
                     <span class="badge badge-soft-dark ml-2" id="itemCount">
                         {{$reviews->total()}}
                     </span>
@@ -34,7 +34,7 @@
                                         class="form-control js-select2-custom set-filter theme-style"
                                         data-filter="deliveryman_id"
                                         data-url="{{ url()->full() }}">
-                                    <option value="all">{{ translate('messages.All_DeliveryMan') }}</option>
+                                    <option value="all">{{ 'Todo Repartidor' }}</option>
                                     @foreach(DeliveryMan::oldest()->where('application_status' , 'approved')->get(['id','f_name','l_name' ]) as $deliveryMan)
                                         <option
                                             value="{{$deliveryMan->id}}" {{$deliveryMan->id == request()?->deliveryman_id ? 'selected':''}}>
@@ -48,24 +48,24 @@
                                         class="form-control js-select2-custom set-filter theme-style"
                                         data-filter="order_by"
                                         data-url="{{ url()->full() }}">
-                                    <option>{{ translate('messages.Latest_ratings') }}</option>
-                                    <option value="desc" {{  request()?->order_by == 'desc' ? 'selected' : '' }} >{{ translate('messages.Top_ratings') }}</option>
-                                    <option value="asc" {{  request()?->order_by == 'asc' ? 'selected' : '' }} >{{ translate('messages.Low_ratings') }}</option>
+                                    <option>{{ 'Últimas calificaciones' }}</option>
+                                    <option value="desc" {{  request()?->order_by == 'desc' ? 'selected' : '' }} >{{ 'Calificaciones más altas' }}</option>
+                                    <option value="asc" {{  request()?->order_by == 'asc' ? 'selected' : '' }} >{{ 'Calificaciones bajas' }}</option>
                                 </select>
                             </div>
 
                             <form class="search-form theme-style">
                                 <div class="input-group input--group">
                                     <input id="datatableSearch" name="search" type="search" class="form-control"
-                                           placeholder="{{translate('ex_: search_delivery_man_,_email_or_phone')}}"
+                                           placeholder="{{'ej: buscar repartidor, correo electrónico o teléfono'}}"
                                            value="{{ request()->get('search') }}"
-                                           aria-label="{{translate('messages.search_here')}}">
+                                           aria-label="{{'buscar aquí'}}">
                                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                                 </div>
                             </form>
                             @if(request()->get('search'))
                                 <button type="reset" class="btn btn--primary ml-2 location-reload-to-base"
-                                        data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                                        data-url="{{url()->full()}}">{{'reiniciar'}}</button>
                             @endif
 
                             <!-- Unfold -->
@@ -76,25 +76,25 @@
                                             "target": "#usersExportDropdown",
                                             "type": "css-animation"
                                         }'>
-                                    <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                                    <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                                 </a>
 
                                 <div id="usersExportDropdown"
                                      class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                                    <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                                    <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                                     <a id="export-excel" class="dropdown-item"
                                        href="{{route('admin.users.delivery-man.reviews.export', ['type'=>'excel',request()->getQueryString()])}}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                              src="{{ asset('assets/admin/svg/components/excel.svg') }}"
                                              alt="Image Description">
-                                        {{ translate('messages.excel') }}
+                                        {{ 'sobresalir' }}
                                     </a>
                                     <a id="export-csv" class="dropdown-item"
                                        href="{{route('admin.users.delivery-man.reviews.export', ['type'=>'csv',request()->getQueryString()])}}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                              src="{{ asset('assets/admin/svg/components/placeholder-csv-format.svg') }}"
                                              alt="Image Description">
-                                        .{{ translate('messages.csv') }}
+                                        .{{ 'csv' }}
                                     </a>
                                 </div>
                             </div>
@@ -114,13 +114,13 @@
                                }'>
                             <thead class="thead-light">
                             <tr>
-                                <th class="border-0">{{translate('SL')}}</th>
-                                <th class="border-0">{{translate('Order_ID')}}</th>
-                                <th class="border-0">{{translate('messages.deliveryman')}}</th>
-                                <th class="border-0">{{translate('messages.customer')}}</th>
-                                <th class="border-0">{{translate('messages.rating')}}</th>
-                                <th class="border-0">{{translate('messages.review')}}</th>
-                                <th class="border-0 text-center">{{translate('messages.action')}}</th>
+                                <th class="border-0">{{'SL'}}</th>
+                                <th class="border-0">{{'ID de pedido'}}</th>
+                                <th class="border-0">{{'Repartidor'}}</th>
+                                <th class="border-0">{{'Cliente'}}</th>
+                                <th class="border-0">{{'clasificación'}}</th>
+                                <th class="border-0">{{'revisar'}}</th>
+                                <th class="border-0 text-center">{{'acción'}}</th>
                             </tr>
                             </thead>
 
@@ -155,7 +155,7 @@
                                             </a>
                                         @else
                                             <div
-                                                class="text-muted">{{translate('messages.customer_not_found')}}</div>
+                                                class="text-muted">{{'cliente no encontrado'}}</div>
                                         @endif
                                     </td>
                                     <td>
@@ -204,7 +204,7 @@
                         <div class="empty--data">
                             <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                             <h5>
-                                {{translate('no_data_found')}}
+                                {{'no se encontraron datos'}}
                             </h5>
                         </div>
                     @endif
@@ -227,8 +227,8 @@
                 </div>
                 <div class="modal-body pt-0">
                     <div class="text-center d-flex flex-column align-items-center mb-3">
-                        <h5>{{translate('Deliveryman_Review')}}</h5>
-                        <div class="fs-12 mb-1">{{ translate('Order#') }} <span id="order-id" class="font-semibold text-dark"></span></div>
+                        <h5>{{'Revisión del repartidor'}}</h5>
+                        <div class="fs-12 mb-1">{{ 'Orden#' }} <span id="order-id" class="font-semibold text-dark"></span></div>
                         <div id="date" class="text-muted fs-12"></div>
                     </div>
 
@@ -253,7 +253,7 @@
                         </div>
                     </div>
                     <div class="p-3 card rounded">
-                        <h5 class="text-warning">{{translate('Review')}}</h5>
+                        <h5 class="text-warning">{{'Revisar'}}</h5>
                         <p id="comment"></p>
                     </div>
                 </div>

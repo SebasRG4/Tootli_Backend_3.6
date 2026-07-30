@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('Store Report'))
+@section('title','Informe de la tienda')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -16,10 +16,10 @@
             <img src="{{asset('assets/admin/img/store-report.svg')}}" class="page-header-icon" alt="">
             <div class="w-0 flex-grow-1 pl-3">
                 <h1 class="page-header-title m-0">
-                    {{translate('Store Report')}}
+                    {{'Informe de la tienda'}}
                 </h1>
                 <span>
-                    {{ translate('Monitor_store’s_business_analytics_&_Reports') }}
+                    {{ 'Supervise los análisis e informes comerciales de la tienda' }}
                 </span>
             </div>
         </div>
@@ -29,13 +29,13 @@
     <!-- Page Header Menu -->
     <ul class="nav nav-tabs page-header-tabs mb-2">
         <li class="nav-item">
-            <a href="{{route('admin.transactions.report.store-summary-report')}}" class="nav-link active">{{translate('Summary Report')}}</a>
+            <a href="{{route('admin.transactions.report.store-summary-report')}}" class="nav-link active">{{'Informe resumido'}}</a>
         </li>
         <li class="nav-item">
-            <a href="{{route('admin.transactions.report.store-sales-report')}}" class="nav-link">{{translate('Sales Report')}}</a>
+            <a href="{{route('admin.transactions.report.store-sales-report')}}" class="nav-link">{{'Informe de ventas'}}</a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('admin.transactions.report.store-order-report') }}" class="nav-link">{{translate('Order Report')}}</a>
+            <a href="{{ route('admin.transactions.report.store-order-report') }}" class="nav-link">{{'Informe de pedido'}}</a>
         </li>
     </ul>
 
@@ -44,23 +44,23 @@
             <div class="statistics-btn-grp">
                 <label>
                     <input type="radio" name="filter" value="all_time" {{ isset($filter) && $filter == "all_time" ? 'checked' : '' }} data-url="{{ url()->full() }}" data-filter="filter" class="set-filter" hidden>
-                    <span>{{ translate('All Time') }}</span>
+                    <span>{{ 'Todo el tiempo' }}</span>
                 </label>
                 <label>
                     <input type="radio" name="filter" value="this_year" {{ isset($filter) && $filter == "this_year" ? 'checked' : '' }} data-url="{{ url()->full() }}" data-filter="filter" class="set-filter" hidden>
-                    <span>{{ translate('This Year') }}</span>
+                    <span>{{ 'este año' }}</span>
                 </label>
                 <label>
                     <input type="radio" name="filter" value="previous_year" {{ isset($filter) && $filter == "previous_year" ? 'checked' : '' }} data-url="{{ url()->full() }}" data-filter="filter" class="set-filter" hidden>
-                    <span>{{ translate('Previous Year') }}</span>
+                    <span>{{ 'Año anterior' }}</span>
                 </label>
                 <label>
                     <input type="radio" name="filter" value="this_month" {{ isset($filter) && $filter == "this_month" ? 'checked' : '' }} data-url="{{ url()->full() }}" data-filter="filter" class="set-filter" hidden>
-                    <span>{{ translate('This Month') }}</span>
+                    <span>{{ 'este mes' }}</span>
                 </label>
                 <label>
                     <input type="radio" name="filter" value="this_week" {{ isset($filter) && $filter == "this_week" ? 'checked' : '' }} data-url="{{ url()->full() }}" data-filter="filter" class="set-filter" hidden>
-                    <span>{{ translate('This Week') }}</span>
+                    <span>{{ 'Esta semana' }}</span>
                 </label>
             </div>
         </div>
@@ -71,30 +71,30 @@
                 <img src="{{asset('assets/admin/img/report/store.svg')}}" alt="">
                 <div class="info">
                     <h4 class="subtitle">{{ $new_stores }}</h4>
-                    <h6 class="subtext">{{ translate('messages.Registered Stores') }}</h6>
+                    <h6 class="subtext">{{ 'Tiendas registradas' }}</h6>
                 </div>
             </div>
             <div class="left-content-card">
                 <img src="{{asset('assets/admin/img/report/cart.svg')}}" alt="">
                 <div class="info">
                     <h4 class="subtitle">{{ $orders->count() }}</h4>
-                    <h6 class="subtext">{{ translate('messages.Total Orders') }}</h6>
+                    <h6 class="subtext">{{ 'Órdenes totales' }}</h6>
                 </div>
                 <div class="coupon__discount w-100 text-right d-flex justify-content-between">
                     <div>
                         <strong class="text-danger">{{ $total_canceled }}</strong>
-                        <div>{{ translate('messages.canceled') }}</div>
+                        <div>{{ 'Cancelado' }}</div>
                     </div>
                     <div>
                         <strong>{{ $total_ongoing }}</strong>
                         <div>
-                            {{ translate('Incomplete') }}
+                            {{ 'Incompleto' }}
                         </div>
                     </div>
                     <div>
                         <strong class="text-success">{{ $total_delivered }}</strong>
                         <div>
-                            {{ translate('Completed') }}
+                            {{ 'Terminado' }}
                         </div>
                     </div>
                 </div>
@@ -103,18 +103,18 @@
                 <img src="{{asset('assets/admin/img/report/product.svg')}}" alt="">
                 <div class="info">
                     <h4 class="subtitle">{{ $items->count() }}</h4>
-                    <h6 class="subtext">{{ translate('New Items') }}</h6>
+                    <h6 class="subtext">{{ 'Nuevos artículos' }}</h6>
                 </div>
             </div>
         </div>
         <div class="center-chart-area">
             <div class="center-chart-header">
-                <h4 class="title">{{ translate('Total Orders') }}</h4>
-                <h5 class="subtitle">{{ translate('Average Order Value :') }}
+                <h4 class="title">{{ 'Órdenes totales' }}</h4>
+                <h5 class="subtitle">{{ 'Valor promedio del pedido:' }}
                     {{ $total_delivered > 0 ? \App\CentralLogics\Helpers::number_format_short($total_order_amount/ $total_delivered) : 0 }}
                     <span class="input-label-secondary text--title" data-toggle="tooltip"
                     data-placement="right"
-                    data-original-title="{{ translate('Average Value of completed orders.') }}">
+                    data-original-title="{{ 'Valor medio de pedidos completados.' }}">
                     <i class="tio-info-outined"></i>
                 </span></h5>
             </div>
@@ -183,7 +183,7 @@
             <div class="card h-100 bg-white payment-statistics-shadow">
                 <div class="card-header border-0 ">
                     <h5 class="card-title">
-                        <span>{{ translate('Completed payment statistics') }}</span>
+                        <span>{{ 'Estadísticas de pago completadas' }}</span>
                     </h5>
                 </div>
                 <div class="card-body px-0 pt-0">
@@ -193,21 +193,21 @@
                         <div class="total--orders">
                             <h3>{{ \App\CentralLogics\Helpers::number_format_short($total_order_amount) }}
                             </h3>
-                            {{-- <span>{{ translate('messages.orders') }}</span> --}}
+                            {{-- <span>{{ 'Pedidos' }}</span> --}}
                         </div>
                         <!-- Total Orders -->
                     </div>
                     <div class="apex-legends">
                         <div class="before-bg-107980">
-                            <span>{{ translate('Cash Payments') }}
+                            <span>{{ 'Pagos en efectivo' }}
                                 ({{ count($order_payment_methods)>0?\App\CentralLogics\Helpers::number_format_short(isset($order_payment_methods[0])?$order_payment_methods[0]->total_order_amount:0):0 }})</span>
                         </div>
                         <div class="before-bg-56B98F">
-                            <span>{{ translate('Digital Payments') }} (
+                            <span>{{ 'Pagos digitales' }} (
                                 {{ count($order_payment_methods)>0?\App\CentralLogics\Helpers::number_format_short(isset($order_payment_methods[1])?$order_payment_methods[1]->total_order_amount:0):0 }})</span>
                         </div>
                         <div class="before-bg-E5F5F1">
-                            <span>{{ translate('messages.Wallet') }}
+                            <span>{{ 'Billetera' }}
                                 ({{ count($order_payment_methods)>0?\App\CentralLogics\Helpers::number_format_short(isset($order_payment_methods[2])?$order_payment_methods[2]->total_order_amount:0):0 }})</span>
                         </div>
                     </div>
@@ -220,13 +220,13 @@
     <div class="mt-11px card">
         <div class="card-header border-0 py-2">
             <div class="search--button-wrapper">
-                <h5 class="card-title">{{translate('messages.Total Stores')}}</h5>
+                <h5 class="card-title">{{'Tiendas totales'}}</h5>
                 <form class="search-form">
                                 <!-- Search -->
                     {{-- @csrf --}}
                     <div class="input-group input--group">
                         <input id="datatableSearch_" type="search" name="search" class="form-control"
-                                placeholder="{{translate('ex_:_Search_Store_Name')}}" value="{{ request()?->search ?? null}}" aria-label="{{translate('messages.search')}}" required>
+                                placeholder="{{'ej: buscar nombre de tienda'}}" value="{{ request()?->search ?? null}}" aria-label="{{'buscar'}}" required>
                         <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
 
                     </div>
@@ -239,23 +239,23 @@
                                 "target": "#usersExportDropdown",
                                 "type": "css-animation"
                             }'>
-                        <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                        <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                     </a>
 
                     <div id="usersExportDropdown"
                         class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                        <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                        <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                         <a id="export-excel" class="dropdown-item" href="{{route('admin.transactions.report.store-summary-report-export', ['type'=>'excel',request()->getQueryString()])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
                                 src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                 alt="Image Description">
-                            {{ translate('messages.excel') }}
+                            {{ 'sobresalir' }}
                         </a>
                         <a id="export-csv" class="dropdown-item" href="{{route('admin.transactions.report.store-summary-report-export', ['type'=>'csv',request()->getQueryString()])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
                                 src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                 alt="Image Description">
-                            .{{ translate('messages.csv') }}
+                            .{{ 'csv' }}
                         </a>
                     </div>
                 </div>
@@ -267,16 +267,16 @@
                 <table class="table table-borderless">
                     <thead class="thead-light white--space-false">
                         <tr>
-                            <th class="border-top border-bottom text-capitalize">{{translate('SL')}}</th>
-                            <th class="border-top border-bottom text-capitalize">{{translate('Store')}}</th>
-                            <th class="border-top border-bottom text-capitalize">{{translate('Total Order')}}</th>
-                            <th class="border-top border-bottom text-capitalize">{{translate('Total Delivered Order')}}</th>
-                            <th class="border-top border-bottom text-capitalize text-center">{{translate('Total Amount')}}</th>
-                            <th class="border-top border-bottom text-capitalize text-center">{{translate('Completion Rate')}}</th>
-                            <th class="border-top border-bottom text-capitalize text-center">{{translate('Ongoing Rate')}}</th>
-                            <th class="border-top border-bottom text-capitalize text-center">{{translate('Cancelation Rate')}}</th>
-                            <th class="border-top border-bottom text-capitalize text-center">{{translate('Refund Request')}}</th>
-                            <th class="border-top border-bottom text-capitalize text-center">{{translate('Action')}}</th>
+                            <th class="border-top border-bottom text-capitalize">{{'SL'}}</th>
+                            <th class="border-top border-bottom text-capitalize">{{'Almacenar'}}</th>
+                            <th class="border-top border-bottom text-capitalize">{{'Orden total'}}</th>
+                            <th class="border-top border-bottom text-capitalize">{{'Orden total entregada'}}</th>
+                            <th class="border-top border-bottom text-capitalize text-center">{{'Monto total'}}</th>
+                            <th class="border-top border-bottom text-capitalize text-center">{{'Tasa de finalización'}}</th>
+                            <th class="border-top border-bottom text-capitalize text-center">{{'Tarifa continua'}}</th>
+                            <th class="border-top border-bottom text-capitalize text-center">{{'Tasa de cancelación'}}</th>
+                            <th class="border-top border-bottom text-capitalize text-center">{{'Solicitud de reembolso'}}</th>
+                            <th class="border-top border-bottom text-capitalize text-center">{{'Acción'}}</th>
                         </tr>
                     </thead>
                     <tbody id="set-rows">
@@ -335,7 +335,7 @@
         <div class="empty--data">
             <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
             <h5>
-                {{translate('no_data_found')}}
+                {{'no se encontraron datos'}}
             </h5>
         </div>
         @endif
@@ -370,9 +370,9 @@
                 width: 320,
                 type: 'donut',
             },
-            labels: ['{{ translate('Cash Payments') }} ({{ count($order_payment_methods)>0?isset($order_payment_methods[0])?$order_payment_methods[0]->total_order_amount:0:0 }})',
-                '{{ translate('Digital Payments') }} ({{ count($order_payment_methods)>0?isset($order_payment_methods[1])?$order_payment_methods[1]->total_order_amount:0:0 }})',
-                '{{ translate('Wallet') }} ({{ count($order_payment_methods)>0?isset($order_payment_methods[2])?$order_payment_methods[2]->total_order_amount:0:0 }})'
+            labels: ['{{ 'Pagos en efectivo' }} ({{ count($order_payment_methods)>0?isset($order_payment_methods[0])?$order_payment_methods[0]->total_order_amount:0:0 }})',
+                '{{ 'Pagos digitales' }} ({{ count($order_payment_methods)>0?isset($order_payment_methods[1])?$order_payment_methods[1]->total_order_amount:0:0 }})',
+                '{{ 'Billetera' }} ({{ count($order_payment_methods)>0?isset($order_payment_methods[2])?$order_payment_methods[2]->total_order_amount:0:0 }})'
             ],
             dataLabels: {
                 enabled: false,

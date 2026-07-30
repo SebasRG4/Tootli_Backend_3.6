@@ -23,7 +23,7 @@
     </td>
     <td>
         <label class="toggle-switch toggle-switch-sm ml-xl-4" for="stocksCheckbox{{ $customer->id }}">
-            <input type="checkbox" data-url="{{ route('admin.users.customer.status', [$customer->id, $customer->status ? 0 : 1]) }}" data-message="{{ $customer->status? translate('messages.you_want_to_block_this_customer'): translate('messages.you_want_to_unblock_this_customer') }}"
+            <input type="checkbox" data-url="{{ route('admin.users.customer.status', [$customer->id, $customer->status ? 0 : 1]) }}" data-message="{{ $customer->status? 'quieres bloquear a este cliente': 'quieres desbloquear a este cliente' }}"
                    class="toggle-switch-input status_change_alert" id="stocksCheckbox{{ $customer->id }}"
                 {{ $customer->status ? 'checked' : '' }}>
             <span class="toggle-switch-label">
@@ -34,7 +34,7 @@
     <td>
         <a class="btn action-btn btn--warning btn-outline-warning"
             href="{{ route('admin.users.customer.view', [$customer['id']]) }}"
-            title="{{ translate('messages.view_customer') }}"><i
+            title="{{ 'ver cliente' }}"><i
                 class="tio-visible-outlined"></i>
         </a>
     </td>

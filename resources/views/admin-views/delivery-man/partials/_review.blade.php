@@ -15,7 +15,7 @@
                 {{$review->customer?$review->customer->f_name:""}} {{$review->customer?$review->customer->l_name:""}}
             </a>
             @else
-                {{translate('messages.customer_not_found')}}
+                {{'cliente no encontrado'}}
             @endif
 
         </td>

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.units'))
+@section('title','unidades')
 
 @push('css_or_js')
 
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/category.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{translate('messages.add_new_unit')}}
+                    {{'agregar nueva unidad'}}
                 </span>
             </h1>
         </div>
@@ -31,7 +31,7 @@
                                         <li class="nav-item">
                                             <a class="nav-link lang_link active"
                                             href="#"
-                                            id="default-link">{{translate('messages.default')}}</a>
+                                            id="default-link">{{'por defecto'}}</a>
                                         </li>
                                         @foreach ($language as $lang)
                                             <li class="nav-item">
@@ -44,15 +44,15 @@
                                     <div class="lang_form" id="default-form">
                                         <div class="form-group">
                                             <label class="input-label"
-                                                for="default_title">{{ translate('messages.name') }}
-                                                ({{translate('messages.default')}}) <span class="form-label-secondary text-danger"
+                                                for="default_title">{{ 'nombre' }}
+                                                ({{'por defecto'}}) <span class="form-label-secondary text-danger"
                                                 data-toggle="tooltip" data-placement="right"
-                                                data-original-title="{{ translate('messages.Required.')}}"> *
+                                                data-original-title="{{ 'Requerido.'}}"> *
                                                 </span>
 
                                             </label>
                                             <input type="text" name="unit[]" id="default_title"
-                                                class="form-control" placeholder="{{ translate('messages.unit_name') }}" maxlength="191"
+                                                class="form-control" placeholder="{{ 'nombre de la unidad' }}" maxlength="191"
 
                                                  >
                                         </div>
@@ -63,11 +63,11 @@
                                                 id="{{ $lang }}-form">
                                                 <div class="form-group">
                                                     <label class="input-label"
-                                                        for="{{ $lang }}_title">{{ translate('messages.name') }}
+                                                        for="{{ $lang }}_title">{{ 'nombre' }}
                                                         ({{ strtoupper($lang) }})
                                                     </label>
                                                     <input type="text" name="unit[]" id="{{ $lang }}_title"
-                                                        class="form-control" placeholder="{{ translate('messages.unit_name') }}" maxlength="191"
+                                                        class="form-control" placeholder="{{ 'nombre de la unidad' }}" maxlength="191"
                                                          >
                                                 </div>
                                                 <input type="hidden" name="lang[]" value="{{ $lang }}">
@@ -77,16 +77,16 @@
                                         <div id="default-form">
                                             <div class="form-group">
                                                 <label class="input-label"
-                                                    for="exampleFormControlInput1">{{ translate('messages.name') }} ({{ translate('messages.default') }})</label>
+                                                    for="exampleFormControlInput1">{{ 'nombre' }} ({{ 'por defecto' }})</label>
                                                 <input type="text" name="unit[]" class="form-control"
-                                                    placeholder="{{ translate('messages.unit_name') }}" maxlength="191" required>
+                                                    placeholder="{{ 'nombre de la unidad' }}" maxlength="191" required>
                                             </div>
                                             <input type="hidden" name="lang[]" value="default">
                                         </div>
                                     @endif
                             <div class="btn--container justify-content-end">
-                                <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                                <button type="submit" class="btn btn--primary">{{translate('messages.submit')}}</button>
+                                <button type="reset" class="btn btn--reset">{{'reiniciar'}}</button>
+                                <button type="submit" class="btn btn--primary">{{'entregar'}}</button>
                             </div>
                         </form>
                     </div>
@@ -98,13 +98,13 @@
                     <div class="card-header py-2 border-0">
                         <div class="search--button-wrapper">
                             <h5 class="card-title">
-                                {{translate('messages.unit_list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$units->total()}}</span></h5>
+                                {{'lista de unidades'}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$units->total()}}</span></h5>
                             <form class="search-form">
                                 <!-- Search -->
 
                                 <div class="input-group input--group">
                                     <input id="datatableSearch_" type="search" name="search" class="form-control"  value="{{request()?->search}}"
-                                            placeholder="{{translate('messages.search_unit')}}" aria-label="Search" >
+                                            placeholder="{{'unidad de búsqueda'}}" aria-label="Search" >
                                     <button type="submit" class="btn btn--secondary">
                                         <i class="tio-search"></i>
                                     </button>
@@ -113,7 +113,7 @@
                             </form>
 
                             @if(request()->get('search'))
-                            <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                            <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{'reiniciar'}}</button>
                             @endif
 
                             <!-- Unfold -->
@@ -123,23 +123,23 @@
                                             "target": "#usersExportDropdown",
                                             "type": "css-animation"
                                         }'>
-                                    <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                                    <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                                 </a>
 
                                 <div id="usersExportDropdown"
                                     class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                                    <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                                    <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                                     <a id="export-excel" class="dropdown-item" href="{{route('admin.unit.export', ['type'=>'excel',request()->getQueryString()]) }}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                             src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                             alt="Image Description">
-                                        {{ translate('messages.excel') }}
+                                        {{ 'sobresalir' }}
                                     </a>
                                     <a id="export-csv" class="dropdown-item" href="{{route('admin.unit.export', ['type'=>'csv',request()->getQueryString()]) }}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                             src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                             alt="Image Description">
-                                        .{{ translate('messages.csv') }}
+                                        .{{ 'csv' }}
                                     </a>
                                 </div>
                             </div>
@@ -157,9 +157,9 @@
                                }'>
                             <thead class="thead-light">
                             <tr class="text-center">
-                                <th class="border-0">{{translate('sl')}}</th>
-                                <th class="border-0">{{translate('messages.unit')}}</th>
-                                <th class="border-0">{{translate('messages.action')}}</th>
+                                <th class="border-0">{{'SL'}}</th>
+                                <th class="border-0">{{'unidad'}}</th>
+                                <th class="border-0">{{'acción'}}</th>
                             </tr>
 
                             </thead>
@@ -175,9 +175,9 @@
                                     </td>
                                     <td>
                                         <div class="btn--container justify-content-center">
-                                            <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.unit.edit',[$unit['id']])}}" title="{{translate('messages.edit')}}"><i class="tio-edit"></i>
+                                            <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.unit.edit',[$unit['id']])}}" title="{{'editar'}}"><i class="tio-edit"></i>
                                             </a>
-                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="unit-{{$unit['id']}}" data-message="{{ translate('Want to delete this unit ?') }}" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
+                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="unit-{{$unit['id']}}" data-message="{{ '¿Quieres eliminar esta unidad?' }}" title="{{'borrar'}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{route('admin.unit.destroy',[$unit['id']])}}"
                                                     method="post" id="unit-{{$unit['id']}}">
@@ -200,7 +200,7 @@
                     <div class="empty--data">
                         <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
-                            {{translate('no_data_found')}}
+                            {{'no se encontraron datos'}}
                         </h5>
                     </div>
                     @endif

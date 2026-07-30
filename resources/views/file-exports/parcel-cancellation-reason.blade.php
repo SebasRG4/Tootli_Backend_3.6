@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-lg-12 text-center ">
-        <h1> {{ translate('Parcel_Cancellation_Reason_List') }}
+        <h1> {{ 'Lista de motivos de cancelación de paquetes' }}
         </h1>
     </div>
     <div class="col-lg-12">
@@ -8,11 +8,11 @@
         <table>
             <thead>
                 <tr>
-                    <th>{{ translate('Filter_Criteria') }}</th>
+                    <th>{{ 'Criterios de filtrado' }}</th>
                     <th></th>
                     <th>
 
-                        {{ translate('Search_Bar_Content') }}: {{ $data['search'] ?? translate('N/A') }}
+                        {{ 'Contenido de la barra de búsqueda' }}: {{ $data['search'] ?? 'N / A' }}
 
                     </th>
                     <th> </th>
@@ -21,19 +21,19 @@
 
                 <tr>
                     <th class="fs-14 text-title font-semibold top-border-table">
-                        {{ translate('SL') }}
+                        {{ 'SL' }}
                     </th>
                     <th class="fs-14 text-title font-semibold top-border-table">
-                        {{ translate('messages.reason') }}
+                        {{ 'razón' }}
                     </th>
                     <th class="fs-14 text-title font-semibold top-border-table">
-                        {{ translate('messages.cancellation_type') }}
+                        {{ 'tipo de cancelación' }}
                     </th>
                     <th class="fs-14 text-title font-semibold top-border-table">
-                        {{ translate('messages.user_type') }}
+                        {{ 'tipo de usuario' }}
                     </th>
                     <th class="fs-14 text-title font-semibold top-border-table">
-                        {{ translate('messages.status') }}
+                        {{ 'estado' }}
                     </th>
 
                 </tr>
@@ -54,9 +54,9 @@
                         </td>
                         <td class="p-3">
                             @if ($item->status == 1)
-                                <span class="badge badge-soft-success fs-12">{{ translate('Active') }}</span>
+                                <span class="badge badge-soft-success fs-12">{{ 'Activo' }}</span>
                             @else
-                                <span class="badge badge-soft-danger fs-12">{{ translate('Inactive') }}</span>
+                                <span class="badge badge-soft-danger fs-12">{{ 'Inactivo' }}</span>
                             @endif
                         </td>
 

@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-lg-12 text-center "><h1 >{{ translate('order_transactions_report') }}</h1></div>
+    <div class="col-lg-12 text-center "><h1 >{{ 'informe de transacciones de pedidos' }}</h1></div>
     <div class="col-lg-12">
 
 
@@ -7,27 +7,27 @@
     <table>
         <thead>
             <tr>
-                <th>{{ translate('Search_Criteria') }}</th>
+                <th>{{ 'Criterios de búsqueda' }}</th>
                 <th></th>
                 <th></th>
                 <th>
-                    {{ translate('module' )}} - {{ $data['module']?translate($data['module']):translate('all') }}
+                    {{ 'módulo'}} - {{ $data['module']?translate($data['module']):'todo' }}
                     <br>
-                    {{ translate('zone' )}} - {{ $data['zone']??translate('all') }}
+                    {{ 'zona'}} - {{ $data['zone']??'todo' }}
                     <br>
-                    {{ translate('store' )}} - {{ $data['store']??translate('all') }}
+                    {{ 'Negocio'}} - {{ $data['store']??'todo' }}
                     @if ($data['from'])
                     <br>
-                    {{ translate('from' )}} - {{ $data['from']?Carbon\Carbon::parse($data['from'])->format('d M Y'):'' }}
+                    {{ 'de'}} - {{ $data['from']?Carbon\Carbon::parse($data['from'])->format('d M Y'):'' }}
                     @endif
                     @if ($data['to'])
                     <br>
-                    {{ translate('to' )}} - {{ $data['to']?Carbon\Carbon::parse($data['to'])->format('d M Y'):'' }}
+                    {{ 'a'}} - {{ $data['to']?Carbon\Carbon::parse($data['to'])->format('d M Y'):'' }}
                     @endif
                     <br>
-                    {{ translate('filter')  }}- {{  translate($data['filter']) }}
+                    {{ 'filtrar'  }}- {{  translate($data['filter']) }}
                     <br>
-                    {{ translate('Search_Bar_Content')  }}- {{ $data['search'] ??translate('N/A') }}
+                    {{ 'Contenido de la barra de búsqueda'  }}- {{ $data['search'] ??'N / A' }}
 
                 </th>
                 <th> </th>
@@ -36,13 +36,13 @@
                 <th></th>
                 </tr>
             <tr>
-                <th>{{ translate('Transaction_Analytics') }}</th>
+                <th>{{ 'Análisis de transacciones' }}</th>
                 <th></th>
                 <th></th>
                 <th>
-                    {{ translate('Completed_Transactions')  }}- {{ $data['delivered'] ??translate('N/A') }}
+                    {{ 'Transacciones completadas'  }}- {{ $data['delivered'] ??'N / A' }}
                     <br>
-                    {{ translate('Refunded_Transactions')  }}- {{ $data['canceled'] ??translate('N/A') }}
+                    {{ 'Transacciones reembolsadas'  }}- {{ $data['canceled'] ??'N / A' }}
                 </th>
                 <th> </th>
                 <th></th>
@@ -50,15 +50,15 @@
                 <th></th>
             </tr>
             <tr>
-                <th>{{ translate('Earning_Analytics') }}</th>
+                <th>{{ 'Análisis de ganancias' }}</th>
                 <th></th>
                 <th></th>
                 <th>
-                    {{ translate('Admin_Earnings')  }} - {{ $data['admin_earned'] ??translate('N/A') }}
+                    {{ 'Ganancias de administrador'  }} - {{ $data['admin_earned'] ??'N / A' }}
                     <br>
-                    {{ translate('Store_Earnings')  }} - {{ $data['store_earned'] ??translate('N/A') }}
+                    {{ 'Ganancias de la tienda'  }} - {{ $data['store_earned'] ??'N / A' }}
                     <br>
-                    {{ translate('Delivery_Man_Earnings')  }} - {{ $data['deliveryman_earned'] ??translate('N/A') }}
+                    {{ 'Ganancias del repartidor'  }} - {{ $data['deliveryman_earned'] ??'N / A' }}
                 </th>
                 <th> </th>
                 <th></th>
@@ -66,24 +66,24 @@
                 <th></th>
             </tr>
             <tr>
-                <th>{{ translate('messages.ecartpay_gateway_report_title') }}</th>
+                <th>{{ 'título del informe de la puerta de enlace de ecartpay' }}</th>
                 <th></th>
                 <th></th>
                 <th>
-                    {{ translate('messages.ecartpay_saved_card_heading') }}:
-                    {{ translate('messages.ecartpay_total_gateway_fees') }}
+                    {{ 'encabezado de tarjeta guardada ecartpay' }}:
+                    {{ 'tarifas totales de entrada de ecartpay' }}
                     — {{ \App\CentralLogics\Helpers::format_currency($data['ecartpayFeesCardTotal'] ?? 0) }}
                     <br>
-                    {{ translate('messages.ecartpay_saved_card_heading') }}:
-                    {{ translate('messages.ecartpay_admin_net_after_gateway') }}
+                    {{ 'encabezado de tarjeta guardada ecartpay' }}:
+                    {{ 'red de administración de ecartpay después de la puerta de enlace' }}
                     — {{ \App\CentralLogics\Helpers::format_currency($data['adminNetAfterEcartpayCard'] ?? 0) }}
                     <br>
-                    {{ translate('messages.ecartpay_spei_heading') }}:
-                    {{ translate('messages.ecartpay_total_gateway_fees') }}
+                    {{ 'título ecartpay spei' }}:
+                    {{ 'tarifas totales de entrada de ecartpay' }}
                     — {{ \App\CentralLogics\Helpers::format_currency($data['ecartpayFeesSpeiTotal'] ?? 0) }}
                     <br>
-                    {{ translate('messages.ecartpay_spei_heading') }}:
-                    {{ translate('messages.ecartpay_admin_net_after_gateway') }}
+                    {{ 'título ecartpay spei' }}:
+                    {{ 'red de administración de ecartpay después de la puerta de enlace' }}
                     — {{ \App\CentralLogics\Helpers::format_currency($data['adminNetAfterEcartpaySpei'] ?? 0) }}
                 </th>
                 <th> </th>
@@ -92,29 +92,29 @@
                 <th></th>
             </tr>
         <tr>
-            <th>{{ translate('sl') }}</th>
-            <th>{{ translate('messages.order_id') }}</th>
-            <th>{{ translate('messages.store') }}</th>
-            <th>{{ translate('messages.customer_name') }}</th>
-            <th>{{ translate('messages.total_item_amount') }}</th>
-            <th>{{ translate('messages.item_discount') }}</th>
-            <th>{{ translate('messages.coupon_discount') }}</th>
-            <th>{{ translate('messages.referral_discount') }}</th>
-            <th>{{ translate('messages.discounted_amount') }}</th>
-            <th>{{ translate('messages.vat/tax') }}</th>
-            <th>{{ translate('messages.delivery_charge') }}</th>
-            <th>{{ translate('messages.order_amount') }}</th>
-            <th>{{ translate('messages.admin_discount') }}</th>
-            <th>{{ translate('messages.store_discount') }}</th>
-            <th>{{ translate('messages.admin_commission') }}</th>
-            <th>{{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge') }}</th>
-            <th>{{ translate('messages.extra_packaging_amount') }}</th>
-            <th>{{ translate('commision_on_delivery_charge') }}</th>
-            <th>{{ translate('admin_net_income') }}</th>
-            <th>{{ translate('store_net_income') }}</th>
-            <th>{{ translate('messages.amount_received_by') }}</th>
-            <th>{{ translate('messages.payment_method') }}</th>
-            <th>{{ translate('messages.payment_status') }}</th>
+            <th>{{ 'SL' }}</th>
+            <th>{{ 'identificación del pedido' }}</th>
+            <th>{{ 'Negocio' }}</th>
+            <th>{{ 'nombre del cliente' }}</th>
+            <th>{{ 'importe total del artículo' }}</th>
+            <th>{{ 'descuento del artículo' }}</th>
+            <th>{{ 'cupón de descuento' }}</th>
+            <th>{{ 'descuento por referencia' }}</th>
+            <th>{{ 'cantidad descontada' }}</th>
+            <th>{{ 'iva/impuesto' }}</th>
+            <th>{{ 'cargo de entrega' }}</th>
+            <th>{{ 'monto del pedido' }}</th>
+            <th>{{ 'descuento de administrador' }}</th>
+            <th>{{ 'descuento de tienda' }}</th>
+            <th>{{ 'comisión administrativa' }}</th>
+            <th>{{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??'cargo adicional' }}</th>
+            <th>{{ 'cantidad de embalaje adicional' }}</th>
+            <th>{{ 'comisión sobre el cargo de entrega' }}</th>
+            <th>{{ 'ingresos netos administrativos' }}</th>
+            <th>{{ 'ingresos netos de la tienda' }}</th>
+            <th>{{ 'cantidad recibida por' }}</th>
+            <th>{{ 'método de pago' }}</th>
+            <th>{{ 'estado de pago' }}</th>
         </thead>
         <tbody>
         @foreach($data['order_transactions'] as $key => $ot)
@@ -125,14 +125,14 @@
                     @if($ot->order->store)
                         {{Str::limit($ot->order->store->name,25,'...')}}
                     @else
-                        {{ translate('messages.parcel_order') }}
+                        {{ 'orden de paquete' }}
                     @endif
                 </td>
                 <td>
                     @if ($ot->order->customer)
                         {{  $ot->order->customer['f_name'] . ' ' . $ot->order->customer['l_name']  }}
                     @else
-                        {{ translate('messages.not_found') }}
+                        {{ 'extraviado' }}
                     @endif
                 </td>
                 {{-- total_item_amount --}}
@@ -164,31 +164,31 @@
                 <td>{{ \App\CentralLogics\Helpers::format_currency(($ot->admin_commission  - $ot->order['flash_admin_discount_amount'])) }}</td>
                 <td>{{ \App\CentralLogics\Helpers::format_currency($ot->store_amount -($ot?->order?->order_type == 'parcel' ? 0: $ot->tax)) }}</td>
                 @if ($ot->received_by == 'admin')
-                    <td>{{ translate('messages.admin') }}</td>
+                    <td>{{ 'administración' }}</td>
                 @elseif ($ot->received_by == 'deliveryman')
                     <td>
-                        <div>{{ translate('messages.delivery_man') }}</div>
+                        <div>{{ 'Repartidor' }}</div>
                         <div>
                             @if (isset($ot->delivery_man) && $ot->delivery_man->earning == 1)
-                                {{translate('messages.freelance')}}
+                                {{'independiente'}}
                             @elseif (isset($ot->delivery_man) && $ot->delivery_man->earning == 0 && $ot->delivery_man->type == 'restaurant_wise')
-                                {{translate('messages.restaurant')}}
+                                {{'restaurante'}}
                             @elseif (isset($ot->delivery_man) && $ot->delivery_man->earning == 0 && $ot->delivery_man->type == 'zone_wise')
-                                {{translate('messages.admin')}}
+                                {{'administración'}}
                             @endif
                         </div>
                     </td>
                 @elseif ($ot->received_by == 'store')
-                    <td>{{ translate('messages.store') }}</td>
+                    <td>{{ 'Negocio' }}</td>
                 @endif
                 <td>
                         {{ translate(str_replace('_', ' ', $ot->order['payment_method'])) }}
                 </td>
                 <td>
                     @if ($ot->status)
-                        {{translate('messages.refunded')}}
+                        {{'Reembolsado'}}
                     @else
-                        {{translate('messages.completed')}}
+                        {{'terminado'}}
                     @endif
                 </td>
             </tr>

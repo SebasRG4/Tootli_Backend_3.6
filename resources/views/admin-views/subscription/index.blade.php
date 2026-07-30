@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.disbursement'))
+@section('title','desembolso')
 
 @push('css_or_js')
 
@@ -15,7 +15,7 @@
                     <div class="d-flex align-items-start">
                         <img src="{{asset('assets/admin/img/store.png')}}" width="24" alt="img">
                         <div class="w-0 flex-grow pl-2">
-                            <h1 class="page-header-title">{{translate('Green Mart Subscription')}}</h1>
+                            <h1 class="page-header-title">{{'Suscripción a Green Mart'}}</h1>
                         </div>
                     </div>
                 </div>

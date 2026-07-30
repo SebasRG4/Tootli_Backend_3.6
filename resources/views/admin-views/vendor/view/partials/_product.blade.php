@@ -13,7 +13,7 @@
         </a>
     </td>
     <td>
-    {{Str::limit($food->category?$food->category->name:translate('messages.category_deleted'),20,'...')}}
+    {{Str::limit($food->category?$food->category->name:'categoría eliminada',20,'...')}}
     </td>
     <td>{{\App\CentralLogics\Helpers::format_currency($food['price'])}}</td>
     <td>
@@ -27,10 +27,10 @@
     <td>
         <div class="btn--container justify-content-center">
             <a class="btn action-btn btn--primary btn-outline-primary"
-               href="{{route('admin.item.edit',[$food['id']])}}" title="{{translate('messages.edit_item')}}"><i class="tio-edit"></i>
+               href="{{route('admin.item.edit',[$food['id']])}}" title="{{'editar elemento'}}"><i class="tio-edit"></i>
             </a>
             <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
-               data-id="food-{{$food['id']}}" data-message="{{ translate('messages.Want to delete this item ?') }}" title="{{translate('messages.delete_item')}}"><i class="tio-delete-outlined"></i>
+               data-id="food-{{$food['id']}}" data-message="{{ '¿Quieres eliminar este elemento?' }}" title="{{'eliminar elemento'}}"><i class="tio-delete-outlined"></i>
             </a>
         </div>
         <form action="{{route('admin.item.delete',[$food['id']])}}"

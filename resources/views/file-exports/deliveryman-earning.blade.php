@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-lg-12 text-center "><h1 >{{ translate('delivery_man_earning_list') }}</h1></div>
+    <div class="col-lg-12 text-center "><h1 >{{ 'lista de ganancias del repartidor' }}</h1></div>
     <div class="col-lg-12">
 
 
@@ -7,18 +7,18 @@
     <table>
         <thead>
             <tr>
-                <th>{{ translate('delivery_man_info') }}</th>
+                <th>{{ 'información del repartidor' }}</th>
                 <th></th>
                 <th>
-                    {{ translate('name')  }}- {{ $data['dm']->f_name.' '.$data['dm']->l_name}}
+                    {{ 'nombre'  }}- {{ $data['dm']->f_name.' '.$data['dm']->l_name}}
                     <br>
-                    {{ translate('phone')  }}- {{ $data['dm']->phone}}
+                    {{ 'teléfono'  }}- {{ $data['dm']->phone}}
                     <br>
-                    {{ translate('email')  }}- {{ $data['dm']->email}}
+                    {{ 'correo electrónico'  }}- {{ $data['dm']->email}}
                     <br>
-                    {{ translate('total_order')  }}- {{ $data['dm']->order_count }}
+                    {{ 'orden total'  }}- {{ $data['dm']->order_count }}
                     <br>
-                    {{ translate('total_earning')  }}- {{$data['dm']->wallet->total_earning}}
+                    {{ 'ganancia total'  }}- {{$data['dm']->wallet->total_earning}}
 
                 </th>
                 <th></th>
@@ -28,10 +28,10 @@
                 <th></th>
             </tr>
             <tr>
-                <th>{{ translate('Filter_Criteria') }}</th>
+                <th>{{ 'Criterios de filtrado' }}</th>
                 <th></th>
                 <th>
-                    {{ translate('date')  }}- {{ $data['date'] ??translate('N/A') }}
+                    {{ 'fecha'  }}- {{ $data['date'] ??'N / A' }}
 
                 </th>
                 <th></th>
@@ -41,13 +41,13 @@
                 <th></th>
             </tr>
         <tr>
-            <th>{{ translate('sl') }}</th>
-            <th>{{translate('messages.order_id')}}</th>
-            <th>{{translate('messages.date')}}</th>
-            {{-- <th>{{translate('messages.distance')}}</th> --}}
-            <th>{{translate('messages.delivery_fee_earned')}}</th>
-            <th>{{translate('messages.tips')}}</th>
-            <th>{{translate('messages.total_earning')}}</th>
+            <th>{{ 'SL' }}</th>
+            <th>{{'identificación del pedido'}}</th>
+            <th>{{'fecha'}}</th>
+            {{-- <th>{{'distancia'}}</th> --}}
+            <th>{{'tarifa de entrega ganada'}}</th>
+            <th>{{'consejos'}}</th>
+            <th>{{'ganancia total'}}</th>
         </thead>
         <tbody>
         @foreach($data['earnings'] as $key => $earning)

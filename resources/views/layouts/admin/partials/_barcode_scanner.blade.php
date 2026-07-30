@@ -3,7 +3,7 @@
         <div class="modal-content" style="border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
                 <h5 class="modal-title font-weight-bold" id="barcodeScannerModalLabel" style="color: #333;">
-                    <i class="tio-camera mr-2" style="color: #149174;"></i>{{ translate('Escáner de Código de Barras') }}
+                    <i class="tio-camera mr-2" style="color: #149174;"></i>{{ 'Escáner de Código de Barras' }}
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="stopBarcodeScanner()">
                     <span aria-hidden="true" style="font-size: 1.5rem;">&times;</span>
@@ -15,7 +15,7 @@
                 </div>
                 <div class="mt-3">
                     <p class="text-muted mb-0" style="font-size: 0.9rem;">
-                        {{ translate('Apunta la cámara del celular al código de barras del producto.') }}
+                        {{ 'Apunte la cámara del celular al código de barras del producto.' }}
                     </p>
                 </div>
             </div>
@@ -94,7 +94,7 @@
                     }
                 ).catch((err) => {
                     console.error("Error starting barcode scanner camera stream: ", err);
-                    toastr.error("{{ translate('No se pudo acceder a la cámara. Verifica los permisos de tu navegador.') }}");
+                    toastr.error("{{ 'No se pudo acceder a la cámara. Verifica los permisos de tu navegador.' }}");
                     $('#barcodeScannerModal').modal('hide');
                 });
             } catch (e) {

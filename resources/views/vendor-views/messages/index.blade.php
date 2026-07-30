@@ -11,7 +11,7 @@
     <div class="content container-fluid">
         <!-- Page Header -->
         <div class="page-header">
-            <h1 class="page-header-title">{{ translate('messages.conversation_list') }}</h1>
+            <h1 class="page-header-title">{{ 'lista de conversaciones' }}</h1>
         </div>
         <!-- End Page Header -->
 
@@ -24,7 +24,7 @@
                             <div class="input-group-prepend border-inline-end-0">
                                 <span class="input-group-text border-inline-end-0" id="basic-addon1"><i class="tio-search"></i></span>
                             </div>
-                            <input type="text" class="form-control border-inline-start-0 pl-1" id="serach" placeholder="{{translate('Search')}}" aria-label="Username"
+                            <input type="text" class="form-control border-inline-start-0 pl-1" id="serach" placeholder="{{'Buscar'}}" aria-label="Username"
                                 aria-describedby="basic-addon1" autocomplete="off">
                         </div>
                     </div>
@@ -39,7 +39,7 @@
             </div>
             <div class="col-lg-8 col-nd-6" id="view-conversation">
                 <div class="text-center view_conversation-style">
-                    <h4 class="view_conversation-h4-style">{{ translate('messages.view_conversation') }}
+                    <h4 class="view_conversation-h4-style">{{ 'ver conversación' }}
                     </h4>
                 </div>
                 {{-- view here --}}

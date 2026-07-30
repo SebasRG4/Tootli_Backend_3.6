@@ -15,10 +15,10 @@
             </a>
         </td>
         <td>
-            {{ Str::limit($item->category ? $item->category->name : translate('messages.category_deleted'), 20, '...') }}
+            {{ Str::limit($item->category ? $item->category->name : 'categoría eliminada', 20, '...') }}
         </td>
         <td>
-            {{ Str::limit($item->store ? $item->store->name : translate('messages.store deleted!'), 20, '...') }}
+            {{ Str::limit($item->store ? $item->store->name : 'tienda eliminada!', 20, '...') }}
         </td>
         <td>
             <div class="text-right mw--85px">
@@ -38,11 +38,11 @@
             <div class="btn--container justify-content-center">
                 <a class="btn action-btn btn--primary btn-outline-primary"
                     href="{{ route('admin.item.edit', [$item['id']]) }}"
-                    title="{{ translate('messages.edit_item') }}"><i class="tio-edit"></i>
+                    title="{{ 'editar elemento' }}"><i class="tio-edit"></i>
                 </a>
                 <a class="btn  action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
-                    data-id="food-{{ $item['id'] }}" data-message="{{ translate('messages.Want_to_delete_this_item') }}"
-                    title="{{ translate('messages.delete_item') }}"><i
+                    data-id="food-{{ $item['id'] }}" data-message="{{ 'Quiere eliminar este elemento' }}"
+                    title="{{ 'eliminar elemento' }}"><i
                         class="tio-delete-outlined"></i>
                 </a>
                 <form action="{{ route('admin.item.delete', [$item['id']]) }}" method="post"

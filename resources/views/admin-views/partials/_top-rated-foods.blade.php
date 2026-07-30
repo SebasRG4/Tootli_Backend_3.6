@@ -1,10 +1,10 @@
 <div class="card-header border-0 order-header-shadow">
     <h5 class="card-title d-flex justify-content-between">
         <span>
-            {{ translate('most rated') }}@if (Config::get('module.current_module_type') == 'food')
-                {{ translate('messages.foods') }}
+            {{ 'más valorado' }}@if (Config::get('module.current_module_type') == 'food')
+                {{ 'alimentos' }}
             @else
-                {{ translate('messages.items') }}
+                {{ 'Productos' }}
             @endif
         </span>
     </h5>
@@ -12,9 +12,9 @@
     @if ($params['zone_id'] != 'all')
         @php($zone_name = \App\Models\Zone::where('id', $params['zone_id'])->first()->name)
     @else
-        @php($zone_name = translate('messages.all'))
+        @php($zone_name = 'todo')
     @endif
-    <a href="{{ route('admin.item.list') }}" class="fz-12px font-medium text-006AE5">{{ translate('view_all') }}</a>
+    <a href="{{ route('admin.item.list') }}" class="fz-12px font-medium text-006AE5">{{ 'ver todo' }}</a>
 </div>
 
 <div class="card-body">
@@ -26,9 +26,9 @@
                         <img src="{{ $item['image_full_url'] ?? asset('assets/admin/img/100x100/2.png') }}"
                             class="onerror-image"
                             data-onerror-image="{{ asset('assets/admin/img/100x100/2.png') }}"
-                            alt="{{ Str::limit($item->name ?? translate('messages.Item deleted!'), 20, '...') }}">
+                            alt="{{ Str::limit($item->name ?? '¡Artículo eliminado!', 20, '...') }}">
                         <span class="line--limit-1 w-0 flex-grow-1" title="{{ $item?->name }}">
-                            {{ Str::limit($item->name ?? translate('messages.Item deleted!'), 20, '...') }}
+                            {{ Str::limit($item->name ?? '¡Artículo eliminado!', 20, '...') }}
                         </span>
                         <div>
                             <span class="text-FF6D6D">{{ $item['rating_count'] }} <i class="tio-heart"></i></span>
@@ -42,13 +42,13 @@
         <!-- <div class="empty--data">
             <img src="{{ asset('assets/admin/img/illustrations/empty-state.svg') }}" alt="public">
             <h5>
-                {{ translate('no_data_found') }}
+                {{ 'no se encontraron datos' }}
             </h5>
         </div> -->
         <div class="empty--data d-flex flex-column align-items-center justify-content-center h-100 w-100">
             <img src="{{ asset('assets/admin/img/no-items.png') }}" alt="public">
             <h5 class="secondary-clr">
-                {{ translate('No stores available') }}
+                {{ 'No hay tiendas disponibles' }}
             </h5>
         </div>
     @endif

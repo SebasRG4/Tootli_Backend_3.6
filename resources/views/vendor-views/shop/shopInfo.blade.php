@@ -3,7 +3,7 @@
     $title = $vendorData?->module_type == 'rental' && addon_published_status('Rental') ? 'Provider' : 'Store';
 @endphp
 @extends('layouts.vendor.app')
-@section('title',translate('messages.store_view'))
+@section('title','vista de la tienda')
 @push('css_or_js')
     <!-- Custom styles for this page -->
 @endpush
@@ -15,11 +15,11 @@
             <h2 class="page-header-title text-capitalize my-2">
                 <img class="w--26" src="{{asset('assets/admin/img/store.png')}}" alt="public">
                 <span>
-                    {{translate('messages.my_'.$title.'_info')}}
+                    {{'mi \'.$título.\' información'}}
                 </span>
             </h2>
             <div class="my-2">
-                <a class="btn btn--primary" href="{{route('vendor.shop.edit')}}"><i class="tio-edit"></i>{{translate('messages.edit_'.$title.'_information')}}</a>
+                <a class="btn btn--primary" href="{{route('vendor.shop.edit')}}"><i class="tio-edit"></i>{{'editar \'.$título.\' información'}}</a>
             </div>
         </div>
     </div>
@@ -48,24 +48,24 @@
 
                 <div class="my-resturant--content">
                     <span class="d-block mb-1 pb-1">
-                        <strong> {{translate('messages.name')}} :</strong>{{$shop->name}}
+                        <strong> {{'nombre'}} :</strong>{{$shop->name}}
                     </span>
                     <span class="d-block mb-1 pb-1">
-                        <strong>{{translate('messages.phone')}} :</strong> <a href="tel:{{$shop->phone}}">{{$shop->phone}}</a>
+                        <strong>{{'teléfono'}} :</strong> <a href="tel:{{$shop->phone}}">{{$shop->phone}}</a>
                     </span>
                     <span class="d-block mb-1 pb-1">
-                        <strong>{{translate('messages.address')}} : </strong> {{$shop->address}}
+                        <strong>{{'DIRECCIÓN'}} : </strong> {{$shop->address}}
                     </span>
                     <span class="d-block mb-1 pb-1">
-                        <strong>{{translate('messages.Business_Plan')}} : </strong> {{translate($shop->store_business_model)}}
+                        <strong>{{'plan de negocios'}} : </strong> {{translate($shop->store_business_model)}}
                     </span>
                     <span class="d-block mb-1 pb-1">
                         @if ($shop->store_business_model == 'commission')
 
-                        <strong>{{translate('messages.admin_commission')}} : </strong> {{(isset($shop->comission)? $shop->comission:\App\Models\BusinessSetting::where('key','admin_commission')->first()->value)}}%
+                        <strong>{{'comisión administrativa'}} : </strong> {{(isset($shop->comission)? $shop->comission:\App\Models\BusinessSetting::where('key','admin_commission')->first()->value)}}%
                         @elseif(in_array($shop->store_business_model ,['subscription','unsubscribed']))
 
-                        <strong>{{translate('Subscription_plan')}} : </strong> {{ $shop?->store_sub_update_application?->package?->package_name}}
+                        <strong>{{'Plan de suscripción'}} : </strong> {{ $shop?->store_sub_update_application?->package?->package_name}}
                         @endif
 
                     </span>
@@ -78,7 +78,7 @@
         <div class="card-header">
             <h5 class="card-title toggle-switch toggle-switch-sm d-flex justify-content-between">
                 <span class="card-header-icon mr-1"><i class="tio-dashboard"></i></span>
-                <span>{{translate('Announcement')}}</span><span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('This_feature_is_for_sharing_important_information_or_announcements_related_to_the_'.$title.'.')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.This_feature_is_for_sharing_important_information_or_announcements_related_to_the_'.$title)}}"></span>
+                <span>{{'Anuncio'}}</span><span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{'Esta función es para compartir información importante o anuncios relacionados con el \'.$título\'.'}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.This_feature_is_for_sharing_important_information_or_announcements_related_to_the_'.$title)}}"></span>
             </h5>
             <label class="toggle-switch toggle-switch-sm" for="announcement_status">
                 <input class="toggle-switch-input dynamic-checkbox" type="checkbox" id="announcement_status"
@@ -86,10 +86,10 @@
                        data-type="status"
                        data-image-on='{{asset('assets/admin/img/modal')}}/digital-payment-on.png'
                        data-image-off="{{asset('assets/admin/img/modal')}}/digital-payment-off.png"
-                       data-title-on="{{translate('Do_you_want_to_enable_the_announcement')}}"
-                       data-title-off="{{translate('Do_you_want_to_disable_the_announcement')}}"
-                       data-text-on="<p>{{translate('User_will_able_to_see_the_Announcement_on_the_store_page.')}}</p>"
-                       data-text-off="<p>{{translate('User_will_not_be_able_to_see_the_Announcement_on_the_store_page')}}</p>"
+                       data-title-on="{{'¿Quieres habilitar el anuncio?'}}"
+                       data-title-off="{{'¿Quieres desactivar el anuncio?'}}"
+                       data-text-on="<p>{{'El usuario podrá ver el anuncio en la página de la tienda.'}}</p>"
+                       data-text-off="<p>{{'El usuario no podrá ver el anuncio en la página de la tienda.'}}</p>"
                        name="announcement" value="1" {{$shop->announcement?'checked':''}}>
                                 <span class="toggle-switch-label">
                                     <span class="toggle-switch-indicator"></span>
@@ -104,9 +104,9 @@
         <div class="card-body">
             <form action="{{route('vendor.shop.update-message')}}" method="post">
             @csrf
-                <textarea name="announcement_message" id="" class="form-control" rows="5" placeholder="{{ translate('messages.ex_:_ABC_Company') }}">{{ $shop->announcement_message??'' }}</textarea>
+                <textarea name="announcement_message" id="" class="form-control" rows="5" placeholder="{{ 'Ej: Compañía ABC' }}">{{ $shop->announcement_message??'' }}</textarea>
                 <div class="justify-content-end btn--container mt-2">
-                    <button type="submit" class="btn btn--primary">{{translate('publish')}}</button>
+                    <button type="submit" class="btn btn--primary">{{'publicar'}}</button>
                 </div>
             </form>
         </div>

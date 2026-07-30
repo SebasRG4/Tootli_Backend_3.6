@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('Update Banner'))
+@section('title','Actualizar banner')
 
 @section('content')
     <div class="content container-fluid">
@@ -11,7 +11,7 @@
                     <img src="{{asset('assets/admin/img/edit.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.update_banner')}}
+                    {{'banner de actualización'}}
                 </span>
             </h1>
         </div>
@@ -28,7 +28,7 @@
                                             <li class="nav-item">
                                                 <a class="nav-link lang_link active"
                                                 href="#"
-                                                id="default-link">{{translate('messages.default')}}</a>
+                                                id="default-link">{{'por defecto'}}</a>
                                             </li>
                                             @foreach ($language as $lang)
                                                 <li class="nav-item">
@@ -40,8 +40,8 @@
                                         </ul>
                                         <div class="lang_form" id="default-form">
                                             <div class="form-group error-wrapper">
-                                                <label class="input-label" for="default_title">{{translate('messages.title')}} ({{translate('messages.default')}})</label>
-                                                <input type="text" name="title[]" id="default_title" class="form-control" placeholder="{{translate('messages.new_banner')}}" required value="{{$banner?->getRawOriginal('title')}}">
+                                                <label class="input-label" for="default_title">{{'título'}} ({{'por defecto'}})</label>
+                                                <input type="text" name="title[]" id="default_title" class="form-control" placeholder="{{'nueva pancarta'}}" required value="{{$banner?->getRawOriginal('title')}}">
                                             </div>
                                             <input type="hidden" name="lang[]" value="default">
                                         </div>
@@ -59,8 +59,8 @@
                                             ?>
                                             <div class="d-none lang_form" id="{{$lang}}-form">
                                                 <div class="form-group error-wrapper">
-                                                    <label class="input-label" for="{{$lang}}_title">{{translate('messages.title')}} ({{strtoupper($lang)}})</label>
-                                                    <input type="text" name="title[]" id="{{$lang}}_title" class="form-control" placeholder="{{translate('messages.new_banner')}}" value="{{$translate[$lang]['title']??''}}">
+                                                    <label class="input-label" for="{{$lang}}_title">{{'título'}} ({{strtoupper($lang)}})</label>
+                                                    <input type="text" name="title[]" id="{{$lang}}_title" class="form-control" placeholder="{{'nueva pancarta'}}" value="{{$translate[$lang]['title']??''}}">
                                                 </div>
                                                 <input type="hidden" name="lang[]" value="{{$lang}}">
                                             </div>
@@ -68,16 +68,16 @@
                                     @else
                                     <div id="default-form">
                                         <div class="form-group error-wrapper">
-                                            <label class="input-label" for="exampleFormControlInput1">{{translate('messages.title')}} ({{ translate('messages.default') }})</label>
-                                            <input type="text" name="title[]" class="form-control" placeholder="{{translate('messages.new_banner')}}" value="{{$banner['title']}}" maxlength="100">
+                                            <label class="input-label" for="exampleFormControlInput1">{{'título'}} ({{ 'por defecto' }})</label>
+                                            <input type="text" name="title[]" class="form-control" placeholder="{{'nueva pancarta'}}" value="{{$banner['title']}}" maxlength="100">
                                         </div>
                                         <input type="hidden" name="lang[]" value="default">
                                     </div>
                                     @endif
                                     <div class="form-group error-wrapper">
-                                        <label class="input-label" for="title">{{translate('messages.zone')}}</label>
+                                        <label class="input-label" for="title">{{'zona'}}</label>
                                         <select name="zone_id" id="zone" class="form-control js-select2-custom">
-                                            <option  disabled selected>---{{translate('messages.select')}}---</option>
+                                            <option  disabled selected>---{{'seleccionar'}}---</option>
                                             @foreach($zones as $zone)
                                                 @if(isset(auth('admin')->user()->zone_id))
                                                     @if(auth('admin')->user()->zone_id == $zone->id)
@@ -90,11 +90,11 @@
                                         </select>
                                     </div>
                                     <div class="form-group error-wrapper">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.banner_type')}}</label>
+                                        <label class="input-label" for="exampleFormControlInput1">{{'tipo de banner'}}</label>
                                         <select name="banner_type" id="banner_type" class="form-control">
-                                            <option value="store_wise" {{$banner->type == 'store_wise'? 'selected':'' }}>{{translate('messages.store_wise')}}</option>
-                                            <option value="item_wise" {{$banner->type == 'item_wise'? 'selected':'' }}>{{translate('messages.item_wise')}}</option>
-                                            <option value="default" {{$banner->type == 'default'? 'selected':'' }}>{{translate('messages.default')}}</option>
+                                            <option value="store_wise" {{$banner->type == 'store_wise'? 'selected':'' }}>{{'tienda sabia'}}</option>
+                                            <option value="item_wise" {{$banner->type == 'item_wise'? 'selected':'' }}>{{'artículo sabio'}}</option>
+                                            <option value="default" {{$banner->type == 'default'? 'selected':'' }}>{{'por defecto'}}</option>
                                         </select>
                                     </div>
                                     <div class="form-group error-wrapper">
@@ -107,7 +107,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group mb-0 error-wrapper" id="store_wise">
-                                        <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.store')}}<span
+                                        <label class="input-label" for="exampleFormControlSelect1">{{'Negocio'}}<span
                                                 class="input-label-secondary"></span></label>
                                         <select name="store_id" id="store_id" class="js-data-example-ajax" id="resturant_ids"  title="Select Restaurant">
                                         @if($banner->type=='store_wise')
@@ -119,22 +119,22 @@
                                         </select>
                                     </div>
                                     <div class="form-group mb-0 error-wrapper" id="item_wise">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.select_item')}}</label>
-                                        <select name="item_id" id="choice_item" class="form-control js-select2-custom" placeholder="{{translate('messages.select_item')}}">
+                                        <label class="input-label" for="exampleFormControlInput1">{{'seleccionar elemento'}}</label>
+                                        <select name="item_id" id="choice_item" class="form-control js-select2-custom" placeholder="{{'seleccionar elemento'}}">
 
                                         </select>
                                     </div>
                                     <div class="form-group mb-0 error-wrapper" id="default">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.default_link')}}</label>
-                                        <input type="text" name="default_link" class="form-control" value="{{ $banner->default_link }}" placeholder="{{translate('messages.default_link')}}">
+                                        <label class="input-label" for="exampleFormControlInput1">{{'enlace predeterminado'}}</label>
+                                        <input type="text" name="default_link" class="form-control" value="{{ $banner->default_link }}" placeholder="{{'enlace predeterminado'}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="error-wrapper">
                                         <div class="h-100 d-flex flex-column">
                                             <label class="mt-auto mb-0 d-block text-center">
-                                                {{translate('messages.banner_image')}}
-                                                <small class="text-danger">* ( {{translate('messages.ratio')}} 900x300 )</small>
+                                                {{'imagen de banner'}}
+                                                <small class="text-danger">* ( {{'relación'}} 900x300 )</small>
                                             </label>
                                             <div class="text-center py-3 my-auto">
                                                 <img class="img--vertical onerror-image" id="viewer" data-onerror-image="{{asset('assets/admin/img/900x400/img1.jpg')}}" src="{{ $banner['image_full_url'] }}"
@@ -143,15 +143,15 @@
                                             <div class="custom-file">
                                                 <input type="file" name="image" id="customFileEg1" class="custom-file-input"
                                                     accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                                <label class="custom-file-label" for="customFileEg1">{{translate('messages.choose_file')}}</label>
+                                                <label class="custom-file-label" for="customFileEg1">{{'elegir archivo'}}</label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-12 mt-4">
                                     <div class="btn--container justify-content-end">
-                                        <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                                        <button type="submit" class="btn btn--primary">{{translate('messages.update')}}</button>
+                                        <button type="reset" id="reset_btn" class="btn btn--reset">{{'reiniciar'}}</button>
+                                        <button type="submit" class="btn btn--primary">{{'actualizar'}}</button>
                                     </div>
                                 </div>
                             </div>
@@ -275,7 +275,7 @@
                             });
                         }
                     } else {
-                        toastr.success("{{translate('messages.banner_updated_successfully')}}", {
+                        toastr.success("{{'banner actualizado exitosamente'}}", {
                             CloseButton: true,
                             ProgressBar: true
                         });

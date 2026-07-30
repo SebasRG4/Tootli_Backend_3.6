@@ -1,11 +1,11 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.dm_strike_appeals_title'))
+@section('title', 'título de apelaciones de huelga dm')
 
 @section('content')
     <div class="content container-fluid">
         <div class="page-header">
-            <h1 class="page-header-title">{{ translate('messages.dm_strike_appeals_title') }}</h1>
+            <h1 class="page-header-title">{{ 'título de apelaciones de huelga dm' }}</h1>
         </div>
         <div class="card">
             <div class="card-body p-0">
@@ -13,12 +13,12 @@
                     <table class="table table-hover mb-0">
                         <thead class="thead-light">
                             <tr>
-                                <th>{{ translate('messages.dm_strike_appeal_dm') }}</th>
-                                <th>{{ translate('messages.dm_strike_type') }}</th>
-                                <th>{{ translate('messages.order') }}</th>
-                                <th>{{ translate('messages.dm_strike_appeal_text') }}</th>
-                                <th>{{ translate('messages.dm_strike_appealed_at') }}</th>
-                                <th>{{ translate('messages.actions') }}</th>
+                                <th>{{ 'dm apelación de huelga dm' }}</th>
+                                <th>{{ 'tipo de ataque dm' }}</th>
+                                <th>{{ 'Pedido' }}</th>
+                                <th>{{ 'texto de apelación de huelga dm' }}</th>
+                                <th>{{ 'huelga dm apelada en' }}</th>
+                                <th>{{ 'comportamiento' }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -47,18 +47,18 @@
                                         <form method="post" action="{{ route('admin.users.delivery-man.strike.appeals.resolve', $a->id) }}" class="d-inline">
                                             @csrf
                                             <input type="hidden" name="resolution" value="accepted">
-                                            <button type="submit" class="btn btn-sm btn-outline-success mb-1">{{ translate('messages.dm_strike_appeal_accept') }}</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-success mb-1">{{ 'apelación de huelga dm aceptar' }}</button>
                                         </form>
                                         <form method="post" action="{{ route('admin.users.delivery-man.strike.appeals.resolve', $a->id) }}" class="d-inline">
                                             @csrf
                                             <input type="hidden" name="resolution" value="rejected">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger">{{ translate('messages.dm_strike_appeal_reject') }}</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">{{ 'Rechazo de apelación de huelga de DM' }}</button>
                                         </form>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center text-muted py-4">{{ translate('messages.no_data_found') }}</td>
+                                    <td colspan="6" class="text-center text-muted py-4">{{ 'no se encontraron datos' }}</td>
                                 </tr>
                             @endforelse
                         </tbody>

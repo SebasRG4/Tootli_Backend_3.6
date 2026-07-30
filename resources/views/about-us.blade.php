@@ -1,6 +1,6 @@
 @extends('layouts.landing.app')
 
-@section('title',translate('messages.about_us'))
+@section('title','sobre nosotros')
 
 @section('content')
         <!-- ==== About Section ==== -->

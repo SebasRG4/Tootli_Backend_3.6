@@ -1,5 +1,5 @@
 @extends('layouts.landing.app')
-@section('title', translate('messages.vendor_registration'))
+@section('title', 'registro de proveedores')
 @push('css_or_js')
     <link rel="stylesheet" href="{{ asset('assets/admin/css/toastr.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/admin/css/view-pages/vendor-registration.css') }}">
@@ -65,10 +65,10 @@
 
                         {{-- @if (! (isset($payment_status) && $payment_status == 'fail'))
                         <div class="text-center py-2">
-                            {{ translate('or') }}
+                            {{ 'o' }}
                         </div>
                         <div class="text-center">
-                            <a href="{{ route('home',['new_user'=> true]) }}" class="text-base font-bold">{{ translate('Continue to Home Page') }}</a>
+                            <a href="{{ route('home',['new_user'=> true]) }}" class="text-base font-bold">{{ 'Continuar a la página de inicio' }}</a>
                         </div>
                         @endif --}}
                     </div>

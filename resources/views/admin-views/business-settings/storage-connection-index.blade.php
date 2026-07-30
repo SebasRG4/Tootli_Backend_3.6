@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.Storage_Connection'))
+@section('title', 'Conexión de almacenamiento')
 
 
 @section('content')
@@ -12,7 +12,7 @@
                     <img src="{{asset('assets/admin/img/captcha.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.storage_connection_credentials_setup')}}
+                    {{'configuración de credenciales de conexión de almacenamiento'}}
                 </span>
             </h1>
             @include('admin-views.business-settings.partials.third-party-links')
@@ -21,7 +21,7 @@
         <div class="card border-0">
             <div class="card-header card-header-shadow">
                 <h5 class="card-title align-items-center">
-                    {{translate('Storage_Connection_Settings')}}
+                    {{'Configuración de conexión de almacenamiento'}}
                 </h5>
             </div>
             <div class="card-body">
@@ -34,9 +34,9 @@
                             <label class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
                                 <span class="pr-1 d-flex align-items-center switch--label">
                                     <span class="line--limit-1">
-                                        {{translate('Local Storage')}}
+                                        {{'Almacenamiento local'}}
                                     </span>
-                                    <span class="form-label-secondary text-danger d-flex" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('If_enabled_System_will_store_all_files_and_images_to_local_storage')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="Veg/non-veg toggle"> * </span>
+                                    <span class="form-label-secondary text-danger d-flex" data-toggle="tooltip" data-placement="right" data-original-title="{{'Si está habilitado, el sistema almacenará todos los archivos e imágenes en el almacenamiento local.'}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="Veg/non-veg toggle"> * </span>
                                 </span>
                                 <input type="hidden" name="toggle_type" value="local_storage">
                                 <input
@@ -45,10 +45,10 @@
                                     data-type="status"
                                     data-image-on="{{ asset('assets/admin/img/modal/local_storage.png') }}"
                                     data-image-off="{{ asset('assets/admin/img/modal/local_storage.png') }}"
-                                    data-title-on="{{ translate('By Turning ON Local Storage Option') }}"
-                                    data-title-off="{{ translate('By Turning OFF Local Storage Option') }}"
-                                    data-text-on="<p>{{ translate('System_will_store_all_files_and_images_to_local_storage') }}</p>"
-                                    data-text-off="<p>{{ translate('System_will_not_store_all_files_and_images_to_local_storage') }}</p>"
+                                    data-title-on="{{ 'Activando la opción de almacenamiento local' }}"
+                                    data-title-off="{{ 'Desactivando la opción de almacenamiento local' }}"
+                                    data-text-on="<p>{{ 'El sistema almacenará todos los archivos e imágenes en el almacenamiento local.' }}</p>"
+                                    data-text-off="<p>{{ 'El sistema no almacenará todos los archivos e imágenes en el almacenamiento local' }}</p>"
                                     class="status toggle-switch-input dynamic-checkbox"
                                     name="status" value="1" {{$config?($config==1?'checked':''):''}}>
                                 <span class="toggle-switch-label text">
@@ -65,9 +65,9 @@
                             <label class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
                                 <span class="pr-1 d-flex align-items-center switch--label">
                                     <span class="line--limit-1">
-                                        {{translate('3rd Party Storage')}}
+                                        {{'Almacenamiento de terceros'}}
                                     </span>
-                                    <span class="form-label-secondary text-danger d-flex" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('If_enabled_System_will_store_all_files_and_images_to_3rd_party_storage')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="Veg/non-veg toggle"> * </span>
+                                    <span class="form-label-secondary text-danger d-flex" data-toggle="tooltip" data-placement="right" data-original-title="{{'Si está habilitado, el sistema almacenará todos los archivos e imágenes en un almacenamiento de terceros.'}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="Veg/non-veg toggle"> * </span>
                                 </span>
                                 <input type="hidden" name="toggle_type" value="3rd_party_storage">
                                 <input
@@ -76,10 +76,10 @@
                                     data-type="status"
                                     data-image-on="{{ asset('assets/admin/img/modal/3rd_party_storage.png') }}"
                                     data-image-off="{{ asset('assets/admin/img/modal/3rd_party_storage.png') }}"
-                                    data-title-on="{{ translate('By Turning ON 3rd Party Storage Option') }}"
-                                    data-title-off="{{ translate('By Turning OFF 3rd Party Storage Option') }}"
-                                    data-text-on="<p>{{ translate('System_will_store_all_files_and_images_to_3rd_party_storage') }}</p>"
-                                    data-text-off="<p>{{ translate('System_will_not_store_all_files_and_images_to_3rd_party_storage') }}</p>"
+                                    data-title-on="{{ 'Activando la opción de almacenamiento de terceros' }}"
+                                    data-title-off="{{ 'Desactivando la opción de almacenamiento de terceros' }}"
+                                    data-text-on="<p>{{ 'El sistema almacenará todos los archivos e imágenes en un almacenamiento de terceros' }}</p>"
+                                    data-text-off="<p>{{ 'El sistema no almacenará todos los archivos e imágenes en un almacenamiento de terceros' }}</p>"
                                     class="status toggle-switch-input dynamic-checkbox"
                                     name="status" value="1" {{$config?($config==1?'checked':''):''}}>
                                 <span class="toggle-switch-label text">
@@ -96,9 +96,9 @@
         <div class="card mt-3">
             <div class="p-4 card-header-shadow">
                 <h4 class="card-title align-items-center">
-                    {{translate('S3_Credential')}}
+                    {{'Credencial S3'}}
                 </h4>
-                <span>{{ translate('The_Access_Key_ID_is_a_publicly_accessible_identifier_used_to_authenticate_requests_to_S3.') }} <a target="_blank" href="https://aws.amazon.com/s3/">{{ translate('Learn_More') }}</a></span>            </div>
+                <span>{{ 'El ID de clave de acceso es un identificador de acceso público que se utiliza para autenticar solicitudes a S3.' }} <a target="_blank" href="https://aws.amazon.com/s3/">{{ 'Más información' }}</a></span>            </div>
             <div class="card-body">
                 <div class="mt-2 px-3">
                     <form
@@ -107,7 +107,7 @@
                         @csrf
                                 <div class="border pt-5 radius-10 row mb-3">
                                     <div class="col-lg-4 col-sm-6 p-10px">
-                                        <label for="key" class="form-label">{{translate('messages.key')}}</label>
+                                        <label for="key" class="form-label">{{'llave'}}</label>
                                     </div>
                                     <div class="col-lg-8 col-sm-6">
                                         <div class="form-group">
@@ -119,7 +119,7 @@
                                 </div>
                                 <div class="border pt-5 radius-10 row mb-3">
                                     <div class="col-lg-4 col-sm-6 p-10px">
-                                        <label for="secret" class="form-label">{{translate('messages.secret')}}</label>
+                                        <label for="secret" class="form-label">{{'secreto'}}</label>
                                     </div>
                                     <div class="col-lg-8 col-sm-6">
                                         <div class="form-group">
@@ -131,7 +131,7 @@
                                 </div>
                                 <div class="border pt-5 radius-10 row mb-3">
                                     <div class="col-lg-4 col-sm-6 p-10px">
-                                        <label for="region" class="form-label">{{translate('messages.region')}}</label>
+                                        <label for="region" class="form-label">{{'región'}}</label>
                                     </div>
                                     <div class="col-lg-8 col-sm-6">
                                         <div class="form-group">
@@ -143,7 +143,7 @@
                                 </div>
                                 <div class="border pt-5 radius-10 row mb-3">
                                     <div class="col-lg-4 col-sm-6 p-10px">
-                                        <label for="bucket" class="form-label">{{translate('messages.bucket')}}</label>
+                                        <label for="bucket" class="form-label">{{'balde'}}</label>
                                     </div>
                                     <div class="col-lg-8 col-sm-6">
                                         <div class="form-group">
@@ -155,7 +155,7 @@
                                 </div>
                                 <div class="border pt-5 radius-10 row mb-3">
                                     <div class="col-lg-4 col-sm-6 p-10px">
-                                        <label for="url" class="form-label">{{translate('messages.url')}}</label>
+                                        <label for="url" class="form-label">{{'URL'}}</label>
                                     </div>
                                     <div class="col-lg-8 col-sm-6">
                                         <div class="form-group">
@@ -167,7 +167,7 @@
                                 </div>
                                 <div class="border pt-5 radius-10 row mb-3">
                                     <div class="col-lg-4 col-sm-6 p-10px">
-                                        <label for="end_point" class="form-label">{{translate('messages.end_point')}}</label>
+                                        <label for="end_point" class="form-label">{{'punto final'}}</label>
                                     </div>
                                     <div class="col-lg-8 col-sm-6">
                                         <div class="form-group">
@@ -178,8 +178,8 @@
                                     </div>
                                 </div>
                         <div class="btn--container justify-content-end">
-                            <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                            <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}" class="btn btn--primary call-demo">{{translate('messages.save')}}</button>
+                            <button type="reset" class="btn btn--reset">{{'reiniciar'}}</button>
+                            <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}" class="btn btn--primary call-demo">{{'ahorrar'}}</button>
                         </div>
                     </form>
                 </div>

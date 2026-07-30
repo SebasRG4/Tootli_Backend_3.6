@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.edit_section'))
+@section('title', 'editar sección')
 
 @push('css_or_js')
     <link href="{{asset('assets/admin/css/select2.min.css')}}" rel="stylesheet" />
@@ -13,7 +13,7 @@
                 <span class="page-header-icon">
                     <img src="{{asset('assets/admin/img/banner.png')}}" class="w--26" alt="">
                 </span>
-                <span>{{translate('messages.edit_section')}}</span>
+                <span>{{'editar sección'}}</span>
             </h1>
         </div>
 
@@ -26,7 +26,7 @@
                         <!-- Image -->
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{translate('messages.banner_image')}}</label>
+                                <label class="form-label">{{'imagen de banner'}}</label>
                                 <label class="__upload-img aspect-4-1 m-auto d-block">
                                     <div class="img">
                                         <img class="onerror-image" id="viewer-edit"
@@ -37,16 +37,16 @@
                                     <input type="file" name="image" accept="image/*" hidden
                                         onchange="document.getElementById('viewer-edit').src = window.URL.createObjectURL(this.files[0])">
                                 </label>
-                                <p class="text-center mt-2 text-muted">{{translate('messages.recommended_ratio_4_1')}}</p>
+                                <p class="text-center mt-2 text-muted">{{'proporción recomendada 4 1'}}</p>
                             </div>
                         </div>
 
                         <!-- Stores -->
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{translate('messages.select_stores')}}</label>
+                                <label class="form-label">{{'tiendas selectas'}}</label>
                                 <select name="stores[]" class="form-control select2-stores" multiple
-                                    data-placeholder="{{translate('messages.select_stores')}}">
+                                    data-placeholder="{{'tiendas selectas'}}">
                                     @foreach($stores as $store)
                                         <option value="{{$store->id}}"
                                             {{ in_array($store->id, $selectedStores) ? 'selected' : '' }}>
@@ -63,7 +63,7 @@
                                     <span class="toggle-switch-label">
                                         <span class="toggle-switch-indicator"></span>
                                     </span>
-                                    <span class="ml-2">{{translate('messages.active')}}</span>
+                                    <span class="ml-2">{{'activo'}}</span>
                                 </label>
                             </div>
                         </div>
@@ -71,8 +71,8 @@
 
                     <div class="btn--container justify-content-end mt-3">
                         <a href="{{ route('admin.dynamic-section-ecommerce.index') }}"
-                            class="btn btn--reset">{{translate('messages.cancel')}}</a>
-                        <button type="submit" class="btn btn--primary">{{translate('messages.update')}}</button>
+                            class="btn btn--reset">{{'Cancelar'}}</a>
+                        <button type="submit" class="btn btn--primary">{{'actualizar'}}</button>
                     </div>
                 </form>
             </div>
@@ -85,7 +85,7 @@
     <script>
         $(document).ready(function () {
             $('.select2-stores').select2({
-                placeholder: "{{translate('messages.select_stores')}}",
+                placeholder: "{{'tiendas selectas'}}",
                 allowClear: true
             });
         });

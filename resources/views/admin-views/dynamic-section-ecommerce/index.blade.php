@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.dynamic_sections_ecommerce'))
+@section('title', 'comercio electrónico secciones dinámicas')
 
 @push('css_or_js')
     <link href="{{asset('assets/admin/css/select2.min.css')}}" rel="stylesheet" />
@@ -47,7 +47,7 @@
                 <span class="page-header-icon">
                     <img src="{{asset('assets/admin/img/banner.png')}}" class="w--26" alt="">
                 </span>
-                <span>{{translate('messages.dynamic_sections_ecommerce')}}</span>
+                <span>{{'comercio electrónico secciones dinámicas'}}</span>
             </h1>
         </div>
 
@@ -56,7 +56,7 @@
             <div class="card-header">
                 <h5 class="card-title">
                     <span class="card-header-icon"><i class="tio-add-circle"></i></span>
-                    <span>{{translate('messages.add_new_section')}}</span>
+                    <span>{{'agregar nueva sección'}}</span>
                 </h5>
             </div>
             <div class="card-body">
@@ -67,7 +67,7 @@
                         <!-- Image Upload -->
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{translate('messages.banner_image')}} <span
+                                <label class="form-label">{{'imagen de banner'}} <span
                                         class="text-danger">*</span></label>
                                 <label class="__upload-img aspect-4-1 m-auto d-block">
                                     <div class="img">
@@ -79,16 +79,16 @@
                                     <input type="file" name="image" accept="image/*" required hidden
                                         onchange="document.getElementById('viewer-create').src = window.URL.createObjectURL(this.files[0])">
                                 </label>
-                                <p class="text-center mt-2 text-muted">{{translate('messages.recommended_ratio_4_1')}}</p>
+                                <p class="text-center mt-2 text-muted">{{'proporción recomendada 4 1'}}</p>
                             </div>
                         </div>
 
                         <!-- Store Select -->
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{translate('messages.select_stores')}}</label>
+                                <label class="form-label">{{'tiendas selectas'}}</label>
                                 <select name="stores[]" class="form-control select2-stores" multiple
-                                    data-placeholder="{{translate('messages.select_stores')}}">
+                                    data-placeholder="{{'tiendas selectas'}}">
                                     @foreach($stores as $store)
                                         <option value="{{$store->id}}">{{$store->name}}</option>
                                     @endforeach
@@ -102,15 +102,15 @@
                                     <span class="toggle-switch-label">
                                         <span class="toggle-switch-indicator"></span>
                                     </span>
-                                    <span class="ml-2">{{translate('messages.active')}}</span>
+                                    <span class="ml-2">{{'activo'}}</span>
                                 </label>
                             </div>
                         </div>
                     </div>
 
                     <div class="btn--container justify-content-end">
-                        <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                        <button type="submit" class="btn btn--primary">{{translate('messages.submit')}}</button>
+                        <button type="reset" class="btn btn--reset">{{'reiniciar'}}</button>
+                        <button type="submit" class="btn btn--primary">{{'entregar'}}</button>
                     </div>
                 </form>
             </div>
@@ -120,10 +120,10 @@
         <div class="card">
             <div class="card-header border-0 py-2">
                 <h5 class="card-title">
-                    {{translate('messages.sections_list')}}
+                    {{'lista de secciones'}}
                     <span class="badge badge-soft-dark ml-2">{{$sections->total()}}</span>
                 </h5>
-                <small class="text-muted"><i class="tio-drag"></i> {{translate('messages.drag_to_reorder')}}</small>
+                <small class="text-muted"><i class="tio-drag"></i> {{'arrastrar para reordenar'}}</small>
             </div>
             <div class="card-body pt-0">
                 <div class="table-responsive">
@@ -131,11 +131,11 @@
                         <thead class="thead-light">
                             <tr>
                                 <th class="border-0" style="width: 50px;"></th>
-                                <th class="border-0">{{translate('messages.sl')}}</th>
-                                <th class="border-0">{{translate('messages.image')}}</th>
-                                <th class="border-0">{{translate('messages.stores')}}</th>
-                                <th class="border-0">{{translate('messages.status')}}</th>
-                                <th class="border-0 text-center">{{translate('messages.action')}}</th>
+                                <th class="border-0">{{'SL'}}</th>
+                                <th class="border-0">{{'imagen'}}</th>
+                                <th class="border-0">{{'Negocios'}}</th>
+                                <th class="border-0">{{'estado'}}</th>
+                                <th class="border-0 text-center">{{'acción'}}</th>
                             </tr>
                         </thead>
                         <tbody id="sortable-sections">
@@ -155,7 +155,7 @@
                                     </td>
                                     <td>
                                         <span class="badge badge-soft-info">
-                                            {{$section->stores_count}} {{translate('messages.stores')}}
+                                            {{$section->stores_count}} {{'Negocios'}}
                                         </span>
                                     </td>
                                     <td>
@@ -172,13 +172,13 @@
                                         <div class="btn--container justify-content-center">
                                             <a class="btn action-btn btn--primary btn-outline-primary"
                                                 href="{{route('admin.dynamic-section-ecommerce.edit', $section->id)}}"
-                                                title="{{translate('messages.edit')}}">
+                                                title="{{'editar'}}">
                                                 <i class="tio-edit"></i>
                                             </a>
                                             <a class="btn action-btn btn--danger btn-outline-danger delete-btn"
                                                 href="javascript:"
                                                 data-url="{{route('admin.dynamic-section-ecommerce.delete', $section->id)}}"
-                                                title="{{translate('messages.delete')}}">
+                                                title="{{'borrar'}}">
                                                 <i class="tio-delete-outlined"></i>
                                             </a>
                                         </div>
@@ -189,7 +189,7 @@
                                     <td colspan="6" class="text-center py-5">
                                         <img src="{{asset('assets/admin/img/empty-table.png')}}" alt="" class="mb-3"
                                             style="width:100px;">
-                                        <p class="text-muted">{{translate('messages.no_data_found')}}</p>
+                                        <p class="text-muted">{{'no se encontraron datos'}}</p>
                                     </td>
                                 </tr>
                             @endforelse
@@ -210,7 +210,7 @@
     <script>
         $(document).ready(function () {
             $('.select2-stores').select2({
-                placeholder: "{{translate('messages.select_stores')}}",
+                placeholder: "{{'tiendas selectas'}}",
                 allowClear: true
             });
 
@@ -233,14 +233,14 @@
                             sections: sections
                         },
                         success: function (response) {
-                            toastr.success("{{translate('messages.order_updated_successfully')}}");
+                            toastr.success("{{'pedido actualizado exitosamente'}}");
                             // Update SL numbers
                             $('#sortable-sections tr.sortable-row').each(function (index) {
                                 $(this).find('td:nth-child(2)').text(index + 1);
                             });
                         },
                         error: function () {
-                            toastr.error("{{translate('messages.failed_to_update_order')}}");
+                            toastr.error("{{'no se pudo actualizar el pedido'}}");
                             location.reload();
                         }
                     });
@@ -250,20 +250,20 @@
             $('.change-status').on('change', function () {
                 let url = $(this).data('url');
                 $.get(url, function () {
-                    toastr.success("{{translate('messages.status_updated')}}");
+                    toastr.success("{{'estado actualizado'}}");
                 });
             });
 
             $('.delete-btn').on('click', function () {
                 let url = $(this).data('url');
                 Swal.fire({
-                    title: "{{translate('messages.are_you_sure')}}",
-                    text: "{{translate('messages.you_wont_be_able_to_revert_this')}}",
+                    title: "{{'¿está seguro?'}}",
+                    text: "{{'no podrás revertir esto'}}",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#FC6A57',
                     cancelButtonColor: '#363636',
-                    confirmButtonText: "{{translate('messages.yes_delete_it')}}"
+                    confirmButtonText: "{{'si borrarlo'}}"
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({

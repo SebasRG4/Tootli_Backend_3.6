@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.Delivery Man Preview'))
+@section('title','Vista previa del repartidor')
 
 @section('content')
 <div class="content container-fluid">
@@ -57,12 +57,12 @@
                             </div>
                             <div>
                                 <div class="mb-1 d-flex align-items-center gap-2">
-                                    <h3 class=" text-danger-dark mb-0 fs-18 code__copy max-w-150 line--limit-1">{{ translate('messages.H9FJ8F7KJ') }}</h3>
+                                    <h3 class=" text-danger-dark mb-0 fs-18 code__copy max-w-150 line--limit-1">{{ 'H9FJ8F7KJ' }}</h3>
                                     <button type="button" class="btn p-0 m-0 outline-0">
                                         <i class="tio-copy theme-clr fs-16"></i>
                                     </button>
                                 </div>
-                                <p class="text-dark fs-14 mb-0">{{ translate('messages.Referral Code') }}</p>
+                                <p class="text-dark fs-14 mb-0">{{ 'Código de referencia' }}</p>
                             </div>
                         </div>
                     </div>
@@ -74,8 +74,8 @@
                                 <img src="{{asset('assets/admin/img/e-referred-total.png')}}" class="w--26" alt="">
                             </div>
                             <div>
-                                <h3 class="text-00AA6D mb-1 fs-26">{{ translate('messages.20') }}</h3>
-                                <p class="text-dark fs-14 mb-0">{{ translate('messages.Total Referred') }}</p>
+                                <h3 class="text-00AA6D mb-1 fs-26">{{ '20' }}</h3>
+                                <p class="text-dark fs-14 mb-0">{{ 'Total referido' }}</p>
                             </div>
                         </div>
                     </div>
@@ -87,8 +87,8 @@
                                 <img src="{{asset('assets/admin/img/e-referral-earned.png')}}" class="w--26" alt="">
                             </div>
                             <div>
-                                <h3 class="title mb-1 fs-26">{{ translate('messages.$15.00') }}</h3>
-                                <p class="text-dark fs-14 mb-0">{{ translate('messages.Referral Earned') }}</p>
+                                <h3 class="title mb-1 fs-26">{{ '$15.00' }}</h3>
+                                <p class="text-dark fs-14 mb-0">{{ 'Referencia obtenida' }}</p>
                             </div>
                         </div>
                     </div>
@@ -100,7 +100,7 @@
     <div class="card">
         <div class="card-header flex-wrap pt-3 pb-3 border-0 gap-2">
             <div class="search--button-wrapper mr-1">
-                <h4 class="card-title fs-16 text-dark">{{ translate('messages.Refer & Earn History')}}</h4>
+                <h4 class="card-title fs-16 text-dark">{{ 'Referir y ganar historial'}}</h4>
                 <form class="search-form min--260">
                     <div class="input-group input--group">
                         <input id="datatableSearch_" type="search" name="search" class="form-control h--40px" placeholder="Search Keywords" value="" aria-label="Search" tabindex="1">
@@ -111,7 +111,7 @@
                 <button type="button" class="btn btn--primary h-40px btn-outline-primary py-2 offcanvas-trigger"  data-target="#transaction__list">
                     <span class="dot-status d-center position-absolute p-0 rounded-circle bg-white"><i class="tio-circle text-danger fs-12"></i></span>
                     <i class="tio-tune-horizontal"></i> 
-                    {{ translate('messages.Filter') }}
+                    {{ 'Filtrar' }}
                 </button>
             </div>
             <!-- Unfold -->
@@ -121,23 +121,23 @@
                             "target": "#usersExportDropdown",
                             "type": "css-animation"
                         }'>
-                    <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                    <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                 </a>
 
                 <div id="usersExportDropdown"
                     class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                    <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                    <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                     <a id="export-excel" class="dropdown-item" href="">
                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                             src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                             alt="Image Description">
-                        {{ translate('messages.excel') }}
+                        {{ 'sobresalir' }}
                     </a>
                     <a id="export-csv" class="dropdown-item" href="">
                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                             src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                             alt="Image Description">
-                        .{{ translate('messages.csv') }}
+                        .{{ 'csv' }}
                     </a>
                 </div>
             </div>
@@ -281,7 +281,7 @@
     <div>
         <form action="#0" method="post">
             <div class="custom-offcanvas-header bg--secondary d-flex justify-content-between align-items-center px-3 py-3">
-                <h3 class="mb-0">{{ translate('messages.Filter') }}</h2>
+                <h3 class="mb-0">{{ 'Filtrar' }}</h2>
                     <button type="button"
                         class="btn-close w-25px h-25px border rounded-circle d-center bg--secondary text-dark offcanvas-close fz-15px p-0"
                         aria-label="Close">&times;</button>
@@ -313,8 +313,8 @@
             </div>
     </div>
     <div class="offcanvas-footer p-3 d-flex align-items-center justify-content-center gap-3">
-        <button type="reset" class="btn w-100 btn--reset h--40px">{{ translate('messages.reset') }}</button>
-        <button type="submit" class="btn w-100 btn--primary h--40px">{{ translate('messages.Filter') }}</button>
+        <button type="reset" class="btn w-100 btn--reset h--40px">{{ 'reiniciar' }}</button>
+        <button type="submit" class="btn w-100 btn--primary h--40px">{{ 'Filtrar' }}</button>
     </div>
     </form>
 </div>

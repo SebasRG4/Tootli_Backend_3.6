@@ -6,7 +6,7 @@
             <tr>
 
                 <th>
-                    {{ translate('Disbursement_report') }}
+                    {{ 'Informe de desembolso' }}
                 </th>
                 <th></th>
                 <th></th>
@@ -18,31 +18,31 @@
             </tr>
             <tr>
 
-                <th>{{ translate('filter_criteria') }} -</th>
+                <th>{{ 'criterios de filtrado' }} -</th>
                 <th></th>
                 <th>
 
-                    {{ translate('zone' )}} - {{ $data['zone']??translate('all') }}
+                    {{ 'zona'}} - {{ $data['zone']??'todo' }}
                     <br>
                     @if($data['type'] == 'store')
-                        {{ translate('store' )}} - {{ $data['store']??translate('all') }}
+                        {{ 'Negocio'}} - {{ $data['store']??'todo' }}
                     @else
-                        {{ translate('delivery_man' )}} - {{ $data['delivery_man']??translate('all') }}
+                        {{ 'Repartidor'}} - {{ $data['delivery_man']??'todo' }}
                     @endif
                     @if ($data['from'])
                         <br>
-                        {{ translate('from' )}} - {{ $data['from']?Carbon\Carbon::parse($data['from'])->format('d M Y'):'' }}
+                        {{ 'de'}} - {{ $data['from']?Carbon\Carbon::parse($data['from'])->format('d M Y'):'' }}
                     @endif
                     @if ($data['to'])
                         <br>
-                        {{ translate('to' )}} - {{ $data['to']?Carbon\Carbon::parse($data['to'])->format('d M Y'):'' }}
+                        {{ 'a'}} - {{ $data['to']?Carbon\Carbon::parse($data['to'])->format('d M Y'):'' }}
                     @endif
                     <br>
-                    {{ translate('filter')  }}- {{  translate($data['filter']) }}
+                    {{ 'filtrar'  }}- {{  translate($data['filter']) }}
                     <br>
-                    {{ translate('Search_Bar_Content')  }}- {{ $data['search'] ??translate('N/A') }}
+                    {{ 'Contenido de la barra de búsqueda'  }}- {{ $data['search'] ??'N / A' }}
                     <br>
-                    {{ translate('status')  }}: {{ $data['status'] ?? translate('N/A') }}
+                    {{ 'estado'  }}: {{ $data['status'] ?? 'N / A' }}
 
                 </th>
                 <th></th>
@@ -54,30 +54,30 @@
             <tr>
 
                 <th>
-                {{ translate('Pending_Disbursements') }} - {{ $data['pending'] ?? translate('N/A') }}
+                {{ 'Desembolsos pendientes' }} - {{ $data['pending'] ?? 'N / A' }}
                 </th>
                 <th></th>
-                <th>{{ translate('Completed_Disbursements') }} - {{ $data['completed'] ?? translate('N/A') }}
+                <th>{{ 'Desembolsos completados' }} - {{ $data['completed'] ?? 'N / A' }}
                 </th>
                 <th></th>
-                <th>{{ translate('Canceled_Transactions') }} - {{ $data['canceled'] ?? translate('N/A') }}
+                <th>{{ 'Transacciones canceladas' }} - {{ $data['canceled'] ?? 'N / A' }}
                 </th>
                 <th>
 
                 </th>
             </tr>
         <tr>
-            <th>{{ translate('sl') }}</th>
+            <th>{{ 'SL' }}</th>
             @if($data['type'] == 'store')
 
-            <th>{{ translate('Store_Info') }}</th>
+            <th>{{ 'Información de la tienda' }}</th>
             @else
-            <th>{{ translate('Delivery_Man_Info') }}</th>
+            <th>{{ 'Información del repartidor' }}</th>
             @endif
-            <th>{{ translate('created_at') }}</th>
-            <th>{{ translate('amount') }}</th>
-            <th>{{ translate('Payment_method') }}</th>
-            <th>{{ translate('status') }}</th>
+            <th>{{ 'creado en' }}</th>
+            <th>{{ 'cantidad' }}</th>
+            <th>{{ 'Método de pago' }}</th>
+            <th>{{ 'estado' }}</th>
 
         </thead>
         <tbody>
@@ -95,7 +95,7 @@
             {{\App\CentralLogics\Helpers::format_currency($disb['disbursement_amount'])}}
         </td>
         <td>
-            <div class="name">{{translate('payment_method')}} : {{$disb->withdraw_method->method_name}}</div>
+            <div class="name">{{'método de pago'}} : {{$disb->withdraw_method->method_name}}</div>
             @forelse(json_decode($disb->withdraw_method->method_fields, true) as $key=> $item)
             <br>
                 <div>

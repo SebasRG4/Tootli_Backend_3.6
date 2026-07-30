@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title',translate('messages.dashboard'))
+@section('title','Panel de Control')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -19,7 +19,7 @@
                     <span class="page-header-icon">
                         <img src="{{asset('assets/admin/img/category.png')}}" class="w--20" alt="">
                     </span>
-                        <span>{{translate('messages.dashboard')}}</span>
+                        <span>{{'Panel de Control'}}</span>
                     </h1>
                 </div>
                 <div class="col-sm ">
@@ -28,9 +28,9 @@
                                 <div class="alert-inner">
                                     <img class="rounded mr-1"  width="25" src="{{ asset('assets/admin/img/invalid-icon.png') }}" alt="">
                                     <div class="cont">
-                                        <h4 class="mb-2">{{ translate('Warning!') }} </h4>{{  ( $out_of_stock_count -1).'+ '.  translate('more_products_are_low_on_Stock.') }}
+                                        <h4 class="mb-2">{{ '¡Advertencia!' }} </h4>{{  ( $out_of_stock_count -1).'+ '.  'Más productos tienen poco stock.' }}
                                         <br>
-                                        <a data-id="stock_out_reminder_close_btn"  class="text-primary text-underline reming_me_later">{{ translate('Remind_Me_Later') }}</a>  &nbsp; &nbsp; <a href="{{ route('vendor.item.stock-limit-list') }}" class="text-primary text-underline">{{ translate('Click_To_View') }}</a>
+                                        <a data-id="stock_out_reminder_close_btn"  class="text-primary text-underline reming_me_later">{{ 'Recuérdamelo más tarde' }}</a>  &nbsp; &nbsp; <a href="{{ route('vendor.item.stock-limit-list') }}" class="text-primary text-underline">{{ 'Haga clic para ver' }}</a>
                                     </div>
                                 </div>
                                 <button class="position-absolute right-0 top-0 py-2 px-2 bg-transparent border-0 outline-none shadow-none reming_me_later"  type="button">
@@ -43,10 +43,10 @@
                                 <div class="alert-inner">
                                     <img class="aspect-1-1 mr-1 object--contain rounded" width="100" src="{{ $item?->image_full_url ?? asset('assets/admin/img/100x100/food-default-image.png') }}" alt="">
                                     <div class="cont">
-                                        <h4 class="mb-2">{{ $item?->name }} </h4>{{  translate('This product is low stock.') }}
+                                        <h4 class="mb-2">{{ $item?->name }} </h4>{{  'Este producto tiene pocas existencias.' }}
                                         <br>
                                         <a
-                                        data-id="stock_out_reminder_close_btn"  class="text-primary text-underline reming_me_later">{{ translate('Remind_Me_Later') }}</a>  &nbsp; &nbsp; <a href="{{ route('vendor.item.stock-limit-list') }}" class="text-primary text-underline">{{ translate('Click_To_View') }}</a>
+                                        data-id="stock_out_reminder_close_btn"  class="text-primary text-underline reming_me_later">{{ 'Recuérdamelo más tarde' }}</a>  &nbsp; &nbsp; <a href="{{ route('vendor.item.stock-limit-list') }}" class="text-primary text-underline">{{ 'Haga clic para ver' }}</a>
                                     </div>
                                 </div>
                                 <button class="position-absolute right-0 top-0 py-2 px-2 bg-transparent border-0 outline-none shadow-none reming_me_later"  type="button">
@@ -66,12 +66,12 @@
                             <div class="inner">
                                 <div class="d-flex flex-wrap flex-md-nowrap align-items-center justify-content-between gap-2">
                                     <div>
-                                        <h4 class="m-0 text-white">{{ translate('Want_to_get_highlighted?') }}</h4>
+                                        <h4 class="m-0 text-white">{{ '¿Quieres destacar?' }}</h4>
                                         <p class="m-0 text-white">
-                                            {{ translate('Create_ads_to_get_highlighted_on_the_app_and_web_browser') }}
+                                            {{ 'Cree anuncios para destacarse en la aplicación y el navegador web.' }}
                                         </p>
                                     </div>
-                                    <a href="{{ route('vendor.advertisement.create') }}" class="btn btn-white text-nowrap font-semibold text-dark">{{ translate('Create_Ads') }}</a>
+                                    <a href="{{ route('vendor.advertisement.create') }}" class="btn btn-white text-nowrap font-semibold text-dark">{{ 'Crear anuncios' }}</a>
                                 </div>
                             </div>
                         </div>
@@ -85,21 +85,21 @@
             <div class="card-body">
                 <div class="row gx-2 gx-lg-3 mb-2">
                     <div class="col-md-9">
-                        <h4><i class="tio-chart-bar-4 fz-30px"></i>{{translate('messages.dashboard_order_statistics')}}</h4>
+                        <h4><i class="tio-chart-bar-4 fz-30px"></i>{{'estadísticas de pedidos del panel de control'}}</h4>
                     </div>
                     <div class="col-md-3">
                         <select class="custom-select order_stats_update" name="statistics_type">
                             <option
                                 value="overall" {{$params['statistics_type'] == 'overall'?'selected':''}}>
-                                {{translate('messages.Overall Statistics')}}
+                                {{'Estadísticas generales'}}
                             </option>
                             <option
                                 value="today" {{$params['statistics_type'] == 'today'?'selected':''}}>
-                                {{translate("messages.Today's Statistics")}}
+                                {{'Estadísticas de hoy'}}
                             </option>
                             <option
                                 value="this_month" {{$params['statistics_type'] == 'this_month'?'selected':''}}>
-                                {{translate("messages.This Month's Statistics")}}
+                                {{'Estadísticas de este mes'}}
                             </option>
                         </select>
                     </div>
@@ -123,11 +123,11 @@
                                     @php($amount=array_sum($earning))
                                     <span class="h5 m-0 mr-3 fz--11 d-flex align-items-center mb-2 mb-md-0">
                                         <span class="legend-indicator chart-bg-2"></span>
-                                        {{translate('messages.total_earning')}} : <span>{{\App\CentralLogics\Helpers::format_currency(array_sum($earning))}}</span>
+                                        {{'ganancia total'}} : <span>{{\App\CentralLogics\Helpers::format_currency(array_sum($earning))}}</span>
                                     </span>
                                     <span class="h5 m-0 fz--11 d-flex align-items-center mb-2 mb-md-0">
                                         <span class="legend-indicator chart-bg-3"></span>
-                                        {{translate('messages.commission_given')}} : <span>{{\App\CentralLogics\Helpers::format_currency(array_sum($commission))}}</span>
+                                        {{'comisión dada'}} : <span>{{\App\CentralLogics\Helpers::format_currency(array_sum($commission))}}</span>
                                     </span>
                                 </div>
 
@@ -136,7 +136,7 @@
                             <div class="col-sm-auto align-self-sm-end">
                                 <!-- Legend Indicators -->
                                 <h5 class="text-center">
-                                    {{translate('messages.yearly_statistics')}}
+                                    {{'estadísticas anuales'}}
                                     <i class="tio-chart-bar-4 fz--40px"></i>
                                 </h5>
                                 <!-- End Legend Indicators -->
@@ -241,8 +241,8 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-sm mb-2 mb-sm-0">
-                    <h1 class="page-header-title">{{translate('messages.welcome')}}, {{auth('vendor_employee')->user()->f_name}}.</h1>
-                    <p class="page-header-text">{{translate('messages.employee_welcome_message')}}</p>
+                    <h1 class="page-header-title">{{'Bienvenido'}}, {{auth('vendor_employee')->user()->f_name}}.</h1>
+                    <p class="page-header-text">{{'mensaje de bienvenida al empleado'}}</p>
                 </div>
             </div>
         </div>

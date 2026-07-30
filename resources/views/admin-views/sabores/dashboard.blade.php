@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Sabores de la Ciudad Dashboard'))
+@section('title', 'Panel Sabores de la Ciudad')
 
 @push('css_or_js')
 @endpush
@@ -13,7 +13,7 @@
                 <span class="page-header-icon">
                     <img src="{{ asset('assets/admin/img/dashboard.png') }}" class="w--20" alt="">
                 </span>
-                <span>{{ translate('Sabores de la Ciudad Dashboard') }}</span>
+                <span>{{ 'Panel Sabores de la Ciudad' }}</span>
             </h1>
         </div>
         <!-- End Page Header -->
@@ -24,7 +24,7 @@
             <div class="col-sm-6 col-lg-3">
                 <div class="card card-hover-shadow h-100">
                     <div class="card-body">
-                        <h6 class="card-subtitle">{{ translate('Total Restaurants') }}</h6>
+                        <h6 class="card-subtitle">{{ 'Restaurantes totales' }}</h6>
                         <div class="row align-items-center gx-2 mb-1">
                             <div class="col-6">
                                 <h2 class="card-title text-hover-primary mb-0">{{ $total_restaurants }}</h2>
@@ -37,7 +37,7 @@
                         </div>
                         <span class="badge badge-soft-success">
                             <i class="tio-trending-up"></i> {{ $restaurants_with_reservations }}
-                            {{ translate('accept reservations') }}
+                            {{ 'aceptar reservas' }}
                         </span>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
             <div class="col-sm-6 col-lg-3">
                 <div class="card card-hover-shadow h-100">
                     <div class="card-body">
-                        <h6 class="card-subtitle">{{ translate('Total Reservations') }}</h6>
+                        <h6 class="card-subtitle">{{ 'Reservas totales' }}</h6>
                         <div class="row align-items-center gx-2 mb-1">
                             <div class="col-6">
                                 <h2 class="card-title text-hover-primary mb-0">{{ $total_reservations }}</h2>
@@ -59,7 +59,7 @@
                             </div>
                         </div>
                         <span class="badge badge-soft-info">
-                            <i class="tio-calendar-day"></i> {{ $today_reservations }} {{ translate('today') }}
+                            <i class="tio-calendar-day"></i> {{ $today_reservations }} {{ 'hoy' }}
                         </span>
                     </div>
                 </div>
@@ -69,7 +69,7 @@
             <div class="col-sm-6 col-lg-3">
                 <div class="card card-hover-shadow h-100">
                     <div class="card-body">
-                        <h6 class="card-subtitle">{{ translate('Pending Reservations') }}</h6>
+                        <h6 class="card-subtitle">{{ 'Reservas Pendientes' }}</h6>
                         <div class="row align-items-center gx-2 mb-1">
                             <div class="col-6">
                                 <h2 class="card-title text-hover-primary mb-0">{{ $pending_reservations }}</h2>
@@ -81,7 +81,7 @@
                             </div>
                         </div>
                         <span class="badge badge-soft-warning">
-                            <i class="tio-checkmark-circle"></i> {{ $confirmed_reservations }} {{ translate('confirmed') }}
+                            <i class="tio-checkmark-circle"></i> {{ $confirmed_reservations }} {{ 'confirmado' }}
                         </span>
                     </div>
                 </div>
@@ -91,7 +91,7 @@
             <div class="col-sm-6 col-lg-3">
                 <div class="card card-hover-shadow h-100">
                     <div class="card-body">
-                        <h6 class="card-subtitle">{{ translate('Upcoming (7 days)') }}</h6>
+                        <h6 class="card-subtitle">{{ 'Próximo (7 días)' }}</h6>
                         <div class="row align-items-center gx-2 mb-1">
                             <div class="col-6">
                                 <h2 class="card-title text-hover-primary mb-0">{{ $upcoming_reservations }}</h2>
@@ -103,7 +103,7 @@
                             </div>
                         </div>
                         <span class="badge badge-soft-primary">
-                            <i class="tio-done"></i> {{ $completed_reservations }} {{ translate('completed') }}
+                            <i class="tio-done"></i> {{ $completed_reservations }} {{ 'terminado' }}
                         </span>
                     </div>
                 </div>
@@ -118,10 +118,10 @@
                     <div class="card-header">
                         <h5 class="card-header-title">
                             <i class="tio-calendar-month"></i>
-                            {{ translate('Recent Reservations') }}
+                            {{ 'Reservas recientes' }}
                         </h5>
                         <a href="{{ route('admin.sabores.reservations') }}" class="btn btn-sm btn-outline-primary">
-                            {{ translate('View All') }}
+                            {{ 'Ver todo' }}
                         </a>
                     </div>
                     <div class="card-body">
@@ -129,12 +129,12 @@
                             <table class="table table-borderless table-thead-bordered table-nowrap card-table">
                                 <thead class="thead-light">
                                     <tr>
-                                        <th>{{ translate('Code') }}</th>
-                                        <th>{{ translate('Customer') }}</th>
-                                        <th>{{ translate('Restaurant') }}</th>
-                                        <th>{{ translate('Date & Time') }}</th>
-                                        <th>{{ translate('Party Size') }}</th>
-                                        <th>{{ translate('Status') }}</th>
+                                        <th>{{ 'Código' }}</th>
+                                        <th>{{ 'Cliente' }}</th>
+                                        <th>{{ 'Restaurante' }}</th>
+                                        <th>{{ 'Fecha y hora' }}</th>
+                                        <th>{{ 'Tamaño del grupo' }}</th>
+                                        <th>{{ 'Estado' }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -155,22 +155,22 @@
                                                 <small
                                                     class="text-muted">{{ \Carbon\Carbon::parse($reservation->reservation_time)->format('h:i A') }}</small>
                                             </td>
-                                            <td>{{ $reservation->party_size }} {{ translate('people') }}</td>
+                                            <td>{{ $reservation->party_size }} {{ 'gente' }}</td>
                                             <td>
                                                 @if($reservation->status == 'pending')
-                                                    <span class="badge badge-soft-warning">{{ translate('Pending') }}</span>
+                                                    <span class="badge badge-soft-warning">{{ 'Pendiente' }}</span>
                                                 @elseif($reservation->status == 'confirmed')
-                                                    <span class="badge badge-soft-success">{{ translate('Confirmed') }}</span>
+                                                    <span class="badge badge-soft-success">{{ 'Confirmado' }}</span>
                                                 @elseif($reservation->status == 'completed')
-                                                    <span class="badge badge-soft-primary">{{ translate('Completed') }}</span>
+                                                    <span class="badge badge-soft-primary">{{ 'Terminado' }}</span>
                                                 @else
-                                                    <span class="badge badge-soft-danger">{{ translate('Cancelled') }}</span>
+                                                    <span class="badge badge-soft-danger">{{ 'Cancelado' }}</span>
                                                 @endif
                                             </td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="6" class="text-center">{{ translate('No reservations yet') }}</td>
+                                            <td colspan="6" class="text-center">{{ 'Aún no hay reservas' }}</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
@@ -186,7 +186,7 @@
                     <div class="card-header">
                         <h5 class="card-header-title">
                             <i class="tio-star"></i>
-                            {{ translate('Top Restaurants') }}
+                            {{ 'Mejores restaurantes' }}
                         </h5>
                     </div>
                     <div class="card-body">
@@ -202,13 +202,13 @@
                                         <div class="flex-grow-1">
                                             <h5 class="text-hover-primary mb-0">{{ $restaurant->name }}</h5>
                                             <span class="font-size-sm text-body">
-                                                {{ $restaurant->reservations_count }} {{ translate('reservations') }}
+                                                {{ $restaurant->reservations_count }} {{ 'reservas' }}
                                             </span>
                                         </div>
                                     </div>
                                 </li>
                             @empty
-                                <li class="text-center">{{ translate('No data available') }}</li>
+                                <li class="text-center">{{ 'No hay datos disponibles' }}</li>
                             @endforelse
                         </ul>
                     </div>
@@ -223,7 +223,7 @@
                     <div class="card-header">
                         <h5 class="card-header-title">
                             <i class="tio-dashboard"></i>
-                            {{ translate('Quick Actions') }}
+                            {{ 'Acciones rápidas' }}
                         </h5>
                     </div>
                     <div class="card-body">
@@ -231,23 +231,23 @@
                             <div class="col-md-3">
                                 <a href="{{ route('admin.sabores.reservations', ['status' => 'pending']) }}"
                                     class="btn btn-outline-warning btn-block">
-                                    <i class="tio-time"></i> {{ translate('Pending Reservations') }}
+                                    <i class="tio-time"></i> {{ 'Reservas Pendientes' }}
                                 </a>
                             </div>
                             <div class="col-md-3">
                                 <a href="{{ route('admin.sabores.restaurants') }}"
                                     class="btn btn-outline-primary btn-block">
-                                    <i class="tio-restaurant"></i> {{ translate('Manage Restaurants') }}
+                                    <i class="tio-restaurant"></i> {{ 'Administrar restaurantes' }}
                                 </a>
                             </div>
                             <div class="col-md-3">
                                 <a href="{{ route('admin.sabores.coupons') }}" class="btn btn-outline-success btn-block">
-                                    <i class="tio-gift"></i> {{ translate('View Coupons') }}
+                                    <i class="tio-gift"></i> {{ 'Ver cupones' }}
                                 </a>
                             </div>
                             <div class="col-md-3">
                                 <a href="{{ route('admin.sabores.analytics') }}" class="btn btn-outline-info btn-block">
-                                    <i class="tio-chart-bar-4"></i> {{ translate('View Analytics') }}
+                                    <i class="tio-chart-bar-4"></i> {{ 'Ver análisis' }}
                                 </a>
                             </div>
                         </div>

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('landing_page'))
+@section('title', 'página de destino')
 
 
 @section('content')
@@ -19,7 +19,7 @@
                     <img src="{{ asset('assets/admin/img/business.png') }}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.business_setup') }}
+                    {{ 'configuración de negocios' }}
                 </span>
             </h1>
             @include('admin-views.business-settings.partials.nav-menu')
@@ -33,9 +33,9 @@
                 <div
                     class="maintenance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center p-2">
                     <h5 class="text-capitalize m-0">
-                        {{ translate('admin_default_landing_page') }}
+                        {{ 'página de inicio predeterminada del administrador' }}
                         <i class="tio-info-outined" data-toggle="tooltip"
-                            title="{{ translate('You_can_turn_off/on_system-provided_landing_page') }}"></i>
+                            title="{{ 'Puede activar o desactivar la página de inicio proporcionada por el sistema.' }}"></i>
                     </h5>
                     <label class="toggle-switch toggle-switch-sm">
                         <input type="checkbox" class="status toggle-switch-input landing-page"
@@ -52,12 +52,12 @@
         <div class="card">
             <div class="card-header flex-wrap border-0">
                 <h3 class="card-title">
-                    {{ translate('Want_to_Integrate_Your_Own_Customised_Landing_Page_?') }}
+                    {{ '¿Quiere integrar su propia página de destino personalizada?' }}
 
                 </h3>
                 <div class="text--primary d-flex align-items-center gap-3 font-weight-bolder cursor-pointer"
                     data-toggle="modal" data-target="#read-instructions">
-                    <span class="mr-2">{{ translate('Read_Instructions') }}</span>
+                    <span class="mr-2">{{ 'Leer instrucciones' }}</span>
                     <div class="ripple-animation">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"
                             fill="none" class="svg replaced-svg">
@@ -72,9 +72,9 @@
                 @csrf
                 <div class="card-body">
                     <label class="text-capitalize form-label form--label mb-3">
-                        {{ translate('Integrate_Your_Landing_Page_Via') }}
+                        {{ 'Integre su página de destino a través de' }}
                         <i class="tio-info-outined" data-toggle="tooltip"
-                            title="{{ translate('You_can_upload_your_landing_page_either_using_URL_or_File_Upload') }}"></i>
+                            title="{{ 'Puede cargar su página de destino mediante URL o carga de archivos' }}"></i>
                     </label>
                     <div class="mb-30">
                         <div class="resturant-type-group border d-inline-flex">
@@ -82,7 +82,7 @@
                                 <input class="form-check-input" type="radio" value="url" name="landing_integration_via"
                                     {{ $landing_integration_type == 'url' ? 'checked' : '' }}>
                                 <span class="form-check-label">
-                                    {{ translate('messages.url') }}
+                                    {{ 'URL' }}
                                 </span>
                             </label>
                             <label class="form-check form--check mr-2 mr-md-4">
@@ -90,14 +90,14 @@
                                     name="landing_integration_via"
                                     {{ $landing_integration_type == 'file_upload' ? 'checked' : '' }}>
                                 <span class="form-check-label">
-                                    {{ translate('file_upload') }}
+                                    {{ 'carga de archivos' }}
                                 </span>
                             </label>
                             <label class="form-check form--check mr-2 mr-md-4">
                                 <input class="form-check-input" type="radio" value="none" name="landing_integration_via"
                                     {{ $landing_integration_type == 'none' ? 'checked' : '' }}>
                                 <span class="form-check-label">
-                                    {{ translate('none') }}
+                                    {{ 'ninguno' }}
                                 </span>
                             </label>
                         </div>
@@ -107,10 +107,10 @@
                             <div class="__bg-F8F9FC-card">
                                 <div class="form-group mb-0 pb-2">
                                     <label for="redirect_url" class="form-label text-capitalize">
-                                        {{ translate('landing_page_url') }}
+                                        {{ 'URL de la página de destino' }}
                                     </label>
                                     <input type="text"
-                                        placeholder="{{ translate('messages.Ex: https://6ammart-web.6amtech.com/') }}"
+                                        placeholder="{{ 'Ej: https://6ammart-web.6amtech.com/' }}"
                                         class="form-control h--45px" id="redirect_url" name="redirect_url" value="{{ $redirect_url }}">
                                 </div>
                             </div>
@@ -152,10 +152,10 @@
                                         </div>
                                         <div class="col-sm-6 col-lg-5 col-xl-4 col-xxl-9">
                                             <div class="pl-sm-5">
-                                                <h3 class="mb-3 d-flex">{{ translate('instructions') }}</h3>
+                                                <h3 class="mb-3 d-flex">{{ 'instrucciones' }}</h3>
                                                 <ul class="pl-3 d-flex flex-column gap-2 instructions-list mb-0">
                                                     <li>
-                                                        {{ translate('Upload_content_as_a_single_ZIP_file_and_the_file_name_must_be') }}
+                                                        {{ 'Cargue el contenido como un único archivo ZIP y el nombre del archivo debe ser' }}
                                                         <b>index.blade.php</b>
                                                     </li>
                                                 </ul>
@@ -176,7 +176,7 @@
 
                                             <a class="btn action-btn btn--danger btn-outline-danger border-0 form-alert"  href="javascript:"
                                                data-id="index_page"
-                                               data-message="{{ translate('Want to delete this index_page ?') }}" title="{{translate('messages.delete_index_page')}}"><i class="tio-delete-outlined"></i>
+                                               data-message="{{ '¿Quieres eliminar esta página de índice?' }}" title="{{'eliminar página de índice'}}"><i class="tio-delete-outlined"></i>
                                         </a>
                                         </div>
                                     </div>
@@ -193,9 +193,9 @@
                                         <img src="{{ asset('assets/admin/img/landing-icon-2.png') }}"
                                             class="mb-3" alt="">
                                         <p class="m-0">
-                                            {{ translate('Currently_you_are_using_6amMart_Default_Admin_Landing_Page_Theme.') }}
+                                            {{ 'Actualmente estás utilizando el tema de página de destino de administrador predeterminado de 6amMart.' }}
                                             <a href="{{ route('home') }}"
-                                                class="text--primary text-underline">{{ translate('Visit_Landing_Page') }}</a>
+                                                class="text--primary text-underline">{{ 'Visitar la página de destino' }}</a>
                                         </p>
                                     </div>
                                 @else
@@ -203,7 +203,7 @@
                                         <img src="{{ asset('assets/admin/img/landing-icon-2.png') }}"
                                             class="mb-3" alt="">
                                         <p class="m-0">
-                                            {{ translate('You_have_no_business_landing_page_to_show._If_user_search_landing_page_URL_they_will_see_404_page.') }}
+                                            {{ 'No tienes ninguna página de destino empresarial para mostrar. Si el usuario busca la URL de la página de destino, verá la página 404.' }}
                                         </p>
                                     </div>
                                 @endif
@@ -211,9 +211,9 @@
                         </div>
                     </div>
                     <div class="btn--container justify-content-end mt-20">
-                        <button type="reset" id="reset_btn" class="btn btn--reset">{{ translate('Reset') }}</button>
+                        <button type="reset" id="reset_btn" class="btn btn--reset">{{ 'Reiniciar' }}</button>
                         <button type="button"  class="btn btn--primary {{ getEnvMode() == 'demo' ? 'call-demo' : 'zip-upload' }}" id="update_setting">
-                            {{ translate('Save_Information') }}</button>
+                            {{ 'Guardar información' }}</button>
                     </div>
                 </div>
 
@@ -240,27 +240,27 @@
                                     <img src="{{ asset('assets/admin/img/read-instructions.png') }}"
                                         alt="" class="mb-20">
                                     <h5 class="modal-title">
-                                        {{ translate('If_you_want_to_set_up_your_own_landing_page_please_follow_tha_instructions_below') }}
+                                        {{ 'Si desea configurar su propia página de destino, siga las instrucciones a continuación' }}
                                     </h5>
                                 </div>
                                 <ol type="1">
                                     <li>
-                                        {{ translate('You_can_add_your_customised_landing_page_via_URL_or_upload_ZIP_file_of_the_landing_page.') }}
+                                        {{ 'Puede agregar su página de destino personalizada a través de URL o cargar un archivo ZIP de la página de destino.' }}
                                     </li>
                                     <li>
-                                        {{ translate('If_you_want_to_use_URL_option._Just_host_you_landing_page_and_copy_the_page_URL_and_click_save_information.') }}
+                                        {{ 'Si desea utilizar la opción URL. Simplemente aloje su página de destino, copie la URL de la página y haga clic en guardar información.' }}
                                     </li>
                                     <li>
-                                        {{ translate('If_you_want_to_Upload_your_landing_page_source_code_file.') }}
+                                        {{ 'Si desea cargar el archivo de código fuente de su página de destino.' }}
 
                                         <div class="ms-2 mt-1">
-                                            {{ translate('a._Create_an_html_file_named') }} <b
+                                            {{ 'a. Crea un archivo html llamado' }} <b
                                                 class="bg--4 text--primary-2">index.blade.php</b>
-                                            {{ translate('_and_insert_your_landing_page_design_code_and_make_a_zip_file.') }}
+                                            {{ 'e inserte el código de diseño de su página de destino y cree un archivo zip.' }}
 
                                         </div>
                                         <div class="ms-2 mt-1">
-                                            {{ translate('b._upload_the_zip_file_in_file_upload_section_and_click_save_information.') }}
+                                            {{ 'b. cargue el archivo zip en la sección de carga de archivos y haga clic en guardar información.' }}
                                         </div>
                                     </li>
                                 </ol>
@@ -292,14 +292,14 @@
                 toastr.warning('Sorry! You can not change landing page in demo!');
                 @else
                 Swal.fire({
-                    title: '{{ isset($config) && $config ? translate('messages.Want_to_Turn_Off_the_Default_Admin_Landing_Page_?') : translate('messages.Want_to_Turn_On_the_Default_Admin_Landing_Page_?') }}',
-                    text: '{{ isset($config) && $config ? translate('If_disabled,_the_landing_page_won’t_be_visible_to_anyone') : translate('If_enabled,_the_landing_page_will_be_visible_to_everyone') }}',
+                    title: '{{ isset($config) && $config ? '¿Quiere desactivar la página de inicio de administración predeterminada?' : '¿Quiere activar la página de inicio de administración predeterminada?' }}',
+                    text: '{{ isset($config) && $config ? 'Si está deshabilitada, la página de destino no será visible para nadie.' : 'Si está habilitado, la página de destino será visible para todos' }}',
                     type: 'warning',
                     showCancelButton: true,
                     cancelButtonColor: 'default',
                     confirmButtonColor: '#00868F',
-                    cancelButtonText: '{{ translate('messages.no') }}',
-                    confirmButtonText: '{{ translate('messages.yes') }}',
+                    cancelButtonText: '{{ 'No' }}',
+                    confirmButtonText: '{{ 'Sí' }}',
                     reverseButtons: true
                 }).then((result) => {
                     if (result.value) {

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.modules'))
+@section('title','módulos')
 
 @push('css_or_js')
 
@@ -12,29 +12,29 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-sm mb-2 mb-sm-0">
-                    <h1 class="page-header-title">{{translate('messages.module_type')}}</h1>
+                    <h1 class="page-header-title">{{'tipo de módulo'}}</h1>
                 </div>
             </div>
         </div>
         <!-- End Page Header -->
 
         <div class="card">
-            <div class="card-header"><h5>{{translate('messages.add_new_module')}}</h5></div>
+            <div class="card-header"><h5>{{'agregar nuevo módulo'}}</h5></div>
             <div class="card-body">
                 <form action="{{route('admin.module.create')}}" method="get" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
-                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.type')}}</label>
-                        <input type="text" name="module_type" class="form-control" placeholder="{{translate('messages.new_category')}}" value="{{old('name')}}" required maxlength="191">
+                        <label class="input-label" for="exampleFormControlInput1">{{'tipo'}}</label>
+                        <input type="text" name="module_type" class="form-control" placeholder="{{'nueva categoría'}}" value="{{old('name')}}" required maxlength="191">
                     </div>
 
                     <div class="form-group">
-                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.description')}}</label>
+                        <label class="input-label" for="exampleFormControlInput1">{{'descripción'}}</label>
                         <textarea class="ckeditor form-control" name="module_description"></textarea>
                     </div>
 
                     <div class="form-group pt-2">
-                        <button type="submit" class="btn btn-primary">{{translate('messages.add')}}</button>
+                        <button type="submit" class="btn btn-primary">{{'agregar'}}</button>
                     </div>
 
                 </form>
@@ -43,7 +43,7 @@
 
         <div class="card mt-3">
             <div class="card-header pb-0">
-                <h5>{{translate('messages.module_type_list')}}</h5>
+                <h5>{{'lista de tipos de módulos'}}</h5>
             </div>
             <div class="card-body">
                 <div class="table-responsive datatable-custom">
@@ -55,8 +55,8 @@
                         }'>
                         <thead class="thead-light">
                             <tr>
-                                <th>{{translate('messages.module_type')}}</th>
-                                <th>{{translate('messages.description')}}</th>
+                                <th>{{'tipo de módulo'}}</th>
+                                <th>{{'descripción'}}</th>
                             </tr>
                         </thead>
 

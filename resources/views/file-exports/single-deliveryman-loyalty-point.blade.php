@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-lg-12 text-center ">
-        <h1>{{ translate('delivery_man_loyalty_point_transaction_history') }}</h1>
+        <h1>{{ 'historial de transacciones de puntos de fidelidad del repartidor' }}</h1>
     </div>
     <div class="col-lg-12">
 
@@ -9,19 +9,19 @@
         <table>
             <thead>
                 <tr>
-                    <th>{{ translate('delivery_man_info') }}</th>
+                    <th>{{ 'información del repartidor' }}</th>
                     <th></th>
                     <th></th>
                     <th>
-                        {{ translate('name')  }}- {{ $data['dm']->f_name . ' ' . $data['dm']->l_name}}
+                        {{ 'nombre'  }}- {{ $data['dm']->f_name . ' ' . $data['dm']->l_name}}
                         <br>
-                        {{ translate('phone')  }}- {{ $data['dm']->phone}}
+                        {{ 'teléfono'  }}- {{ $data['dm']->phone}}
                         <br>
-                        {{ translate('email')  }}- {{ $data['dm']->email}}
+                        {{ 'correo electrónico'  }}- {{ $data['dm']->email}}
                         <br>
-                        {{ translate('total_rating')  }}- {{ count($data['dm']->rating)}}
+                        {{ 'calificación total'  }}- {{ count($data['dm']->rating)}}
                         <br>
-                        {{ translate('average_review')  }}-
+                        {{ 'revisión promedio'  }}-
                         {{count($data['dm']->rating) > 0 ? number_format($data['dm']->rating[0]->average, 1, '.', ' ') : 0}}
 
                     </th>
@@ -31,11 +31,11 @@
                     <th></th>
                 </tr>
                 {{-- <tr>
-                    <th>{{ translate('Search_Criteria') }}</th>
+                    <th>{{ 'Criterios de búsqueda' }}</th>
                     <th></th>
                     <th></th>
                     <th>
-                        {{ translate('Search_Bar_Content') }}- {{ $data['search'] ??translate('N/A') }}
+                        {{ 'Contenido de la barra de búsqueda' }}- {{ $data['search'] ??'N / A' }}
 
                     </th>
                     <th> </th>
@@ -44,12 +44,12 @@
                     <th></th>
                 </tr> --}}
                 <tr>
-                    <th>{{ translate('SL') }}</th>
-                    <th>{{translate('messages.Transaction ID')}}</th>
-                    <th>{{translate('messages.Date')}}</th>
-                    <th>{{translate('messages.Transaction Type')}}</th>
-                    <th>{{translate('messages.Point')}}</th>
-                    <th>{{translate('messages.Reference')}}</th>
+                    <th>{{ 'SL' }}</th>
+                    <th>{{'ID de transacción'}}</th>
+                    <th>{{'Fecha'}}</th>
+                    <th>{{'Tipo de transacción'}}</th>
+                    <th>{{'Punto'}}</th>
+                    <th>{{'Referencia'}}</th>
 
             </thead>
             <tbody>
@@ -78,15 +78,15 @@
                                 {{ $loyalty_point->point }} <br>
                                 @if ($loyalty_point->point_conversion_type == 'credit')
                                     <span type="button"
-                                        class="btn px-3 fs-12 py-1 badge-soft-success">{{ translate('credit') }}</span>
+                                        class="btn px-3 fs-12 py-1 badge-soft-success">{{ 'crédito' }}</span>
                                 @else
                                     <span type="button"
-                                        class="btn px-3 fs-12 py-1 badge-soft-danger">{{ translate('Debit') }}</span>
+                                        class="btn px-3 fs-12 py-1 badge-soft-danger">{{ 'Débito' }}</span>
                                 @endif
                             </div>
                         </td>
                         <td>
-                            {{ $loyalty_point->reference ?? translate('N/A') }}
+                            {{ $loyalty_point->reference ?? 'N / A' }}
                         </td>
                     </tr>
                 @endforeach

@@ -83,7 +83,7 @@ $company_links = json_decode(BusinessSetting::where('key','landing_page_links')-
         <tbody>
             <tr>
                 <td>
-                    <h3 style="color:green;">{{translate('messages.Dear')}}, {{ $name }}</h3>
+                    <h3 style="color:green;">{{'Estimado'}}, {{ $name }}</h3>
                 </td>
                 <td>
                     <div style="text-align: end; margin-inline-end:15px;">
@@ -120,13 +120,13 @@ $company_links = json_decode(BusinessSetting::where('key','landing_page_links')-
             </tr>
             <tr>
                 <th >
-                    <div style="font-weight: 400;font-size: 11px;line-height: 22px;color: #242A30;"><span style="margin-inline-end:5px;"> <a href="tel:{{$company_phone}}" style="text-decoration: none; color: inherit;">{{translate('messages.phone')}}: {{$company_phone}}</a></span> <span><a href="mailto:{{$company_email}}" style="text-decoration: none; color: inherit;">{{translate('messages.email')}}: {{$company_email}}</a></span></div>
+                    <div style="font-weight: 400;font-size: 11px;line-height: 22px;color: #242A30;"><span style="margin-inline-end:5px;"> <a href="tel:{{$company_phone}}" style="text-decoration: none; color: inherit;">{{'teléfono'}}: {{$company_phone}}</a></span> <span><a href="mailto:{{$company_email}}" style="text-decoration: none; color: inherit;">{{'correo electrónico'}}: {{$company_email}}</a></span></div>
                     @if ($company_links['web_app_url_status'])
                     <div style="font-weight: 400;font-size: 11px;line-height: 22px;color: #242A30;">
                         <a href="{{$company_links['web_app_url']}}" style="text-decoration: none; color: inherit;">{{$company_links['web_app_url']}}</a></div>
                     @endif
                     <div style="font-weight: 400;font-size: 11px;line-height: 22px;color: #242A30;">{{$company_address}}</div>
-                    <span style="font-weight: 400;font-size: 10px;line-height: 22px;color: #242A30;">{{translate('messages.All copy right reserved',['year'=>date('Y'),'title'=>$company_name])}}</span>
+                    <span style="font-weight: 400;font-size: 10px;line-height: 22px;color: #242A30;">{{'Todos los derechos de copia reservados\',[\'año\'=>fecha(\'Y','title'=>$company_name])}}</span>
                 </th>
             </tr>
         </tbody>

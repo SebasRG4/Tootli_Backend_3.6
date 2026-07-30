@@ -8,7 +8,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>{{ translate('Email_Template') }}</title>
+    <title>{{ 'Plantilla de correo electrónico' }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style type="text/css">
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
@@ -100,7 +100,7 @@ width: 24px;
                 <img class="mail-img-2"
                 src="{{ $data['icon_full_url'] ?? asset('assets/admin/img/blank3.png') }}"
                 id="iconViewer" alt="">
-                <h3 style="font-size:17px;font-weight:500" class="mt-2" id="mail-title">{{ $title?? translate('Main_Title_or_Subject_of_the_Mail') }}</h3>
+                <h3 style="font-size:17px;font-weight:500" class="mt-2" id="mail-title">{{ $title?? 'Título principal o asunto del correo' }}</h3>
 
             </td>
         </tr>
@@ -123,8 +123,8 @@ width: 24px;
                     </span>
                     @endif
                 <span class="border-top"></span>
-                <span class="d-block" style="margin-bottom:14px" id="mail-footer">{{ $data['footer_text'] ?? translate('Please_contact_us_for_any_queries,_we’re_always_happy_to_help.') }}</span>
-                <span class="d-block">{{ translate('Thanks & Regards') }},</span>
+                <span class="d-block" style="margin-bottom:14px" id="mail-footer">{{ $data['footer_text'] ?? 'Comuníquese con nosotros para cualquier consulta, siempre estaremos encantados de ayudarle.' }}</span>
+                <span class="d-block">{{ 'Gracias y saludos' }},</span>
                 <span class="d-block" style="margin-bottom:20px">{{ $company_name }}</span>
 
 
@@ -133,14 +133,14 @@ width: 24px;
                
                 <span class="privacy">
                     @php($landing_data =\App\Models\DataSetting::where('type', 'admin_landing_page')->whereIn('key', ['shipping_policy_status','refund_policy_status','cancellation_policy_status'])->pluck('value','key')->toArray())
-                    <a href="{{ route('privacy-policy') }}" id="privacy-check" style="{{ (isset($data['privacy']) && $data['privacy'] == 1)?'':'display:none;' }}">{{ translate('Privacy_Policy')}}</a>
+                    <a href="{{ route('privacy-policy') }}" id="privacy-check" style="{{ (isset($data['privacy']) && $data['privacy'] == 1)?'':'display:none;' }}">{{ 'política de privacidad'}}</a>
                     @if (isset($landing_data['refund_policy_status']) && $landing_data['refund_policy_status']  == 1)
-                    <a href="{{ route('refund') }}" id="refund-check" style="{{ (isset($data['refund']) && $data['refund'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Refund_Policy') }}</a>
+                    <a href="{{ route('refund') }}" id="refund-check" style="{{ (isset($data['refund']) && $data['refund'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ 'Política de reembolso' }}</a>
                     @endif
                     @if (isset($landing_data['cancellation_policy_status']) && $landing_data['cancellation_policy_status']  == 1)
-                    <a href="{{ route('cancelation') }}" id="cancelation-check" style="{{ (isset($data['cancelation']) && $data['cancelation'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Cancelation_Policy') }}</a>
+                    <a href="{{ route('cancelation') }}" id="cancelation-check" style="{{ (isset($data['cancelation']) && $data['cancelation'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ 'Política de Cancelación' }}</a>
                     @endif
-                    <a href="{{ route('contact-us') }}" id="contact-check" style="{{ (isset($data['contact']) && $data['contact'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Contact_us') }}</a>
+                    <a href="{{ route('contact-us') }}" id="contact-check" style="{{ (isset($data['contact']) && $data['contact'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ 'Contáctenos' }}</a>
                 </span>
                 <span class="social" style="text-align:center">
                     @php($social_media = \App\Models\SocialMedia::active()->get())
@@ -153,7 +153,7 @@ width: 24px;
                     @endif
                 </span>
                 <span class="copyright" id="mail-copyright">
-                    {{ $copyright_text?? translate('Copyright 2023 6ammart. All right reserved') }}
+                    {{ $copyright_text?? 'Copyright 2023 6ammart. Todos los derechos reservados' }}
                 </span>
             </td>
         </tr>

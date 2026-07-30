@@ -7,27 +7,27 @@
                         <span class="card-header-icon mr-2">
                             <i class="tio-canvas-text"></i>
                         </span>
-                        <span>{{ translate('messages.food_variations') }}</span>
+                        <span>{{ 'variaciones de alimentos' }}</span>
                     </h5>
 
                     <div>
                         <a class="btn text--primary-2" id="add_new_option_button">
-                            {{ translate('add_new_variation') }}
+                            {{ 'agregar nueva variación' }}
                             <i class="tio-add"></i>
                         </a>
                         @if (isset($openai_config) && data_get($openai_config, 'status') == 1)
                         <button type="button" class="btn bg-white text-primary opacity-1 generate_btn_wrapper p-0 mb-2 variation_setup_auto_fill"
                             id="variation_setup_auto_fill" data-route="{{ route('admin.product.variation-setup-auto-fill') }}"
-                            data-error="{{ translate('Please provide an item name and description so the AI can generate a suitable food variations.') }}"
+                            data-error="{{ 'Proporcione un nombre y una descripción del artículo para que la IA pueda generar variaciones de alimentos adecuadas.' }}"
                             data-lang="en">
                             <div class="btn-svg-wrapper">
                                 <img width="18" height="18" class=""
                                      src="{{ asset('assets/admin/img/svg/blink-right-small.svg') }}" alt="">
                             </div>
                             <span class="ai-text-animation d-none" role="status">
-                                {{ translate('Just_a_second') }}
+                                {{ 'Un momento' }}
                             </span>
-                            <span class="btn-text">{{ translate('Generate') }}</span>
+                            <span class="btn-text">{{ 'Generar' }}</span>
                         </button>
                         @endif
                     </div>

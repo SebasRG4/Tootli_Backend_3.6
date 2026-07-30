@@ -15,11 +15,11 @@
                 <!-- List Dot -->
                 <ul class="list-inline list-separator">
                     <li class="list-inline-item">
-                        <a class="list-separator-link" href="{{route('vendor.business-settings.store-setup')}}">{{translate('messages.'.$title.'_settings')}}</a>
+                        <a class="list-separator-link" href="{{route('vendor.business-settings.store-setup')}}">{{'\'.$título.\' ajustes'}}</a>
                     </li>
 
                     <li class="list-inline-item">
-                        <a class="list-separator-link" href="{{route('vendor.shop.view')}}">{{translate('messages.profile')}}</a>
+                        <a class="list-separator-link" href="{{route('vendor.shop.view')}}">{{'perfil'}}</a>
                     </li>
 
                     <li class="list-inline-item">
@@ -34,7 +34,7 @@
                     </li>
                     <li class="list-inline-item">
                         <label class="badge badge-soft-primary m-0">
-                            {{translate('messages.software_version')}} : {{env('SOFTWARE_VERSION')}}
+                            {{'Versión del sistema'}} : {{env('SOFTWARE_VERSION')}}
                         </label>
                     </li>
                 </ul>

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.Delivery_Man_Offline_Payments'))
+@section('title', 'Repartidor de pagos fuera de línea')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -15,11 +15,11 @@
                     <img src="{{asset('public/assets/admin/img/offline_payment.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.Delivery_Man_Offline_Payments')}}
+                    {{'Repartidor de pagos fuera de línea'}}
                 </span>
             </h1>
             <div class="mt-2 text-primary">
-                {{translate('messages.review_and_approve_delivery_man_payments')}}
+                {{'revisar y aprobar pagos del repartidor'}}
             </div>
         </div>
         <!-- End Page Header -->
@@ -32,13 +32,13 @@
                             <!-- Nav Tabs -->
                             <ul class="nav nav-tabs mb-0 border-0">
                                 <li class="nav-item">
-                                    <a class="nav-link {{ $status == 'pending' ? 'active' : '' }}" href="{{ route('admin.delivery-man.offline_payment_list', ['status' => 'pending']) }}">{{ translate('messages.Pending') }}</a>
+                                    <a class="nav-link {{ $status == 'pending' ? 'active' : '' }}" href="{{ route('admin.delivery-man.offline_payment_list', ['status' => 'pending']) }}">{{ 'Pendiente' }}</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ $status == 'approved' ? 'active' : '' }}" href="{{ route('admin.delivery-man.offline_payment_list', ['status' => 'approved']) }}">{{ translate('messages.Approved') }}</a>
+                                    <a class="nav-link {{ $status == 'approved' ? 'active' : '' }}" href="{{ route('admin.delivery-man.offline_payment_list', ['status' => 'approved']) }}">{{ 'Aprobado' }}</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link {{ $status == 'denied' ? 'active' : '' }}" href="{{ route('admin.delivery-man.offline_payment_list', ['status' => 'denied']) }}">{{ translate('messages.Denied') }}</a>
+                                    <a class="nav-link {{ $status == 'denied' ? 'active' : '' }}" href="{{ route('admin.delivery-man.offline_payment_list', ['status' => 'denied']) }}">{{ 'Denegado' }}</a>
                                 </li>
                             </ul>
                         </div>
@@ -55,13 +55,13 @@
                                }'>
                             <thead class="thead-light">
                             <tr>
-                                <th>{{translate('messages.sl')}}</th>
-                                <th>{{translate('messages.Delivery_Man')}}</th>
-                                <th>{{translate('messages.Amount')}}</th>
-                                <th>{{translate('messages.Payment_Method')}}</th>
-                                <th>{{translate('messages.Payment_Info')}}</th>
-                                <th class="text-center">{{translate('messages.Status')}}</th>
-                                <th class="text-center">{{translate('messages.Action')}}</th>
+                                <th>{{'SL'}}</th>
+                                <th>{{'repartidor'}}</th>
+                                <th>{{'Cantidad'}}</th>
+                                <th>{{'Método de pago'}}</th>
+                                <th>{{'Información de pago'}}</th>
+                                <th class="text-center">{{'Estado'}}</th>
+                                <th class="text-center">{{'Acción'}}</th>
                             </tr>
                             </thead>
 
@@ -75,42 +75,42 @@
                                                 {{$payment->delivery_man->f_name}} {{$payment->delivery_man->l_name}}
                                             </a>
                                         @else
-                                            <span class="text-muted">{{translate('messages.Not_Found')}}</span>
+                                            <span class="text-muted">{{'Extraviado'}}</span>
                                         @endif
                                     </td>
                                     <td>
                                         {{\App\CentralLogics\Helpers::format_currency($payment->amount)}}
                                     </td>
                                     <td>
-                                        {{$payment->offline_payment_method ? $payment->offline_payment_method->method_name : translate('messages.Unknown')}}
+                                        {{$payment->offline_payment_method ? $payment->offline_payment_method->method_name : 'Desconocido'}}
                                     </td>
                                     <td>
                                         <button class="btn btn-sm btn--primary" data-toggle="modal" data-target="#paymentInfoModal{{$payment->id}}">
-                                            {{translate('messages.View_Info')}}
+                                            {{'Ver información'}}
                                         </button>
                                     </td>
                                     <td class="text-center">
                                         @if($payment->status == 'pending')
-                                            <label class="badge badge-soft-info">{{translate('messages.pending')}}</label>
+                                            <label class="badge badge-soft-info">{{'Pendiente'}}</label>
                                         @elseif($payment->status == 'approved')
-                                            <label class="badge badge-soft-success">{{translate('messages.approved')}}</label>
+                                            <label class="badge badge-soft-success">{{'aprobado'}}</label>
                                         @else
-                                            <label class="badge badge-soft-danger">{{translate('messages.denied')}}</label>
+                                            <label class="badge badge-soft-danger">{{'denegado'}}</label>
                                         @endif
                                     </td>
                                     <td>
                                         @if($payment->status == 'pending')
                                             <div class="btn--container justify-content-center">
                                                 <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#approveModal{{$payment->id}}">
-                                                    {{translate('messages.Approve')}}
+                                                    {{'Aprobar'}}
                                                 </button>
                                                 <button class="btn btn-sm btn--danger" data-toggle="modal" data-target="#denyModal{{$payment->id}}">
-                                                    {{translate('messages.Deny')}}
+                                                    {{'Denegar'}}
                                                 </button>
                                             </div>
                                         @else
                                             <div class="text-center">
-                                                <span class="text-muted">{{translate('messages.Processed')}}</span>
+                                                <span class="text-muted">{{'Procesado'}}</span>
                                             </div>
                                         @endif
                                     </td>
@@ -121,7 +121,7 @@
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="paymentInfoModalLabel">{{translate('messages.Payment_Information')}}</h5>
+                                                <h5 class="modal-title" id="paymentInfoModalLabel">{{'Información de pago'}}</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -143,14 +143,14 @@
                                                     @endif
                                                     @if($payment->admin_note)
                                                     <li class="list-group-item">
-                                                        <strong>{{translate('messages.Admin_Note')}}:</strong>
+                                                        <strong>{{'Nota de administrador'}}:</strong>
                                                         <p class="mt-2 text-muted">{{$payment->admin_note}}</p>
                                                     </li>
                                                     @endif
                                                 </ul>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{translate('messages.Close')}}</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{'Cerca'}}</button>
                                             </div>
                                         </div>
                                     </div>
@@ -161,7 +161,7 @@
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title">{{translate('messages.Approve_Payment')}}</h5>
+                                                <h5 class="modal-title">{{'Aprobar pago'}}</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -171,15 +171,15 @@
                                                 <div class="modal-body">
                                                     <input type="hidden" name="id" value="{{$payment->id}}">
                                                     <input type="hidden" name="status" value="approved">
-                                                    <p>{{translate('messages.Are_you_sure_to_approve_this_payment?_The_amount_will_be_deducted_from_delivery_man_cash_in_hand.')}}</p>
+                                                    <p>{{'¿Está seguro de aprobar este pago? El importe se descontará del repartidor en efectivo en mano.'}}</p>
                                                     <div class="form-group">
-                                                        <label class="input-label">{{translate('messages.Admin_Note')}} ({{translate('messages.Optional')}})</label>
+                                                        <label class="input-label">{{'Nota de administrador'}} ({{'Opcional'}})</label>
                                                         <textarea name="admin_note" class="form-control" rows="3"></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{translate('messages.Cancel')}}</button>
-                                                    <button type="submit" class="btn btn-success">{{translate('messages.Approve')}}</button>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{'Cancelar'}}</button>
+                                                    <button type="submit" class="btn btn-success">{{'Aprobar'}}</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -191,7 +191,7 @@
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title">{{translate('messages.Deny_Payment')}}</h5>
+                                                <h5 class="modal-title">{{'Denegar pago'}}</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -202,13 +202,13 @@
                                                     <input type="hidden" name="id" value="{{$payment->id}}">
                                                     <input type="hidden" name="status" value="denied">
                                                     <div class="form-group">
-                                                        <label class="input-label">{{translate('messages.Admin_Note')}} ({{translate('messages.Required')}})</label>
+                                                        <label class="input-label">{{'Nota de administrador'}} ({{'Requerido'}})</label>
                                                         <textarea name="admin_note" class="form-control" rows="3" required></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{translate('messages.Cancel')}}</button>
-                                                    <button type="submit" class="btn btn-danger">{{translate('messages.Deny')}}</button>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{'Cancelar'}}</button>
+                                                    <button type="submit" class="btn btn-danger">{{'Denegar'}}</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -221,7 +221,7 @@
                         <div class="empty--data">
                             <img src="{{asset('/public/assets/admin/svg/illustrations/sorrow.svg')}}" alt="public">
                             <h5>
-                                {{translate('no_data_found')}}
+                                {{'no se encontraron datos'}}
                             </h5>
                         </div>
                         @endif

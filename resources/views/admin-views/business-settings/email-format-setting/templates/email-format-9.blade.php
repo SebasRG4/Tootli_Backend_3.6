@@ -5,8 +5,8 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
     <tbody>
         <tr>
             <td class="main-table-td">
-                <h2 class="mb-3" id="mail-title">{{ $data['title']?? translate('Main_Title_or_Subject_of_the_Mail') }}</h2>
-                <div class="mb-1" id="mail-body">{!! $data['body']?? translate('Hi_Sabrina,') !!}</div>
+                <h2 class="mb-3" id="mail-title">{{ $data['title']?? 'Título principal o asunto del correo' }}</h2>
+                <div class="mb-1" id="mail-body">{!! $data['body']?? 'Hola sabrina,' !!}</div>
                 <table class="bg-section p-10 w-100">
                     <tbody>
                         <tr>
@@ -18,7 +18,7 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                                     src="{{ $data?->logo ? $data->logo_full_url : \App\CentralLogics\Helpers::get_full_url('business',$restaurant_logo?->value,$restaurant_logo?->storage[0]?->value ?? 'public', 'favicon') }}"
 
                                     id="logoViewer" alt="">
-                                    <h3 class="mb-3 mt-0">{{ translate('Order_Info') }}</h3>
+                                    <h3 class="mb-3 mt-0">{{ 'Información del pedido' }}</h3>
                                 </span>
                             </td>
                         </tr>
@@ -28,42 +28,42 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <h3 class="subtitle">{{ translate('Order_Summary') }}</h3>
-                                                <span class="d-block">{{ translate('Order') }}{{ translate('#_48573') }}</span>
-                                                <span class="d-block">{{ translate('23 Jul, 2023 4:30 am') }}</span>
+                                                <h3 class="subtitle">{{ 'Resumen del pedido' }}</h3>
+                                                <span class="d-block">{{ 'Orden' }}{{ '# 48573' }}</span>
+                                                <span class="d-block">{{ '23 julio 2023 4:30 am' }}</span>
                                             </td>
                                             <td class="email-template-09-max-width">
-                                                <h3 class="subtitle">{{ translate('Delivery_Address') }}</h3>
-                                                <span class="d-block">{{ translate('Munam_Shahariar') }}</span>
-                                                <span class="d-block" >{{ translate('4517_Washington_Ave._Manchester,_Kentucky_39495') }}</span>
+                                                <h3 class="subtitle">{{ 'Dirección de entrega' }}</h3>
+                                                <span class="d-block">{{ 'Munam Shahariar' }}</span>
+                                                <span class="d-block" >{{ '4517 Washington Ave. Manchester, Kentucky 39495' }}</span>
                                             </td>
                                         </tr>
                                         <td colspan="2">
                                             <table class="w-100">
                                                 <thead class="bg-section-2">
                                                     <tr>
-                                                        <th class="text-left p-1 px-3">{{ translate('Product') }}</th>
-                                                        <th class="text-right p-1 px-3">{{ translate('Price') }}</th>
+                                                        <th class="text-left p-1 px-3">{{ 'Producto' }}</th>
+                                                        <th class="text-right p-1 px-3">{{ 'Precio' }}</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr>
                                                         <td class="text-left p-2 px-3">
-                                                            {{ translate('1._The_school_of_life_-_emotional_baggage_tote_bag_-_canvas_tote_bag_(navy)_x_1') }}
+                                                            {{ '1. La escuela de la vida - bolso de mano equipaje emocional - bolso de mano de lona (azul marino) x 1' }}
                                                         </td>
                                                         <td class="text-right p-2 px-3">
                                                             <h4>
-                                                                {{ translate('$5,465') }}
+                                                                {{ '$5,465' }}
                                                             </h4>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="text-left p-2 px-3">
-                                                            {{ translate('2._3USB_Head_Phone_x_1') }}
+                                                            {{ '2. 3 auriculares USB x 1' }}
                                                         </td>
                                                         <td class="text-right p-2 px-3">
                                                             <h4>
-                                                                {{ translate('$354') }}
+                                                                {{ '$354' }}
                                                             </h4>
                                                         </td>
                                                     </tr>
@@ -73,46 +73,46 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                                                             <table class="w-100">
                                                                 <tr>
                                                                     <td class="email-template-table-td-width"></td>
-                                                                    <td class="p-1 px-3">{{ translate('Item_Price') }}</td>
-                                                                    <td class="text-right p-1 px-3">{{ translate('$85') }}</td>
+                                                                    <td class="p-1 px-3">{{ 'Precio del artículo' }}</td>
+                                                                    <td class="text-right p-1 px-3">{{ '$85' }}</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td class="email-template-table-td-width"></td>
-                                                                    <td class="p-1 px-3">{{ translate('Addon') }}</td>
-                                                                    <td class="text-right p-1 px-3">{{ translate('$85') }}</td>
+                                                                    <td class="p-1 px-3">{{ 'Añadir' }}</td>
+                                                                    <td class="text-right p-1 px-3">{{ '$85' }}</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td class="email-template-table-td-width"></td>
-                                                                    <td class="p-1 px-3">{{ translate('Sub_total') }}</td>
-                                                                    <td class="text-right p-1 px-3">{{ translate('$90') }}</td>
+                                                                    <td class="p-1 px-3">{{ 'Subtotal' }}</td>
+                                                                    <td class="text-right p-1 px-3">{{ '$90' }}</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td class="email-template-table-td-width"></td>
-                                                                    <td class="p-1 px-3">{{ translate('Discount') }}</td>
-                                                                    <td class="text-right p-1 px-3">{{ translate('$10') }}</td>
+                                                                    <td class="p-1 px-3">{{ 'Descuento' }}</td>
+                                                                    <td class="text-right p-1 px-3">{{ '$10' }}</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td class="email-template-table-td-width"></td>
-                                                                    <td class="p-1 px-3">{{ translate('Coupon_Discount') }}</td>
-                                                                    <td class="text-right p-1 px-3">{{ translate('$00') }}</td>
+                                                                    <td class="p-1 px-3">{{ 'Cupón de descuento' }}</td>
+                                                                    <td class="text-right p-1 px-3">{{ '$00' }}</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td class="email-template-table-td-width"></td>
-                                                                    <td class="p-1 px-3">{{ translate('VAT_/_Tax') }}</td>
-                                                                    <td class="text-right p-1 px-3">{{ translate('$15') }}</td>
+                                                                    <td class="p-1 px-3">{{ 'IVA / Impuesto' }}</td>
+                                                                    <td class="text-right p-1 px-3">{{ '$15' }}</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td class="email-template-table-td-width"></td>
-                                                                    <td class="p-1 px-3">{{ translate('Delivery_Charge') }}</td>
-                                                                    <td class="text-right p-1 px-3">{{ translate('$20') }}</td>
+                                                                    <td class="p-1 px-3">{{ 'Cargo de entrega' }}</td>
+                                                                    <td class="text-right p-1 px-3">{{ '$20' }}</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td class="email-template-table-td-width"></td>
                                                                     <td class="p-1 px-3">
-                                                                        <h4>{{ translate('Total') }}</h4>
+                                                                        <h4>{{ 'Total' }}</h4>
                                                                     </td>
                                                                     <td class="text-right p-1 px-3">
-                                                                        <span class="text-base">{{ translate('$105') }}</span>
+                                                                        <span class="text-base">{{ '$105' }}</span>
                                                                     </td>
                                                                 </tr>
                                                             </table>
@@ -129,10 +129,10 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                 </table>
                 <hr>
                 <div class="mb-2" id="mail-footer">
-                    {{ $data['footer_text'] ?? translate('Please_contact_us_for_any_queries,_we’re_always_happy_to_help.') }}
+                    {{ $data['footer_text'] ?? 'Comuníquese con nosotros para cualquier consulta, siempre estaremos encantados de ayudarle.' }}
                 </div>
                 <div>
-                    {{ translate('Thanks_&_Regards') }},
+                    {{ 'Gracias y saludos' }},
                 </div>
                 <div class="mb-4">
                     {{ $company_name }}
@@ -142,10 +142,10 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
         <tr>
             <td>
             <span class="privacy">
-                <a href="#" id="privacy-check" style="{{ (isset($data['privacy']) && $data['privacy'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Privacy_Policy')}}</a>
-                <a href="#" id="refund-check" style="{{ (isset($data['refund']) && $data['refund'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Refund_Policy') }}</a>
-                <a href="#" id="cancelation-check" style="{{ (isset($data['cancelation']) && $data['cancelation'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Cancelation_Policy') }}</a>
-                <a href="#" id="contact-check" style="{{ (isset($data['contact']) && $data['contact'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Contact_us') }}</a>
+                <a href="#" id="privacy-check" style="{{ (isset($data['privacy']) && $data['privacy'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ 'política de privacidad'}}</a>
+                <a href="#" id="refund-check" style="{{ (isset($data['refund']) && $data['refund'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ 'Política de reembolso' }}</a>
+                <a href="#" id="cancelation-check" style="{{ (isset($data['cancelation']) && $data['cancelation'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ 'Política de Cancelación' }}</a>
+                <a href="#" id="contact-check" style="{{ (isset($data['contact']) && $data['contact'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ 'Contáctenos' }}</a>
             </span>
                 <span class="social email-template-social-span">
                     <a href="" id="facebook-check"  class="email-template-social-media"  style="{{ (isset($data['facebook']) && $data['facebook'] == 1)?'':'display:none;' }}">
@@ -165,7 +165,7 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                     </a>
                 </span>
                 <span class="copyright" id="mail-copyright">
-                    {{ $data['copyright_text']?? translate('Copyright 2023 6ammart. All right reserved') }}
+                    {{ $data['copyright_text']?? 'Copyright 2023 6ammart. Todos los derechos reservados' }}
                 </span>
             </td>
         </tr>

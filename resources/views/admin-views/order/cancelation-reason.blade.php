@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.order_cancellation_reasons'))
+@section('title', 'motivos de cancelación del pedido')
 
 @push('css_or_js')
 @endpush
@@ -14,7 +14,7 @@
                     <img src="{{ asset('assets/admin/img/email.png') }}" alt="public">
                 </div>
                 <span>
-                    {{ translate('messages.order_cancellation_reasons') }}
+                    {{ 'motivos de cancelación del pedido' }}
                 </span>
             </h1>
         </div>
@@ -26,7 +26,7 @@
                     <div class="d-flex flex-wrap justify-content-between align-items-center mb-md-0 mb-3">
                         <div class="mx-1">
                             <h5 class="form-label mb-0">
-                                {{ translate('messages.add_an_order_cancellation_reason') }}
+                                {{ 'agregar un motivo de cancelación de pedido' }}
                             </h5>
                         </div>
                     </div>
@@ -43,18 +43,18 @@
                                 <label for="order_cancellation_reason"></label>
                                 <select name="user_type" id="order_cancellation_reason" class="form-control h--45px"
                                     required>
-                                    <option value="">{{ translate('messages.select_user_type') }}</option>
-                                    <option value="admin">{{ translate('messages.admin') }}</option>
-                                    <option value="store">{{ translate('messages.store') }}</option>
-                                    <option value="customer">{{ translate('messages.customer') }}</option>
-                                    <option value="deliveryman">{{ translate('messages.deliveryman') }}</option>
+                                    <option value="">{{ 'seleccione el tipo de usuario' }}</option>
+                                    <option value="admin">{{ 'administración' }}</option>
+                                    <option value="store">{{ 'Negocio' }}</option>
+                                    <option value="customer">{{ 'Cliente' }}</option>
+                                    <option value="deliveryman">{{ 'Repartidor' }}</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="col-md-auto">
                             <button type="submit"
-                                class="btn btn--primary h--45px btn-block">{{ translate('messages.add_reason') }}</button>
+                                class="btn btn--primary h--45px btn-block">{{ 'añadir motivo' }}</button>
                         </div>
                     </div>
                 </form>
@@ -66,7 +66,7 @@
                 <div class="d-flex flex-wrap justify-content-between align-items-center mb-md-0 mb-3">
                     <div class="mx-1">
                         <h5 class="form-label mb-4">
-                            {{ translate('messages.order_cancellation_reason_list') }}
+                            {{ 'lista de motivos de cancelación de pedido' }}
                         </h5>
                     </div>
                 </div>
@@ -83,11 +83,11 @@
                     }'>
                             <thead class="thead-light">
                                 <tr>
-                                    <th class="border-0">{{ translate('messages.SL') }}</th>
-                                    <th class="border-0">{{ translate('messages.Reason') }}</th>
-                                    <th class="border-0">{{ translate('messages.type') }}</th>
-                                    <th class="border-0">{{ translate('messages.status') }}</th>
-                                    <th class="border-0 text-center">{{ translate('messages.action') }}</th>
+                                    <th class="border-0">{{ 'SL' }}</th>
+                                    <th class="border-0">{{ 'Razón' }}</th>
+                                    <th class="border-0">{{ 'tipo' }}</th>
+                                    <th class="border-0">{{ 'estado' }}</th>
+                                    <th class="border-0 text-center">{{ 'acción' }}</th>
                                 </tr>
                             </thead>
 
@@ -120,15 +120,15 @@
 
                                                 <button
                                                     class="btn action-btn btn--primary btn-outline-primary identifyingClass show-modal"
-                                                    data-id="{{ $reason['id'] }}" title="{{ translate('messages.edit') }}" data-data="{{ $reason->reason }}" data-type="{{ $reason->user_type }}">
+                                                    data-id="{{ $reason['id'] }}" title="{{ 'editar' }}" data-data="{{ $reason->reason }}" data-type="{{ $reason->user_type }}">
                                                     <i class="tio-edit"></i>
                                                 </button>
 
 
                                                 <a class="btn btn-sm btn--danger btn-outline-danger action-btn form-alert"
                                                     href="javascript:"
-                                                    data-id="order-cancellation-reason-{{ $reason['id'] }}" data-message="{{ translate('messages.want_to_delete_this_order_cancellation_reason') }}"
-                                                    title="{{ translate('messages.delete') }}">
+                                                    data-id="order-cancellation-reason-{{ $reason['id'] }}" data-message="{{ 'Quiero eliminar este motivo de cancelación de pedido.' }}"
+                                                    title="{{ 'borrar' }}">
                                                     <i class="tio-delete-outlined"></i>
                                                 </a>
                                                 <form
@@ -158,7 +158,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">{{ translate('messages.order_cancellation_reason_Update') }}</label></h5>
+                    <h5 class="modal-title" id="exampleModalLabel">{{ 'motivo de cancelación del pedido Actualizar' }}</label></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -172,16 +172,16 @@
                             <label for="hiddenValuetype"></label>
                             <select name="user_type" id="hiddenValuetype" class="form-control h--45px"
                                 required>
-                                <option value="">{{ translate('messages.select_user_type') }}</option>
-                                <option value="admin">{{ translate('messages.admin') }}</option>
-                                <option value="store">{{ translate('messages.store') }}</option>
-                                <option value="customer">{{ translate('messages.customer') }}</option>
-                                <option value="deliveryman">{{ translate('messages.deliveryman') }}</option>
+                                <option value="">{{ 'seleccione el tipo de usuario' }}</option>
+                                <option value="admin">{{ 'administración' }}</option>
+                                <option value="store">{{ 'Negocio' }}</option>
+                                <option value="customer">{{ 'Cliente' }}</option>
+                                <option value="deliveryman">{{ 'Repartidor' }}</option>
                             </select>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ translate('Close') }}</button>
-                        <button type="submit" class="btn btn-primary">{{ translate('Save_changes') }}</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'Cerca' }}</button>
+                        <button type="submit" class="btn btn-primary">{{ 'Guardar cambios' }}</button>
                     </div>
                 </form>
             </div>

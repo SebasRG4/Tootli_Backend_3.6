@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Deliveryman_Withdraw Request'))
+@section('title', 'Solicitud de retiro del repartidor')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -15,7 +15,7 @@
                     <img src="{{ asset('assets/admin/img/icons/wallet.png') }}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.deliveryman_withdraw_transaction') }}
+                    {{ 'repartidor retirar transacción' }}
                 </span>
             </h1>
         </div>
@@ -25,7 +25,7 @@
             <!-- Header -->
             <div class="card-header flex-wrap py-2 border-0">
                 <div class="d-flex align-items-center gap-2 mb-2">
-                    <h4 class="mb-0">{{ translate('messages.transaction_History') }}</h4>
+                    <h4 class="mb-0">{{ 'Historial de transacciones' }}</h4>
                     <span class="badge badge-soft-dark rounded-circle">{{ $withdraw_req->total() }}</span>
                 </div>
                 <div class="search--button-wrapper justify-content-end">
@@ -34,15 +34,15 @@
                         <div class="input-group input--group">
                             <input id="datatableSearch" name="search" type="search"
                                 value="{{ request()?->search ?? null }}" class="form-control h--40px"
-                                placeholder="{{ translate('ex_:_search_deliveryman_name') }}"
-                                aria-label="{{ translate('messages.search_here') }}">
+                                placeholder="{{ 'Ej: buscar nombre del repartidor' }}"
+                                aria-label="{{ 'buscar aquí' }}">
                             <button type="submit" class="btn btn--primary h--40px"><i class="tio-search"></i></button>
                         </div>
 
                     </form>
                     @if (request()->get('search'))
                         <button type="reset" class="btn btn--primary ml-2 location-reload-to-base"
-                            data-url="{{ url()->full() }}">{{ translate('messages.reset') }}</button>
+                            data-url="{{ url()->full() }}">{{ 'reiniciar' }}</button>
                     @endif
 
 
@@ -50,19 +50,19 @@
                         <select name="withdraw_status_filter" class="custom-select h--40px py-0 status-filter theme-style">
                             <option value="all"
                                 {{ session()->has('withdraw_status_filter') && session('withdraw_status_filter') == 'all' ? 'selected' : '' }}>
-                                {{ translate('messages.all') }}
+                                {{ 'todo' }}
                             </option>
                             <option value="approved"
                                 {{ session()->has('withdraw_status_filter') && session('withdraw_status_filter') == 'approved' ? 'selected' : '' }}>
-                                {{ translate('messages.approved') }}
+                                {{ 'aprobado' }}
                             </option>
                             <option value="denied"
                                 {{ session()->has('withdraw_status_filter') && session('withdraw_status_filter') == 'denied' ? 'selected' : '' }}>
-                                {{ translate('messages.denied') }}
+                                {{ 'denegado' }}
                             </option>
                             <option value="pending"
                                 {{ session()->has('withdraw_status_filter') && session('withdraw_status_filter') == 'pending' ? 'selected' : '' }}>
-                                {{ translate('messages.pending') }}
+                                {{ 'Pendiente' }}
                             </option>
 
                         </select>
@@ -75,25 +75,25 @@
                                     "target": "#usersExportDropdown",
                                     "type": "css-animation"
                                 }'>
-                            <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                            <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                         </a>
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                            <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                            <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                             <a id="export-excel" class="dropdown-item"
                                 href="{{ route('admin.transactions.delivery-man.withdraw_export', ['type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
-                                {{ translate('messages.excel') }}
+                                {{ 'sobresalir' }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
                                 href="{{ route('admin.transactions.delivery-man.withdraw_export', ['type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
-                                .{{ translate('messages.csv') }}
+                                .{{ 'csv' }}
                             </a>
                         </div>
                     </div>
@@ -110,22 +110,22 @@
                             <tr>
 
                                 <th class="fs-14 text-title font-semibold">
-                                    {{ translate('SL') }}
+                                    {{ 'SL' }}
                                 </th>
                                 <th class="fs-14 text-title font-semibold">
-                                    {{ translate('messages.amount') }}
+                                    {{ 'cantidad' }}
                                 </th>
                                 <th class="fs-14 text-title font-semibold">
-                                    {{ translate('messages.deliveryman') }}
+                                    {{ 'Repartidor' }}
                                 </th>
                                 <th class="fs-14 text-title font-semibold">
-                                    {{ translate('messages.request_time') }}
+                                    {{ 'tiempo de solicitud' }}
                                 </th>
                                 <th class="fs-14 text-title font-semibold">
-                                    {{ translate('messages.status') }}
+                                    {{ 'estado' }}
                                 </th>
                                 <th class="fs-14 text-center text-title font-semibold">
-                                    {{ translate('messages.action') }}
+                                    {{ 'acción' }}
                                 </th>
                             </tr>
                         </thead>
@@ -161,7 +161,7 @@
                                                     </div>
                                                 </a>
                                             @else
-                                                {{ translate('messages.deliveryman deleted!') }}
+                                                {{ 'repartidor eliminado!' }}
                                             @endif
 
                                         </div>
@@ -177,13 +177,13 @@
 
                                             @if ($wr->approved == 0)
                                                 <label
-                                                    class="badge badge-soft-info">{{ translate('messages.pending') }}</label>
+                                                    class="badge badge-soft-info">{{ 'Pendiente' }}</label>
                                             @elseif($wr->approved == 1)
                                                 <label
-                                                    class="badge badge-soft-success">{{ translate('messages.approved') }}</label>
+                                                    class="badge badge-soft-success">{{ 'aprobado' }}</label>
                                             @else
                                                 <label
-                                                    class="badge badge-soft-danger">{{ translate('messages.denied') }}</label>
+                                                    class="badge badge-soft-danger">{{ 'denegado' }}</label>
                                             @endif
                                         </div>
                                     </td>
@@ -196,7 +196,7 @@
                                                         class="tio-visible-outlined"></i>
                                                 </a>
                                             @else
-                                                {{ translate('messages.deliveryman_deleted') }}
+                                                {{ 'repartidor eliminado' }}
                                             @endif
 
                                         </div>
@@ -217,7 +217,7 @@
                 <div class="empty--data">
                     <img src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
                     <h5>
-                        {{ translate('no_data_found') }}
+                        {{ 'no se encontraron datos' }}
                     </h5>
                 </div>
             @endif
@@ -263,15 +263,15 @@
             <form  class="withdraw_status_form" action="${url}" method="POST">
                     @csrf
                 <div class="mt-5">
-                    <h5 class="font-semibold text-center mb-3">{{ translate('approval_note') }} </h5>
-                    <textarea required name="note" id="" class="form-control" rows="6" maxlength="200" placeholder="{{ translate('Type_a_note_about_request_approval') }}"></textarea>
+                    <h5 class="font-semibold text-center mb-3">{{ 'nota de aprobación' }} </h5>
+                    <textarea required name="note" id="" class="form-control" rows="6" maxlength="200" placeholder="{{ 'Escriba una nota sobre la aprobación de la solicitud' }}"></textarea>
                     <input name="approved" value="1" type="hidden">
                     <div class="mt-4 d-flex justify-content-center gap-3">
                         <button type="button"  data-id="${id}" class="btn btn-soft-secondary min-w-100px withdraw-info-show">
                             <i class="tio-arrow-backward"></i>
-                            {{ translate('back') }}
+                            {{ 'atrás' }}
                         </button>
-                        <button type="submit" class="btn btn-success set_disable min-w-100px">{{ translate('complete') }}</button>
+                        <button type="submit" class="btn btn-success set_disable min-w-100px">{{ 'completo' }}</button>
                     </div>
                 </div>
               </form>`
@@ -286,15 +286,15 @@
             <form class="withdraw_status_form" action="${url}" method="POST">
                     @csrf
                 <div class="mt-5">
-                    <h5 class="font-semibold text-center mb-3">{{ translate('denial_note') }} </h5>
-                    <textarea required name="note" id="" class="form-control" rows="6" placeholder="{{ translate('Type_a_note_about_request_denial') }}"></textarea>
+                    <h5 class="font-semibold text-center mb-3">{{ 'nota de negación' }} </h5>
+                    <textarea required name="note" id="" class="form-control" rows="6" placeholder="{{ 'Escriba una nota sobre el rechazo de la solicitud' }}"></textarea>
                     <input name="approved" value="2" type="hidden">
                     <div class="mt-4 d-flex justify-content-center gap-3">
                         <button type="button"  data-id="${id}" class="btn btn-soft-secondary min-w-100px withdraw-info-show">
                             <i class="tio-arrow-backward"></i>
-                            {{ translate('back') }}
+                            {{ 'atrás' }}
                         </button>
-                        <button type="submit" class="btn btn-success set_disable min-w-100px">{{ translate('complete') }}</button>
+                        <button type="submit" class="btn btn-success set_disable min-w-100px">{{ 'completo' }}</button>
                     </div>
                 </div>
               </form>`

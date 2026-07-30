@@ -7,17 +7,17 @@
         <a class="deco-none"
             href="{{route('admin.store.view',[$wr->vendor['id'],'module_id'=>$wr->vendor->stores[0]->module_id])}}">{{ Str::limit($wr->vendor->stores[0]->name, 20, '...') }}</a>
         @else
-        {{translate('messages.store deleted!') }}
+        {{'tienda eliminada!' }}
         @endif
     </td>
     <td>{{date('Y-m-d '.config('timeformat'),strtotime($wr->created_at))}}</td>
     <td>
         @if($wr->approved==0)
-            <label class="badge badge-primary">{{ translate('messages.pending') }}</label>
+            <label class="badge badge-primary">{{ 'Pendiente' }}</label>
         @elseif($wr->approved==1)
-            <label class="badge badge-success">{{ translate('messages.approved') }}</label>
+            <label class="badge badge-success">{{ 'aprobado' }}</label>
         @else
-            <label class="badge badge-danger">{{ translate('messages.denied') }}</label>
+            <label class="badge badge-danger">{{ 'denegado' }}</label>
         @endif
     </td>
     <td>
@@ -26,7 +26,7 @@
             class="btn action-btn btn--warning btn-outline-warning"><i class="tio-visible-outlined"></i>
         </a>
         @else
-        {{translate('messages.store_deleted') }}
+        {{'tienda eliminada' }}
         @endif
 
     </td>

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.Add new sub category'))
+@section('title','Agregar nueva subcategoría')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/edit.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{translate('messages.add_new_sub_category')}}
+                    {{'agregar nueva subcategoría'}}
                 </span>
             </h1>
         </div>
@@ -32,7 +32,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link lang_link active"
                                     href="#"
-                                    id="default-link">{{translate('messages.default')}}</a>
+                                    id="default-link">{{'por defecto'}}</a>
                                 </li>
                                 @foreach ($language as $lang)
                                     <li class="nav-item">
@@ -44,34 +44,34 @@
                             </ul>
                         </div>
                         <div class="form-group lang_form col-sm-6" id="default-form">
-                            <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{ translate('messages.default') }}) <span class="form-label-secondary text-danger"
+                            <label class="input-label" for="exampleFormControlInput1">{{'nombre'}} ({{ 'por defecto' }}) <span class="form-label-secondary text-danger"
                                 data-toggle="tooltip" data-placement="right"
-                                data-original-title="{{ translate('messages.Required.')}}"> *
+                                data-original-title="{{ 'Requerido.'}}"> *
                                 </span>
                             </label>
-                            <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_sub_category')}}" maxlength="191"  >
+                            <input type="text" name="name[]" class="form-control" placeholder="{{'nueva subcategoría'}}" maxlength="191"  >
                         </div>
                         <input type="hidden" name="lang[]" value="default">
                         @foreach($language as $lang)
                             <div class="form-group d-none lang_form col-sm-6" id="{{$lang}}-form">
-                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
-                                <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_sub_category')}}" maxlength="191"  >
+                                <label class="input-label" for="exampleFormControlInput1">{{'nombre'}} ({{strtoupper($lang)}})</label>
+                                <input type="text" name="name[]" class="form-control" placeholder="{{'nueva subcategoría'}}" maxlength="191"  >
                             </div>
                             <input type="hidden" name="lang[]" value="{{$lang}}">
                         @endforeach
                     @else
                         <div class="form-group col-sm-6">
-                            <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}}</label>
-                            <input type="text" name="name" class="form-control" placeholder="{{translate('messages.new_sub_category')}}" value="{{old('name')}}" maxlength="191">
+                            <label class="input-label" for="exampleFormControlInput1">{{'nombre'}}</label>
+                            <input type="text" name="name" class="form-control" placeholder="{{'nueva subcategoría'}}" value="{{old('name')}}" maxlength="191">
                         </div>
                         <input type="hidden" name="lang[]" value="default">
                     @endif
                         <div class="form-group col-sm-6">
                             <label class="input-label"
-                                for="exampleFormControlSelect1">{{translate('messages.main_category')}}
+                                for="exampleFormControlSelect1">{{'categoría principal'}}
                                 <span class="input-label-secondary">*</span></label>
                             <select id="exampleFormControlSelect1" name="parent_id" class="form-control js-select2-custom" required>
-                                <option value="" selected disabled>{{translate('Select Main Category')}}</option>
+                                <option value="" selected disabled>{{'Seleccionar categoría principal'}}</option>
                                 @foreach($mainCategories as $category)
                                     <option value="{{$category['id']}}" >{{$category['name']}} ({{Str::limit($category->module->module_name, 15, '...')}})</option>
                                 @endforeach
@@ -81,29 +81,29 @@
 
                           <div class="form-group col-sm-6">
                                 <label class="input-label" for="">
-                                    {{ translate('messages.Priority') }}
+                                    {{ 'Prioridad' }}
                                 </label>
                                 <select required name="priority"
-                                    data-original-title="{{ translate('messages.Select_Priority') }}"
+                                    data-original-title="{{ 'Seleccionar prioridad' }}"
                                     class="custom-select">
-                                    <option value="0">{{ translate('messages.Normal') }}</option>
-                                    <option value="1">{{ translate('messages.Medium') }}</option>
-                                    <option value="2">{{ translate('messages.High') }}</option>
+                                    <option value="0">{{ 'Normal' }}</option>
+                                    <option value="1">{{ 'Medio' }}</option>
+                                    <option value="2">{{ 'Alto' }}</option>
                                 </select>
                             </div>
 
                         <div class="form-group col-sm-6">
-                            <label class="input-label">{{translate('messages.image')}} <small class="text-danger">({{translate('messages.ratio')}} 1:1)</small></label>
+                            <label class="input-label">{{'imagen'}} <small class="text-danger">({{'relación'}} 1:1)</small></label>
                             <div class="custom-file">
                                 <input type="file" name="image" id="customFileEg1" class="custom-file-input" accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                <label class="custom-file-label" for="customFileEg1">{{translate('messages.choose_file')}}</label>
+                                <label class="custom-file-label" for="customFileEg1">{{'elegir archivo'}}</label>
                             </div>
                         </div>
 
                         <div class="col-sm-12">
                             <div class="btn--container justify-content-end">
-                                <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                                <button type="submit" class="btn btn--primary">{{translate('messages.add')}}</button>
+                                <button type="reset" id="reset_btn" class="btn btn--reset">{{'reiniciar'}}</button>
+                                <button type="submit" class="btn btn--primary">{{'agregar'}}</button>
                             </div>
                         </div>
                     </div>
@@ -113,12 +113,12 @@
         <div class="card mt-2">
             <div class="card-header py-2 border-0">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title">{{translate('messages.sub_category_list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$categories->total()}}</span></h5>
+                    <h5 class="card-title">{{'lista de subcategorías'}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$categories->total()}}</span></h5>
 
                     <form   class="search-form">
                         <!-- Search -->
                         <div class="input-group input--group">
-                            <input id="datatableSearch" data-reload_url="{{url()->full()}}" name="search" value="{{ request()?->search ?? null }}"  type="search" class="form-control" placeholder="{{translate('messages.ex_:_search_sub_categories')}}" aria-label="{{translate('messages.ex_:_sub_categories')}}">
+                            <input id="datatableSearch" data-reload_url="{{url()->full()}}" name="search" value="{{ request()?->search ?? null }}"  type="search" class="form-control" placeholder="{{'ej: buscar subcategorías'}}" aria-label="{{'ej: subcategorías'}}">
                             <input type="hidden" name="position" value="1">
                             <input type="hidden" name="sub_category" value="1">
                             <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
@@ -126,7 +126,7 @@
                         <!-- End Search -->
                     </form>
                     @if(request()->get('search'))
-                    <button type="reset" class="btn btn--primary ml-2 location-reload-to-category" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                    <button type="reset" class="btn btn--primary ml-2 location-reload-to-category" data-url="{{url()->full()}}">{{'reiniciar'}}</button>
                     @endif
                     <!-- Unfold -->
                     <div class="hs-unfold mr-2">
@@ -135,24 +135,24 @@
                                     "target": "#usersExportDropdown",
                                     "type": "css-animation"
                                 }'>
-                            <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                            <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                         </a>
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
 
-                            <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                            <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                             <a id="export-excel" class="dropdown-item" href="{{ route('admin.category.export-categories', ['type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
-                                {{ translate('messages.excel') }}
+                                {{ 'sobresalir' }}
                             </a>
                             <a id="export-csv" class="dropdown-item" href="{{ route('admin.category.export-categories', ['type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
-                                .{{ translate('messages.csv') }}
+                                .{{ 'csv' }}
                             </a>
 
                         </div>
@@ -172,14 +172,14 @@
                         }'>
                         <thead class="thead-light">
                             <tr>
-                                <th class="border-0">{{translate('sl')}}</th>
-                                <th class="border-0">{{translate('messages.id')}}</th>
-                                <th class="border-0 w--1">{{translate('messages.main_category')}}</th>
-                                <th class="border-0 text-center">{{translate('messages.sub_category')}}</th>
-                                <th class="border-0 text-center">{{translate('messages.status')}}</th>
-                                <th class="border-0 text-center">{{translate('messages.featured')}}</th>
-                                <th class="border-0 text-center">{{translate('messages.priority')}}</th>
-                                <th class="border-0 text-center">{{translate('messages.action')}}</th>
+                                <th class="border-0">{{'SL'}}</th>
+                                <th class="border-0">{{'identificación'}}</th>
+                                <th class="border-0 w--1">{{'categoría principal'}}</th>
+                                <th class="border-0 text-center">{{'subcategoría'}}</th>
+                                <th class="border-0 text-center">{{'estado'}}</th>
+                                <th class="border-0 text-center">{{'presentado'}}</th>
+                                <th class="border-0 text-center">{{'prioridad'}}</th>
+                                <th class="border-0 text-center">{{'acción'}}</th>
                             </tr>
                         </thead>
 
@@ -190,7 +190,7 @@
                                 <td>{{$category->id}}</td>
                                 <td>
                                     <span class="d-block font-size-sm text-body">
-                                        {{ $category?->parent?->name ? Str::limit($category->parent['name'],20,'...') : translate('Invalid_Category') }}
+                                        {{ $category?->parent?->name ? Str::limit($category->parent['name'],20,'...') : 'Categoría no válida' }}
                                     </span>
                                 </td>
                                 <td class="text-center">
@@ -213,10 +213,10 @@
                                                 data-type="status"
                                                 data-image-on="{{ asset('assets/admin/img/status-ons.png') }}"
                                                 data-image-off="{{ asset('assets/admin/img/off-danger.png') }}"
-                                                data-title-on="{{ translate('Do you want to Featured this sub category ?') }}"
-                                                data-title-off="{{ translate('Don’t you want to Featured this sub category?') }}"
-                                                data-text-on="<p>{{ translate('If you turn on this sub category as a featured category it will show in customer app landing page.') }}"
-                                                data-text-off="<p>{{ translate('If you turn off this sub category from featured category it will not show in customer app landing page.') }}</p>"
+                                                data-title-on="{{ '¿Quieres destacar esta subcategoría?' }}"
+                                                data-title-off="{{ '¿No quieres destacar esta subcategoría?' }}"
+                                                data-text-on="<p>{{ 'Si activa esta subcategoría como categoría destacada, se mostrará en la página de inicio de la aplicación del cliente.' }}"
+                                                data-text-off="<p>{{ 'Si desactiva esta subcategoría de la categoría destacada, no se mostrará en la página de inicio de la aplicación del cliente.' }}</p>"
                                                 class="toggle-switch-input dynamic-checkbox"
                                                 id="featuredCheckbox{{ $category->id }}"
                                                 {{ $category->featured ? 'checked' : '' }}>
@@ -233,9 +233,9 @@
                                 <td>
                                     <form action="{{route('admin.category.priority',$category->id)}}" class="priority-form">
                                         <select name="priority" id="priority" class="form-control priority-select form--control-select mx-auto {{$category->priority == 0 ? 'text-title':''}} {{$category->priority == 1 ? 'text-info':''}} {{$category->priority == 2 ? 'text-success':''}}">
-                                            <option value="0" {{$category->priority == 0?'selected':''}}>{{translate('messages.normal')}}</option>
-                                            <option value="1" {{$category->priority == 1?'selected':''}}>{{translate('messages.medium')}}</option>
-                                            <option value="2" {{$category->priority == 2?'selected':''}}>{{translate('messages.high')}}</option>
+                                            <option value="0" {{$category->priority == 0?'selected':''}}>{{'normal'}}</option>
+                                            <option value="1" {{$category->priority == 1?'selected':''}}>{{'medio'}}</option>
+                                            <option value="2" {{$category->priority == 2?'selected':''}}>{{'alto'}}</option>
                                         </select>
                                     </form>
                                 </td>
@@ -249,7 +249,7 @@
                                                 <i class="tio-edit"></i>
                                             </a>
                                         <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
-                                           data-id="category-{{$category['id']}}" data-message="{{ translate('Want to delete this category') }}" title="{{translate('messages.delete_category')}}"><i class="tio-delete-outlined"></i>
+                                           data-id="category-{{$category['id']}}" data-message="{{ 'Quiere eliminar esta categoría' }}" title="{{'eliminar categoría'}}"><i class="tio-delete-outlined"></i>
                                         </a>
                                         <form action="{{route('admin.category.delete',[$category['id']])}}" method="post" id="category-{{$category['id']}}">
                                             @csrf @method('delete')
@@ -272,7 +272,7 @@
             <div class="empty--data">
                 <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                 <h5>
-                    {{translate('no_data_found')}}
+                    {{'no se encontraron datos'}}
                 </h5>
             </div>
             @endif

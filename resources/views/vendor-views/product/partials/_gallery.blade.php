@@ -21,7 +21,7 @@
                                     <h2 class="ml-3">{{ $item?->getRawOriginal('name') }} </h2>
                                     <div>
                                         <a target="_blank" href="{{ route('vendor.item.edit',['id' => $item->id , 'product_gellary' => true ]) }}" class="btn btn--sm btn-outline-primary">
-                                            {{ translate('messages.use_this_product_info') }}
+                                            {{ 'utilizar la información de este producto' }}
                                         </a>
 
 
@@ -31,13 +31,13 @@
                                     <thead>
                                         <tr>
                                             <th class="px-4 border-0">
-                                                <h4 class="m-0 text-capitalize">{{ translate('General_Information') }}</h4>
+                                                <h4 class="m-0 text-capitalize">{{ 'Información general' }}</h4>
                                             </th>
                                             <th class="px-4 border-0">
-                                                <h4 class="m-0 text-capitalize">{{ translate('Available_Variations') }}</h4>
+                                                <h4 class="m-0 text-capitalize">{{ 'Variaciones disponibles' }}</h4>
                                             </th>
                                             <th class="px-4 border-0">
-                                                <h4 class="m-0 text-capitalize">{{ translate('tags') }}</h4>
+                                                <h4 class="m-0 text-capitalize">{{ 'etiquetas' }}</h4>
                                             </th>
                                         </tr>
                                     </thead>
@@ -45,30 +45,30 @@
                                         <tr>
                                             <td class="px-4 max-w--220px">
                                                 <span class="d-block mb-1">
-                                                    <span>{{ translate('messages.Category') }} : </span>
-                                                    <strong>{{ Str::limit(($item?->category?->parent ? $item?->category?->parent?->name : $item?->category?->name )  ?? translate('messages.uncategorize')
+                                                    <span>{{ 'Categoría' }} : </span>
+                                                    <strong>{{ Str::limit(($item?->category?->parent ? $item?->category?->parent?->name : $item?->category?->name )  ?? 'descategorizar'
                                                         , 20, '...') }}</strong>
                                                 </span>
                                                 <span class="d-block mb-1">
-                                                    <span>{{ translate('messages.Sub_Category') }} : </span>
-                                                    <strong>{{ Str::limit(($item?->category?->name )  ?? translate('messages.uncategorize')
+                                                    <span>{{ 'Subcategoría' }} : </span>
+                                                    <strong>{{ Str::limit(($item?->category?->name )  ?? 'descategorizar'
                                                         , 20, '...') }}</strong>
                                                 </span>
                                                 @if ($item->module->module_type == 'grocery')
                                                 <span class="d-block mb-1">
-                                                    <span>{{ translate('messages.Is_Organic') }} : </span>
-                                                    <strong> {{  $item->organic == 1 ?  translate('messages.yes') : translate('messages.no') }}</strong>
+                                                    <span>{{ 'es organico' }} : </span>
+                                                    <strong> {{  $item->organic == 1 ?  'Sí' : 'No' }}</strong>
                                                 </span>
                                                 @endif
                                                 @if ($item->module->module_type == 'food')
                                                 <span class="d-block mb-1">
-                                                    <span>{{ translate('messages.Item_type') }} : </span>
-                                                    <strong> {{  $item->veg == 1 ?  translate('messages.veg') : translate('messages.non_veg') }}</strong>
+                                                    <span>{{ 'tipo de artículo' }} : </span>
+                                                    <strong> {{  $item->veg == 1 ?  'verduras' : 'no vegetariano' }}</strong>
                                                 </span>
                                                 @else
                                                     @if ($item?->unit)
                                                     <span class="d-block mb-1">
-                                                        <span>{{ translate('messages.Unit') }} : </span>
+                                                        <span>{{ 'Unidad' }} : </span>
                                                         <strong> {{ $item?->unit?->unit  }}</strong>
                                                     </span>
                                                     @endif
@@ -81,7 +81,7 @@
                                                             @if (isset($variation['price']))
                                                                 <span class="d-block mb-1 text-capitalize">
                                                                     <strong>
-                                                                        {{ translate('please_update_the_food_variations.') }}
+                                                                        {{ 'actualice las variaciones de alimentos.' }}
                                                                     </strong>
                                                                 </span>
                                                             @break
@@ -125,7 +125,7 @@
                         </div>
                     </div>
                     <div>
-                        <h6> {{ translate('description') }}:</h6>
+                        <h6> {{ 'descripción' }}:</h6>
                         <P> {{ $item?->getRawOriginal('description') }}</P>
                     </div>
                 </div>

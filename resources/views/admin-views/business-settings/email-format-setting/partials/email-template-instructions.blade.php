@@ -12,9 +12,9 @@
                         <div class="mb-20">
                             <div class="text-center">
                                 <img src="{{asset('assets/admin/img/email-templates/1.png')}}" alt="" class="mb-20">
-                                <h5 class="modal-title">{{translate('Select_Theme')}}</h5>
+                                <h5 class="modal-title">{{'Seleccionar tema'}}</h5>
                                 <p>
-                                    {{ translate('Choose_a_related_email_template_theme_for_the_purpose_for_which_you_are_creating_the_email.') }}
+                                    {{ 'Elija un tema de plantilla de correo electrónico relacionado con el propósito para el cual está creando el correo electrónico.' }}
                                 </p>
                             </div>
                         </div>
@@ -23,9 +23,9 @@
                         <div class="mb-20">
                             <div class="text-center">
                                 <img src="{{asset('assets/admin/img/email-templates/5.png')}}" alt="" class="mb-20">
-                                <h5 class="modal-title">{{translate('Choose_Logo')}}</h5>
+                                <h5 class="modal-title">{{'Elija logotipo'}}</h5>
                                 <p>
-                                    {{translate('Upload_your_company_logo_in_1:1_format._This_will_show_above_the_Main_Title_of_the_email.')}}
+                                    {{'Cargue el logotipo de su empresa en formato 1:1. Esto se mostrará encima del título principal del correo electrónico.'}}
                                 </p>
                             </div>
                         </div>
@@ -34,9 +34,9 @@
                         <div class="mb-20">
                             <div class="text-center">
                                 <img src="{{asset('assets/admin/img/email-templates/2.png')}}" alt="" class="mb-20">
-                                <h5 class="modal-title">{{translate('Write_a_Title')}}</h5>
+                                <h5 class="modal-title">{{'Escribe un título'}}</h5>
                                 <p>
-                                    {{translate('Give_your_email_a_‘Catchy_Title’_to_help_the_reader_understand_easily.')}}
+                                    {{'Asigne a su correo electrónico un "Título atractivo" para ayudar al lector a comprenderlo fácilmente.'}}
                                 </p>
                             </div>
                         </div>
@@ -45,26 +45,26 @@
                         <div class="mb-20">
                             <div class="text-center">
                                 <img src="{{asset('assets/admin/img/email-templates/3.png')}}" alt="" class="mb-20">
-                                <h5 class="modal-title">{{translate('Write_a_message_in_the_Email_Body')}}</h5>
+                                <h5 class="modal-title">{{'Escribe un mensaje en el cuerpo del correo electrónico.'}}</h5>
                             </div>
                             <p>
-                                {{ translate('you_can_add_your_message_using_placeholders_to_include_dynamic_content._Here_are_some_examples_of_placeholders_you_can_use:') }}
+                                {{ 'puede agregar su mensaje usando marcadores de posición para incluir contenido dinámico. A continuación se muestran algunos ejemplos de marcadores de posición que puede utilizar:' }}
                             </p>
                             <ul>
                                 <li>
-                                    {userName}: {{ translate('the_name_of_the_user.') }}
+                                    {userName}: {{ 'el nombre del usuario.' }}
                                 </li>
                                 <li>
-                                    {deliveryManName}: {{ translate('the_name_of_the_delivery_person.') }}
+                                    {deliveryManName}: {{ 'el nombre del repartidor.' }}
                                 </li>
                                 <li>
-                                    {storeName}: {{ translate('the_name_of_the_store.') }}
+                                    {storeName}: {{ 'el nombre de la tienda.' }}
                                 </li>
                                 <li>
-                                    {orderId}: {{ translate('the_order_id.') }}
+                                    {orderId}: {{ 'la identificación del pedido.' }}
                                 </li>
                                 <li>
-                                    {transactionId}: {{ translate('the_transaction_id.') }}
+                                    {transactionId}: {{ 'la identificación de la transacción.' }}
                                 </li>
                             </ul>
                         </div>
@@ -73,9 +73,9 @@
                         <div class="mb-20">
                             <div class="text-center">
                                 <img src="{{asset('assets/admin/img/email-templates/4.png')}}" alt="" class="mb-20">
-                                <h5 class="modal-title">{{translate('Add_Button_&_Link')}}</h5>
+                                <h5 class="modal-title">{{'Agregar botón y enlace'}}</h5>
                                 <p>
-                                    {{translate('Specify_the_text_and_URL_for_the_button_that_you_want_to_include_in_your_email.')}}
+                                    {{'Especifique el texto y la URL del botón que desea incluir en su correo electrónico.'}}
                                 </p>
                             </div>
                         </div>
@@ -84,9 +84,9 @@
                         <div class="mb-20">
                             <div class="text-center">
                                 <img src="{{asset('assets/admin/img/email-templates/5.png')}}" alt="" class="mb-20">
-                                <h5 class="modal-title">{{translate('Change_Banner_Image_if_needed')}}</h5>
+                                <h5 class="modal-title">{{'Cambie la imagen del banner si es necesario'}}</h5>
                                 <p>
-                                    {{translate('Choose_the_relevant_banner_image_for_the_email_theme_you_use_for_this_mail.')}}
+                                    {{'Elija la imagen de banner relevante para el tema de correo electrónico que utiliza para este correo.'}}
                                 </p>
                             </div>
                         </div>
@@ -95,9 +95,9 @@
                         <div class="mb-20">
                             <div class="text-center">
                                 <img src="{{asset('assets/admin/img/email-templates/6.png')}}" alt="" class="mb-20">
-                                <h5 class="modal-title">{{translate('Add_Content_to_Email_Footer')}}</h5>
+                                <h5 class="modal-title">{{'Agregar contenido al pie de página del correo electrónico'}}</h5>
                                 <p>
-                                    {{translate('Write_text_on_the_footer_section_of_the_email,_and_choose_important_page_links_and_social_media_links.')}}
+                                    {{'Escriba texto en la sección de pie de página del correo electrónico y elija enlaces de páginas importantes y enlaces de redes sociales.'}}
                                 </p>
                             </div>
                         </div>
@@ -106,9 +106,9 @@
                         <div class="mb-20">
                             <div class="text-center">
                                 <img src="{{asset('assets/admin/img/email-templates/7.png')}}" alt="" class="mb-20">
-                                <h5 class="modal-title">{{translate('Create_a_copyright_notice')}}</h5>
+                                <h5 class="modal-title">{{'Crear un aviso de derechos de autor'}}</h5>
                                 <p>
-                                    {{translate('Include_a_copyright_notice_at_the_bottom_of_your_email_to_protect_your_content.')}}
+                                    {{'Incluya un aviso de derechos de autor en la parte inferior de su correo electrónico para proteger su contenido.'}}
                                 </p>
                             </div>
                         </div>
@@ -117,11 +117,11 @@
                         <div class="mb-20">
                             <div class="text-center">
                                 <img src="{{asset('assets/admin/img/email-templates/8.png')}}" alt="" class="mb-20">
-                                <h5 class="modal-title">{{translate('Save_and_publish')}}</h5>
+                                <h5 class="modal-title">{{'Guardar y publicar'}}</h5>
                                 <p>
-                                    {{translate("Once_you've_set_up_all_the_elements_of_your_email_template,_save_and_publish_it_for_use.")}}
+                                    {{'Una vez que haya configurado todos los elementos de su plantilla de correo electrónico, guárdela y publíquela para usarla.'}}
                                 </p>
-                                <button class="btn btn--primary w-100 mw-300px" data-dismiss="modal" type="button">{{translate('Got_It')}}</button>
+                                <button class="btn btn--primary w-100 mw-300px" data-dismiss="modal" type="button">{{'Entendido'}}</button>
                             </div>
                         </div>
                     </div>

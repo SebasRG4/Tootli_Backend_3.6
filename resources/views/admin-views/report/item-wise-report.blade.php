@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.item_report'))
+@section('title','informe del artículo')
 
 @push('css_or_js')
 
@@ -20,7 +20,7 @@
                     <img src="{{asset('assets/admin/img/report.png')}}" class="w--22" alt="">
                 </span>
                 <span>
-                    {{translate('messages.item_report')}}
+                    {{'informe del artículo'}}
                     @if (isset($filter) && $filter != 'all_time')
                     <span class="mb-0 h6 badge badge-soft-success ml-2"
                         id="itemCount">( {{ session('from_date') }} - {{ session('to_date') }} )</span>
@@ -32,13 +32,13 @@
 
         <div class="card mb-20">
             <div class="card-body">
-                <h4 class="">{{translate('Search Data')}}</h4>
+                <h4 class="">{{'Buscar datos'}}</h4>
                 <form action="{{route('admin.transactions.report.set-date')}}" method="post">
                     @csrf
                 <div class="row g-3">
                     <div class="col-sm-6 col-md-3">
-                        <select name="module_id" class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}" data-filter="module_id" title="{{translate('messages.select_modules')}}">
-                            <option value="" {{!request('module_id') ? 'selected':''}}>{{translate('messages.all_modules')}}</option>
+                        <select name="module_id" class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}" data-filter="module_id" title="{{'seleccionar módulos'}}">
+                            <option value="" {{!request('module_id') ? 'selected':''}}>{{'todos los módulos'}}</option>
                             @foreach (\App\Models\Module::notParcel()->get() as $module)
                                 <option
                                     value="{{$module->id}}" {{request('module_id') == $module->id?'selected':''}}>
@@ -49,7 +49,7 @@
                     </div>
                     <div class="col-sm-6 col-md-3">
                         <select name="zone_id" class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}" data-filter="zone_id" id="zone">
-                    <option value="all">{{ translate('messages.All_Zones') }}</option>
+                    <option value="all">{{ 'Todas las Zonas' }}</option>
                     @foreach(\App\Models\Zone::orderBy('name')->get() as $z)
                         <option
                             value="{{$z['id']}}" {{isset($zone) && $zone->id == $z['id']?'selected':''}}>
@@ -59,11 +59,11 @@
                 </select>
                     </div>
                     <div class="col-sm-6 col-md-3">
-                        <select name="store_id" data-placeholder="{{translate('messages.select_store')}}" class="js-data-example-ajax form-control set-filter" data-url="{{ url()->full() }}" data-filter="store_id" >
+                        <select name="store_id" data-placeholder="{{'seleccionar tienda'}}" class="js-data-example-ajax form-control set-filter" data-url="{{ url()->full() }}" data-filter="store_id" >
                             @if(isset($store))
                             <option value="{{$store->id}}" selected>{{$store->name}}</option>
                             @else
-                            <option value="all" selected>{{translate('messages.all_stores')}}</option>
+                            <option value="all" selected>{{'todas las tiendas'}}</option>
                             @endif
                         </select>
                     </div>
@@ -73,35 +73,35 @@
                         @if(isset($category))
                         <option value="{{$category->id}}" selected>{{$category->name}}</option>
                         @else
-                        <option value="all" selected>{{ translate('messages.All Categories') }}</option>
+                        <option value="all" selected>{{ 'Todas las categorías' }}</option>
                         @endif
                     </select>
                     </div>
                     <div class="col-sm-6 col-md-3">
                         <select class="form-control set-filter" data-url="{{ url()->full() }}" data-filter="filter"  name="filter">
-                            <option value="all_time" {{ isset($filter) && $filter == "all_time" ? 'selected' : '' }}>{{ translate('messages.All Time') }}</option>
-                            <option value="this_year" {{ isset($filter) && $filter == "this_year" ? 'selected' : '' }}>{{ translate('messages.This Year') }}</option>
-                            <option value="previous_year" {{ isset($filter) && $filter == "previous_year" ? 'selected' : '' }}>{{ translate('messages.Previous Year') }}</option>
-                            <option value="this_month" {{ isset($filter) && $filter == "this_month" ? 'selected' : '' }}>{{ translate('messages.This Month') }}</option>
-                            <option value="this_week" {{ isset($filter) && $filter == "this_week" ? 'selected' : '' }}>{{ translate('messages.This Week') }}</option>
+                            <option value="all_time" {{ isset($filter) && $filter == "all_time" ? 'selected' : '' }}>{{ 'Todo el tiempo' }}</option>
+                            <option value="this_year" {{ isset($filter) && $filter == "this_year" ? 'selected' : '' }}>{{ 'este año' }}</option>
+                            <option value="previous_year" {{ isset($filter) && $filter == "previous_year" ? 'selected' : '' }}>{{ 'Año anterior' }}</option>
+                            <option value="this_month" {{ isset($filter) && $filter == "this_month" ? 'selected' : '' }}>{{ 'este mes' }}</option>
+                            <option value="this_week" {{ isset($filter) && $filter == "this_week" ? 'selected' : '' }}>{{ 'Esta semana' }}</option>
                             <option value="custom" {{ isset($filter) && $filter == 'custom' ? 'selected' : '' }}>
-                                {{ translate('messages.Custom') }}</option>
+                                {{ 'Costumbre' }}</option>
                         </select>
                     </div>
                     @if (isset($filter) && $filter == 'custom')
                     <div class="col-sm-6 col-md-3">
 
-                            <input type="date" name="from" id="from_date" class="form-control" placeholder="{{ translate('Start Date') }}" {{session()->has('from_date')?'value='.session('from_date'):''}} required>
+                            <input type="date" name="from" id="from_date" class="form-control" placeholder="{{ 'Fecha de inicio' }}" {{session()->has('from_date')?'value='.session('from_date'):''}} required>
 
                     </div>
                     <div class="col-sm-6 col-md-3">
 
-                            <input type="date" name="to" id="to_date" class="form-control" placeholder="{{ translate('End Date') }}" {{session()->has('to_date')?'value='.session('to_date'):''}} required>
+                            <input type="date" name="to" id="to_date" class="form-control" placeholder="{{ 'Fecha de finalización' }}" {{session()->has('to_date')?'value='.session('to_date'):''}} required>
 
                     </div>
                     @endif
                     <div class="col-sm-6 col-md-3 ml-auto">
-                        <button type="submit" class="btn btn-primary btn-block h--45px">{{translate('Filter')}}</button>
+                        <button type="submit" class="btn btn-primary btn-block h--45px">{{'Filtrar'}}</button>
                     </div>
                 </div>
             </form>
@@ -113,18 +113,18 @@
             <div class="card-header border-0 py-2">
                 <div class="search--button-wrapper">
                     <h3 class="card-title">
-                        {{translate('Item report table')}}<span class="badge badge-soft-secondary" id="countItems">{{ $items->total() }}</span>
+                        {{'Tabla de informe de artículos'}}<span class="badge badge-soft-secondary" id="countItems">{{ $items->total() }}</span>
                     </h3>
                     <form class="search-form">
                     <!-- Search -->
                     <div class="input--group input-group">
-                        <input id="datatableSearch" name="search" type="search" class="form-control" placeholder="{{translate('ex_:_search_item_name')}}" value="{{ request()?->search ?? null}}" aria-label="{{translate('messages.search_here')}}">
+                        <input id="datatableSearch" name="search" type="search" class="form-control" placeholder="{{'ej: nombre del elemento de búsqueda'}}" value="{{ request()?->search ?? null}}" aria-label="{{'buscar aquí'}}">
                         <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                     </div>
                     <!-- End Search -->
                     </form>
                     @if(request()->get('search'))
-                        <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                        <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{'reiniciar'}}</button>
                     @endif<!-- Unfold -->
                     <div class="hs-unfold mr-2">
                         <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle min-height-40" href="javascript:;"
@@ -132,23 +132,23 @@
                                     "target": "#usersExportDropdown",
                                     "type": "css-animation"
                                 }'>
-                            <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                            <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                         </a>
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                            <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                            <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                             <a id="export-excel" class="dropdown-item" href="{{route('admin.transactions.report.item-wise-export', ['type'=>'excel',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
-                                {{ translate('messages.excel') }}
+                                {{ 'sobresalir' }}
                             </a>
                             <a id="export-csv" class="dropdown-item" href="{{route('admin.transactions.report.item-wise-export', ['type'=>'csv',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
-                                .{{ translate('messages.csv') }}
+                                .{{ 'csv' }}
                             </a>
                         </div>
                     </div>
@@ -180,17 +180,17 @@
                     }'>
                     <thead class="thead-light">
                     <tr>
-                        <th>{{translate('sl')}}</th>
-                        <th class="w--2">{{translate('messages.name')}}</th>
-                        <th class="w--2">{{translate('messages.module')}}</th>
-                        <th class="w--2">{{translate('messages.store')}}</th>
-                        <th>{{translate('messages.stock')}}</th>
-                        <th>{{translate('messages.sell_count')}}</th>
-                        <th>{{translate('messages.price')}}</th>
-                        <th>{{translate('messages.total_amount_sold')}}</th>
-                        <th>{{translate('messages.total_discount_given')}}</th>
-                        <th>{{translate('messages.average_sale_value')}}</th>
-                        <th>{{translate('messages.average_ratings')}}</th>
+                        <th>{{'SL'}}</th>
+                        <th class="w--2">{{'nombre'}}</th>
+                        <th class="w--2">{{'módulo'}}</th>
+                        <th class="w--2">{{'Negocio'}}</th>
+                        <th>{{'existencias'}}</th>
+                        <th>{{'vender recuento'}}</th>
+                        <th>{{'precio'}}</th>
+                        <th>{{'cantidad total vendida'}}</th>
+                        <th>{{'descuento total otorgado'}}</th>
+                        <th>{{'valor promedio de venta'}}</th>
+                        <th>{{'calificaciones promedio'}}</th>
                     </tr>
                     </thead>
 
@@ -220,11 +220,11 @@
                                 @if($item->store)
                                 {{Str::limit($item->store->name,25,'...')}}
                                 @else
-                                {{translate('messages.store_deleted')}}
+                                {{'tienda eliminada'}}
                                 @endif
                             </td>
                             <td>
-                                {{$item->module->module_type == 'food'? translate('N/A') : $item->stock}}
+                                {{$item->module->module_type == 'food'? 'N / A' : $item->stock}}
                             </td>
                             <td>
                                 {{$item->orders_sum_quantity ?? 0}}
@@ -261,7 +261,7 @@
             <div class="empty--data">
                 <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                 <h5>
-                    {{translate('no_data_found')}}
+                    {{'no se encontraron datos'}}
                 </h5>
             </div>
             @endif

@@ -1,5 +1,5 @@
 @extends('layouts.vendor.app')
-@section('title',translate('messages.Employee Edit'))
+@section('title','Empleado Editar')
 
 @section('content')
 <div class="content container-fluid">
@@ -10,7 +10,7 @@
                 <img src="{{asset('assets/admin/img/edit.png')}}" class="w--26" alt="">
             </span>
             <span>
-                {{translate('messages.Employee_update')}}
+                {{'Actualización del empleado'}}
             </span>
         </h1>
     </div>
@@ -21,24 +21,24 @@
             <div class="card-header">
                 <h5 class="card-title">
                     <span class="card-header-icon"><i class="tio-user"></i></span>
-                    <span>{{translate('messages.general_information')}}</span>
+                    <span>{{'información general'}}</span>
                 </h5>
             </div>
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="input-label " for="f_name">{{translate('messages.first_name')}}</label>
+                            <label class="input-label " for="f_name">{{'nombre de pila'}}</label>
                             <input type="text" name="f_name" value="{{$e['f_name']}}" class="form-control" id="f_name"
-                                    placeholder="{{translate('messages.first_name')}}" required>
+                                    placeholder="{{'nombre de pila'}}" required>
                         </div>
                         <div class="form-group">
-                            <label class="input-label " for="l_name">{{translate('messages.last_name')}}</label>
+                            <label class="input-label " for="l_name">{{'apellido'}}</label>
                             <input type="text" name="l_name" value="{{$e['l_name']}}" class="form-control" id="l_name"
-                                    placeholder="{{translate('messages.last_name')}}">
+                                    placeholder="{{'apellido'}}">
                         </div>
                         <div class="form-group">
-                            <label class="input-label " for="phone">{{translate('messages.phone')}}</label>
+                            <label class="input-label " for="phone">{{'teléfono'}}</label>
                             <input type="tel"
                                    value="{{$e['phone']}}"
                                    required
@@ -46,13 +46,13 @@
                                    class="form-control"
                                    id="phone"
                                    pattern="^\+?[1-9]\d{1,14}$"
-                                   title="{{ translate('messages.please_enter_valid_phone_number_with_country_code') }}"
-                                   placeholder="{{ translate('messages.Ex:') }} +88017********">
+                                   title="{{ 'por favor ingrese un número de teléfono válido con el código de país' }}"
+                                   placeholder="{{ 'Ex:' }} +88017********">
                         </div>
                         <div class="form-group mb-0">
-                            <label class="input-label " for="role_id">{{translate('messages.Role')}}</label>
+                            <label class="input-label " for="role_id">{{'Role'}}</label>
                             <select class="form-control w-100" id="role_id" name="role_id">
-                                    <option value="" selected disabled>{{translate('messages.select_Role')}}</option>
+                                    <option value="" selected disabled>{{'seleccione Rol'}}</option>
                                     @foreach($rls as $r)
                                         <option
                                             value="{{$r->id}}" {{$r['id']==$e['employee_role_id']?'selected':''}}>{{$r->name}}</option>
@@ -64,8 +64,8 @@
                         <div class="card h-100">
                             <div class="card-body d-flex flex-column">
                                 <h5 class="form-label text-center mb-3">
-                                    {{translate('messages.employee_image')}}
-                                    <span class="text-danger">{{translate('messages.Ratio (1:1)')}}</span>
+                                    {{'imagen del empleado'}}
+                                    <span class="text-danger">{{'Relación (1:1)'}}</span>
                                 </h5>
 
                                 <div class="text-center mb-auto">
@@ -76,11 +76,11 @@
                                 </div>
 
                                 <div class="form-group mt-3 mb-0">
-                                    <label class="form-label">{{translate('messages.Employee image size max 2 MB')}} <span class="text-danger">*</span></label>
+                                    <label class="form-label">{{'Tamaño de imagen del empleado máximo 2 MB'}} <span class="text-danger">*</span></label>
                                     <div class="custom-file">
                                         <input type="file" name="image" id="customFileUpload" class="custom-file-input read-url"
                                             accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                        <label class="custom-file-label" for="customFileUpload">{{translate('messages.choose_file')}}</label>
+                                        <label class="custom-file-label" for="customFileUpload">{{'elegir archivo'}}</label>
                                     </div>
                                 </div>
 
@@ -92,23 +92,23 @@
                             <div class="card-header">
                                 <h5 class="card-title">
                                     <span class="card-header-icon"><i class="tio-user"></i></span>
-                                    <span>{{translate('messages.account_information')}}</span>
+                                    <span>{{'información de cuenta'}}</span>
                                 </h5>
                             </div>
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-md-4">
-                                        <label class="input-label " for="email">{{translate('messages.email')}}</label>
+                                        <label class="input-label " for="email">{{'correo electrónico'}}</label>
                                         <input type="email" value="{{$e['email']}}" name="email" class="form-control" id="email"
-                                                placeholder="{{ translate('messages.Ex:') }} ex@gmail.com">
+                                                placeholder="{{ 'Ex:' }} ex@gmail.com">
                                     </div>
                                     <div class="col-md-4">
                                         <div class="js-form-message form-group mb-0">
-                                            <label class="input-label" for="signupSrPassword">{{translate('messages.password')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-        data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"></span></label>
+                                            <label class="input-label" for="signupSrPassword">{{'Contraseña'}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+        data-original-title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"></span></label>
 
                                             <div class="input-group input-group-merge">
-                                                <input type="password" class="js-toggle-password form-control" name="password" id="signupSrPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"
+                                                <input type="password" class="js-toggle-password form-control" name="password" id="signupSrPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"
                                                 placeholder="{{ translate('messages.password_length_placeholder', ['length' => '8+']) }}"
                                                 aria-label="8+ characters required"
                                                 data-msg="Your password is invalid. Please try again."
@@ -128,9 +128,9 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="js-form-message form-group mb-0">
-                                            <label class="input-label" for="signupSrConfirmPassword">{{translate('messages.confirm_password')}}</label>
+                                            <label class="input-label" for="signupSrConfirmPassword">{{'confirmar Contraseña'}}</label>
                                             <div class="input-group input-group-merge">
-                                            <input type="password" class="js-toggle-password form-control" name="confirmPassword" id="signupSrConfirmPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"
+                                            <input type="password" class="js-toggle-password form-control" name="confirmPassword" id="signupSrConfirmPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"
                                             placeholder="{{ translate('messages.password_length_placeholder', ['length' => '8+']) }}"
                                             aria-label="8+ characters required"
                                                     data-msg="Password does not match the confirm password."
@@ -155,8 +155,8 @@
                     </div>
                     <div class="col-md-12">
                         <div class="btn--container justify-content-end">
-                            <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                            <button type="submit" class="btn btn--primary">{{translate('messages.update')}}</button>
+                            <button type="reset" id="reset_btn" class="btn btn--reset">{{'reiniciar'}}</button>
+                            <button type="submit" class="btn btn--primary">{{'actualizar'}}</button>
                         </div>
                     </div>
                 </div>

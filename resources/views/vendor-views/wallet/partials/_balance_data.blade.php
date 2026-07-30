@@ -39,8 +39,8 @@
                 <div class="alert alert-danger d-flex align-items-center gap-2 m-0 p-3 rounded" style="border-left: 5px solid #dc3545; background-color: #f8d7da; color: #721c24; display: flex; align-items: center;">
                     <i class="tio-money" style="font-size: 1.5rem; margin-right: 8px;"></i>
                     <div>
-                        <strong>{{ translate('messages.le_debes_a_tootli') }}:</strong>
-                        <span>{{ translate('messages.debes') }} <strong style="font-weight: 800; color: #dc3545;">{{\App\CentralLogics\Helpers::format_currency(abs($wallet->balance))}}</strong> {{ translate('messages.a_tootli_se_te_descontara_de_tu_proximo_pedido') }}.</span>
+                        <strong>{{ 'le debes a tootli' }}:</strong>
+                        <span>{{ 'debes' }} <strong style="font-weight: 800; color: #dc3545;">{{\App\CentralLogics\Helpers::format_currency(abs($wallet->balance))}}</strong> {{ 'a tootli se te descontara de tu proximo pedido' }}.</span>
                     </div>
                 </div>
             </div>
@@ -51,14 +51,14 @@
                     <h4 class="title">{{\App\CentralLogics\Helpers::format_currency($wallet->collected_cash)}}</h4>
 
                     <div class="d-flex gap-1 align-items-center">
-                                    <span class="subtitle">{{translate('messages.Cash_in_Hand')}}
+                                    <span class="subtitle">{{'Efectivo en mano'}}
                                     </span>
 
                         <span class="form-label-secondary text-danger d-flex"
                               data-toggle="tooltip" data-placement="right"
-                              data-original-title="{{ translate('The_total_amount_you’ve_received_from_the_customer_in_cash_(Cash_on_Delivery)')}}"><img
+                              data-original-title="{{ 'El importe total que has recibido del cliente en efectivo (contra reembolso)'}}"><img
                                 src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                alt="{{ translate('messages.Take_Picture_For_Completing_Delivery') }}"> </span>
+                                alt="{{ 'Tome una fotografía para completar la entrega' }}"> </span>
                         <img class="resturant-icon" src="{{asset('assets/admin/img/transactions/image_total89.png')}}" alt="public">
 
                     </div>
@@ -69,7 +69,7 @@
             <div class="col-sm-{{ isset($col_size)  == true ? '3' :'4' }}">
                 <div class="resturant-card shadow--card-2">
                     <h4 class="title">{{\App\CentralLogics\Helpers::format_currency($wallet->balance > 0 ? $wallet->balance: 0 )}}</h4>
-                    <span class="subtitle">{{translate('messages.withdraw_able_balance')}}</span>
+                    <span class="subtitle">{{'retirar saldo capaz'}}</span>
                     <img class="resturant-icon" src="{{asset('assets/admin/img/transactions/image_w_balance.png')}}" alt="public">
                 </div>
             </div>
@@ -85,16 +85,16 @@
 
                                 @if( $wallet->balance ==  $wallet_earning )
 
-                                    <span class="subtitle">{{ translate('messages.Withdrawable_Balance') }}</span>
+                                    <span class="subtitle">{{ 'Saldo Retirable' }}</span>
                                 @else
-                                    <span class="subtitle">{{ translate('messages.Balance') }}
-                                            <small>{{translate('Unadjusted')}} </small>
+                                    <span class="subtitle">{{ 'Balance' }}
+                                            <small>{{'Sin ajustar'}} </small>
                                         </span>
                                 @endif
 
                             @else
                                 <h4 class="title">{{\App\CentralLogics\Helpers::format_currency(abs($wallet->collected_cash))}}</h4>
-                                <span class="subtitle">{{  translate('messages.Payable_Balance')}}</span>
+                                <span class="subtitle">{{  'Saldo a pagar'}}</span>
 
                             @endif
 
@@ -104,11 +104,11 @@
                         @if($wallet->balance > 0  &&  $wallet->balance > $wallet->collected_cash  )
                             <div class="d-flex gap-2 flex-wrap">
                                 @if ($adjust_able ==  true )
-                                    <a class="btn btn--primary d-flex gap-1 align-items-center text-nowrap"  href="javascript:" data-toggle="modal" data-target="#Adjust_wallet">{{translate('messages.Adjust_with_wallet')}}
+                                    <a class="btn btn--primary d-flex gap-1 align-items-center text-nowrap"  href="javascript:" data-toggle="modal" data-target="#Adjust_wallet">{{'Ajustar con billetera'}}
 
                                         <span class="form-label-secondary d-flex"
                                               data-toggle="tooltip" data-placement="right"
-                                              data-original-title="{{ translate('Adjust_the_withdrawable_balance_&_unadjusted_balance_with_your_wallet_(Cash_in_Hand)_or_click_‘Request_Withdraw’')}}">
+                                              data-original-title="{{ 'Ajuste el saldo retirable y el saldo no ajustado con su billetera (efectivo en mano) o haga clic en "Solicitar retiro"'}}">
                                         <i class="tio-info-outined"> </i>
 
                                         </span>
@@ -124,13 +124,13 @@
                                        data-toggle="modal" data-target="#balance-modal"
                                         @else
                                             class="btn btn--primary d-flex gap-1 align-items-center text-nowrap withdrawal-methods-disable"
-                                        data-message="{{translate('Withdraw_methods_are_not_available')}}"
+                                        data-message="{{'Los métodos de retiro no están disponibles'}}"
                                        @endif
-                                    >{{translate('messages.request_withdraw')}}
+                                    >{{'solicitar retiro'}}
 
                                         <span class="form-label-secondary  d-flex"
                                               data-toggle="tooltip" data-placement="right"
-                                              data-original-title="{{ translate('As_you_have_more_‘Withdrawable_Balance’_than_‘Cash_in_Hand’,_you_need_to_request_for_withdrawal_from_Admin')}}">
+                                              data-original-title="{{ 'Como tiene más "Saldo retirable" que "Dinero en efectivo", debe solicitar el retiro al Administrador.'}}">
                                             <i class="tio-info-outined"> </i> </span>
                                     </a>
                                 @endif
@@ -139,11 +139,11 @@
                             <div class="d-flex gap-2 flex-wrap">
 
                                 @if ($adjust_able ==  true )
-                                    <a class="btn btn--primary d-flex gap-1 align-items-center text-nowrap"  href="javascript:" data-toggle="modal" data-target="#Adjust_wallet">{{translate('messages.Adjust_with_wallet')}}
+                                    <a class="btn btn--primary d-flex gap-1 align-items-center text-nowrap"  href="javascript:" data-toggle="modal" data-target="#Adjust_wallet">{{'Ajustar con billetera'}}
 
                                         <span class="form-label-secondary  d-flex"
                                               data-toggle="tooltip" data-placement="right"
-                                              data-original-title="{{ translate('As_you_have_more_‘Cash_in_Hand’_than_‘Withdrawable_Balance,’_you_need_to_pay_the_Admin')}}"> <i class="tio-info-outined"> </i> </span> </span>
+                                              data-original-title="{{ 'Como tiene más "efectivo en mano" que "saldo retirable", debe pagarle al administrador.'}}"> <i class="tio-info-outined"> </i> </span> </span>
                                     </a>
                                 @endif
 
@@ -158,11 +158,11 @@
                                     data-toggle="modal" data-target="#payment_model"
                                     @endif
 
-                                    >{{translate('messages.Pay_Now')}}
+                                    >{{'Paga ahora'}}
 
                                         <span class="form-label-secondary  d-flex"
                                               data-toggle="tooltip" data-placement="right"
-                                              data-original-title="{{ translate('Adjust_the_payable_&_withdrawable_balance_with_your_wallet_(Cash_in_Hand)_or_click_‘Pay_Now’.')}}"> <i class="tio-info-outined"> </i> </span> </span></a>
+                                              data-original-title="{{ 'Ajuste el saldo pagadero y retirable con su billetera (efectivo en mano) o haga clic en "Pagar ahora".'}}"> <i class="tio-info-outined"> </i> </span> </span></a>
                                 @endif
                             </div>
                         @endif
@@ -181,7 +181,7 @@
             <div class="col-sm-4">
                 <div class="resturant-card  bg--3" >
                     <h4 class="title">{{\App\CentralLogics\Helpers::format_currency($wallet->pending_withdraw)}}</h4>
-                    <span class="subtitle">{{translate('messages.pending_withdraw')}}</span>
+                    <span class="subtitle">{{'pendiente de retiro'}}</span>
                     <img class="resturant-icon" src="{{asset('assets/admin/img/transactions/image_pending.png')}}" alt="public">
                 </div>
             </div>
@@ -190,7 +190,7 @@
             <div class="col-sm-4">
                 <div class="resturant-card  bg--2">
                     <h4 class="title">{{\App\CentralLogics\Helpers::format_currency($wallet->total_withdrawn)}}</h4>
-                    <span class="subtitle">{{translate('messages.Total_Withdrawn')}}</span>
+                    <span class="subtitle">{{'Total Retirado'}}</span>
                     <img class="resturant-icon" src="{{asset('assets/admin/img/transactions/image_withdaw.png')}}" alt="public">
                 </div>
             </div>
@@ -200,7 +200,7 @@
             <div class="col-sm-4">
                 <div class="resturant-card  bg--1">
                     <h4 class="title">{{\App\CentralLogics\Helpers::format_currency($wallet->total_earning)}}</h4>
-                    <span class="subtitle">{{translate('messages.total_earning')}}</span>
+                    <span class="subtitle">{{'ganancia total'}}</span>
                     <img class="resturant-icon" src="{{asset('assets/admin/img/transactions/image_total89.png')}}" alt="public">
                 </div>
             </div>
@@ -214,7 +214,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">
-                    {{translate('messages.withdraw_request')}}
+                    {{'retirar solicitud'}}
                 </h5>
                 <button type="button" class="close" data-dismiss="modal">
                     <span aria-hidden="true" class="btn btn--circle btn-soft-danger text-danger"><i class="tio-clear"></i></span>
@@ -226,7 +226,7 @@
                     @csrf
                     <div class="">
                         <select class="form-control" id="withdraw_method" name="withdraw_method" required>
-                            <option value="" selected disabled>{{translate('Select_Withdraw_Method')}}</option>
+                            <option value="" selected disabled>{{'Seleccione el método de retiro'}}</option>
                             @foreach($withdrawal_methods as $item)
                                 <option value="{{$item['id']}}">{{$item['method_name']}}</option>
                             @endforeach
@@ -235,15 +235,15 @@
                     <div class="" id="method-filed__div">
                     </div>
                     <div class="form-group">
-                        <label for="recipient-name" class="form-label">{{translate('messages.amount')}}:</label>
+                        <label for="recipient-name" class="form-label">{{'cantidad'}}:</label>
                         <input type="number" name="amount"  step="0.01"
                                value="{{abs($wallet->balance)}}"
                                class="form-control h--45px" id="" min="1" max="{{abs($wallet->balance)}}">
                     </div>
                 </div>
                 <div class="modal-footer pt-0 border-0">
-                    <button type="button" class="btn btn--reset" data-dismiss="modal">{{translate('messages.cancel')}}</button>
-                    <button type="submit"  id="set_disable" id="submit_button" class="btn btn--primary">{{translate('messages.Submit')}}</button>
+                    <button type="button" class="btn btn--reset" data-dismiss="modal">{{'Cancelar'}}</button>
+                    <button type="submit"  id="set_disable" id="submit_button" class="btn btn--primary">{{'Entregar'}}</button>
                 </div>
             </form>
         </div>
@@ -255,7 +255,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">{{translate('messages.Note')}}:  </h5>
+                <h5 class="modal-title" id="exampleModalLabel">{{'Nota'}}:  </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -268,7 +268,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="reset_btn" type="reset" data-dismiss="modal" class="btn btn-secondary" >{{ translate('Close') }} </button>
+                <button id="reset_btn" type="reset" data-dismiss="modal" class="btn btn-secondary" >{{ 'Cerca' }} </button>
             </div>
         </div>
     </div>
@@ -281,19 +281,19 @@
 
                 <ul class="nav nav-tabs page-header-tabs pb-2">
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('vendor-panel/wallet') ?'active':''}}"  href="{{ route('vendor.wallet.index') }}">{{translate('messages.withdraw_request')}}</a>
+                        <a class="nav-link {{ Request::is('vendor-panel/wallet') ?'active':''}}"  href="{{ route('vendor.wallet.index') }}">{{'retirar solicitud'}}</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link  {{Request::is('vendor-panel/wallet/wallet-payment-list') ?'active':''}}" href="{{route('vendor.wallet.wallet_payment_list')}}"  aria-disabled="true">{{translate('messages.Payment_history')}}</a>
+                        <a class="nav-link  {{Request::is('vendor-panel/wallet/wallet-payment-list') ?'active':''}}" href="{{route('vendor.wallet.wallet_payment_list')}}"  aria-disabled="true">{{'Historial de pagos'}}</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link  {{Request::is('vendor-panel/wallet/disbursement-list') ?'active':''}}" href="{{route('vendor.wallet.getDisbursementList')}}"  aria-disabled="true">{{translate('messages.Next_Payouts')}}</a>
+                        <a class="nav-link  {{Request::is('vendor-panel/wallet/disbursement-list') ?'active':''}}" href="{{route('vendor.wallet.getDisbursementList')}}"  aria-disabled="true">{{'Próximos pagos'}}</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link  {{Request::is('vendor-panel/wallet/cash-on-pickup-history') ?'active':''}}" href="{{route('vendor.wallet.cash_on_pickup_history')}}">{{translate('messages.historial_recolecciones_efectivo')}}</a>
+                        <a class="nav-link  {{Request::is('vendor-panel/wallet/cash-on-pickup-history') ?'active':''}}" href="{{route('vendor.wallet.cash_on_pickup_history')}}">{{'historial recolecciones efectivo'}}</a>
                     </li>
                 </ul>
 

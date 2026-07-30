@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title',translate('messages.deliverymen'))
+@section('title','repartidores')
 
 
 @section('content')
@@ -12,7 +12,7 @@
                     <img src="{{asset('assets/admin/img/deliveryman.png')}}" class="w--30" alt="">
                 </span>
                 <span>
-                   {{translate('messages.deliveryman')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$delivery_men->total()}}</span>
+                   {{'Repartidor'}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$delivery_men->total()}}</span>
                 </span>
             </h1>
         </div>
@@ -24,7 +24,7 @@
                 <form class="search-form" >
                     <div class="input-group input--group">
                         <input  type="search" name="search" class="form-control" value="{{request()?->search ?? ''}}"
-                                placeholder="{{translate('messages.ex_search_name')}}" aria-label="{{translate('messages.ex_search_name')}}" >
+                                placeholder="{{'ex nombre de búsqueda'}}" aria-label="{{'ex nombre de búsqueda'}}" >
                         <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                     </div>
                     <!-- End Search -->
@@ -43,12 +43,12 @@
                         }'>
                     <thead class="thead-light">
                     <tr>
-                        <th class="border-0 text-capitalize">{{translate('messages.#')}}</th>
-                        <th class="border-0 text-capitalize">{{translate('messages.name')}}</th>
-                        <th class="border-0 text-capitalize">{{translate('messages.availability_status')}}</th>
-                        <th class="border-0 text-capitalize">{{translate('messages.phone')}}</th>
-                        <th class="border-0 text-capitalize text-center">{{translate('messages.active_orders')}}</th>
-                        <th class="border-0 text-capitalize text-center">{{translate('messages.action')}}</th>
+                        <th class="border-0 text-capitalize">{{'#'}}</th>
+                        <th class="border-0 text-capitalize">{{'nombre'}}</th>
+                        <th class="border-0 text-capitalize">{{'estado de disponibilidad'}}</th>
+                        <th class="border-0 text-capitalize">{{'teléfono'}}</th>
+                        <th class="border-0 text-capitalize text-center">{{'pedidos activos'}}</th>
+                        <th class="border-0 text-capitalize text-center">{{'acción'}}</th>
                     </tr>
                     </thead>
 
@@ -72,20 +72,20 @@
                             </td>
                             <td>
                                 <div>
-                                    {{translate('messages.currently_assigned_orders')}} : {{$dm->current_orders}}
+                                    {{'órdenes actualmente asignadas'}} : {{$dm->current_orders}}
                                 </div>
                                 <div>
-                                    {{translate('messages.active_status')}} :
+                                    {{'estado activo'}} :
                                     @if($dm->application_status == 'approved')
                                         @if($dm->active)
-                                        <strong class="text-capitalize text-success">{{translate('messages.online')}}</strong>
+                                        <strong class="text-capitalize text-success">{{'en línea'}}</strong>
                                         @else
-                                        <strong class="text-capitalize text-danger">{{translate('messages.offline')}}</strong>
+                                        <strong class="text-capitalize text-danger">{{'desconectado'}}</strong>
                                         @endif
                                     @elseif ($dm->application_status == 'denied')
-                                        <strong class="text-capitalize text-danger">{{translate('messages.denied')}}</strong>
+                                        <strong class="text-capitalize text-danger">{{'denegado'}}</strong>
                                     @else
-                                        <strong class="text-capitalize text-primary">{{translate('messages.pending')}}</strong>
+                                        <strong class="text-capitalize text-primary">{{'Pendiente'}}</strong>
                                     @endif
                                 </div>
                             </td>
@@ -97,12 +97,12 @@
                             </td>
                             <td>
                                 <div class="btn--container justify-content-center">
-                                    <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('vendor.delivery-man.edit',[$dm['id']])}}" title="{{translate('messages.edit')}}"><i class="tio-edit"></i>
+                                    <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('vendor.delivery-man.edit',[$dm['id']])}}" title="{{'editar'}}"><i class="tio-edit"></i>
                                     </a>
                                     <a class="btn action-btn btn--danger btn-outline-danger form-alert"
                                        data-id="delivery-man-{{$dm['id']}}"
-                                       data-message="{{translate('Want_to_remove_this_deliveryman_?')}}"
-                                       href="javascript:"  title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
+                                       data-message="{{'¿Quieres eliminar a este repartidor?'}}"
+                                       href="javascript:"  title="{{'borrar'}}"><i class="tio-delete-outlined"></i>
                                     </a>
                                 </div>
                                 <form action="{{route('vendor.delivery-man.delete',[$dm['id']])}}" method="post" id="delivery-man-{{$dm['id']}}">
@@ -127,7 +127,7 @@
                     <div class="empty--data">
                         <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
-                            {{translate('no_data_found')}}
+                            {{'no se encontraron datos'}}
                         </h5>
                     </div>
                     @endif

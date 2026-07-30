@@ -1,5 +1,5 @@
 @extends('layouts.admin.app')
-@section('title',translate('Withdraw information View'))
+@section('title','Retirar información Ver')
 @push('css_or_js')
     <!-- Custom styles for this page -->
     <link href="{{asset('assets')}}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
@@ -11,15 +11,15 @@
 <div class="content container-fluid">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">{{translate('messages.Dashboard')}}</a></li>
-            <li class="breadcrumb-item" aria-current="page">{{translate('messages.seller_Withdraw')}}</li>
+            <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">{{'Panel de Control'}}</a></li>
+            <li class="breadcrumb-item" aria-current="page">{{'vendedor retirar'}}</li>
         </ol>
     </nav>
 
     <!-- Page Heading -->
     <div class="d-sm-flex row align-items-center justify-content-between mb-2">
         <div class="col-md-6">
-             <h4 class=" mb-0 text-black-50">{{translate('messages.seller_Withdraw_information')}}</h4>
+             <h4 class=" mb-0 text-black-50">{{'vendedor retirar información'}}</h4>
             </div>
 
     </div>
@@ -28,15 +28,15 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="h3 mb-0  ">{{translate('messages.my_bank_info')}} </h3>
+                    <h3 class="h3 mb-0  ">{{'mi información bancaria'}} </h3>
                 </div>
                 <div class="card-body">
                     <div class="col-md-8 mt-2">
 
-                        <h4>{{translate('messages.bank_name')}}: {{$seller->seller->bank_name ? $seller->seller->bank_name : 'No Data found'}}</h4>
-                        <h6>{{translate('messages.Branch')}}  : {{$seller->seller->branch ? $seller->seller->branch : 'No Data found'}}</h6>
-                        <h6>{{translate('messages.holder_name')}} : {{$seller->seller->holder_name ? $seller->seller->holder_name : 'No Data found'}}</h6>
-                        <h6>{{translate('messages.account_no')}}  : {{$seller->seller->account_no ? $seller->seller->account_no : 'No Data found'}}</h6>
+                        <h4>{{'nombre del banco'}}: {{$seller->seller->bank_name ? $seller->seller->bank_name : 'No Data found'}}</h4>
+                        <h6>{{'Rama'}}  : {{$seller->seller->branch ? $seller->seller->branch : 'No Data found'}}</h6>
+                        <h6>{{'nombre del titular'}} : {{$seller->seller->holder_name ? $seller->seller->holder_name : 'No Data found'}}</h6>
+                        <h6>{{'número de cuenta'}}  : {{$seller->seller->account_no ? $seller->seller->account_no : 'No Data found'}}</h6>
 
 
 
@@ -48,12 +48,12 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    {{translate('messages.Shop_info')}}
+                    {{'Información de la tienda'}}
                 </div>
                 <div class="card-body">
-                    <h5>{{translate('messages.seller_b')}} : {{$seller->seller->shop->name}}</h5>
-                    <h5>{{translate('messages.Phone')}} : {{$seller->seller->shop->contact}}</h5>
-                    <h5>{{translate('messages.address')}} : {{$seller->seller->shop->address}}</h5>
+                    <h5>{{'vendedor b'}} : {{$seller->seller->shop->name}}</h5>
+                    <h5>{{'Teléfono'}} : {{$seller->seller->shop->contact}}</h5>
+                    <h5>{{'DIRECCIÓN'}} : {{$seller->seller->shop->address}}</h5>
                 </div>
             </div>
         </div>
@@ -64,12 +64,12 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    {{translate('messages.Seller_info')}}
+                    {{'Información del vendedor'}}
                 </div>
                 <div class="card-body">
-                    <h5>{{translate('messages.name')}} : {{$seller->seller->f_name}} {{$seller->seller->l_name}}</h5>
-                    <h5>{{translate('messages.Email')}} : {{$seller->seller->email}}</h5>
-                    <h5>{{translate('messages.Phone')}} : {{$seller->seller->phone}}</h5>
+                    <h5>{{'nombre'}} : {{$seller->seller->f_name}} {{$seller->seller->l_name}}</h5>
+                    <h5>{{'Correo electrónico'}} : {{$seller->seller->email}}</h5>
+                    <h5>{{'Teléfono'}} : {{$seller->seller->phone}}</h5>
                 </div>
             </div>
         </div>
@@ -79,11 +79,11 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h3 class="h3 mb-0  ">{{translate('messages.Withdraw_information')}} </h3>
+                    <h3 class="h3 mb-0  ">{{'Retirar información'}} </h3>
                 </div>
                 <div class="card-body">
-                    <h5>{{translate('messages.amount')}} : {{$seller->amount}}</h5>
-                    <h5>{{translate('messages.request_time')}} : {{$seller->created_at}}</h5>
+                    <h5>{{'cantidad'}} : {{$seller->amount}}</h5>
+                    <h5>{{'tiempo de solicitud'}} : {{$seller->created_at}}</h5>
                     {{-- {{ $seller->id }} --}}
                     @if ($seller->approved== 0)
 
@@ -92,22 +92,22 @@
                             @csrf
                             <input type="hidden" name="id" value="{{$seller->id}}">
                             <input type="hidden" name="approved" value="1">
-                            <button type="submit" class="btn btn-primary">{{translate('messages.Approve')}}</button>
+                            <button type="submit" class="btn btn-primary">{{'Aprobar'}}</button>
                         </form>
                         <form class="d-inline-block" action="{{route('admin.sellers.withdraw_status')}}" method="POST">
                             @csrf
                             <input type="hidden" name="id" value="{{$seller->id}}">
                             <input type="hidden" name="approved" value="2">
-                            <button type="submit" class="btn btn-danger">{{translate('messages.Denied')}}</button>
+                            <button type="submit" class="btn btn-danger">{{'Denegado'}}</button>
                         </form>
                     </div>
                     @else
                       <div class="text-center col-sm-3  mt-3">
 
                     @if($seller->approved==1)
-                        <label class="badge badge-success p-2 rounded-bottom">{{translate('messages.Approved')}}</label>
+                        <label class="badge badge-success p-2 rounded-bottom">{{'Aprobado'}}</label>
                     @else
-                        <label class="badge badge-danger p-2 rounded-bottom">{{translate('messages.Denied')}}</label>
+                        <label class="badge badge-danger p-2 rounded-bottom">{{'Denegado'}}</label>
                     @endif
                           
                       </div>

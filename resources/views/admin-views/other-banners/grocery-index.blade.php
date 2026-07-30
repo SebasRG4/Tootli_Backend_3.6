@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.banner'))
+@section('title', 'bandera')
 
 @push('css_or_js')
 
@@ -17,7 +17,7 @@
                 <img src="{{asset('assets/admin/img/3rd-party.png')}}" class="w--26" alt="">
             </span>
             <span>
-                {{translate('messages.Other_Promotional_Content_Setup')}}
+                {{'Configuración de otro contenido promocional'}}
             </span>
         </h1>
     </div>
@@ -36,13 +36,13 @@
                                     <img src="{{asset('assets/admin/img/other-banner.png')}}" class="h-85"
                                         alt="">
                                     <h3 class="form-label d-block mb-2">
-                                        {{translate('Bottom_Section_Banner')}}
+                                        {{'Banner de la sección inferior'}}
                                     </h3>
                                 </span>
                             </div>
                             <div class="col-12">
                                 <h3 class="form-label d-block mb-5">
-                                    {{translate('Upload_Banner')}}
+                                    {{'Subir banner'}}
                                 </h3>
                                 <label class="__upload-img aspect-4-1 m-auto d-block position-relative">
                                     <div class="img">
@@ -58,19 +58,19 @@
                                                 data-id="bottom_section_banner" data-type="status"
                                                 data-image-on="{{asset('assets/admin/img/modal')}}/mail-success.png"
                                                 data-image-off="{{asset('assets/admin/img/modal')}}/mail-warning.png"
-                                                data-title-on="{{translate('Important!')}}"
-                                                data-title-off="{{translate('Warning!')}}"
-                                                data-text-on="<p>{{translate('Are_you_sure_you_want_to_remove_this_image')}}</p>"
-                                                data-text-off="<p>{{translate('Are_you_sure_you_want_to_remove_this_image.')}}</p>">
+                                                data-title-on="{{'¡Importante!'}}"
+                                                data-title-off="{{'¡Advertencia!'}}"
+                                                data-text-on="<p>{{'¿Estás seguro de que quieres eliminar esta imagen?'}}</p>"
+                                                data-text-off="<p>{{'¿Está seguro de que desea eliminar esta imagen?'}}</p>">
                                                 <i class="tio-clear"></i></span>
                                         @endif
                                     </div>
                                 </label>
                                 <div class="text-center mt-5">
                                     <h3 class="form-label d-block mt-2">
-                                        {{translate('Banner_Image_Ratio_4:1')}}
+                                        {{'Proporción de imagen de banner 4:1'}}
                                     </h3>
-                                    <p>{{translate('image_format_:_jpg_,_png_,_jpeg_|_maximum_size:_2_MB')}}</p>
+                                    <p>{{'formato de imagen: jpg, png, jpeg | tamaño máximo: 2 MB'}}</p>
 
                                 </div>
                             </div>
@@ -80,7 +80,7 @@
                         <br>
                         <div class="btn--container justify-content-end mt-20">
                             <button type="submit"
-                                class="btn btn--primary mb-2">{{translate('messages.Submit')}}</button>
+                                class="btn btn--primary mb-2">{{'Entregar'}}</button>
                         </div>
                     </div>
                 </form>
@@ -100,7 +100,7 @@
                                     <img src="{{asset('assets/admin/img/other-banner.png')}}" class="h-85"
                                         alt="">
                                     <h3 class="form-label d-block mb-2">
-                                        {{translate('Best_Reviewed_Section_Banner')}}
+                                        {{'Banner de la sección mejor reseñada'}}
                                     </h3>
                                 </span>
                                 <div>
@@ -110,9 +110,9 @@
                                         </div>
                                         <div class="business-notes">
                                             <h6><img src="{{asset('assets/admin/img/notes.png')}}" alt="">
-                                                {{translate('Note')}}</h6>
+                                                {{'Nota'}}</h6>
                                             <div>
-                                                {{translate('messages.this_banner_is_only_for_react_web.')}}
+                                                {{'Este banner es solo para reaccionar web.'}}
                                             </div>
                                         </div>
                                     </div>
@@ -120,7 +120,7 @@
                             </div>
                             <div class="col-12">
                                 <h3 class="form-label d-block mb-5 text-center">
-                                    {{translate('Upload_Banner')}}
+                                    {{'Subir banner'}}
                                 </h3>
                                 <label class="__upload-img aspect-235-375 m-auto d-block">
                                     <div class="position-relative">
@@ -137,10 +137,10 @@
                                                 data-id="best_reviewed_section_banner" data-type="status"
                                                 data-image-on="{{asset('assets/admin/img/modal')}}/mail-success.png"
                                                 data-image-off="{{asset('assets/admin/img/modal')}}/mail-warning.png"
-                                                data-title-on="{{translate('Important!')}}"
-                                                data-title-off="{{translate('Warning!')}}"
-                                                data-text-on="<p>{{translate('Are_you_sure_you_want_to_remove_this_image')}}</p>"
-                                                data-text-off="<p>{{translate('Are_you_sure_you_want_to_remove_this_image.')}}</p>">
+                                                data-title-on="{{'¡Importante!'}}"
+                                                data-title-off="{{'¡Advertencia!'}}"
+                                                data-text-on="<p>{{'¿Estás seguro de que quieres eliminar esta imagen?'}}</p>"
+                                                data-text-off="<p>{{'¿Está seguro de que desea eliminar esta imagen?'}}</p>">
                                                 <i class="tio-clear"></i></span>
                                         @endif
                                     </div>
@@ -148,16 +148,16 @@
 
                                 <div class="text-center mt-5">
                                     <h3 class="form-label d-block mt-2">
-                                        {{translate('Min_Size_for_Better_Resolution_235_x_375_px')}}
+                                        {{'Tamaño mínimo para una mejor resolución 235 x 375 px'}}
                                     </h3>
-                                    <p>{{translate('image_format_:_jpg_,_png_,_jpeg_|_maximum_size:_2_MB')}}</p>
+                                    <p>{{'formato de imagen: jpg, png, jpeg | tamaño máximo: 2 MB'}}</p>
 
                                 </div>
                             </div>
                         </div>
                         <div class="btn--container justify-content-end mt-20">
                             <button type="submit"
-                                class="btn btn--primary mb-2">{{translate('messages.Submit')}}</button>
+                                class="btn btn--primary mb-2">{{'Entregar'}}</button>
                         </div>
                     </div>
                 </form>

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.flash_sales'))
+@section('title','ventas flash')
 
 @push('css_or_js')
 
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/condition.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.flash_sale_product_setup')}}
+                    {{'configuración de producto de venta flash'}}
                 </span>
             </h1>
         </div>
@@ -30,8 +30,8 @@
                             <div class="row mb-3">
                                 <div class="col-12 mb-2">
                                     <div class="form-group mb-0" id="item_wise">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.select_item')}}</label>
-                                        <select name="item_id" id="choice_item" class="form-control js-select2-custom" placeholder="{{translate('messages.select_item')}}">
+                                        <label class="input-label" for="exampleFormControlInput1">{{'seleccionar elemento'}}</label>
+                                        <select name="item_id" id="choice_item" class="form-control js-select2-custom" placeholder="{{'seleccionar elemento'}}">
 
                                         </select>
                                     </div>
@@ -39,42 +39,42 @@
                                 <div class="col-sm-4 col-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                            for="total_stock">{{ translate('messages.total_stock') }}</label>
-                                        <input type="number" placeholder="{{ translate('messages.Ex:_10') }}" class="form-control" name="stock" min="0" id="quantity">
+                                            for="total_stock">{{ 'existencias totales' }}</label>
+                                        <input type="number" placeholder="{{ 'Ej: 10' }}" class="form-control" name="stock" min="0" id="quantity">
                                     </div>
                                 </div>
                                 <div class="col-sm-4 col-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.discount_type') }}<span
+                                            for="exampleFormControlInput1">{{ 'tipo de descuento' }}<span
                                                 class="input-label-secondary text--title" data-toggle="tooltip"
                                                 data-placement="right"
-                                                data-original-title="{{ translate('Admin_shares_the_same_percentage/amount_on_discount_as_he_takes_commissions_from_stores') }}">
+                                                data-original-title="{{ 'El administrador comparte el mismo porcentaje/cantidad de descuento que recibe comisiones de las tiendas.' }}">
                                                 <i class="tio-info-outined"></i>
                                             </span>
                                         </label>
                                         <select name="discount_type" id="discount_type"
                                             class="form-control js-select2-custom">
-                                            {{-- <option value="current_active_discount">{{ translate('messages.current_active_discount') }}</option> --}}
-                                            <option value="percent">{{ translate('messages.percent') }}</option>
-                                            <option value="amount">{{ translate('messages.amount') }}</option>
+                                            {{-- <option value="current_active_discount">{{ 'descuento activo actual' }}</option> --}}
+                                            <option value="percent">{{ 'por ciento' }}</option>
+                                            <option value="amount">{{ 'cantidad' }}</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4 col-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.discount') }}</label>
+                                            for="exampleFormControlInput1">{{ 'descuento' }}</label>
                                         <input type="number" min="0" max="9999999999999999999999" value="0" step="0.001"
                                             name="discount" class="form-control" id="discount_amount"
-                                            placeholder="{{ translate('messages.Ex:') }} 100">
+                                            placeholder="{{ 'Ex:' }} 100">
                                     </div>
                                 </div>
                             </div>
 
                             <div class="btn--container justify-content-end">
-                                <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                                <button type="submit" class="btn btn--primary">{{translate('messages.submit')}}</button>
+                                <button type="reset" class="btn btn--reset">{{'reiniciar'}}</button>
+                                <button type="submit" class="btn btn--primary">{{'entregar'}}</button>
                             </div>
                         </form>
                     </div>
@@ -86,14 +86,14 @@
                     <div class="card-header py-2 border-0">
                         <div class="search--button-wrapper">
                             <h5 class="card-title">
-                                {{translate('messages.flash_sale_product_list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$items->total()}}</span>
+                                {{'lista de productos de venta flash'}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$items->total()}}</span>
                             </h5>
                             <form  class="search-form">
                                 <!-- Search -->
 
                                 <div class="input-group input--group">
                                     <input id="datatableSearch_" value="{{ request()?->search ?? null }}" type="search" name="search" class="form-control"
-                                            placeholder="{{translate('ex_:_product_name')}}" aria-label="Search" >
+                                            placeholder="{{'ej: nombre del producto'}}" aria-label="Search" >
                                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                                 </div>
                                 <!-- End Search -->
@@ -111,14 +111,14 @@
                                }'>
                             <thead class="thead-light">
                             <tr class="text-center">
-                                <th class="border-0">{{translate('sl')}}</th>
-                                <th class="border-0">{{translate('messages.product')}}</th>
-                                <th class="border-0">{{translate('messages.store')}}</th>
-                                <th class="border-0">{{translate('messages.stock_for_this_sale')}}</th>
-                                <th class="border-0">{{translate('messages.Qty_Sold')}}</th>
-                                <th class="border-0">{{translate('messages.price')}}</th>
-                                <th class="border-0">{{translate('messages.status')}}</th>
-                                <th class="border-0">{{translate('messages.action')}}</th>
+                                <th class="border-0">{{'SL'}}</th>
+                                <th class="border-0">{{'producto'}}</th>
+                                <th class="border-0">{{'Negocio'}}</th>
+                                <th class="border-0">{{'stock para esta venta'}}</th>
+                                <th class="border-0">{{'Cantidad vendida'}}</th>
+                                <th class="border-0">{{'precio'}}</th>
+                                <th class="border-0">{{'estado'}}</th>
+                                <th class="border-0">{{'acción'}}</th>
                             </tr>
 
                             </thead>
@@ -141,7 +141,7 @@
                                         </a>
                                     </td>
                                     <td class="text-center" title="{{ $item->item->store?$item->item->store->name:'' }}">
-                                        {{Str::limit($item->item->store?$item->item->store->name:translate('messages.store deleted!'), 20, '...')}}
+                                        {{Str::limit($item->item->store?$item->item->store->name:'tienda eliminada!', 20, '...')}}
                                         </td>
                                     <td class="text-center">
                                         {{ $item['stock'] }}
@@ -162,7 +162,7 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="btn--container justify-content-center">
-                                            <a class="btn action-btn btn--danger btn-outline-danger form-control form-alert" href="javascript:" data-id="item-{{$item['id']}}" data-message="{{ translate('Want to delete this item ?') }}" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
+                                            <a class="btn action-btn btn--danger btn-outline-danger form-control form-alert" href="javascript:" data-id="item-{{$item['id']}}" data-message="{{ '¿Quieres eliminar este elemento?' }}" title="{{'borrar'}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{route('admin.flash-sale.delete-product',[$item['id']])}}"
                                                     method="post" id="item-{{$item['id']}}">
@@ -185,7 +185,7 @@
                     <div class="empty--data">
                         <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
-                            {{translate('no_data_found')}}
+                            {{'no se encontraron datos'}}
                         </h5>
                     </div>
                     @endif

@@ -43,7 +43,7 @@
                     <div class="search--form-group">
                         <button type="button" class="btn"><i class="tio-search"></i></button>
                         <input autocomplete="false" name="qq" type="text" class="form-control form--control"
-                            placeholder="{{ translate('Search Menu...') }}" id="search">
+                            placeholder="{{ 'Menú de búsqueda...' }}" id="search">
                         <div id="search-suggestions" class="flex-wrap mt-1"></div>
                     </div>
                 </form>
@@ -53,10 +53,10 @@
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/taxi/dashboard') ? 'show active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link"
-                            href="{{ route('admin.taxi.dashboard') }}" title="{{ translate('messages.dashboard') }}">
+                            href="{{ route('admin.taxi.dashboard') }}" title="{{ 'Panel de Control' }}">
                             <i class="tio-home-vs-1-outlined nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('messages.dashboard') }}
+                                {{ 'Panel de Control' }}
                             </span>
                         </a>
                     </li>
@@ -65,17 +65,17 @@
                     <!-- Taxi Management Section -->
                     <li class="nav-item">
                         <small class="nav-subtitle"
-                            title="{{ translate('Taxi Management') }}">{{ translate('Taxi Management') }}</small>
+                            title="{{ 'Gestión de taxis' }}">{{ 'Gestión de taxis' }}</small>
                         <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                     </li>
 
                     <!-- Rides -->
                     <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/taxi/rides*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
-                            title="{{ translate('Rides') }}">
+                            title="{{ 'paseos' }}">
                             <i class="tio-route nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('Rides') }}
+                                {{ 'paseos' }}
                             </span>
                         </a>
                         <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
@@ -83,10 +83,10 @@
                             <li
                                 class="nav-item {{ Request::is('admin/taxi/rides') && !request('status') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('admin.taxi.rides') }}"
-                                    title="{{ translate('All Rides') }}">
+                                    title="{{ 'Todos los paseos' }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
-                                        {{ translate('All Rides') }}
+                                        {{ 'Todos los paseos' }}
                                         <span class="badge badge-soft-info badge-pill ml-1">
                                             {{ \Modules\Taxi\Models\TaxiRide::count() }}
                                         </span>
@@ -95,10 +95,10 @@
                             </li>
                             <li class="nav-item {{ request('status') == 'pending' ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('admin.taxi.rides', ['status' => 'pending']) }}"
-                                    title="{{ translate('Pending') }}">
+                                    title="{{ 'Pendiente' }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
-                                        {{ translate('Pending') }}
+                                        {{ 'Pendiente' }}
                                         <span class="badge badge-soft-warning badge-pill ml-1">
                                             {{ \Modules\Taxi\Models\TaxiRide::where('status', 'pending')->count() }}
                                         </span>
@@ -107,10 +107,10 @@
                             </li>
                             <li class="nav-item {{ request('status') == 'in_progress' ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('admin.taxi.rides', ['status' => 'in_progress']) }}"
-                                    title="{{ translate('In Progress') }}">
+                                    title="{{ 'En curso' }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
-                                        {{ translate('In Progress') }}
+                                        {{ 'En curso' }}
                                         <span class="badge badge-soft-primary badge-pill ml-1">
                                             {{ \Modules\Taxi\Models\TaxiRide::whereIn('status', ['accepted', 'arriving', 'arrived', 'in_progress'])->count() }}
                                         </span>
@@ -119,10 +119,10 @@
                             </li>
                             <li class="nav-item {{ request('status') == 'completed' ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('admin.taxi.rides', ['status' => 'completed']) }}"
-                                    title="{{ translate('Completed') }}">
+                                    title="{{ 'Terminado' }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
-                                        {{ translate('Completed') }}
+                                        {{ 'Terminado' }}
                                         <span class="badge badge-soft-success badge-pill ml-1">
                                             {{ \Modules\Taxi\Models\TaxiRide::where('status', 'completed')->count() }}
                                         </span>
@@ -131,10 +131,10 @@
                             </li>
                             <li class="nav-item {{ request('status') == 'cancelled' ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('admin.taxi.rides', ['status' => 'cancelled']) }}"
-                                    title="{{ translate('Cancelled') }}">
+                                    title="{{ 'Cancelado' }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
-                                        {{ translate('Cancelled') }}
+                                        {{ 'Cancelado' }}
                                         <span class="badge badge-soft-danger badge-pill ml-1">
                                             {{ \Modules\Taxi\Models\TaxiRide::where('status', 'cancelled')->count() }}
                                         </span>
@@ -148,10 +148,10 @@
                     <!-- Drivers -->
                     <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/taxi/drivers*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.taxi.drivers') }}"
-                            title="{{ translate('Drivers') }}">
+                            title="{{ 'Repartidores' }}">
                             <i class="tio-user nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('Drivers') }}
+                                {{ 'Repartidores' }}
                             </span>
                         </a>
                     </li>
@@ -161,10 +161,10 @@
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/taxi/vehicles*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.taxi.vehicles') }}"
-                            title="{{ translate('Vehicles') }}">
+                            title="{{ 'Vehículos' }}">
                             <i class="tio-car nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('Vehicles') }}
+                                {{ 'Vehículos' }}
                             </span>
                         </a>
                     </li>
@@ -174,10 +174,10 @@
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/taxi/fare-config*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link"
-                            href="{{ route('admin.taxi.fare-config') }}" title="{{ translate('Fare Configuration') }}">
+                            href="{{ route('admin.taxi.fare-config') }}" title="{{ 'Configuración de tarifas' }}">
                             <i class="tio-dollar nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('Fare Configuration') }}
+                                {{ 'Configuración de tarifas' }}
                             </span>
                         </a>
                     </li>
@@ -186,10 +186,10 @@
                     <!-- Coupons -->
                     <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/taxi/coupons*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link"
-                            href="{{ route('admin.taxi.coupons.index') }}" title="{{ translate('Coupons') }}">
+                            href="{{ route('admin.taxi.coupons.index') }}" title="{{ 'Cupones' }}">
                             <i class="tio-ticket nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('Coupons') }}
+                                {{ 'Cupones' }}
                             </span>
                         </a>
                     </li>
@@ -199,10 +199,10 @@
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/taxi/vehicle-types*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link"
-                            href="{{ route('admin.taxi.vehicle-types') }}" title="{{ translate('Vehicle Types') }}">
+                            href="{{ route('admin.taxi.vehicle-types') }}" title="{{ 'Tipos de vehículos' }}">
                             <i class="tio-car nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('Vehicle Types') }}
+                                {{ 'Tipos de vehículos' }}
                             </span>
                         </a>
                     </li>
@@ -212,10 +212,10 @@
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/taxi/simulator*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link"
-                            href="{{ route('admin.taxi.simulator') }}" title="{{ translate('Driver Simulator') }}">
+                            href="{{ route('admin.taxi.simulator') }}" title="{{ 'Simulador de conductor' }}">
                             <i class="tio-play nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('Driver Simulator') }}
+                                {{ 'Simulador de conductor' }}
                                 <span class="badge badge-soft-info ml-1" style="font-size: 10px;">TEST</span>
                             </span>
                         </a>
@@ -225,7 +225,7 @@
                     <!-- Interurban Zones Section -->
                     <li class="nav-item">
                         <small class="nav-subtitle"
-                            title="{{ translate('Interurban') }}">{{ translate('Interurban / Intercity') }}</small>
+                            title="{{ 'Interurbano' }}">{{ 'Interurbano / Interurbano' }}</small>
                         <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                     </li>
 
@@ -234,11 +234,11 @@
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/taxi/interurban/routes*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link" href="javascript:void(0)"
-                            title="{{ translate('Interurban Routes') }}"
-                            onclick="alert('{{ translate('Coming soon: Intercity travel routes') }}')">
+                            title="{{ 'Rutas Interurbanas' }}"
+                            onclick="alert('{{ 'Próximamente: rutas de viajes interurbanos' }}')">
                             <i class="tio-globe nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('Interurban Routes') }}
+                                {{ 'Rutas Interurbanas' }}
                                 <span class="badge badge-soft-warning ml-1" style="font-size: 10px;">TODO</span>
                             </span>
                         </a>
@@ -248,11 +248,11 @@
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/taxi/interurban/fares*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link" href="javascript:void(0)"
-                            title="{{ translate('Interurban Fares') }}"
-                            onclick="alert('{{ translate('Coming soon: Intercity fare configuration') }}')">
+                            title="{{ 'Tarifas Interurbanas' }}"
+                            onclick="alert('{{ 'Próximamente: configuración de tarifas interurbanas' }}')">
                             <i class="tio-money nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('Interurban Fares') }}
+                                {{ 'Tarifas Interurbanas' }}
                                 <span class="badge badge-soft-warning ml-1" style="font-size: 10px;">TODO</span>
                             </span>
                         </a>
@@ -262,11 +262,11 @@
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/taxi/interurban/schedules*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link" href="javascript:void(0)"
-                            title="{{ translate('Schedules') }}"
-                            onclick="alert('{{ translate('Coming soon: Intercity schedules') }}')">
+                            title="{{ 'Horarios' }}"
+                            onclick="alert('{{ 'Próximamente: Horarios interurbanos' }}')">
                             <i class="tio-calendar nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('Schedules') }}
+                                {{ 'Horarios' }}
                                 <span class="badge badge-soft-warning ml-1" style="font-size: 10px;">TODO</span>
                             </span>
                         </a>
@@ -276,17 +276,17 @@
                     <!-- Security Section -->
                     <li class="nav-item">
                         <small class="nav-subtitle"
-                            title="{{ translate('Security') }}">{{ translate('Security & Safety') }}</small>
+                            title="{{ 'Seguridad' }}">{{ 'Seguridad y protección' }}</small>
                         <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                     </li>
 
                     <!-- SOS Alerts -->
                     <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/taxi/safety*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link"
-                            href="{{ route('admin.taxi.safety.index') }}" title="{{ translate('SOS Alerts') }}">
+                            href="{{ route('admin.taxi.safety.index') }}" title="{{ 'Alertas SOS' }}">
                             <i class="tio-warning-outlined nav-icon text-danger"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('SOS Alerts') }}
+                                {{ 'Alertas SOS' }}
                                 @php($pendingAlerts = \Modules\Taxi\Models\TaxiSafetyAlert::pending()->count())
                                 @if($pendingAlerts > 0)
                                     <span class="badge badge-danger ml-1">{{ $pendingAlerts }}</span>
@@ -300,10 +300,10 @@
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/taxi/drivers/verification*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link"
                             href="{{ route('admin.taxi.drivers.verification.index') }}"
-                            title="{{ translate('Driver Verification') }}">
+                            title="{{ 'Verificación del conductor' }}">
                             <i class="tio-checkmark-circle-outlined nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('Driver Verification') }}
+                                {{ 'Verificación del conductor' }}
                             </span>
                         </a>
                     </li>
@@ -312,11 +312,11 @@
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/taxi/security/tracking*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link" href="javascript:void(0)"
-                            title="{{ translate('Trip Tracking') }}"
-                            onclick="alert('{{ translate('Coming soon: Real-time trip tracking & monitoring') }}')">
+                            title="{{ 'Seguimiento de viaje' }}"
+                            onclick="alert('{{ 'Próximamente: seguimiento y monitoreo de viajes en tiempo real' }}')">
                             <i class="tio-location-search nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('Trip Tracking') }}
+                                {{ 'Seguimiento de viaje' }}
                                 <span class="badge badge-soft-warning ml-1" style="font-size: 10px;">TODO</span>
                             </span>
                         </a>
@@ -326,11 +326,11 @@
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/taxi/security/reports*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link" href="javascript:void(0)"
-                            title="{{ translate('Safety Reports') }}"
-                            onclick="alert('{{ translate('Coming soon: Incident & safety reports') }}')">
+                            title="{{ 'Informes de seguridad' }}"
+                            onclick="alert('{{ 'Próximamente: informes de incidentes y seguridad' }}')">
                             <i class="tio-document-text nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('Safety Reports') }}
+                                {{ 'Informes de seguridad' }}
                                 <span class="badge badge-soft-warning ml-1" style="font-size: 10px;">TODO</span>
                             </span>
                         </a>

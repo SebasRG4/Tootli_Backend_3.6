@@ -5,61 +5,61 @@
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/admin/forgot-password') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['admin','forgot-password']) }}">
-                    {{translate('Forgot Password')}}
+                    {{'Has olvidado tu contraseña'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/admin/store-registration') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['admin','store-registration']) }}">
-                    {{translate('New Store Registration')}}
+                    {{'Registro de nueva tienda'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/admin/dm-registration') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['admin','dm-registration']) }}">
-                    {{translate('New Delivery Man Registration')}}
+                    {{'Registro de nuevo repartidor'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/admin/withdraw-request') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['admin','withdraw-request']) }}">
-                    {{translate('Withdraw Request')}}
+                    {{'Solicitud de retiro'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/admin/dm-withdraw-request') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['admin','dm-withdraw-request']) }}">
-                    {{translate('Delivery Man Withdraw Request')}}
+                    {{'Solicitud de retiro del repartidor'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/admin/campaign-request') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['admin','campaign-request']) }}">
-                    {{translate('Campaign Join Request')}}
+                    {{'Solicitud de unión a la campaña'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/admin/refund-request') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['admin','refund-request']) }}">
-                    {{translate('Refund Request')}}
+                    {{'Solicitud de reembolso'}}
                 </a>
             </li>
             {{-- <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/admin/login') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['admin','login']) }}">
-                    {{translate('Login mail')}}
+                    {{'Correo de inicio de sesión'}}
                 </a>
             </li> --}}
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/admin/new-advertisement') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['admin','new-advertisement']) }}">
-                    {{translate('New_Advertisement_Request')}}
+                    {{'Nueva solicitud de publicidad'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/admin/update-advertisement') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['admin','update-advertisement']) }}">
-                    {{translate('Advertisement_Update_Request')}}
+                    {{'Solicitud de actualización de anuncio'}}
                 </a>
             </li>
         </ul>

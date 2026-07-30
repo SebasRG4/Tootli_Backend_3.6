@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title', translate('messages.profile_settings'))
+@section('title', 'configuración de perfil')
 
 @push('css_or_js')
 
@@ -13,12 +13,12 @@
     <div class="page-header">
         <div class="row align-items-end">
             <div class="col-sm mb-2 mb-sm-0">
-                <h1 class="page-header-title">{{translate('messages.settings')}}</h1>
+                <h1 class="page-header-title">{{'Configuración'}}</h1>
             </div>
 
             <div class="col-sm-auto">
                 <a class="btn btn--primary" href="{{route('vendor.dashboard')}}">
-                    <i class="tio-home mr-1"></i> {{translate('messages.dashboard')}}
+                    <i class="tio-home mr-1"></i> {{'Panel de Control'}}
                 </a>
             </div>
         </div>
@@ -35,7 +35,7 @@
                     aria-expanded="false" aria-controls="navbarVerticalNavMenu" data-toggle="collapse"
                     data-target="#navbarVerticalNavMenu">
                     <span class="d-flex justify-content-between align-items-center">
-                        <span class="h5 mb-0">{{translate('messages.nav_menu')}}</span>
+                        <span class="h5 mb-0">{{'menú de navegación'}}</span>
 
                         <span class="navbar-toggle-default">
                             <i class="tio-menu-hamburger"></i>
@@ -54,12 +54,12 @@
                         class="js-sticky-block js-scrollspy navbar-nav navbar-nav-lg nav-tabs card card-navbar-nav">
                         <li class="nav-item">
                             <a class="nav-link active text-dark" href="javascript:" id="generalSection">
-                                <i class="tio-user-outlined nav-icon"></i> {{translate('messages.basic_information')}}
+                                <i class="tio-user-outlined nav-icon"></i> {{'informacion basica'}}
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="javascript:" id="passwordSection">
-                                <i class="tio-lock-outlined nav-icon"></i> {{translate('messages.password')}}
+                                <i class="tio-lock-outlined nav-icon"></i> {{'Contraseña'}}
                             </a>
                         </li>
                     </ul>
@@ -102,7 +102,7 @@
                 <!-- Card -->
                 <div class="card mb-3 mb-lg-5">
                     <div class="card-header">
-                        <h2 class="card-title h4"><i class="tio-info"></i> {{translate('messages.basic_information')}}
+                        <h2 class="card-title h4"><i class="tio-info"></i> {{'informacion basica'}}
                         </h2>
                     </div>
 
@@ -112,19 +112,19 @@
                         <!-- Form Group -->
                         <div class="row form-group">
                             <label for="firstNameLabel"
-                                class="col-sm-3 col-form-label input-label">{{translate('messages.full_name')}} <i
+                                class="col-sm-3 col-form-label input-label">{{'nombre completo'}} <i
                                     class="tio-help-outlined text-body ml-1" data-toggle="tooltip" data-placement="top"
                                     title="Display name"></i></label>
 
                             <div class="col-sm-9">
                                 <div class="input-group input-group-sm-down-break">
                                     <input type="text" class="form-control" name="f_name" id="firstNameLabel"
-                                        placeholder="{{translate('messages.your_first_name')}}"
-                                        aria-label="{{translate('messages.your_first_name')}}"
+                                        placeholder="{{'tu nombre'}}"
+                                        aria-label="{{'tu nombre'}}"
                                         value="{{auth('vendor')->check() ? auth('vendor')->user()->f_name : auth('vendor_employee')->user()->f_name}}">
                                     <input type="text" class="form-control" name="l_name" id="lastNameLabel"
-                                        placeholder="{{translate('messages.your_last_name')}}"
-                                        aria-label="{{translate('messages.your_last_name')}}"
+                                        placeholder="{{'tu apellido'}}"
+                                        aria-label="{{'tu apellido'}}"
                                         value="{{auth('vendor')->check() ? auth('vendor')->user()->l_name : auth('vendor_employee')->user()->l_name}}">
                                 </div>
                             </div>
@@ -134,8 +134,8 @@
                         <!-- Form Group -->
                         <div class="row form-group">
                             <label for="phoneLabel"
-                                class="col-sm-3 col-form-label input-label">{{translate('messages.phone')}} <span
-                                    class="input-label-secondary">({{translate('messages.optional')}})</span></label>
+                                class="col-sm-3 col-form-label input-label">{{'teléfono'}} <span
+                                    class="input-label-secondary">({{'opcional'}})</span></label>
 
                             <div class="col-sm-9">
                                 <input type="text" class="js-masked-input form-control" name="phone" id="phoneLabel"
@@ -150,20 +150,20 @@
 
                         <div class="row form-group">
                             <label for="newEmailLabel"
-                                class="col-sm-3 col-form-label input-label">{{translate('messages.email')}}</label>
+                                class="col-sm-3 col-form-label input-label">{{'correo electrónico'}}</label>
 
                             <div class="col-sm-9">
                                 <input type="email" class="form-control" name="email" id="newEmailLabel"
                                     value="{{auth('vendor')->check() ? auth('vendor')->user()->email : auth('vendor_employee')->user()->email}}"
-                                    placeholder="{{translate('messages.enter_new_email_address')}}"
-                                    aria-label="{{translate('messages.enter_new_email_address')}}">
+                                    placeholder="{{'introduce una nueva dirección de correo electrónico'}}"
+                                    aria-label="{{'introduce una nueva dirección de correo electrónico'}}">
                             </div>
                         </div>
 
                         <div class="d-flex justify-content-end">
                             <button type="button" data-id="vendor-settings-form"
-                                data-message="{{ translate('you_want_to_update_user_info') }}"
-                                class="btn btn-primary {{env('APP_MODE') != 'demo' ? 'form-alert' : 'call-demo'}}">{{ translate('messages.Save_changes') }}</button>
+                                data-message="{{ 'quieres actualizar la información del usuario' }}"
+                                class="btn btn-primary {{env('APP_MODE') != 'demo' ? 'form-alert' : 'call-demo'}}">{{ 'Guardar cambios' }}</button>
                         </div>
 
                         <!-- End Form -->
@@ -177,7 +177,7 @@
                     <!-- QR Code Card -->
                     <div class="card mb-3 mb-lg-5">
                         <div class="card-header">
-                            <h2 class="card-title h4"><i class="tio-qr-code"></i> {{translate('messages.your_qr_code')}}
+                            <h2 class="card-title h4"><i class="tio-qr-code"></i> {{'tu codigo qr'}}
                             </h2>
                         </div>
                         <div class="card-body text-center">
@@ -185,10 +185,10 @@
                                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={{ $store->id }}"
                                     alt="QR Code" class="img-fluid border" style="max-width: 200px;">
                             </div>
-                            <p class="text-muted">{{translate('messages.scan_this_qr_to_receive_payments')}}</p>
+                            <p class="text-muted">{{'escanea este qr para recibir pagos'}}</p>
                             <a href="https://api.qrserver.com/v1/create-qr-code/?size=500x500&data={{ $store->id }}"
                                 download="qr_code_{{$store->id}}.png" target="_blank" class="btn btn-outline-primary">
-                                <i class="tio-download"></i> {{translate('messages.download_qr')}}
+                                <i class="tio-download"></i> {{'descargar qr'}}
                             </a>
                         </div>
                     </div>
@@ -199,7 +199,7 @@
             <!-- Card -->
             <div id="passwordDiv" class="card mb-3 mb-lg-5">
                 <div class="card-header">
-                    <h4 class="card-title">{{ translate('messages.change_your_password') }}</h4>
+                    <h4 class="card-title">{{ 'cambia tu contraseña' }}</h4>
                 </div>
 
                 <!-- Body -->
@@ -213,11 +213,11 @@
                         <!-- Form Group -->
                         <div class="row form-group">
                             <label for="newPassword"
-                                class="col-sm-3 col-form-label input-label">{{ translate('messages.new_password') }}<span
+                                class="col-sm-3 col-form-label input-label">{{ 'Nueva contraseña' }}<span
                                     class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                    data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><img
+                                    data-original-title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"><img
                                         src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                        alt="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"></span></label>
+                                        alt="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"></span></label>
 
                             <div class="col-sm-9">
 
@@ -228,7 +228,7 @@
                                     <div class="input-group input-group-merge">
                                         <input type="password" class="js-toggle-password form-control" name="password"
                                             id="signupSrPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                                            title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"
+                                            title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"
                                             placeholder="{{ translate('messages.password_length_placeholder', ['length' => '8+']) }}"
                                             aria-label="8+ characters required" required
                                             data-msg="Your password is invalid. Please try again."
@@ -252,7 +252,7 @@
                         <!-- Form Group -->
                         <div class="row form-group">
                             <label for="confirmNewPasswordLabel"
-                                class="col-sm-3 col-form-label input-label">{{ translate('messages.confirm_password') }}</label>
+                                class="col-sm-3 col-form-label input-label">{{ 'confirmar Contraseña' }}</label>
 
                             <div class="col-sm-9">
                                 <div class="mb-3">
@@ -261,7 +261,7 @@
                                             <input type="password" class="js-toggle-password form-control"
                                                 name="confirm_password" id="signupSrConfirmPassword"
                                                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                                                title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"
+                                                title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"
                                                 placeholder="{{ translate('messages.password_length_placeholder', ['length' => '8+']) }}"
                                                 aria-label="8+ characters required" required
                                                 data-msg="Password does not match the confirm password."
@@ -285,8 +285,8 @@
 
                         <div class="d-flex justify-content-end">
                             <button type="button" data-id="changePasswordForm"
-                                data-message="{{ translate('messages.want_to_update_admin_password') }}"
-                                class="btn btn-primary {{ env('APP_MODE') != 'demo' ? 'form-alert' : 'call-demo' }}">{{ translate('messages.save') }}</button>
+                                data-message="{{ 'quiero actualizar la contraseña de administrador' }}"
+                                class="btn btn-primary {{ env('APP_MODE') != 'demo' ? 'form-alert' : 'call-demo' }}">{{ 'ahorrar' }}</button>
                         </div>
                     </form>
                     <!-- End Form -->

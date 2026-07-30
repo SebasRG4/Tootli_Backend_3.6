@@ -21,11 +21,11 @@
             <ul class="dropdown-menu conv-dropdown-menu">
                 <li>
                     @if ($user->user_id)
-                        <a href="{{ route('admin.customer.view', [$user->user_id]) }}">{{ translate('View_Details') }}</a>
+                        <a href="{{ route('admin.customer.view', [$user->user_id]) }}">{{ 'Ver detalles' }}</a>
                     @elseif($user->deliveryman_id)
-                        <a href="{{ route('admin.users.delivery-man.preview', [$user->deliveryman_id]) }}">{{ translate('View_Details') }}</a>
+                        <a href="{{ route('admin.users.delivery-man.preview', [$user->deliveryman_id]) }}">{{ 'Ver detalles' }}</a>
                     @elseif($user->vendor_id && isset($user->vendor->stores[0]))
-                        <a href="{{ route('admin.store.view', [$user->vendor->stores[0]->id]) }}">{{ translate('View_Details') }}</a>
+                        <a href="{{ route('admin.store.view', [$user->vendor->stores[0]->id]) }}">{{ 'Ver detalles' }}</a>
                     @endif
                 </li>
             </ul>
@@ -34,22 +34,22 @@
 
     @if($user->deliveryman_id)
         <div class="card-body border-bottom py-2 bg-light">
-            <h6 class="mb-1">{{ translate('messages.support_dm_cancel_tool_title') }}</h6>
-            <p class="fs-12 text-muted mb-2 mb-0">{{ translate('messages.support_dm_cancel_tool_hint') }}</p>
+            <h6 class="mb-1">{{ 'soporte dm cancelar título de la herramienta' }}</h6>
+            <p class="fs-12 text-muted mb-2 mb-0">{{ 'soporte dm cancelar sugerencia de herramienta' }}</p>
             <form method="get" action="{{ route('admin.order.status') }}" class="d-flex flex-wrap align-items-end gap-2 mt-2"
-                onsubmit="return confirm({{ json_encode(translate('messages.support_dm_cancel_confirm')) }});">
+                onsubmit="return confirm({{ json_encode('soporte dm cancelar confirmar') }});">
                 <input type="hidden" name="order_status" value="canceled">
                 <div class="form-group mb-0">
-                    <label class="input-label d-block fs-12">{{ translate('Order ID') }}</label>
+                    <label class="input-label d-block fs-12">{{ 'ID de pedido' }}</label>
                     <input type="number" name="id" class="form-control form-control-sm" min="1" required
                         placeholder="#">
                 </div>
                 <div class="form-group mb-0 flex-grow-1" style="min-width: 220px;">
-                    <label class="input-label d-block fs-12">{{ translate('messages.order_cancellation_reason') }}</label>
+                    <label class="input-label d-block fs-12">{{ 'motivo de cancelación del pedido' }}</label>
                     <input type="text" name="reason" class="form-control form-control-sm" required
-                        value="{{ translate('messages.support_dm_cancel_default_reason') }}">
+                        value="{{ 'soporte dm cancelar motivo predeterminado' }}">
                 </div>
-                <button type="submit" class="btn btn-sm btn-danger">{{ translate('messages.support_dm_cancel_apply') }}</button>
+                <button type="submit" class="btn btn-sm btn-danger">{{ 'soporte dm cancelar aplicar' }}</button>
             </form>
         </div>
     @endif
@@ -69,7 +69,7 @@
                         <div class="d-flex justify-content-between gap-2">
                             <div>
                                 <div class="d-flex align-items-center gap-2">
-                                    <h5 class="card-title">{{ translate('Order ID') }} # {{ $con?->order?->id }}</h5>
+                                    <h5 class="card-title">{{ 'ID de pedido' }} # {{ $con?->order?->id }}</h5>
                                     @if (in_array($con?->order?->order_status ,['pending' ,'confirmed',
                                     'accepted','processing','handover','picked_up']))
                                     <span class="badge badge-soft-info">
@@ -88,16 +88,16 @@
                                         </span>
                                 </div>
                                 <!-- Total Amount -->
-                                <p class="text-success font-weight-bold">{{ translate('Total') }}: {{ \App\CentralLogics\Helpers::format_currency($con?->order?->order_amount)  }}</p>
+                                <p class="text-success font-weight-bold">{{ 'Total' }}: {{ \App\CentralLogics\Helpers::format_currency($con?->order?->order_amount)  }}</p>
                             </div>
                             <!-- Order Date -->
-                                <p class="text-muted mb-2 text-right text-dark"> <span class="text-muted fs-12">{{ translate('Order Placed') }}</span> <br> {{ \App\CentralLogics\Helpers::date_format($con?->order?->created_at)  }}</p>
+                                <p class="text-muted mb-2 text-right text-dark"> <span class="text-muted fs-12">{{ 'Pedido realizado' }}</span> <br> {{ \App\CentralLogics\Helpers::date_format($con?->order?->created_at)  }}</p>
                             </div>
                             <br />
                     <div class="d-flex justify-content-betweeen align-items-center">
                         <div class="w-0 flex-grow-1">
                             <!-- Delivery Address -->
-                            <h6 class="font-weight-bold"> {{ translate('Delivery Address') }}  </h6>
+                            <h6 class="font-weight-bold"> {{ 'Dirección de entrega' }}  </h6>
                             @php
                                 $delivery_address = json_decode($con?->order?->delivery_address,true);
                             @endphp
@@ -108,7 +108,7 @@
                             @if ($con?->order?->details_count > 0)
                                 <div class="d-flex justify-content-end">
                                     <div class="border rounded p-2 text-center">
-                                        <p class="mb-0 font-weight-bold">{{ translate('Items') }}</p>
+                                        <p class="mb-0 font-weight-bold">{{ 'Elementos' }}</p>
                                         <h5 class="mb-0"> {{ $con?->order?->details_count }}</h5>
                                     </div>
                                 </div>
@@ -173,7 +173,7 @@
             @csrf
             <div class="quill-custom_">
                 <!-- <label for="msg" class="layer-msg"></label> -->
-                <textarea id="conv-textarea" class="form-control pr--180" id="msg" rows = "1" name="reply" placeholder="{{translate('Start a new message')}}"></textarea>
+                <textarea id="conv-textarea" class="form-control pr--180" id="msg" rows = "1" name="reply" placeholder="{{'Iniciar un nuevo mensaje'}}"></textarea>
                 <div class="upload__box">
                     <div class="upload__img-wrap"></div>
                     <div id="file-upload-filename" class="upload__file-wrap"></div>
@@ -189,7 +189,7 @@
                 </div>
 
                 <button type="submit"
-                        class="btn btn-primary btn--primary con-reply-btn">{{translate('messages.send')}}
+                        class="btn btn-primary btn--primary con-reply-btn">{{'enviar'}}
                 </button>
             </div>
         </form>
@@ -311,13 +311,13 @@
 
             },
             onExtensionErr: function(index, file) {
-                toastr.error('{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
+                toastr.error('{{ 'Por favor ingrese solo archivos tipo png o jpg' }}', {
                     CloseButton: true,
                     ProgressBar: true
                 });
             },
             onSizeErr: function(index, file) {
-                toastr.error('{{ translate('messages.file_size_too_big') }}', {
+                toastr.error('{{ 'tamaño de archivo demasiado grande' }}', {
                     CloseButton: true,
                     ProgressBar: true
                 });

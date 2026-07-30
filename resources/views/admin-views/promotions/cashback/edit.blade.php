@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('Edit_Cashback_Offer'))
+@section('title','Editar oferta de reembolso')
 
 @section('content')
     <div class="content container-fluid">
@@ -11,7 +11,7 @@
                     <img src="{{asset('assets/admin/img/Create_Cashback_Offer.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.Edit_Cashback_Offer')}}
+                    {{'Editar oferta de reembolso'}}
                 </span>
             </h1>
         </div>
@@ -28,7 +28,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link lang_link active"
                                     href="#"
-                                    id="default-link">{{translate('messages.default')}}</a>
+                                    id="default-link">{{'por defecto'}}</a>
                                 </li>
                                 @foreach ($language as $lang)
                                     <li class="nav-item">
@@ -44,11 +44,11 @@
                             <div class="lang_form" id="default-form">
                                 <div class="form-group">
                                     <label class="input-label"
-                                        for="default_title">{{ translate('messages.title') }}
-                                        ({{ translate('Default') }})
+                                        for="default_title">{{ 'título' }}
+                                        ({{ 'Por defecto' }})
                                     </label>
                                     <input type="text" name="title[]" maxlength="254" value="{{$cashback?->getRawOriginal('title')}}" id="default_title"
-                                        class="form-control" placeholder="{{ translate('messages.Eid_Dhamaka') }}" >
+                                        class="form-control" placeholder="{{ 'Eid Dhamaka' }}" >
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                             </div>
@@ -71,11 +71,11 @@
                                         id="{{ $lang }}-form">
                                         <div class="form-group">
                                             <label class="input-label"
-                                                for="{{ $lang }}_title">{{ translate('messages.title') }}
+                                                for="{{ $lang }}_title">{{ 'título' }}
                                                 ({{ strtoupper($lang) }})
                                             </label>
                                             <input type="text" name="title[]" maxlength="254" id="{{ $lang }}_title" value="{{$translate[$lang]['title']??''}}"
-                                                class="form-control" placeholder="{{ translate('messages.Eid_Dhamaka') }}"
+                                                class="form-control" placeholder="{{ 'Eid Dhamaka' }}"
                                                  >
                                         </div>
                                         <input type="hidden" name="lang[]" value="{{ $lang }}">
@@ -85,9 +85,9 @@
                                 <div id="default-form">
                                     <div class="form-group">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.title') }} ({{ translate('messages.default') }})</label>
+                                            for="exampleFormControlInput1">{{ 'título' }} ({{ 'por defecto' }})</label>
                                         <input type="text" name="title[]" maxlength="254" class="form-control"
-                                            placeholder="{{ translate('messages.Eid_Dhamaka') }}">
+                                            placeholder="{{ 'Eid Dhamaka' }}">
                                     </div>
                                     <input type="hidden" name="lang[]" value="default">
                                 </div>
@@ -96,11 +96,11 @@
 
                         <div class="col-md-4 col-lg-4 col-sm-6" id="customer_wise">
                             <div class="form-group">
-                                <label class="input-label" for="select_customer">{{translate('messages.select_customer')}}</label>
+                                <label class="input-label" for="select_customer">{{'seleccionar cliente'}}</label>
                                 <select required name="customer_id[]" id="select_customer"
                                 class="form-control js-select2-custom"
-                                multiple="multiple" placeholder="{{translate('messages.select_customer')}}">
-                                <option value="all" {{in_array('all', json_decode($cashback->customer_id))?'selected':''}}>{{translate('messages.all')}} </option>
+                                multiple="multiple" placeholder="{{'seleccionar cliente'}}">
+                                <option value="all" {{in_array('all', json_decode($cashback->customer_id))?'selected':''}}>{{'todo'}} </option>
                                 @foreach(\App\Models\User::get(['id','f_name','l_name']) as $user)
                                 <option value="{{$user->id}}" {{in_array($user->id, json_decode($cashback->customer_id))?'selected':''}}>{{$user->f_name.' '.$user->l_name}}</option>
                             @endforeach
@@ -113,19 +113,19 @@
 
                         <div class="col-md-4 col-lg-4 col-sm-6">
                             <div class="form-group">
-                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Cashback_Type')}} <span class="form-label-secondary text-danger"
+                                <label class="input-label" for="exampleFormControlInput1">{{'Tipo de reembolso'}} <span class="form-label-secondary text-danger"
                                     data-toggle="tooltip" data-placement="right"
-                                    data-original-title="{{ translate('messages.Required.')}}"> *
+                                    data-original-title="{{ 'Requerido.'}}"> *
                                     </span></label>
                                 <select name="cashback_type" class="form-control"  data-mas_discount="{{ $cashback?->max_discount ?? null }}" id="cashback_type" required>
-                                    <option {{ $cashback->cashback_type ==  'percentage' ? 'selected'  : '' }} value="percentage">{{translate('messages.percentage')}} (%)</option>
-                                    <option {{ $cashback->cashback_type ==  'amount' ? 'selected'  : '' }} value="amount">{{translate('messages.amount')}} {{ \App\CentralLogics\Helpers::currency_symbol() }}</option>
+                                    <option {{ $cashback->cashback_type ==  'percentage' ? 'selected'  : '' }} value="percentage">{{'porcentaje'}} (%)</option>
+                                    <option {{ $cashback->cashback_type ==  'amount' ? 'selected'  : '' }} value="amount">{{'cantidad'}} {{ \App\CentralLogics\Helpers::currency_symbol() }}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-4 col-lg-4 col-sm-6">
                             <div class="form-group">
-                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Cashback_Amount')}}
+                                <label class="input-label" for="exampleFormControlInput1">{{'Monto del reembolso'}}
 
                                     <span  class=" {{ $cashback->cashback_type ==  'percentage' ? 'd-none'  : '' }}   " id='cuttency_symbol'>({{ \App\CentralLogics\Helpers::currency_symbol() }})
                                     </span>
@@ -134,57 +134,57 @@
                                     <span
                                     class="input-label-secondary text--title" data-toggle="tooltip"
                                     data-placement="right"
-                                    data-original-title="{{ translate('Set_the_Cash_back_amount/percentage_a_customer_will_receive_after_a_successfull_order.') }}">
+                                    data-original-title="{{ 'Establezca el monto/porcentaje de reembolso en efectivo que recibirá un cliente después de un pedido exitoso.' }}">
                                     <i class="tio-info-outined"></i>
                                 </span>
                                 <span class="form-label-secondary text-danger"
                                 data-toggle="tooltip" data-placement="right"
-                                data-original-title="{{ translate('messages.Required.')}}"> *
+                                data-original-title="{{ 'Requerido.'}}"> *
                                 </span>
 
                                 </label>
-                                <input type="number"   step="0.01" min="1" value="{{  $cashback->cashback_amount }}" max="{{ $cashback->cashback_type ==  'percentage' ? '100'  : '999999999.99' }}"  placeholder="{{ translate('messages.Ex:_100') }}"  name="cashback_amount" id="Cash_back_amount" class="form-control" required>
+                                <input type="number"   step="0.01" min="1" value="{{  $cashback->cashback_amount }}" max="{{ $cashback->cashback_type ==  'percentage' ? '100'  : '999999999.99' }}"  placeholder="{{ 'Ej: 100' }}"  name="cashback_amount" id="Cash_back_amount" class="form-control" required>
                             </div>
                         </div>
 
                         <div class="col-md-4 col-lg-4 col-sm-6">
                             <div class="form-group">
-                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Minimum_Purchase')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
+                                <label class="input-label" for="exampleFormControlInput1">{{'Compra Mínima'}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
                                 <input type="number" step="0.01" id="min_purchase" required name="min_purchase" value="{{ $cashback->min_purchase }}" min="0" max="999999999999.99" class="form-control"
-                                placeholder="{{ translate('messages.Ex:_100') }}">
+                                placeholder="{{ 'Ej: 100' }}">
                             </div>
                         </div>
                         <div class="col-md-4 col-lg-4 col-sm-6">
                             <div class="form-group">
-                                <label class="input-label" for="max_discount">{{translate('messages.Maximum_Discount')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
-                                <input type="number" step="0.01" min="0" placeholder="{{ translate('messages.Ex:_100') }}"  max="999999999999.99"  {{ $cashback->cashback_type ==  'percentage' ? 'required'  : 'readonly' }}   value="{{ $cashback->max_discount }}" name="max_discount" id="max_discount" class="form-control" >
+                                <label class="input-label" for="max_discount">{{'Descuento máximo'}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
+                                <input type="number" step="0.01" min="0" placeholder="{{ 'Ej: 100' }}"  max="999999999999.99"  {{ $cashback->cashback_type ==  'percentage' ? 'required'  : 'readonly' }}   value="{{ $cashback->max_discount }}" name="max_discount" id="max_discount" class="form-control" >
                             </div>
                         </div>
 
                         <div class="col-md-4 col-lg-4 col-sm-6">
                             <div class="form-group">
-                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Start_Date')}}</label>
+                                <label class="input-label" for="exampleFormControlInput1">{{'Fecha de inicio'}}</label>
                                 <input type="date" name="start_date" value="{{ $cashback->start_date }}" class="form-control" id="date_from" required>
                             </div>
                         </div>
                         <div class="col-md-4 col-lg-4 col-sm-6">
                             <div class="form-group">
-                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.End_Date')}}</label>
+                                <label class="input-label" for="exampleFormControlInput1">{{'Fecha de finalización'}}</label>
                                 <input type="date" name="end_date" value="{{ $cashback->end_date }}"  class="form-control" id="date_to" required>
                             </div>
                         </div>
                         <div class="col-md-4 col-lg-4 col-sm-6">
                             <div class="form-group">
-                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Limit_for_Same_User')}}</label>
+                                <label class="input-label" for="exampleFormControlInput1">{{'Límite para el mismo usuario'}}</label>
                                 <input type="number" step="1" name="same_user_limit" value="{{ $cashback->same_user_limit }}"  value="0" min="0" max="9999999" class="form-control" required
-                                placeholder="{{ translate('messages.Ex:_5') }}">
+                                placeholder="{{ 'Ej: 5' }}">
                             </div>
                         </div>
 
                     </div>
                     <div class="btn--container justify-content-end">
-                        <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                        <button type="submit" class="btn btn--primary">{{translate('messages.Update')}}</button>
+                        <button type="reset" id="reset_btn" class="btn btn--reset">{{'reiniciar'}}</button>
+                        <button type="submit" class="btn btn--primary">{{'Actualizar'}}</button>
                     </div>
                 </form>
             </div>

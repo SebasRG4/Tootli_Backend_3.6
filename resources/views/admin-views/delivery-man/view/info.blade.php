@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Delivery Man Preview'))
+@section('title', 'Vista previa del repartidor')
 
 @section('content')
     <div class="content container-fluid pb-0">
@@ -19,21 +19,21 @@
                     <div
                         class="d-flex mb-xxl-4 mb-3 justify-content-between align-items-center gap-2 flex-wrap position-relative z-index-2">
                         <h4 class="card-title text-dark align-items-center flex-wrap gap-2">
-                            {{ translate('messages.deliveryman Details') }}
+                            {{ 'Detalles del repartidor' }}
                         </h4>
 
                         <div class="d-flex flex-wrap gap-2">
                             <a href="javascript:"
                                 class="btn request-alert py-2 btn-warning text-white align-items-center d-flex"
                                 data-url="{{ route('admin.users.delivery-man.reset-device', [$deliveryMan['id']]) }}"
-                                data-message="{{ translate('messages.are_you_sure_to_reset_device_for_this_deliveryman') }}">
-                                <i class="tio-android-phone mr-1"></i> {{ translate('messages.Reset Device') }}
+                                data-message="{{ '¿Estás seguro de restablecer el dispositivo para este repartidor?' }}">
+                                <i class="tio-android-phone mr-1"></i> {{ 'Restablecer dispositivo' }}
                             </a>
                             <a href="javascript:"
                                 class="btn request-alert py-2 {{ $deliveryMan->status ? 'btn--danger' : 'btn-success' }} align-items-center d-flex"
                                 data-url="{{ route('admin.users.delivery-man.status', [$deliveryMan['id'], $deliveryMan->status ? 0 : 1]) }}"
-                                data-message="{{ $deliveryMan->status ? translate('messages.you_want_to_suspend_this_deliveryman') : translate('messages.you_want_to_unsuspend_this_deliveryman') }}">
-                                {{ $deliveryMan->status ? translate('messages.suspend_this_delivery_man') : translate('messages.unsuspend_this_delivery_man') }}
+                                data-message="{{ $deliveryMan->status ? 'quieres suspender a este repartidor' : 'quieres dessuspender a este repartidor' }}">
+                                {{ $deliveryMan->status ? 'suspender a este repartidor' : 'suspender a este repartidor' }}
                             </a>
                             <div class="hs-unfold">
 
@@ -43,16 +43,16 @@
                                         aria-expanded="false">
                                         <img src="{{ asset('assets/admin/img/icons/bx_edit.png') }}" alt=""
                                             class="mr-1">
-                                        {{ translate('Edit') }}
+                                        {{ 'Editar' }}
 
                                     </button>
                                     <div class="dropdown-menu min-w-220 dropdown-menu-right text-capitalize"
                                         aria-labelledby="dropdownMenuButton">
                                         <a class="dropdown-item fs-14 font-weight-medium text-dark"
-                                            href="{{ route('admin.users.delivery-man.edit', [$deliveryMan->id]) }}">{{ translate('messages.Edit Information') }}</a>
+                                            href="{{ route('admin.users.delivery-man.edit', [$deliveryMan->id]) }}">{{ 'Editar información' }}</a>
                                         <a class="dropdown-item fs-14 font-weight-medium text-dark" data-toggle="modal"
                                             data-target="#work_switcher" href="javascript:">
-                                            {{ translate('messages.Edit Delivery Type') }}
+                                            {{ 'Editar tipo de entrega' }}
                                         </a>
                                     </div>
                                 </div>
@@ -69,7 +69,7 @@
                             src="{{ $deliveryMan['image_full_url'] }}" width="115" height="115"
                             alt="Delivery man image">
                         <span
-                            class="suspend-badge bg-danger py-0 px-2 mb-2 fs-13 lh-1 text-white rounded position-absolute bottom-0 start-0">{{ !$deliveryMan['status'] && $deliveryMan['application_status'] == 'approved' ? translate('messages.suspended') : '' }}</span>
+                            class="suspend-badge bg-danger py-0 px-2 mb-2 fs-13 lh-1 text-white rounded position-absolute bottom-0 start-0">{{ !$deliveryMan['status'] && $deliveryMan['application_status'] == 'approved' ? 'suspendido' : '' }}</span>
                     </div>
 
                     <div class="flex-grow-1">
@@ -81,14 +81,14 @@
                                     @if ($deliveryMan['status'])
                                         @if ($deliveryMan['active'])
                                             <label
-                                                class=" mb-0 badge badge-soft-primary">{{ translate('messages.online') }}</label>
+                                                class=" mb-0 badge badge-soft-primary">{{ 'en línea' }}</label>
                                         @else
                                             <label
-                                                class=" mb-0 badge badge-soft-danger">{{ translate('messages.offline') }}</label>
+                                                class=" mb-0 badge badge-soft-danger">{{ 'desconectado' }}</label>
                                         @endif
                                     @else
                                         <label
-                                            class=" mb-0 badge badge-danger">{{ translate('messages.suspended') }}</label>
+                                            class=" mb-0 badge badge-danger">{{ 'suspendido' }}</label>
                                     @endif
                                 @else
                                     <label
@@ -110,9 +110,9 @@
                             <div class="d-flex justify-content-center justify-content-md-start gap-3">
                                 <div class="">
                                     <h6 class="fs-13 mb-1 font-weight-normal text-dark">
-                                        {{ translate('messages.Job_Type') }} </h6>
+                                        {{ 'Tipo de trabajo' }} </h6>
                                     <p class="mb-0 fs-14 font-weight-bold text-dark ">
-                                        {{ $deliveryMan->earning ? translate('messages.freelancer') : translate('messages.salary_based') }}
+                                        {{ $deliveryMan->earning ? 'persona de libre dedicación' : 'basado en salario' }}
                                     </p>
                                 </div>
                             </div>
@@ -120,18 +120,18 @@
                             <div class="d-flex justify-content-center justify-content-md-start gap-3">
                                 <div class="">
                                     <h6 class="fs-13 mb-1 font-weight-normal text-dark">
-                                        {{ translate('messages.Vehicle_Type') }}</h6>
+                                        {{ 'Tipo de vehículo' }}</h6>
                                     <p class="mb-0 fs-14 font-weight-bold text-dark ">
-                                        {{ $deliveryMan?->vehicle?->type ?? translate('messages.Unknown Vehicle') }}</p>
+                                        {{ $deliveryMan?->vehicle?->type ?? 'Vehículo desconocido' }}</p>
                                 </div>
                             </div>
                             <div class="text-muted line-30"></div>
                             <div class="d-flex justify-content-center justify-content-md-start gap-3">
                                 <div class="">
-                                    <h6 class="fs-13 mb-1 font-weight-normal text-dark">{{ translate('messages.Zone') }}
+                                    <h6 class="fs-13 mb-1 font-weight-normal text-dark">{{ 'Zona' }}
                                     </h6>
                                     <p class="mb-0 fs-14 font-weight-bold text-dark ">
-                                        {{ isset($deliveryMan->zone) ? $deliveryMan->zone->name : translate('zone_deleted') }}
+                                        {{ isset($deliveryMan->zone) ? $deliveryMan->zone->name : 'zona eliminada' }}
                                     </p>
                                 </div>
                             </div>
@@ -140,17 +140,17 @@
                             <div class="d-flex justify-content-center justify-content-md-start gap-3">
                                 <div class="">
                                     <h6 class="fs-13 mb-1 font-weight-normal text-dark">
-                                        {{ translate('messages.services') }} </h6>
+                                        {{ 'servicios' }} </h6>
                                     <div class="mb-0 fs-14 font-weight-bold text-dark ">
                                         @if($deliveryMan->can_deliver)
-                                            <span class="badge badge-soft-info">{{translate('messages.delivery')}}</span>
+                                            <span class="badge badge-soft-info">{{'entrega'}}</span>
                                         @endif
                                         @if($deliveryMan->can_drive_taxi)
-                                            <span class="badge badge-soft-warning">{{translate('messages.taxi')}}</span>
+                                            <span class="badge badge-soft-warning">{{'Taxi'}}</span>
                                             @if($deliveryMan->taxi_is_verified)
-                                                <i class="tio-checkmark-circle text-success" title="{{translate('messages.verified')}}"></i>
+                                                <i class="tio-checkmark-circle text-success" title="{{'verificado'}}"></i>
                                             @else
-                                                <i class="tio-warning text-warning" title="{{translate('messages.unverified')}}"></i>
+                                                <i class="tio-warning text-warning" title="{{'inconfirmado'}}"></i>
                                             @endif
                                         @endif
                                     </div>
@@ -160,7 +160,7 @@
                             <div class="text-muted line-30"></div>
                             <div class="d-flex justify-content-center justify-content-md-start gap-3">
                                 <div class="">
-                                    <h6 class="fs-13 mb-1 font-weight-normal text-dark">{{ translate('messages.taxi_license_number') }}</h6>
+                                    <h6 class="fs-13 mb-1 font-weight-normal text-dark">{{ 'número de licencia de taxi' }}</h6>
                                     <p class="mb-0 fs-14 font-weight-bold text-dark ">
                                         {{ $deliveryMan->taxi_license_number }}
                                     </p>
@@ -185,8 +185,8 @@
                                                 {{ count($deliveryMan->rating) > 0 ? number_format($deliveryMan->rating[0]->average, 1) : 0 }}<span
                                                     class="out-of">/5</span></h3>
                                             <div class="info">
-                                                <span>{{ translate('messages._of') }} {{ $deliveryMan->reviews->count() }}
-                                                    {{ translate('messages.reviews') }}</span>
+                                                <span>{{ 'de' }} {{ $deliveryMan->reviews->count() }}
+                                                    {{ 'opiniones' }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -198,7 +198,7 @@
                                     <!-- Review Ratings -->
                                     <li class="d-flex align-items-center font-size-sm">
                                         @php($five = \App\CentralLogics\Helpers::dm_rating_count($deliveryMan['id'], 5))
-                                        <span class="progress-name mr-3">{{ translate('excellent') }}</span>
+                                        <span class="progress-name mr-3">{{ 'excelente' }}</span>
                                         <div class="progress flex-grow-1">
                                             <div class="progress-bar" role="progressbar"
                                                 style="width: {{ $total == 0 ? 0 : ($five / $total) * 100 }}%;"
@@ -212,7 +212,7 @@
                                     <!-- Review Ratings -->
                                     <li class="d-flex align-items-center font-size-sm">
                                         @php($four = \App\CentralLogics\Helpers::dm_rating_count($deliveryMan['id'], 4))
-                                        <span class="progress-name mr-3">{{ translate('good') }}</span>
+                                        <span class="progress-name mr-3">{{ 'bien' }}</span>
                                         <div class="progress flex-grow-1">
                                             <div class="progress-bar" role="progressbar"
                                                 style="width: {{ $total == 0 ? 0 : ($four / $total) * 100 }}%;"
@@ -226,7 +226,7 @@
                                     <!-- Review Ratings -->
                                     <li class="d-flex align-items-center font-size-sm">
                                         @php($three = \App\CentralLogics\Helpers::dm_rating_count($deliveryMan['id'], 3))
-                                        <span class="progress-name mr-3">{{ translate('average') }}</span>
+                                        <span class="progress-name mr-3">{{ 'promedio' }}</span>
                                         <div class="progress flex-grow-1">
                                             <div class="progress-bar" role="progressbar"
                                                 style="width: {{ $total == 0 ? 0 : ($three / $total) * 100 }}%;"
@@ -240,7 +240,7 @@
                                     <!-- Review Ratings -->
                                     <li class="d-flex align-items-center font-size-sm">
                                         @php($two = \App\CentralLogics\Helpers::dm_rating_count($deliveryMan['id'], 2))
-                                        <span class="progress-name mr-3">{{ translate('below_average') }}</span>
+                                        <span class="progress-name mr-3">{{ 'por debajo del promedio' }}</span>
                                         <div class="progress flex-grow-1">
                                             <div class="progress-bar" role="progressbar"
                                                 style="width: {{ $total == 0 ? 0 : ($two / $total) * 100 }}%;"
@@ -254,7 +254,7 @@
                                     <!-- Review Ratings -->
                                     <li class="d-flex align-items-center font-size-sm">
                                         @php($one = \App\CentralLogics\Helpers::dm_rating_count($deliveryMan['id'], 1))
-                                        <span class="progress-name mr-3">{{ translate('poor') }}</span>
+                                        <span class="progress-name mr-3">{{ 'pobre' }}</span>
                                         <div class="progress flex-grow-1">
                                             <div class="progress-bar" role="progressbar"
                                                 style="width: {{ $total == 0 ? 0 : ($one / $total) * 100 }}%;"
@@ -270,7 +270,7 @@
                                     <img width="75" class=""
                                         src="{{ asset('assets/admin/img/icons/no_rating.png') }}" alt="">
                                     <p class="mb-0 font-weight-normal">
-                                        {{ translate('messages.no_review/rating_given_yet') }}
+                                        {{ 'aún no se ha dado ninguna reseña/calificación' }}
                                     </p>
                                 </div>
                             @endif
@@ -287,9 +287,9 @@
                 <div class="border rounded p-xxl-20 p-3 mt-20">
                     <div class="d-flex gap-2 align-items-center mb-20">
                         @if ($deliveryMan->application_status == 'approved')
-                            <h5 class="mb-0 fs-16 fw-bold">{{ translate('Identity_Documents') }}</h5>
+                            <h5 class="mb-0 fs-16 fw-bold">{{ 'Documentos de identidad' }}</h5>
                         @else
-                            <h5 class="mb-0 fs-16 fw-bold">{{ translate('Registration_Information') }}</h5>
+                            <h5 class="mb-0 fs-16 fw-bold">{{ 'Información de registro' }}</h5>
                         @endif
                     </div>
                     <div class="row g-3">
@@ -299,16 +299,16 @@
 
                                     <div class="key-val-list-item d-flex gap-3">
                                         <div class="text-title fs-14 identity__info">
-                                            {{ translate('messages.First_Name') }} </div>:
+                                            {{ 'Nombre de pila' }} </div>:
                                         <div class="text-dark fs-14">{{ $deliveryMan['f_name'] }}</div>
                                     </div>
                                     <div class="key-val-list-item d-flex gap-3">
-                                        <div class="text-title fs-14 identity__info">{{ translate('messages.Last_Name') }}
+                                        <div class="text-title fs-14 identity__info">{{ 'Apellido' }}
                                         </div>:
                                         <div class="text-dark fs-14">{{ $deliveryMan['l_name'] }}</div>
                                     </div>
                                     <div class="key-val-list-item d-flex gap-3">
-                                        <div class="text-title fs-14 identity__info">{{ translate('messages.email') }}
+                                        <div class="text-title fs-14 identity__info">{{ 'correo electrónico' }}
                                         </div>:
                                         <div class="text-dark fs-14">{{ $deliveryMan['email'] }}</div>
                                     </div>
@@ -319,12 +319,12 @@
                             <div class="bg-light2 rounded p-3 h-100 d-flex flex-column gap-2">
 
                                 <div class="key-val-list-item d-flex gap-3">
-                                    <div class="text-title fs-14 identity__info">{{ translate('Identity_Type') }}</div>:
+                                    <div class="text-title fs-14 identity__info">{{ 'Tipo de identidad' }}</div>:
                                     <div class="text-dark fs-14">{{ translate($deliveryMan->identity_type) }}</div>
                                 </div>
                                 <div class="key-val-list-item d-flex gap-3">
                                     <div class="text-title fs-14 identity__info">
-                                        {{ translate('messages.identification_number') }}</div>:
+                                        {{ 'número de identificación' }}</div>:
                                     <div class="text-dark fs-14">{{ $deliveryMan->identity_number }}</div>
                                 </div>
                             </div>
@@ -334,12 +334,12 @@
                                 <div class="bg-light2 rounded p-3 h-100 d-flex flex-column gap-2">
 
                                     <div class="key-val-list-item d-flex gap-3">
-                                        <div class="text-title fs-14 identity__info">{{ translate('messages.Phone') }}
+                                        <div class="text-title fs-14 identity__info">{{ 'Teléfono' }}
                                         </div>:
                                         <div class="text-dark fs-14">{{ $deliveryMan->phone }}</div>
                                     </div>
                                     <div class="key-val-list-item d-flex gap-3">
-                                        <div class="text-title fs-14 identity__info">{{ translate('messages.Password') }}
+                                        <div class="text-title fs-14 identity__info">{{ 'Contraseña' }}
                                         </div>:
                                         <div class="text-dark fs-14">**********</div>
                                     </div>
@@ -366,10 +366,10 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h4 class="modal-title" id="myModlabel">
-                                                            {{ translate('messages.Identity_Image') }}</h4>
+                                                            {{ 'Imagen de identidad' }}</h4>
                                                         <button type="button" class="close" data-dismiss="modal"><span
                                                                 aria-hidden="true">&times;</span><span
-                                                                class="sr-only">{{ translate('messages.Close') }}</span></button>
+                                                                class="sr-only">{{ 'Cerca' }}</span></button>
                                                     </div>
                                                     <div class="modal-body">
                                                         <img data-onerror-image="{{ asset('assets/admin/img/900x400/img1.jpg') }}"
@@ -519,7 +519,7 @@
                                             {{ count($deliveryMan['order_transaction']) }}
                                         </h2>
                                         <div class="subtitle text-title">
-                                            {{ translate('messages.total_delivered_orders') }}
+                                            {{ 'pedidos totales entregados' }}
                                         </div>
                                     </div>
                                 </div>
@@ -542,7 +542,7 @@
                                                 {{ \App\CentralLogics\Helpers::format_currency($deliveryMan->wallet ? $deliveryMan->wallet->collected_cash : 0.0) }}
                                             </h2>
                                             <div class="subtitle text-title">
-                                                {{ translate('messages.cash_in_hand') }}
+                                                {{ 'efectivo en mano' }}
                                             </div>
                                         </div>
                                     </div>
@@ -561,7 +561,7 @@
                                                 {{ \App\CentralLogics\Helpers::format_currency($deliveryMan->wallet ? $deliveryMan->wallet->total_earning : 0.0) }}
                                             </h2>
                                             <div class="subtitle text-title">
-                                                {{ translate('messages.total_earning') }}
+                                                {{ 'ganancia total' }}
                                             </div>
                                         </div>
                                     </div>
@@ -590,7 +590,7 @@
                                                         {{ \App\CentralLogics\Helpers::format_currency(abs($balance)) }}
                                                     </h2>
                                                     <div class="subtitle text-title">
-                                                        {{ translate('messages.Withdraw_Able_Balance') }}
+                                                        {{ 'Retirar saldo capaz' }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -608,7 +608,7 @@
                                                         {{ \App\CentralLogics\Helpers::format_currency(abs($deliveryMan->wallet->collected_cash)) }}
                                                     </h2>
                                                     <div class="subtitle text-title">
-                                                        {{ translate('messages.Payable_Balance') }}
+                                                        {{ 'Saldo a pagar' }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -626,7 +626,7 @@
                                                         {{ \App\CentralLogics\Helpers::format_currency(0) }}
                                                     </h2>
                                                     <div class="subtitle text-title">
-                                                        {{ translate('messages.Balance') }}
+                                                        {{ 'Balance' }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -646,7 +646,7 @@
                                                     {{ \App\CentralLogics\Helpers::format_currency($deliveryMan->wallet ? $deliveryMan->wallet->total_withdrawn : 0.0) }}
                                                 </h2>
                                                 <div class="subtitle text-title">
-                                                    {{ translate('messages.Total_withdrawn') }}
+                                                    {{ 'Total retirado' }}
                                                 </div>
                                             </div>
                                         </div>
@@ -664,7 +664,7 @@
                                                     {{ \App\CentralLogics\Helpers::format_currency($deliveryMan->wallet ? $deliveryMan->wallet->pending_withdraw : 0.0) }}
                                                 </h2>
                                                 <div class="subtitle text-title">
-                                                    {{ translate('messages.Pending_withdraw') }}
+                                                    {{ 'Retiro pendiente' }}
                                                 </div>
                                             </div>
                                         </div>
@@ -681,7 +681,7 @@
                                                     {{ (int) $deliveryMan->loyalty_point }}
                                                 </h2>
                                                 <div class="subtitle text-title">
-                                                    {{ translate('messages.Loyalty Point') }}
+                                                    {{ 'Punto de fidelización' }}
                                                 </div>
                                             </div>
                                         </div>
@@ -702,7 +702,7 @@
                 <!-- Header -->
                 <div class="card-header flex-sm-nowrap flex-wrap gap-2 pt-3 pb-0 border-0">
                     <h5 class="card-header-title d-flex align-items-center gap-2 text-nowrap line--limite-1">
-                        {{ translate('messages.review_list') }}
+                        {{ 'lista de revisión' }}
                         <span class="badge badge-soft-dark ml-2" id="itemCount">
                             {{ $reviews->total() }}
                         </span>
@@ -711,7 +711,7 @@
                         <form class="search-form min--260">
                             <div class="input-group input--group">
                                 <input id="datatableSearch_" type="search" name="search" class="form-control h--40px"
-                                    placeholder="{{ translate('messages.search here') }}"
+                                    placeholder="{{ 'buscar aquí' }}"
                                     value="{{ request()->search }}" aria-label="Search" tabindex="1">
 
                                 <button type="submit" class="btn btn--secondary bg-modal-btn"><i
@@ -726,25 +726,25 @@
                                     "target": "#usersExportDropdown",
                                     "type": "css-animation"
                                 }'>
-                                <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                                <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                             </a>
 
                             <div id="usersExportDropdown"
                                 class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                                <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                                <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                                 <a id="export-excel" class="dropdown-item"
                                     href="{{ route('admin.users.delivery-man.review-export', ['type' => 'excel', 'id' => $deliveryMan->id, request()->getQueryString()]) }}">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
                                         src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                         alt="Image Description">
-                                    {{ translate('messages.excel') }}
+                                    {{ 'sobresalir' }}
                                 </a>
                                 <a id="export-csv" class="dropdown-item"
                                     href="{{ route('admin.users.delivery-man.review-export', ['type' => 'csv', 'id' => $deliveryMan->id, request()->getQueryString()]) }}">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
                                         src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                         alt="Image Description">
-                                    .{{ translate('messages.csv') }}
+                                    .{{ 'csv' }}
                                 </a>
                             </div>
                         </div>
@@ -777,12 +777,12 @@
                         }'>
                                 <thead class="thead-light">
                                     <tr>
-                                        <th class="border-0 fs-14">{{ translate('messages.SL') }}</th>
-                                        <th class="border-0 fs-14">{{ translate('messages.order_ID') }}</th>
-                                        <th class="border-0 fs-14">{{ translate('messages.customer') }}</th>
-                                        <th class="border-0 fs-14">{{ translate('messages.Rating') }}</th>
-                                        <th class="border-0 fs-14">{{ translate('messages.Review ID') }}</th>
-                                        <th class="border-0 fs-14">{{ translate('messages.review') }}</th>
+                                        <th class="border-0 fs-14">{{ 'SL' }}</th>
+                                        <th class="border-0 fs-14">{{ 'ID de pedido' }}</th>
+                                        <th class="border-0 fs-14">{{ 'Cliente' }}</th>
+                                        <th class="border-0 fs-14">{{ 'Clasificación' }}</th>
+                                        <th class="border-0 fs-14">{{ 'ID de revisión' }}</th>
+                                        <th class="border-0 fs-14">{{ 'revisar' }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -803,7 +803,7 @@
                                                         </span>
                                                     </a>
                                                 @else
-                                                    {{ translate('messages.customer_not_found') }}
+                                                    {{ 'cliente no encontrado' }}
                                                 @endif
                                             </td>
                                             <td>
@@ -842,7 +842,7 @@
                                 <img src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}"
                                     alt="public">
                                 <h5>
-                                    {{ translate('no_data_found') }}
+                                    {{ 'no se encontraron datos' }}
                                 </h5>
                             </div>
                         @endif
@@ -875,18 +875,18 @@
                             </div>
                             <div class="text-center mb-4">
                                 <h3 class="font-weight-normal text-dark">
-                                    {{ translate('This deliveryman is currently on') }} <br>
-                                    <strong>{{ $deliveryMan->earning ? translate('messages.freelancer') : translate('messages.salary_based') }}</strong>
+                                    {{ 'Este repartidor está actualmente en' }} <br>
+                                    <strong>{{ $deliveryMan->earning ? 'persona de libre dedicación' : 'basado en salario' }}</strong>
                                 </h3>
                             </div>
                         </div>
                         <div class="bg-light2 rounded p-sm-4 p-3">
-                            <p class="fs-14 mb-20 text-body">{{ translate('Do you want to change the delivery type?') }}
+                            <p class="fs-14 mb-20 text-body">{{ '¿Quieres cambiar el tipo de entrega?' }}
                             </p>
                             <div class="btn--container justify-content-center p-0">
                                 <a href="{{ route('admin.users.delivery-man.earning', ['id' => $deliveryMan->id, 'status' => $deliveryMan->earning ? 0 : 1]) }}"
                                     class="btn btn--primary min-w-120">
-                                    {{ $deliveryMan->earning ? translate('Switch to Salary Based') : translate('Switch to Freelanced Based') }}
+                                    {{ $deliveryMan->earning ? 'Cambiar a basado en salario' : 'Cambiar a autónomo' }}
                                 </a>
                             </div>
                         </div>
@@ -908,14 +908,14 @@
 
         function request_alert(url, message) {
             Swal.fire({
-                title: '{{ translate('messages.are_you_sure') }}',
+                title: '{{ '¿está seguro?' }}',
                 text: message,
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{ translate('messages.no') }}',
-                confirmButtonText: '{{ translate('messages.yes') }}',
+                cancelButtonText: '{{ 'No' }}',
+                confirmButtonText: '{{ 'Sí' }}',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {

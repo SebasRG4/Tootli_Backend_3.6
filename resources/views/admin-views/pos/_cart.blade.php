@@ -2,10 +2,10 @@
     <table class="table table--vertical-middle">
         <thead class="text-muted thead-light">
             <tr class="text-center">
-                <th class="border-bottom-0 border-top-0" scope="col">{{translate('messages.food')}}</th>
-                <th class="border-bottom-0 border-top-0" scope="col">{{translate('messages.QTY')}}</th>
-                <th class="border-bottom-0 border-top-0 text-right" scope="col">{{translate('messages.Unit_price')}}</th>
-                <th class="border-bottom-0 border-top-0" scope="col">{{translate('messages.delete')}}</th>
+                <th class="border-bottom-0 border-top-0" scope="col">{{'alimento'}}</th>
+                <th class="border-bottom-0 border-top-0" scope="col">{{'CANTIDAD'}}</th>
+                <th class="border-bottom-0 border-top-0 text-right" scope="col">{{'Precio unitario'}}</th>
+                <th class="border-bottom-0 border-top-0" scope="col">{{'borrar'}}</th>
             </tr>
         </thead>
         <tbody class="border-left border-right border-bottom">
@@ -89,13 +89,13 @@
     <dl class="row text-dark">
         @if (Config::get('module.current_module_type') == 'food')
 
-        <dd  class="col-6">{{translate('messages.addon')}}:</dd>
+        <dd  class="col-6">{{'Añadir'}}:</dd>
         <dd class="col-6 text-right">{{\App\CentralLogics\Helpers::format_currency($addon_price)}}</dd>
         @endif
 
-        <dd  class="col-6">{{translate('messages.subtotal')}}
+        <dd  class="col-6">{{'total parcial'}}
             @if ($tax_included ==  1)
-                ({{ translate('messages.TAX_Included') }})
+                ({{ 'IVA incluido' }})
                 @php($tax_amount=0)
             @endif
             :</dd>
@@ -104,7 +104,7 @@
 
         {{-- Coupon Discount --}}
         {{-- @if(true)
-            <dd  class="col-6">{{translate('coupon_discount')}} :</dd>
+            <dd  class="col-6">{{'cupón de descuento'}} :</dd>
             <dd class="col-6 text-right">
             <span class="delivery--edit-icon text-primary cursor-pointer" data-toggle="modal" data-target="#couponModal">
                 <i class="tio-edit"></i>
@@ -112,13 +112,13 @@
             - {{\App\CentralLogics\Helpers::format_currency(100)}}</dd>
         @endif --}}
 
-        <dd  class="col-6">{{translate('messages.discount')}} :</dd>
+        <dd  class="col-6">{{'descuento'}} :</dd>
         <dd class="col-6 text-right">- {{\App\CentralLogics\Helpers::format_currency(round($discount_on_product,2))}}</dd>
-        <dd class="col-6">{{ translate('messages.delivery_fee') }} :</dd>
+        <dd class="col-6">{{ 'tarifa de entrega' }} :</dd>
         <dd class="col-6 text-right" id="delivery_price">
             {{ \App\CentralLogics\Helpers::format_currency($delivery_fee) }}</dd>
         @if ($tax_included !=  1)
-            <dd  class="col-6">{{ translate('messages.tax') }}  : </dd>
+            <dd  class="col-6">{{ 'impuesto' }}  : </dd>
             <dd class="col-6 text-right">
             {{\App\CentralLogics\Helpers::format_currency(round($tax_amount,2))}}</dd>
         @endif
@@ -128,7 +128,7 @@
         <dd  class="col-6 pl-0">
             <hr class="my-0">
         </dd>
-        <dt  class="col-6">{{ translate('messages.total') }}  : </dt>
+        <dt  class="col-6">{{ 'total' }}  : </dt>
         <dt class="col-6 text-right">
             {{\App\CentralLogics\Helpers::format_currency(round($total+$tax_amount, 2))}}
         </dt>
@@ -138,14 +138,14 @@
         @csrf
         <input type="hidden" name="user_id" id="customer_id">
         <div class="pos--payment-options mt-3 mb-3">
-            <p class="mb-3">{{ translate('paid_By') }}</p>
+            <p class="mb-3">{{ 'pagado por' }}</p>
             <ul>
                 @php($cod=\App\CentralLogics\Helpers::get_business_settings('cash_on_delivery'))
                 @if ($cod['status'])
                 <li>
                     <label>
                         <input type="radio" name="type" value="cash" hidden checked>
-                        <span>{{ translate('Cash On Delivery') }}</span>
+                        <span>{{ 'Contra reembolso' }}</span>
                     </label>
                 </li>
                 @endif
@@ -154,7 +154,7 @@
                 <li>
                     <label>
                         <input type="radio" name="type" value="wallet" hidden {{ $cod['status']? '':'checked' }}>
-                        <span>{{ translate('Wallet') }}</span>
+                        <span>{{ 'Billetera' }}</span>
                     </label>
                 </li>
                 @endif
@@ -163,10 +163,10 @@
 
         <div class="row button--bottom-fixed g-1 bg-white">
             <div class="col-sm-6">
-                <button type="button" class="btn h-100  btn-outline-danger btn-block empty-Cart" {{ (session()->has('cart') && count( session()->get('cart')) > 0)?'':'disabled' }}>{{ translate('messages.Clear Cart') }} </button>
+                <button type="button" class="btn h-100  btn-outline-danger btn-block empty-Cart" {{ (session()->has('cart') && count( session()->get('cart')) > 0)?'':'disabled' }}>{{ 'Borrar carrito' }} </button>
             </div>
             <div class="col-sm-6">
-                <button type="submit" class="btn  btn--primary place-order-submit btn-block">{{ translate('messages.place_order') }} </button>
+                <button type="submit" class="btn  btn--primary place-order-submit btn-block">{{ 'realizar pedido' }} </button>
             </div>
         </div>
     </form>
@@ -183,7 +183,7 @@
             </div>
             <div class="modal-body p-4 pt-0">
                 <div class="text-center">
-                    <h3 class="modal-title flex-grow-1 text-center">{{translate('Coupon Discount')}}</h3>
+                    <h3 class="modal-title flex-grow-1 text-center">{{'Cupón de descuento'}}</h3>
                     <p>Select from available coupon or input code</p>
                 </div>
                 <div>
@@ -265,7 +265,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content modal-scroll">
             <div class="modal-header bg-light border-bottom py-3">
-                <h4 class="modal-title flex-grow-1 text-center">{{translate('delivery_options')}}</h4>
+                <h4 class="modal-title flex-grow-1 text-center">{{'opciones de entrega'}}</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -285,66 +285,66 @@
                     <div class="row g-2" id="delivery_address">
                         <div class="col-md-6">
                             <label class="input-label"
-                                for="contact_person_name">{{ translate('messages.contact_person_name') }}<span
+                                for="contact_person_name">{{ 'nombre de la persona de contacto' }}<span
                                             class="input-label-secondary text-danger">*</span></label>
                             <input  id="contact_person_name" type="text" class="form-control" name="contact_person_name"
-                                value="{{ $old ? $old['contact_person_name'] : '' }}" placeholder="{{ translate('messages.Ex :') }} Jhone">
+                                value="{{ $old ? $old['contact_person_name'] : '' }}" placeholder="{{ 'Ex :' }} Jhone">
                         </div>
                         <div class="col-md-6">
                             <label class="input-label"
-                                for="contact_person_number">{{ translate('Contact Number') }}<span
+                                for="contact_person_number">{{ 'Número de contacto' }}<span
                                             class="input-label-secondary text-danger">*</span></label>
                             <input id="contact_person_number" type="tel" class="form-control" name="contact_person_number"
-                                value="{{ $old ? $old['contact_person_number'] : '' }}"  placeholder="{{ translate('messages.Ex :') }} +3264124565">
+                                value="{{ $old ? $old['contact_person_number'] : '' }}"  placeholder="{{ 'Ex :' }} +3264124565">
                         </div>
                         <div class="col-md-6">
-                            <label class="input-label" for="road">{{ translate('messages.Road') }}</label>
-                            <input id="road" type="text" class="form-control" name="road" value="{{ $old ? $old['road'] : '' }}"  placeholder="{{ translate('messages.Ex :') }} 4th">
+                            <label class="input-label" for="road">{{ 'Camino' }}</label>
+                            <input id="road" type="text" class="form-control" name="road" value="{{ $old ? $old['road'] : '' }}"  placeholder="{{ 'Ex :' }} 4th">
                         </div>
                         <div class="col-md-3">
-                            <label  class="input-label" for="house">{{ translate('messages.House') }}</label>
-                            <input id="house" type="text" class="form-control" name="house" value="{{ $old ? $old['house'] : '' }}" placeholder="{{ translate('messages.Ex :') }} 45/C">
+                            <label  class="input-label" for="house">{{ 'Casa' }}</label>
+                            <input id="house" type="text" class="form-control" name="house" value="{{ $old ? $old['house'] : '' }}" placeholder="{{ 'Ex :' }} 45/C">
                         </div>
                         <div class="col-md-3">
-                            <label class="input-label" for="floor">{{ translate('messages.Floor') }}</label>
-                            <input id="floor" type="text" class="form-control" name="floor" value="{{ $old ? $old['floor'] : '' }}"  placeholder="{{ translate('messages.Ex :') }} 1A">
+                            <label class="input-label" for="floor">{{ 'Piso' }}</label>
+                            <input id="floor" type="text" class="form-control" name="floor" value="{{ $old ? $old['floor'] : '' }}"  placeholder="{{ 'Ex :' }} 1A">
                         </div>
                     </div>
 
                     <div class="border p-3 mt-3 rounded border-success">
                         <div class="row g-2">
                             <div class="col-md-6">
-                                <label class="input-label" for="longitude">{{ translate('messages.longitude') }}<span
+                                <label class="input-label" for="longitude">{{ 'longitud' }}<span
                                                 class="input-label-secondary text-danger">*</span></label>
                                 <input  type="text" class="form-control" id="longitude" name="longitude"
                                     value="{{ $old ? $old['longitude'] : '' }}" readonly >
                             </div>
                             <div class="col-md-6">
-                                <label class="input-label" for="latitude">{{ translate('messages.latitude') }}<span
+                                <label class="input-label" for="latitude">{{ 'latitud' }}<span
                                                 class="input-label-secondary text-danger">*</span></label>
                                 <input  type="text" class="form-control" id="latitude" name="latitude"
                                     value="{{ $old ? $old['latitude'] : '' }}" readonly>
                             </div>
                             <div class="col-md-12">
-                                <label class="input-label" for="address">{{ translate('messages.address') }}</label>
-                                <textarea id="address" name="address" class="form-control" cols="30" rows="3" placeholder="{{ translate('messages.Ex :') }} address">{{ $old ? $old['address'] : '' }}</textarea>
+                                <label class="input-label" for="address">{{ 'DIRECCIÓN' }}</label>
+                                <textarea id="address" name="address" class="form-control" cols="30" rows="3" placeholder="{{ 'Ex :' }} address">{{ $old ? $old['address'] : '' }}</textarea>
                             </div>
                             <div class="col-12">
                                 <div class="d-flex flex-wrap gap-1 justify-content-between mb-3">
                                     <div>
                                         <span class="text-danger">*</span>
-                                        {{ translate(' pin the address in the map to calculate delivery fee') }}
+                                        {{ 'fije la dirección en el mapa para calcular la tarifa de envío' }}
                                     </div>
                                     <div class="btn btn--primary text-white">
                                         <input type="hidden" name="distance" id="distance">
-                                        <span>{{ translate('Delivery fee') }} :</span>
+                                        <span>{{ 'Tarifa de entrega' }} :</span>
                                         <input type="hidden" name="delivery_fee" id="delivery_fee" value="{{ $old ? $old['delivery_fee'] : '' }}">
                                         <strong>{{ $old ? $old['delivery_fee'] : 0 }} {{ \App\CentralLogics\Helpers::currency_symbol() }}</strong>
                                     </div>
                                 </div>
                                 <input id="pac-input" class="controls map-search__option rounded initial-8"
-                                    title="{{ translate('messages.search_your_location_here') }}" type="text"
-                                    placeholder="{{ translate('messages.search_here') }}" />
+                                    title="{{ 'busca tu ubicación aquí' }}" type="text"
+                                    placeholder="{{ 'buscar aquí' }}" />
                                 <div class="mb-2 h-200px" id="map"></div>
                             </div>
                         </div>
@@ -352,7 +352,7 @@
                     <div class="col-md-12">
                         <div class="btn--container justify-content-end mt-20">
                             <button class="btn btn-sm btn--primary w-100 delivery-Address-Store" type="button">
-                                {{  translate('Update_Delivery address') }}
+                                {{  'Actualizar dirección de entrega' }}
                             </button>
                         </div>
                     </div>
@@ -364,9 +364,9 @@
                     <div class="col-12">
                         <div class="text-center">
                             <h2>
-                                {{translate('messages.please_select_a_store_first')}}
+                                {{'Por favor seleccione una tienda primero'}}
                             </h2>
-                            <button data-dismiss="modal" class="btn btn-primary">{{translate('messages.Ok')}}</button>
+                            <button data-dismiss="modal" class="btn btn-primary">{{'De acuerdo'}}</button>
                         </div>
                     </div>
                 </div>

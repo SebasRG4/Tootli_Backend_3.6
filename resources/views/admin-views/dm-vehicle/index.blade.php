@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.add_vehicle_category'))
+@section('title','añadir categoría de vehículo')
 
 @push('css_or_js')
 
@@ -14,7 +14,7 @@
             <div class="col-sm mb-2 mb-sm-0">
                 <h1 class="page-header-title">
                     <div class="page-header-icon"><i class="tio-add-circle-outlined"></i></div>
-                    {{translate('messages.add_vehicle_category')}}
+                    {{'añadir categoría de vehículo'}}
                 </h1>
             </div>
         </div>
@@ -29,7 +29,7 @@
                 <ul class="nav nav-tabs mb-4">
                     <li class="nav-item">
                         <a class="nav-link lang_link active" href="#"
-                            id="default-link">{{translate('messages.default')}}</a>
+                            id="default-link">{{'por defecto'}}</a>
                     </li>
                     @foreach ($language as $lang)
                     <li class="nav-item">
@@ -46,32 +46,32 @@
                                 @if ($language)
                                 <div class="form-group lang_form" id="default-form">
                                     <label class="input-label text-capitalize"
-                                        for="title">{{translate('messages.Vehicle_type')}} ({{
-                                        translate('messages.default') }})<span class="form-label-secondary text-danger"
+                                        for="title">{{'tipo de vehículo'}} ({{
+                                        'por defecto' }})<span class="form-label-secondary text-danger"
                                             data-toggle="tooltip" data-placement="right"
-                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            data-original-title="{{ 'Requerido.'}}"> *
                                         </span>
                                     </label>
                                     <input type="text" name="type[]" class="form-control h--45px"
-                                        placeholder="{{translate('messages.ex_:_bike')}}" maxlength="191" required>
+                                        placeholder="{{'ej: bicicleta'}}" maxlength="191" required>
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 @foreach($language as $lang)
                                 <div class="form-group d-none lang_form" id="{{$lang}}-form">
                                     <label class="input-label text-capitalize"
-                                        for="title">{{translate('messages.Vehicle_type')}}
+                                        for="title">{{'tipo de vehículo'}}
                                         ({{strtoupper($lang)}})</label>
                                     <input type="text" name="type[]" class="form-control h--45px"
-                                        placeholder="{{translate('messages.ex_:_bike')}}" maxlength="191">
+                                        placeholder="{{'ej: bicicleta'}}" maxlength="191">
                                 </div>
                                 <input type="hidden" name="lang[]" value="{{$lang}}">
                                 @endforeach
                                 @else
                                 <div class="form-group">
                                     <label class="input-label text-capitalize"
-                                        for="title">{{translate('messages.Vehicle_type')}}</label>
+                                        for="title">{{'tipo de vehículo'}}</label>
                                     <input type="text" name="type" class="form-control h--45px"
-                                        placeholder="{{translate('messages.ex_:_bike')}}" required maxlength="191">
+                                        placeholder="{{'ej: bicicleta'}}" required maxlength="191">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 @endif
@@ -79,14 +79,14 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="input-label text-capitalize"
-                                        for="title">{{translate('messages.extra_charges')}} ({{
+                                        for="title">{{'cargos extra'}} ({{
                                         \App\CentralLogics\Helpers::currency_symbol() }}) <span
                                             class="input-label-secondary" data-toggle="tooltip" data-placement="right"
-                                            data-original-title="{{translate('This amount will be added with delivery charge')}}"><img
+                                            data-original-title="{{'A este importe se le añadirá el cargo de envío.'}}"><img
                                                 src="{{asset('assets/admin/img/info-circle.svg')}}"
                                                 alt="public/img"></span><span class="form-label-secondary text-danger"
                                             data-toggle="tooltip" data-placement="right"
-                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            data-original-title="{{ 'Requerido.'}}"> *
                                         </span>
                                     </label>
                                     <input type="number" id="extra_charges" class="form-control h--45px" step="0.001"
@@ -100,14 +100,14 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="input-label text-capitalize"
-                                        for="title">{{translate('messages.Starting_coverage_area')}} ({{
-                                        translate('messages.km') }}) <span class="input-label-secondary"
+                                        for="title">{{'Área de cobertura inicial'}} ({{
+                                        'kilómetros' }}) <span class="input-label-secondary"
                                             data-toggle="tooltip" data-placement="right"
-                                            data-original-title="{{translate('the_starting_coverage_area_represents_the_location_where_deliveries_are_made.')}}"><img
+                                            data-original-title="{{'el área de cobertura inicial representa el lugar donde se realizan las entregas.'}}"><img
                                                 src="{{asset('assets/admin/img/info-circle.svg')}}"
                                                 alt="public/img"></span><span class="form-label-secondary text-danger"
                                             data-toggle="tooltip" data-placement="right"
-                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            data-original-title="{{ 'Requerido.'}}"> *
                                         </span>
                                     </label>
                                     <input type="number" id="starting_coverage_area" class="form-control h--45px"
@@ -117,12 +117,12 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="input-label text-capitalize"
-                                        for="title">{{translate('messages.maximum_coverage_area')}} ({{
-                                        translate('messages.km') }}) <span class="input-label-secondary"
-                                            data-toggle="tooltip" data-placement="right" data-original-title="{{translate('the_maximum_coverage_area_represents_the_farthest_or_widest_extent_to_which_deliveries_can_be_made')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}"
+                                        for="title">{{'área de cobertura máxima'}} ({{
+                                        'kilómetros' }}) <span class="input-label-secondary"
+                                            data-toggle="tooltip" data-placement="right" data-original-title="{{'el área de cobertura máxima representa la extensión más lejana o amplia hasta la cual se pueden realizar entregas'}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}"
                                                 alt="public/img"></span><span class="form-label-secondary text-danger"
                                             data-toggle="tooltip" data-placement="right"
-                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            data-original-title="{{ 'Requerido.'}}"> *
                                         </span>
                                     </label>
                                     <input type="number" id="maximum_coverage_area" class="form-control h--45px"
@@ -135,8 +135,8 @@
                 </div>
 
                 <div class="btn--container justify-content-end">
-                    <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                    <button type="submit" class="btn btn--primary">{{translate('messages.submit')}}</button>
+                    <button type="reset" id="reset_btn" class="btn btn--reset">{{'reiniciar'}}</button>
+                    <button type="submit" class="btn btn--primary">{{'entregar'}}</button>
                 </div>
             </form>
         </div>
@@ -172,7 +172,7 @@
                             });
                         }
                     } else {
-                        toastr.success('{{ translate('messages.Vehicle_category_created') }}', {
+                        toastr.success('{{ 'Categoría de vehículo creada' }}', {
                             CloseButton: true,
                             ProgressBar: true
                         });

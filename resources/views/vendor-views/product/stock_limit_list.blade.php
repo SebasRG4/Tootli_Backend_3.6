@@ -1,7 +1,7 @@
 
 @extends('layouts.vendor.app')
 
-@section('title',translate('messages.Low_Stock_List'))
+@section('title','Lista de existencias bajas')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -14,7 +14,7 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-sm mb-2 mb-sm-0">
-                    <h1 class="page-header-title"><i class="tio-filter-list"></i> {{translate('messages.Low_Stock_List')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$items->total()}}</span></h1>
+                    <h1 class="page-header-title"><i class="tio-filter-list"></i> {{'Lista de existencias bajas'}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$items->total()}}</span></h1>
                 </div>
             </div>
         </div>
@@ -28,7 +28,7 @@
                         @csrf
                         <!-- Search -->
                         <div class="input-group input--group">
-                            <input id="datatableSearch" type="search" name="search" class="form-control" placeholder="{{translate('messages.ex_search_name')}}" aria-label="{{translate('messages.search_here')}}">
+                            <input id="datatableSearch" type="search" name="search" class="form-control" placeholder="{{'ex nombre de búsqueda'}}" aria-label="{{'buscar aquí'}}">
                             <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                         </div>
                         <!-- End Search -->
@@ -36,21 +36,21 @@
                     <!-- Unfold -->
                     @if ($store_data->module->module_type == 'food' && $toggle_veg_non_veg)
                     <div class="col-sm-auto mb-1 mb-sm-0">
-                        <select name="type" data-url="{{url()->full()}}" data-filter="type" data-placeholder="{{translate('messages.all')}}" class="form-control h--37px set-filter">
-                            <option value="all" {{$type=='all'?'selected':''}}>{{translate('messages.all')}}</option>
-                            <option value="veg" {{$type=='veg'?'selected':''}}>{{translate('messages.veg')}}</option>
-                            <option value="non_veg" {{$type=='non_veg'?'selected':''}}>{{translate('messages.non_veg')}}</option>
+                        <select name="type" data-url="{{url()->full()}}" data-filter="type" data-placeholder="{{'todo'}}" class="form-control h--37px set-filter">
+                            <option value="all" {{$type=='all'?'selected':''}}>{{'todo'}}</option>
+                            <option value="veg" {{$type=='veg'?'selected':''}}>{{'verduras'}}</option>
+                            <option value="non_veg" {{$type=='non_veg'?'selected':''}}>{{'no vegetariano'}}</option>
                         </select>
                     </div>
                     <!-- End Veg/NonVeg filter -->
                     @endif
 
                     <div class="hs-unfold  min--250">
-                        <select name="category_id" id="category" data-url="{{url()->full()}}" data-filter="category_id" data-placeholder="{{translate('messages.select_category')}}" class="js-data-example-ajax form-control set-filter">
+                        <select name="category_id" id="category" data-url="{{url()->full()}}" data-filter="category_id" data-placeholder="{{'seleccionar categoría'}}" class="js-data-example-ajax form-control set-filter">
                             @if($category)
-                                <option value="{{$category->id}}" selected>{{$category->name}} ({{$category->position == 0?translate('messages.main'):translate('messages.sub')}})</option>
+                                <option value="{{$category->id}}" selected>{{$category->name}} ({{$category->position == 0?'principal':'sub'}})</option>
                             @else
-                                <option value="all" selected>{{translate('messages.all_categories')}}</option>
+                                <option value="all" selected>{{'todas las categorias'}}</option>
                             @endif
                         </select>
                     </div>
@@ -63,7 +63,7 @@
                             <div class="card card-sm">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="mr-2">{{translate('messages.name')}}</span>
+                                        <span class="mr-2">{{'nombre'}}</span>
                                         <!-- Checkbox Switch -->
                                         <label class="toggle-switch toggle-switch-sm" for="toggleColumn_name">
                                             <input type="checkbox" class="toggle-switch-input" id="toggleColumn_name" checked>
@@ -75,7 +75,7 @@
                                     </div>
 
                                     <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="mr-2">{{translate('messages.category')}}</span>
+                                        <span class="mr-2">{{'categoría'}}</span>
 
                                         <!-- Checkbox Switch -->
                                         <label class="toggle-switch toggle-switch-sm" for="toggleColumn_type">
@@ -88,7 +88,7 @@
                                     </div>
 
                                     <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="mr-2">{{translate('messages.price')}}</span>
+                                        <span class="mr-2">{{'precio'}}</span>
 
                                         <!-- Checkbox Switch -->
                                         <label class="toggle-switch toggle-switch-sm" for="toggleColumn_status">
@@ -100,7 +100,7 @@
                                         <!-- End Checkbox Switch -->
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="mr-2">{{translate('messages.stock')}}</span>
+                                        <span class="mr-2">{{'existencias'}}</span>
 
                                         <!-- Checkbox Switch -->
                                         <label class="toggle-switch toggle-switch-sm" for="toggleColumn_price">
@@ -112,7 +112,7 @@
                                         <!-- End Checkbox Switch -->
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="mr-2">{{translate('messages.action')}}</span>
+                                        <span class="mr-2">{{'acción'}}</span>
 
                                         <!-- Checkbox Switch -->
                                         <label class="toggle-switch toggle-switch-sm" for="toggleColumn_action">
@@ -154,12 +154,12 @@
                     }'>
                     <thead class="thead-light">
                     <tr>
-                        <th class="border-0">{{translate('messages.#')}}</th>
-                        <th class="border-0 w-20p">{{translate('messages.name')}}</th>
-                        <th class="border-0 w-20p">{{translate('messages.category')}}</th>
-                        <th class="border-0">{{translate('messages.price')}}</th>
-                        <th class="border-0 text-center">{{translate('messages.stock')}}</th>
-                        <th class="border-0 text-center">{{translate('messages.action')}}</th>
+                        <th class="border-0">{{'#'}}</th>
+                        <th class="border-0 w-20p">{{'nombre'}}</th>
+                        <th class="border-0 w-20p">{{'categoría'}}</th>
+                        <th class="border-0">{{'precio'}}</th>
+                        <th class="border-0 text-center">{{'existencias'}}</th>
+                        <th class="border-0 text-center">{{'acción'}}</th>
                     </tr>
                     </thead>
 
@@ -177,7 +177,7 @@
                                 </a>
                             </td>
                             <td>
-                            {{Str::limit($item->category?$item->category->name:translate('messages.category_deleted'),20,'...')}}
+                            {{Str::limit($item->category?$item->category->name:'categoría eliminada',20,'...')}}
                             </td>
                             <td>
                                 {{\App\CentralLogics\Helpers::format_currency($item['price'])}}
@@ -190,7 +190,7 @@
                             <td>
                                 <div class="btn--container justify-content-center">
                                     <a class="btn btn-sm btn--primary btn-outline-primary action-btn update_quantity"
-                                        href="javascript:" title="{{translate('messages.edit_quantity')}}" data-id="{{ $item->id }}" data-toggle="modal" data-target="#update-quantity"><i class="tio-edit"></i>
+                                        href="javascript:" title="{{'editar cantidad'}}" data-id="{{ $item->id }}" data-toggle="modal" data-target="#update-quantity"><i class="tio-edit"></i>
                                     </a>
                                 </div>
                             </td>
@@ -210,7 +210,7 @@
                 <div class="empty--data">
                     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
-                        {{translate('no_data_found')}}
+                        {{'no se encontraron datos'}}
                     </h5>
                 </div>
                 @endif
@@ -237,8 +237,8 @@
                     @csrf
                     <div class="mt-2 rest-part w-100"></div>
                     <div class="btn--container justify-content-end">
-                        <button type="reset" data-dismiss="modal" aria-label="Close" class="btn btn--reset">{{translate('cancel')}}</button>
-                        <button type="submit" id="submit_new_customer" class="btn btn--primary">{{translate('update_stock')}}</button>
+                        <button type="reset" data-dismiss="modal" aria-label="Close" class="btn btn--reset">{{'Cancelar'}}</button>
+                        <button type="submit" id="submit_new_customer" class="btn btn--primary">{{'actualizar existencias'}}</button>
                     </div>
                 </form>
             </div>

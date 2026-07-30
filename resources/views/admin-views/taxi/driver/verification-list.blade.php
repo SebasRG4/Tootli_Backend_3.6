@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Driver Verification'))
+@section('title', 'Verificación del conductor')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -13,7 +13,7 @@
             <div class="row align-items-center">
                 <div class="col-sm mb-2 mb-sm-0">
                     <h1 class="page-header-title"><i class="tio-filter-list-outlined"></i>
-                        {{ translate('Driver Verification') }} <span
+                        {{ 'Verificación del conductor' }} <span
                             class="badge badge-soft-dark ml-2">{{ $drivers->total() }}</span></h1>
                 </div>
             </div>
@@ -26,7 +26,7 @@
                     <!-- Header -->
                     <div class="card-header">
                         <div class="search--button-wrapper">
-                            <h5 class="card-title">{{ translate('Driver List') }}</h5>
+                            <h5 class="card-title">{{ 'Lista de conductores' }}</h5>
                             <form action="{{ url()->current() }}" method="GET">
                                 <div class="input-group input-group-merge input-group-flush">
                                     <div class="input-group-prepend">
@@ -35,9 +35,9 @@
                                         </div>
                                     </div>
                                     <input id="datatableSearch_" type="search" name="search" class="form-control"
-                                        placeholder="{{ translate('Search by Name, Email or Phone') }}" aria-label="Search"
+                                        placeholder="{{ 'Buscar por nombre, correo electrónico o teléfono' }}" aria-label="Search"
                                         value="{{ $search }}" required>
-                                    <button type="submit" class="btn btn-primary">{{ translate('search') }}</button>
+                                    <button type="submit" class="btn btn-primary">{{ 'buscar' }}</button>
                                 </div>
                             </form>
                             <!-- Unfold -->
@@ -47,21 +47,21 @@
                                             "target": "#usersExportDropdown",
                                             "type": "css-animation"
                                             }'>
-                                    <i class="tio-filter-list"></i> {{ translate('Filter by Status') }}
+                                    <i class="tio-filter-list"></i> {{ 'Filtrar por estado' }}
                                 </a>
 
                                 <div id="usersExportDropdown"
                                     class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
                                     <a class="dropdown-item" href="{{ route('admin.taxi.drivers.verification.index') }}">
-                                        {{ translate('All') }}
+                                        {{ 'Todo' }}
                                     </a>
                                     <a class="dropdown-item"
                                         href="{{ route('admin.taxi.drivers.verification.index', ['status' => 'pending']) }}">
-                                        {{ translate('Pending Verification') }}
+                                        {{ 'Pendiente de verificación' }}
                                     </a>
                                     <a class="dropdown-item"
                                         href="{{ route('admin.taxi.drivers.verification.index', ['status' => 'verified']) }}">
-                                        {{ translate('Verified') }}
+                                        {{ 'Verificado' }}
                                     </a>
                                 </div>
                             </div>
@@ -76,11 +76,11 @@
                             class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
                             <thead class="thead-light">
                                 <tr>
-                                    <th>{{ translate('#') }}</th>
-                                    <th>{{ translate('Driver Info') }}</th>
-                                    <th>{{ translate('Contact') }}</th>
-                                    <th>{{ translate('Status') }}</th>
-                                    <th>{{ translate('Actions') }}</th>
+                                    <th>{{ '#' }}</th>
+                                    <th>{{ 'Información del conductor' }}</th>
+                                    <th>{{ 'Contacto' }}</th>
+                                    <th>{{ 'Estado' }}</th>
+                                    <th>{{ 'Comportamiento' }}</th>
                                 </tr>
                             </thead>
 
@@ -107,16 +107,16 @@
                                         </td>
                                         <td>
                                             @if ($dm->taxi_is_verified)
-                                                <span class="badge badge-soft-success">{{ translate('Verified') }}</span>
+                                                <span class="badge badge-soft-success">{{ 'Verificado' }}</span>
                                             @else
-                                                <span class="badge badge-soft-warning">{{ translate('Pending') }}</span>
+                                                <span class="badge badge-soft-warning">{{ 'Pendiente' }}</span>
                                             @endif
                                         </td>
                                         <td>
                                             <a class="btn btn-sm btn-white"
                                                 href="{{ route('admin.taxi.drivers.verification.show', $dm['id']) }}"
-                                                title="{{ translate('View Details') }}">
-                                                <i class="tio-visible"></i> {{ translate('Details') }}
+                                                title="{{ 'Ver detalles' }}">
+                                                <i class="tio-visible"></i> {{ 'Detalles' }}
                                             </a>
                                         </td>
                                     </tr>

@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-lg-12 text-center "><h1 >{{ translate('messages.customer_order_list') }}</h1></div>
+    <div class="col-lg-12 text-center "><h1 >{{ 'lista de pedidos de clientes' }}</h1></div>
     <div class="col-lg-12">
 
 
@@ -7,19 +7,19 @@
     <table>
         <thead>
             <tr>
-                <th>{{ translate('customer_information') }} -</th>
+                <th>{{ 'información del cliente' }} -</th>
                 <th></th>
                 <th></th>
                 <th> 
-                    {{ translate('customer_id' )}} : {{ translate($data['customer_id']) }}
+                    {{ 'identificación del cliente'}} : {{ translate($data['customer_id']) }}
                     <br>
-                    {{ translate('name' )}} : {{ $data['customer_name'] }}
+                    {{ 'nombre'}} : {{ $data['customer_name'] }}
                     <br>
-                    {{ translate('phone' )}} : {{ $data['customer_phone'] }}
+                    {{ 'teléfono'}} : {{ $data['customer_phone'] }}
                     <br>
-                    {{ translate('email' )}} : {{ $data['customer_email'] }}
+                    {{ 'correo electrónico'}} : {{ $data['customer_email'] }}
                     <br>
-                    {{ translate('total_orders' )}} : {{ $data['orders']->count() }}
+                    {{ 'pedidos totales'}} : {{ $data['orders']->count() }}
 
                 </th>
                 <th></th>
@@ -28,18 +28,18 @@
                 <th></th>
             </tr>
             <tr>
-                <th>{{ translate('messages.sl') }}</th>
-                <th>{{ translate('messages.order_id') }}</th>
-                <th>{{ translate('messages.store_name') }}</th>
-                <th>{{ translate('messages.item_price') }}</th>
-                <th>{{ translate('messages.item_discount') }}</th>
-                <th>{{ translate('messages.coupon_discount') }}</th>
-                <th>{{ translate('messages.discounted_amount') }}</th>
-                <th>{{ translate('messages.tax') }}</th>
-                <th>{{ translate('messages.total_amount') }}</th>
-                <th>{{ translate('messages.payment_status') }}</th>
-                <th>{{ translate('messages.order_status') }}</th>
-                <th>{{ translate('messages.order_type') }}</th>
+                <th>{{ 'SL' }}</th>
+                <th>{{ 'identificación del pedido' }}</th>
+                <th>{{ 'nombre de la tienda' }}</th>
+                <th>{{ 'precio del artículo' }}</th>
+                <th>{{ 'descuento del artículo' }}</th>
+                <th>{{ 'cupón de descuento' }}</th>
+                <th>{{ 'cantidad descontada' }}</th>
+                <th>{{ 'impuesto' }}</th>
+                <th>{{ 'cantidad total' }}</th>
+                <th>{{ 'estado de pago' }}</th>
+                <th>{{ 'estado del pedido' }}</th>
+                <th>{{ 'tipo de orden' }}</th>
             </tr>
         </thead>
         <tbody>
@@ -51,7 +51,7 @@
                     @if($order->store)
                         {{$order->store->name}}
                     @else
-                        {{ translate('messages.not_found') }}
+                        {{ 'extraviado' }}
                     @endif
                 </td>
                 <td>{{ \App\CentralLogics\Helpers::number_format_short($order['order_amount']-$order['dm_tips']-$order['total_tax_amount']-$order['delivery_charge']+$order['coupon_discount_amount'] + $order['store_discount_amount']) }}</td>

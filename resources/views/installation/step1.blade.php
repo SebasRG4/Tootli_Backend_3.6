@@ -81,7 +81,7 @@
                                     <div class="d-flex gap-3 align-items-center">
                                         <img src="{{ asset('assets/installation') }}/assets/img/svg-icons/curl-enabled.svg" alt="">
                                         <div class="d-flex align-items-center gap-2 justify-content-between flex-grow-1">
-                                            {{ translate($key) . ' ' . translate('Enabled') }}
+                                            {{ translate($key) . ' ' . 'Activado' }}
 
                                             @if ($item)
                                                 <img width="20" src="{{ asset('assets/installation') }}/assets/img/svg-icons/check.png" alt="">

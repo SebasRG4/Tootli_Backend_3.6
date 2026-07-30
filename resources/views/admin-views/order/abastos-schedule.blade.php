@@ -98,7 +98,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">{{ translate('messages.Create Schedule') }}</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">{{ 'Crear horario' }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -109,16 +109,16 @@
                         <input type="hidden" name="day" id="day_id_input">
                         <input type="hidden" name="store_id" value="{{ $store->id }}">
                         <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">{{ translate('messages.Start time') }}:</label>
+                            <label for="recipient-name" class="col-form-label">{{ 'Hora de inicio' }}:</label>
                             <input type="time" class="form-control" name="start_time" required>
                         </div>
                         <div class="form-group">
-                            <label for="message-text" class="col-form-label">{{ translate('messages.End time') }}:</label>
+                            <label for="message-text" class="col-form-label">{{ 'Hora de finalización' }}:</label>
                             <input type="time" class="form-control" name="end_time" required>
                         </div>
                         <div class="btn--container justify-content-end">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">{{ translate('messages.Submit') }}</button>
+                            <button type="submit" class="btn btn-primary">{{ 'Entregar' }}</button>
                         </div>
                     </form>
                 </div>
@@ -137,7 +137,7 @@
                 let day_name = button.data('day');
                 let day_id = button.data('dayid');
                 let modal = $(this);
-                modal.find('.modal-title').text('{{ translate('messages.Create Schedule For ') }} ' + day_name);
+                modal.find('.modal-title').text('{{ 'Crear horario para' }} ' + day_name);
                 modal.find('.modal-body input[name=day]').val(day_id);
             });
         });
@@ -145,14 +145,14 @@
         $(document).on('click', '.delete-schedule', function () {
             let route = $(this).data('url');
             Swal.fire({
-                title: '{{ translate('Want_to_delete_this_schedule?') }}',
-                text: '{{ translate('If_you_select_Yes,_the_time_schedule_will_be_deleted') }}',
+                title: '{{ '¿Quieres eliminar este horario?' }}',
+                text: '{{ 'Si selecciona Sí, se eliminará el horario.' }}',
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#00868F',
-                cancelButtonText: '{{ translate('messages.no') }}',
-                confirmButtonText: '{{ translate('messages.yes') }}',
+                cancelButtonText: '{{ 'No' }}',
+                confirmButtonText: '{{ 'Sí' }}',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
@@ -171,14 +171,14 @@
                                 }
                             } else {
                                 $('#schedule').empty().html(data.view);
-                                toastr.success('{{ translate('messages.Schedule removed successfully') }}', {
+                                toastr.success('{{ 'Programación eliminada exitosamente' }}', {
                                     CloseButton: true,
                                     ProgressBar: true
                                 });
                             }
                         },
                         error: function(XMLHttpRequest, textStatus, errorThrown) {
-                            toastr.error('{{ translate('messages.Schedule not found') }}', {
+                            toastr.error('{{ 'Horario no encontrado' }}', {
                                 CloseButton: true,
                                 ProgressBar: true
                             });
@@ -219,7 +219,7 @@
                     } else {
                         $('#schedule').empty().html(data.view);
                         $('#exampleModal').modal('hide');
-                        toastr.success('{{ translate('messages.Schedule added successfully') }}', {
+                        toastr.success('{{ 'Programa agregado exitosamente' }}', {
                             CloseButton: true,
                             ProgressBar: true
                         });

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.admin_landing_page'))
+@section('title','página de inicio del administrador')
 
 @section('content')
 <div class="content container-fluid">
@@ -11,11 +11,11 @@
                     <img src="{{asset('assets/admin/img/landing.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.admin_landing_pages') }}
+                    {{ 'páginas de inicio de administración' }}
                 </span>
             </h1>
             <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#how-it-works">
-                <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
+                <strong class="mr-2">{{'¡Mira cómo funciona!'}}</strong>
                 <div>
                     <i class="tio-info-outined"></i>
                 </div>
@@ -38,7 +38,7 @@
             <li class="nav-item">
                 <a class="nav-link lang_link active"
                 href="#"
-                id="default-link">{{translate('messages.default')}}</a>
+                id="default-link">{{'por defecto'}}</a>
             </li>
             @foreach (json_decode($language) as $lang)
                 <li class="nav-item">
@@ -61,32 +61,32 @@
                                 <div class="col-md-12 lang_form default-form">
                                     <div class="row g-3">
                                         <div class="col-12">
-                                            <label for="contact_us_title" class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})<span
+                                            <label for="contact_us_title" class="form-label">{{'Título'}} ({{ 'por defecto' }})<span
                                         class="form-label-secondary" data-toggle="tooltip"
                                         data-placement="right"
-                                        data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
+                                        data-original-title="{{ 'Escribe el título dentro de 20 caracteres.' }}">
                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                             alt="">
                                     </span>
                                                 <span class="form-label-secondary text-danger"
                                                       data-toggle="tooltip" data-placement="right"
-                                                      data-original-title="{{ translate('messages.Required.')}}"> *
+                                                      data-original-title="{{ 'Requerido.'}}"> *
                                                 </span></label>
-                                <input required id="contact_us_title" type="text" maxlength="20" name="contact_us_title[]" value="{{ $contact_us_title?->getRawOriginal('value') }}" class="form-control" placeholder="{{translate('Ex_:_Contact_Us')}}">
+                                <input required id="contact_us_title" type="text" maxlength="20" name="contact_us_title[]" value="{{ $contact_us_title?->getRawOriginal('value') }}" class="form-control" placeholder="{{'Ej: Contáctenos'}}">
                                         </div>
                                         <div class="col-12">
-                                            <label for="contact_us_sub_title" class="form-label">{{translate('Sub Title')}} ({{ translate('messages.default') }})<span
+                                            <label for="contact_us_sub_title" class="form-label">{{'Subtítulo'}} ({{ 'por defecto' }})<span
                                         class="form-label-secondary" data-toggle="tooltip"
                                         data-placement="right"
-                                        data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
+                                        data-original-title="{{ 'Escribe el título dentro de 80 caracteres.' }}">
                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                             alt="">
                                     </span>
                                                 <span class="form-label-secondary text-danger"
                                                       data-toggle="tooltip" data-placement="right"
-                                                      data-original-title="{{ translate('messages.Required.')}}"> *
+                                                      data-original-title="{{ 'Requerido.'}}"> *
                                                 </span></label>
-                                <input required id="contact_us_sub_title" type="text" maxlength="80" name="contact_us_sub_title[]" value="{{ $contact_us_sub_title?->getRawOriginal('value') }}" class="form-control" placeholder="{{translate('Ex_:_Any_questions_or_remarks_?_Just_write_us_a_message!')}}">
+                                <input required id="contact_us_sub_title" type="text" maxlength="80" name="contact_us_sub_title[]" value="{{ $contact_us_sub_title?->getRawOriginal('value') }}" class="form-control" placeholder="{{'Ej: ¿Alguna pregunta o comentario? ¡Solo escríbenos un mensaje!'}}">
                                         </div>
                                     </div>
                                 </div>
@@ -117,24 +117,24 @@
                                     <div class="col-md-12 d-none lang_form" id="{{$lang}}-form1">
                                         <div class="row g-3">
                                             <div class="col-12">
-                                                <label for="contact_us_title{{$lang}}" class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})<span
+                                                <label for="contact_us_title{{$lang}}" class="form-label">{{'Título'}} ({{strtoupper($lang)}})<span
                                         class="form-label-secondary" data-toggle="tooltip"
                                         data-placement="right"
-                                        data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
+                                        data-original-title="{{ 'Escribe el título dentro de 20 caracteres.' }}">
                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                             alt="">
                                     </span></label>
-                                <input id="contact_us_title{{$lang}}" type="text" maxlength="20" name="contact_us_title[]" value="{{ $contact_us_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{translate('Ex_:_Contact_Us')}}">
+                                <input id="contact_us_title{{$lang}}" type="text" maxlength="20" name="contact_us_title[]" value="{{ $contact_us_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{'Ej: Contáctenos'}}">
                                             </div>
                                             <div class="col-12">
-                                                <label for="contact_us_sub_title{{$lang}}" class="form-label">{{translate('Sub Title')}} ({{strtoupper($lang)}})<span
+                                                <label for="contact_us_sub_title{{$lang}}" class="form-label">{{'Subtítulo'}} ({{strtoupper($lang)}})<span
                                         class="form-label-secondary" data-toggle="tooltip"
                                         data-placement="right"
-                                        data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
+                                        data-original-title="{{ 'Escribe el título dentro de 80 caracteres.' }}">
                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                             alt="">
                                     </span></label>
-                                <input id="contact_us_sub_title{{$lang}}" type="text" maxlength="80" name="contact_us_sub_title[]" value="{{ $contact_us_sub_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{translate('Ex_:_Any_questions_or_remarks_?_Just_write_us_a_message!')}}">
+                                <input id="contact_us_sub_title{{$lang}}" type="text" maxlength="80" name="contact_us_sub_title[]" value="{{ $contact_us_sub_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{'Ej: ¿Alguna pregunta o comentario? ¡Solo escríbenos un mensaje!'}}">
                                             </div>
                                         </div>
                                     </div>
@@ -144,24 +144,24 @@
                                 <div class="col-md-12">
                                     <div class="row g-3">
                                         <div class="col-12">
-                                            <label for="contact_us_title" class="form-label">{{translate('Title')}}<span
+                                            <label for="contact_us_title" class="form-label">{{'Título'}}<span
                                         class="form-label-secondary" data-toggle="tooltip"
                                         data-placement="right"
-                                        data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
+                                        data-original-title="{{ 'Escribe el título dentro de 20 caracteres.' }}">
                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                             alt="">
                                     </span></label>
-                                <input id="contact_us_title" type="text" maxlength="20" name="contact_us_title[]" class="form-control" placeholder="{{translate('Ex_:_Contact_Us')}}">
+                                <input id="contact_us_title" type="text" maxlength="20" name="contact_us_title[]" class="form-control" placeholder="{{'Ej: Contáctenos'}}">
                                         </div>
                                         <div class="col-12">
-                                            <label for="contact_us_sub_title" class="form-label">{{translate('Sub Title')}}<span
+                                            <label for="contact_us_sub_title" class="form-label">{{'Subtítulo'}}<span
                                         class="form-label-secondary" data-toggle="tooltip"
                                         data-placement="right"
-                                        data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
+                                        data-original-title="{{ 'Escribe el título dentro de 80 caracteres.' }}">
                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                             alt="">
                                     </span></label>
-                                <input id="contact_us_sub_title" type="text" maxlength="80" name="contact_us_sub_title[]" class="form-control" placeholder="{{translate('Ex_:_Any_questions_or_remarks_?_Just_write_us_a_message!')}}">
+                                <input id="contact_us_sub_title" type="text" maxlength="80" name="contact_us_sub_title[]" class="form-control" placeholder="{{'Ej: ¿Alguna pregunta o comentario? ¡Solo escríbenos un mensaje!'}}">
                                         </div>
                                     </div>
                                 </div>
@@ -170,10 +170,10 @@
                             </div>
                             <div class="col-md-6">
                                     <label class="form-label d-block mb-3">
-                                        {{ translate('messages.Banner') }}  <span class="text--primary">(size: 6:1)</span>
+                                        {{ 'Bandera' }}  <span class="text--primary">(size: 6:1)</span>
                                         <span class="form-label-secondary text-danger"
                                               data-toggle="tooltip" data-placement="right"
-                                              data-original-title="{{ translate('messages.Required.')}}"> *
+                                              data-original-title="{{ 'Requerido.'}}"> *
                                                 </span>
                                         <div class="fs-12 opacity-70">
                                             {{ translate(IMAGE_FORMAT.' ' . 'Less Than 2MB') }}
@@ -192,8 +192,8 @@
                                             <span id="contact_image" class="remove_image_button remove-image dynamic-checkbox"
                                                   data-id="contact_image"
                                                   data-image-off="{{ asset('assets/admin/img/delete-confirmation.png') }}"
-                                                  data-title="{{translate('Warning!')}}"
-                                                  data-text="<p>{{translate('Are_you_sure_you_want_to_remove_this_image_?')}}</p>"
+                                                  data-title="{{'¡Advertencia!'}}"
+                                                  data-text="<p>{{'¿Estás seguro de que deseas eliminar esta imagen?'}}</p>"
                                             > <i class="tio-clear"></i></span>
                                             @endif
                                         </div>
@@ -203,74 +203,74 @@
                     </div>
                 </div>
                 <h5 class="card-title mb-3 mt-3">
-                    <span class="card-header-icon mr-2"><i class="tio-poi"></i></span> <span>{{translate('Office Opening & Closing')}}</span>
+                    <span class="card-header-icon mr-2"><i class="tio-poi"></i></span> <span>{{'Apertura y cierre de oficinas'}}</span>
                 </h5>
                 <div class="card">
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-sm-6 col-lg-3">
                                 @php($opening_time = \App\Models\BusinessSetting::where('key', 'opening_time')->first())
-                                <label for="opening_time" class="form-label">{{translate('Start Time')}}</label>
+                                <label for="opening_time" class="form-label">{{'Hora de inicio'}}</label>
                                 <input  type="time" value="{{ $opening_time ? $opening_time->value: '' }}" name="opening_time" class="form-control" id="opening_time">
                             </div>
                             <div class="col-sm-6 col-lg-3">
                                  @php($closing_time = \App\Models\BusinessSetting::where('key', 'closing_time')->first())
-                                <label for="closing_time" class="form-label">{{translate('End Time')}}</label>
+                                <label for="closing_time" class="form-label">{{'Hora de finalización'}}</label>
                                 <input type="time" value="{{ $closing_time ? $closing_time->value: '' }}" name="closing_time" class="form-control" id="closing_time">
                             </div>
                             <div class="col-sm-6 col-lg-3">
                                 @php($opening_day = \App\Models\BusinessSetting::where('key', 'opening_day')->first())
                                 @php($opening_day = $opening_day ? $opening_day->value : '')
-                                <label for="opening_day" class="form-label">{{translate('Start Day')}}</label>
+                                <label for="opening_day" class="form-label">{{'Día de inicio'}}</label>
                                 <select id="opening_day" name="opening_day" class="form-control">
                                     <option value="saturday" {{ $opening_day == 'saturday' ? 'selected' : '' }}>
-                                        {{ translate('messages.saturday') }}
+                                        {{ 'sábado' }}
                                     </option>
                                     <option value="sunday" {{ $opening_day == 'sunday' ? 'selected' : '' }}>
-                                        {{ translate('messages.sunday') }}
+                                        {{ 'domingo' }}
                                     </option>
                                     <option value="monday" {{ $opening_day == 'monday' ? 'selected' : '' }}>
-                                        {{ translate('messages.monday') }}
+                                        {{ 'lunes' }}
                                     </option>
                                     <option value="tuesday" {{ $opening_day == 'tuesday' ? 'selected' : '' }}>
-                                        {{ translate('messages.tuesday') }}
+                                        {{ 'martes' }}
                                     </option>
                                     <option value="wednesday" {{ $opening_day == 'wednesday' ? 'selected' : '' }}>
-                                        {{ translate('messages.wednesday') }}
+                                        {{ 'miércoles' }}
                                     </option>
                                     <option value="thrusday" {{ $opening_day == 'thrusday' ? 'selected' : '' }}>
-                                        {{ translate('messages.thrusday') }}
+                                        {{ 'jueves' }}
                                     </option>
                                     <option value="friday" {{ $opening_day == 'friday' ? 'selected' : '' }}>
-                                        {{ translate('messages.friday') }}
+                                        {{ 'viernes' }}
                                     </option>
                                 </select>
                             </div>
                             <div class="col-sm-6 col-lg-3">
                                 @php($closing_day = \App\Models\BusinessSetting::where('key', 'closing_day')->first())
                                 @php($closing_day = $closing_day ? $closing_day->value : '')
-                                <label for="closing_day" class="form-label">{{translate('End Day')}}</label>
+                                <label for="closing_day" class="form-label">{{'Día final'}}</label>
                                 <select id="closing_day" name="closing_day" class="form-control">
                                     <option value="saturday" {{ $closing_day == 'saturday' ? 'selected' : '' }}>
-                                        {{ translate('messages.saturday') }}
+                                        {{ 'sábado' }}
                                     </option>
                                     <option value="sunday" {{ $closing_day == 'sunday' ? 'selected' : '' }}>
-                                        {{ translate('messages.sunday') }}
+                                        {{ 'domingo' }}
                                     </option>
                                     <option value="monday" {{ $closing_day == 'monday' ? 'selected' : '' }}>
-                                        {{ translate('messages.monday') }}
+                                        {{ 'lunes' }}
                                     </option>
                                     <option value="tuesday" {{ $closing_day == 'tuesday' ? 'selected' : '' }}>
-                                        {{ translate('messages.tuesday') }}
+                                        {{ 'martes' }}
                                     </option>
                                     <option value="wednesday" {{ $closing_day == 'wednesday' ? 'selected' : '' }}>
-                                        {{ translate('messages.wednesday') }}
+                                        {{ 'miércoles' }}
                                     </option>
                                     <option value="thrusday" {{ $closing_day == 'thrusday' ? 'selected' : '' }}>
-                                        {{ translate('messages.Thursday') }}
+                                        {{ 'Jueves' }}
                                     </option>
                                     <option value="friday" {{ $closing_day == 'friday' ? 'selected' : '' }}>
-                                        {{ translate('messages.friday') }}
+                                        {{ 'viernes' }}
                                     </option>
                                 </select>
                             </div>
@@ -278,8 +278,8 @@
                     </div>
                 </div>
                 <div class="btn--container justify-content-end mt-20">
-                    <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
-                    <button type="submit"   class="btn btn--primary mb-2">{{translate('Save Information')}}</button>
+                    <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
+                    <button type="submit"   class="btn btn--primary mb-2">{{'Guardar información'}}</button>
                 </div>
             </form>
             <form  id="contact_image_form" action="{{ route('admin.remove_image') }}" method="post">

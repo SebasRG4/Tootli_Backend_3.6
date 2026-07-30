@@ -2,10 +2,10 @@
     <table class="table table-bordered pos-grill-cart-table">
         <thead class="text-muted thead-light pos-grill-cart-thead">
             <tr class="text-center">
-                <th class="border-bottom-0" scope="col">{{ translate('messages.item') }}</th>
-                <th class="border-bottom-0" scope="col">{{ translate('messages.qty') }}</th>
-                <th class="border-bottom-0" scope="col">{{ translate('messages.price') }}</th>
-                <th class="border-bottom-0" scope="col">{{ translate('messages.delete') }}</th>
+                <th class="border-bottom-0" scope="col">{{ 'Producto' }}</th>
+                <th class="border-bottom-0" scope="col">{{ 'cantidad' }}</th>
+                <th class="border-bottom-0" scope="col">{{ 'precio' }}</th>
+                <th class="border-bottom-0" scope="col">{{ 'borrar' }}</th>
             </tr>
         </thead>
         <tbody>
@@ -113,30 +113,30 @@
     <div class="box p-3">
         <dl class="row">
 
-            <dt class="col-6 font-regular">{{ translate('messages.addon') }}:</dt>
+            <dt class="col-6 font-regular">{{ 'Añadir' }}:</dt>
             <dd class="col-6 text-right">{{ \App\CentralLogics\Helpers::format_currency($addon_price) }}</dd>
 
-            <dt class="col-6 font-regular">{{ translate('messages.subtotal') }}
+            <dt class="col-6 font-regular">{{ 'total parcial' }}
                 @if ($tax_included ==  1)
-                ({{ translate('messages.TAX_Included') }})
+                ({{ 'IVA incluido' }})
                 @endif
                 :</dt>
             <dd class="col-6 text-right">{{ \App\CentralLogics\Helpers::format_currency($subtotal + $addon_price) }}</dd>
 
 
-            <dt class="col-6 font-regular">{{ translate('messages.discount') }} :</dt>
+            <dt class="col-6 font-regular">{{ 'descuento' }} :</dt>
             <dd class="col-6 text-right">-
                 {{ \App\CentralLogics\Helpers::format_currency(round($discount_on_product, 2)) }}</dd>
-            <dt class="col-6 font-regular">{{ translate('messages.delivery_fee') }} :</dt>
+            <dt class="col-6 font-regular">{{ 'tarifa de entrega' }} :</dt>
             <dd class="col-6 text-right" id="delivery_price">
                 {{ \App\CentralLogics\Helpers::format_currency($delivery_fee) }}</dd>
 
-            <dt class="col-6 font-regular">{{ translate('messages.extra_discount') }} :</dt>
+            <dt class="col-6 font-regular">{{ 'descuento adicional' }} :</dt>
             <dd class="col-6 text-right"><button class="btn btn-sm" type="button" data-toggle="modal"
                     data-target="#add-discount"><i class="tio-edit"></i></button>-
                 {{ \App\CentralLogics\Helpers::format_currency(round($discount_amount, 2)) }}</dd>
             @if ($tax_included !=  1)
-                <dt class="col-6 font-regular">{{ translate('messages.tax') }} : </dt>
+                <dt class="col-6 font-regular">{{ 'impuesto' }} : </dt>
                 <dd class="col-6 text-right">
 {{--                    <button class="btn btn-sm" type="button" data-toggle="modal"--}}
 {{--                    data-target="#add-tax">--}}
@@ -148,7 +148,7 @@
                 <hr class="m-0">
             </dd>
             <input type="hidden" id='total_order_amount' value="{{ round($total + $tax_amount, 2) }}">
-            <dt class="col-6 font-regular">{{ translate('Total') }}: </dt>
+            <dt class="col-6 font-regular">{{ 'Total' }}: </dt>
             <dd class="col-6 text-right h4 b">
                 {{ \App\CentralLogics\Helpers::format_currency(round($total + $tax_amount, 2)) }} </dd>
         </dl>
@@ -161,19 +161,19 @@
                         <li>
                             <label>
                                 <input type="radio" name="type" value="cash_on_delivery" hidden checked>
-                                <span>{{ translate('Efectivo al repartidor') }}</span>
+                                <span>{{ 'Efectivo al repartidor' }}</span>
                             </label>
                         </li>
                         <li>
                             <label>
                                 <input type="radio" name="type" value="card_tootli_direct" hidden>
-                                <span>{{ translate('Tarjeta') }}</span>
+                                <span>{{ 'Tarjeta' }}</span>
                             </label>
                         </li>
                         <li>
                             <label>
                                 <input type="radio" name="type" value="paid_at_restaurant" hidden>
-                                <span>{{ translate('Pagado al restaurante') }}</span>
+                                <span>{{ 'Pagado al restaurante' }}</span>
                             </label>
                         </li>
                     @endif
@@ -181,19 +181,19 @@
                     <li id="payment_cash">
                         <label>
                             <input type="radio" name="type" value="cash" hidden="" checked>
-                            <span>{{ translate('Efectivo') }}</span>
+                            <span>{{ 'Efectivo' }}</span>
                         </label>
                     </li>
                     <li id="payment_card">
                         <label>
                             <input type="radio" name="type" value="card_in_store" hidden="">
-                            <span>{{ translate('Tarjeta') }}</span>
+                            <span>{{ 'Tarjeta' }}</span>
                         </label>
                     </li>
                     <li id="payment_transfer">
                         <label>
                             <input type="radio" name="type" value="bank_transfer_in_store" hidden="">
-                            <span>{{ translate('Transferencia') }}</span>
+                            <span>{{ 'transferencia' }}</span>
                         </label>
                     </li>
                 @endif
@@ -203,20 +203,20 @@
         <div id="card-fee-box" class="border rounded p-2 mb-3 d-none">
             <div class="row g-2">
                 <div class="col-md-6">
-                    <label class="input-label">{{ translate('Comisión tarjeta (%)') }}</label>
+                    <label class="input-label">{{ 'Comisión tarjeta (%)' }}</label>
                     <input type="number" step="0.01" min="0" class="form-control" name="card_fee_percent" id="card_fee_percent" value="0">
                 </div>
                 <div class="col-md-6">
-                    <label class="input-label">{{ translate('IVA sobre comisión (%)') }}</label>
+                    <label class="input-label">{{ 'IVA sobre comisión (%)' }}</label>
                     <input type="number" step="0.01" min="0" class="form-control" name="card_fee_vat_percent" id="card_fee_vat_percent" value="0">
                 </div>
                 <div class="col-md-12">
-                    <label class="input-label">{{ translate('Monto cobrado') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
+                    <label class="input-label">{{ 'Monto cobrado' }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
                     <input type="number" step="0.01" min="0" class="form-control" name="card_gross_amount" id="card_gross_amount" value="{{ round($total + $tax_amount, 2) }}">
                 </div>
                 <div class="col-md-12">
                     <small class="text-muted d-block">
-                        {{ translate('Monto después de comisión') }}:
+                        {{ 'Monto después de la comisión' }}:
                         <strong id="card_net_amount">{{ \App\CentralLogics\Helpers::format_currency(round($total + $tax_amount, 2)) }}</strong>
                     </small>
                 </div>
@@ -224,18 +224,18 @@
         </div>
         @if (!$add)
             <div class="pos--payment-options mt-3 mb-3">
-                <h5 class="mb-3">{{ translate('messages.order_type') }}</h5>
+                <h5 class="mb-3">{{ 'tipo de orden' }}</h5>
                 <ul>
                     <li>
                         <label>
                             <input type="radio" name="service_type" value="take_away" hidden checked>
-                            <span>{{ translate('messages.take_away') }}</span>
+                            <span>{{ 'llevar' }}</span>
                         </label>
                     </li>
                     <li>
                         <label>
                             <input type="radio" name="service_type" value="dine_in" hidden>
-                            <span>{{ translate('Comer en restaurante') }}</span>
+                            <span>{{ 'Comer en restaurante' }}</span>
                         </label>
                     </li>
                 </ul>
@@ -243,7 +243,7 @@
 
             <div id="paid_section">
                 <div class="mt-4 d-flex justify-content-between pos--payable-amount">
-                    <label class="m-0">{{ translate('Paid Amount') }} :</label>
+                    <label class="m-0">{{ 'Monto pagado' }} :</label>
                     <div>
                         <span data-toggle="modal" data-target="#insertPayableAmount" class="text-body"><i
                                 class="tio-edit"></i></span>
@@ -252,7 +252,7 @@
                     </div>
                 </div>
                 <div class="mt-4 d-flex justify-content-between pos--payable-amount">
-                    <label class="m-0">{{ translate('Change Amount') }} :</label>
+                    <label class="m-0">{{ 'Cantidad de cambio' }} :</label>
                     <div>
                         <span>{{ \App\CentralLogics\Helpers::format_currency($change) }}</span>
                         <input type="hidden" value="{{ $change }}">
@@ -262,12 +262,12 @@
         @endif
         <div class="row button--bottom-fixed g-1 bg-white">
             <div class="col-sm-6">
-                <button type="submit" class="btn  btn--primary btn-sm btn-block place-order-submit">{{ translate('place_order') }}
+                <button type="submit" class="btn  btn--primary btn-sm btn-block place-order-submit">{{ 'realizar pedido' }}
                 </button>
             </div>
             <div class="col-sm-6">
                 <a href="#" class="btn btn--reset btn-sm btn-block empty-Cart"
-                    >{{ translate('Clear Cart') }}</a>
+                    >{{ 'Borrar carrito' }}</a>
             </div>
         </div>
     </div>
@@ -276,7 +276,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-light border-bottom py-3">
-                <h5 class="modal-title">{{ translate('messages.payment') }}</h5>
+                <h5 class="modal-title">{{ 'pago' }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -287,7 +287,7 @@
                     <div class="row">
                         <div class="form-group col-12">
                             <label class="input-label"
-                                for="paid">{{ translate('messages.amount') }}({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
+                                for="paid">{{ 'cantidad' }}({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
                             <input type="number" class="form-control"  id="paid" name="paid" min="0" step="0.01"
                                 value="{{ $paid }}">
                         </div>
@@ -295,7 +295,7 @@
                     <div class="form-group col-12 mb-0">
                         <div class="btn--container justify-content-end">
                             <button class="btn btn-sm btn--primary payable-amount" type="button" >
-                                {{ translate('messages.submit') }}
+                                {{ 'entregar' }}
                             </button>
                         </div>
                     </div>
@@ -308,7 +308,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">{{ translate('messages.update_discount') }}</h5>
+                <h5 class="modal-title">{{ 'descuento de actualización' }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -317,24 +317,24 @@
                 <form action="{{ route('vendor.pos.discount') }}" method="post" class="row">
                     @csrf
                     <div class="form-group col-sm-6">
-                        <label for="discount_input">{{ translate('messages.discount') }}</label>
+                        <label for="discount_input">{{ 'descuento' }}</label>
                         <input type="number" class="form-control" name="discount" min="0"
                             id="discount_input" value="{{ $discount }}"
                             max="{{ $discount_type == 'percent' ? 100 : 1000000000 }}">
                     </div>
                     <div class="form-group col-sm-6">
-                        <label for="discount_input_type">{{ translate('messages.type') }}</label>
+                        <label for="discount_input_type">{{ 'tipo' }}</label>
                         <select name="type" class="form-control" id="discount_input_type" >
                             <option value="amount" {{ $discount_type == 'amount' ? 'selected' : '' }}>
-                                {{ translate('messages.amount') }}({{ \App\CentralLogics\Helpers::currency_symbol() }})
+                                {{ 'cantidad' }}({{ \App\CentralLogics\Helpers::currency_symbol() }})
                             </option>
                             <option value="percent" {{ $discount_type == 'percent' ? 'selected' : '' }}>
-                                {{ translate('messages.percent') }}(%)</option>
+                                {{ 'por ciento' }}(%)</option>
                         </select>
                     </div>
                     <div class="form-group col-sm-12">
                         <button class="btn btn-sm btn--primary"
-                            type="submit">{{ translate('messages.submit') }}</button>
+                            type="submit">{{ 'entregar' }}</button>
                     </div>
                 </form>
             </div>
@@ -346,7 +346,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">{{ translate('messages.update_tax') }}</h5>
+                <h5 class="modal-title">{{ 'actualizar impuesto' }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -355,13 +355,13 @@
                 <form action="{{ route('vendor.pos.tax') }}" method="POST" class="row" id="order_submit_form">
                     @csrf
                     <div class="form-group col-12">
-                        <label for="tax">{{ translate('messages.tax') }}(%)</label>
+                        <label for="tax">{{ 'impuesto' }}(%)</label>
                         <input type="number" id="tax" class="form-control" name="tax" min="0">
                     </div>
 
                     <div class="form-group col-sm-12">
                         <button class="btn btn-sm btn--primary"
-                            type="submit">{{ translate('messages.submit') }}</button>
+                            type="submit">{{ 'entregar' }}</button>
                     </div>
                 </form>
             </div>
@@ -373,7 +373,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-light border-bottom py-3">
-                <h5 class="modal-title flex-grow-1 text-center">{{ translate('messages.pos_delivery_information') }}</h5>
+                <h5 class="modal-title flex-grow-1 text-center">{{ 'información pos entrega' }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -394,84 +394,84 @@
                     <div class="row g-2" id="delivery_address">
                         <div class="col-md-6">
                             <label class="input-label"
-                                for="contact_person_name">{{ translate('messages.pos_contact_name') }}<span
+                                for="contact_person_name">{{ 'nombre de contacto pos' }}<span
                                     class="input-label-secondary text-danger">*</span></label>
                             <input type="text" id="contact_person_name" class="form-control" name="contact_person_name"
                                 value="{{ $old ? $old['contact_person_name'] : '' }}"
-                                placeholder="{{ translate('messages.pos_placeholder_contact_name') }}">
+                                placeholder="{{ 'nombre de contacto del marcador de posición pos' }}">
                         </div>
                         <div class="col-md-6">
-                            <label class="input-label" for="contact_person_number">{{ translate('messages.pos_contact_phone') }}<span
+                            <label class="input-label" for="contact_person_number">{{ 'teléfono de contacto pos' }}<span
                                     class="input-label-secondary text-danger">*</span></label>
                             <input type="tel" id="contact_person_number" class="form-control" name="contact_person_number"
                                 value="{{ $old ? $old['contact_person_number'] : '' }}"
-                                placeholder="{{ translate('messages.pos_placeholder_contact_phone') }}">
+                                placeholder="{{ 'pos marcador de posición teléfono de contacto' }}">
                         </div>
                         <div class="col-md-4">
-                            <label class="input-label" for="road">{{ translate('messages.pos_road') }}<span
+                            <label class="input-label" for="road">{{ 'pos carretera' }}<span
                                     class="input-label-secondary text-danger">*</span></label>
                             <input type="text" id="road" class="form-control" name="road"
-                                value="{{ $old ? $old['road'] : '' }}" placeholder="{{ translate('messages.pos_placeholder_road') }}">
+                                value="{{ $old ? $old['road'] : '' }}" placeholder="{{ 'camino del marcador de posición pos' }}">
                         </div>
                         <div class="col-md-4">
-                            <label class="input-label" for="house">{{ translate('messages.pos_house') }}</label>
+                            <label class="input-label" for="house">{{ 'pos casa' }}</label>
                             <input type="text" id="house" class="form-control" name="house"
-                                value="{{ $old ? $old['house'] : '' }}" placeholder="{{ translate('messages.pos_placeholder_house') }}">
+                                value="{{ $old ? $old['house'] : '' }}" placeholder="{{ 'casa de marcador de posición pos' }}">
                         </div>
                         <div class="col-md-4">
-                            <label class="input-label" for="floor">{{ translate('messages.pos_floor') }}</label>
+                            <label class="input-label" for="floor">{{ 'pos piso' }}</label>
                             <input type="text" id="floor" class="form-control" name="floor"
-                                value="{{ $old ? $old['floor'] : '' }}" placeholder="{{ translate('messages.pos_placeholder_floor') }}">
+                                value="{{ $old ? $old['floor'] : '' }}" placeholder="{{ 'pos piso marcador de posición' }}">
                         </div>
                         <div class="col-md-6">
-                            <label class="input-label" for="longitude">{{ translate('messages.pos_longitude') }}<span
+                            <label class="input-label" for="longitude">{{ 'posición longitud' }}<span
                                     class="input-label-secondary text-danger">*</span></label>
                             <input type="text" class="form-control" id="longitude" name="longitude"
                                 value="{{ $old ? $old['longitude'] : '' }}" readonly>
                         </div>
                         <div class="col-md-6">
-                            <label class="input-label" for="latitude">{{ translate('messages.pos_latitude') }}<span
+                            <label class="input-label" for="latitude">{{ 'pos latitud' }}<span
                                     class="input-label-secondary text-danger">*</span></label>
                             <input type="text" class="form-control" id="latitude" name="latitude"
                                 value="{{ $old ? $old['latitude'] : '' }}" readonly>
                         </div>
                         <div class="col-md-12">
-                            <label class="input-label" for="address">{{ translate('messages.pos_address_notes') }}</label>
+                            <label class="input-label" for="address">{{ 'notas de dirección pos' }}</label>
                             <textarea name="address" id="address" class="form-control" cols="30" rows="3"
-                                placeholder="{{ translate('messages.pos_placeholder_address') }}">{{ $old ? $old['address'] : '' }}</textarea>
+                                placeholder="{{ 'dirección de marcador de posición pos' }}">{{ $old ? $old['address'] : '' }}</textarea>
                         </div>
                         <div class="col-md-12">
-                            <label class="input-label" for="gmaps_delivery_link">{{ translate('messages.pos_paste_google_maps_link') }}</label>
+                            <label class="input-label" for="gmaps_delivery_link">{{ 'Pos pegar enlace de Google Maps' }}</label>
                             <div class="input-group">
                                 <input type="url" class="form-control" id="gmaps_delivery_link" autocomplete="off"
                                     inputmode="url"
                                     placeholder="https://maps.google.com/... o https://maps.app.goo.gl/...">
                                 <div class="input-group-append">
                                     <button type="button" class="btn btn-outline-primary" id="pos_apply_gmaps_link">
-                                        {{ translate('messages.pos_apply_google_maps_link') }}
+                                        {{ 'Pos aplicar enlace de Google Maps.' }}
                                     </button>
                                 </div>
                             </div>
-                            <small class="text-muted d-block mt-1">{{ translate('messages.pos_google_maps_link_help') }}</small>
+                            <small class="text-muted d-block mt-1">{{ 'pos google mapas enlace ayuda' }}</small>
                         </div>
                         <input type="hidden" name="original_delivery_fee" id="original_delivery_fee"
                             value="{{ $old ? ($old['original_delivery_fee'] ?? $old['delivery_fee']) : '' }}">
                         <div class="col-md-12 mb-2">
                             <label class="input-label"
-                                for="customer_delivery_fee">{{ translate('messages.tootli_direct_customer_pays_delivery') }}</label>
+                                for="customer_delivery_fee">{{ 'El cliente directo de Tootli paga la entrega.' }}</label>
                             <input type="number" step="0.01" min="0" class="form-control" id="customer_delivery_fee"
                                 value="{{ $old ? $old['delivery_fee'] : '' }}"
-                                placeholder="{{ translate('messages.Ex:_100') }}">
+                                placeholder="{{ 'Ej: 100' }}">
                             <small
-                                class="text-muted">{{ translate('messages.tootli_direct_full_fee_stored_hint') }}</small>
+                                class="text-muted">{{ 'pista almacenada de tarifa completa directa de tootli' }}</small>
                         </div>
                         <div class="col-12">
                             <div class="d-flex justify-content-between">
                                 <span class="text-primary">
-                                    {{ translate('messages.pos_map_pin_hint') }}
+                                    {{ 'sugerencia de pin del mapa pos' }}
                                 </span>
                                 <div>
-                                    <span>{{ translate('messages.pos_delivery_fee_label') }} :</span>
+                                    <span>{{ 'etiqueta de tarifa de entrega pos' }} :</span>
                                     <input type="hidden" name="distance" id="distance">
                                     <input type="hidden" name="delivery_fee" id="delivery_fee"
                                         value="{{ $old ? $old['delivery_fee'] : '' }}">
@@ -479,10 +479,10 @@
                                         {{ \App\CentralLogics\Helpers::currency_symbol() }}</strong>
                                 </div>
                             </div>
-                            <p class="small text-muted mb-2">{{ translate('messages.pos_map_store_reference_hint') }}</p>
+                            <p class="small text-muted mb-2">{{ 'sugerencia de referencia de la tienda de mapas pos' }}</p>
                             <input id="pac-input" class="controls rounded initial-8"
-                                title="{{ translate('messages.pos_search_location') }}" type="text"
-                                placeholder="{{ translate('messages.pos_search_location') }}" />
+                                title="{{ 'ubicación de búsqueda pos' }}" type="text"
+                                placeholder="{{ 'ubicación de búsqueda pos' }}" />
                             <div class="mb-2 h-200px" id="map"></div>
                         </div>
                     </div>
@@ -490,7 +490,7 @@
                         <div class="btn--container justify-content-end">
                             <button class="btn btn-sm btn--primary w-100 delivery-Address-Store" type="button"
                                 >
-                                {{ translate('messages.pos_save_delivery') }}
+                                {{ 'pos guardar entrega' }}
                             </button>
                         </div>
                     </div>

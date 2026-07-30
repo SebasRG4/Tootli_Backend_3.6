@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.flutter_web_landing_page'))
+@section('title','página de inicio web de aleteo')
 
 @section('content')
 
@@ -12,11 +12,11 @@
                     <img src="{{asset('assets/admin/img/flutter.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.flutter_web_landing_page') }}
+                    {{ 'página de inicio web de aleteo' }}
                 </span>
             </h1>
             <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#how-it-works">
-                <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
+                <strong class="mr-2">{{'¡Mira cómo funciona!'}}</strong>
                 <div>
                     <i class="tio-info-outined"></i>
                 </div>
@@ -42,7 +42,7 @@
             <li class="nav-item">
                 <a class="nav-link lang_link active"
                 href="#"
-                id="default-link">{{translate('messages.default')}}</a>
+                id="default-link">{{'por defecto'}}</a>
             </li>
             @foreach (json_decode($language) as $lang)
                 <li class="nav-item">
@@ -58,7 +58,7 @@
             <form action="{{ route('admin.business-settings.flutter-landing-page-settings', 'fixed-header') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <h5 class="card-title mb-3">
-                    <span class="card-header-icon mr-2"><i class="tio-settings-outlined"></i></span> <span>{{translate('messages.header_section')}}</span>
+                    <span class="card-header-icon mr-2"><i class="tio-settings-outlined"></i></span> <span>{{'sección de encabezado'}}</span>
                 </h5>
                 <div class="card">
                     <div class="card-body">
@@ -68,16 +68,16 @@
                                 <div class="col-md-12 lang_form default-form">
                                     <div class="row g-3">
                                         <div class="col-12">
-                                            <label for="fixed_header_title" class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
+                                            <label for="fixed_header_title" class="form-label">{{'Título'}} ({{ 'por defecto' }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 20 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input id="fixed_header_title" type="text"  maxlength="20" name="fixed_header_title[]" value="{{ $fixed_header_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                    <input id="fixed_header_title" type="text"  maxlength="20" name="fixed_header_title[]" value="{{ $fixed_header_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{'título aquí...'}}">
                                         </div>
                                         <div class="col-12">
-                                            <label for="fixed_header_sub_title" class="form-label">{{translate('Sub Title')}} ({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_120_characters') }}">
+                                            <label for="fixed_header_sub_title" class="form-label">{{'Subtítulo'}} ({{ 'por defecto' }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 120 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input id="fixed_header_sub_title" type="text"  maxlength="120" name="fixed_header_sub_title[]" value="{{ $fixed_header_sub_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                    <input id="fixed_header_sub_title" type="text"  maxlength="120" name="fixed_header_sub_title[]" value="{{ $fixed_header_sub_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{'subtítulo aquí...'}}">
                                         </div>
                                     </div>
                                 </div>
@@ -108,16 +108,16 @@
                                     <div class="col-md-12 d-none lang_form" id="{{$lang}}-form1">
                                         <div class="row g-3">
                                             <div class="col-12">
-                                                <label for="fixed_header_title{{$lang}}" class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
+                                                <label for="fixed_header_title{{$lang}}" class="form-label">{{'Título'}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 20 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input id="fixed_header_title{{$lang}}" type="text"  maxlength="20" name="fixed_header_title[]" value="{{ $fixed_header_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                    <input id="fixed_header_title{{$lang}}" type="text"  maxlength="20" name="fixed_header_title[]" value="{{ $fixed_header_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{'título aquí...'}}">
                                             </div>
                                             <div class="col-12">
-                                                <label for="fixed_header_sub_title{{$lang}}" class="form-label">{{translate('Sub Title')}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_120_characters') }}">
+                                                <label for="fixed_header_sub_title{{$lang}}" class="form-label">{{'Subtítulo'}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 120 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input type="text"  id="fixed_header_sub_title{{$lang}}" maxlength="120" name="fixed_header_sub_title[]" value="{{ $fixed_header_sub_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                    <input type="text"  id="fixed_header_sub_title{{$lang}}" maxlength="120" name="fixed_header_sub_title[]" value="{{ $fixed_header_sub_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{'subtítulo aquí...'}}">
                                             </div>
                                         </div>
                                     </div>
@@ -127,16 +127,16 @@
                                 <div class="col-md-12">
                                     <div class="row g-3">
                                         <div class="col-12">
-                                            <label for="fixed_header_title" class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                            <label for="fixed_header_title" class="form-label">{{'Título'}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 50 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input type="text"  id="fixed_header_title" maxlength="50" name="fixed_header_title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                    <input type="text"  id="fixed_header_title" maxlength="50" name="fixed_header_title[]" class="form-control" placeholder="{{'título aquí...'}}">
                                         </div>
                                         <div class="col-12">
-                                            <label for="fixed_header_sub_title" class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                            <label for="fixed_header_sub_title" class="form-label">{{'Subtítulo'}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 50 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input type="text" id="fixed_header_sub_title"  maxlength="50" name="fixed_header_sub_title[]" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                    <input type="text" id="fixed_header_sub_title"  maxlength="50" name="fixed_header_sub_title[]" class="form-control" placeholder="{{'subtítulo aquí...'}}">
                                         </div>
                                     </div>
                                 </div>
@@ -145,7 +145,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label d-block mb-2">
-                                    {{ translate('messages.Image') }}  <span class="text--primary">{{translate('(size: 1:1)')}}</span>
+                                    {{ 'Imagen' }}  <span class="text--primary">{{'(tamaño: 1:1)'}}</span>
                                 </label>
                                 <label class="upload-img-3 m-0">
                                     <div class="position-relative">
@@ -158,8 +158,8 @@
                                         @if (isset($fixed_header_image['value']))
                                             <span id="fixed_header_image" class="remove_image_button remove-image"
                                                   data-id="fixed_header_image"
-                                                  data-title="{{translate('Warning!')}}"
-                                                  data-text="<p>{{translate('Are_you_sure_you_want_to_remove_this_image_?')}}</p>"
+                                                  data-title="{{'¡Advertencia!'}}"
+                                                  data-text="<p>{{'¿Estás seguro de que deseas eliminar esta imagen?'}}</p>"
                                             > <i class="tio-clear"></i></span>
 
                                             @endif
@@ -168,8 +168,8 @@
                             </div>
                         </div>
                         <div class="btn--container justify-content-end mt-20">
-                            <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
-                            <button type="submit"   class="btn btn--primary mb-2">{{translate('Save')}}</button>
+                            <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
+                            <button type="submit"   class="btn btn--primary mb-2">{{'Ahorrar'}}</button>
                         </div>
                     </div>
                 </div>
@@ -184,17 +184,17 @@
             <form action="{{ route('admin.business-settings.flutter-landing-page-settings', 'fixed-location') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <h5 class="card-title mb-3 mt-3">
-                    <span class="card-header-icon mr-2"><i class="tio-settings-outlined"></i></span> <span>{{translate('messages.location_setup')}}</span>
+                    <span class="card-header-icon mr-2"><i class="tio-settings-outlined"></i></span> <span>{{'configuración de ubicación'}}</span>
                 </h5>
                 <div class="card">
                     <div class="card-body">
                         @if ($language)
                             <div class="row g-3 lang_form default-form">
                                 <div class="col-sm-12">
-                                    <label for="fixed_location_title" class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_30_characters') }}">
+                                    <label for="fixed_location_title" class="form-label">{{'Título'}} ({{ 'por defecto' }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de los 30 caracteres.' }}">
                                         <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                     </span></label>
-                            <input type="text"  id="fixed_location_title" maxlength="30" name="fixed_location_title[]" class="form-control" value="{{$fixed_location_title?->getRawOriginal('value')??''}}" placeholder="{{translate('messages.title_here...')}}">
+                            <input type="text"  id="fixed_location_title" maxlength="30" name="fixed_location_title[]" class="form-control" value="{{$fixed_location_title?->getRawOriginal('value')??''}}" placeholder="{{'título aquí...'}}">
                                 </div>
                             </div>
                             <input type="hidden" name="lang[]" value="default">
@@ -213,10 +213,10 @@
                                     ?>
                                     <div class="row g-3 d-none lang_form" id="{{$lang}}-form2">
                                         <div class="col-sm-12">
-                                            <label for="fixed_location_title{{$lang}}" class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_30_characters') }}">
+                                            <label for="fixed_location_title{{$lang}}" class="form-label">{{'Título'}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de los 30 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input id="fixed_location_title{{$lang}}" type="text"  maxlength="30" name="fixed_location_title[]" class="form-control" value="{{ $fixed_location_title_translate[$lang]['value']?? '' }}" placeholder="{{translate('messages.title_here...')}}">
+                                    <input id="fixed_location_title{{$lang}}" type="text"  maxlength="30" name="fixed_location_title[]" class="form-control" value="{{ $fixed_location_title_translate[$lang]['value']?? '' }}" placeholder="{{'título aquí...'}}">
                                         </div>
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
@@ -224,17 +224,17 @@
                             @else
                                 <div class="row g-3">
                                     <div class="col-sm-12">
-                                        <label for="fixed_location_title" class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_30_characters') }}">
+                                        <label for="fixed_location_title" class="form-label">{{'Título'}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de los 30 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input id="fixed_location_title" type="text"  maxlength="30" name="fixed_location_title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                    <input id="fixed_location_title" type="text"  maxlength="30" name="fixed_location_title[]" class="form-control" placeholder="{{'título aquí...'}}">
                                     </div>
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                             @endif
                         <div class="btn--container justify-content-end mt-20">
-                            <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
-                            <button type="submit"   class="btn btn--primary mb-2">{{translate('Add')}}</button>
+                            <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
+                            <button type="submit"   class="btn btn--primary mb-2">{{'Agregar'}}</button>
                         </div>
                     </div>
                 </div>
@@ -242,7 +242,7 @@
             <form action="{{ route('admin.business-settings.flutter-landing-page-settings', 'fixed-module') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <h5 class="card-title mb-3 mt-3">
-                    <span class="card-header-icon mr-2"><i class="tio-settings-outlined"></i></span> <span>{{translate('messages.module_setup')}}</span>
+                    <span class="card-header-icon mr-2"><i class="tio-settings-outlined"></i></span> <span>{{'configuración del módulo'}}</span>
                 </h5>
                 <div class="card">
                     <div class="card-body">
@@ -250,16 +250,16 @@
                         @if ($language)
                             <div class="row g-3 lang_form default-form">
                                 <div class="col-sm-6">
-                                    <label for="fixed_module_title" class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
+                                    <label for="fixed_module_title" class="form-label">{{'Título'}} ({{ 'por defecto' }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 40 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input id="fixed_module_title" type="text"  maxlength="40" name="fixed_module_title[]" class="form-control" value="{{$fixed_module_title?->getRawOriginal('value')??''}}" placeholder="{{translate('messages.title_here...')}}">
+                                    <input id="fixed_module_title" type="text"  maxlength="40" name="fixed_module_title[]" class="form-control" value="{{$fixed_module_title?->getRawOriginal('value')??''}}" placeholder="{{'título aquí...'}}">
                                 </div>
                                 <div class="col-sm-6">
-                                    <label  for="fixed_module_sub_title" class="form-label">{{translate('Sub Title')}} ({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
+                                    <label  for="fixed_module_sub_title" class="form-label">{{'Subtítulo'}} ({{ 'por defecto' }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 80 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input id="fixed_module_sub_title" type="text"  maxlength="80" name="fixed_module_sub_title[]" class="form-control" value="{{$fixed_module_sub_title?->getRawOriginal('value')??''}}" placeholder="{{translate('messages.sub_title_here...')}}">
+                                    <input id="fixed_module_sub_title" type="text"  maxlength="80" name="fixed_module_sub_title[]" class="form-control" value="{{$fixed_module_sub_title?->getRawOriginal('value')??''}}" placeholder="{{'subtítulo aquí...'}}">
                                 </div>
                             </div>
                             <input type="hidden" name="lang[]" value="default">
@@ -288,16 +288,16 @@
                                     ?>
                                     <div class="row g-3 d-none lang_form" id="{{$lang}}-form">
                                         <div class="col-sm-6">
-                                            <label for="fixed_module_title{{$lang}}" class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
+                                            <label for="fixed_module_title{{$lang}}" class="form-label">{{'Título'}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 40 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input id="fixed_module_title{{$lang}}" type="text"  maxlength="40" name="fixed_module_title[]" class="form-control" value="{{ $fixed_module_title_translate[$lang]['value']?? '' }}" placeholder="{{translate('messages.title_here...')}}">
+                                    <input id="fixed_module_title{{$lang}}" type="text"  maxlength="40" name="fixed_module_title[]" class="form-control" value="{{ $fixed_module_title_translate[$lang]['value']?? '' }}" placeholder="{{'título aquí...'}}">
                                         </div>
                                         <div class="col-sm-6">
-                                            <label for="fixed_module_sub_title{{$lang}}" class="form-label">{{translate('Sub Title')}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
+                                            <label for="fixed_module_sub_title{{$lang}}" class="form-label">{{'Subtítulo'}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 80 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input id="fixed_module_sub_title{{$lang}}" type="text"  maxlength="80" name="fixed_module_sub_title[]" class="form-control" value="{{ $fixed_module_sub_title_translate[$lang]['value']?? '' }}" placeholder="{{translate('messages.sub_title_here...')}}">
+                                    <input id="fixed_module_sub_title{{$lang}}" type="text"  maxlength="80" name="fixed_module_sub_title[]" class="form-control" value="{{ $fixed_module_sub_title_translate[$lang]['value']?? '' }}" placeholder="{{'subtítulo aquí...'}}">
                                         </div>
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
@@ -305,16 +305,16 @@
                             @else
                                 <div class="row g-3">
                                     <div class="col-sm-6">
-                                        <label for="fixed_module_title" class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
+                                        <label for="fixed_module_title" class="form-label">{{'Título'}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 40 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input id="fixed_module_title" type="text"  maxlength="40" name="fixed_module_title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                    <input id="fixed_module_title" type="text"  maxlength="40" name="fixed_module_title[]" class="form-control" placeholder="{{'título aquí...'}}">
                                     </div>
                                     <div class="col-sm-6">
-                                        <label for="fixed_module_sub_title" class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
+                                        <label for="fixed_module_sub_title" class="form-label">{{'Subtítulo'}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 80 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input id="fixed_module_sub_title" type="text"  maxlength="80" name="fixed_module_sub_title[]" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                    <input id="fixed_module_sub_title" type="text"  maxlength="80" name="fixed_module_sub_title[]" class="form-control" placeholder="{{'subtítulo aquí...'}}">
                                     </div>
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
@@ -324,12 +324,12 @@
                                 <i class="tio-info"></i>
                             </div>
                             <div>
-                                {{translate('NB_:_All_the_modules_and_their_information_will_be_dynamically_added_from_the_module_setup_section._You_just_need_to_add_the_title_and_subtitle_of_the_Module_List_Section.')}}
+                                {{'NB: Todos los módulos y su información se agregarán dinámicamente desde la sección de configuración del módulo. Sólo necesita agregar el título y el subtítulo de la Sección de Lista de Módulos.'}}
                             </div>
                         </div>
                         <div class="btn--container justify-content-end mt-20">
-                            <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
-                            <button type="submit"   class="btn btn--primary mb-2">{{translate('Save')}}</button>
+                            <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
+                            <button type="submit"   class="btn btn--primary mb-2">{{'Ahorrar'}}</button>
                         </div>
                     </div>
                 </div>

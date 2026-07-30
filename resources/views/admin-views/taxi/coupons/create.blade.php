@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Create Taxi Coupon'))
+@section('title', 'Crear cupón de taxi')
 
 @section('content')
     <div class="content container-fluid">
@@ -9,12 +9,12 @@
             <div class="row align-items-center">
                 <div class="col-sm mb-2 mb-sm-0">
                     <h1 class="page-header-title">
-                        <i class="tio-ticket"></i> {{ translate('Create Coupon') }}
+                        <i class="tio-ticket"></i> {{ 'Crear cupón' }}
                     </h1>
                 </div>
                 <div class="col-sm-auto">
                     <a href="{{ route('admin.taxi.coupons.index') }}" class="btn btn-secondary">
-                        <i class="tio-arrow-left"></i> {{ translate('Back') }}
+                        <i class="tio-arrow-left"></i> {{ 'Atrás' }}
                     </a>
                 </div>
             </div>
@@ -28,16 +28,16 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>{{ translate('Title') }} *</label>
+                                <label>{{ 'Título' }} *</label>
                                 <input type="text" name="title" class="form-control" required
-                                    placeholder="{{ translate('Coupon title') }}" value="{{ old('title') }}">
+                                    placeholder="{{ 'Título del cupón' }}" value="{{ old('title') }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>{{ translate('Code') }} *</label>
+                                <label>{{ 'Código' }} *</label>
                                 <input type="text" name="code" class="form-control" required
-                                    placeholder="{{ translate('COUPON_CODE') }}" value="{{ old('code') }}"
+                                    placeholder="{{ 'CÓDIGO DE CUPÓN' }}" value="{{ old('code') }}"
                                     style="text-transform: uppercase;">
                             </div>
                         </div>
@@ -46,30 +46,30 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>{{ translate('Discount Type') }} *</label>
+                                <label>{{ 'Tipo de descuento' }} *</label>
                                 <select name="discount_type" class="form-control" required>
-                                    <option value="percent">{{ translate('Percentage') }}</option>
-                                    <option value="amount">{{ translate('Fixed Amount') }}</option>
+                                    <option value="percent">{{ 'Porcentaje' }}</option>
+                                    <option value="amount">{{ 'Monto Fijo' }}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>{{ translate('Discount') }} *</label>
+                                <label>{{ 'Descuento' }} *</label>
                                 <input type="number" name="discount" class="form-control" required step="0.01" min="0"
                                     value="{{ old('discount', 0) }}">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>{{ translate('Min Purchase') }} *</label>
+                                <label>{{ 'Compra mínima' }} *</label>
                                 <input type="number" name="min_purchase" class="form-control" required step="0.01" min="0"
                                     value="{{ old('min_purchase', 0) }}">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>{{ translate('Max Discount') }} *</label>
+                                <label>{{ 'Descuento máximo' }} *</label>
                                 <input type="number" name="max_discount" class="form-control" required step="0.01" min="0"
                                     value="{{ old('max_discount', 0) }}">
                             </div>
@@ -79,23 +79,23 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>{{ translate('Start Date') }} *</label>
+                                <label>{{ 'Fecha de inicio' }} *</label>
                                 <input type="date" name="start_date" class="form-control" required
                                     value="{{ old('start_date', date('Y-m-d')) }}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>{{ translate('Expire Date') }} *</label>
+                                <label>{{ 'Fecha de vencimiento' }} *</label>
                                 <input type="date" name="expire_date" class="form-control" required
                                     value="{{ old('expire_date') }}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>{{ translate('Usage Limit') }}</label>
+                                <label>{{ 'Límite de uso' }}</label>
                                 <input type="number" name="limit" class="form-control" min="0"
-                                    placeholder="{{ translate('Unlimited') }}" value="{{ old('limit') }}">
+                                    placeholder="{{ 'Ilimitado' }}" value="{{ old('limit') }}">
                             </div>
                         </div>
                     </div>
@@ -103,9 +103,9 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>{{ translate('Vehicle Types') }}</label>
+                                <label>{{ 'Tipos de vehículos' }}</label>
                                 <small
-                                    class="text-muted d-block mb-2">{{ translate('Leave empty for all vehicle types') }}</small>
+                                    class="text-muted d-block mb-2">{{ 'Dejar vacío para todo tipo de vehículos' }}</small>
                                 <select name="vehicle_types[]" class="form-control js-select2-custom" multiple>
                                     @foreach($vehicleTypes ?? [] as $type)
                                         <option value="{{ $type->slug }}">{{ $type->name }}</option>
@@ -118,16 +118,16 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="input-label">{{ translate('Coupon For') }}</label>
+                                <label class="input-label">{{ 'Cupón para' }}</label>
                                 <select name="coupon_type" class="form-control" onchange="toggleCustomerType(this.value)">
-                                    <option value="all">{{ translate('All Customers') }}</option>
-                                    <option value="specific">{{ translate('Specific Customers') }}</option>
+                                    <option value="all">{{ 'Todos los clientes' }}</option>
+                                    <option value="specific">{{ 'Clientes específicos' }}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-12" id="customer_select_div" style="display: none;">
                             <div class="form-group">
-                                <label class="input-label">{{ translate('Select Customers') }}</label>
+                                <label class="input-label">{{ 'Seleccionar clientes' }}</label>
                                 <select name="customer_ids[]" id="customer_ids" class="form-control js-data-example-ajax"
                                     multiple>
                                 </select>
@@ -175,12 +175,12 @@
                     <div class="form-group">
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" name="status" class="custom-control-input" id="couponStatus" checked>
-                            <label class="custom-control-label" for="couponStatus">{{ translate('Active') }}</label>
+                            <label class="custom-control-label" for="couponStatus">{{ 'Activo' }}</label>
                         </div>
                     </div>
 
                     <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn btn-primary">{{ translate('Create Coupon') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ 'Crear cupón' }}</button>
                     </div>
                 </form>
             </div>

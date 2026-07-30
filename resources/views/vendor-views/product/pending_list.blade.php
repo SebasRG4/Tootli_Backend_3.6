@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title',translate('messages.item_list'))
+@section('title','lista de artículos')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -13,7 +13,7 @@
         <div class="page-header">
             <div class="btn--container align-items-center mb-0">
                 <div class="mr-auto">
-                    <h1 class="page-header-title"><i class="tio-filter-list"></i> {{translate('messages.Pending_For_Approval_products')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$items->total()}}</span></h1>
+                    <h1 class="page-header-title"><i class="tio-filter-list"></i> {{'Productos pendientes de aprobación'}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$items->total()}}</span></h1>
                 </div>
             </div>
         </div>
@@ -23,13 +23,13 @@
         <div class="card">
             <!-- Header -->
             <div class="card-header py-2  border-0">
-                <h4>{{ translate('messages.Item_List') }}</h4>
+                <h4>{{ 'Lista de artículos' }}</h4>
                 <div class="search--button-wrapper justify-content-end">
                     <form class="search-form">
 
                         <!-- Search -->
                         <div class="input-group input--group">
-                            <input id="datatableSearch" type="search"  value="{{ request()?->search ?? null }}" name="search" class="form-control" placeholder="{{translate('messages.ex_search_name')}}" aria-label="{{translate('messages.search_here')}}">
+                            <input id="datatableSearch" type="search"  value="{{ request()?->search ?? null }}" name="search" class="form-control" placeholder="{{'ex nombre de búsqueda'}}" aria-label="{{'buscar aquí'}}">
                             <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                         </div>
                         <!-- End Search -->
@@ -60,12 +60,12 @@
                     }'>
                     <thead class="thead-light">
                         <tr>
-                            <th class="border-0">{{translate('messages.#')}}</th>
-                            <th class="border-0 w-20p">{{translate('messages.name')}}</th>
-                            <th class="border-0 w-20p">{{translate('messages.category')}}</th>
-                            <th class="border-0">{{translate('messages.price')}}</th>
-                            <th class="border-0 ">{{translate('messages.status')}}</th>
-                            <th class="border-0 text-center">{{translate('messages.action')}}</th>
+                            <th class="border-0">{{'#'}}</th>
+                            <th class="border-0 w-20p">{{'nombre'}}</th>
+                            <th class="border-0 w-20p">{{'categoría'}}</th>
+                            <th class="border-0">{{'precio'}}</th>
+                            <th class="border-0 ">{{'estado'}}</th>
+                            <th class="border-0 text-center">{{'acción'}}</th>
                         </tr>
                     </thead>
 
@@ -83,7 +83,7 @@
                                 </a>
                             </td>
                             <td>
-                            {{Str::limit($item->category?$item->category->name:translate('messages.category_deleted'),20,'...')}}
+                            {{Str::limit($item->category?$item->category->name:'categoría eliminada',20,'...')}}
                             </td>
                             <td>
                                 <div class="mw--85px">
@@ -93,11 +93,11 @@
                             <td>
                                     @if ($item->is_rejected == 1)
                                     <span class="badge badge-soft-danger text-capitalize">
-                                        {{ translate('messages.rejected') }}
+                                        {{ 'rechazado' }}
                                     </span>
                                     @else
                                     <span class="badge badge-soft-info text-capitalize">
-                                        {{ translate('messages.pending') }}
+                                        {{ 'Pendiente' }}
                                     </span>
                                     @endif
                             </td>
@@ -105,11 +105,11 @@
                                 <div class="btn--container justify-content-center">
                                     @if ($item->is_rejected == 1)
                                     <a class="btn btn-sm btn--primary btn-outline-primary action-btn"
-                                        href="{{route('vendor.item.edit',[$item['id'] , 'temp_product' => true])}}" title="{{translate('messages.edit_item')}}"><i class="tio-edit"></i>
+                                        href="{{route('vendor.item.edit',[$item['id'] , 'temp_product' => true])}}" title="{{'editar elemento'}}"><i class="tio-edit"></i>
                                     </a>
                                     @endif
                                     <a class="btn btn-sm btn--danger btn-outline-danger action-btn form-alert" href="javascript:"
-                                        data-id="food-{{$item['id']}}" data-message="{{ translate('Want to delete this item ?') }}" title="{{translate('messages.delete_item')}}"><i class="tio-delete-outlined"></i>
+                                        data-id="food-{{$item['id']}}" data-message="{{ '¿Quieres eliminar este elemento?' }}" title="{{'eliminar elemento'}}"><i class="tio-delete-outlined"></i>
                                     </a>
                                 </div>
                                 <form action="{{route('vendor.item.delete',[$item['id']])}}"
@@ -134,7 +134,7 @@
                 <div class="empty--data">
                     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
-                        {{translate('no_data_found')}}
+                        {{'no se encontraron datos'}}
                     </h5>
                 </div>
                 @endif

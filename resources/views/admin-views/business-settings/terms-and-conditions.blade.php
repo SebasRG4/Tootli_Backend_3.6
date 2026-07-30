@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.terms_and_condition'))
+@section('title','términos y condiciones')
 
 
 
@@ -13,7 +13,7 @@
                     <img src="{{asset('assets/admin/img/privacy-policy.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.terms_and_condition')}}
+                    {{'términos y condiciones'}}
                 </span>
             </h1>
         </div>
@@ -32,7 +32,7 @@
                         <li class="nav-item">
                             <a class="nav-link lang_link active"
                             href="#"
-                            id="default-link">{{translate('messages.default')}}</a>
+                            id="default-link">{{'por defecto'}}</a>
                         </li>
 
                         @foreach (json_decode($language) as $lang)
@@ -74,7 +74,7 @@
                     @endif
 
                     <div class="btn--container justify-content-end">
-                        <button type="submit" class="btn btn--primary">{{translate('messages.submit')}}</button>
+                        <button type="submit" class="btn btn--primary">{{'entregar'}}</button>
                     </div>
                 </form>
             </div>

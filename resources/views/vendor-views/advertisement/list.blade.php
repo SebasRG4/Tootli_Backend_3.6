@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title', request()?->type == 'pending' ?  translate('advertisement_pending_list') : translate('Advertisement List'))
+@section('title', request()?->type == 'pending' ?  'lista de anuncios pendientes' : 'Lista de anuncios')
 @section('advertisement')
 active
 @endsection
@@ -32,20 +32,20 @@ active
 
 
 
-<h1 class="page-header-title mb-3">{{ translate('Advertisement List') }}</h1>
+<h1 class="page-header-title mb-3">{{ 'Lista de anuncios' }}</h1>
 
 <div class="card">
     <div class="card-body">
         <div class="text-center max-w-700 mx-auto pt-5">
             <img src="{{asset('assets/admin/img/advertisement-list.png')}}" class="mw-100 mb-3" alt="">
-            <h4 class="mb-2">{{ translate('Advertisement List') }}</h4>
-            <p class="mb-4">{{ translate('Uh oh! You didn’t created any advertisement yet') }}!</p>
+            <h4 class="mb-2">{{ 'Lista de anuncios' }}</h4>
+            <p class="mb-4">{{ '¡Oh, oh! Aún no has creado ningún anuncio' }}!</p>
             <div class="pb-4">
-                <a href="{{ route('vendor.advertisement.create') }}" class="btn btn--primary">{{ translate('Create Ads') }}</a>
+                <a href="{{ route('vendor.advertisement.create') }}" class="btn btn--primary">{{ 'Crear anuncios' }}</a>
             </div>
             <hr>
             <div class="max-w-471 mx-auto fs-12 py-4">
-                {{ translate('By') }} <strong>{{ translate('Creating Advertisement') }}</strong> {{ translate('you can showcase your items or store to a wider audience through targeted ad campaigns.') }}
+                {{ 'Por' }} <strong>{{ 'Creando publicidad' }}</strong> {{ 'puede mostrar sus artículos o tiendas a un público más amplio a través de campañas publicitarias específicas.' }}
             </div>
         </div>
     </div>
@@ -60,10 +60,10 @@ active
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="page-header-title d-flex align-items-center gap-2">
             <img src="{{asset('assets/admin/img/advertisement.png')}}" alt="">
-            {{ translate('messages.Ads_list') }}
+            {{ 'Lista de anuncios' }}
             <span class="badge badge-soft-dark ml-2">{{ $adds->total() }}</span>
         </h1>
-        <a href="{{ route('vendor.advertisement.create') }}" class="btn btn-primary">  <i class="tio-add"></i> {{ translate('New Advertisement') }}</a>
+        <a href="{{ route('vendor.advertisement.create') }}" class="btn btn-primary">  <i class="tio-add"></i> {{ 'Nuevo anuncio' }}</a>
     </div>
     <!-- Title -->
 
@@ -80,7 +80,7 @@ active
                 @endif
                 <div class="input--group input-group input-group-merge input-group-flush">
 
-                    <input id="datatableSearch" type="search" name="search"  value="{{ request()?->search ?? null }}"  class="form-control" placeholder="{{ translate('Search by ads ID') }}" aria-label="{{translate('messages.search_here')}}">
+                    <input id="datatableSearch" type="search" name="search"  value="{{ request()?->search ?? null }}"  class="form-control" placeholder="{{ 'Buscar por ID de anuncios' }}" aria-label="{{'buscar aquí'}}">
                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                 </div>
                 <!-- End Search -->
@@ -89,11 +89,11 @@ active
             <div class="select-item min-250">
                 <select name="subscription_list" class="form-control js-select2-custom set-filter"
                 data-url="{{url()->full()}}" data-filter="ads_type">
-                    <option  value="all">{{translate('messages.All Ads')}}</option>
-                    <option {{ request()?->ads_type =='running'?'selected':''}} value="running">{{translate('running')}} </option>
-                    <option {{request()?->ads_type =='approved'?'selected':''}} value="approved">{{translate('approved')}} </option>
-                    <option {{request()?->ads_type =='expired'?'selected':''}} value="expired">{{translate('expired')}} </option>
-                    <option {{request()?->ads_type =='denied'?'selected':''}} value="denied">{{translate('denied')}} </option>
+                    <option  value="all">{{'Todos los anuncios'}}</option>
+                    <option {{ request()?->ads_type =='running'?'selected':''}} value="running">{{'correr'}} </option>
+                    <option {{request()?->ads_type =='approved'?'selected':''}} value="approved">{{'aprobado'}} </option>
+                    <option {{request()?->ads_type =='expired'?'selected':''}} value="expired">{{'venció'}} </option>
+                    <option {{request()?->ads_type =='denied'?'selected':''}} value="denied">{{'denegado'}} </option>
                 </select>
             </div>
             @endif
@@ -105,13 +105,13 @@ active
                 <table class="font-size-sm table table-borderless table-thead-bordered table-nowrap table-align-middle card-table min-h-225px">
                     <thead class="thead-light">
                         <tr>
-                            <th>{{ translate('sl') }}</th>
-                            <th >{{translate('Ads ID')}}</th>
-                            <th >{{translate('Ads Type')}}</th>
-                            <th >{{translate('Ads Title')}}</th>
-                            <th >{{translate('Duration')}}</th>
-                            <th >{{translate('Status')}}</th>
-                            <th >{{translate('Action')}}</th>
+                            <th>{{ 'SL' }}</th>
+                            <th >{{'ID de anuncios'}}</th>
+                            <th >{{'Tipo de anuncios'}}</th>
+                            <th >{{'Título del anuncio'}}</th>
+                            <th >{{'Duración'}}</th>
+                            <th >{{'Estado'}}</th>
+                            <th >{{'Acción'}}</th>
                         </tr>
                     </thead>
 
@@ -133,15 +133,15 @@ active
                             </td>
                             <td>
                                 @if ($add->status == 'approved' && $add->active == 1 )
-                                <label class="badge badge-soft-primary rounded-pill">{{ translate('messages.running') }}</label>
+                                <label class="badge badge-soft-primary rounded-pill">{{ 'correr' }}</label>
                                 @elseif ($add->status == 'approved' && $add->active == 2 )
-                                <label class="badge badge-soft-success rounded-pill">{{ translate('messages.approved') }}</label>
+                                <label class="badge badge-soft-success rounded-pill">{{ 'aprobado' }}</label>
                                 @elseif ($add->status == 'paused' && $add->active == 1 )
-                                <label class="badge badge-soft-warning rounded-pill">{{ translate('messages.paused') }}</label>
+                                <label class="badge badge-soft-warning rounded-pill">{{ 'pausado' }}</label>
                                 @elseif (in_array($add->status ,['denied','expired'] ))
                                 <label class="badge badge-soft-danger rounded-pill">{{ translate($add->status) }}</label>
                                 @elseif ($add->active == 0)
-                                <label class="badge badge-soft-secondary rounded-pill">{{ translate('messages.Expired') }}</label>
+                                <label class="badge badge-soft-secondary rounded-pill">{{ 'Venció' }}</label>
                                 @else
                                 <label class="badge badge-soft-info rounded-pill">{{ translate($add->status) }}</label>
                                 @endif
@@ -156,13 +156,13 @@ active
                                     <ul class="dropdown-menu" dir="ltr">
                                         <a class="dropdown-item d-flex gap-2 align-items-center" href="{{ route('vendor.advertisement.show',$add->id) }}">
                                             <i class="tio-visible-outlined"></i>
-                                            {{ translate('View Ads') }}
+                                            {{ 'Ver anuncios' }}
                                         </a>
 
                                         @if ($add->active == 0 || in_array($add->status ,['pending']))
                                         <a class="dropdown-item d-flex gap-2 align-items-center" href="{{ route('vendor.advertisement.edit',$add->id) }}">
                                             <i class="tio-edit"></i>
-                                            {{ translate('Edit & Resubmit Ads') }}
+                                            {{ 'Editar y volver a enviar anuncios' }}
                                             </a>
 
                                             @else
@@ -171,17 +171,17 @@ active
                                                 id="data-edit-{{ $add->id }}"
                                                 data-id="data-edit-{{ $add->id }}"
 
-                                                data-title="{{translate('Do You Want to Edit?')}}"
-                                                data-text="<p>{{translate('Your ad is running. If you edit this ad, it will be listed for pending and needs to be approved by the Admin. After the approval, it will be running again.')}}</p>"
+                                                data-title="{{'¿Quieres editar?'}}"
+                                                data-text="<p>{{'Su anuncio se está publicando. Si edita este anuncio, aparecerá como pendiente y deberá ser aprobado por el administrador. Después de la aprobación, volverá a funcionar.'}}</p>"
                                                 data-image="{{asset('assets/admin/img/modal/package-status-disable.png')}}"
                                                 data-type="resume"
                                                 data-btn_class = "btn-primary"
-                                                data-success_btn_text = "{{ translate('Yes, Edit') }}"
+                                                data-success_btn_text = "{{ 'Sí, editar' }}"
 
 
                                                 >
                                                 <i class="tio-edit"></i>
-                                                {{ translate('Edit Ads') }}
+                                                {{ 'Editar anuncios' }}
                                             </a>
                                             <form  id="data-edit-{{ $add->id }}_form" action="{{ route('vendor.advertisement.edit',$add->id) }}" method="get">
                                             </form>
@@ -197,8 +197,8 @@ active
                                             id="data-add-{{ $add->id }}"
                                             data-id="data-add-{{ $add->id }}"
 
-                                            data-title="{{translate('Are you sure you want to Resume the request?')}}"
-                                            data-text="<p>{{translate('This ad will be run again and will show in the user app & websites.')}}</p>"
+                                            data-title="{{'¿Está seguro de que desea reanudar la solicitud?'}}"
+                                            data-text="<p>{{'Este anuncio se publicará nuevamente y se mostrará en la aplicación y los sitios web del usuario.'}}</p>"
                                             data-image="{{asset('assets/admin/img/modal/resume.png')}}"
                                             data-type="resume"
                                             data-btn_class = "btn-primary"
@@ -206,7 +206,7 @@ active
 
                                             href="#">
                                                 <i class="tio-pause-circle"></i>
-                                                {{ translate('Resume_Ads') }}
+                                                {{ 'Reanudar anuncios' }}
                                             </a>
 
                                             <form  id="data-add-{{ $add->id }}_form" action="{{ route('vendor.advertisement.status',['status' => 'approved' ,'id' => $add->id]) }}" method="get">
@@ -223,14 +223,14 @@ active
                                         <a class="dropdown-item d-flex gap-2 align-items-center new-dynamic-submit-model"
                                         id="data-add-{{ $add->id }}"
                                         data-id="data-add-{{ $add->id }}"
-                                        data-title="{{translate('Are you sure you want to Pause the request?')}}"
-                                        data-text="<p>{{translate('This ad will be pause and not show in the user app & websites.')}}</p>"
+                                        data-title="{{'¿Está seguro de que desea pausar la solicitud?'}}"
+                                        data-text="<p>{{'Este anuncio se detendrá y no se mostrará en la aplicación ni en los sitios web del usuario.'}}</p>"
                                         data-image="{{asset('assets/admin/img/modal/pause.png')}}"
                                         data-type="pause"
 
                                         href="#">
                                             <i class="tio-pause-circle"></i>
-                                            {{ translate('Pause_Ads') }}
+                                            {{ 'Pausar anuncios' }}
                                             </a>
 
                                             <form  id="data-add-{{ $add->id }}_form" action="{{ route('vendor.advertisement.status',['status' => 'paused' ,'id' => $add->id]) }}" method="get">
@@ -244,26 +244,26 @@ active
 
                                         <a class="dropdown-item d-flex gap-2 align-items-center" href="{{ route('vendor.advertisement.copyAdd', $add->id) }}" >
                                             <i class="tio-copy"></i>
-                                            {{ translate('Copy_Ads') }}
+                                            {{ 'Copiar anuncios' }}
                                             </a>
 
                                         <a class="dropdown-item d-flex gap-2 align-items-center new-dynamic-submit-model"
                                         id="delete-add-{{ $add->id }}"
                                             data-id="delete-add-{{ $add->id }}"
                                             @if ($add->status == 'approved' && $add->active == 1)
-                                                data-title="{{translate('You can’t delete the ad')}}"
-                                                data-text="<p>{{translate('This Advertisement is currently running, To delete this ad from the list, please  resume the Ad first . Once the status is updated, you can proceed with deletion')}}</p>"
+                                                data-title="{{'No puedes eliminar el anuncio.'}}"
+                                                data-text="<p>{{'Este anuncio se está publicando actualmente. Para eliminar este anuncio de la lista, reanude primero el anuncio. Una vez actualizado el estado, puede continuar con la eliminación.'}}</p>"
                                                 data-image="{{asset('assets/admin/img/modal/package-status-disable.png')}}"
                                                 data-type="warning"
                                             @else
                                                 data-type="delete"
-                                                data-title="{{translate('Confirm Ad Deletion')}}"
-                                                data-text="<p>{{translate('Deleting this ad will remove it permanently. Are you sure you want to proceed?')}}</p>"
+                                                data-title="{{'Confirmar la eliminación de anuncios'}}"
+                                                data-text="<p>{{'Eliminar este anuncio lo eliminará permanentemente. ¿Estás seguro de que quieres continuar?'}}</p>"
                                                 data-image="{{asset('assets/admin/img/modal/delete-icon.png')}}"
                                             @endif
                                             >
                                             <i class="tio-delete"></i>
-                                            {{ translate('Delete_Ads') }}
+                                            {{ 'Eliminar anuncios' }}
                                             </a>
                                             <form  id="delete-add-{{ $add->id }}_form" action="{{ route('vendor.advertisement.destroy',$add->id) }}" method="post">
                                                 @csrf
@@ -284,7 +284,7 @@ active
                 <div class="empty--data">
                     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
-                        {{translate('no_data_found')}}
+                        {{'no se encontraron datos'}}
                     </h5>
                 </div>
                 @endif
@@ -311,11 +311,11 @@ active
             <div class="modal-body pt-0">
                 <div class="text-center max-w-700 mx-auto">
                     <img src="{{asset('assets/admin/img/created.png')}}" class="mw-100 mb-4" alt="">
-                    <h4 class="mb-2">{{ translate('Ad Created Successfully!') }}</h4>
-                    <p class="mb-4 fs-12 mx-auto max-w-520">{{ translate('Congratulations on creating your ad! It’s now awaiting approval. To finalize the process & make payment arrangements, please contact our')}} <a class="text--underline" href="mailto:{{\App\CentralLogics\Helpers::get_settings('email_address')  }}">{{ translate('Admin directly.') }}</a>
-                   {{   translate(' We look forward to helping you boost your visibility & reach more customers') }}</p>
+                    <h4 class="mb-2">{{ '¡Anuncio creado exitosamente!' }}</h4>
+                    <p class="mb-4 fs-12 mx-auto max-w-520">{{ '¡Felicitaciones por crear su anuncio! Ahora está a la espera de aprobación. Para finalizar el proceso y hacer arreglos de pago, comuníquese con nuestro'}} <a class="text--underline" href="mailto:{{\App\CentralLogics\Helpers::get_settings('email_address')  }}">{{ 'Administrador directamente.' }}</a>
+                   {{   'Esperamos poder ayudarle a aumentar su visibilidad y llegar a más clientes.' }}</p>
                     <div class="pb-4">
-                        <a href="#" data-dismiss="modal"  class="btn btn--primary">{{ translate('Okay') }}</a>
+                        <a href="#" data-dismiss="modal"  class="btn btn--primary">{{ 'Bueno' }}</a>
                     </div>
                 </div>
             </div>

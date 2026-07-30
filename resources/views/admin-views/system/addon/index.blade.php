@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('system_addons'))
+@section('title', 'complementos del sistema')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -17,10 +17,10 @@
         <!-- Page Header -->
         <div class="page-header d-flex justify-content-between">
             <h1 class="page-header-title">
-                <span>{{translate('system_addons')}}</span>
+                <span>{{'complementos del sistema'}}</span>
             </h1>
             <div class="cursor-pointer text-primary d-flex align-items-center gap-3 font-weight-bolder"  data-toggle="modal" data-target="#settingModal">
-                {{ translate('How_the_Setting_Works') }}
+                {{ 'Cómo funciona el entorno' }}
                 <div class="ripple-animation ml-2">
                     <img src="{{asset('assets/admin/img/info.svg')}}" class="svg" alt="">
                 </div>
@@ -44,15 +44,15 @@
                                     <div class="">
                                         <img src="{{asset('assets/admin/img/addon_setting.png')}}" loading="lazy" alt="" class="dark-support rounded mb-4 mw-100">
                                         <ol>
-                                            <li>{{translate('After purchasing the ')}} <strong>{{translate('Payment & SMS Module/Rental Module')}}</strong> {{translate('from Codecanyon, you will find a file download option.')}}</li>
-                                            <li>{{translate('Download the file. It will be downloaded as Zip format Filename.Zip.')}}</li>
-                                            <li>{{translate('Extract the file and you will get another file name Filename.zip.')}}</li>
-                                            <li>{{translate('Upload the file here and your Addon uploading is complete !')}}</li>
-                                            <li>{{translate('Then active the Addon and setup all the options. you are good to go !')}}</li>
+                                            <li>{{'Después de comprar el'}} <strong>{{'Módulo de Pago y SMS/Módulo de Alquiler'}}</strong> {{'Desde Codecanyon, encontrarás una opción de descarga de archivos.'}}</li>
+                                            <li>{{'Descarga el archivo. Se descargará en formato Zip Nombre de archivo.Zip.'}}</li>
+                                            <li>{{'Extraiga el archivo y obtendrá otro nombre de archivo Filename.zip.'}}</li>
+                                            <li>{{'¡Cargue el archivo aquí y la carga de su complemento estará completa!'}}</li>
+                                            <li>{{'Luego active el complemento y configure todas las opciones. ¡Estás listo para irte!'}}</li>
                                         </ol>
                                         <div class="swiper-slide">
                                             <div class="d-flex flex-column align-items-center mx-w450 mx-auto">
-                                                <button class="btn btn-primary px-10 mt-3" data-dismiss="modal">{{ translate('Got_It') }}</button>
+                                                <button class="btn btn-primary px-10 mt-3" data-dismiss="modal">{{ 'Entendido' }}</button>
                                             </div>
                                         </div>
                                     </div>
@@ -71,7 +71,7 @@
         <!-- File Upload Card -->
         <div class="card mb-5">
             <div class="card-body pl-md-10">
-                <h4 class="mb-3 text-capitalize d-flex align-items-center">{{translate('upload_addon')}}</h4>
+                <h4 class="mb-3 text-capitalize d-flex align-items-center">{{'subir complemento'}}</h4>
                 <form enctype="multipart/form-data" id="theme_form">
                     <div class="row g-3">
                         <div class="col-sm-6 col-lg-5 col-xl-4 col-xxl-3">
@@ -103,18 +103,18 @@
                         @php($condition_two=str_replace('MB','',ini_get('post_max_size'))>=20 && str_replace('MB','',ini_get('post_max_size'))>=20)
                         <div class="col-sm-6 col-lg-5 col-xl-4 col-xxl-9">
                             <div class="pl-sm-5">
-                                <h5 class="mb-3 d-flex">{{ translate('instructions') }}</h5>
+                                <h5 class="mb-3 d-flex">{{ 'instrucciones' }}</h5>
                                 <ul class="pl-3 d-flex flex-column gap-2 instructions-list">
                                     <li>
-                                        1. {{ translate('please_make_sure') }}, {{ translate('your_server_php') }}
-                                        "upload_max_filesize" {{translate('value_is_grater_or_equal_to_20MB') }}. {{ translate('current_value_is') }}
+                                        1. {{ 'por favor asegúrese' }}, {{ 'tu servidor php' }}
+                                        "upload_max_filesize" {{'el valor es mayor o igual a 20MB' }}. {{ 'el valor actual es' }}
                                         - {{ini_get('upload_max_filesize')}}B
                                     </li>
                                     <li>
-                                        2. {{ translate('please_make_sure')}}, {{ translate('your_server_php')}}
+                                        2. {{ 'por favor asegúrese'}}, {{ 'tu servidor php'}}
                                         "post_max_size"
-                                        {{translate('value_is_grater_or_equal_to_20MB')}}
-                                        . {{translate('current_value_is') }} - {{ini_get('post_max_size')}}B
+                                        {{'el valor es mayor o igual a 20MB'}}
+                                        . {{'el valor actual es' }} - {{ini_get('post_max_size')}}B
                                     </li>
                                 </ul>
                             </div>
@@ -122,7 +122,7 @@
                         <div class="col-12">
                             <div class="d-flex justify-content-end mt-3">
                                 <button type="button"
-                                    class="btn btn--primary px-4 {{ getEnvMode() == 'demo' ? 'call-demo' : 'zip-upload' }}" id="upload_theme">{{translate('upload')}}</button>
+                                    class="btn btn--primary px-4 {{ getEnvMode() == 'demo' ? 'call-demo' : 'zip-upload' }}" id="upload_theme">{{'subir'}}</button>
                             </div>
                         </div>
                     </div>
@@ -163,11 +163,11 @@
                                                     <img width="75" src="{{asset('assets/admin/img/delete.png')}}" alt="">
                                                 </div>
 
-                                                <h3>{{ translate('are_you_sure_you_want_to_delete_the').' '.$data['name'] }}?</h3>
-                                                <p class="mb-5">{{ translate('once_you_delete') }}, {{ translate('you_will_lost_the_this') .' '.$data['name']  }}</p>
+                                                <h3>{{ '¿Estás seguro de que deseas eliminar el'.' '.$data['name'] }}?</h3>
+                                                <p class="mb-5">{{ 'una vez que eliminas' }}, {{ 'perderás esto' .' '.$data['name']  }}</p>
                                                 <div class="btn--container justify-content-center mb-3">
-                                                    <button type="button" class="fs-16 btn btn-secondary px-sm-5" data-dismiss="modal">{{ translate('cancel') }}</button>
-                                                    <button type="submit" class="fs-16 btn btn-danger px-sm-5 theme-delete" data-dismiss="modal" data-path="{{$addon}}">{{ translate('delete') }}</button>
+                                                    <button type="button" class="fs-16 btn btn-secondary px-sm-5" data-dismiss="modal">{{ 'Cancelar' }}</button>
+                                                    <button type="submit" class="fs-16 btn btn-danger px-sm-5 theme-delete" data-dismiss="modal" data-path="{{$addon}}">{{ 'borrar' }}</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -193,15 +193,15 @@
                                                     <img width="75" src="{{asset('assets/admin/img/shift.png')}}" alt="">
                                                 </div>
 
-                                                <h3>{{ translate('are_you_sure?') }}</h3>
+                                                <h3>{{ '¿está seguro?' }}</h3>
                                                 @if ($data['is_published'])
                                                 <p class="mb-5">{{ translate('want_to_disabled_this_'.' '.$data['name']) }}</p>
                                                 @else
                                                 <p class="mb-5">{{ translate('want_to_activate_this_'.' '.$data['name']) }}</p>
                                                 @endif
                                                 <div class="btn--container justify-content-center mb-3">
-                                                    <button type="button" class="fs-16 btn btn-secondary px-sm-5" data-dismiss="modal">{{ translate('no') }}</button>
-                                                    <button type="button" class="fs-16 btn btn--primary px-sm-5 publish-addon" data-path="{{$addon}}" data-dismiss="modal">{{ translate('yes') }}</button>
+                                                    <button type="button" class="fs-16 btn btn-secondary px-sm-5" data-dismiss="modal">{{ 'No' }}</button>
+                                                    <button type="button" class="fs-16 btn btn--primary px-sm-5 publish-addon" data-path="{{$addon}}" data-dismiss="modal">{{ 'Sí' }}</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -216,17 +216,17 @@
                                 @csrf
                                 <div class="form-group">
                                     <input type="text" name="username" value=""
-                                            class="form-control" placeholder="{{ translate('codecanyon_username') }}">
+                                            class="form-control" placeholder="{{ 'nombre de usuario de codecanyon' }}">
                                 </div>
                                 <div class="form-group">
                                     <input type="text" name="purchase_code" value=""
-                                            class="form-control" placeholder="{{ translate('purchase_code') }}">
+                                            class="form-control" placeholder="{{ 'codigo de compra' }}">
                                     <input type="text" name="path" class="form-control" value="" hidden>
                                 </div>
 
                                 <div>
                                     <input type="hidden" value="key" name="theme">
-                                    <button type="submit" class="btn btn--primary radius-button text-end">{{translate('activate')}}</button>
+                                    <button type="submit" class="btn btn--primary radius-button text-end">{{'activar'}}</button>
                                 </div>
                             </form>
                         </div>
@@ -389,7 +389,7 @@
                                     });
                                 }
                             } else {
-                                toastr.success('{{ translate("updated successfully!") }}', {
+                                toastr.success('{{ 'actualizado exitosamente!' }}', {
                                     CloseButton: true,
                                     ProgressBar: true
                                 });

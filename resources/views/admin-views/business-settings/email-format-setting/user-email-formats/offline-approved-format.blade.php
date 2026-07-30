@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('email_template'))
+@section('title', 'plantilla de correo electrónico')
 @push('css_or_js')
 <link rel="stylesheet" href="{{asset('assets/admin/css/view-pages/email-templates.css')}}">
 @endpush
@@ -16,7 +16,7 @@
                         <img src="{{ asset('assets/admin/img/email-setting.png') }}" class="w--26" alt="">
                     </span>
                     <span>
-                        {{ translate('messages.Email Templates') }}
+                        {{ 'Plantillas de correo electrónico' }}
                     </span>
                 </h1>
                 @include('admin-views.business-settings.email-format-setting.partials.email-template-options')
@@ -32,8 +32,8 @@
                     <div class="card-body">
                         <div class="maintenance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center p-2">
                             <h5 class="text-capitalize m-0 text--primary pl-2">
-                                {{translate('Send_Mail_on_Offline_Payment’?')}}
-                        <span class="form-label-secondary text--primary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('If_Admin_approves_an_offline_payment,_the_user_will_get_an_automatic_disapproval_mail_from_the_system.') }}">
+                                {{'¿Enviar correo sobre pago fuera de línea?'}}
+                        <span class="form-label-secondary text--primary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Si el administrador aprueba un pago fuera de línea, el usuario recibirá un correo de desaprobación automática del sistema.' }}">
                                     <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                 </span>
                             </h5>
@@ -43,10 +43,10 @@
                                        data-type="status"
                                        data-image-on='{{asset('assets/admin/img/modal')}}/place-order-on.png'
                                        data-image-off="{{asset('assets/admin/img/modal')}}/place-order-off.png"
-                                       data-title-on="{{translate('Want_to_enable_offline_payment_approve_mail?')}}"
-                                       data-title-off="{{translate('Want_to_disable_offline_payment_approve_mail?')}}"
-                                       data-text-on="<p>{{translate('If_enabled,_User_will_receive_a_confirmation_email_when_the_Admin_approves_their_offline_payment.')}}</p>"
-                                       data-text-off="<p>{{translate('If_disabled,_Users_will_not_get_offline_payment_approve_mail.')}}</p>"
+                                       data-title-on="{{'¿Quiere habilitar el correo de aprobación de pagos sin conexión?'}}"
+                                       data-title-off="{{'¿Quiere desactivar el correo de aprobación de pagos fuera de línea?'}}"
+                                       data-text-on="<p>{{'Si está habilitado, el usuario recibirá un correo electrónico de confirmación cuando el administrador apruebe su pago fuera de línea.'}}</p>"
+                                       data-text-off="<p>{{'Si está deshabilitado, los usuarios no recibirán el correo de aprobación de pago fuera de línea.'}}</p>"
                                        id="mail-status" {{$mail_status == '1'?'checked':''}}>
 
                                 <span class="toggle-switch-label text mb-0">
@@ -86,7 +86,7 @@
                                                 <li class="nav-item">
                                                     <a class="nav-link lang_link active"
                                                     href="#"
-                                                    id="default-link">{{translate('messages.default')}}</a>
+                                                    id="default-link">{{'por defecto'}}</a>
                                                 </li>
                                                 @foreach (json_decode($language) as $lang)
                                                     <li class="nav-item">
@@ -99,7 +99,7 @@
                                         @endif
                                         <div class="d-flex justify-content-end">
                                             <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center py-1" type="button" data-toggle="modal" data-target="#instructions">
-                                                <strong class="mr-2">{{translate('Read Instructions')}}</strong>
+                                                <strong class="mr-2">{{'Leer instrucciones'}}</strong>
                                                 <div class="blinkings">
                                                     <i class="tio-info-outined"></i>
                                                 </div>
@@ -108,28 +108,28 @@
                                     </div>
                                     <div>
                                         <h5 class="card-title mb-3">
-                                            {{translate('Icon')}}
+                                            {{'Icono'}}
                                         </h5>
                                         <label class="custom-file">
                                             <input type="file" name="icon" id="mail-icon" class="custom-file-input" accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                            <span class="custom-file-label">{{ translate('messages.Choose File') }}</span>
+                                            <span class="custom-file-label">{{ 'Elija archivo' }}</span>
                                         </label>
                                     </div>
                                     <br>
                                     <div>
                                         <h5 class="card-title mb-3">
                                             <img src="{{asset('assets/admin/img/pointer.png')}}" class="mr-2" alt="">
-                                            {{translate('Header Content')}}
+                                            {{'Contenido del encabezado'}}
                                         </h5>
                                         @if ($language)
                                             <div class="__bg-F8F9FC-card default-form lang_form" id="default-form">
                                                 <div class="form-group">
-                                                    <label class="form-label">{{translate('Main Title')}}({{ translate('messages.default') }})</label>
+                                                    <label class="form-label">{{'Título principal'}}({{ 'por defecto' }})</label>
                                                     <input type="text" name="title[]" value="{{ $data?->getRawOriginal('title') }}" data-id="mail-title" placeholder="Order has been placed successfully !" class="form-control">
                                                 </div>
                                                 <div class="form-group mb-0">
                                                     <label class="form-label">
-                                                        {{ translate('Mail Body Message') }}({{ translate('messages.default') }})
+                                                        {{ 'Mensaje del cuerpo del correo' }}({{ 'por defecto' }})
 
                                                     </label>
                                                     <textarea class="form-control" id="ckeditor" data-id="mail-body" name="body[]">
@@ -155,12 +155,12 @@
                                                 ?>
                                                 <div class="__bg-F8F9FC-card d-none lang_form" id="{{$lang}}-form">
                                                     <div class="form-group">
-                                                        <label class="form-label">{{translate('Main Title')}}({{strtoupper($lang)}})</label>
+                                                        <label class="form-label">{{'Título principal'}}({{strtoupper($lang)}})</label>
                                                         <input type="text" name="title[]" placeholder="Order has been placed successfully !" class="form-control" value="{{$translate[$lang]['title']??''}}">
                                                     </div>
                                                     <div class="form-group mb-0">
                                                         <label class="form-label">
-                                                            {{ translate('Mail Body Message') }}({{strtoupper($lang)}})
+                                                            {{ 'Mensaje del cuerpo del correo' }}({{strtoupper($lang)}})
 
                                                         </label>
                                                         <textarea class="ckeditor form-control" name="body[]">
@@ -173,16 +173,16 @@
                                         @else
                                             <div class="__bg-F8F9FC-card default-form">
                                                 <div class="form-group">
-                                                    <label class="form-label">{{translate('Main Title')}}</label>
+                                                    <label class="form-label">{{'Título principal'}}</label>
                                                     <input type="text" name="title[]" placeholder="Order has been placed successfully !" class="form-control">
                                                 </div>
                                                 <div class="form-group mb-0">
                                                     <label class="form-label">
-                                                        {{ translate('Mail Body Message') }}
+                                                        {{ 'Mensaje del cuerpo del correo' }}
 
                                                     </label>
                                                     <textarea class="ckeditor form-control" name="body[]">
-                                                      {{ translate('Hi_Sabrina') }},
+                                                      {{ 'Hola sabrina' }},
                                                     </textarea>
                                                 </div>
                                             </div>
@@ -195,15 +195,15 @@
                                     <div>
                                         <h5 class="card-title mb-3">
                                             <img src="{{asset('assets/admin/img/pointer.png')}}" class="mr-2" alt="">
-                                            {{translate('Footer Content')}}
+                                            {{'Contenido del pie de página'}}
                                         </h5>
                                         <div class="__bg-F8F9FC-card">
                                                 @if ($language)
                                                         <div class="form-group lang_form default-form">
                                                             <label class="form-label">
-                                                                {{translate('Section Text')}}({{ translate('messages.default') }})
+                                                                {{'Texto de la sección'}}({{ 'por defecto' }})
                                                             </label>
-                                                            <input type="text" data-id="mail-footer" name="footer_text[]"  placeholder="{{ translate('Please_contact_us_for_any_queries;_we’re_always_happy_to_help.') }}"class="form-control" value="{{ $data?->getRawOriginal('footer_text') }}">
+                                                            <input type="text" data-id="mail-footer" name="footer_text[]"  placeholder="{{ 'Por favor contáctenos para cualquier consulta; Siempre estaremos felices de ayudar.' }}"class="form-control" value="{{ $data?->getRawOriginal('footer_text') }}">
                                                         </div>
                                                     @foreach(json_decode($language) as $lang)
                                                     <?php
@@ -219,18 +219,18 @@
                                                         ?>
                                                         <div class="form-group d-none lang_form" id="{{$lang}}-form2">
                                                             <label class="form-label">
-                                                                {{translate('Section Text')}}({{strtoupper($lang)}})
+                                                                {{'Texto de la sección'}}({{strtoupper($lang)}})
                                                             </label>
-                                                            <input type="text" name="footer_text[]"  placeholder="{{ translate('Please_contact_us_for_any_queries;_we’re_always_happy_to_help.') }}"class="form-control" value="{{ $translate[$lang]['footer_text']??'' }}">
+                                                            <input type="text" name="footer_text[]"  placeholder="{{ 'Por favor contáctenos para cualquier consulta; Siempre estaremos felices de ayudar.' }}"class="form-control" value="{{ $translate[$lang]['footer_text']??'' }}">
                                                         </div>
                                                     @endforeach
                                                 @else
                                                 <div class="form-group">
                                                     <label class="form-label">
-                                                        {{translate('Section Text')}}
+                                                        {{'Texto de la sección'}}
 
                                                     </label>
-                                                    <input type="text" placeholder="{{ translate('Please_contact_us_for_any_queries;_we’re_always_happy_to_help.') }}"class="form-control" name="footer_text[]" value="">
+                                                    <input type="text" placeholder="{{ 'Por favor contáctenos para cualquier consulta; Siempre estaremos felices de ayudar.' }}"class="form-control" name="footer_text[]" value="">
                                                 </div>
                                                 @endif
                                                     @include('admin-views.business-settings.email-format-setting.partials.social-media-and-footer-section')
@@ -239,9 +239,9 @@
                                                 @if ($language)
                                                         <div class="form-group lang_form default-form">
                                                             <label class="form-label">
-                                                                {{translate('Copyright Content')}}({{ translate('messages.default') }})
+                                                                {{'Contenido protegido por derechos de autor'}}({{ 'por defecto' }})
                                                             </label>
-                                                            <input type="text" data-id="mail-copyright" name="copyright_text[]"  placeholder="{{ translate('Ex:_Copyright_2023_6amMart._All_right_reserved') }}" class="form-control" value="{{ $data?->getRawOriginal('copyright_text') }}">
+                                                            <input type="text" data-id="mail-copyright" name="copyright_text[]"  placeholder="{{ 'Ej: Copyright 2023 6amMart. Todos los derechos reservados' }}" class="form-control" value="{{ $data?->getRawOriginal('copyright_text') }}">
                                                         </div>
                                                     @foreach(json_decode($language) as $lang)
                                                     <?php
@@ -257,26 +257,26 @@
                                                         ?>
                                                         <div class="form-group d-none lang_form" id="{{$lang}}-form3">
                                                             <label class="form-label">
-                                                                {{translate('Copyright Content')}}({{strtoupper($lang)}})
+                                                                {{'Contenido protegido por derechos de autor'}}({{strtoupper($lang)}})
                                                             </label>
-                                                            <input type="text" name="copyright_text[]"  placeholder="{{ translate('Ex:_Copyright_2023_6amMart._All_right_reserved') }}" class="form-control" value="{{ $translate[$lang]['copyright_text']??'' }}">
+                                                            <input type="text" name="copyright_text[]"  placeholder="{{ 'Ej: Copyright 2023 6amMart. Todos los derechos reservados' }}" class="form-control" value="{{ $translate[$lang]['copyright_text']??'' }}">
                                                         </div>
                                                     @endforeach
                                                 @else
                                                 <div class="form-group">
                                                     <label class="form-label">
-                                                        {{translate('Copyright Content')}}
+                                                        {{'Contenido protegido por derechos de autor'}}
 
                                                     </label>
-                                                    <input type="text" placeholder="{{ translate('Ex:_Copyright_2023_6amMart._All_right_reserved') }}" class="form-control" name="copyright_text[]" value="">
+                                                    <input type="text" placeholder="{{ 'Ej: Copyright 2023 6amMart. Todos los derechos reservados' }}" class="form-control" name="copyright_text[]" value="">
                                                 </div>
                                                 @endif
                                             </div>
                                         </div>
                                     </div>
                                     <div class="btn--container justify-content-end mt-20">
-                                        <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('Reset')}}</button>
-                                        <button type="submit" class="btn btn--primary">{{translate('Save')}}</button>
+                                        <button type="reset" id="reset_btn" class="btn btn--reset">{{'Reiniciar'}}</button>
+                                        <button type="submit" class="btn btn--primary">{{'Ahorrar'}}</button>
                                     </div>
                                 </div>
                             </div>

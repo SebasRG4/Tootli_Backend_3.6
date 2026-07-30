@@ -23,17 +23,17 @@
     <td class="text-center">
         <span class="font-size-sm text-body mr-3">
             @if($contact->seen==1)
-            <label class="badge badge-soft-success mb-0">{{translate('messages.Seen')}}</label>
+            <label class="badge badge-soft-success mb-0">{{'Visto'}}</label>
         @else
-            <label class="badge badge-soft-info mb-0">{{translate('messages.Not_Seen_Yet')}}</label>
+            <label class="badge badge-soft-info mb-0">{{'Aún no visto'}}</label>
         @endif
         </span>
     </td>
     <td>
         <div class="btn--container justify-content-center">
-            <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.users.contact.contact-view',[$contact['id']])}}" title="{{translate('messages.edit')}}"><i class="tio-invisible"></i>
+            <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.users.contact.contact-view',[$contact['id']])}}" title="{{'editar'}}"><i class="tio-invisible"></i>
             </a>
-            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="contact-{{$contact['id']}}" data-message="{{ translate('messages.Want to delete this message?') }}" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
+            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="contact-{{$contact['id']}}" data-message="{{ '¿Quieres eliminar este mensaje?' }}" title="{{'borrar'}}"><i class="tio-delete-outlined"></i>
             </a>
             <form action="{{route('admin.users.contact.contact-delete',[$contact['id']])}}"
                     method="post" id="contact-{{$contact['id']}}">

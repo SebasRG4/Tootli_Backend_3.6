@@ -43,7 +43,7 @@
                     <div class="search--form-group">
                         <button type="button" class="btn"><i class="tio-search"></i></button>
                         <input autocomplete="false" name="qq" type="text" class="form-control form--control"
-                            placeholder="{{ translate('Search Menu...') }}" id="search">
+                            placeholder="{{ 'Menú de búsqueda...' }}" id="search">
                         <div id="search-suggestions" class="flex-wrap mt-1"></div>
                     </div>
                 </form>
@@ -53,10 +53,10 @@
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/sabores/dashboard') ? 'show active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link"
-                            href="{{ route('admin.sabores.dashboard') }}" title="{{ translate('messages.dashboard') }}">
+                            href="{{ route('admin.sabores.dashboard') }}" title="{{ 'Panel de Control' }}">
                             <i class="tio-home-vs-1-outlined nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('messages.dashboard') }}
+                                {{ 'Panel de Control' }}
                             </span>
                         </a>
                     </li>
@@ -65,7 +65,7 @@
                     <!-- Sabores Management Section -->
                     <li class="nav-item">
                         <small class="nav-subtitle"
-                            title="{{ translate('Sabores de la Ciudad') }}">{{ translate('Sabores de la Ciudad') }}</small>
+                            title="{{ 'Sabores de la ciudad' }}">{{ 'Sabores de la ciudad' }}</small>
                         <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                     </li>
 
@@ -73,10 +73,10 @@
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/sabores/reservations*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
-                            title="{{ translate('Reservations') }}">
+                            title="{{ 'Reservas' }}">
                             <i class="tio-calendar nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('Reservations') }}
+                                {{ 'Reservas' }}
                             </span>
                         </a>
                         <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
@@ -84,10 +84,10 @@
                             <li
                                 class="nav-item {{ Request::is('admin/sabores/reservations') && !request('status') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('admin.sabores.reservations') }}"
-                                    title="{{ translate('All Reservations') }}">
+                                    title="{{ 'Todas las Reservas' }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
-                                        {{ translate('All Reservations') }}
+                                        {{ 'Todas las Reservas' }}
                                         <span class="badge badge-soft-info badge-pill ml-1">
                                             {{ \App\Models\Reservation::count() }}
                                         </span>
@@ -97,10 +97,10 @@
                             <li class="nav-item {{ request('status') == 'pending' ? 'active' : '' }}">
                                 <a class="nav-link"
                                     href="{{ route('admin.sabores.reservations', ['status' => 'pending']) }}"
-                                    title="{{ translate('Pending') }}">
+                                    title="{{ 'Pendiente' }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
-                                        {{ translate('Pending') }}
+                                        {{ 'Pendiente' }}
                                         <span class="badge badge-soft-warning badge-pill ml-1">
                                             {{ \App\Models\Reservation::where('status', 'pending')->count() }}
                                         </span>
@@ -110,10 +110,10 @@
                             <li class="nav-item {{ request('status') == 'confirmed' ? 'active' : '' }}">
                                 <a class="nav-link"
                                     href="{{ route('admin.sabores.reservations', ['status' => 'confirmed']) }}"
-                                    title="{{ translate('Confirmed') }}">
+                                    title="{{ 'Confirmado' }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
-                                        {{ translate('Confirmed') }}
+                                        {{ 'Confirmado' }}
                                         <span class="badge badge-soft-success badge-pill ml-1">
                                             {{ \App\Models\Reservation::where('status', 'confirmed')->count() }}
                                         </span>
@@ -123,10 +123,10 @@
                             <li class="nav-item {{ request('status') == 'completed' ? 'active' : '' }}">
                                 <a class="nav-link"
                                     href="{{ route('admin.sabores.reservations', ['status' => 'completed']) }}"
-                                    title="{{ translate('Completed') }}">
+                                    title="{{ 'Terminado' }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
-                                        {{ translate('Completed') }}
+                                        {{ 'Terminado' }}
                                         <span class="badge badge-soft-primary badge-pill ml-1">
                                             {{ \App\Models\Reservation::where('status', 'completed')->count() }}
                                         </span>
@@ -136,10 +136,10 @@
                             <li class="nav-item {{ request('status') == 'cancelled' ? 'active' : '' }}">
                                 <a class="nav-link"
                                     href="{{ route('admin.sabores.reservations', ['status' => 'cancelled']) }}"
-                                    title="{{ translate('Cancelled') }}">
+                                    title="{{ 'Cancelado' }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
-                                        {{ translate('Cancelled') }}
+                                        {{ 'Cancelado' }}
                                         <span class="badge badge-soft-danger badge-pill ml-1">
                                             {{ \App\Models\Reservation::where('status', 'cancelled')->count() }}
                                         </span>
@@ -154,10 +154,10 @@
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/sabores/restaurants*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link"
-                            href="{{ route('admin.sabores.restaurants') }}" title="{{ translate('Restaurants') }}">
+                            href="{{ route('admin.sabores.restaurants') }}" title="{{ 'Restaurantes' }}">
                             <i class="tio-restaurant nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('Restaurants') }}
+                                {{ 'Restaurantes' }}
                             </span>
                         </a>
                     </li>
@@ -167,10 +167,10 @@
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/sabores/dineout-categories*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
-                            title="{{ translate('Dineout Categories') }}">
+                            title="{{ 'Categorías para cenar fuera' }}">
                             <i class="tio-category nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('Dineout Categories') }}
+                                {{ 'Categorías para cenar fuera' }}
                             </span>
                         </a>
                         <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
@@ -178,10 +178,10 @@
                             <li
                                 class="nav-item {{ Request::is('admin/sabores/dineout-categories') && !Request::is('admin/sabores/dineout-categories/create') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('admin.sabores.dineout-categories.index') }}"
-                                    title="{{ translate('All Categories') }}">
+                                    title="{{ 'Todas las categorías' }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
-                                        {{ translate('All Categories') }}
+                                        {{ 'Todas las categorías' }}
                                         <span class="badge badge-soft-info badge-pill ml-1">
                                             {{ \App\Models\DineoutCategory::count() }}
                                         </span>
@@ -191,10 +191,10 @@
                             <li
                                 class="nav-item {{ Request::is('admin/sabores/dineout-categories/create') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('admin.sabores.dineout-categories.create') }}"
-                                    title="{{ translate('Add New') }}">
+                                    title="{{ 'Agregar nuevo' }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate">
-                                        {{ translate('Add New') }}
+                                        {{ 'Agregar nuevo' }}
                                     </span>
                                 </a>
                             </li>
@@ -206,10 +206,10 @@
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/sabores/coupons*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link"
-                            href="{{ route('admin.sabores.coupons') }}" title="{{ translate('Coupons') }}">
+                            href="{{ route('admin.sabores.coupons') }}" title="{{ 'Cupones' }}">
                             <i class="tio-gift nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('Coupons') }}
+                                {{ 'Cupones' }}
                             </span>
                         </a>
                     </li>
@@ -219,10 +219,10 @@
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/sabores/campaigns*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link"
-                            href="{{ route('admin.sabores.campaigns') }}" title="{{ translate('Campaigns') }}">
+                            href="{{ route('admin.sabores.campaigns') }}" title="{{ 'Campañas' }}">
                             <i class="tio-layers nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('Campaigns') }}
+                                {{ 'Campañas' }}
                             </span>
                         </a>
                     </li>
@@ -231,17 +231,17 @@
                     <!-- Security Section -->
                     <li class="nav-item">
                         <small class="nav-subtitle"
-                            title="{{ translate('Security') }}">{{ translate('Security') }}</small>
+                            title="{{ 'Seguridad' }}">{{ 'Seguridad' }}</small>
                         <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                     </li>
 
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/sabores/reviews*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link"
-                            href="{{ route('admin.sabores.reviews.list') }}" title="{{ translate('Reviews') }}">
+                            href="{{ route('admin.sabores.reviews.list') }}" title="{{ 'Reseñas' }}">
                             <i class="tio-star nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('Reviews') }}
+                                {{ 'Reseñas' }}
                             </span>
                         </a>
                     </li>
@@ -250,7 +250,7 @@
                     <!-- Analytics Section -->
                     <li class="nav-item">
                         <small class="nav-subtitle"
-                            title="{{ translate('Analytics') }}">{{ translate('Analytics & Reports') }}</small>
+                            title="{{ 'Analítica' }}">{{ 'Análisis e informes' }}</small>
                         <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                     </li>
 
@@ -258,10 +258,10 @@
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/sabores/analytics*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link"
-                            href="{{ route('admin.sabores.analytics') }}" title="{{ translate('Usage Statistics') }}">
+                            href="{{ route('admin.sabores.analytics') }}" title="{{ 'Estadísticas de uso' }}">
                             <i class="tio-chart-bar-4 nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('Usage Statistics') }}
+                                {{ 'Estadísticas de uso' }}
                             </span>
                         </a>
                     </li>

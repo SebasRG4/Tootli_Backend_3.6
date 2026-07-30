@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('business_setup'))
+@section('title', 'configuración de negocios')
 
 
 @section('content')
@@ -16,7 +16,7 @@
                         <img src="{{ asset('assets/admin/img/business.png') }}" class="w--26" alt="">
                     </span>
                     <span>
-                        {{ translate('messages.business_settings') }}
+                        {{ 'entornos empresariales' }}
                     </span>
                 </h1>
                 @include('admin-views.business-settings.partials.nav-menu')
@@ -29,10 +29,10 @@
                         <div class="col-xxl-9 col-lg-8 col-md-7 col-sm-6">
                             <div>
                                 <h3 class="mb-1">
-                                    {{ translate('Maintenance Mode') }}
+                                    {{ 'Modo de mantenimiento' }}
                                 </h3>
                                 <p class="mb-0 fs-12">
-                                    {{ translate('Turn on the Maintenance Mode will temporarily deactivate your selected systems as of your chosen date and time.') }}
+                                    {{ 'Activar el modo de mantenimiento desactivará temporalmente los sistemas seleccionados a partir de la fecha y hora elegidas.' }}
                                 </p>
                             </div>
                         </div>
@@ -41,7 +41,7 @@
                                 class="maintenance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center py-2 px-3">
                                 @php($config = \App\CentralLogics\Helpers::get_business_settings('maintenance_mode'))
                                 <h5 class="text-capitalize m-0 font-weight-normal fs-14 text-dark">
-                                    {{ translate('messages.maintenance_mode') }}
+                                    {{ 'modo de mantenimiento' }}
                                 </h5>
                                 <label class="toggle-switch toggle-switch-sm">
                                     <input type="checkbox" class="status toggle-switch-input maintenance-mode" {{ isset($config) && $config ? 'checked' : '' }}>
@@ -60,10 +60,10 @@
                         <div class="card-header">
                             <div>
                                 <h3 class="mb-1">
-                                    {{ translate('Basic Information') }}
+                                    {{ 'Información básica' }}
                                 </h3>
                                 <p class="mb-0 fs-12">
-                                    {{ translate('Here you setup your all business information.') }}
+                                    {{ 'Aquí configura toda la información comercial.' }}
                                 </p>
                             </div>
                         </div>
@@ -75,38 +75,38 @@
                                             <div class="col-sm-6 col-md-6">
                                                 <div class="form-group mb-0">
                                                     <label class="form-label"
-                                                        for="store_name">{{ translate('messages.company_name') }} <span
+                                                        for="store_name">{{ 'nombre de empresa' }} <span
                                                             class="text-danger">*</span></label>
                                                     <input id="store_name" type="text" name="store_name"
                                                         value="{{ $name->value ?? '' }}" class="form-control"
-                                                        placeholder="{{ translate('messages.new_company') }}" required>
+                                                        placeholder="{{ 'nueva empresa' }}" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-md-6">
                                                 @php($email = \App\Models\BusinessSetting::where('key', 'email_address')->first())
                                                 <div class="form-group mb-0">
-                                                    <label class="form-label" for="email">{{ translate('messages.email') }}
+                                                    <label class="form-label" for="email">{{ 'correo electrónico' }}
                                                         <span class="text-danger">*</span></label>
                                                     <input id="email" type="email" value="{{ $email->value ?? '' }}"
                                                         name="email" class="form-control"
-                                                        placeholder="{{ translate('messages.Ex_:_ex@example.com') }}"
+                                                        placeholder="{{ 'Ej: ex@ejemplo.com' }}"
                                                         required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-md-6">
                                                 @php($phone = \App\Models\BusinessSetting::where('key', 'phone')->first())
                                                 <div class="form-group mb-0">
-                                                    <label class="form-label" for="phone">{{ translate('messages.phone') }}
+                                                    <label class="form-label" for="phone">{{ 'teléfono' }}
                                                     </label>
                                                     <input type="tel" value="{{ $phone->value ?? '' }}" id="phone"
                                                         name="phone" class="form-control"
-                                                        placeholder="{{ translate('messages.Ex: +3264124565') }}" required>
+                                                        placeholder="{{ 'Ej: +3264124565' }}" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-md-6">
                                                 <div class="form-group mb-0">
                                                     <label class="form-label text-capitalize"
-                                                        for="country">{{ translate('messages.country') }} <span
+                                                        for="country">{{ 'país' }} <span
                                                             class="text-danger">*</span></label>
                                                     <select id="country" name="country"
                                                         class="form-control  js-select2-custom">
@@ -369,7 +369,7 @@
                                                 @php($address = \App\Models\BusinessSetting::where('key', 'address')->first())
                                                 <div class="form-group mb-0">
                                                     <label class="form-label"
-                                                        for="address">{{ translate('messages.address') }} <span
+                                                        for="address">{{ 'DIRECCIÓN' }} <span
                                                             class="text-danger">*</span>
                                                         <span class="" data-toggle="tooltip" data-placement="right"
                                                             data-original-title="The physical location of your business">
@@ -377,7 +377,7 @@
                                                         </span>
                                                     </label>
                                                     <textarea type="text" id="address" name="address" class="form-control"
-                                                        placeholder="{{ translate('messages.Ex: address') }}" rows="1"
+                                                        placeholder="{{ 'Ej: dirección' }}" rows="1"
                                                         required>{{ $address->value ?? '' }}</textarea>
                                                 </div>
                                             </div>
@@ -392,14 +392,14 @@
                                                                     fill="#039D55" />
                                                             </svg>
                                                             <div class="w-0 flex-grow pl-2">
-                                                                {{ translate('clicking_on_the_map_will_set_Latitude_and_Longitude_automatically') }}
+                                                                {{ 'Al hacer clic en el mapa se establecerá la latitud y la longitud automáticamente.' }}
                                                             </div>
                                                         </div> -->
                                                         <input id="pac-input" class="controls rounded" data-toggle="tooltip"
                                                             data-placement="right"
-                                                            data-original-title="{{ translate('messages.search_your_location_here') }}"
+                                                            data-original-title="{{ 'busca tu ubicación aquí' }}"
                                                             type="text"
-                                                            placeholder="{{ translate('messages.search_here') }}" />
+                                                            placeholder="{{ 'buscar aquí' }}" />
                                                         <div id="location_map_canvas"
                                                             class="overflow-hidden rounded height-285px"></div>
 
@@ -411,7 +411,7 @@
                                                             <div class="form-group mb-0">
                                                                 <input type="text" id="latitude" name="latitude"
                                                                     class="w-auto border-0 p-0 m-0 text-center"
-                                                                    placeholder="{{ translate('messages.Ex:') }} -94.22213"
+                                                                    placeholder="{{ 'Ex:' }} -94.22213"
                                                                     value="{{ $default_location ? $default_location['lat'] : 0 }}"
                                                                     required readonly>
                                                             </div>
@@ -419,7 +419,7 @@
                                                             <div class="form-group mb-0">
                                                                 <input type="text" name="longitude"
                                                                     class="w-auto border-0 p-0 m-0 text-center"
-                                                                    placeholder="{{ translate('messages.Ex:') }} 103.344322"
+                                                                    placeholder="{{ 'Ex:' }} 103.344322"
                                                                     id="longitude"
                                                                     value="{{ $default_location ? $default_location['lng'] : 0 }}"
                                                                     required readonly>
@@ -437,9 +437,9 @@
                                     <div class="d-flex flex-column gap-4 shadow-sm h--37px">
                                         <div class="bg-light2 rounded p-20">
                                             <div class="mb-15">
-                                                <h4 class="mb-1">{{ translate('Upload Logo') }} </h4>
+                                                <h4 class="mb-1">{{ 'Subir logotipo' }} </h4>
                                                 <p class="mb-0 fs-12 gray-dark">
-                                                    {{translate('Upload your business logo')}}
+                                                    {{'Sube el logotipo de tu empresa'}}
                                                 </p>
                                             </div>
                                             @include('admin-views.partials._image-uploader', [
@@ -459,9 +459,9 @@
                                         <div class="bg-light2 rounded p-20">
                                             <div class="text-start">
                                                 <div class="mb-15">
-                                                    <h4 class="mb-1">{{ translate('Favicon') }} </h4>
+                                                    <h4 class="mb-1">{{ 'favicon' }} </h4>
                                                     <p class="mb-0 fs-12 gray-dark">
-                                                        {{translate('Upload your website favicon')}}
+                                                        {{'Sube el favicon de tu sitio web'}}
                                                     </p>
                                                 </div>
                                                 @include('admin-views.partials._image-uploader', [
@@ -488,14 +488,14 @@
                                             @php($default_location = $default_location?->value ? json_decode($default_location->value, true) : 0)
                                             <div class="form-group mb-0">
                                                 <label class="form-label text-capitalize"
-                                                    for="latitude">{{ translate('messages.latitude') }}<span
+                                                    for="latitude">{{ 'latitud' }}<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('messages.click_on_the_map_select_your_defaul_location') }}"><img
+                                                        data-original-title="{{ 'haga clic en el mapa seleccione su ubicación predeterminada' }}"><img
                                                             src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                            alt="{{ translate('messages.click_on_the_map_select_your_defaul_location') }}"></span></label>
+                                                            alt="{{ 'haga clic en el mapa seleccione su ubicación predeterminada' }}"></span></label>
                                                 <input type="text" id="latitude" name="latitude" class="form-control"
-                                                    placeholder="{{ translate('messages.Ex:') }} -94.22213"
+                                                    placeholder="{{ 'Ex:' }} -94.22213"
                                                     value="{{ $default_location ? $default_location['lat'] : 0 }}" required
                                                     readonly>
                                             </div>
@@ -503,14 +503,14 @@
                                         <div class="col-sm-6">
                                             <div class="form-group mb-0">
                                                 <label class="form-label text-capitalize"
-                                                    for="longitude">{{ translate('messages.longitude') }}<span
+                                                    for="longitude">{{ 'longitud' }}<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('messages.click_on_the_map_select_your_defaul_location') }}"><img
+                                                        data-original-title="{{ 'haga clic en el mapa seleccione su ubicación predeterminada' }}"><img
                                                             src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                            alt="{{ translate('messages.click_on_the_map_select_your_defaul_location') }}"></span></label>
+                                                            alt="{{ 'haga clic en el mapa seleccione su ubicación predeterminada' }}"></span></label>
                                                 <input type="text" name="longitude" class="form-control"
-                                                    placeholder="{{ translate('messages.Ex:') }} 103.344322" id="longitude"
+                                                    placeholder="{{ 'Ex:' }} 103.344322" id="longitude"
                                                     value="{{ $default_location ? $default_location['lng'] : 0 }}" required
                                                     readonly>
                                             </div>
@@ -522,9 +522,9 @@
                             <div class="info-notes-bg px-3 py-2 rounded fz-11  gap-2 align-items-center d-flex mt-20">
                                 <img src="{{asset('assets/admin/img/info-idea.svg')}}" alt="">
                                 <span>
-                                    {{translate('For the address setup you can simply drag the map to pick for the perfect')}}
-                                    <strong class="text-title"> {{translate('Lat(Latitude) & Log(Longitude)')}}</strong>
-                                    {{translate('value')}}.
+                                    {{'Para configurar la dirección, simplemente arrastre el mapa para elegir la ubicación perfecta.'}}
+                                    <strong class="text-title"> {{'Lat (latitud) y Log (longitud)'}}</strong>
+                                    {{'valor'}}.
                                 </span>
                             </div>
                         </div>
@@ -536,10 +536,10 @@
                         <div class="card-header">
                             <div>
                                 <h3 class="mb-1">
-                                    {{ translate('General Setup') }}
+                                    {{ 'Configuración general' }}
                                 </h3>
                                 <p class="mb-0 fs-12">
-                                    {{ translate('Here you can manage time settings to match with your business criteria') }}
+                                    {{ 'Aquí puede administrar la configuración de tiempo para que coincida con los criterios de su negocio.' }}
                                 </p>
                             </div>
                         </div>
@@ -547,10 +547,10 @@
                             <div class="shadow-sm p-xxl-20 p-xl-3 p-2 bg-white mb-20">
                                 <div class="mb-20">
                                     <h4 class="mb-1">
-                                        {{ translate('Time Setup') }}
+                                        {{ 'Configuración de hora' }}
                                     </h4>
                                     <p class="mb-0 fs-12">
-                                        {{ translate('Vendor Logo & Covers') }}
+                                        {{ 'Logotipo y portadas del proveedor' }}
                                     </p>
                                 </div>
                                 <div class="bg-light2 rounded p-xxl-20 p-3">
@@ -560,7 +560,7 @@
                                             @php($settings_timezone = $tz ? $tz->value : 0)
                                             <div class="form-group mb-0">
                                                 <label class="input-label d-flex align-items-center gap-1">
-                                                    {{ translate('messages.time_zone') }}
+                                                    {{ 'huso horario' }}
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <select name="timezone" class="form-control js-select2-custom">
@@ -586,14 +586,14 @@
                                             @php($tf = $tf ? $tf->value : '24')
                                             <div class="form-group mb-0">
                                                 <label for="time_format"
-                                                    class="form-label text-capitalize">{{ translate('messages.time_format') }}
+                                                    class="form-label text-capitalize">{{ 'formato de hora' }}
                                                     <span class="text-danger">*</span></label>
                                                 <!-- <select id="time_format" name="time_format" class="form-control">
                                                     <option value="12" {{ $tf == '12' ? 'selected' : '' }}>
-                                                        {{ translate('messages.12_hour') }}
+                                                        {{ '12 horas' }}
                                                     </option>
                                                     <option value="24" {{ $tf == '24' ? 'selected' : '' }}>
-                                                        {{ translate('messages.24_hour') }}
+                                                        {{ '24 horas' }}
                                                     </option>
                                                 </select> -->
                                                 <div class="resturant-type-group bg-white border">
@@ -601,14 +601,14 @@
                                                         <input class="form-check-input" type="radio" value="12"
                                                             name="time_format" {{ $tf == '12' ? 'checked' : '' }}>
                                                         <span class="form-check-label">
-                                                            {{translate('12 Hours')}}
+                                                            {{'12 horas'}}
                                                         </span>
                                                     </label>
                                                     <label class="form-check form--check mr-2 mr-md-4">
                                                         <input class="form-check-input" type="radio" value="24"
                                                             name="time_format" {{ $tf == '24' ? 'checked' : '' }}>
                                                         <span class="form-check-label">
-                                                            {{translate('24 Hours')}}
+                                                            {{'24 Horas'}}
                                                         </span>
                                                     </label>
                                                 </div>
@@ -621,10 +621,10 @@
 
                                 <div class="mb-20">
                                     <h4 class="mb-1">
-                                        {{ translate('Currency Setup') }}
+                                        {{ 'Configuración de moneda' }}
                                     </h4>
                                     <p class="mb-0 fs-12">
-                                        {{ translate('Here you can manage currency settings to match with your business criteria') }}
+                                        {{ 'Aquí puede administrar la configuración de moneda para que coincida con los criterios de su negocio.' }}
                                     </p>
                                 </div>
                                 <div class="bg-light2 rounded p-xxl-20 p-3">
@@ -633,7 +633,7 @@
                                             @php($currency_code = \App\Models\BusinessSetting::where('key', 'currency')->first())
                                             <div class="form-group mb-0">
                                                 <label class="form-label"
-                                                    for="currency">{{ translate('Currency Symbol') }}</label>
+                                                    for="currency">{{ 'Símbolo de moneda' }}</label>
                                                 <select id="change_currency" name="currency"
                                                     class="form-control js-select2-custom">
                                                     @foreach (\App\Models\Currency::orderBy('currency_code')->get() as $currency)
@@ -649,7 +649,7 @@
                                             @php($currency_symbol_position = \App\Models\BusinessSetting::where('key', 'currency_symbol_position')->first())
                                             <div class="form-group mb-0">
                                                 <label class="form-label text-capitalize"
-                                                    for="currency_symbol_position">{{ translate('Currency Position') }}
+                                                    for="currency_symbol_position">{{ 'Posición de moneda' }}
                                                 </label>
                                                 <div class="resturant-type-group bg-white border">
                                                     <label class="form-check form--check mr-2 mr-md-4">
@@ -657,7 +657,7 @@
                                                             name="currency_symbol_position" {{ $currency_symbol_position ? ($currency_symbol_position->value == 'left' ? 'checked' : '') : '' }}>
                                                         <span class="form-check-label">
                                                             ({{\App\CentralLogics\Helpers::currency_symbol()}})
-                                                            {{translate('Left')}}
+                                                            {{'Izquierda'}}
                                                         </span>
                                                     </label>
                                                     <label class="form-check form--check mr-2 mr-md-4">
@@ -665,7 +665,7 @@
                                                             name="currency_symbol_position" {{ $currency_symbol_position ? ($currency_symbol_position->value == 'right' ? 'checked' : '') : '' }}>
                                                         <span class="form-check-label">
                                                             ({{\App\CentralLogics\Helpers::currency_symbol()}})
-                                                            {{translate('Right')}}
+                                                            {{'Bien'}}
                                                         </span>
                                                     </label>
                                                 </div>
@@ -675,16 +675,16 @@
                                             @php($digit_after_decimal_point = \App\Models\BusinessSetting::where('key', 'digit_after_decimal_point')->first())
                                             <div class="form-group mb-0">
                                                 <label class="form-label text-capitalize"
-                                                    for="digit_after_decimal_point">{{ translate('messages.Digit after decimal point') }}
+                                                    for="digit_after_decimal_point">{{ 'Dígito después del punto decimal' }}
                                                 </label>
                                                 <span class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('how_many_fractional_digit_to_show_after_decimal_value') }}">
+                                                        data-original-title="{{ '¿Cuántos dígitos fraccionarios mostrar después del valor decimal?' }}">
                                                         <i class="tio-info text-muted"></i>
                                                 </span>
                                                 <input type="number" name="digit_after_decimal_point" class="form-control"
                                                     id="digit_after_decimal_point"
-                                                    placeholder="{{ translate('messages.ex_:_2') }}"
+                                                    placeholder="{{ 'ejemplo: 2' }}"
                                                     value="{{ $digit_after_decimal_point ? $digit_after_decimal_point->value : 0 }}"
                                                     min="0" max="4" required>
                                             </div>
@@ -702,19 +702,19 @@
                             <div class="shadow-sm p-xxl-20 p-xl-3 p-2 bg-white mb-20">
                                 <div class="mb-20">
                                     <h4 class="mb-1">
-                                        {{ translate('Business Model Setup') }}
+                                        {{ 'Configuración del modelo de negocio' }}
                                     </h4>
                                     <p class="mb-0 fs-12">
-                                        {{ translate('Setup your business time zone and format from here') }}
+                                        {{ 'Configure la zona horaria y el formato de su empresa desde aquí' }}
                                     </p>
                                 </div>
                                 <div class="bg-light2 rounded p-xxl-20 p-3">
                                     <div class="row g-3">
                                         <div class="col-lg-12">
-                                            <label class="form-label" for="footer_text">{{translate('Business Model')}}
+                                            <label class="form-label" for="footer_text">{{'Modelo de negocio'}}
                                                 <span class="text-danger">*</span>
                                                 <span class="form-label-secondary" data-toggle="tooltip"
-                                                    data-placement="right" data-original-title="{{ translate('Choose the model that decides how you earn money and process orders.') }}">
+                                                    data-placement="right" data-original-title="{{ 'Elige el modelo que decide cómo ganar dinero y procesar pedidos.' }}">
                                                     <i class="tio-info text-muted"></i>
                                                 </span>
                                             </label>
@@ -726,17 +726,17 @@
                                                                 <input type="checkbox" class="custom-control-input"
                                                                     id="subs" name="subscription_business_model" {{ $subscription_business_model ? 'checked' : '' }} value="1">
                                                                 <label class="custom-control-label" for="subs">
-                                                                    <h5 class="mb-1">{{ translate('Subscription') }}</h5>
+                                                                    <h5 class="mb-1">{{ 'Suscripción' }}</h5>
                                                                     <p class="mb-0 fs-12">
-                                                                        {{ translate('By selecting subscription based business model restaurants can run business with you based on subscription package.') }}
+                                                                        {{ 'Al seleccionar un modelo de negocio basado en suscripción, los restaurantes pueden hacer negocios con usted según el paquete de suscripción.' }}
                                                                     </p>
                                                                     <div
                                                                         class="d-flex p-2 px-3 rounded gap-2 bg-opacity-warning-10 mt-3">
                                                                         <i class="tio-info text-warning"></i>
                                                                         <p class="fz-12px mb-0">
-                                                                            {{translate('To active subscription based business model 1st you need to add subscription package from')}}
+                                                                            {{'Para activar el modelo de negocio basado en suscripción, primero debe agregar el paquete de suscripción de'}}
                                                                             <a href="{{route('admin.business-settings.subscriptionackage.index')}}"
-                                                                                class="fz-12px font-semibold info-dark text-underline">{{translate('Subscription Packages')}}</a>
+                                                                                class="fz-12px font-semibold info-dark text-underline">{{'Paquetes de suscripción'}}</a>
                                                                         </p>
                                                                     </div>
                                                                 </label>
@@ -749,20 +749,20 @@
                                                                 <input type="checkbox" class="custom-control-input"
                                                                     id="commission" name="commission_business_model" {{ $commission_business_model ? 'checked' : '' }} value="1">
                                                                 <label class="custom-control-label" for="commission">
-                                                                    <h5 class="mb-1">{{ translate('Commission') }}</h5>
+                                                                    <h5 class="mb-1">{{ 'Comisión' }}</h5>
                                                                     <p class="mb-0 fs-12">
-                                                                        {{ translate('By selecting commission based business model restaurants can run business with you based on commission based payment per order.') }}
+                                                                        {{ 'Al seleccionar un modelo de negocio basado en comisiones, los restaurantes pueden hacer negocios con usted basándose en el pago de comisiones por pedido.' }}
                                                                     </p>
                                                                     <div
                                                                         class="info-notes-bg px-3 py-2 rounded fz-11  gap-2 d-flex mt-20">
                                                                         <img src="{{asset('assets/admin/img/info-idea.svg')}}"
                                                                             alt="">
                                                                         <span>
-                                                                            {{translate('To set different commission for commission based restaurants.')}}
-                                                                            {{translate('Go to')}}: <span
-                                                                                class="fz-12px font-semibold info-dark">{{translate('Restaurant List')}}
-                                                                                > {{translate('Restaurant Details')}} >
-                                                                                {{translate('Business Plan')}}</span>
+                                                                            {{'Para establecer comisiones diferentes para restaurantes basados ​​en comisiones.'}}
+                                                                            {{'Ir a'}}: <span
+                                                                                class="fz-12px font-semibold info-dark">{{'Lista de restaurantes'}}
+                                                                                > {{'Detalles del restaurante'}} >
+                                                                                {{'plan de negocios'}}</span>
                                                                         </span>
                                                                     </div>
                                                                 </label>
@@ -776,17 +776,17 @@
                                                     @php($admin_commission = \App\Models\BusinessSetting::where('key', 'admin_commission')->first())
                                                     <div class="form-group mb-0">
                                                         <label class="form-label text-capitalize" for="admin_commission">
-                                                            {{ translate('messages.Default_Commission_Rate_On_Order') }} (%)
+                                                            {{ 'Tasa de comisión predeterminada en el pedido' }} (%)
                                                             <span class="text-danger">*</span>
                                                             <span class="form-label-secondary" data-toggle="tooltip"
                                                                 data-placement="right"
-                                                                data-original-title="{{ translate('messages.Set_up_‘Default_Commission_Rate’_on_every_Order._Admin_can_also_set_store-wise_different_commission_rates_from_respective_store_settings.') }}">
+                                                                data-original-title="{{ 'Configure la "Tasa de comisión predeterminada" en cada pedido. El administrador también puede establecer diferentes tasas de comisión para la tienda desde la configuración de la tienda respectiva.' }}">
                                                                 <i class="tio-info text-muted"></i>
                                                             </span>
                                                         </label>
                                                         <input type="number" name="admin_commission" class="form-control"
                                                             id="admin_commission"
-                                                            placeholder="{{ translate('messages.Ex:_10') }}"
+                                                            placeholder="{{ 'Ej: 10' }}"
                                                             value="{{ $admin_commission ? $admin_commission->value : 0 }}"
                                                             min="0" max="100" required>
                                                     </div>
@@ -796,17 +796,17 @@
                                                     <div class="form-group mb-0">
                                                         <label class="input-label text-capitalize d-flex alig-items-center"
                                                             for="admin_comission_in_delivery_charge">
-                                                            {{translate('messages.Commission_Rate_On_Delivery_Charge')}} (%)
+                                                            {{'Tarifa de comisión contra cargo de entrega'}} (%)
                                                             <span class="text-danger">*</span>
                                                             <span class="form-label-secondary ml-1" data-toggle="tooltip"
                                                                 data-placement="right"
-                                                                data-original-title="{{ translate('messages.Set_a_default_‘Commission_Rate’_for_freelance_deliverymen_(under_admin)_on_every_deliveryman. ') }}">
+                                                                data-original-title="{{ 'Establezca una "tasa de comisión" predeterminada para los repartidores independientes (bajo administrador) para cada repartidor.' }}">
                                                                 <i class="tio-info text-muted"></i>
                                                             </span>
                                                         </label>
                                                         <input type="number" name="admin_comission_in_delivery_charge"
                                                             class="form-control" id="admin_comission_in_delivery_charge"
-                                                            placeholder="{{ translate('messages.Ex:_10') }}" min="0"
+                                                            placeholder="{{ 'Ej: 10' }}" min="0"
                                                             max="100" step="0.01"
                                                             value="{{ $delivery_charge_comission ? $delivery_charge_comission->value : 0 }}">
                                                     </div>
@@ -816,16 +816,16 @@
                                                     <div class="form-group mb-0">
                                                         <label class="input-label text-capitalize d-flex alig-items-center"
                                                             for="tootli_direct_food_commission">
-                                                            {{ translate('messages.tootli_direct_food_commission') }} (%)
+                                                            {{ 'comisión directa de alimentos de tootli' }} (%)
                                                             <span class="form-label-secondary ml-1" data-toggle="tooltip"
                                                                 data-placement="right"
-                                                                data-original-title="{{ translate('messages.tootli_direct_food_commission_hint') }}">
+                                                                data-original-title="{{ 'sugerencia de comisión de alimentos directa de tootli' }}">
                                                                 <i class="tio-info text-muted"></i>
                                                             </span>
                                                         </label>
                                                         <input type="number" name="tootli_direct_food_commission"
                                                             class="form-control" id="tootli_direct_food_commission"
-                                                            placeholder="{{ translate('messages.Ex:_10') }}" min="0"
+                                                            placeholder="{{ 'Ej: 10' }}" min="0"
                                                             max="100" step="0.01"
                                                             value="{{ $tootli_direct_food_commission ? $tootli_direct_food_commission->value : 0 }}">
                                                     </div>
@@ -835,16 +835,16 @@
                                                     <div class="form-group mb-0">
                                                         <label class="input-label text-capitalize d-flex alig-items-center"
                                                             for="tootli_direct_delivery_commission">
-                                                            {{ translate('messages.tootli_direct_delivery_commission') }} (%)
+                                                            {{ 'comisión de entrega directa de tootli' }} (%)
                                                             <span class="form-label-secondary ml-1" data-toggle="tooltip"
                                                                 data-placement="right"
-                                                                data-original-title="{{ translate('messages.tootli_direct_delivery_commission_hint') }}">
+                                                                data-original-title="{{ 'sugerencia de comisión de entrega directa de tootli' }}">
                                                                 <i class="tio-info text-muted"></i>
                                                             </span>
                                                         </label>
                                                         <input type="number" name="tootli_direct_delivery_commission"
                                                             class="form-control" id="tootli_direct_delivery_commission"
-                                                            placeholder="{{ translate('messages.Ex:_10') }}" min="0"
+                                                            placeholder="{{ 'Ej: 10' }}" min="0"
                                                             max="100" step="0.01"
                                                             value="{{ $tootli_direct_delivery_commission ? $tootli_direct_delivery_commission->value : 0 }}">
                                                     </div>
@@ -881,10 +881,10 @@
                                     <div class="col-xxl-9 col-lg-8 col-md-7 col-sm-6">
                                         <div>
                                             <h4 class="mb-1">
-                                                {{ translate('Additional Charge Setup') }}
+                                                {{ 'Configuración de cargo adicional' }}
                                             </h4>
                                             <p class="mb-0 fs-12">
-                                                {{ translate('By switching this feature ON, Customer need to pay the amount you set. ') }}
+                                                {{ 'Al activar esta función, el cliente debe pagar la cantidad que usted establezca.' }}
                                             </p>
                                         </div>
                                     </div>
@@ -896,16 +896,16 @@
                                                 class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
                                                 <span class="pr-1 d-flex align-items-center switch--label">
                                                     <span class="line--limit-1">
-                                                        {{translate('messages.Status') }}
+                                                        {{'Estado' }}
                                                     </span>
                                                 </span>
                                                 <input type="checkbox" data-id="additional_charge_status" data-type="toggle"
                                                     data-image-on="{{ asset('assets/admin/img/modal/dm-tips-on.png') }}"
                                                     data-image-off="{{ asset('assets/admin/img/modal/dm-tips-off.png') }}"
-                                                    data-title-on="<strong>{{ translate('messages.Want_to_enable_additional_charge?') }}</strong>"
-                                                    data-title-off="<strong>{{ translate('messages.Want_to_disable_additional_charge?') }}</strong>"
-                                                    data-text-on="<p>{{ translate('messages.If_you_enable_this,_additional_charge_will_be_added_with_order_amount,_it_will_be_added_in_admin_wallet') }}</p>"
-                                                    data-text-off="<p>{{ translate('messages.If_you_disable_this,_additional_charge_will_not_be_added_with_order_amount.') }}</p>"
+                                                    data-title-on="<strong>{{ '¿Quieres habilitar el cargo adicional?' }}</strong>"
+                                                    data-title-off="<strong>{{ '¿Quieres desactivar el cargo adicional?' }}</strong>"
+                                                    data-text-on="<p>{{ 'Si habilita esto, se agregará un cargo adicional con el monto del pedido, se agregará en la billetera administrativa' }}</p>"
+                                                    data-text-off="<p>{{ 'Si desactiva esto, no se agregará ningún cargo adicional al monto del pedido.' }}</p>"
                                                     class="status toggle-switch-input dynamic-checkbox-toggle" value="1"
                                                     name="additional_charge_status" id="additional_charge_status" {{ $additional_charge_status == 1 ? 'checked' : '' }}>
                                                 <span class="toggle-switch-label text">
@@ -924,14 +924,14 @@
                                                     class="form-label d-flex justify-content-between text-capitalize mb-1"
                                                     for="additional_charge_name">
                                                     <span
-                                                        class="line--limit-1">{{ translate('messages.additional_charge_name') }}
+                                                        class="line--limit-1">{{ 'nombre del cargo adicional' }}
                                                         <span class="text-danger">*</span>
                                                     </span>
                                                 </label>
 
                                                 <input type="text" name="additional_charge_name" class="form-control"
                                                     id="additional_charge_name"
-                                                    placeholder="{{ translate('messages.Ex:_Processing_Fee') }}"
+                                                    placeholder="{{ 'Ej: tarifa de procesamiento' }}"
                                                     value="{{ $additional_charge_name ? $additional_charge_name->value : '' }}"
                                                     {{ isset($additional_charge_status) ? '' : 'readonly' }} required>
                                             </div>
@@ -942,14 +942,14 @@
                                                 <label
                                                     class="form-label d-flex justify-content-between text-capitalize mb-1"
                                                     for="additional_charge">
-                                                    <span class="line--limit-1">{{ translate('messages.charge_amount') }}
+                                                    <span class="line--limit-1">{{ 'monto del cargo' }}
                                                         ({{ \App\CentralLogics\Helpers::currency_symbol() }}) <span
                                                             class="text-danger">*</span>
                                                     </span>
                                                 </label>
 
                                                 <input type="number" name="additional_charge" class="form-control"
-                                                    id="additional_charge" placeholder="{{ translate('messages.Ex:_10') }}"
+                                                    id="additional_charge" placeholder="{{ 'Ej: 10' }}"
                                                     value="{{ $additional_charge ? $additional_charge->value : 0 }}" min="0"
                                                     step=".01" {{ isset($additional_charge_status) ? '' : 'readonly' }}>
                                             </div>
@@ -959,17 +959,17 @@
                                 <div class="info-notes-bg px-3 py-2 rounded fz-11  gap-2 d-flex mt-20">
                                     <img src="{{asset('assets/admin/img/info-idea.svg')}}" alt="">
                                     <span>
-                                        {{translate('Only admin will get the additional amount & customer must pay the amount.')}}
+                                        {{'Solo el administrador recibirá el monto adicional y el cliente deberá pagar el monto.'}}
                                     </span>
                                 </div>
                             </div>
                             <div class="shadow-sm p-xxl-20 p-xl-3 p-2 bg-white">
                                 <div class="mb-20">
                                     <h4 class="mb-1">
-                                        {{ translate('Copyright & Cookies Text') }}
+                                        {{ 'Texto sobre derechos de autor y cookies' }}
                                     </h4>
                                     <p class="mb-0 fs-12">
-                                        {{ translate('Add the necessary texts to display in required sections') }}
+                                        {{ 'Agregue los textos necesarios para mostrar en las secciones requeridas' }}
                                     </p>
                                 </div>
                                 <div class="bg-light2 rounded p-xxl-20 p-3">
@@ -978,16 +978,16 @@
                                             @php($footer_text = \App\Models\BusinessSetting::where('key', 'footer_text')->first())
                                             <div class="form-group mb-0">
                                                 <label class="form-label"
-                                                    for="footer_text">{{ translate('Copyright Text') }}
+                                                    for="footer_text">{{ 'Texto de derechos de autor' }}
                                                     <span class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('messages.make_visitors_aware_of_your_business‘s_rights_&_legal_information.') }}">
+                                                        data-original-title="{{ 'Haga que los visitantes conozcan los derechos y la información legal de su empresa.' }}">
                                                         <i class="tio-info text-muted"></i>
                                                     </span>
                                                 </label>
                                                 <textarea type="text" id="footer_text" maxlength="100" name="footer_text"
                                                     class="form-control" rows="3"
-                                                    placeholder="{{ translate('messages.Ex_:_Copyright_Text') }}"
+                                                    placeholder="{{ 'Ej: texto de derechos de autor' }}"
                                                     required>{{ $footer_text->value ?? '' }}</textarea>
                                                 <span
                                                     class="text-right text-counting color-A7A7A7 d-block mt-1">0/100</span>
@@ -996,16 +996,16 @@
                                         <div class="col-md-6 col-xl-6">
                                             @php($cookies_text = \App\Models\BusinessSetting::where('key', 'cookies_text')->first())
                                             <div class="form-group mb-0">
-                                                <label class="form-label" for="cookies_text">{{ translate('Cookies Text') }}
+                                                <label class="form-label" for="cookies_text">{{ 'Texto de cookies' }}
                                                 </label>
                                                 <span class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('messages.make_visitors_aware_of_your_business‘s_rights_&_legal_information.') }}">
+                                                        data-original-title="{{ 'Haga que los visitantes conozcan los derechos y la información legal de su empresa.' }}">
                                                         <i class="tio-info text-muted"></i>
                                                     </span>
                                                 <textarea type="text" id="cookies_text" maxlength="100" name="cookies_text"
                                                     class="form-control " rows="3"
-                                                    placeholder="{{ translate('messages.Ex_:_Cookies_Text') }}"
+                                                    placeholder="{{ 'Ej: texto de cookies' }}"
                                                     required>{{ $cookies_text->value ?? '' }}</textarea>
                                                 <span
                                                     class="text-right text-counting color-A7A7A7 d-block mt-1">0/100</span>
@@ -1021,13 +1021,13 @@
                 <div class="col-lg-12">
                     <h4 class="card-title mb-3 d-flex align-items-center"> <span class="card-header-icon mr-2"><i
                                 class="tio-neighborhood"></i></span>
-                        <span>{{ translate('messages.Business_Rules_setup') }} </span>
+                        <span>{{ 'Configuración de reglas comerciales' }} </span>
                     </h4>
                     <div class="card">
                         <div class="card-body">
                             <div class="__bg-F8F9FC-card p-0 mt-4">
                                 <div class="border-bottom p-3">
-                                    <h4 class="card-title m-0 text--title">{{translate('Payment')}}</h4>
+                                    <h4 class="card-title m-0 text--title">{{'Pago'}}</h4>
                                 </div>
                                 <div class="card-body">
                                     <div class="row g-3 align-items-end">
@@ -1039,23 +1039,23 @@
                                                     class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
                                                     <span class="pr-1 d-flex align-items-center switch--label">
                                                         <span class="line--limit-1">
-                                                            {{ translate('messages.partial_payment') }}
+                                                            {{ 'pago parcial' }}
                                                         </span>
                                                         <span class="form-label-secondary text-danger d-flex"
                                                             data-toggle="tooltip" data-placement="right"
-                                                            data-original-title="{{ translate('messages.If_enabled,_customers_can_make_partial_payments._For_example,_a_customer_can_pay_$20_initially_out_of_their_$50_payment_&_use_other_payment_methods_for_the_rest._Partial_payments_must_be_made_through_their_wallets.')}}"><img
+                                                            data-original-title="{{ 'Si está habilitado, los clientes pueden realizar pagos parciales. Por ejemplo, un cliente puede pagar inicialmente $20 de su pago de $50 y utilizar otros métodos de pago para el resto. Los pagos parciales deberán realizarse a través de sus billeteras.'}}"><img
                                                                 src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                                alt="{{ translate('messages.customer_varification_toggle') }}">
+                                                                alt="{{ 'alternancia de variación del cliente' }}">
                                                             *
                                                         </span>
                                                     </span>
                                                     <input type="checkbox" data-id="partial_payment" data-type="toggle"
                                                         data-image-on="{{ asset('assets/admin/img/modal/schedule-on.png') }}"
                                                         data-image-off="{{ asset('assets/admin/img/modal/schedule-off.png') }}"
-                                                        data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.partial_payment_?') }}</strong>"
-                                                        data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.partial_payment_?') }}</strong>"
-                                                        data-text-on="<p>{{ translate('messages.If_you_enable_this,_customers_can_choose_partial_payment_during_checkout.') }}</p>"
-                                                        data-text-off="<p>{{ translate('messages.If_you_disable_this,_the_partial_payment_feature_will_be_hidden.') }}</p>"
+                                                        data-title-on="{{ 'Quiere habilitar' }} <strong>{{ 'pago parcial?' }}</strong>"
+                                                        data-title-off="{{ 'Quiere deshabilitar' }} <strong>{{ 'pago parcial?' }}</strong>"
+                                                        data-text-on="<p>{{ 'Si habilita esto, los clientes pueden elegir el pago parcial durante el proceso de pago.' }}</p>"
+                                                        data-text-off="<p>{{ 'Si desactiva esto, la función de pago parcial estará oculta.' }}</p>"
                                                         class="status toggle-switch-input dynamic-checkbox-toggle" value="1"
                                                         name="partial_payment_status" id="partial_payment" {{ $partial_payment == 1 ? 'checked' : '' }}>
                                                     <span class="toggle-switch-label text">
@@ -1068,10 +1068,10 @@
                                             @php($partial_payment_method = \App\Models\BusinessSetting::where('key', 'partial_payment_method')->first())
                                             <div class="form-group mb-0">
                                                 <label class="input-label text-capitalize d-flex alig-items-center"><span
-                                                        class="line--limit-1">{{ translate('Can_Pay_the_Rest_Amount_using') }}
+                                                        class="line--limit-1">{{ 'Puede pagar el monto restante usando' }}
                                                         <span class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('messages.Set_the_method(s)_that_customers_can_pay_the_remainder_after_partial_payment.') }}">
+                                                        data-original-title="{{ 'Establezca los métodos con los que los clientes pueden pagar el resto después del pago parcial.' }}">
                                                         <i class="tio-info text-muted"></i>
                                                     </span>
                                                     </span>
@@ -1081,21 +1081,21 @@
                                                         <input class="form-check-input" type="radio" value="cod"
                                                             name="partial_payment_method" {{ $partial_payment_method ? ($partial_payment_method->value == 'cod' ? 'checked' : '') : '' }}>
                                                         <span class="form-check-label">
-                                                            {{translate('cod')}}
+                                                            {{'bacalao'}}
                                                         </span>
                                                     </label>
                                                     <label class="form-check form--check">
                                                         <input class="form-check-input" type="radio" value="digital_payment"
                                                             name="partial_payment_method" {{ $partial_payment_method ? ($partial_payment_method->value == 'digital_payment' ? 'checked' : '') : '' }}>
                                                         <span class="form-check-label">
-                                                            {{translate('digital_payment')}}
+                                                            {{'pago digital'}}
                                                         </span>
                                                     </label>
                                                     <label class="form-check form--check">
                                                         <input class="form-check-input" type="radio" value="both"
                                                             name="partial_payment_method" {{ $partial_payment_method ? ($partial_payment_method->value == 'both' ? 'checked' : '') : '' }}>
                                                         <span class="form-check-label">
-                                                            {{translate('both')}}
+                                                            {{'ambos'}}
                                                         </span>
                                                     </label>
                                                 </div>
@@ -1112,10 +1112,10 @@
         <div class="mt-0 footer-sticky">
             <div class="container-fluid">
                 <div class="btn--container justify-content-end py-3">
-                    <button type="reset" class="btn btn--reset min-w-120px">{{ translate('messages.reset') }}</button>
+                    <button type="reset" class="btn btn--reset min-w-120px">{{ 'reiniciar' }}</button>
                     <button type="{{ env('APP_MODE') != 'demo' ? 'submit' : 'button' }}"
                         class="btn btn--primary call-demo min-w-120px"><i class="tio-save">x</i>
-                        {{ translate('save_information') }}</button>
+                        {{ 'guardar información' }}</button>
                 </div>
             </div>
         </div>
@@ -1141,9 +1141,9 @@
                             <h5 class="modal-title"></h5>
                         </div>
                         <div class="text-center">
-                            <h3> {{ translate('Are_you_sure_to_change_the_currency_?') }}</h3>
+                            <h3> {{ '¿Estás seguro de cambiar la moneda?' }}</h3>
                             <div>
-                                <p>{{ translate('If_you_enable_this_currency,_you_must_active_at_least_one_digital_payment_method_that_supports_this_currency._Otherwise_customers_cannot_pay_via_digital_payments_from_the_app_and_websites._And_Also_restaurants_cannot_pay_you_digitally') }}
+                                <p>{{ 'Si habilita esta moneda, debe activar al menos un método de pago digital que admita esta moneda. De lo contrario, los clientes no pueden pagar mediante pagos digitales desde la aplicación y los sitios web. Y además los restaurantes no te pueden pagar digitalmente' }}
                                 </p>
                             </div>
                         </div>
@@ -1151,15 +1151,15 @@
                         <div class="text-center mb-4">
                             <a class="text--underline"
                                 href="{{ route('admin.business-settings.third-party.payment-method') }}">
-                                {{ translate('Go_to_payment_method_settings.') }}</a>
+                                {{ 'Vaya a la configuración del método de pago.' }}</a>
                         </div>
                     </div>
 
                     <div class="btn--container justify-content-center">
                         <button data-dismiss="modal" id="confirm-currency-change"
-                            class="btn btn--cancel min-w-120">{{translate("Cancel")}}</button>
+                            class="btn btn--cancel min-w-120">{{'Cancelar'}}</button>
                         <button data-dismiss="modal" type="button"
-                            class="btn btn--primary min-w-120">{{translate('OK')}}</button>
+                            class="btn btn--primary min-w-120">{{'DE ACUERDO'}}</button>
 
                     </div>
                 </div>
@@ -1241,14 +1241,14 @@
             toastr.warning('Sorry! You can not enable maintenance mode in demo!');
         @else
             Swal.fire({
-                title: '{{ translate('messages.Are you sure?') }}',
-                text: '{{ translate('messages.all_your_apps_and_customer_website_will_be_disabled_until_you_‘Turn_Off’ _maintenance_mode.') }}',
+                title: '{{ '¿Está seguro?' }}',
+                text: '{{ 'todas sus aplicaciones y el sitio web del cliente se desactivarán hasta que "Desactive" el modo de mantenimiento.' }}',
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#00868F',
-                cancelButtonText: '{{ translate('messages.no') }}',
-                confirmButtonText: '{{ translate('messages.yes') }}',
+                cancelButtonText: '{{ 'No' }}',
+                confirmButtonText: '{{ 'Sí' }}',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {

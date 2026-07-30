@@ -10,28 +10,28 @@
     <table>
         <thead>
             <tr>
-                <th>{{ translate('Filter_Criteria') }}</th>
+                <th>{{ 'Criterios de filtrado' }}</th>
                 <th></th>
                 <th>
-                    {{ translate('Search_Bar_Content')  }}: {{ $data['search'] ?? translate('N/A') }}
+                    {{ 'Contenido de la barra de búsqueda'  }}: {{ $data['search'] ?? 'N / A' }}
                 </th>
                 <th> </th>
                 </tr>
 
 
         <tr>
-            <th>{{ translate('sl') }}</th>
+            <th>{{ 'SL' }}</th>
             <th>{{ translate($tripOrOrder.'_ID') }}</th>
             <th>{{ translate($tripOrOrder.'_Time') }}</th>
-            <th>{{ translate('Total_'.$tripOrOrder.'_amount') }}</th>
+            <th>{{ 'Total \'.$tripOrOrder.\' cantidad' }}</th>
             <th>{{ translate($storeOrProvider.'_Earnings') }}</th>
-            <th>{{ translate('Admin_Earnings') }}</th>
+            <th>{{ 'Ganancias de administrador' }}</th>
             @if($data['is_provider'])
-                <th>{{ translate('Additional_charge') }}</th>
+                <th>{{ 'Cargo adicional' }}</th>
             @else
-                <th>{{ translate('Delivery_Fee') }}</th>
+                <th>{{ 'Tarifa de entrega' }}</th>
             @endif
-            <th>{{ translate('Vat/Tax') }}</th>
+            <th>{{ 'IVA/Impuesto' }}</th>
 
         </thead>
         <tbody>
@@ -39,7 +39,7 @@
             <tr>
         <td>{{ $loop->index+1}}</td>
         <td>{{ $data['is_provider'] ? $tr->trip_id : $tr->order_id }}</td>
-        <td>{{ $tr->created_at->format('Y-m-d '.config('timeformat')) ??  translate('N/A') }}</td>
+        <td>{{ $tr->created_at->format('Y-m-d '.config('timeformat')) ??  'N / A' }}</td>
 
         <td>
             {{ \App\CentralLogics\Helpers::format_currency($data['is_provider'] ? $tr->trip_amount : $tr->order_amount) }}

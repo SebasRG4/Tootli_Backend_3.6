@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-lg-12 text-center "><h1 >{{ translate('store_sales_reports') }}</h1></div>
+    <div class="col-lg-12 text-center "><h1 >{{ 'informes de ventas de la tienda' }}</h1></div>
     <div class="col-lg-12">
 
 
@@ -7,25 +7,25 @@
     <table>
         <thead>
             <tr>
-                <th>{{ translate('Search_Criteria') }}</th>
+                <th>{{ 'Criterios de búsqueda' }}</th>
                 <th></th>
                 <th></th>
                 <th>
-                    {{ translate('zone' )}} - {{ $data['zone']??translate('all') }}
+                    {{ 'zona'}} - {{ $data['zone']??'todo' }}
                     <br>
-                    {{ translate('store' )}} - {{ $data['store']??translate('all') }}
+                    {{ 'Negocio'}} - {{ $data['store']??'todo' }}
                     @if ($data['from'])
                     <br>
-                    {{ translate('from' )}} - {{ $data['from']?Carbon\Carbon::parse($data['from'])->format('d M Y'):'' }}
+                    {{ 'de'}} - {{ $data['from']?Carbon\Carbon::parse($data['from'])->format('d M Y'):'' }}
                     @endif
                     @if ($data['to'])
                     <br>
-                    {{ translate('to' )}} - {{ $data['to']?Carbon\Carbon::parse($data['to'])->format('d M Y'):'' }}
+                    {{ 'a'}} - {{ $data['to']?Carbon\Carbon::parse($data['to'])->format('d M Y'):'' }}
                     @endif
                     <br>
-                    {{ translate('filter')  }}- {{  translate($data['filter']) }}
+                    {{ 'filtrar'  }}- {{  translate($data['filter']) }}
                     <br>
-                    {{ translate('Search_Bar_Content')  }}- {{ $data['search'] ??translate('N/A') }}
+                    {{ 'Contenido de la barra de búsqueda'  }}- {{ $data['search'] ??'N / A' }}
 
                 </th>
                 <th> </th>
@@ -34,17 +34,17 @@
                 <th></th>
                 </tr>
             <tr>
-                <th>{{ translate('Analytics') }}</th>
+                <th>{{ 'Analítica' }}</th>
                 <th></th>
                 <th></th>
                 <th>
-                    {{ translate('gross_sale')  }}- {{ \App\CentralLogics\Helpers::number_format_short($data['orders']->sum('order_amount')) }}
+                    {{ 'venta bruta'  }}- {{ \App\CentralLogics\Helpers::number_format_short($data['orders']->sum('order_amount')) }}
                     <br>
-                    {{ translate('total_tax')  }}- {{ \App\CentralLogics\Helpers::number_format_short($data['orders']->sum('total_tax_amount')) }}
+                    {{ 'impuesto total'  }}- {{ \App\CentralLogics\Helpers::number_format_short($data['orders']->sum('total_tax_amount')) }}
                     <br>
-                    {{ translate('total_commission')  }}- {{ \App\CentralLogics\Helpers::number_format_short($data['orders']->sum('transaction_sum_admin_commission')+$data['orders']->sum('transaction_sum_delivery_fee_comission')-$data['orders']->sum('transaction_sum_admin_expense')) }}
+                    {{ 'comisión total'  }}- {{ \App\CentralLogics\Helpers::number_format_short($data['orders']->sum('transaction_sum_admin_commission')+$data['orders']->sum('transaction_sum_delivery_fee_comission')-$data['orders']->sum('transaction_sum_admin_expense')) }}
                     <br>
-                    {{ translate('total_store_earning')  }}- {{ \App\CentralLogics\Helpers::number_format_short($data['orders']->sum('transaction_sum_store_amount')) }}
+                    {{ 'ganancia total de la tienda'  }}- {{ \App\CentralLogics\Helpers::number_format_short($data['orders']->sum('transaction_sum_store_amount')) }}
                 </th>
                 <th> </th>
                 <th></th>
@@ -52,15 +52,15 @@
                 <th></th>
             </tr>
         <tr>
-            <th>{{ translate('sl') }}</th>
-            <th>{{translate('product_image')}}</th>
-            <th>{{ translate('Product_name') }}</th>
-            <th>{{ translate('Available_Variations') }}</th>
-            <th>{{ translate('QTY_Sold') }}</th>
+            <th>{{ 'SL' }}</th>
+            <th>{{'imagen del producto'}}</th>
+            <th>{{ 'Nombre del producto' }}</th>
+            <th>{{ 'Variaciones disponibles' }}</th>
+            <th>{{ 'Cantidad vendida' }}</th>
             <th>
-                {{ translate('Gross_Sale') }}</th>
+                {{ 'Venta bruta' }}</th>
             <th>
-                {{ translate('Discount_Given') }}</th>
+                {{ 'Descuento otorgado' }}</th>
         </thead>
         <tbody>
         @foreach($data['items'] as $key => $item)
@@ -70,9 +70,9 @@
             <td>{{  $item['name']  }}</td>
             <td>
                 @if ($item->module->module_type == 'food')
-                {{ \App\CentralLogics\Helpers::get_food_variations($item->food_variations) == "  "  ? translate('N/A'): \App\CentralLogics\Helpers::get_food_variations($item->food_variations) }}
+                {{ \App\CentralLogics\Helpers::get_food_variations($item->food_variations) == "  "  ? 'N / A': \App\CentralLogics\Helpers::get_food_variations($item->food_variations) }}
                 @else
-                {{ \App\CentralLogics\Helpers::get_attributes($item->choice_options) == "  "  ? translate('N/A'): \App\CentralLogics\Helpers::get_attributes($item->choice_options) }}
+                {{ \App\CentralLogics\Helpers::get_attributes($item->choice_options) == "  "  ? 'N / A': \App\CentralLogics\Helpers::get_attributes($item->choice_options) }}
                 @endif
             </td>
             <td>

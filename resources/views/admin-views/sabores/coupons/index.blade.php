@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Coupons'))
+@section('title', 'Cupones')
 
 @section('content')
     <div class="content container-fluid">
@@ -8,7 +8,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon"><i class="tio-gift"></i></span>
-                <span>{{ translate('Restaurant Coupons') }}</span>
+                <span>{{ 'Cupones de restaurante' }}</span>
             </h1>
         </div>
 
@@ -24,15 +24,15 @@
                                     <div class="input-group-text"><i class="tio-search"></i></div>
                                 </div>
                                 <input type="search" name="search" class="form-control"
-                                    placeholder="{{ translate('Search by title or code') }}" value="{{ $search }}">
-                                <button type="submit" class="btn btn-primary">{{ translate('Search') }}</button>
+                                    placeholder="{{ 'Buscar por título o código' }}" value="{{ $search }}">
+                                <button type="submit" class="btn btn-primary">{{ 'Buscar' }}</button>
                             </div>
                         </form>
                     </div>
                     <div class="col-lg-4">
                         <select name="store_id" class="form-control"
                             onchange="location.href='{{ route('admin.sabores.coupons') }}?store_id=' + this.value + '&search={{ $search }}'">
-                            <option value="">{{ translate('All Restaurants') }}</option>
+                            <option value="">{{ 'Todos los restaurantes' }}</option>
                             @foreach($stores as $store)
                                 <option value="{{ $store->id }}" {{ $store_id == $store->id ? 'selected' : '' }}>
                                     {{ $store->name }}
@@ -49,13 +49,13 @@
                     class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
                     <thead class="thead-light">
                         <tr>
-                            <th>{{ translate('ID') }}</th>
-                            <th>{{ translate('Title') }}</th>
-                            <th>{{ translate('Code') }}</th>
-                            <th>{{ translate('Restaurant') }}</th>
-                            <th>{{ translate('Discount') }}</th>
-                            <th>{{ translate('Valid Period') }}</th>
-                            <th>{{ translate('Status') }}</th>
+                            <th>{{ 'IDENTIFICACIÓN' }}</th>
+                            <th>{{ 'Título' }}</th>
+                            <th>{{ 'Código' }}</th>
+                            <th>{{ 'Restaurante' }}</th>
+                            <th>{{ 'Descuento' }}</th>
+                            <th>{{ 'Período válido' }}</th>
+                            <th>{{ 'Estado' }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -90,9 +90,9 @@
                                 </td>
                                 <td>
                                     @if($coupon->status && $coupon->expire_date >= now())
-                                        <span class="badge badge-soft-success">{{ translate('Active') }}</span>
+                                        <span class="badge badge-soft-success">{{ 'Activo' }}</span>
                                     @else
-                                        <span class="badge badge-soft-secondary">{{ translate('Inactive') }}</span>
+                                        <span class="badge badge-soft-secondary">{{ 'Inactivo' }}</span>
                                     @endif
                                 </td>
                             </tr>
@@ -101,7 +101,7 @@
                                 <td colspan="7" class="text-center">
                                     <img class="mb-3 w-160" src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}"
                                         alt="">
-                                    <p class="mb-0">{{ translate('No coupons found') }}</p>
+                                    <p class="mb-0">{{ 'No se encontraron cupones' }}</p>
                                 </td>
                             </tr>
                         @endforelse

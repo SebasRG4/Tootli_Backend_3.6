@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.third_party_apis'))
+@section('title', 'API de terceros')
 
 @push('css_or_js')
 
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/api.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.third_party_apis')}}
+                    {{'API de terceros'}}
                 </span>
             </h1>
             @include('admin-views.business-settings.partials.third-party-links')
@@ -29,12 +29,12 @@
         @php($map_api_key_server=$map_api_key_server?$map_api_key_server->value:null)
             <div class="card-header card-header-shadow border-0 align-items-center">
                 <h5 class="card-title align-items-center text--title">
-                    {{translate('Google Map API Setup')}}
+                    {{'Configuración de la API de mapas de Google'}}
                 </h5>
                 <div class="blinkings active lg-top">
                     <i class="tio-info-outined"></i>
                     <div class="business-notes">
-                        <h6><img src="{{asset('assets/admin/img/notes.png')}}" alt=""> {{translate('Note')}}</h6>
+                        <h6><img src="{{asset('assets/admin/img/notes.png')}}" alt=""> {{'Nota'}}</h6>
                         <div>
                             {{translate('Without configuring this section map functionality will not work properly. Thus the whole
                                  system will not work as it planned')}}
@@ -48,7 +48,7 @@
                         <i class="tio-info"></i>
                     </div>
                     <div>
-                        {{translate('messages.map_api_hint_map_api_hint_2')}}
+                        {{'sugerencia de API de mapa sugerencia de API de mapa 2'}}
                     </div>
                 </div>
                 <div class="py-1"></div>
@@ -58,22 +58,22 @@
                     <div class="row gy-3">
                         <div class="col-md-6">
                             <div class="form-group mb-0">
-                                <label for="map_api_key" class="input-label">{{translate('messages.map_api_key')}} ({{translate('messages.client')}})</label>
-                                <input id="map_api_key" type="text" placeholder="{{translate('messages.map_api_key')}} ({{translate('messages.client')}})" class="form-control" name="map_api_key"
+                                <label for="map_api_key" class="input-label">{{'clave de API de mapa'}} ({{'cliente'}})</label>
+                                <input id="map_api_key" type="text" placeholder="{{'clave de API de mapa'}} ({{'cliente'}})" class="form-control" name="map_api_key"
                                     value="{{env('APP_MODE')!='demo'?$map_api_key??'':''}}" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group mb-0">
-                                <label for="map_api_key_server" class="input-label">{{translate('messages.map_api_key')}} ({{translate('messages.server')}})</label>
-                                <input id="map_api_key_server" type="text" placeholder="{{translate('messages.map_api_key')}} ({{translate('messages.server')}})" class="form-control" name="map_api_key_server"
+                                <label for="map_api_key_server" class="input-label">{{'clave de API de mapa'}} ({{'servidor'}})</label>
+                                <input id="map_api_key_server" type="text" placeholder="{{'clave de API de mapa'}} ({{'servidor'}})" class="form-control" name="map_api_key_server"
                                     value="{{env('APP_MODE')!='demo'?$map_api_key_server??'':''}}" required>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="btn--container justify-content-end">
-                                <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                                <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}"  class="btn btn--primary call-demo">{{translate('messages.save')}}</button>
+                                <button type="reset" class="btn btn--reset">{{'reiniciar'}}</button>
+                                <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}"  class="btn btn--primary call-demo">{{'ahorrar'}}</button>
                             </div>
                         </div>
                     </div>

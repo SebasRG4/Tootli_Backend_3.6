@@ -9,7 +9,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ translate('Email_Template') }}</title>
+    <title>{{ 'Plantilla de correo electrónico' }}</title>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap');
@@ -261,7 +261,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                     <img class="mb-2 mail-img-2"
                                         src="{{ \App\CentralLogics\Helpers::get_full_url('business', $logo?->value ?? '', $logo?->storage[0]?->value ?? 'public', 'favicon') }}"
                                         alt="">
-                                    <h3 class="mb-3 mt-0">{{ translate('Order_Info') }}</h3>
+                                    <h3 class="mb-3 mt-0">{{ 'Información del pedido' }}</h3>
                                 </td>
                             </tr>
                             <tr>
@@ -270,13 +270,13 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                         <tbody>
                                             <tr>
                                                 <td style="width:150px">
-                                                    <h3 class="subtitle">{{ translate('Order_Summary') }}</h3>
-                                                    <div class="d-block">{{ translate('Order') }}# {{ $order->id }}
+                                                    <h3 class="subtitle">{{ 'Resumen del pedido' }}</h3>
+                                                    <div class="d-block">{{ 'Orden' }}# {{ $order->id }}
                                                     </div>
                                                     <div class="d-block">{{ $order->created_at }}</div>
                                                 </td>
                                                 <td class="px-3" style="width:100px">
-                                                    <h3 class="subtitle">{{ translate('Delivery_Address') }}</h3>
+                                                    <h3 class="subtitle">{{ 'Dirección de entrega' }}</h3>
                                                     @if ($order->delivery_address)
                                                         @php($address = json_decode($order->delivery_address, true))
                                                         <div class="d-block">
@@ -311,16 +311,16 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                         <thead class="bg-section-2">
                                                             <tr>
                                                                 <th class="text-left p-1 px-3">
-                                                                    {{ translate('Product') }}</th>
+                                                                    {{ 'Producto' }}</th>
                                                                 <th class="text-right p-1 px-3">
-                                                                    {{ translate('Price') }}</th>
+                                                                    {{ 'Precio' }}</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             @if ($order->order_type == 'parcel')
                                                                 <tr>
                                                                     <td class="text-left p-2 px-3">
-                                                                        {{ Str::limit($order->parcel_category ? $order->parcel_category->name : translate('messages.parcel_category_not_found'), 25, '...') }}
+                                                                        {{ Str::limit($order->parcel_category ? $order->parcel_category->name : 'categoría de paquete no encontrada', 25, '...') }}
                                                                     </td>
                                                                     <td class="text-right p-2 px-3">
                                                                         <h4>
@@ -345,7 +345,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                             <br>
                                                                             @if (count(json_decode($details['variation'], true)) > 0)
                                                                                 <span style="font-size: 12px;">
-                                                                                    {{ translate('messages.variation') }}
+                                                                                    {{ 'variación' }}
                                                                                     :
                                                                                     @foreach (json_decode($details['variation'], true) as $variation)
                                                                                         @if (isset($variation['name']) && isset($variation['values']))
@@ -379,7 +379,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                             @foreach (json_decode($details['add_ons'], true) as $key2 => $addon)
                                                                                 @if ($key2 == 0)
                                                                                     <br><span
-                                                                                        style="font-size: 12px;"><u>{{ translate('messages.addons') }}
+                                                                                        style="font-size: 12px;"><u>{{ 'complementos' }}
                                                                                         </u></span>
                                                                                 @endif
                                                                                 <div style="font-size: 12px;">
@@ -417,7 +417,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
 
                                                                                 <td style="width: 40%"></td>
                                                                                 <td class="p-1 px-3">
-                                                                                    {{ translate('messages.item_price') }}
+                                                                                    {{ 'precio del artículo' }}
                                                                                 </td>
                                                                                 <td class="text-right p-1 px-3">
                                                                                     <?php
@@ -433,7 +433,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                             <tr>
                                                                                 <td style="width: 40%"></td>
                                                                                 <td class="p-1 px-3">
-                                                                                    {{ translate('messages.addon_cost') }}
+                                                                                    {{ 'costo adicional' }}
                                                                                 </td>
                                                                                 <td class="text-right p-1 px-3">
                                                                                     {{ \App\CentralLogics\Helpers::format_currency($total_addon_price) }}
@@ -442,9 +442,9 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                             <tr>
                                                                                 <td style="width: 40%"></td>
                                                                                 <td class="p-1 px-3">
-                                                                                    {{ translate('messages.subtotal') }}
+                                                                                    {{ 'total parcial' }}
                                                                                     @if ($order->tax_status == 'included')
-                                                                                        ({{ translate('messages.TAX_Included') }})
+                                                                                        ({{ 'IVA incluido' }})
                                                                                     @endif
                                                                                 </td>
                                                                                 <td class="text-right p-1 px-3">
@@ -454,7 +454,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                             <tr>
                                                                                 <td style="width: 40%"></td>
                                                                                 <td class="p-1 px-3">
-                                                                                    {{ translate('messages.discount') }}
+                                                                                    {{ 'descuento' }}
                                                                                 </td>
                                                                                 <td class="text-right p-1 px-3">
                                                                                     {{ \App\CentralLogics\Helpers::format_currency($order->store_discount_amount) }}
@@ -463,7 +463,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                             <tr>
                                                                                 <td style="width: 40%"></td>
                                                                                 <td class="p-1 px-3">
-                                                                                    {{ translate('messages.coupon_discount') }}
+                                                                                    {{ 'cupón de descuento' }}
                                                                                 </td>
                                                                                 <td class="text-right p-1 px-3">
                                                                                     {{ \App\CentralLogics\Helpers::format_currency($order->coupon_discount_amount) }}
@@ -473,7 +473,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                                 <tr>
                                                                                     <td style="width: 40%"></td>
                                                                                     <td class="p-1 px-3">
-                                                                                        {{ translate('messages.Referral_Discount') }}
+                                                                                        {{ 'Descuento por recomendación' }}
                                                                                     </td>
                                                                                     <td class="text-right p-1 px-3">
                                                                                         {{ \App\CentralLogics\Helpers::format_currency($order->ref_bonus_amount) }}
@@ -485,7 +485,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                                 <tr>
                                                                                     <td style="width: 40%"></td>
                                                                                     <td class="p-1 px-3">
-                                                                                        {{ translate('messages.Extra_Packaging_Amount') }}
+                                                                                        {{ 'Cantidad de embalaje adicional' }}
                                                                                     </td>
                                                                                     <td class="text-right p-1 px-3">
                                                                                         {{ \App\CentralLogics\Helpers::format_currency($order->extra_packaging_amount) }}
@@ -498,7 +498,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                             <tr>
                                                                                 <td style="width: 40%"></td>
                                                                                 <td class="p-1 px-3">
-                                                                                    {{ translate('messages.tax') }}
+                                                                                    {{ 'impuesto' }}
                                                                                 </td>
                                                                                 <td class="text-right p-1 px-3">
                                                                                     {{ \App\CentralLogics\Helpers::format_currency($order->total_tax_amount) }}
@@ -508,7 +508,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                             <tr>
                                                                                 <td style="width: 40%"></td>
                                                                                 <td class="p-1 px-3">
-                                                                                    {{ translate('messages.tax') }}
+                                                                                    {{ 'impuesto' }}
                                                                                 </td>
                                                                                 <td class="text-right p-1 px-3">
                                                                                     {{ \App\CentralLogics\Helpers::format_currency($total_tax) }}
@@ -520,7 +520,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                             <tr>
                                                                                 <td style="width: 40%"></td>
                                                                                 <td class="p-1 px-3">
-                                                                                    {{ translate('messages.delivery_charge') }}
+                                                                                    {{ 'cargo de entrega' }}
                                                                                 </td>
                                                                                 <td class="text-right p-1 px-3">
                                                                                     {{ \App\CentralLogics\Helpers::format_currency($order->delivery_charge) }}
@@ -532,7 +532,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                         <tr>
                                                                             <td style="width: 40%"></td>
                                                                             <td class="p-1 px-3">
-                                                                                {{ translate('messages.delivery_man_tips') }}
+                                                                                {{ 'consejos de repartidor' }}
                                                                             </td>
                                                                             <td class="text-right p-1 px-3">
                                                                                 {{ \App\CentralLogics\Helpers::format_currency($order->dm_tips) }}
@@ -544,8 +544,8 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                         <tr>
                                                                             <td style="width: 40%"></td>
                                                                             <td class="p-1 px-3">
-                                                                                <h4>{{ translate('messages.total') }}
-                                                                                    {{ $order->order_type == 'parcel' && $order->tax_status == 'included' ? '(' . translate('messages.TAX_Included') . ')' : '' }}
+                                                                                <h4>{{ 'total' }}
+                                                                                    {{ $order->order_type == 'parcel' && $order->tax_status == 'included' ? '(' . 'IVA incluido' . ')' : '' }}
                                                                                 </h4>
                                                                             </td>
                                                                             <td class="text-right p-1 px-3">
@@ -574,13 +574,13 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                 <td style="text-align:center">
 
                     <div class="copyright" style="text-align:center" id="">
-                        {{ translate('Please') }}
+                        {{ 'Por favor' }}
                         <a class="text-base"
-                            href="mailto:{{ $BusinessData['email_address'] }}">{{ translate('contact us') }}</a>
-                        {{ translate('for any queries, we’re always happy to help.') }}
+                            href="mailto:{{ $BusinessData['email_address'] }}">{{ 'contáctanos' }}</a>
+                        {{ 'Para cualquier consulta, siempre estaremos encantados de ayudarle.' }}
                     </div>
                     <div class="copyright" style="text-align:center" id="mail-copyright">
-                        {{ $BusinessData['footer_text'] ?? translate('Copyright 2023 6ammart. All right reserved') }}
+                        {{ $BusinessData['footer_text'] ?? 'Copyright 2023 6ammart. Todos los derechos reservados' }}
                     </div>
                 </td>
             </tr>

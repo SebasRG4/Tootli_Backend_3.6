@@ -7,32 +7,32 @@
     <table>
         <thead>
             <tr>
-                <th>{{ translate('Filter_Criteria') }}</th>
+                <th>{{ 'Criterios de filtrado' }}</th>
                 <th></th>
                 <th>
-                    {{ translate('Search_Bar_Content')  }}: {{ $data['search'] ?? translate('N/A') }}
+                    {{ 'Contenido de la barra de búsqueda'  }}: {{ $data['search'] ?? 'N / A' }}
                 </th>
                 <th> </th>
                 </tr>
         <tr>
-            <th>{{ translate('sl') }}</th>
-            <th>{{ translate('Request_Created_At') }}</th>
-            <th>{{ translate('Requested_Amount') }}</th>
-            <th>{{ translate('Status') }}</th>
+            <th>{{ 'SL' }}</th>
+            <th>{{ 'Solicitud creada en' }}</th>
+            <th>{{ 'Monto solicitado' }}</th>
+            <th>{{ 'Estado' }}</th>
         </thead>
         <tbody>
         @foreach($data['data'] as $key => $tr)
             <tr>
                 <td>{{ $loop->index+1}}</td>
-                <td>{{ $tr?->created_at->format('Y-m-d '.config('timeformat')) ??  translate('N/A') }}</td>
+                <td>{{ $tr?->created_at->format('Y-m-d '.config('timeformat')) ??  'N / A' }}</td>
                 <td> {{ \App\CentralLogics\Helpers::format_currency($tr->amount) }}</td>
                 <td>
                     @if($tr->approved==0)
-                    {{ translate('messages.pending') }}
+                    {{ 'Pendiente' }}
                     @elseif($tr->approved==1)
-                    {{ translate('messages.approved') }}
+                    {{ 'aprobado' }}
                     @else
-                    {{ translate('messages.denied') }}
+                    {{ 'denegado' }}
                     @endif
                 </td>
             </tr>

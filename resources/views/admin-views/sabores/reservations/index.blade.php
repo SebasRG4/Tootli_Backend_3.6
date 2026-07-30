@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Reservations'))
+@section('title', 'Reservas')
 
 @push('css_or_js')
 @endpush
@@ -13,7 +13,7 @@
                 <span class="page-header-icon">
                     <i class="tio-calendar"></i>
                 </span>
-                <span>{{ translate('Reservations Management') }}</span>
+                <span>{{ 'Gestión de Reservas' }}</span>
             </h1>
         </div>
         <!-- End Page Header -->
@@ -32,9 +32,9 @@
                                     </div>
                                 </div>
                                 <input type="search" name="search" class="form-control"
-                                    placeholder="{{ translate('Search by code, customer, or restaurant') }}"
+                                    placeholder="{{ 'Buscar por código, cliente o restaurante' }}"
                                     value="{{ $search }}">
-                                <button type="submit" class="btn btn-primary">{{ translate('Search') }}</button>
+                                <button type="submit" class="btn btn-primary">{{ 'Buscar' }}</button>
                             </div>
                         </form>
                     </div>
@@ -43,7 +43,7 @@
                             <!-- Filter by Store -->
                             <select name="store_id" class="form-control"
                                 onchange="location.href='{{ route('admin.sabores.reservations') }}?store_id=' + this.value + '&status={{ $status }}&search={{ $search }}'">
-                                <option value="">{{ translate('All Restaurants') }}</option>
+                                <option value="">{{ 'Todos los restaurantes' }}</option>
                                 @foreach($stores as $store)
                                     <option value="{{ $store->id }}" {{ $store_id == $store->id ? 'selected' : '' }}>
                                         {{ $store->name }}
@@ -62,15 +62,15 @@
                     class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
                     <thead class="thead-light">
                         <tr>
-                            <th>{{ translate('ID') }}</th>
-                            <th>{{ translate('Code') }}</th>
-                            <th>{{ translate('Customer') }}</th>
-                            <th>{{ translate('Restaurant') }}</th>
-                            <th>{{ translate('Date & Time') }}</th>
-                            <th>{{ translate('Party Size') }}</th>
-                            <th>{{ translate('Status') }}</th>
-                            <th>{{ translate('Created') }}</th>
-                            <th class="text-center">{{ translate('Actions') }}</th>
+                            <th>{{ 'IDENTIFICACIÓN' }}</th>
+                            <th>{{ 'Código' }}</th>
+                            <th>{{ 'Cliente' }}</th>
+                            <th>{{ 'Restaurante' }}</th>
+                            <th>{{ 'Fecha y hora' }}</th>
+                            <th>{{ 'Tamaño del grupo' }}</th>
+                            <th>{{ 'Estado' }}</th>
+                            <th>{{ 'Creado' }}</th>
+                            <th class="text-center">{{ 'Comportamiento' }}</th>
                         </tr>
                     </thead>
 
@@ -128,19 +128,19 @@
                                 <td>
                                     @if($reservation->status == 'pending')
                                         <span class="badge badge-soft-warning">
-                                            <i class="tio-time"></i> {{ translate('Pending') }}
+                                            <i class="tio-time"></i> {{ 'Pendiente' }}
                                         </span>
                                     @elseif($reservation->status == 'confirmed')
                                         <span class="badge badge-soft-success">
-                                            <i class="tio-checkmark-circle"></i> {{ translate('Confirmed') }}
+                                            <i class="tio-checkmark-circle"></i> {{ 'Confirmado' }}
                                         </span>
                                     @elseif($reservation->status == 'completed')
                                         <span class="badge badge-soft-primary">
-                                            <i class="tio-done"></i> {{ translate('Completed') }}
+                                            <i class="tio-done"></i> {{ 'Terminado' }}
                                         </span>
                                     @else
                                         <span class="badge badge-soft-danger">
-                                            <i class="tio-clear"></i> {{ translate('Cancelled') }}
+                                            <i class="tio-clear"></i> {{ 'Cancelado' }}
                                         </span>
                                     @endif
                                 </td>
@@ -149,18 +149,18 @@
                                     <div class="btn-group" role="group">
                                         <a class="btn btn-sm btn-white"
                                             href="{{ route('admin.sabores.reservations.details', $reservation->id) }}"
-                                            title="{{ translate('View Details') }}">
+                                            title="{{ 'Ver detalles' }}">
                                             <i class="tio-visible-outlined"></i>
                                         </a>
                                         @if($reservation->status == 'pending')
                                             <button type="button" class="btn btn-sm btn-white"
                                                 onclick="updateStatus({{ $reservation->id }}, 'confirmed')"
-                                                title="{{ translate('Confirm') }}">
+                                                title="{{ 'Confirmar' }}">
                                                 <i class="tio-checkmark-circle text-success"></i>
                                             </button>
                                             <button type="button" class="btn btn-sm btn-white"
                                                 onclick="updateStatus({{ $reservation->id }}, 'cancelled')"
-                                                title="{{ translate('Cancel') }}">
+                                                title="{{ 'Cancelar' }}">
                                                 <i class="tio-clear text-danger"></i>
                                             </button>
                                         @endif
@@ -172,7 +172,7 @@
                                 <td colspan="9" class="text-center">
                                     <img class="mb-3 w-160" src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}"
                                         alt="Image Description">
-                                    <p class="mb-0">{{ translate('No reservations found') }}</p>
+                                    <p class="mb-0">{{ 'No se encontraron reservas' }}</p>
                                 </td>
                             </tr>
                         @endforelse
@@ -206,7 +206,7 @@
 @push('script_2')
     <script>
         function updateStatus(reservationId, status) {
-            if (confirm('{{ translate("Are you sure you want to update this reservation status?") }}')) {
+            if (confirm('{{ '¿Está seguro de que desea actualizar el estado de esta reserva?' }}')) {
                 const form = document.getElementById('status-form');
                 form.action = '{{ route("admin.sabores.reservations.update-status", ":id") }}'.replace(':id', reservationId);
                 document.getElementById('status-input').value = status;

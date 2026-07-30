@@ -1,5 +1,5 @@
 @extends('layouts.admin.app')
-@section('title',translate('Employee List'))
+@section('title','Lista de empleados')
 @push('css_or_js')
 
 @endpush
@@ -14,12 +14,12 @@
                     <img src="{{asset('assets/admin/img/role.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.Employee_list')}}
+                    {{'lista de empleados'}}
                 </span>
             </h1>
             <a href="{{route('admin.users.employee.add-new')}}" class="btn btn--primary mb-3">
                 <i class="tio-add-circle"></i>
-                <span class="text">{{translate('messages.add_new')}}</span>
+                <span class="text">{{'agregar nuevo'}}</span>
             </a>
         </div>
     </div>
@@ -29,18 +29,18 @@
             <div class="card">
                 <div class="card-header py-2 border-0">
                     <div class="search--button-wrapper">
-                        <h5 class="card-title">{{translate('messages.Employee_table')}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$employees->total()}}</span></h5>
+                        <h5 class="card-title">{{'mesa de empleados'}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$employees->total()}}</span></h5>
                         <form class="search-form min--200">
                             <!-- Search -->
                             <div class="input-group input--group">
-                                <input id="datatableSearch_" type="search" name="search"  value="{{ request()->get('search') }}" class="form-control" placeholder="{{translate('messages.ex_:_search_name')}}" aria-label="Search">
+                                <input id="datatableSearch_" type="search" name="search"  value="{{ request()->get('search') }}" class="form-control" placeholder="{{'ej: nombre de búsqueda'}}" aria-label="Search">
                                 <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                             </div>
                             <!-- End Search -->
                         </form>
 
                         @if(request()->get('search'))
-                        <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                        <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{'reiniciar'}}</button>
                         @endif
 
                                             <!-- Unfold -->
@@ -50,23 +50,23 @@
                                     "target": "#usersExportDropdown",
                                     "type": "css-animation"
                                 }'>
-                            <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                            <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                         </a>
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                            <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                            <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                             <a id="export-excel" class="dropdown-item" href="{{route('admin.users.employee.export', ['type'=>'excel',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
-                                {{ translate('messages.excel') }}
+                                {{ 'sobresalir' }}
                             </a>
                             <a id="export-csv" class="dropdown-item" href="{{route('admin.users.employee.export', ['type'=>'csv',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
-                                .{{ translate('messages.csv') }}
+                                .{{ 'csv' }}
                             </a>
                         </div>
                     </div>
@@ -84,12 +84,12 @@
                                }'>
                             <thead class="thead-light">
                             <tr>
-                                <th class="border-0">{{translate('sl')}}</th>
-                                <th class="border-0">{{translate('messages.name')}}</th>
-                                <th class="border-0">{{translate('messages.email')}}</th>
-                                <th class="border-0">{{translate('messages.phone')}}</th>
-                                <th class="border-0">{{translate('messages.Role')}}</th>
-                                <th class="border-0 text-center">{{translate('messages.action')}}</th>
+                                <th class="border-0">{{'SL'}}</th>
+                                <th class="border-0">{{'nombre'}}</th>
+                                <th class="border-0">{{'correo electrónico'}}</th>
+                                <th class="border-0">{{'teléfono'}}</th>
+                                <th class="border-0">{{'Role'}}</th>
+                                <th class="border-0 text-center">{{'acción'}}</th>
                             </tr>
                             </thead>
                             <tbody id="set-rows">
@@ -101,14 +101,14 @@
                                       {{$employee['email']}}
                                     </td>
                                     <td>{{$employee['phone']}}</td>
-                                    <td>{{$employee->role?$employee->role['name']:translate('messages.role_deleted')}}</td>
+                                    <td>{{$employee->role?$employee->role['name']:'rol eliminado'}}</td>
                                     <td>
                                         @if (auth('admin')->id()  != $employee['id'])
                                         <div class="btn--container justify-content-center">
                                             <a class="btn action-btn btn--primary btn-outline-primary"
-                                                href="{{route('admin.users.employee.edit',[$employee['id']])}}" title="{{translate('messages.edit_Employee')}}"><i class="tio-edit"></i>
+                                                href="{{route('admin.users.employee.edit',[$employee['id']])}}" title="{{'editar empleado'}}"><i class="tio-edit"></i>
                                             </a>
-                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="employee-{{$employee['id']}}" data-message="{{translate('messages.Want_to_delete_this_role')}}" title="{{translate('messages.delete_Employee')}}"><i class="tio-delete-outlined"></i>
+                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="employee-{{$employee['id']}}" data-message="{{'Quiere eliminar este rol'}}" title="{{'eliminar empleado'}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                         </div>
                                         <form action="{{route('admin.users.employee.delete',[$employee['id']])}}"
@@ -117,7 +117,7 @@
                                         </form>
                                         @else
                                         <div class="btn--container justify-content-center">
-                                        <span class="badge-pill badge-soft-primary"> {{ translate('messages.N/A') }} </span>
+                                        <span class="badge-pill badge-soft-primary"> {{ 'N / A' }} </span>
                                     </div>
                                         @endif
                                     </td>
@@ -137,7 +137,7 @@
                 <div class="empty--data">
                     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
-                        {{translate('no_data_found')}}
+                        {{'no se encontraron datos'}}
                     </h5>
                 </div>
                 @endif

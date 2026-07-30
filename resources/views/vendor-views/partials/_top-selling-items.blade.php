@@ -1,9 +1,9 @@
 <!-- Header -->
 <div class="card-header">
     <h5 class="card-header-title text-capitalize">
-        <i class="tio-align-to-top"></i> {{translate('messages.top_selling_items')}}
+        <i class="tio-align-to-top"></i> {{'artículos más vendidos'}}
     </h5>
-    <a href="{{ route('vendor.item.list') }}" class="fz-12px font-medium text-006AE5">{{ translate('view_all') }}</a>
+    <a href="{{ route('vendor.item.list') }}" class="fz-12px font-medium text-006AE5">{{ 'ver todo' }}</a>
 
 </div>
 <!-- End Header -->
@@ -16,7 +16,7 @@
             <div class="col-md-4 col-sm-6 initial--27 redirect-url"
                  data-url="{{route('vendor.item.view',[$item['id']])}}">
                 <div class="grid-card">
-                    <label class="label_1 text-center">{{translate('messages.sold')}} : {{$item['order_count']}}</label>
+                    <label class="label_1 text-center">{{'vendido'}} : {{$item['order_count']}}</label>
                     <img class="initial--28 onerror-image"
                     src="{{ $item['image_full_url'] }}"
                          data-onerror-image="{{asset('assets/admin/img/placeholder-2.png')}}"
@@ -32,7 +32,7 @@
     <div class="empty--data">
         <img src="{{ asset('assets/admin/svg/illustrations/empty-state.svg') }}" alt="public">
         <h5>
-            {{ translate('no_data_found') }}
+            {{ 'no se encontraron datos' }}
         </h5>
     </div>
 

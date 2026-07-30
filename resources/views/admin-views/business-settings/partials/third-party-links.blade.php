@@ -3,28 +3,28 @@
         <!-- Nav -->
         <ul class="nav nav-tabs border-0 nav--tabs nav--pills">
             <li class="nav-item">
-                <a class="nav-link   {{ Request::is('admin/business-settings/third-party/payment-method') ? 'active' : '' }}" href="{{ route('admin.business-settings.third-party.payment-method') }}"   aria-disabled="true">{{translate('Payment Methods')}}</a>
+                <a class="nav-link   {{ Request::is('admin/business-settings/third-party/payment-method') ? 'active' : '' }}" href="{{ route('admin.business-settings.third-party.payment-method') }}"   aria-disabled="true">{{'Métodos de pago'}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/third-party/sms-module') ? 'active' : '' }}" href="{{ route('admin.business-settings.third-party.sms-module') }}"  aria-disabled="true">{{translate('SMS Module')}}</a>
+                <a class="nav-link {{ Request::is('admin/business-settings/third-party/sms-module') ? 'active' : '' }}" href="{{ route('admin.business-settings.third-party.sms-module') }}"  aria-disabled="true">{{'Módulo SMS'}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/third-party/mail-config') || Request::is('admin/business-settings/third-party/test-mail')  ? 'active' : '' }}" href="{{ route('admin.business-settings.third-party.mail-config') }}"  aria-disabled="true">{{translate('Mail Config')}}</a>
+                <a class="nav-link {{ Request::is('admin/business-settings/third-party/mail-config') || Request::is('admin/business-settings/third-party/test-mail')  ? 'active' : '' }}" href="{{ route('admin.business-settings.third-party.mail-config') }}"  aria-disabled="true">{{'Configuración de correo'}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/third-party/config-setup') ?'active':'' }}" href="{{ route('admin.business-settings.third-party.config-setup') }}"  aria-disabled="true">{{translate('Map APIs')}}</a>
+                <a class="nav-link {{ Request::is('admin/business-settings/third-party/config-setup') ?'active':'' }}" href="{{ route('admin.business-settings.third-party.config-setup') }}"  aria-disabled="true">{{'API de mapas'}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{Request::is('admin/business-settings/third-party/social-login/view')?'active':''}}" href="{{route('admin.business-settings.third-party.social-login.view')}}"  aria-disabled="true">{{translate('Social Logins')}}</a>
+                <a class="nav-link {{Request::is('admin/business-settings/third-party/social-login/view')?'active':''}}" href="{{route('admin.business-settings.third-party.social-login.view')}}"  aria-disabled="true">{{'Inicios de sesión sociales'}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/third-party/recaptcha*') ? 'active' : '' }}" href="{{route('admin.business-settings.third-party.recaptcha_index')}}"  aria-disabled="true">{{translate('Recaptcha')}}</a>
+                <a class="nav-link {{ Request::is('admin/business-settings/third-party/recaptcha*') ? 'active' : '' }}" href="{{route('admin.business-settings.third-party.recaptcha_index')}}"  aria-disabled="true">{{'recaptcha'}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/third-party/firebase-otp*') ? 'active' : '' }}" href="{{route('admin.business-settings.third-party.firebase_otp_index')}}"  aria-disabled="true">{{translate('Firebase OTP')}}</a>
+                <a class="nav-link {{ Request::is('admin/business-settings/third-party/firebase-otp*') ? 'active' : '' }}" href="{{route('admin.business-settings.third-party.firebase_otp_index')}}"  aria-disabled="true">{{'OTP de base de fuego'}}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/third-party/storage-connection*') ? 'active' : '' }}" href="{{route('admin.business-settings.third-party.storage_connection_index')}}"  aria-disabled="true">{{translate('Storage_Connection')}}</a>
+                <a class="nav-link {{ Request::is('admin/business-settings/third-party/storage-connection*') ? 'active' : '' }}" href="{{route('admin.business-settings.third-party.storage_connection_index')}}"  aria-disabled="true">{{'Conexión de almacenamiento'}}</a>
             </li>
         </ul>
         <!-- End Nav -->

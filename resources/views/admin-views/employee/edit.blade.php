@@ -1,5 +1,5 @@
 @extends('layouts.admin.app')
-@section('title',translate('Employee Edit'))
+@section('title','Empleado Editar')
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endpush
@@ -13,7 +13,7 @@
                 <img src="{{asset('assets/admin/img/edit.png')}}" class="w--26" alt="">
             </span>
             <span>
-                {{translate('messages.Employee_update')}}
+                {{'Actualización del empleado'}}
             </span>
         </h1>
     </div>
@@ -28,7 +28,7 @@
                     <span class="card-header-icon">
                         <i class="tio-user"></i>
                     </span>
-                    <span>{{translate('messages.general_information')}}</span>
+                    <span>{{'información general'}}</span>
                 </h5>
             </div>
             <div class="card-body">
@@ -36,30 +36,30 @@
                     <div class="col-md-8">
                         <div class="row g-3">
                             <div class="col-sm-6">
-                                <label class="input-label qcont" for="name">{{translate('messages.first_name')}} <span class="form-label-secondary text-danger"
+                                <label class="input-label qcont" for="name">{{'nombre de pila'}} <span class="form-label-secondary text-danger"
                             data-toggle="tooltip" data-placement="right"
-                            data-original-title="{{ translate('messages.Required.')}}"> *
+                            data-original-title="{{ 'Requerido.'}}"> *
                             </span> </label>
                                 <input type="text" name="f_name" value="{{$employee['f_name']}}" class="form-control" id="f_name"
-                                        placeholder="{{translate('messages.first_name')}}" required>
+                                        placeholder="{{'nombre de pila'}}" required>
                             </div>
                             <div class="col-sm-6">
-                                <label class="input-label qcont" for="name">{{translate('messages.last_name')}} <span class="form-label-secondary text-danger"
+                                <label class="input-label qcont" for="name">{{'apellido'}} <span class="form-label-secondary text-danger"
                             data-toggle="tooltip" data-placement="right"
-                            data-original-title="{{ translate('messages.Required.')}}"> *
+                            data-original-title="{{ 'Requerido.'}}"> *
                             </span> </label>
                                 <input type="text" name="l_name" value="{{$employee['l_name']}}" class="form-control" id="l_name"
-                                        placeholder="{{translate('messages.last_name')}}">
+                                        placeholder="{{'apellido'}}">
                             </div>
                             <div class="col-sm-6">
                                 <div>
-                                    <label class="input-label" for="title">{{translate('messages.zone')}} <span class="form-label-secondary text-danger"
+                                    <label class="input-label" for="title">{{'zona'}} <span class="form-label-secondary text-danger"
                             data-toggle="tooltip" data-placement="right"
-                            data-original-title="{{ translate('messages.Required.')}}"> *
+                            data-original-title="{{ 'Requerido.'}}"> *
                             </span> </label>
                                     <select name="zone_id" id="zone_id" class="form-control js-select2-custom">
                                         @if(!isset(auth('admin')->user()->zone_id))
-                                            <option value="" {{!isset($employee->zone_id)?'selected':''}}>{{translate('messages.all')}}</option>
+                                            <option value="" {{!isset($employee->zone_id)?'selected':''}}>{{'todo'}}</option>
                                         @endif
                                         @foreach($zones as $zone)
                                             <option value="{{$zone['id']}}" {{$employee->zone_id == $zone->id?'selected':''}}>{{$zone['name']}}</option>
@@ -69,12 +69,12 @@
                             </div>
                             <div class="col-sm-6">
                                 <div>
-                                    <label class="input-label qcont" for="name">{{translate('messages.Role')}} <span class="form-label-secondary text-danger"
+                                    <label class="input-label qcont" for="name">{{'Role'}} <span class="form-label-secondary text-danger"
                             data-toggle="tooltip" data-placement="right"
-                            data-original-title="{{ translate('messages.Required.')}}"> *
+                            data-original-title="{{ 'Requerido.'}}"> *
                             </span> </label>
                                     <select class="form-control js-select2-custom w-100" name="role_id" id="role_id">
-                                        <option value="" selected disabled>{{translate('messages.select_Role')}}</option>
+                                        <option value="" selected disabled>{{'seleccione Rol'}}</option>
                                         @foreach($roles as $role)
                                         <option value="{{$role->id}}" {{$role['id']==$employee['role_id']?'selected':''}}>{{$role->name}}</option>
                                         @endforeach
@@ -82,12 +82,12 @@
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <label class="input-label qcont" for="name">{{translate('messages.phone')}} <span class="form-label-secondary text-danger"
+                                <label class="input-label qcont" for="name">{{'teléfono'}} <span class="form-label-secondary text-danger"
                             data-toggle="tooltip" data-placement="right"
-                            data-original-title="{{ translate('messages.Required.')}}"> *
+                            data-original-title="{{ 'Requerido.'}}"> *
                             </span> </label>
                                 <input type="number" value="{{$employee['phone']}}" required name="phone" class="form-control" id="phone"
-                                        placeholder="{{ translate('messages.Ex:') }} +88017********">
+                                        placeholder="{{ 'Ex:' }} +88017********">
                             </div>
                         </div>
                     </div>
@@ -96,7 +96,7 @@
 
 
                             <div class="text-center input-label qcont py-3 my-auto">
-                                {{ translate('messages.Employee_image') }} <small  class="text-danger"> ( {{ translate('messages.ratio') }} 1:1 )</small>
+                                {{ 'Imagen del empleado' }} <small  class="text-danger"> ( {{ 'relación' }} 1:1 )</small>
 
                             </div>
                             <div class="text-center py-3 my-auto">
@@ -107,7 +107,7 @@
                             <div class="custom-file">
                                 <input type="file" name="image" id="customFileUpload" class="custom-file-input"
                                     accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                <span class="custom-file-label">{{translate('messages.choose_file')}}</span>
+                                <span class="custom-file-label">{{'elegir archivo'}}</span>
                             </div>
                         </label>
                     </div>
@@ -121,26 +121,26 @@
                     <span class="card-header-icon">
                         <i class="tio-user"></i>
                     </span>
-                    <span>{{translate('messages.account_information')}}</span>
+                    <span>{{'información de cuenta'}}</span>
                 </h5>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-4">
-                        <label class="input-label qcont" for="name">{{translate('messages.email')}} <span class="form-label-secondary text-danger"
+                        <label class="input-label qcont" for="name">{{'correo electrónico'}} <span class="form-label-secondary text-danger"
                             data-toggle="tooltip" data-placement="right"
-                            data-original-title="{{ translate('messages.Required.')}}"> *
+                            data-original-title="{{ 'Requerido.'}}"> *
                             </span> </label>
                         <input type="email" value="{{$employee['email']}}" name="email" class="form-control" id="email"
-                                placeholder="{{ translate('messages.Ex:') }} ex@gmail.com">
+                                placeholder="{{ 'Ex:' }} ex@gmail.com">
                     </div>
                     <div class="col-md-4">
                         <div class="js-form-message form-group mb-0">
-                            <label class="input-label" for="signupSrPassword">{{translate('messages.password')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="top"
-        data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"></span></label>
+                            <label class="input-label" for="signupSrPassword">{{'Contraseña'}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="top"
+        data-original-title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"></span></label>
 
                             <div class="input-group input-group-merge">
-                                <input type="password" class="js-toggle-password form-control" name="password" id="signupSrPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"
+                                <input type="password" class="js-toggle-password form-control" name="password" id="signupSrPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"
                                 placeholder="{{ translate('messages.password_length_placeholder', ['length' => '8+']) }}"
                                 aria-label="8+ characters required"
                                 data-msg="Your password is invalid. Please try again."
@@ -160,9 +160,9 @@
                     </div>
                     <div class="col-md-4">
                         <div class="js-form-message form-group mb-0">
-                            <label class="input-label" for="signupSrConfirmPassword">{{translate('messages.confirm_password')}}  </label>
+                            <label class="input-label" for="signupSrConfirmPassword">{{'confirmar Contraseña'}}  </label>
                             <div class="input-group input-group-merge">
-                            <input type="password" class="js-toggle-password form-control" name="confirmPassword" id="signupSrConfirmPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"
+                            <input type="password" class="js-toggle-password form-control" name="confirmPassword" id="signupSrConfirmPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"
                             placeholder="{{ translate('messages.password_length_placeholder', ['length' => '8+']) }}"
                             aria-label="8+ characters required"
                                     data-msg="Password does not match the confirm password."
@@ -185,8 +185,8 @@
         </div>
 
         <div class="btn--container justify-content-end mt-4">
-            <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
-            <button type="submit" class="btn btn--primary">{{translate('messages.update')}}</button>
+            <button type="reset" id="reset_btn" class="btn btn--reset">{{'reiniciar'}}</button>
+            <button type="submit" class="btn btn--primary">{{'actualizar'}}</button>
         </div>
     </form>
 </div>

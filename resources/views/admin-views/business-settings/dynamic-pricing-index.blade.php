@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Dynamic Pricing Setup'))
+@section('title', 'Configuración de precios dinámicos')
 
 @section('content')
     <div class="content">
@@ -10,7 +10,7 @@
                     <img src="{{ asset('assets/admin/img/business.png') }}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.business_settings') }}
+                    {{ 'entornos empresariales' }}
                 </span>
             </h1>
             @include('admin-views.business-settings.partials.nav-menu')
@@ -24,9 +24,9 @@
                         <div class="col-md-12">
                             <div class="d-flex justify-content-between align-items-center border rounded p-3 mb-3">
                                 <div>
-                                    <h4 class="mb-1">{{ translate('messages.dynamic_pricing_status') }}</h4>
+                                    <h4 class="mb-1">{{ 'estado de precios dinámicos' }}</h4>
                                     <p class="mb-0 fs-12">
-                                        {{ translate('Enable or disable surge pricing multipliers based on real-time demand.') }}
+                                        {{ 'Habilite o deshabilite los multiplicadores de aumento de precios según la demanda en tiempo real.' }}
                                     </p>
                                 </div>
                                 <label class="toggle-switch toggle-switch-sm">
@@ -42,10 +42,10 @@
                             <div class="card">
                                 <div class="card-header">
                                     <h5 class="card-title">
-                                        <i class="tio-trending-up mr-1"></i> {{ translate('Surge Thresholds') }}
+                                        <i class="tio-trending-up mr-1"></i> {{ 'Umbrales de sobretensión' }}
                                     </h5>
                                     <button type="button" class="btn btn-outline-primary btn-sm" onclick="addThreshold()">
-                                        <i class="tio-add"></i> {{ translate('Add Threshold') }}
+                                        <i class="tio-add"></i> {{ 'Agregar umbral' }}
                                     </button>
                                 </div>
                                 <div class="card-body">
@@ -54,9 +54,9 @@
                                             class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
                                             <thead class="thead-light">
                                                 <tr>
-                                                    <th>{{ translate('Demand Ratio (Orders / Delivery Men)') }}</th>
-                                                    <th>{{ translate('Multiplier (x)') }}</th>
-                                                    <th class="text-center">{{ translate('Action') }}</th>
+                                                    <th>{{ 'Ratio de Demanda (Pedidos / Repartidores)' }}</th>
+                                                    <th>{{ 'Multiplicador (x)' }}</th>
+                                                    <th class="text-center">{{ 'Acción' }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="thresholds-table">
@@ -88,7 +88,7 @@
 
                         <div class="col-md-12 mt-3 text-right">
                             <button type="submit"
-                                class="btn btn-primary">{{ translate('messages.save_information') }}</button>
+                                class="btn btn-primary">{{ 'guardar información' }}</button>
                         </div>
                     </div>
                 </form>
@@ -98,7 +98,7 @@
         <!-- Algorithm Suggestions -->
         <div class="card bg-info-light">
             <div class="card-body">
-                <h5 class="text-info"><i class="tio-info-outined mr-1"></i> {{ translate('Algorithm Suggestions') }}</h5>
+                <h5 class="text-info"><i class="tio-info-outined mr-1"></i> {{ 'Sugerencias de algoritmos' }}</h5>
                 <p class="fs-12 mb-0">Basado en la demanda reciente, se sugiere mantener un multiplicador de 1.3x cuando el
                     ratio supere 2.0 y 1.5x cuando supere 3.0 para balancear la flota de repartidores.</p>
             </div>

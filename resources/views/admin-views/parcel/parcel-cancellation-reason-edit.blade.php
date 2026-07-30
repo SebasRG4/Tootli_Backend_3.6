@@ -4,7 +4,7 @@
     @csrf
     <div>
         <div class="custom-offcanvas-header bg--secondary d-flex justify-content-between align-items-center px-3 py-3">
-            <h3 class="mb-0">{{ translate('Edit_Reason') }}</h3>
+            <h3 class="mb-0">{{ 'Editar motivo' }}</h3>
             <button type="button"
                 class="btn-close w-25px h-25px border rounded-circle d-center bg--secondary text-dark offcanvas-close fz-15px p-0"
                 aria-label="Close">&times;</button>
@@ -15,7 +15,7 @@
                     <ul class="nav nav-tabs mb-4 border-0">
                         <li class="nav-item">
                             <a class="nav-link lang_link1 active" href="#"
-                                id="default-link">{{ translate('messages.default') }}</a>
+                                id="default-link">{{ 'por defecto' }}</a>
                         </li>
                         @foreach ($language as $lang)
                             <li class="nav-item">
@@ -29,8 +29,8 @@
                     <div class="col-12">
                         @if ($language)
                             <div class="form-group lang_form1" id="default-form1">
-                                <label class="fs-14 mb-2 color-222324">{{ translate('Parcel cancellation reason') }}
-                                    ({{ translate('Default') }})
+                                <label class="fs-14 mb-2 color-222324">{{ 'Motivo de cancelación del paquete' }}
+                                    ({{ 'Por defecto' }})
                                 </label>
                                 <textarea rows="1" name="reason[]" data-target="#edit-char-count"
                                     class="form-control min-h-45px bg-white char-counter" maxlength="150" placeholder="Type Tittle">{{ $reason?->getRawOriginal('reason') }}</textarea>
@@ -51,7 +51,7 @@
 
                                 <div class="form-group d-none lang_form1" id="{{ $lang }}-form1">
                                     <label
-                                        class="fs-14 mb-2 color-222324 ">{{ translate('Parcel cancellation reason') }}
+                                        class="fs-14 mb-2 color-222324 ">{{ 'Motivo de cancelación del paquete' }}
                                         ({{ strtoupper($lang) }})
                                     </label>
                                     <textarea rows="1" name="reason[]" data-target="#edit-feedback-count-{{ $lang }}"
@@ -68,27 +68,27 @@
                     <div class="col-12">
                         <div class="form-group">
                             <label for="" class="fs-14 mb-2 color-222324">
-                                {{ translate('Cancellation type') }}
+                                {{ 'Tipo de cancelación' }}
                             </label>
                             <select name="cancellation_type" required id=""
                                 class="custom-select fs-12 title-clr">
                                 <option {{ $reason?->cancellation_type == 'before_pickup' ? 'selected' : '' }}
-                                    value="before_pickup">{{ translate('before_pickup') }}</option>
+                                    value="before_pickup">{{ 'antes de la recogida' }}</option>
                                 <option {{ $reason?->cancellation_type == 'after_pickup' ? 'selected' : '' }}
-                                    value="after_pickup">{{ translate('after_pickup') }}</option>
+                                    value="after_pickup">{{ 'después de la recogida' }}</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="form-group">
                             <label for="" class="fs-14 mb-2 color-222324">
-                                {{ translate('User Type') }}
+                                {{ 'Tipo de usuario' }}
                             </label>
                             <select name="user_type" required id="" class="custom-select fs-12 title-clr">
                                 <option {{ $reason?->user_type == 'customer' ? 'selected' : '' }} value="customer">
-                                    {{ translate('Customer') }}</option>
+                                    {{ 'Cliente' }}</option>
                                 <option {{ $reason?->user_type == 'deliveryman' ? 'selected' : '' }}
-                                    value="deliveryman">{{ translate('Deliveryman') }}</option>
+                                    value="deliveryman">{{ 'repartidor' }}</option>
                             </select>
                         </div>
                     </div>
@@ -99,7 +99,7 @@
     <div
         class="align-items-center bg-white bottom-0 d-flex gap-3 justify-content-center mt-auto offcanvas-footer p-3 position-sticky">
         <button type="button"
-            class="btn w-100 btn--secondary offcanvas-close h--40px">{{ translate('Cancel') }}</button>
-        <button type="submit" class="btn w-100 btn--primary h--40px">{{ translate('Update') }}</button>
+            class="btn w-100 btn--secondary offcanvas-close h--40px">{{ 'Cancelar' }}</button>
+        <button type="submit" class="btn w-100 btn--primary h--40px">{{ 'Actualizar' }}</button>
     </div>
 </form>

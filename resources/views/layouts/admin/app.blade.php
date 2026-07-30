@@ -96,13 +96,13 @@ $countryCode = strtolower($country ? $country : 'auto');
         @include('layouts.admin.partials._footer')
         <!-- End Footer -->
 
-        <div class="d-none" id="text-validate-translate" data-required="{{ translate('this_field_is_required') }}"
-            data-something-went-wrong="{{ translate('something_went_wrong!') }}"
-            data-max-limit-crossed="{{ translate('max_limit_crossed') }}"
-            data-file-size-larger="{{ translate('file_size_is_larger') }}"
-            data-passwords-do-not-match="{{ translate('passwords_do_not_match') }}"
-            data-valid-email="{{ translate('please_enter_a_valid_email') }}"
-            data-password-validation="{{ translate('password_must_be_8+_chars_with_upper,_lower,_number_&_symbol') }}">
+        <div class="d-none" id="text-validate-translate" data-required="{{ 'Este campo es obligatorio' }}"
+            data-something-went-wrong="{{ 'algo salió mal!' }}"
+            data-max-limit-crossed="{{ 'límite máximo cruzado' }}"
+            data-file-size-larger="{{ 'el tamaño del archivo es mayor' }}"
+            data-passwords-do-not-match="{{ 'las contraseñas no coinciden' }}"
+            data-valid-email="{{ 'por favor ingrese un correo electrónico válido' }}"
+            data-password-validation="{{ 'la contraseña debe tener más de 8 caracteres con superior, inferior, número y símbolo' }}">
         </div>
 
         <div class="modal fade" id="popup-modal">
@@ -114,11 +114,11 @@ $countryCode = strtolower($country ? $country : 'auto');
                                 <div class="text-center">
                                     <h2 class="update_notification_text">
                                         <i class="tio-shopping-cart-outlined"></i>
-                                        {{translate('messages.You have new order, Check Please.')}}
+                                        {{'Tiene un nuevo pedido, consulte por favor.'}}
                                     </h2>
                                     <hr>
                                     <button
-                                        class="btn btn-primary check-order">{{translate('messages.Ok, let me check')}}</button>
+                                        class="btn btn-primary check-order">{{'Ok, déjame comprobar'}}</button>
                                 </div>
                             </div>
                         </div>
@@ -149,10 +149,10 @@ $countryCode = strtolower($country ? $country : 'auto');
                             <div class="btn--container justify-content-center">
                                 <button type="button" id="toggle-ok-button"
                                     class="btn btn--primary min-w-120 confirm-Toggle"
-                                    data-dismiss="modal">{{translate('Ok')}}</button>
+                                    data-dismiss="modal">{{'De acuerdo'}}</button>
                                 <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120"
                                     data-dismiss="modal">
-                                    {{translate("Cancel")}}
+                                    {{'Cancelar'}}
                                 </button>
                             </div>
                         </div>
@@ -182,10 +182,10 @@ $countryCode = strtolower($country ? $country : 'auto');
                             <div class="btn--container justify-content-center">
                                 <button type="button" id="toggle-status-ok-button"
                                     class="btn btn--primary min-w-120 confirm-Status-Toggle"
-                                    data-dismiss="modal">{{translate('Ok')}}</button>
+                                    data-dismiss="modal">{{'De acuerdo'}}</button>
                                 <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120"
                                     data-dismiss="modal">
-                                    {{translate("Cancel")}}
+                                    {{'Cancelar'}}
                                 </button>
                             </div>
                         </div>
@@ -253,21 +253,21 @@ $countryCode = strtolower($country ? $country : 'auto');
 
                             </div>
                             <div class="mb-4 d-none" id="note-data">
-                                <textarea class="form-control" placeholder="{{ translate('your_note_here') }}"
+                                <textarea class="form-control" placeholder="{{ 'tu nota aquí' }}"
                                     id="get-text-note" cols="5"></textarea>
                             </div>
                             <div class="btn--container justify-content-center">
                                 <div id="hide-buttons">
                                     <div class="d-flex justify-content-center flex-wrap gap-3">
                                         <button data-dismiss="modal" id="cancel6_btn_text"
-                                            class="btn btn--cancel min-w-120">{{translate("Not_Now")}}</button>
+                                            class="btn btn--cancel min-w-120">{{'Ahora no'}}</button>
                                         <button type="button" id="new-dynamic-ok-button"
-                                            class="btn btn-primary confirm-model min-w-120">{{translate('Yes')}}</button>
+                                            class="btn btn-primary confirm-model min-w-120">{{'Sí'}}</button>
                                     </div>
                                 </div>
 
                                 <button data-dismiss="modal" type="button" id="new-dynamic-ok-button-show"
-                                    class="btn btn--primary  d-none min-w-120">{{translate('Okay')}}</button>
+                                    class="btn btn--primary  d-none min-w-120">{{'Bueno'}}</button>
 
                             </div>
                         </div>
@@ -290,10 +290,10 @@ $countryCode = strtolower($country ? $country : 'auto');
                     </div>
                     <div class="modal-body text-center p-3 pt-0">
                         <div class="imageModal_img_wrapper">
-                            <img src="" class="img-fluid imageModal_img" alt="{{ translate('Preview_Image') }}">
+                            <img src="" class="img-fluid imageModal_img" alt="{{ 'Imagen de vista previa' }}">
                             <div class="imageModal_btn_wrapper">
                                 <a href="javascript:" class="btn icon-btn download_btn"
-                                    title="{{ translate('Download') }}" download>
+                                    title="{{ 'Descargar' }}" download>
                                     <i class="tio-arrow-large-downward"></i>
                                 </a>
                             </div>
@@ -393,13 +393,13 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
             $('.log-out').on('click', function () {
 
                 Swal.fire({
-                    title: '{{ translate('Do you want to sign out?') }}',
+                    title: '{{ '¿Quieres cerrar sesión?' }}',
                     showDenyButton: true,
                     showCancelButton: true,
                     confirmButtonColor: '#FC6A57',
                     cancelButtonColor: '#363636',
-                    confirmButtonText: `{{ translate('yes')}}`,
-                    cancelButtonText: `{{ translate('Cancel')}}`,
+                    confirmButtonText: `{{ 'Sí'}}`,
+                    cancelButtonText: `{{ 'Cancelar'}}`,
                 }).then((result) => {
                     if (result.value) {
                         location.href = '{{route('logout')}}';
@@ -409,7 +409,7 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
             });
 
 
-            function route_alert(route, message, title = "{{translate('messages.are_you_sure')}}") {
+            function route_alert(route, message, title = "{{'¿está seguro?'}}") {
                 Swal.fire({
                     title: title,
                     text: message,
@@ -417,8 +417,8 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                     showCancelButton: true,
                     cancelButtonColor: 'default',
                     confirmButtonColor: '#FC6A57',
-                    cancelButtonText: '{{ translate('messages.no') }}',
-                    confirmButtonText: '{{ translate('messages.Yes') }}',
+                    cancelButtonText: '{{ 'No' }}',
+                    confirmButtonText: '{{ 'Sí' }}',
                     reverseButtons: true
                 }).then((result) => {
                     if (result.value) {
@@ -436,13 +436,13 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                 let confirm = $(this).data('confirm-btn');
 
                 if (!title || title === "") {
-                    title = '{{ translate('messages.Are you sure?') }}';
+                    title = '{{ '¿Está seguro?' }}';
                 }
                 if (!cancel || cancel === "") {
-                    cancel = '{{ translate('messages.no') }}';
+                    cancel = '{{ 'No' }}';
                 }
                 if (!confirm || confirm === "") {
-                    confirm = '{{ translate('messages.Yes') }}';
+                    confirm = '{{ 'Sí' }}';
                 }
                 if (!image || image === "") {
                     image = "{{ asset('assets/admin/img/off-danger.png') }}";
@@ -478,16 +478,16 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
             function cancelled_status(route, message, processing = false) {
                 Swal.fire({
                     //text: message,
-                    title: '<?php echo e(translate('messages.Are you sure ?')); ?>',
+                    title: '<?php echo e('Está seguro ?'); ?>',
                     type: 'warning',
                     showCancelButton: true,
                     cancelButtonColor: 'default',
                     confirmButtonColor: '#FC6A57',
-                    cancelButtonText: '<?php echo e(translate('messages.Cancel')); ?>',
-                    confirmButtonText: '<?php echo e(translate('messages.submit')); ?>',
-                    inputPlaceholder: "<?php echo e(translate('Enter_a_reason')); ?>",
+                    cancelButtonText: '<?php echo e('Cancelar'); ?>',
+                    confirmButtonText: '<?php echo e('entregar'); ?>',
+                    inputPlaceholder: "<?php echo e('Introduce un motivo'); ?>",
                     input: 'text',
-                    html: message + '<br/>' + '<label><?php echo e(translate('Enter_a_reason')); ?></label>',
+                    html: message + '<br/>' + '<label><?php echo e('Introduce un motivo'); ?></label>',
                     inputValue: processing,
                     preConfirm: (note) => {
                         location.href = route + '&note=' + note;
@@ -498,14 +498,14 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
 
             function set_mail_filter(url, id, filter_by) {
                 Swal.fire({
-                    title: '{{ translate('messages.Are you sure?') }}',
+                    title: '{{ '¿Está seguro?' }}',
                     text: 'Please save changes before switching template',
                     type: 'warning',
                     showCancelButton: true,
                     cancelButtonColor: 'default',
                     confirmButtonColor: '#FC6A57',
-                    cancelButtonText: '{{ translate('messages.no') }}',
-                    confirmButtonText: '{{ translate('messages.Yes') }}',
+                    cancelButtonText: '{{ 'No' }}',
+                    confirmButtonText: '{{ 'Sí' }}',
                     reverseButtons: true
                 }).then((result) => {
                     if (result.value) {
@@ -519,7 +519,7 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
 
             function copy_text(copyText) {
                 navigator.clipboard.writeText(copyText);
-                toastr.success('{{translate('messages.text_copied')}}', {
+                toastr.success('{{'texto copiado'}}', {
                     CloseButton: true,
                     ProgressBar: true
                 });
@@ -685,7 +685,7 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                         admin_zone_id = '<?php    echo auth()->guard('admin')->user()->zone_id;?>';
                         admin_role_id = '<?php    echo auth()->guard('admin')->user()->role_id;?>';
                         if (new_order_type === 'trip') {
-                            document.querySelector('.update_notification_text').textContent = "{{translate('messages.You have new trip, Check Please.')}}";
+                            document.querySelector('.update_notification_text').textContent = "{{'Tienes un nuevo viaje, consulta por favor.'}}";
                         }
                         if (admin_role_id === '1') {
                             playAudio();
@@ -710,12 +710,12 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                             }
                         })
                     }
-                    toastr.success(@json(translate('messages.new_message_arrived_toast')), {
+                    toastr.success(@json('llegó un nuevo mensaje brindis'), {
                         CloseButton: true,
                         ProgressBar: true
                     });
                     showBrowserNotification(
-                        (payload.notification && payload.notification.title) ? payload.notification.title : @json(translate('messages.browser_notification_new_message_title')),
+                        (payload.notification && payload.notification.title) ? payload.notification.title : @json('notificación del navegador título del nuevo mensaje'),
                         (payload.notification && payload.notification.body) ? payload.notification.body : (payload.data && payload.data.description) ? payload.data.description : '',
                         '{{ route('admin.message.list') }}'
                     );
@@ -735,7 +735,7 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                             new_order_type = data.type;
                             new_module_id = data.module_id;
                             if (new_order_type === 'trip') {
-                                document.querySelector('.update_notification_text').textContent = "{{translate('messages.You have new trip, Check Please.')}}";
+                                document.querySelector('.update_notification_text').textContent = "{{'Tienes un nuevo viaje, consulta por favor.'}}";
                             }
                             if (data.new_order > 0) {
                                 playAudio();
@@ -776,7 +776,7 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                     return;
                 }
                 try {
-                    const n = new Notification(title || @json(translate('messages.browser_notification_new_message_title')), {
+                    const n = new Notification(title || @json('notificación del navegador título del nuevo mensaje'), {
                         body: body || '',
                         icon: @json($adminBrowserNotifIcon),
                     });
@@ -813,15 +813,15 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                     type: 'GET',
                     success: function (data) {
                         if (lastUnreadCount !== null && data.count > lastUnreadCount) {
-                            toastr.info('<a href="{{ route("admin.message.list") }}" style="color:#fff;text-decoration:underline;">{{ translate("messages.view_conversation") }}</a>', @json(translate('New message received')), {
+                            toastr.info('<a href="{{ route("admin.message.list") }}" style="color:#fff;text-decoration:underline;">{{ 'ver conversación' }}</a>', @json('Nuevo mensaje recibido'), {
                                 CloseButton: true,
                                 ProgressBar: true,
                                 timeOut: 8000,
                                 allowHtml: true
                             });
                             showBrowserNotification(
-                                @json(translate('messages.browser_notification_new_message_title')),
-                                @json(translate('messages.browser_notification_new_message_body')),
+                                @json('notificación del navegador título del nuevo mensaje'),
+                                @json('notificación del navegador nuevo cuerpo del mensaje'),
                                 '{{ route('admin.message.list') }}'
                             );
                             // Also refresh conversation list if on messages page
@@ -837,7 +837,7 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
 
             $(document).on('click', '.call-demo', function (e) {
                 @if(getEnvMode() == 'demo')
-                    toastr.warning('{{ translate('Update option is disabled for demo!') }}', {
+                    toastr.warning('{{ '¡La opción de actualización está deshabilitada para la demostración!' }}', {
                         CloseButton: true,
                         ProgressBar: true
                     });
@@ -853,14 +853,14 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
 
             function request_alert(url, message) {
                 Swal.fire({
-                    title: '{{translate('messages.are_you_sure')}}',
+                    title: '{{'¿está seguro?'}}',
                     text: message,
                     type: 'warning',
                     showCancelButton: true,
                     cancelButtonColor: 'default',
                     confirmButtonColor: '#FC6A57',
-                    cancelButtonText: '{{translate('messages.no')}}',
-                    confirmButtonText: '{{translate('messages.yes')}}',
+                    cancelButtonText: '{{'No'}}',
+                    confirmButtonText: '{{'Sí'}}',
                     reverseButtons: true
                 }).then((result) => {
                     if (result.value) {
@@ -947,13 +947,13 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                                     let htmlContent = '';
 
                                     @if (!$current_module_type_for_search)
-                                        htmlContent += '<div class="bg--13 d-inline-block fs-12 fw-500 mb-2 px-2 py-1 rounded text-italic">' + @json(translate('* To get module-specific results, please search within the module.')) + '</div>';
+                                        htmlContent += '<div class="bg--13 d-inline-block fs-12 fw-500 mb-2 px-2 py-1 rounded text-italic">' + @json('* Para obtener resultados específicos del módulo, busque dentro del módulo.') + '</div>';
                                     @endif
 
-                                    htmlContent += '<div class="fs-16 fw-500 mb-2">' + @json(translate('Search Result')) + '</div>' +
+                                    htmlContent += '<div class="fs-16 fw-500 mb-2">' + @json('Resultado de la búsqueda') + '</div>' +
                                         '<div class="search-list h-300 d-flex flex-column gap-2 justify-content-center align-items-center fs-16">' +
                                         '<img width="30" class="h-auto" src="' + @json(asset('assets/admin/img/modal/no-search-found.png')) + '" alt="">' + ' ' +
-                                        @json(translate('No result found')) +
+                                        @json('No se encontró ningún resultado') +
                                         '</div>';
 
                                     $('#searchResults').html(htmlContent);
@@ -976,9 +976,9 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                                     let htmlContent = '';
 
                                     @if (!$current_module_type_for_search)
-                                        htmlContent += '<div class="bg--13 d-inline-block fs-12 fw-500 mb-2 px-2 py-1 rounded text-italic">' + @json(translate('* To get module-specific results, please search within the module.')) + '</div>';
+                                        htmlContent += '<div class="bg--13 d-inline-block fs-12 fw-500 mb-2 px-2 py-1 rounded text-italic">' + @json('* Para obtener resultados específicos del módulo, busque dentro del módulo.') + '</div>';
                                     @endif
-                                    htmlContent +='<div class="fs-16 fw-500 mb-2">' + @json(translate('Search Result')) + '</div>' + '<div class="search-list d-flex flex-column">' + resultHtml + '</div>';
+                                    htmlContent +='<div class="fs-16 fw-500 mb-2">' + @json('Resultado de la búsqueda') + '</div>' + '<div class="search-list d-flex flex-column">' + resultHtml + '</div>';
 
                                     $('#searchResults').html(htmlContent);
                                     $('.search-list-item').click(function () {
@@ -1034,7 +1034,7 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
 
             function getRecentSearch() {
                 $(this).find("#searchForm input[type=search]").val('');
-                $('#searchResults').html('<div class="text-center text-muted py-5">{{translate('Loading recent searches')}}...</div>');
+                $('#searchResults').html('<div class="text-center text-muted py-5">{{'Cargando búsquedas recientes'}}...</div>');
                 $(this).find("#searchForm input[type=search]").focus();
 
                 $.ajax({
@@ -1042,7 +1042,7 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                     url: '{{ route('admin.recent.search') }}',
                     success: function (response) {
                         if (response.length === 0) {
-                            $('#searchResults').html('<div class="text-center text-muted py-5">{{translate('It appears that you have not yet searched.')}}.</div>');
+                            $('#searchResults').html('<div class="text-center text-muted py-5">{{'Parece que aún no has buscado.'}}.</div>');
                         } else {
                             var resultHtml = '';
                             response.forEach(function (route) {
@@ -1052,7 +1052,7 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                                 resultHtml += '</a>';
                             });
                             $('#searchResults').html('<div class="recent-search fs-16 fw-500 animate">' +
-                                @json(translate('Recent Search')) + '<div class="search-list d-flex flex-column mt-2">' + resultHtml + '</div></div>');
+                                @json('Búsqueda reciente') + '<div class="search-list d-flex flex-column mt-2">' + resultHtml + '</div></div>');
 
                             $('.search-list-item').click(function () {
                                 var routeName = $(this).data('route-name');
@@ -1082,7 +1082,7 @@ if (in_array(config('module.current_module_type'), config('module.module_type'))
                     },
                     error: function (xhr, status, error) {
                         console.error(xhr.responseText);
-                        $('#searchResults').html('<div class="text-center text-muted py-5">{{translate('Error loading recent searches')}}.</div>');
+                        $('#searchResults').html('<div class="text-center text-muted py-5">{{'Error al cargar búsquedas recientes'}}.</div>');
                     }
                 });
             }

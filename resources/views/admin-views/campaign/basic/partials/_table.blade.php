@@ -22,10 +22,10 @@
     <td>
         <div class="btn--container justify-content-center">
             <a class="btn action-btn btn-outline-primary btn--primary"
-                href="{{route('admin.campaign.edit',['basic',$campaign['id']])}}" title="{{translate('messages.edit_campaign')}}"><i class="tio-edit"></i>
+                href="{{route('admin.campaign.edit',['basic',$campaign['id']])}}" title="{{'editar campaña'}}"><i class="tio-edit"></i>
             </a>
-            <a class="btn action-btn btn-outline-danger btn--danger form-alert" href="javascript:" data-id="campaign-{{$campaign['id']}}" data-message="{{translate('messages.Want_to_delete_this_item')}}"
-               title="{{translate('messages.delete_campaign')}}"><i class="tio-delete-outlined"></i>
+            <a class="btn action-btn btn-outline-danger btn--danger form-alert" href="javascript:" data-id="campaign-{{$campaign['id']}}" data-message="{{'Quiere eliminar este elemento'}}"
+               title="{{'eliminar campaña'}}"><i class="tio-delete-outlined"></i>
             </a>
             <form action="{{route('admin.campaign.delete',[$campaign['id']])}}"
                             method="post" id="campaign-{{$campaign['id']}}">

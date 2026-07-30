@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', \App\Models\BusinessSetting::where(['key' => 'business_name'])->first()->value ?? translate('messages.dashboard'))
+@section('title', \App\Models\BusinessSetting::where(['key' => 'business_name'])->first()->value ?? 'Panel de Control')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -16,8 +16,8 @@
                 <div class="d-flex align-items-center">
                     <img src="{{asset('assets/admin/img/new-img/users.svg')}}" alt="img">
                     <div class="w-0 flex-grow pl-3">
-                        <h1 class="page-header-title mb-0">{{ translate('messages.User Overview') }}</h1>
-                        <p class="page-header-text m-0">{{translate('Hello,_here_you_can_manage_your_users_by_zone.')}}
+                        <h1 class="page-header-title mb-0">{{ 'Descripción general del usuario' }}</h1>
+                        <p class="page-header-text m-0">{{'Hola, aquí puedes administrar tus usuarios por zona.'}}
                         </p>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
             <div class="col-sm-auto min--280">
                 <select name="zone_id" class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}"
                     data-filter="zone_id">
-                    <option value="all">{{ translate('messages.All_Zones') }}</option>
+                    <option value="all">{{ 'Todas las Zonas' }}</option>
                     @foreach(\App\Models\Zone::orderBy('name')->get() as $zone)
                         <option value="{{$zone['id']}}" {{$params['zone_id'] == $zone['id'] ? 'selected' : ''}}>
                             {{$zone['name']}}
@@ -53,7 +53,7 @@
                         @endforeach
                     </div>
                     <h3 class="title">{{$total_customers}}</h3>
-                    <h5 class="subtitle text-capitalize">{{translate('messages.total_customer')}}</h5>
+                    <h5 class="subtitle text-capitalize">{{'cliente total'}}</h5>
                 </div>
             </a>
         </div>
@@ -72,7 +72,7 @@
                         @endforeach
                     </div>
                     <h3 class="title">{{$total_deliveryman}}</h3>
-                    <h5 class="subtitle text-capitalize">{{translate('messages.total_delivery_man')}}</h5>
+                    <h5 class="subtitle text-capitalize">{{'repartidor total'}}</h5>
                 </div>
             </a>
         </div>
@@ -93,13 +93,13 @@
                         @endforeach
                     </div>
                     <h3 class="title">{{$total_employees}}</h3>
-                    <h5 class="subtitle text-capitalize">{{translate('messages.total_employee')}}</h5>
+                    <h5 class="subtitle text-capitalize">{{'empleado total'}}</h5>
                 </div>
             </a>
         </div>
     </div>
 
-    <h4 class="mb-md-3">{{ translate('Customer Statistics') }}</h4>
+    <h4 class="mb-md-3">{{ 'Estadísticas de clientes' }}</h4>
 
     <div class="row g-2 pb-4 mb-0">
         <div class="col-lg-8">
@@ -115,7 +115,7 @@
                                             alt="new-img">
                                         <h4>{{$active_customers}}</h4>
                                     </div>
-                                    <h4 class="subtitle text-capitalize">{{translate('messages.active_customer')}}</h4>
+                                    <h4 class="subtitle text-capitalize">{{'cliente activo'}}</h4>
                                 </div>
                             </a>
                         </div>
@@ -128,7 +128,7 @@
                                             alt="new-img">
                                         <h4>{{$newly_joined}}</h4>
                                     </div>
-                                    <h4 class="subtitle text-capitalize">{{translate('messages.newly_joined')}}</h4>
+                                    <h4 class="subtitle text-capitalize">{{'recién unido'}}</h4>
                                 </div>
                             </a>
                         </div>
@@ -141,7 +141,7 @@
                                             alt="new-img">
                                         <h4>{{$blocked_customers}}</h4>
                                     </div>
-                                    <h4 class="subtitle text-capitalize">{{translate('messages.blocked_customer')}}</h4>
+                                    <h4 class="subtitle text-capitalize">{{'cliente bloqueado'}}</h4>
                                 </div>
                             </a>
                         </div>
@@ -153,12 +153,12 @@
                             <div class="d-flex flex-wrap justify-content-between align-items-center __gap-12px">
                                 <div class="__gross-amount">
                                     {{-- <h6>$855.8K</h6> --}}
-                                    <span class="text-capitalize">{{translate('messages.customer_growth')}}</span>
+                                    <span class="text-capitalize">{{'crecimiento de clientes'}}</span>
                                 </div>
                                 <div class="chart--label __chart-label p-0 ml-auto">
                                     <span class="indicator chart-bg-2"></span>
                                     <span class="info">
-                                        <span>{{translate('messages.this_year')}}</span> ({{ now()->year }})
+                                        <span>{{'este año'}}</span> ({{ now()->year }})
                                     </span>
                                 </div>
                             </div>
@@ -172,19 +172,19 @@
             <div class="__customer-satisfaction">
                 <div class="px-2">
                     <div class="d-flex align-items-center justify-content-between">
-                        <h5 class="subtitle text-capitalize">{{translate('messages.customer_satisfaction')}}</h5>
+                        <h5 class="subtitle text-capitalize">{{'satisfacción del cliente'}}</h5>
                         <img src="{{asset('assets/admin/img/new-img/satisfactions.png')}}" alt="new-img">
                     </div>
                     <div class="px-sm-2">
                         <h4 class="review-count">{{$reviews}}</h4>
-                        <span class="review-received text-capitalize">{{translate('messages.review_received')}}</span>
+                        <span class="review-received text-capitalize">{{'revisión recibida'}}</span>
                     </div>
                 </div>
                 <ul class="__customer-review">
                     <li
-                        title="{{ translate('positive_review_given_total') . ' ' . $positive_reviews . ' ' . translate('messages.customers')  }} ({{ translate('Scale: 4-5') }}) ">
+                        title="{{ 'revisión positiva dado total' . ' ' . $positive_reviews . ' ' . 'Clientes'  }} ({{ 'Escala: 4-5' }}) ">
 
-                        <span class="tag">{{ translate('Positive') }}</span>
+                        <span class="tag">{{ 'Positivo' }}</span>
                         @php($positive_parcent = $positive_reviews > 0 ? round($positive_reviews / $reviews * 100) : 0)
                         <span class="review">
                             <i class="tio-user-big" @if ($positive_parcent >= 5) style="--clr:#00AA6D;" @endif></i>
@@ -201,9 +201,9 @@
                         <span class="ratio">{{$positive_parcent}}%</span>
                     </li>
                     <li
-                        title="{{ translate('good_review_given_total') . ' ' . $good_reviews . ' ' . translate('messages.customers') }} ({{ translate('Scale: 3') }})">
+                        title="{{ 'buena reseña dado el total' . ' ' . $good_reviews . ' ' . 'Clientes' }} ({{ 'Escala: 3' }})">
 
-                        <span class="tag">{{ translate('Good') }}</span>
+                        <span class="tag">{{ 'Bien' }}</span>
                         @php($good_parcent = $good_reviews > 0 ? round($good_reviews / $reviews * 100) : 0)
                         <span class="review">
                             <i class="tio-user-big" @if ($good_parcent >= 5) style="--clr:#FEB019;" @endif></i>
@@ -220,8 +220,8 @@
                         <span class="ratio">{{$good_parcent}}%</span>
                     </li>
                     <li
-                        title="{{ translate('neutral_review_given_total') . ' ' . $neutral_reviews . ' ' . translate('messages.customers') }} ({{ translate('Scale: 2') }})">
-                        <span class="tag">{{ translate('Neutral') }}</span>
+                        title="{{ 'revisión neutral dado el total' . ' ' . $neutral_reviews . ' ' . 'Clientes' }} ({{ 'Escala: 2' }})">
+                        <span class="tag">{{ 'Neutral' }}</span>
                         @php($neutral_parcent = $neutral_reviews > 0 ? round($neutral_reviews / $reviews * 100) : 0)
                         <span class="review">
                             <i class="tio-user-big" @if ($neutral_parcent >= 5) style="--clr:#0177CD;" @endif></i>
@@ -238,8 +238,8 @@
                         <span class="ratio">{{$neutral_parcent}}%</span>
                     </li>
                     <li
-                        title="{{ translate('negative_review_given_total') . ' ' . $negative_reviews . ' ' . translate('messages.customers') }} ({{ translate('Scale: 1') }})">
-                        <span class="tag">{{ translate('Negetive') }}</span>
+                        title="{{ 'revisión negativa dado total' . ' ' . $negative_reviews . ' ' . 'Clientes' }} ({{ 'Escala: 1' }})">
+                        <span class="tag">{{ 'negativo' }}</span>
                         @php($negative_percent = $negative_reviews > 0 ? round($negative_reviews / $reviews * 100) : 0)
                                                 <span class="review">
                                                     <i class="tio-user-big" @if ($negative_percent >= 5) style="--clr:#FF7E7E;" @endif></i>
@@ -259,7 +259,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <h4 class="mb-md-3">{{ translate('Deliveryman Statistics') }}</h4>
+                            <h4 class="mb-md-3">{{ 'Estadísticas del repartidor' }}</h4>
                             <div class="row g-2">
                                 <div class="col-lg-8">
                                     <div class="row gap__10">
@@ -272,7 +272,7 @@
                                                             alt="new-img">
                                                         <h4>{{$active_deliveryman}}</h4>
                                                     </div>
-                                                    <h4 class="subtitle text-capitalize">{{translate('messages.active_delivery_man')}}</h4>
+                                                    <h4 class="subtitle text-capitalize">{{'repartidor activo'}}</h4>
                                                 </div>
                                             </a>
                                         </div>
@@ -285,7 +285,7 @@
                                                             alt="new-img">
                                                         <h4>{{$newly_joined_deliveryman}}</h4>
                                                     </div>
-                                                    <h4 class="subtitle text-capitalize">{{translate('messages.newly_joined_delivery_man')}}
+                                                    <h4 class="subtitle text-capitalize">{{'repartidor recién incorporado'}}
                                                     </h4>
                                                 </div>
                                             </a>
@@ -299,7 +299,7 @@
                                                             alt="new-img">
                                                         <h4>{{$inactive_deliveryman}}</h4>
                                                     </div>
-                                                    <h4 class="subtitle text-capitalize">{{translate('messages.inactive_deliveryman')}}</h4>
+                                                    <h4 class="subtitle text-capitalize">{{'repartidor inactivo'}}</h4>
                                                 </div>
                                             </a>
                                         </div>
@@ -312,7 +312,7 @@
                                                             alt="new-img">
                                                         <h4>{{$blocked_deliveryman}}</h4>
                                                     </div>
-                                                    <h4 class="subtitle text-capitalize">{{translate('messages.Blocked_deliveryman')}}</h4>
+                                                    <h4 class="subtitle text-capitalize">{{'Repartidor bloqueado'}}</h4>
                                                 </div>
                                             </a>
                                         </div>
@@ -320,14 +320,14 @@
                                     <div class="__map-wrapper-2 mt-3">
                                         <div class="map-pop-deliveryman">
                                             <form action="javascript:" id="search-form" class="map-pop-deliveryman-inner">
-                                                <label>{{ translate('Currently Active Delivery Men') }} </label>
+                                                <label>{{ 'Repartidores actualmente activos' }} </label>
                                                 <div class="position-relative mx-auto">
                                                     <i class="tio-search"></i>
                                                     <input type="text" name="search" class="form-control"
-                                                        placeholder="{{translate('Search Delivery Man ...')}}">
+                                                        placeholder="{{'Buscar repartidor...'}}">
                                                 </div>
                                                 <a href="{{ route('admin.users.delivery-man.list') }}"
-                                                    class="link">{{ translate('View All Delivery Men') }}</a>
+                                                    class="link">{{ 'Ver todos los repartidores' }}</a>
                                             </form>
                                         </div>
                                         <div class="map-warper map-wrapper-2 rounded">
@@ -346,8 +346,8 @@
     <div class="page-header">
         <div class="row align-items-center">
             <div class="col-sm mb-2 mb-sm-0">
-                <h1 class="page-header-title">{{translate('messages.welcome')}}, {{auth('admin')->user()->f_name}}.</h1>
-                <p class="page-header-text">{{translate('messages.employee_welcome_message')}}</p>
+                <h1 class="page-header-title">{{'Bienvenido'}}, {{auth('admin')->user()->f_name}}.</h1>
+                <p class="page-header-text">{{'mensaje de bienvenida al empleado'}}</p>
             </div>
         </div>
     </div>
@@ -547,7 +547,7 @@
 
     let options = {
         series: [{
-            name: '{{ translate('New_Customer_Growth') }}',
+            name: '{{ 'Nuevo crecimiento de clientes' }}',
             data: [{{$last_year_users > 0 ? number_format($user_data[1] / $last_year_users, 2) : 0}},
            {{$user_data[1] > 0 ? number_format($user_data[2] / $user_data[1], 2) : 0}},
            {{$user_data[2] > 0 ? number_format($user_data[3] / $user_data[2], 2) : 0}},
@@ -582,7 +582,7 @@
         },
         xaxis: {
             //   type: 'datetime',
-            categories: ["{{ translate('Jan') }}", "{{ translate('Feb') }}", "{{ translate('Mar') }}", "{{ translate('Apr') }}", "{{ translate('May') }}", "{{ translate('Jun') }}", "{{ translate('Jul') }}", "{{ translate('Aug') }}", "{{ translate('Sep') }}", "{{ translate('Oct') }}", "{{ translate('Nov') }}", "{{ translate('Dec') }}"]
+            categories: ["{{ 'Ene' }}", "{{ 'Feb' }}", "{{ 'Mar' }}", "{{ 'Abr' }}", "{{ 'Puede' }}", "{{ 'Jun' }}", "{{ 'Jul' }}", "{{ 'Ago' }}", "{{ 'Sep' }}", "{{ 'Oct' }}", "{{ 'Nov' }}", "{{ 'Dic' }}"]
         },
         tooltip: {
             x: {

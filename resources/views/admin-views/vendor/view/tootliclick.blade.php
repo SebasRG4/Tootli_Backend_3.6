@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('TootliClick Settings'))
+@section('title', 'Configuración de TootliClick')
 
 @push('css_or_js')
     <!-- Custom CSS for dynamic rows if needed -->
@@ -14,7 +14,7 @@
             <div class="card-header">
                 <h5 class="card-title">
                     <i class="tio-settings-outlined"></i>
-                    {{ translate('Configuración de Menú Digital TootliClick') }}
+                    {{ 'Configuración de Menú Digital TootliClick' }}
                 </h5>
             </div>
             <div class="card-body">
@@ -23,16 +23,16 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="input-label">{{ translate('Habilitar Envío por Zonas/Colonias') }}</label>
+                                <label class="input-label">{{ 'Habilitar Envío por Zonas/Colonias' }}</label>
                                 <input type="checkbox" name="shipping_enabled" value="1" {{ (isset($store->tootliclick_settings['shipping_enabled']) && $store->tootliclick_settings['shipping_enabled']) ? 'checked' : '' }}>
-                                <small class="text-muted d-block">{{ translate('Si se habilita, el cliente deberá seleccionar una colonia de la lista para ver el costo de envío.') }}</small>
+                                <small class="text-muted d-block">{{ 'Si se habilita, el cliente deberá seleccionar una colonia de la lista para ver el costo de envío.' }}</small>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="input-label">{{ translate('Mínimo de compra para envío GRATIS') }}</label>
+                                <label class="input-label">{{ 'Mínimo de compra para envío GRATIS' }}</label>
                                 <input type="number" step="0.01" name="free_delivery_min_amount" class="form-control" value="{{ $store->tootliclick_settings['free_delivery_min_amount'] ?? 0 }}">
-                                <small class="text-muted">{{ translate('Coloca 0 para no ofrecer envío gratis.') }}</small>
+                                <small class="text-muted">{{ 'Coloca 0 para no ofrecer envío gratis.' }}</small>
                             </div>
                         </div>
                     </div>
@@ -41,9 +41,9 @@
 
                     <div class="form-group">
                         <label class="input-label d-flex justify-content-between align-items-center">
-                            {{ translate('Colonias y Costos de Envío') }}
+                            {{ 'Colonias y Costos de Envío' }}
                             <button type="button" class="btn btn-sm btn-outline-primary" onclick="addColoniaRow()">
-                                <i class="tio-add"></i> {{ translate('Agregar Colonia') }}
+                                <i class="tio-add"></i> {{ 'Agregar Colonia' }}
                             </button>
                         </label>
                         
@@ -93,7 +93,7 @@
                     </div>
 
                     <div class="form-group mt-4">
-                        <button type="submit" class="btn btn--primary">{{ translate('Guardar Configuración') }}</button>
+                        <button type="submit" class="btn btn--primary">{{ 'Guardar configuración' }}</button>
                     </div>
                 </form>
             </div>

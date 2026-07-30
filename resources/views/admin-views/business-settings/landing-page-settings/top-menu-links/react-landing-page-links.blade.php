@@ -4,75 +4,75 @@
         <ul class="nav nav-tabs tabs-inner border-0 nav--tabs nav--pills">
             <li class="nav-item tabs-slide_items">
                 <a class="nav-link {{ Request::is('admin/business-settings/pages/react-landing-page-settings/header') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.react-landing-page-settings', 'header') }}">{{translate('Hero Section')}}</a>
+                href="{{ route('admin.business-settings.react-landing-page-settings', 'header') }}">{{'Sección de héroe'}}</a>
             </li>
             <li class="nav-item tabs-slide_items">
                 <a class="nav-link {{ Request::is('admin/business-settings/pages/react-landing-page-settings/trust-section') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.react-landing-page-settings', 'trust-section') }}">{{translate('Trust Section')}}</a>
+                href="{{ route('admin.business-settings.react-landing-page-settings', 'trust-section') }}">{{'Sección de confianza'}}</a>
             </li>
             <li class="nav-item tabs-slide_items">
                 <a class="nav-link {{ Request::is('admin/business-settings/pages/react-landing-page-settings/available-zone') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.react-landing-page-settings', 'available-zone') }}">{{translate('messages.available_zone')}}</a>
+                href="{{ route('admin.business-settings.react-landing-page-settings', 'available-zone') }}">{{'zona disponible'}}</a>
             </li>
             <li class="nav-item tabs-slide_items">
                 <a class="nav-link {{ Request::is('admin/business-settings/pages/react-landing-page-settings/promotion-banner') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.react-landing-page-settings', 'promotion-banner') }}">{{translate('Promotional Banners')}}</a>
+                href="{{ route('admin.business-settings.react-landing-page-settings', 'promotion-banner') }}">{{'pancartas promocionales'}}</a>
             </li>
             <li class="nav-item tabs-slide_items">
                 <a class="nav-link {{ Request::is('admin/business-settings/pages/react-landing-page-settings/download-user-app') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.react-landing-page-settings', 'download-user-app') }}">{{translate('User App Download')}}</a>
+                href="{{ route('admin.business-settings.react-landing-page-settings', 'download-user-app') }}">{{'Descarga de la aplicación del usuario'}}</a>
             </li>
             <li class="nav-item tabs-slide_items">
                 <a class="nav-link {{ Request::is('admin/business-settings/pages/react-landing-page-settings/popular-clients') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.react-landing-page-settings', 'popular-clients') }}">{{translate('Popular Clients')}}</a>
+                href="{{ route('admin.business-settings.react-landing-page-settings', 'popular-clients') }}">{{'Clientes populares'}}</a>
             </li>
             <li class="nav-item tabs-slide_items">
                 <a class="nav-link {{ Request::is('admin/business-settings/pages/react-landing-page-settings/download-seller-app') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.react-landing-page-settings', 'download-seller-app') }}">{{translate('Seller App Download')}}</a>
+                href="{{ route('admin.business-settings.react-landing-page-settings', 'download-seller-app') }}">{{'Descarga de la aplicación del vendedor'}}</a>
             </li>
             <li class="nav-item tabs-slide_items">
                 <a class="nav-link {{ Request::is('admin/business-settings/pages/react-landing-page-settings/download-deliveryman-app') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.react-landing-page-settings', 'download-deliveryman-app') }}">{{translate('Deliveryman App Download')}}</a>
+                href="{{ route('admin.business-settings.react-landing-page-settings', 'download-deliveryman-app') }}">{{'Descarga de la aplicación Repartidor'}}</a>
             </li>
             <li class="nav-item tabs-slide_items">
                 <a class="nav-link {{ Request::is('admin/business-settings/pages/react-landing-page-settings/banner-section') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.react-landing-page-settings', 'banner-section') }}">{{translate('Banner Section')}}</a>
+                href="{{ route('admin.business-settings.react-landing-page-settings', 'banner-section') }}">{{'Sección de pancartas'}}</a>
             </li>
             <li class="nav-item tabs-slide_items">
                 <a class="nav-link {{ Request::is('admin/business-settings/pages/react-landing-page-settings/testimonials*') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.react-landing-page-settings', 'testimonials') }}">{{translate('messages.testimonials')}}</a>
+                href="{{ route('admin.business-settings.react-landing-page-settings', 'testimonials') }}">{{'testimonios'}}</a>
             </li>
             <li class="nav-item tabs-slide_items">
                 <a class="nav-link {{ Request::is('admin/business-settings/pages/react-landing-page-settings/gallery') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.react-landing-page-settings', 'gallery') }}">{{translate('Gallery')}}</a>
+                href="{{ route('admin.business-settings.react-landing-page-settings', 'gallery') }}">{{'Galería'}}</a>
             </li>
             <li class="nav-item tabs-slide_items">
                 <a class="nav-link {{ Request::is('admin/business-settings/pages/react-landing-page-settings/highlight-section') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.react-landing-page-settings', 'highlight-section') }}">{{translate('Highlight Section')}}</a>
+                href="{{ route('admin.business-settings.react-landing-page-settings', 'highlight-section') }}">{{'Sección destacada'}}</a>
             </li>
             <li class="nav-item tabs-slide_items">
                 <a class="nav-link {{ Request::is('admin/business-settings/pages/react-landing-page-settings/faq') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.react-landing-page-settings', 'faq') }}">{{translate('FAQ')}}</a>
+                href="{{ route('admin.business-settings.react-landing-page-settings', 'faq') }}">{{'Preguntas frecuentes'}}</a>
             </li>
             <li class="nav-item tabs-slide_items">
                 <a class="nav-link {{ Request::is('admin/business-settings/pages/react-landing-page-settings/footer') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.react-landing-page-settings', 'footer') }}">{{translate('Footer')}}</a>
+                href="{{ route('admin.business-settings.react-landing-page-settings', 'footer') }}">{{'Pie de página'}}</a>
             </li>
 {{--            <li class="nav-item tabs-slide_items">--}}
 {{--                <a class="nav-link {{ Request::is('admin/business-settings/pages/react-landing-page-settings/company-intro') ? 'active' : '' }}"--}}
-{{--                href="{{ route('admin.business-settings.react-landing-page-settings', 'company-intro') }}">{{translate('Company Intro')}}</a>--}}
+{{--                href="{{ route('admin.business-settings.react-landing-page-settings', 'company-intro') }}">{{'Introducción de la empresa'}}</a>--}}
 {{--            </li>--}}
 {{--            <li class="nav-item tabs-slide_items">--}}
 {{--                <a class="nav-link {{ Request::is('admin/business-settings/pages/react-landing-page-settings/earn-money') ? 'active' : '' }}"--}}
-{{--                href="{{ route('admin.business-settings.react-landing-page-settings', 'earn-money') }}">{{translate('messages.earn_money')}}</a>--}}
+{{--                href="{{ route('admin.business-settings.react-landing-page-settings', 'earn-money') }}">{{'ganar dinero'}}</a>--}}
 {{--            </li>--}}
 {{--            <li class="nav-item tabs-slide_items">--}}
 {{--                <a class="nav-link {{ Request::is('admin/business-settings/pages/react-landing-page-settings/business-section') ? 'active' : '' }}"--}}
-{{--                href="{{ route('admin.business-settings.react-landing-page-settings', 'business-section') }}">{{translate('Business Section')}}</a>--}}
+{{--                href="{{ route('admin.business-settings.react-landing-page-settings', 'business-section') }}">{{'Sección de Negocios'}}</a>--}}
 {{--            </li>--}}
             <li class="nav-item tabs-slide_items">
                 <a class="nav-link {{ Request::is('admin/business-settings/pages/react-landing-page-settings/meta-data') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.react-landing-page-settings', 'meta-data') }}">{{translate('messages.meta_data')}}</a>
+                href="{{ route('admin.business-settings.react-landing-page-settings', 'meta-data') }}">{{'metadatos'}}</a>
             </li>
         </ul>
         <!-- End Nav -->

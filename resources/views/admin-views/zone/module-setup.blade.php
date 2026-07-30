@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Zone Wise Module Setup'))
+@section('title', 'Configuración del módulo de zona')
 
 @push('css_or_js')
 @endpush
@@ -12,11 +12,11 @@
         <div class="page-header">
             <h1 class="page-header-title mb-1">
                 <span>
-                    {{ translate('Connect_Module_With') }} {{ $zone->name }}
+                    {{ 'Conecte el módulo con' }} {{ $zone->name }}
                 </span>
             </h1>
             <p class="fs-14">
-                {{ translate('Here_you_connect_your_modules_&_setup_the_delivery_charges_for_this_zone.') }}
+                {{ 'Aquí conecta sus módulos y configura los gastos de envío para esta zona.' }}
             </p>
         </div>
         <!-- End Page Header -->
@@ -31,14 +31,14 @@
                         <div class="row g-3 align-items-end">
 
                             <div class="col-sm-5 col-md-4">
-                                <h3 for="">{{ translate('Select Payment Method') }} </h3>
+                                <h3 for="">{{ 'Seleccione método de pago' }} </h3>
                                 @if (data_get($cash_on_delivery, 'status') != 1 && data_get($digital_payment, 'status') != 1 && $offline_payment != 1)
                                     <div
                                         class="danger-notes-bg px-2 py-2 rounded fz-11  gap-2 align-items-center d-flex ">
                                         <img src="{{ asset('assets/admin/img/Icon.svg') }}" alt="">
                                         <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="">
                                         <span>
-                                            {{ translate('Must enable at least one payment method from your 3rd party payment settings.') }}
+                                            {{ 'Debe habilitar al menos un método de pago desde su configuración de pago de terceros.' }}
                                         </span>
                                     </div>
                                 @else
@@ -46,7 +46,7 @@
                                         <img src="{{ asset('assets/admin/img/Icon.svg') }}" alt="">
 
                                         <span>
-                                            {{ translate('Must select at least one payment method.') }}
+                                            {{ 'Debe seleccionar al menos un método de pago.' }}
                                         </span>
                                     </div>
                                 @endif
@@ -60,7 +60,7 @@
                                                    {{ $zone->cash_on_delivery == 1 ? 'checked' : '' }} id="cash_on_delivery"
                                                    value="1" name="cash_on_delivery">
                                             <label class=" form-check-label"
-                                                   for="cash_on_delivery">{{ translate('Cash on Delivery') }}</label>
+                                                   for="cash_on_delivery">{{ 'Contra reembolso' }}</label>
                                         </div>
                                     @endif
                                     @if (data_get($digital_payment, 'status') == 1)
@@ -69,7 +69,7 @@
                                                    {{ $zone->digital_payment == 1 ? 'checked' : '' }} type="checkbox"
                                                    id="digital_payment" value="1" name="digital_payment">
                                             <label class=" form-check-label"
-                                                   for="digital_payment">{{ translate('Digital Payment') }}</label>
+                                                   for="digital_payment">{{ 'Pago Digital' }}</label>
                                         </div>
                                     @endif
                                     @if ($offline_payment == 1)
@@ -78,7 +78,7 @@
                                                    {{ $zone->offline_payment == 1 ? 'checked' : '' }} id="offline_payment"
                                                    value="1" name="offline_payment">
                                             <label class=" form-check-label"
-                                                   for="offline_payment">{{ translate('Offline Payment') }}</label>
+                                                   for="offline_payment">{{ 'Pago sin conexión' }}</label>
                                         </div>
                                     @endif
 
@@ -96,7 +96,7 @@
                     <div class="card-body">
                         <div class="form-group mb-0">
                             <label class="input-label"
-                                   for="exampleFormControlSelect1">{{ translate('Choose_Business_Module_To_Connect') }}
+                                   for="exampleFormControlSelect1">{{ 'Elija el módulo empresarial para conectarse' }}
                                 <span
                                     class="input-label-secondary"></span></label>
                             <select name="module_id[]" id="choice_modules" required
@@ -118,16 +118,16 @@
 
             @if (count($selected_modules) > 0)
                 <div class="col-md-12 mb-2 mt-3">
-                    <h4 class="m-0">{{ translate('Delivery_Charge_Setup') }}</h4>
+                    <h4 class="m-0">{{ 'Configuración del cargo de entrega' }}</h4>
                 </div>
                 <div class="col-md-12 mb-2">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
-                                <h5 class="m-0">{{ translate('Multi_store_delivery_extra_title') }}</h5>
-                                <span class="badge badge-soft-secondary">{{ translate('Multi_store_delivery_extra_global_badge') }}</span>
+                                <h5 class="m-0">{{ 'Título adicional de entrega en varias tiendas' }}</h5>
+                                <span class="badge badge-soft-secondary">{{ 'Insignia global adicional de entrega en varias tiendas' }}</span>
                             </div>
-                            <p class="fs-12 text-muted mb-3">{{ translate('Multi_store_delivery_extra_hint') }}</p>
+                            <p class="fs-12 text-muted mb-3">{{ 'Sugerencia adicional de entrega en varias tiendas' }}</p>
                             <div class="row g-3 align-items-end">
                                 <div class="col-md-6 col-lg-4">
                                     <div class="form-check form--check mb-0">
@@ -137,19 +137,19 @@
                                                name="multi_store_delivery_extra_status"
                                             {{ (string) old('multi_store_delivery_extra_status', $multi_store_delivery_extra_status ?? '0') === '1' ? 'checked' : '' }}>
                                         <label class="form-check-label"
-                                               for="multi_store_delivery_extra_status">{{ translate('Multi_store_delivery_extra_enable') }}</label>
+                                               for="multi_store_delivery_extra_status">{{ 'Habilitación adicional de entrega en varias tiendas' }}</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label text-capitalize fs-14"
                                                for="multi_store_delivery_extra_amount">
-                                            {{ translate('Multi_store_delivery_extra_amount_label') }}
+                                            {{ 'Etiqueta de cantidad adicional de entrega en varias tiendas' }}
                                             ({{ \App\CentralLogics\Helpers::currency_symbol() }})
                                         </label>
                                         <input type="number" class="form-control" id="multi_store_delivery_extra_amount"
                                                name="multi_store_delivery_extra_amount" step=".01" min="0"
-                                               placeholder="{{ translate('messages.Ex:10') }}"
+                                               placeholder="{{ 'Ej: 10' }}"
                                                value="{{ old('multi_store_delivery_extra_amount', $multi_store_delivery_extra_amount ?? '0') }}">
                                     </div>
                                 </div>
@@ -166,7 +166,7 @@
                             <div class="module-row card view-details-container overflow-hidden">
                                 <a href="#0"
                                    class="card-header border-0 view-btn d-flex align-items-center justify-content-between flex-wrap gap-1">
-                                    <h5 class="m-0">{{ $module->module_name }} {{ translate('Module') }}</h5>
+                                    <h5 class="m-0">{{ $module->module_name }} {{ 'Módulo' }}</h5>
                                     <i class="tio-chevron-down fs-24 text-title"></i>
                                 </a>
                                 <div class="card-body view-details border-top">
@@ -175,11 +175,11 @@
                                         <div class="gap-1 d-flex align-items-center">
                                             <i class="tio-light-on theme-clr-dark fs-16"></i>
                                             <p class="m-0 fs-12">
-                                                {{ translate('To Setup parcel module delivery charge please visit') }}
+                                                {{ 'Para configurar el cargo de entrega del módulo de paquetes, visite' }}
                                                 <a
                                                     href="#0"
-                                                    class="font-semibold text-title">{{ translate('Parcel Module > Delivery Setup') }}</a>
-                                                {{ translate('page.') }}</p>
+                                                    class="font-semibold text-title">{{ 'Módulo de paquetería > Configuración de entrega' }}</a>
+                                                {{ 'página.' }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -211,9 +211,9 @@
                                         <div class="gap-1 d-flex align-items-center">
                                             <i class="tio-light-on theme-clr-dark fs-16"></i>
                                             <p class="m-0 fs-12">
-                                                {{ translate('Rental module doesn’t support delivery charges. You can set trip fare per vehicle from:') }}
+                                                {{ 'El módulo de alquiler no admite cargos de envío. Puede establecer la tarifa del viaje por vehículo desde:' }}
                                                 <a href="#0"
-                                                   class="font-semibold text-title">{{ translate('Rental Module > Vehicle Management > Vehicle Setup > List.') }}</a>
+                                                   class="font-semibold text-title">{{ 'Módulo de Alquiler > Gestión de Vehículos > Configuración de Vehículos > Lista.' }}</a>
                                             </p>
                                         </div>
                                     </div>
@@ -237,7 +237,7 @@
                             <div class="module-row card view-details-container overflow-hidden">
                                 <a href="#0"
                                    class="card-header border-0 view-btn d-flex align-items-center justify-content-between flex-wrap gap-1">
-                                    <h5 class="m-0">{{ $module->module_name }} {{ translate('Module') }}</h5>
+                                    <h5 class="m-0">{{ $module->module_name }} {{ 'Módulo' }}</h5>
                                     <i class="tio-chevron-down fs-24 text-title"></i>
                                 </a>
                                 <div class="card-body view-details border-top">
@@ -246,7 +246,7 @@
                                             <div class="form-group mb-0">
                                                 <label
                                                     class="input-label text-capitalize fs-14 d-flex alig-items-center line--limit-1">
-                                                    {{ translate('messages.Choose_Delivery_Charge_Type') }} <span
+                                                    {{ 'Elija el tipo de cargo de envío' }} <span
                                                         class="text-danger">*</span>
                                                 </label>
                                                 <div
@@ -257,7 +257,7 @@
                                                                name="module_data[{{ $module->id }}][delivery_charge_type]"
                                                             {{ $pivot?->delivery_charge_type == 'fixed' ? 'checked' : '' }}>
                                                         <span
-                                                            class="form-check-label">{{ translate('messages.Fixed_Amount') }}</span>
+                                                            class="form-check-label">{{ 'Monto Fijo' }}</span>
                                                     </label>
                                                     <label class="form-check form--check mr-2 mr-md-4">
                                                         <input class="form-check-input delivery-type-radio" type="radio"
@@ -265,7 +265,7 @@
                                                                name="module_data[{{ $module->id }}][delivery_charge_type]"
                                                             {{ $pivot?->delivery_charge_type != 'fixed' ? 'checked' : '' }}>
                                                         <span
-                                                            class="form-check-label">{{ translate('messages.Distance_Wise') }}</span>
+                                                            class="form-check-label">{{ 'Distancia sabia' }}</span>
                                                     </label>
                                                 </div>
                                             </div>
@@ -274,14 +274,14 @@
                                             <div class="form-group mb-0">
                                                 <label
                                                     class="input-label text-capitalize fs-14 d-flex alig-items-center line--limit-1">
-                                                    {{ translate('messages.Amount') }}
+                                                    {{ 'Cantidad' }}
                                                     ({{ \App\CentralLogics\Helpers::currency_symbol() }})
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <input type="number" class="form-control"
                                                        name="module_data[{{ $module->id }}][fixed_shipping_charge]"
                                                        step=".01" min="0"
-                                                       placeholder="{{ translate('messages.Ex:10') }}"
+                                                       placeholder="{{ 'Ej: 10' }}"
                                                        value="{{ $pivot?->fixed_shipping_charge }}">
                                             </div>
                                         </div>
@@ -289,14 +289,14 @@
                                             <div class="form-group mb-0">
                                                 <label
                                                     class="input-label text-capitalize fs-14 d-flex alig-items-center line--limit-1">
-                                                    {{ translate('messages.Per_km_delivery_charge') }}
+                                                    {{ 'Cargo de entrega por km' }}
                                                     ({{ \App\CentralLogics\Helpers::currency_symbol() }}) <span
                                                         class="text-danger">*</span>
                                                 </label>
                                                 <input type="number" class="form-control"
                                                        name="module_data[{{ $module->id }}][per_km_shipping_charge]"
                                                        step=".01" min="0"
-                                                       placeholder="{{ translate('messages.Ex:10') }}"
+                                                       placeholder="{{ 'Ej: 10' }}"
                                                        value="{{ $pivot?->per_km_shipping_charge }}">
                                             </div>
                                         </div>
@@ -304,13 +304,13 @@
                                             <div class="form-group mb-0">
                                                 <label
                                                     class="input-label text-capitalize fs-14 d-flex alig-items-center line--limit-1">
-                                                    {{ translate('messages.Minimum_delivery_charge') }}
+                                                    {{ 'Cargo mínimo de entrega' }}
                                                     ({{ \App\CentralLogics\Helpers::currency_symbol() }}) <span
                                                         class="text-danger">*</span>
                                                 </label>
                                                 <input type="number" step=".01" min="0" class="form-control"
                                                        name="module_data[{{ $module->id }}][minimum_shipping_charge]"
-                                                       placeholder="{{ translate('messages.Ex:10') }}"
+                                                       placeholder="{{ 'Ej: 10' }}"
                                                        value="{{ $pivot?->minimum_shipping_charge }}">
                                             </div>
                                         </div>
@@ -318,12 +318,12 @@
                                             <div class="form-group mb-0">
                                                 <label
                                                     class="input-label text-capitalize fs-14 d-flex alig-items-center line--limit-1">
-                                                    {{ translate('messages.Maximum_delivery_charge') }}
+                                                    {{ 'Cargo máximo de entrega' }}
                                                     ({{ \App\CentralLogics\Helpers::currency_symbol() }})
                                                 </label>
                                                 <input type="number" step=".01" min="0" class="form-control"
                                                        name="module_data[{{ $module->id }}][maximum_shipping_charge]"
-                                                       placeholder="{{ translate('messages.Ex:10') }}"
+                                                       placeholder="{{ 'Ej: 10' }}"
                                                        value="{{ $pivot?->maximum_shipping_charge }}">
                                             </div>
                                         </div>
@@ -331,12 +331,12 @@
                                             <div class="form-group mb-0">
                                                 <label
                                                     class="input-label text-capitalize fs-14 d-flex alig-items-center line--limit-1">
-                                                    {{ translate('messages.Maximum_cod_order_amount') }}
+                                                    {{ 'Importe máximo del pedido de bacalao' }}
                                                     ({{ \App\CentralLogics\Helpers::currency_symbol() }})
                                                 </label>
                                                 <input type="number" step=".01" min="0" class="form-control"
                                                        name="module_data[{{ $module->id }}][maximum_cod_order_amount]"
-                                                       placeholder="{{ translate('messages.Ex:10') }}"
+                                                       placeholder="{{ 'Ej: 10' }}"
                                                        value="{{ $pivot?->maximum_cod_order_amount }}">
                                             </div>
                                         </div>
@@ -344,11 +344,11 @@
                                             <div class="form-group mb-0">
                                                 <label
                                                     class="input-label text-capitalize fs-14 d-flex alig-items-center line--limit-1">
-                                                    {{ translate('messages.max_delivery_radius') }} (km)
+                                                    {{ 'radio máximo de entrega' }} (km)
                                                 </label>
                                                 <input type="number" step=".01" min="0" class="form-control"
                                                        name="module_data[{{ $module->id }}][max_delivery_radius]"
-                                                       placeholder="{{ translate('messages.Ex:10') }}"
+                                                       placeholder="{{ 'Ej: 10' }}"
                                                        value="{{ $pivot?->max_delivery_radius }}">
                                             </div>
                                         </div>
@@ -357,12 +357,12 @@
                                             <div class="form-group mb-0">
                                                 <label
                                                     class="input-label text-capitalize fs-14 d-flex alig-items-center line--limit-1">
-                                                    {{ translate('Cargo extra pedidos grandes') }}
+                                                    {{ 'Cargo extra pedidos grandes' }}
                                                     ({{ \App\CentralLogics\Helpers::currency_symbol() }})
                                                 </label>
                                                 <input type="number" step=".01" min="0" class="form-control"
                                                        name="module_data[{{ $module->id }}][large_order_surcharge]"
-                                                       placeholder="{{ translate('messages.Ex:120') }}"
+                                                       placeholder="{{ 'Ej: 120' }}"
                                                        value="{{ $pivot?->large_order_surcharge ?? 0 }}">
                                             </div>
                                         </div>
@@ -370,10 +370,10 @@
                                         <div class="col-md-6 col-lg-4">
                                             <div class="form-group mb-0">
                                                 <label class="input-label text-capitalize fs-14 d-flex alig-items-center line--limit-1">
-                                                    {{ translate('Delivery Grid') }}
+                                                    {{ 'Cuadrícula de entrega' }}
                                                 </label>
                                                 <a href="{{ route('admin.business-settings.zone.grid-config', [$zone->id, $module->id]) }}" class="btn btn-outline-primary btn-sm btn-block h-cus-456px d-flex align-items-center justify-content-center">
-                                                    <i class="tio-map mr-1"></i> {{ translate('Configure_Grid') }}
+                                                    <i class="tio-map mr-1"></i> {{ 'Configurar cuadrícula' }}
                                                 </a>
                                             </div>
                                         </div>
@@ -548,8 +548,8 @@
 
             <div class="col-md-12">
                 <div class="btn--container mt-3 justify-content-end">
-                    <button id="reset_btn" type="reset" class="btn btn--reset">{{ translate('messages.Reset') }}</button>
-                    <button type="submit" class="btn btn--primary">{{ translate('messages.Save Information') }}</button>
+                    <button id="reset_btn" type="reset" class="btn btn--reset">{{ 'Reiniciar' }}</button>
+                    <button type="submit" class="btn btn--primary">{{ 'Guardar información' }}</button>
                 </div>
             </div>
         </form>

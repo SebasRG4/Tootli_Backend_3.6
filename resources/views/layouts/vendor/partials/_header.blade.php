@@ -21,7 +21,7 @@
                     <li class="nav-item max-sm-m-0 w-xxl-200px ml-auto mr-2 flex-grow-0">
                         <button type="button" id="modalOpener" class="title-color bg--secondary border-0 rounded justify-content-between w-100 align-items-center py-2 px-2 px-md-3 d-flex gap-1" data-toggle="modal" data-target="#staticBackdrop">
                             <div class="align-items-center d-flex flex-grow-1 gap-1 justify-content-between">
-                                <span class="align-items-center d-none d-xxl-flex gap-2 text-muted">{{translate('Search_or')}}
+                                <span class="align-items-center d-none d-xxl-flex gap-2 text-muted">{{'Buscar o'}}
 
                                     <span class="bg-E7E6E8 border ctrlplusk d-md-block d-none font-bold fs-12 fw-bold lh-1 ms-1 px-1 rounded text-muted">Ctrl+K</span>
 
@@ -127,13 +127,13 @@
                                 <div class="dropdown-divider"></div>
 
                                 <a class="dropdown-item" href="{{route('vendor.profile.view')}}">
-                                    <span class="text-truncate pr-2" title="Settings">{{translate('messages.settings')}}</span>
+                                    <span class="text-truncate pr-2" title="Settings">{{'Configuración'}}</span>
                                 </a>
 
                                 <div class="dropdown-divider"></div>
 
                                 <a class="dropdown-item log-out" >
-                                    <span class="text-truncate pr-2 log-out" title="Sign out">{{translate('messages.sign_out')}}</span>
+                                    <span class="text-truncate pr-2 log-out" title="Sign out">{{'desconectar'}}</span>
                                 </a>
                             </div>
                         </div>
@@ -154,17 +154,17 @@
                     <form class="flex-grow-1" id="searchForm" action="{{ route('vendor.search.routing') }}">
                         @csrf
                         <div class="d-flex align-items-center global-search-container">
-                            <input autocomplete="off" class="form-control flex-grow-1 rounded-10 search-input" id="searchInput" maxlength="255" name="search" type="search" placeholder="{{ translate('Search_by_keyword') }}" aria-label="Search" autofocus>
+                            <input autocomplete="off" class="form-control flex-grow-1 rounded-10 search-input" id="searchInput" maxlength="255" name="search" type="search" placeholder="{{ 'Buscar por palabra clave' }}" aria-label="Search" autofocus>
                         </div>
                     </form>
                     <div class="position-absolute right-0 pr-2">
-                        <button class="border-0 rounded px-2 py-1" type="button" data-dismiss="modal">{{ translate('Esc') }}</button>
+                        <button class="border-0 rounded px-2 py-1" type="button" data-dismiss="modal">{{ 'ESC' }}</button>
                     </div>
                 </div>
 
                 <div class="min-h-350">
                     <div class="search-result" id="searchResults">
-                        <div class="text-center text-muted py-5">{{translate('It appears that you have not yet searched.')}}.</div>
+                        <div class="text-center text-muted py-5">{{'Parece que aún no has buscado.'}}.</div>
                     </div>
                 </div>
             </div>
@@ -204,8 +204,8 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
     <div class="alert __alert-2 alert-warning m-0 py-1 px-2" role="alert">
         <img class="rounded mr-1"  width="25" src="{{ asset('assets/admin/img/header_warning.png') }}" alt="">
         <div class="cont">
-            <h4 class="m-0">{{ translate('Attentions_!') }} </h4>
-            {{ translate('Your cancelation rate is getting higher. If cancelation rate is reach 20%, your account will automatically suspended.') }}
+            <h4 class="m-0">{{ '¡Atenciones!' }} </h4>
+            {{ 'Su tasa de cancelación es cada vez mayor. Si la tasa de cancelación alcanza el 20%, su cuenta se suspenderá automáticamente.' }}
         </div>
     </div>
     @elseif(data_get($store_data,'cancellation_rate')  >= \App\CentralLogics\Helpers::get_business_settings('order_cancelation_rate_block_limit') && $store_data?->module?->module_type == 'rental' && addon_published_status('Rental') )
@@ -214,8 +214,8 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
     <div class="alert __alert-2 alert-warning m-0 py-1 px-2" role="alert">
         <img class="rounded mr-1"  width="25" src="{{ asset('assets/admin/img/header_warning.png') }}" alt="">
         <div class="cont">
-            <h4 class="m-0">{{ translate('Attention_Please') }} </h4>
-            {{ translate('Your account has been suspended due to high cancelation rate. Contact with admin.') }}
+            <h4 class="m-0">{{ 'Atención, por favor' }} </h4>
+            {{ 'Su cuenta ha sido suspendida debido a una alta tasa de cancelación. Contactar con el administrador.' }}
         </div>
     </div>
 @endif --}}
@@ -225,8 +225,8 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
     <div class="alert __alert-2 alert-warning m-0 py-1 px-2" role="alert">
         <img class="rounded mr-1"  width="25" src="{{ asset('assets/admin/img/header_warning.png') }}" alt="">
         <div class="cont">
-            <h4 class="m-0">{{ translate('Attention_Please') }} </h4>
-            {{ translate('The_Cash_in_Hand_amount_is_about_to_exceed_the_limit._Please_pay_the_due_amount._If_the_limit_exceeds,_your_account_will_be_suspended.') }}
+            <h4 class="m-0">{{ 'Atención, por favor' }} </h4>
+            {{ 'El monto de efectivo en mano está a punto de exceder el límite. Por favor pague el monto adeudado. Si el límite excede, su cuenta será suspendida.' }}
         </div>
     </div>
 @endif
@@ -235,7 +235,7 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
     <div class="alert __alert-2 alert-warning m-0 py-1 px-2" role="alert">
         <img class="mr-1"  width="25" src="{{ asset('assets/admin/img/header_warning.png') }}" alt="">
         <div class="cont">
-            <h4 class="m-0">{{ translate('Attention_Please') }} </h4>{{ translate('The_Cash_in_Hand_amount_limit_is_exceeded._Your_account_is_now_suspended._Please_pay_the_due_amount_to_receive_new_order_requests_again.') }}<a href="{{ route('vendor.wallet.index') }}" class="alert-link"> &nbsp; {{ translate('Pay_the_due') }}</a>
+            <h4 class="m-0">{{ 'Atención, por favor' }} </h4>{{ 'Se ha superado el límite de cantidad de efectivo en mano. Su cuenta ahora está suspendida. Pague el monto adeudado para recibir nuevamente solicitudes de nuevos pedidos.' }}<a href="{{ route('vendor.wallet.index') }}" class="alert-link"> &nbsp; {{ 'pagar lo debido' }}</a>
         </div>
     </div>
 @endif
@@ -267,11 +267,11 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
 
                         <img src="{{asset('assets/admin/img/timer.svg')}}" alt="">
                         <div class="txt">
-                            {{ $subscription_deadline_warning_message != null ?  $subscription_deadline_warning_message : translate('Your subscription ending soon. Please renew to continue access') }}
+                            {{ $subscription_deadline_warning_message != null ?  $subscription_deadline_warning_message : 'Tu suscripción finalizará pronto. Por favor renueve para continuar con el acceso' }}
                         </div>
                     </div>
                     <div>
-                        <a href="{{route('vendor.subscriptionackage.subscriberDetail',['renew_now' => true])}}" class="btn btn--danger">{{ translate('Renew') }}</a>
+                        <a href="{{route('vendor.subscriptionackage.subscriberDetail',['renew_now' => true])}}" class="btn btn--danger">{{ 'Renovar' }}</a>
                     </div>
                 </div>
 
@@ -285,18 +285,18 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
 
                         <img src="{{asset('assets/admin/img/timer.svg')}}" alt="">
                         <div class="txt">
-                            {{ $subscription_deadline_warning_message != null ?  $subscription_deadline_warning_message : translate('Your subscription ending soon. Please renew to continue access') }}
+                            {{ $subscription_deadline_warning_message != null ?  $subscription_deadline_warning_message : 'Tu suscripción finalizará pronto. Por favor renueve para continuar con el acceso' }}
                         </div>
                     </div>
                     <div>
                         @if ($store_data?->store_sub?->is_canceled == 1)
-                        <a href="{{route('vendor.subscriptionackage.subscriberDetail',['open_plans' => true])}}" class="btn btn--danger">{{ translate('Change_Subscription') }}</a>
+                        <a href="{{route('vendor.subscriptionackage.subscriberDetail',['open_plans' => true])}}" class="btn btn--danger">{{ 'Cambiar suscripción' }}</a>
                         @else
 
-                        <a href="{{route('vendor.subscriptionackage.subscriberDetail',['renew_now' => true])}}" class="btn btn--danger">{{ translate('Renew') }}</a>
+                        <a href="{{route('vendor.subscriptionackage.subscriberDetail',['renew_now' => true])}}" class="btn btn--danger">{{ 'Renovar' }}</a>
 
                         @endif
-                        <button  data-id="subscription_renew_close_btn" id="hide-warning"  class="btn btn-sm btn-primary add-to-session" >{{ translate('remind_me_later') }}</button>
+                        <button  data-id="subscription_renew_close_btn" id="hide-warning"  class="btn btn-sm btn-primary add-to-session" >{{ 'recuérdamelo más tarde' }}</button>
                     </div>
                 </div>
                 <!-- Renew -->
@@ -310,8 +310,8 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                 <div class="left">
                     <img src="{{asset('assets/admin/img/icon-puck.svg')}}" alt="">
                     <div class="left-content">
-                        <h6>{{ translate('Get the best experience of on demand service business') }}</h6>
-                        <div>{{ translate('Run your on demand business with the most popular platform') }}</div>
+                        <h6>{{ 'Obtenga la mejor experiencia de negocio de servicios bajo demanda' }}</h6>
+                        <div>{{ 'Gestione su negocio bajo demanda con la plataforma más popular' }}</div>
                     </div>
                 </div>
                 <div class="right">
@@ -323,9 +323,9 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                             </svg>
                             {{ Carbon\Carbon::now()->diffInDays($store_data?->store_sub?->expiry_date_parsed->format('Y-m-d'), false) }}
                         </span>
-                        {{translate('Days_left_in_free_trial')}}
+                        {{'Días restantes en la prueba gratuita'}}
                     </a>
-                    <a href="{{route('vendor.subscriptionackage.subscriberDetail' ,['open_plans' => true])}}" class="btn btn-light">{{ translate('Choose_Subscription_Plan') }} <i class="tio-arrow-forward"></i></a>
+                    <a href="{{route('vendor.subscriptionackage.subscriberDetail' ,['open_plans' => true])}}" class="btn btn-light">{{ 'Elija el plan de suscripción' }} <i class="tio-arrow-forward"></i></a>
                 </div>
 
                 <button type="button" data-id="subscription_free_trial_close_btn" class="trial-close add-to-session ">
@@ -343,14 +343,14 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                     <div class="modal-body p-0">
                         <div class="trial-ended-modal-wrapper">
                             <div class="trial-ended-modal-content align-self-center">
-                                <h3 class="title">{{ translate('Your_Free_Trial_Has_Been_Ended') }}</h3>
+                                <h3 class="title">{{ 'Su prueba gratuita ha finalizado' }}</h3>
                                 <p class="mb-4">
-                                    {{ translate('Purchase a subscription plan or contact with the admin to settle the payment and unblock the access to service.') }}
+                                    {{ 'Compre un plan de suscripción o comuníquese con el administrador para liquidar el pago y desbloquear el acceso al servicio.' }}
                                 </p>
-                                <a href="{{route('vendor.subscriptionackage.subscriberDetail' ,['open_plans' => true])}}" class="btn btn--primary">{{ translate('Choose Subscription Plan') }} <i class="tio-arrow-forward"></i></a>
+                                <a href="{{route('vendor.subscriptionackage.subscriberDetail' ,['open_plans' => true])}}" class="btn btn--primary">{{ 'Elija el plan de suscripción' }} <i class="tio-arrow-forward"></i></a>
                                 <div class="blocked-subscription mt-5">
                                     <img src="{{asset('assets/admin/img/WarningOctagon.svg')}}" alt="">
-                                    <span>{{ translate('All Access to service has been blocked due to no active subscription') }}</span>
+                                    <span>{{ 'Todo el acceso al servicio ha sido bloqueado debido a que no hay suscripción activa.' }}</span>
                                 </div>
                             </div>
                             <div class="trial-ended-modal-img d-none d-md-block">
@@ -369,12 +369,12 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                 <div class="left">
                     <img src="{{asset('assets/admin/img/timer-2.svg')}}" alt="">
                     <div class="left-content">
-                        <h6>{{ translate('Free_Trial_Has_Been_Ended') }}</h6>
-                        <div>{{ translate('Get_a_subscription_plan_to_continue_with_your_business') }}</div>
+                        <h6>{{ 'La prueba gratuita ha finalizado' }}</h6>
+                        <div>{{ 'Obtén un plan de suscripción para continuar con tu negocio' }}</div>
                     </div>
                 </div>
                 <div class="right">
-                    <a href="{{route('vendor.subscriptionackage.subscriberDetail' ,['open_plans' => true])}}" class="btn btn-light">{{ translate('Choose_Subscription_Plan') }} <i class="tio-arrow-forward"></i></a>
+                    <a href="{{route('vendor.subscriptionackage.subscriberDetail' ,['open_plans' => true])}}" class="btn btn-light">{{ 'Elija el plan de suscripción' }} <i class="tio-arrow-forward"></i></a>
                 </div>
             </div>
         </div>
@@ -384,8 +384,8 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                 <div class="left">
                     <img src="{{asset('assets/admin/img/timer-2.svg')}}" alt="">
                     <div class="left-content">
-                        <h6>{{ translate('Your_Subscription_Has_Been_Cnaceled_by') }} {{ $store_data?->store_sub?->canceled_by == 'admin' ? translate($store_data?->store_sub?->canceled_by) : translate('Yourself') }}</h6>
-                        <div>{{ translate('You_can_not_consume_your_subscription_after') }} {{ \App\CentralLogics\Helpers::date_format($store_data?->store_sub?->expiry_date_parsed) }}</div>
+                        <h6>{{ 'Su suscripción ha sido cancelada por' }} {{ $store_data?->store_sub?->canceled_by == 'admin' ? translate($store_data?->store_sub?->canceled_by) : 'Tú mismo' }}</h6>
+                        <div>{{ 'No puedes consumir tu suscripción después' }} {{ \App\CentralLogics\Helpers::date_format($store_data?->store_sub?->expiry_date_parsed) }}</div>
                     </div>
                 </div>
                 <div class="right">
@@ -397,9 +397,9 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                             </svg>
                             {{ Carbon\Carbon::now()->diffInDays($store_data?->store_sub?->expiry_date_parsed->format('Y-m-d'), false) }}
                         </span>
-                        {{translate('Days_left_in_this_subscription')}}
+                        {{'Días restantes en esta suscripción'}}
                     </a>
-                    <a href="{{route('vendor.subscriptionackage.subscriberDetail' ,['open_plans' => true])}}" class="btn btn-light">{{ translate('Change_Subscription_Plan') }} <i class="tio-arrow-forward"></i></a>
+                    <a href="{{route('vendor.subscriptionackage.subscriberDetail' ,['open_plans' => true])}}" class="btn btn-light">{{ 'Cambiar plan de suscripción' }} <i class="tio-arrow-forward"></i></a>
                 </div>
 
                 <button type="button" data-id="subscription_cancel_close_btn" class="trial-close add-to-session ">
@@ -413,8 +413,8 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                 <div class="left">
                     <img src="{{asset('assets/admin/img/timer-2.svg')}}" alt="">
                     <div class="left-content">
-                        <h6>{{ translate('Your_Current_Subscription_Package_has_been_Disable_By_Admin.') }} </h6>
-                        <div>{{ translate('You_can_not_renew_this_Package_after') }} {{ \App\CentralLogics\Helpers::date_format($store_data?->store_sub?->expiry_date_parsed) }}. {{ translate('to_continue_your_subscription_please_chose_another_package.')  }}</div>
+                        <h6>{{ 'El administrador ha desactivado su paquete de suscripción actual.' }} </h6>
+                        <div>{{ 'No puedes renovar este paquete después' }} {{ \App\CentralLogics\Helpers::date_format($store_data?->store_sub?->expiry_date_parsed) }}. {{ 'Para continuar con su suscripción, elija otro paquete.'  }}</div>
                     </div>
                 </div>
                 <div class="right">
@@ -426,9 +426,9 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                             </svg>
                             {{ Carbon\Carbon::now()->diffInDays($store_data?->store_sub?->expiry_date_parsed->format('Y-m-d'), false) }}
                         </span>
-                        {{translate('Days_left_in_this_subscription')}}
+                        {{'Días restantes en esta suscripción'}}
                     </a>
-                    <a href="{{route('vendor.subscriptionackage.subscriberDetail' ,['open_plans' => true])}}" class="btn btn-light">{{ translate('Change_Subscription_Plan') }} <i class="tio-arrow-forward"></i></a>
+                    <a href="{{route('vendor.subscriptionackage.subscriberDetail' ,['open_plans' => true])}}" class="btn btn-light">{{ 'Cambiar plan de suscripción' }} <i class="tio-arrow-forward"></i></a>
                 </div>
 
                 <button type="button" data-id="subscription_plan_update_close_btn" class="trial-close add-to-session ">
@@ -443,13 +443,13 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                 <div class="left">
                     <img src="{{asset('assets/admin/img/timer-2.svg')}}" alt="">
                     <div class="left-content">
-                        <h6>{{ translate('Your_Subscription_Has_Been_Expired_on') }} {{  \App\CentralLogics\Helpers::date_format($store_data?->store_sub_update_application?->expiry_date_parsed) }} </h6>
-                        <div>{{ translate('Purchase a subscription plan or contact with the admin to settle the payment and unblock the access to service') }} </div>
+                        <h6>{{ 'Su suscripción ha caducado el' }} {{  \App\CentralLogics\Helpers::date_format($store_data?->store_sub_update_application?->expiry_date_parsed) }} </h6>
+                        <div>{{ 'Compre un plan de suscripción o comuníquese con el administrador para liquidar el pago y desbloquear el acceso al servicio.' }} </div>
                     </div>
                 </div>
                 <div class="right">
 
-                    <a href="{{route('vendor.subscriptionackage.subscriberDetail' ,['open_plans' => true])}}" class="btn btn-light">{{ translate('Change/Renew Subscription_Plan') }} <i class="tio-arrow-forward"></i></a>
+                    <a href="{{route('vendor.subscriptionackage.subscriberDetail' ,['open_plans' => true])}}" class="btn btn-light">{{ 'Cambiar/renovar plan de suscripción' }} <i class="tio-arrow-forward"></i></a>
                 </div>
             </div>
         </div>
@@ -464,13 +464,13 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
     document.addEventListener('DOMContentLoaded', function () {
                 $(document).on('click', '.log-out', function () {
                 Swal.fire({
-                title: '{{ translate('Do you want to sign out?') }}',
+                title: '{{ '¿Quieres cerrar sesión?' }}',
                 showDenyButton: true,
                 showCancelButton: true,
                 confirmButtonColor: '#FC6A57',
                 cancelButtonColor: '#363636',
-                confirmButtonText: `{{ translate('yes')}}`,
-                cancelButtonText: `{{ translate('Cancel')}}`,
+                confirmButtonText: `{{ 'Sí'}}`,
+                cancelButtonText: `{{ 'Cancelar'}}`,
                 }).then((result) => {
                 if (result.value) {
                 location.href='{{route('logout')}}';

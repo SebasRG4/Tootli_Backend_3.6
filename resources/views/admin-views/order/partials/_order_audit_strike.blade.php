@@ -1,7 +1,7 @@
 @if (isset($orderStrikeReviewItems) && $orderStrikeReviewItems->isNotEmpty())
     <div class="card mb-3">
         <div class="card-header">
-            <h5 class="card-title mb-0">{{ translate('messages.order_strike_review_for_order') }}</h5>
+            <h5 class="card-title mb-0">{{ 'revisión de huelga de pedidos para pedidos' }}</h5>
         </div>
         <div class="card-body">
             @foreach ($orderStrikeReviewItems as $q)
@@ -26,20 +26,20 @@
                                 @foreach ($q->evidence['photos'] as $ph)
                                     @php($disk = $ph['storage'] ?? config('filesystems.default'))
                                     @php($url = \Illuminate\Support\Facades\Storage::disk($disk)->url('order-cancel/'.($ph['img'] ?? '')))
-                                    <a href="{{ $url }}" target="_blank" rel="noopener">{{ translate('messages.order_strike_review_photo_link') }}</a><br>
+                                    <a href="{{ $url }}" target="_blank" rel="noopener">{{ 'enlace de foto de revisión de huelga de pedido' }}</a><br>
                                 @endforeach
                             @endif
                             @if (!empty($q->evidence['audio']['img']))
                                 @php($adisk = $q->evidence['audio']['storage'] ?? config('filesystems.default'))
                                 @php($aurl = \Illuminate\Support\Facades\Storage::disk($adisk)->url('order-cancel-audio/'.$q->evidence['audio']['img']))
-                                <a href="{{ $aurl }}" target="_blank" rel="noopener">{{ translate('messages.order_strike_review_audio') }}</a>
+                                <a href="{{ $aurl }}" target="_blank" rel="noopener">{{ 'audio de revisión de huelga de pedidos' }}</a>
                             @endif
                         </p>
                     @endif
                     @if ($q->status === \App\Models\OrderStrikeReviewQueue::STATUS_PENDING && isset($strikeIncidentTypes))
                         <div class="mt-2">
                             <button type="button" class="btn btn-sm btn--primary" data-toggle="modal" data-target="#orderStrikeModal{{ $q->id }}">
-                                {{ translate('messages.order_strike_review_record_strike') }}
+                                {{ 'huelga de orden revisión huelga récord' }}
                             </button>
                         </div>
                         <div class="modal fade" id="orderStrikeModal{{ $q->id }}" tabindex="-1">
@@ -48,12 +48,12 @@
                                     <form method="post" action="{{ route('admin.order.strike-review-queue.record-strike', $q->id) }}">
                                         @csrf
                                         <div class="modal-header">
-                                            <h5 class="modal-title">{{ translate('messages.order_strike_review_record_strike') }}</h5>
+                                            <h5 class="modal-title">{{ 'huelga de orden revisión huelga récord' }}</h5>
                                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                                         </div>
                                         <div class="modal-body">
                                             <div class="form-group">
-                                                <label>{{ translate('messages.dm_strike_type') }}</label>
+                                                <label>{{ 'tipo de ataque dm' }}</label>
                                                 <select name="delivery_incident_type_id" class="form-control" required>
                                                     @foreach ($strikeIncidentTypes as $t)
                                                         <option value="{{ $t->id }}">{{ $t->name }}</option>
@@ -61,17 +61,17 @@
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label>{{ translate('messages.Note') }}</label>
+                                                <label>{{ 'Nota' }}</label>
                                                 <textarea name="admin_note" class="form-control" rows="2" maxlength="2000">{{ $q->cancellation_detail }}</textarea>
                                             </div>
                                             <div class="form-group">
-                                                <label>{{ translate('messages.dm_strike_suspended_until_field') }}</label>
+                                                <label>{{ 'huelga dm suspendida hasta el campo' }}</label>
                                                 <input type="datetime-local" name="delivery_suspended_until" class="form-control">
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ translate('messages.cancel') }}</button>
-                                            <button type="submit" class="btn btn--primary">{{ translate('submit') }}</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'Cancelar' }}</button>
+                                            <button type="submit" class="btn btn--primary">{{ 'entregar' }}</button>
                                         </div>
                                     </form>
                                 </div>
@@ -87,7 +87,7 @@
 @if (isset($orderAuditEvents) && $orderAuditEvents->isNotEmpty())
     <div class="card mb-3">
         <div class="card-header">
-            <h5 class="card-title mb-0">{{ translate('messages.order_audit_timeline_title') }}</h5>
+            <h5 class="card-title mb-0">{{ 'título del cronograma de auditoría del pedido' }}</h5>
         </div>
         <div class="card-body">
             <ul class="list-unstyled mb-0">

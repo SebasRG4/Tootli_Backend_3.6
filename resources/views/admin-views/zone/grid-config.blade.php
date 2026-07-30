@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Configure Delivery Grid'))
+@section('title', 'Configurar la cuadrícula de entrega')
 
 @push('css_or_js')
     <style>
@@ -74,7 +74,7 @@
                 <span class="page-header-icon">
                     <img src="{{asset('assets/admin/img/zone.png')}}" class="w--26" alt="">
                 </span>
-                <span>{{translate('Configure_Delivery_Grid')}} - {{ $zone->name }} ({{ $module->module_name }})</span>
+                <span>{{'Configurar la cuadrícula de entrega'}} - {{ $zone->name }} ({{ $module->module_name }})</span>
             </h1>
         </div>
 
@@ -82,27 +82,27 @@
             <div>
                 <div class="brush-option active" data-type="minutes">
                     <span class="brush-color" style="background: #4caf50;"></span>
-                    {{ translate('Minutes (Fast)') }}
+                    {{ 'Minutos (rápido)' }}
                 </div>
                 <div class="brush-option" data-type="standard">
                     <span class="brush-color" style="background: #2196f3;"></span>
-                    {{ translate('Standard') }}
+                    {{ 'Estándar' }}
                 </div>
                 <div class="brush-option" data-type="next_day">
                     <span class="brush-color" style="background: #ff9800;"></span>
-                    {{ translate('Next Day') }}
+                    {{ 'día siguiente' }}
                 </div>
                 <div class="brush-option" data-type="no_coverage">
                     <span class="brush-color" style="background: #000000;"></span>
-                    {{ translate('No Coverage') }}
+                    {{ 'Sin cobertura' }}
                 </div>
                 <div class="brush-option" data-type="none">
                     <span class="brush-color" style="background: #f44336;"></span>
-                    {{ translate('Eraser') }}
+                    {{ 'Borrador' }}
                 </div>
             </div>
             <button class="btn btn-primary" id="save-grid">
-                <i class="tio-save"></i> {{ translate('Save_Changes') }}
+                <i class="tio-save"></i> {{ 'Guardar cambios' }}
             </button>
         </div>
 
@@ -287,7 +287,7 @@
         });
 
         $('#save-grid').on('click', function () {
-            $(this).prop('disabled', true).html('<i class="tio-running"></i> {{translate("Saving...")}}');
+            $(this).prop('disabled', true).html('<i class="tio-running"></i> {{'Ahorro...'}}');
 
             $.ajax({
                 url: '{{ route("admin.business-settings.zone.grid-config-update") }}',
@@ -300,10 +300,10 @@
                 },
                 success: function (res) {
                     toastr.success(res.message);
-                    $('#save-grid').prop('disabled', false).html('<i class="tio-save"></i> {{translate("Save_Changes")}}');
+                    $('#save-grid').prop('disabled', false).html('<i class="tio-save"></i> {{'Guardar cambios'}}');
                 },
                 error: function (xhr) {
-                    let message = '{{translate("Error_saving_grid")}}';
+                    let message = '{{'Error al guardar la cuadrícula'}}';
                     if (xhr.status === 419) {
                         message += ' (Session Expired/CSRF Error)';
                     } else if (xhr.status === 422) {
@@ -315,7 +315,7 @@
                     }
                     toastr.error(message);
                     console.error('Grid Save Error:', xhr);
-                    $('#save-grid').prop('disabled', false).html('<i class="tio-save"></i> {{translate("Save_Changes")}}');
+                    $('#save-grid').prop('disabled', false).html('<i class="tio-save"></i> {{'Guardar cambios'}}');
                 }
             });
         });

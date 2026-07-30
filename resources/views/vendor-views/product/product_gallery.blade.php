@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title',translate('messages.Product_Gallery'))
+@section('title','Galería de productos')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -16,8 +16,8 @@
                     <img class="h--50px"
                         src="{{ asset('assets/admin/img/group.png') }}" alt="Product_Gallery">
                     <div>
-                        <h1 class="page-header-title"> {{translate('messages.Product_Gallery')}}<span class="badge badge-soft-dark ml-2" id="itemCount"></span></h1>
-                    <p>{{ translate('search_product_and_use_its_info_to_create_own_product') }}</p>
+                        <h1 class="page-header-title"> {{'Galería de productos'}}<span class="badge badge-soft-dark ml-2" id="itemCount"></span></h1>
+                    <p>{{ 'buscar producto y utilizar su información para crear su propio producto' }}</p>
                     </div>
                 </div>
             </div>
@@ -32,10 +32,10 @@
                     <input type="hidden" value="1" name="product_gallery">
                     <div class="row">
                         <div class="col-11">
-                            <input id="datatableSearch" type="search" value="{{  request()?->search ?? null }}" name="search" class="form-control" placeholder="{{translate('messages.ex_search_name')}}" aria-label="{{translate('messages.search_here')}}">
+                            <input id="datatableSearch" type="search" value="{{  request()?->search ?? null }}" name="search" class="form-control" placeholder="{{'ex nombre de búsqueda'}}" aria-label="{{'buscar aquí'}}">
                         </div>
                         <div class="col-1">
-                            <button type="submit" class="btn btn--primary">{{ translate('messages.search') }}</button>
+                            <button type="submit" class="btn btn--primary">{{ 'buscar' }}</button>
                         </div>
                     </div>
                 </form>
@@ -44,8 +44,8 @@
         </div>
         <!-- End Card -->
         <div>
-            <h2>{{ translate('messages.Product_List') }}</h2>
-            <p>{{ translate('search_product_and_use_its_info_to_create_own_product') }}</p>
+            <h2>{{ 'Lista de productos' }}</h2>
+            <p>{{ 'buscar producto y utilizar su información para crear su propio producto' }}</p>
         </div>
 
                     <div class="row" id="set-rows">
@@ -57,7 +57,7 @@
                 <div class="empty--data">
                     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
-                        {{translate('no_data_found')}}
+                        {{'no se encontraron datos'}}
                     </h5>
                 </div>
                 @endif

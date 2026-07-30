@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.banner'))
+@section('title','bandera')
 
 @section('content')
 <div class="content container-fluid">
@@ -10,7 +10,7 @@
                 <img src="{{asset('assets/admin/img/3rd-party.png')}}" class="w--26" alt="">
             </span>
             <span>
-                {{translate('messages.Other_Promotional_Content_Setup')}}
+                {{'Configuración de otro contenido promocional'}}
             </span>
         </h1>
     </div>
@@ -31,7 +31,7 @@
                             <li class="nav-item">
                                 <a class="nav-link lang_link active"
                                 href="#"
-                                id="default-link">{{translate('messages.default')}}</a>
+                                id="default-link">{{'por defecto'}}</a>
                             </li>
                             @foreach (json_decode($language) as $lang)
                                 <li class="nav-item">
@@ -50,18 +50,18 @@
                                     <div class="row lang_form default-form">
                                         <div class="col-12">
                                             <div class="form-group">
-                                                <label class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
+                                                <label class="form-label">{{'Título'}} ({{ 'por defecto' }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 80 caracteres.' }}">
                                                             <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                                         </span></label>
-                                                <input type="text"  maxlength="80" name="title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                                <input type="text"  maxlength="80" name="title[]" class="form-control" placeholder="{{'título aquí...'}}">
                                             </div>
                                         </div>
                                         <div class="col-12">
                                             <div class="form-group">
-                                                <label class="form-label">{{translate('messages.Short_Description')}} ({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_short_description_within_100_characters') }}">
+                                                <label class="form-label">{{'Breve descripción'}} ({{ 'por defecto' }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escriba la breve descripción dentro de 100 caracteres.' }}">
                                                             <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                                         </span></label>
-                                                <textarea type="text"  maxlength="100" name="short_description[]" class="form-control" rows="3" {{translate('messages.short_description_here...')}}> </textarea>
+                                                <textarea type="text"  maxlength="100" name="short_description[]" class="form-control" rows="3" {{'breve descripción aquí...'}}> </textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -71,18 +71,18 @@
 
                                         <div class="col-12">
                                             <div class="form-group">
-                                                <label class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
+                                                <label class="form-label">{{'Título'}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 80 caracteres.' }}">
                                                     <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                                 </span></label>
-                                                <input type="text"  maxlength="80" name="title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                                <input type="text"  maxlength="80" name="title[]" class="form-control" placeholder="{{'título aquí...'}}">
                                             </div>
                                         </div>
                                         <div class="col-12">
                                             <div class="form-group">
-                                                <label class="form-label">{{translate('messages.Short_Description')}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_short_description_within_100_characters') }}">
+                                                <label class="form-label">{{'Breve descripción'}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escriba la breve descripción dentro de 100 caracteres.' }}">
                                                     <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                                 </span></label>
-                                                <textarea type="text"  maxlength="100" name="short_description[]" class="form-control" rows="3" {{translate('messages.short_description_here...')}}> </textarea>
+                                                <textarea type="text"  maxlength="100" name="short_description[]" class="form-control" rows="3" {{'breve descripción aquí...'}}> </textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -93,10 +93,10 @@
 
                                 @else
                                 <div class="col-sm-6">
-                                    <label class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
+                                    <label class="form-label">{{'Título'}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 80 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input type="text"  maxlength="80" name="title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                    <input type="text"  maxlength="80" name="title[]" class="form-control" placeholder="{{'título aquí...'}}">
                                 </div>
                                     <input type="hidden" name="lang[]" value="default">
                                 @endif
@@ -104,7 +104,7 @@
                                     <div class="ml-5">
                                         <div>
 
-                                            <label class="form-label">{{translate('image (1:1)')}}</label>
+                                            <label class="form-label">{{'imagen (1:1)'}}</label>
                                         </div>
                                         <label class="upload-img-3 m-0">
                                             <div class="img">
@@ -116,8 +116,8 @@
                                 </div>
                             </div>
                             <div class="btn--container justify-content-end mt-20">
-                                <button type="reset" class="btn btn--reset">{{translate('Reset')}}</button>
-                                <button type="submit" class="btn btn--primary mb-2">{{translate('Submit')}}</button>
+                                <button type="reset" class="btn btn--reset">{{'Reiniciar'}}</button>
+                                <button type="submit" class="btn btn--primary mb-2">{{'Entregar'}}</button>
                             </div>
                         </form>
                     </div>
@@ -134,12 +134,12 @@
                                     }'>
                                 <thead class="thead-light">
                                 <tr>
-                                    <th class="border-0">{{translate('sl')}}</th>
-                                    <th class="border-0">{{translate('Title')}}</th>
-                                    <th class="border-0">{{translate('messages.Short_Description')}}</th>
-                                    <th class="border-0">{{translate('Image')}}</th>
-                                    <th class="border-0">{{translate('Status')}}</th>
-                                    <th class="text-center border-0">{{translate('messages.action')}}</th>
+                                    <th class="border-0">{{'SL'}}</th>
+                                    <th class="border-0">{{'Título'}}</th>
+                                    <th class="border-0">{{'Breve descripción'}}</th>
+                                    <th class="border-0">{{'Imagen'}}</th>
+                                    <th class="border-0">{{'Estado'}}</th>
+                                    <th class="text-center border-0">{{'acción'}}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -167,10 +167,10 @@
                                                        data-type="status"
                                                        data-image-on="{{asset('assets/admin/img/modal')}}/this-criteria-on.png"
                                                        data-image-off="{{asset('assets/admin/img/modal')}}/this-criteria-off.png"
-                                                       data-title-on="{{translate('messages.Want_to_enable')}} <strong>{{translate('this_feature?')}}"
-                                                       data-title-off="{{translate('messages.Want_to_disable')}} <strong>{{translate('this_feature?')}}"
-                                                       data-text-on="<p>{{translate('If_yes,_it_will_be_available_on_this_module.')}}</p>"
-                                                       data-text-off="<p>{{translate('If_yes,_it_will_be_hidden_from_this_module.')}}</p>"
+                                                       data-title-on="{{'Quiere habilitar'}} <strong>{{'esta característica?'}}"
+                                                       data-title-off="{{'Quiere deshabilitar'}} <strong>{{'esta característica?'}}"
+                                                       data-text-on="<p>{{'En caso afirmativo, estará disponible en este módulo.'}}</p>"
+                                                       data-text-off="<p>{{'En caso afirmativo, estará oculto en este módulo.'}}</p>"
                                                        id="status-{{$banner->id}}" {{$banner->status?'checked':''}}>
                                                 <span class="toggle-switch-label">
                                                     <span class="toggle-switch-indicator"></span>
@@ -186,7 +186,7 @@
                                                     <i class="tio-edit"></i>
                                                 </a>
                                                 <a class="btn action-btn btn--danger btn-outline-danger form-alert-title" href="javascript:"
-                                                data-id="criteria-{{$banner['id']}}" data-title="{{ translate('Want_to_delete_this_feature_?') }}" data-message="{{translate('If_yes,_It_will_be_removed_from_this_list_and_this_module.')}}" title="{{translate('messages.delete_criteria')}}"><i class="tio-delete-outlined"></i>
+                                                data-id="criteria-{{$banner['id']}}" data-title="{{ '¿Quieres eliminar esta característica?' }}" data-message="{{'En caso afirmativo, se eliminará de esta lista y de este módulo.'}}" title="{{'eliminar criterios'}}"><i class="tio-delete-outlined"></i>
                                                 </a>
                                                 <form action="{{route('admin.promotional-banner.why-choose-delete',[$banner['id']])}}" method="post" id="criteria-{{$banner['id']}}">
                                                     @csrf @method('delete')
@@ -205,7 +205,7 @@
                     <div class="empty--data">
                         <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
-                            {{translate('no_data_found')}}
+                            {{'no se encontraron datos'}}
                         </h5>
                     </div>
                     @endif

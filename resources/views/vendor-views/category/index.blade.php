@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title', translate('messages.category'))
+@section('title', 'categoría')
 
 @push('css_or_js')
 @endpush
@@ -14,7 +14,7 @@
                     <img src="{{ asset('assets/admin/img/categories.png') }}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.category_list') }} <span class="badge badge-soft-dark ml-2"
+                    {{ 'lista de categorías' }} <span class="badge badge-soft-dark ml-2"
                         id="itemCount">{{ $categories->total() }}</span>
                 </span>
             </h1>
@@ -31,8 +31,8 @@
                                 <div class="input-group input--group">
                                     <input type="search" value="{{ request()?->search ?? null }}" name="search"
                                         class="form-control min-height-45"
-                                        placeholder="{{ translate('messages.search_categories') }}"
-                                        aria-label="{{ translate('messages.ex_:_categories') }}">
+                                        placeholder="{{ 'categorías de búsqueda' }}"
+                                        aria-label="{{ 'ej: categorías' }}">
                                     <button type="submit" class="btn btn--secondary min-height-45"><i
                                             class="tio-search"></i></button>
                                 </div>
@@ -46,26 +46,26 @@
                                         "target": "#usersExportDropdown",
                                         "type": "css-animation"
                                     }'>
-                                    <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                                    <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                                 </a>
 
                                 <div id="usersExportDropdown"
                                     class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
 
-                                    <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                                    <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                                     <a id="export-excel" class="dropdown-item"
                                         href="{{ route('vendor.category.export-categories', ['type' => 'excel', request()->getQueryString()]) }}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                             src="{{ asset('assets/admin/svg/components/excel.svg') }}"
                                             alt="Image Description">
-                                        {{ translate('messages.excel') }}
+                                        {{ 'sobresalir' }}
                                     </a>
                                     <a id="export-csv" class="dropdown-item"
                                         href="{{ route('vendor.category.export-categories', ['type' => 'csv', request()->getQueryString()]) }}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                             src="{{ asset('assets/admin/svg/components/placeholder-csv-format.svg') }}"
                                             alt="Image Description">
-                                        .{{ translate('messages.csv') }}
+                                        .{{ 'csv' }}
                                     </a>
 
                                 </div>
@@ -86,13 +86,13 @@
                                 }'>
                                 <thead class="thead-light">
                                     <tr>
-                                        <th class="w-33p border-0 text-center">{{ translate('messages.#') }}</th>
-                                        <th class="w-33p border-0 text-center">{{ translate('messages.category_id') }}</th>
-                                        <th class="w-33p border-0 text-center">{{ translate('messages.category_name') }}
+                                        <th class="w-33p border-0 text-center">{{ '#' }}</th>
+                                        <th class="w-33p border-0 text-center">{{ 'identificación de categoría' }}</th>
+                                        <th class="w-33p border-0 text-center">{{ 'nombre de categoría' }}
                                         </th>
 
                                         @if ($categoryWiseTax)
-                                            <th class="border-0 ">{{ translate('messages.Vat/Tax') }}</th>
+                                            <th class="border-0 ">{{ 'IVA/Impuesto' }}</th>
                                         @endif
                                     </tr>
                                 </thead>
@@ -119,7 +119,7 @@
                                                                 </span> </span>
                                                             <br>
                                                         @empty
-                                                            <span> {{ translate('messages.no_tax') }} </span>
+                                                            <span> {{ 'sin impuestos' }} </span>
                                                         @endforelse
                                                     </span>
                                                 </td>
@@ -138,7 +138,7 @@
                             <div class="empty--data">
                                 <img src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
                                 <h5>
-                                    {{ translate('no_data_found') }}
+                                    {{ 'no se encontraron datos' }}
                                 </h5>
                             </div>
                         @endif

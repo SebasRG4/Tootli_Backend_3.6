@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('react_landing_page'))
+@section('title','reaccionar página de inicio')
 
 @push('css_or_js')
     <!-- Custom styles for this page -->
@@ -19,11 +19,11 @@
                     <img src="{{asset('assets/admin/img/landing.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.react_landing_page') }}
+                    {{ 'reaccionar página de inicio' }}
                 </span>
             </h1>
             <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#how-it-works">
-                <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
+                <strong class="mr-2">{{'¡Mira cómo funciona!'}}</strong>
                 <div>
                     <i class="tio-info-outined"></i>
                 </div>

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.Subscription'))
+@section('title','Suscripción')
 
 @section('subscription_index')
 active
@@ -15,8 +15,8 @@ active
                     <div class="d-flex align-items-start">
                         <img src="{{asset('assets/admin/img/create-package-icon.png')}}" width="24" alt="img">
                         <div class="w-0 flex-grow pl-2">
-                            <h1 class="page-header-title">{{translate('Subscription Package')}}</h1>
-                            <div class="page-header-text">{{ translate('Update_Subscriptions_Packages_for_Subscription_Business_Model') }}</div>
+                            <h1 class="page-header-title">{{'Paquete de suscripción'}}</h1>
+                            <div class="page-header-text">{{ 'Actualizar paquetes de suscripciones para el modelo comercial de suscripción' }}</div>
                         </div>
                     </div>
                 </div>
@@ -27,8 +27,8 @@ active
                 <div class="w-100 d-flex flex-wrap align-items-start gap-2">
                     <img src="{{asset('assets/admin/img/material-symbols_featured-play-list.png')}}" width="18" alt="img" class="mt-1">
                     <div class="w-0 flex-grow">
-                        <h5 class="text--title card-title">{{ translate('Package_Information') }}</h5>
-                        <div class="fz-12px">{{ translate('Give_Subscriptions_Package_Information') }}</div>
+                        <h5 class="text--title card-title">{{ 'Información del paquete' }}</h5>
+                        <div class="fz-12px">{{ 'Proporcionar información del paquete de suscripciones' }}</div>
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@ active
                             <li class="nav-item">
                                 <a class="nav-link lang_link active"
                                 href="#"
-                                id="default-link">{{translate('messages.default')}}</a>
+                                id="default-link">{{'por defecto'}}</a>
                             </li>
                             @foreach ($language as $lang)
                                 <li class="nav-item">
@@ -60,9 +60,9 @@ active
                         <div class="col-lg-4 col-sm-6 lang_form" id="default-form">
                             <div class="form-group mb-0">
                                 <label class="form-label input-label"
-                                for="name">{{ translate('Package_Name') }} ({{ translate('Default') }})</label>
+                                for="name">{{ 'Nombre del paquete' }} ({{ 'Por defecto' }})</label>
                                 <input type="text" name="package_name[]" class="form-control" id="name" maxlength="191"  value="{{ $subscriptionackage?->getRawOriginal('package_name') }}"
-                                placeholder="{{ translate('Package_Name') }}"
+                                placeholder="{{ 'Nombre del paquete' }}"
                                 >
                             <input type="hidden" name="lang[]" value="default">
                             </div>
@@ -87,9 +87,9 @@ active
                                 <div class="col-lg-4 col-sm-6  d-none lang_form" id="{{$lang}}-form">
                                     <div class="form-group mb-0">
                                         <label class="form-label input-label"
-                                        for="{{$lang}}_title">{{ translate('Package_Name') }} ({{strtoupper($lang)}})</label>
+                                        for="{{$lang}}_title">{{ 'Nombre del paquete' }} ({{strtoupper($lang)}})</label>
                                         <input type="text" name="package_name[]" class="form-control" id="{{$lang}}_title" maxlength="191"  value="{{ $translate[$lang]['package_name']??'' }}"
-                                        placeholder="{{ translate('Package_Name') }}"
+                                        placeholder="{{ 'Nombre del paquete' }}"
                                         >
                                         <input type="hidden" name="lang[]" value="{{$lang}}">
                                     </div>
@@ -100,14 +100,14 @@ active
 
                         <div class="col-lg-4 col-sm-6">
                             <div class="form-group">
-                                <label class="input-label">{{ translate('Package_Price') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
-                                <input type="number" value="{{ $subscriptionackage->price }}" name="package_price" required  min="0.01" step="0.01" max="999999999" class="form-control" placeholder="{{ translate('Ex: 300') }}">
+                                <label class="input-label">{{ 'Precio del paquete' }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
+                                <input type="number" value="{{ $subscriptionackage->price }}" name="package_price" required  min="0.01" step="0.01" max="999999999" class="form-control" placeholder="{{ 'Ej: 300' }}">
                             </div>
                         </div>
                         <div class="col-lg-4 col-sm-6">
                             <div class="form-group">
-                                <label class="input-label">{{ translate('Package_Validity') }} {{ translate('Days') }}</label>
-                                <input type="number"   min="1" max="999999999"  value="{{ $subscriptionackage->validity }}"  required name="package_validity"  class="form-control" placeholder="{{ translate('Ex: 365') }}">
+                                <label class="input-label">{{ 'Validez del paquete' }} {{ 'Días' }}</label>
+                                <input type="number"   min="1" max="999999999"  value="{{ $subscriptionackage->validity }}"  required name="package_validity"  class="form-control" placeholder="{{ 'Ej: 365' }}">
                             </div>
                         </div>
 
@@ -115,8 +115,8 @@ active
                         <div class="col-lg-4 col-sm-6 lang_form default-form" >
                             <div class="form-group m-0">
                                 <label class="form-label input-label   text-capitalize"
-                                    for="package_info">{{ translate('messages.package_info') }}</label>
-                                <textarea class="form-control" placeholder="{{ translate('EX:_Value_for_money') }}"  name="text[]" id="package_info">{{ $subscriptionackage?->getRawOriginal('text')  }}</textarea>
+                                    for="package_info">{{ 'información del paquete' }}</label>
+                                <textarea class="form-control" placeholder="{{ 'Ej: relación calidad-precio' }}"  name="text[]" id="package_info">{{ $subscriptionackage?->getRawOriginal('text')  }}</textarea>
                             </div>
                         </div>
 
@@ -136,8 +136,8 @@ active
                         <div class="col-lg-4 col-sm-6 d-none lang_form" id="{{$lang}}-form1">
                             <div class="form-group m-0">
                                 <label class="form-label input-label   text-capitalize"
-                                    for="package_info">{{ translate('messages.package_info') }} ({{strtoupper($lang)}})</label>
-                                <textarea class="form-control" name="text[]" placeholder="{{ translate('EX:_Value_for_money') }}" id="package_info">{{ $text[$lang]['text']??''}}</textarea>
+                                    for="package_info">{{ 'información del paquete' }} ({{strtoupper($lang)}})</label>
+                                <textarea class="form-control" name="text[]" placeholder="{{ 'Ej: relación calidad-precio' }}" id="package_info">{{ $text[$lang]['text']??''}}</textarea>
                             </div>
                         </div>
                         @endforeach
@@ -153,14 +153,14 @@ active
                         <div class="w-0 flex-grow">
                             <h5 class="text--title card-title d-flex gap-3 flex-wrap mb-1">
                                 <div>
-                                    {{ translate('Package_Available_Features') }}
+                                    {{ 'Características disponibles del paquete' }}
                                 </div>
                                 <label class="form-group form-check form--check">
                                     <input type="checkbox" class="form-check-input" id="select-all">
-                                    <span class="form-check-label text-dark font-regular text-14">{{ translate('Select_All') }}</span>
+                                    <span class="form-check-label text-dark font-regular text-14">{{ 'Seleccionar todo' }}</span>
                                 </label>
                             </h5>
-                            <div class="fz-12px">{{ translate('Mark_the_feature_you_want_to_give_in_this_package') }}</div>
+                            <div class="fz-12px">{{ 'Marca la característica que deseas ofrecer en este paquete.' }}</div>
                         </div>
                     </div>
                 </div>
@@ -171,13 +171,13 @@ active
                        <div class="check-item">
                            <label class="form-group form-check form--check">
                                <input type="checkbox" class="form-check-input package-available-feature"  {{ $subscriptionackage->pos == 1 ? 'checked' : '' }} name="pos_system" value="1">
-                               <span class="form-check-label text-dark">{{ translate('messages.pos_system') }}</span>
+                               <span class="form-check-label text-dark">{{ 'sistema pos' }}</span>
                            </label>
                        </div>
                        <div class="check-item">
                            <label class="form-group form-check form--check">
                                <input type="checkbox" class="form-check-input package-available-feature" {{ $subscriptionackage->self_delivery == 1 ? 'checked' : '' }}  name="self_delivery" value="1">
-                               <span class="form-check-label text-dark">{{ translate('messages.self_delivery') }}</span>
+                               <span class="form-check-label text-dark">{{ 'autoentrega' }}</span>
                            </label>
                        </div>
                        @endif
@@ -193,19 +193,19 @@ active
                         <div class="check-item">
                             <label class="form-group form-check form--check">
                                 <input type="checkbox" class="form-check-input package-available-feature" {{ $subscriptionackage->mobile_app == 1 ? 'checked' : '' }}  name="mobile_app" value="1" >
-                                <span class="form-check-label text-dark">{{ translate('messages.Mobile_App') }}</span>
+                                <span class="form-check-label text-dark">{{ 'Aplicación móvil' }}</span>
                             </label>
                         </div>
                         <div class="check-item">
                             <label class="form-group form-check form--check">
                                 <input type="checkbox" class="form-check-input package-available-feature" {{ $subscriptionackage->review == 1 ? 'checked' : '' }}  name="review" value="1" >
-                                <span class="form-check-label text-dark">{{ translate('messages.review') }}</span>
+                                <span class="form-check-label text-dark">{{ 'revisar' }}</span>
                             </label>
                         </div>
                         <div class="check-item">
                             <label class="form-group form-check form--check">
                                 <input type="checkbox" class="form-check-input package-available-feature" {{ $subscriptionackage->chat == 1 ? 'checked' : '' }}  name="chat" value="1" >
-                                <span class="form-check-label text-dark">{{ translate('messages.chat') }}</span>
+                                <span class="form-check-label text-dark">{{ 'charlar' }}</span>
                             </label>
                         </div>
 
@@ -219,10 +219,10 @@ active
                         <div class="w-0 flex-grow">
                             <h5 class="text--title card-title d-flex gap-3 flex-wrap mb-1">
                                 <div>
-                                    {{ translate('Set_limit') }}
+                                    {{ 'Establecer límite' }}
                                 </div>
                             </h5>
-                            <div class="fz-12px">{{  $subscriptionackage->module_type == 'rental' && addon_published_status('Rental') ? translate('Set_maximum_trip_&_Vehicle_limit_for_this_package') :translate('Set_maximum_order_&_product_limit_for_this_package') }}</div>
+                            <div class="fz-12px">{{  $subscriptionackage->module_type == 'rental' && addon_published_status('Rental') ? 'Establecer límite máximo de viaje y vehículo para este paquete' :'Establecer límite máximo de pedidos y productos para este paquete' }}</div>
                         </div>
                     </div>
                 </div>
@@ -232,24 +232,24 @@ active
                             <div class="card-body">
                                 <div class="limit-item-card">
                                     <div class="form-group mb-0">
-                                        <label class="form-label text-capitalize">{{$subscriptionackage->module_type == 'rental' && addon_published_status('Rental') ? translate('Maximum_Trip_Limit'):translate('Maximum_Order Limit') }}</label>
+                                        <label class="form-label text-capitalize">{{$subscriptionackage->module_type == 'rental' && addon_published_status('Rental') ? 'Límite máximo de viaje':'Límite máximo de pedido' }}</label>
                                         <div class="d-flex flex-wrap items-center gap-2">
                                             <div class="resturant-type-group p-0">
                                                 <label class="form-check form--check mr-2 mr-md-4">
                                                     <input class="form-check-input limit-input" type="radio" {{ $subscriptionackage->max_order == 'unlimited' ? 'checked' : '' }}  name="minimum_order_limit" >
                                                     <span class="form-check-label">
-                                                        {{ translate('Unlimited') }} ({{ translate('Default') }})
+                                                        {{ 'Ilimitado' }} ({{ 'Por defecto' }})
                                                     </span>
                                                 </label>
                                                 <label class="form-check form--check mr-2 mr-md-4">
                                                     <input class="form-check-input limit-input"  {{ $subscriptionackage->max_order != 'unlimited' ? 'checked' : '' }}  type="radio" name="minimum_order_limit" value="Use_Limit">
                                                     <span class="form-check-label">
-                                                        {{ translate('Use_Limit') }}
+                                                        {{ 'Límite de uso' }}
                                                     </span>
                                                 </label>
                                             </div>
                                             <div class="custom-limit-box">
-                                                <input id="max_order" type="number" value="{{ $subscriptionackage->max_order == 'unlimited' ? null : $subscriptionackage->max_order }}" name="max_order" min="1" step="1" max="999999999" class="form-control max_required" placeholder="{{ translate('Ex: 1000') }}">
+                                                <input id="max_order" type="number" value="{{ $subscriptionackage->max_order == 'unlimited' ? null : $subscriptionackage->max_order }}" name="max_order" min="1" step="1" max="999999999" class="form-control max_required" placeholder="{{ 'Ej: 1000' }}">
                                             </div>
                                         </div>
                                     </div>
@@ -260,24 +260,24 @@ active
                             <div class="card-body">
                                 <div class="limit-item-card">
                                     <div class="form-group mb-0">
-                                        <label class="form-label text-capitalize">{{$subscriptionackage->module_type == 'rental' && addon_published_status('Rental') ?  translate('Maximum_Vehicle_Limit'):translate('Maximum_Item_Limit') }}</label>
+                                        <label class="form-label text-capitalize">{{$subscriptionackage->module_type == 'rental' && addon_published_status('Rental') ?  'Límite máximo de vehículos':'Límite máximo de artículos' }}</label>
                                         <div class="d-flex flex-wrap items-center gap-2">
                                             <div class="resturant-type-group p-0">
                                                 <label class="form-check form--check mr-2 mr-md-4">
                                                     <input class="form-check-input limit-input" type="radio" {{ $subscriptionackage->max_product == 'unlimited' ? 'checked' : '' }} name="maximum_item_limit" >
                                                     <span class="form-check-label">
-                                                        {{ translate('Unlimited') }} ({{ translate('Default') }})
+                                                        {{ 'Ilimitado' }} ({{ 'Por defecto' }})
                                                     </span>
                                                 </label>
                                                 <label class="form-check form--check mr-2 mr-md-4">
                                                     <input class="form-check-input limit-input" {{ $subscriptionackage->max_product != 'unlimited' ? 'checked' : '' }}  type="radio" name="maximum_item_limit" value="Use_Limit" >
                                                     <span class="form-check-label">
-                                                        {{ translate('Use_Limit') }}
+                                                        {{ 'Límite de uso' }}
                                                     </span>
                                                 </label>
                                             </div>
                                             <div class="custom-limit-box">
-                                                <input  id="max_product" type="number" value="{{ $subscriptionackage->max_product == 'unlimited' ? null : $subscriptionackage->max_product }}" name="max_product" min="1" step="1" max="999999999" class="form-control max_required" placeholder="{{ translate('Ex: 1000') }}">
+                                                <input  id="max_product" type="number" value="{{ $subscriptionackage->max_product == 'unlimited' ? null : $subscriptionackage->max_product }}" name="max_product" min="1" step="1" max="999999999" class="form-control max_required" placeholder="{{ 'Ej: 1000' }}">
                                             </div>
                                         </div>
                                     </div>
@@ -289,9 +289,9 @@ active
             </div>
             <div class="btn--container justify-content-end mt-20">
                 <button type="reset" id="reset_btn" class="btn btn--reset">
-                    {{ translate('messages.reset') }}
+                    {{ 'reiniciar' }}
                 </button>
-                <button type="submit" class="btn btn--primary">{{ translate('messages.submit') }}</button>
+                <button type="submit" class="btn btn--primary">{{ 'entregar' }}</button>
             </div>
 
         </form>

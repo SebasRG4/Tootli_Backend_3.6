@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('Banner View'))
+@section('title','Vista de banner')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -16,7 +16,7 @@
                 </div>
                 <div class="col-6">
                     <a href="{{url()->previous()}}" class="btn btn-primary float-right">
-                        <i class="tio-back-ui"></i> {{translate('messages.back')}}
+                        <i class="tio-back-ui"></i> {{'atrás'}}
                     </a>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                     </div>
 
                     <div class="col-md">
-                        <h4>{{translate('messages.short_description')}} : </h4>
+                        <h4>{{'breve descripción'}} : </h4>
                         <p>{{$banner->description}}</p>
                     </div>
 
@@ -64,13 +64,13 @@
                                }'>
                             <thead class="thead-light">
                             <tr>
-                                <th>{{translate('messages.#')}}</th>
-                                <th class="w--15">{{translate('messages.logo')}}</th>
-                                <th class="w--2">{{translate('messages.name')}}</th>
-                                <th class="w--25">{{translate('messages.store')}}</th>
-                                <th>{{translate('messages.email')}}</th>
-                                <th>{{translate('messages.phone')}}</th>
-                                <th>{{translate('messages.action')}}</th>
+                                <th>{{'#'}}</th>
+                                <th class="w--15">{{'logo'}}</th>
+                                <th class="w--2">{{'nombre'}}</th>
+                                <th class="w--25">{{'Negocio'}}</th>
+                                <th>{{'correo electrónico'}}</th>
+                                <th>{{'teléfono'}}</th>
+                                <th>{{'acción'}}</th>
                             </tr>
                             <tr>
                                 <th colspan="3">
@@ -86,11 +86,11 @@
                                                     <option value="{{$store->id}}" >{{$store->name}}</option>
                                                     @endif
                                                     @empty
-                                                    <option value="">{{ translate('messages.no_data_found') }}</option>
+                                                    <option value="">{{ 'no se encontraron datos' }}</option>
                                                     @endforelse
                                                 </select>
                                             </div>
-                                            <button type="submit" class="btn btn--primary col-md-5">{{translate('messages.add_store')}}</button>
+                                            <button type="submit" class="btn btn--primary col-md-5">{{'agregar tienda'}}</button>
 
                                         </div>
                                         <!-- End Search -->
@@ -101,7 +101,7 @@
                                     <form action="javascript:" id="search-form">
                                         <!-- Start Search -->
                                         <div class="input-group input--group">
-                                            <input id="datatableSearch_" type="search" name="search" class="form-control" placeholder="{{translate('messages.search')}}" aria-label="Search" required>
+                                            <input id="datatableSearch_" type="search" name="search" class="form-control" placeholder="{{'buscar'}}" aria-label="Search" required>
                                             <button type="submit" class="btn btn--secondary">
                                                 <i class="tio-search"></i>
                                             </button>
@@ -148,7 +148,7 @@
                                         <!-- Dropdown -->
                                         <div class="inline--2 redirect-url"
                                                  data-url="{{route('admin.banner.campaign',[$banner->id, $dm['id']])}}">
-                                                <span class="legend-indicator bg-danger"></span>{{ translate('messages.remove') }}
+                                                <span class="legend-indicator bg-danger"></span>{{ 'eliminar' }}
                                             </div>
                                         <!-- End Dropdown -->
                                     </td>

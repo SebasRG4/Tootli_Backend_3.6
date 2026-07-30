@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Taxi Rides'))
+@section('title', 'Paseos en taxi')
 
 @section('content')
     <div class="content container-fluid">
@@ -9,7 +9,7 @@
             <div class="row align-items-center">
                 <div class="col-sm mb-2 mb-sm-0">
                     <h1 class="page-header-title">
-                        <i class="tio-route"></i> {{ translate('Rides') }}
+                        <i class="tio-route"></i> {{ 'paseos' }}
                         <span class="badge badge-soft-dark ml-2">{{ $rides->total() }}</span>
                     </h1>
                 </div>
@@ -23,29 +23,29 @@
                     <div class="row">
                         <div class="col-md-3">
                             <select name="status" class="form-control">
-                                <option value="">{{ translate('All Status') }}</option>
+                                <option value="">{{ 'Todo el estado' }}</option>
                                 <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>
-                                    {{ translate('Pending') }}</option>
+                                    {{ 'Pendiente' }}</option>
                                 <option value="accepted" {{ request('status') == 'accepted' ? 'selected' : '' }}>
-                                    {{ translate('Accepted') }}</option>
+                                    {{ 'Aceptado' }}</option>
                                 <option value="in_progress" {{ request('status') == 'in_progress' ? 'selected' : '' }}>
-                                    {{ translate('In Progress') }}</option>
+                                    {{ 'En curso' }}</option>
                                 <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>
-                                    {{ translate('Completed') }}</option>
+                                    {{ 'Terminado' }}</option>
                                 <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>
-                                    {{ translate('Cancelled') }}</option>
+                                    {{ 'Cancelado' }}</option>
                             </select>
                         </div>
                         <div class="col-md-3">
                             <input type="date" name="date_from" class="form-control" value="{{ request('date_from') }}"
-                                placeholder="{{ translate('From') }}">
+                                placeholder="{{ 'De' }}">
                         </div>
                         <div class="col-md-3">
                             <input type="date" name="date_to" class="form-control" value="{{ request('date_to') }}"
-                                placeholder="{{ translate('To') }}">
+                                placeholder="{{ 'A' }}">
                         </div>
                         <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary btn-block">{{ translate('Filter') }}</button>
+                            <button type="submit" class="btn btn-primary btn-block">{{ 'Filtrar' }}</button>
                         </div>
                     </div>
                 </form>
@@ -59,16 +59,16 @@
                     <table class="table table-borderless table-thead-bordered table-align-middle">
                         <thead class="thead-light">
                             <tr>
-                                <th>{{ translate('ID') }}</th>
-                                <th>{{ translate('User') }}</th>
-                                <th>{{ translate('Driver') }}</th>
-                                <th>{{ translate('Route') }}</th>
-                                <th>{{ translate('Distance') }}</th>
-                                <th>{{ translate('Fare') }}</th>
-                                <th>{{ translate('Status') }}</th>
-                                <th>{{ translate('Payment') }}</th>
-                                <th>{{ translate('Date') }}</th>
-                                <th>{{ translate('Actions') }}</th>
+                                <th>{{ 'IDENTIFICACIÓN' }}</th>
+                                <th>{{ 'Usuario' }}</th>
+                                <th>{{ 'Conductor' }}</th>
+                                <th>{{ 'Ruta' }}</th>
+                                <th>{{ 'Distancia' }}</th>
+                                <th>{{ 'Tarifa' }}</th>
+                                <th>{{ 'Estado' }}</th>
+                                <th>{{ 'Pago' }}</th>
+                                <th>{{ 'Fecha' }}</th>
+                                <th>{{ 'Comportamiento' }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -84,14 +84,14 @@
                                         @if($ride->driver)
                                             {{ $ride->driver->user->f_name ?? 'N/A' }}
                                         @else
-                                            <span class="badge badge-soft-secondary">{{ translate('Pending') }}</span>
+                                            <span class="badge badge-soft-secondary">{{ 'Pendiente' }}</span>
                                         @endif
                                     </td>
                                     <td>
                                         <small>
-                                            <strong>{{ translate('From') }}:</strong>
+                                            <strong>{{ 'De' }}:</strong>
                                             {{ Str::limit($ride->pickup_address, 30) }}<br>
-                                            <strong>{{ translate('To') }}:</strong> {{ Str::limit($ride->dropoff_address, 30) }}
+                                            <strong>{{ 'A' }}:</strong> {{ Str::limit($ride->dropoff_address, 30) }}
                                         </small>
                                     </td>
                                     <td>{{ number_format($ride->estimated_distance_km, 1) }} km</td>
@@ -132,7 +132,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="10" class="text-center py-4">{{ translate('No rides found') }}</td>
+                                    <td colspan="10" class="text-center py-4">{{ 'No se encontraron viajes' }}</td>
                                 </tr>
                             @endforelse
                         </tbody>

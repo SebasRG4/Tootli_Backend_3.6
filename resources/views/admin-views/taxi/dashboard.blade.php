@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Taxi Dashboard'))
+@section('title', 'Panel de taxis')
 
 @push('css_or_js')
 @endpush
@@ -12,7 +12,7 @@
             <div class="row align-items-center">
                 <div class="col-sm mb-2 mb-sm-0">
                     <h1 class="page-header-title">
-                        <i class="tio-car"></i> {{ translate('Taxi Dashboard') }}
+                        <i class="tio-car"></i> {{ 'Panel de taxis' }}
                     </h1>
                 </div>
             </div>
@@ -23,17 +23,17 @@
             <div class="col-sm-6 col-lg-3 mb-3">
                 <div class="card card-hover-shadow h-100">
                     <div class="card-body">
-                        <h6 class="card-subtitle mb-2">{{ translate('Total Drivers') }}</h6>
+                        <h6 class="card-subtitle mb-2">{{ 'Conductores totales' }}</h6>
                         <h2 class="card-title text-inherit">{{ $stats['total_drivers'] }}</h2>
                         <span class="badge badge-soft-success">{{ $stats['online_drivers'] }}
-                            {{ translate('Online') }}</span>
+                            {{ 'En línea' }}</span>
                     </div>
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3 mb-3">
                 <div class="card card-hover-shadow h-100">
                     <div class="card-body">
-                        <h6 class="card-subtitle mb-2">{{ translate('Total Vehicles') }}</h6>
+                        <h6 class="card-subtitle mb-2">{{ 'Vehículos totales' }}</h6>
                         <h2 class="card-title text-inherit">{{ $stats['total_vehicles'] }}</h2>
                     </div>
                 </div>
@@ -41,20 +41,20 @@
             <div class="col-sm-6 col-lg-3 mb-3">
                 <div class="card card-hover-shadow h-100">
                     <div class="card-body">
-                        <h6 class="card-subtitle mb-2">{{ translate('Total Rides') }}</h6>
+                        <h6 class="card-subtitle mb-2">{{ 'Viajes totales' }}</h6>
                         <h2 class="card-title text-inherit">{{ $stats['total_rides'] }}</h2>
                         <span class="badge badge-soft-warning">{{ $stats['pending_rides'] }}
-                            {{ translate('Pending') }}</span>
+                            {{ 'Pendiente' }}</span>
                     </div>
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3 mb-3">
                 <div class="card card-hover-shadow h-100">
                     <div class="card-body">
-                        <h6 class="card-subtitle mb-2">{{ translate('Total Earnings') }}</h6>
+                        <h6 class="card-subtitle mb-2">{{ 'Ganancias totales' }}</h6>
                         <h2 class="card-title text-inherit">${{ number_format($stats['total_earnings'], 2) }}</h2>
                         <span class="badge badge-soft-info">{{ $stats['completed_rides'] }}
-                            {{ translate('Completed') }}</span>
+                            {{ 'Terminado' }}</span>
                     </div>
                 </div>
             </div>
@@ -65,28 +65,28 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-header-title">{{ translate('Quick Actions') }}</h5>
+                        <h5 class="card-header-title">{{ 'Acciones rápidas' }}</h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3 mb-2">
                                 <a href="{{ route('admin.taxi.drivers') }}" class="btn btn-primary btn-block">
-                                    <i class="tio-user"></i> {{ translate('Manage Drivers') }}
+                                    <i class="tio-user"></i> {{ 'Administrar controladores' }}
                                 </a>
                             </div>
                             <div class="col-md-3 mb-2">
                                 <a href="{{ route('admin.taxi.vehicles') }}" class="btn btn-info btn-block">
-                                    <i class="tio-car"></i> {{ translate('Manage Vehicles') }}
+                                    <i class="tio-car"></i> {{ 'Administrar vehículos' }}
                                 </a>
                             </div>
                             <div class="col-md-3 mb-2">
                                 <a href="{{ route('admin.taxi.fare-config') }}" class="btn btn-success btn-block">
-                                    <i class="tio-dollar"></i> {{ translate('Fare Configuration') }}
+                                    <i class="tio-dollar"></i> {{ 'Configuración de tarifas' }}
                                 </a>
                             </div>
                             <div class="col-md-3 mb-2">
                                 <a href="{{ route('admin.taxi.rides') }}" class="btn btn-warning btn-block">
-                                    <i class="tio-route"></i> {{ translate('View Rides') }}
+                                    <i class="tio-route"></i> {{ 'Ver paseos' }}
                                 </a>
                             </div>
                         </div>
@@ -98,19 +98,19 @@
         <!-- Recent Rides -->
         <div class="card">
             <div class="card-header">
-                <h5 class="card-header-title">{{ translate('Recent Rides') }}</h5>
+                <h5 class="card-header-title">{{ 'Viajes recientes' }}</h5>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-borderless table-thead-bordered table-align-middle">
                         <thead class="thead-light">
                             <tr>
-                                <th>{{ translate('ID') }}</th>
-                                <th>{{ translate('User') }}</th>
-                                <th>{{ translate('Driver') }}</th>
-                                <th>{{ translate('Status') }}</th>
-                                <th>{{ translate('Fare') }}</th>
-                                <th>{{ translate('Date') }}</th>
+                                <th>{{ 'IDENTIFICACIÓN' }}</th>
+                                <th>{{ 'Usuario' }}</th>
+                                <th>{{ 'Conductor' }}</th>
+                                <th>{{ 'Estado' }}</th>
+                                <th>{{ 'Tarifa' }}</th>
+                                <th>{{ 'Fecha' }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -130,7 +130,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center py-4">{{ translate('No rides yet') }}</td>
+                                    <td colspan="6" class="text-center py-4">{{ 'Aún no hay viajes' }}</td>
                                 </tr>
                             @endforelse
                         </tbody>

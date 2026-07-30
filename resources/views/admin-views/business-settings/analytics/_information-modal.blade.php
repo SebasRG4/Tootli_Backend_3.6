@@ -17,18 +17,18 @@
                                     loading="lazy" alt="">
                                 <div>
                                     <h3 class="lh-md mb-3 text-capitalize text-start">
-                                        {{ translate('step_by_step_guide') }}
+                                        {{ 'guía paso a paso' }}
                                     </h3>
                                     <ol class="d-flex flex-column px-4 gap-2 mb-4">
-                                        <li> {{ translate('open_the_advertising_manager_or_platform_you_want_to_integrate_(e.g.,_meta_ads,_snapchat_ads,_google_analytics).') }}
+                                        <li> {{ 'Abra el administrador de publicidad o la plataforma que desea integrar (por ejemplo, metaanuncios, anuncios de Snapchat, Google Analytics).' }}
                                         </li>
-                                        <li> {{ translate('locate_and_copy_the_necessary_tracking_ids_from_their_respective_settings.') }}
+                                        <li> {{ 'Localice y copie los identificadores de seguimiento necesarios desde sus respectivas configuraciones.' }}
                                         </li>
-                                        <li> {{ translate('turn_on_the_toggle_for_the_platform_you_want_to_activate.') }}
+                                        <li> {{ 'Encienda el interruptor de la plataforma que desea activar.' }}
                                         </li>
-                                        <li> {{ translate('paste_the_code_into_the_input_box_and_click_submit.') }}
+                                        <li> {{ 'pegue el código en el cuadro de entrada y haga clic en enviar.' }}
                                         </li>
-                                        <li> {{ translate('if_you_no_longer_want_to_track_a_platforms_analytics_turn_the_toggle_off_anytime.') }}
+                                        <li> {{ 'Si ya no desea realizar un seguimiento de los análisis de una plataforma, desactive la opción en cualquier momento.' }}
                                         </li>
                                     </ol>
                                 </div>

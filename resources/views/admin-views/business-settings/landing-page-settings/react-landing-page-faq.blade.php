@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.react_landing_page'))
+@section('title', 'reaccionar página de inicio')
 
 @section('content')
     <div class="content container-fluid">
@@ -11,12 +11,12 @@
                     <img src="{{asset('assets/admin/img/landing.png')}}" class="w--20" alt="">
                 </span>
                     <span>
-                    {{ translate('messages.react_landing_page') }}
+                    {{ 'reaccionar página de inicio' }}
                 </span>
                 </h1>
                 <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal"
                      data-target="#how-it-works">
-                    <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
+                    <strong class="mr-2">{{'¡Mira cómo funciona!'}}</strong>
                     <div>
                         <i class="tio-info-outined"></i>
                     </div>
@@ -31,15 +31,15 @@
         <div class="card py-3 px-xxl-4 px-3 mb-20">
             <div class="d-flex flex-sm-nowrap flex-wrap gap-3 align-items-center justify-content-between">
                 <div class="">
-                    <h3 class="mb-1">{{ translate('FAQ Section') }}</h3>
+                    <h3 class="mb-1">{{ 'Sección de preguntas frecuentes' }}</h3>
                     <p class="mb-0 gray-dark fs-12">
-                        {{ translate('See how your FAQ Section will look to customers.') }}
+                        {{ 'Vea cómo verá su sección de preguntas frecuentes ante los clientes.' }}
                     </p>
                 </div>
                 <div class="max-w-300px ml-sm-auto">
                     <button type="button" class="btn btn-outline-primary py-2 fs-12 px-3 offcanvas-trigger"
                             data-target="#faqPreview_section">
-                        <i class="tio-invisible"></i> {{ translate('Section Preview') }}
+                        <i class="tio-invisible"></i> {{ 'Vista previa de la sección' }}
                     </button>
                 </div>
             </div>
@@ -49,15 +49,15 @@
             <div class="row g-3 align-items-center justify-content-between">
                 <div class="col-xxl-9 col-lg-8 col-md-7 col-sm-6">
                     <div class="">
-                        <h3 class="mb-1">{{ translate('Show FAQ Section') }}</h3>
+                        <h3 class="mb-1">{{ 'Mostrar sección de preguntas frecuentes' }}</h3>
                         <p class="mb-0 gray-dark fs-12">
-                            {{ translate('If you turn of the availability status, this section will not show in the website') }}
+                            {{ 'Si desactiva el estado de disponibilidad, esta sección no se mostrará en el sitio web.' }}
                         </p>
                     </div>
                 </div>
                 <div class="col-xxl-3 col-lg-4 col-md-5 col-sm-6">
                     <div class="py-2 px-3 rounded d-flex justify-content-between border align-items-center w-300">
-                        <h5 class="text-capitalize fw-normal mb-0">{{ translate('Status') }}</h5>
+                        <h5 class="text-capitalize fw-normal mb-0">{{ 'Estado' }}</h5>
 
                         <form
                             action="{{ route('admin.business-settings.statusUpdate', ['type' => 'react_landing_page', 'key' => 'faq_section_status']) }}"
@@ -67,10 +67,10 @@
                             <input type="checkbox" data-id="CheckboxStatus" data-type="status"
                                    data-image-on="{{ asset('assets/admin/img/status-ons.png') }}"
                                    data-image-off="{{ asset('assets/admin/img/off-danger.png') }}"
-                                   data-title-on="{{ translate('Do you want turn on this section ?') }}"
-                                   data-title-off="{{ translate('Do you want to turn off this section ?') }}"
-                                   data-text-on="<p>{{ translate('If you turn on this section will be show in react landing page.') }}"
-                                   data-text-off="<p>{{ translate('If you turn off this section will not be show in react landing page.') }}</p>"
+                                   data-title-on="{{ '¿Quieres activar esta sección?' }}"
+                                   data-title-off="{{ '¿Quieres desactivar esta sección?' }}"
+                                   data-text-on="<p>{{ 'Si activa esta sección, se mostrará en la página de inicio de reacción.' }}"
+                                   data-text-off="<p>{{ 'Si desactiva esta sección no se mostrará en la página de inicio de reacción.' }}</p>"
                                    class="toggle-switch-input  status dynamic-checkbox" id="CheckboxStatus"
                                 {{ $faq_section_status?->value ? 'checked' : '' }}>
                             <span class="toggle-switch-label text">
@@ -85,9 +85,9 @@
         <div class="card mb-20">
             <div class="card-header">
                 <div class="">
-                    <h3 class="mb-1">{{ translate('FAQ Content Section ') }}</h3>
+                    <h3 class="mb-1">{{ 'Sección de contenido de preguntas frecuentes' }}</h3>
                     <p class="mb-0 fs-12">
-                        {{ translate('Manage the main title and subtitle for the Frequently Asked Questions section.	') }}
+                        {{ 'Gestiona el título principal y el subtítulo de la sección de Preguntas frecuentes.' }}
                     </p>
                 </div>
             </div>
@@ -108,7 +108,7 @@
                                         <ul class="nav nav-tabs mb-4 border-0">
                                             <li class="nav-item">
                                                 <a class="nav-link lang_link active" href="#"
-                                                   id="default-link">{{translate('messages.default')}}</a>
+                                                   id="default-link">{{'por defecto'}}</a>
                                             </li>
                                             @foreach (json_decode($language) as $lang)
                                                 <li class="nav-item">
@@ -124,22 +124,22 @@
                                                 <div class="row g-1">
                                                     <div class="col-12">
                                                         <label for="faq_title"
-                                                               class="form-label">{{translate('Title')}}
-                                                            ({{ translate('messages.default') }})
+                                                               class="form-label">{{'Título'}}
+                                                            ({{ 'por defecto' }})
                                                             <span class="form-label-secondary" data-toggle="tooltip"
                                                                   data-placement="right"
-                                                                  data-original-title="{{ translate('Write_the_title_within_100_characters') }}">
+                                                                  data-original-title="{{ 'Escribe el título dentro de 100 caracteres.' }}">
                                                             <i class="tio-info color-A7A7A7"></i>
                                                         </span><span class="form-label-secondary text-danger"
                                                                      data-toggle="tooltip" data-placement="right"
-                                                                     data-original-title="{{ translate('messages.Required.')}}"> *
+                                                                     data-original-title="{{ 'Requerido.'}}"> *
                                                         </span>
                                                         </label>
                                                         <input id="faq_title" type="text" maxlength="100"
                                                                name="faq_title[]"
                                                                value="{{ $faq_title?->getRawOriginal('value') ?? '' }}"
                                                                class="form-control"
-                                                               placeholder="{{translate('messages.title_here...')}}">
+                                                               placeholder="{{'título aquí...'}}">
                                                         <span
                                                             class="text-right text-counting color-A7A7A7 d-block mt-1">0/100</span>
                                                     </div>
@@ -164,11 +164,11 @@
                                                     <div class="row g-1">
                                                         <div class="col-12">
                                                             <label for="faq_title{{$lang}}"
-                                                                   class="form-label">{{translate('Title')}}
+                                                                   class="form-label">{{'Título'}}
                                                                 ({{strtoupper($lang)}})<span
                                                                     class="form-label-secondary"
                                                                     data-toggle="tooltip" data-placement="right"
-                                                                    data-original-title="{{ translate('Write_the_title_within_100_characters') }}">
+                                                                    data-original-title="{{ 'Escribe el título dentro de 100 caracteres.' }}">
                                                                                             <i class="tio-info color-A7A7A7"></i>
                                                                                         </span>
                                                             </label>
@@ -177,7 +177,7 @@
                                                                    name="faq_title[]"
                                                                    value="{{ $faq_title_translate[$lang]['value'] ?? '' }}"
                                                                    class="form-control"
-                                                                   placeholder="{{translate('messages.title_here...')}}">
+                                                                   placeholder="{{'título aquí...'}}">
                                                             <span
                                                                 class="text-right text-counting color-A7A7A7 d-block mt-1">0/100</span>
                                                         </div>
@@ -189,10 +189,10 @@
                                             <div class="col-12">
                                                 <div class="mb-2">
                                                     <label for="faq_title"
-                                                           class="form-label">{{translate('Title')}}</label>
+                                                           class="form-label">{{'Título'}}</label>
                                                     <input id="faq_title" maxlength="100" type="text"
                                                            name="faq_title[]" class="form-control"
-                                                           placeholder="{{translate('messages.title_here...')}}">
+                                                           placeholder="{{'título aquí...'}}">
                                                     <span
                                                         class="text-right text-counting color-A7A7A7 d-block mt-1">0/100</span>
                                                 </div>
@@ -204,17 +204,17 @@
                             </div>
                         </div>
                         <div class="btn--container justify-content-end gap-3 mt-20">
-                            <button type="reset" class="btn btn--reset">{{translate('Reset')}}</button>
-                            <button type="submit" class="btn btn--primary">{{translate('Save')}}</button>
+                            <button type="reset" class="btn btn--reset">{{'Reiniciar'}}</button>
+                            <button type="submit" class="btn btn--primary">{{'Ahorrar'}}</button>
                         </div>
                     </form>
                 </div>
                 <div class="card mb-20 border-0">
                     <div class="card-body p-xxl-4 p-3">
                         <div class="mb-20">
-                            <h4 class="mb-1">{{ translate('FAQ Q&A Setup ') }}</h4>
+                            <h4 class="mb-1">{{ 'Preguntas frecuentes Configuración de preguntas y respuestas' }}</h4>
                             <p class="mb-0 fs-12">
-                                {{ translate('Add and manage individual questions and answers for each user type.') }}
+                                {{ 'Agregue y administre preguntas y respuestas individuales para cada tipo de usuario.' }}
                             </p>
                         </div>
                         <form action="{{ route('admin.business-settings.react-landing-page-settings', 'faq-store') }}"
@@ -224,19 +224,19 @@
                                 <div class="col-lg-12">
                                     <div class="form-group mb-20">
                                         <label for=""
-                                               class="mb-2 d-block text-title">{{ translate('messages.User Type') }}</label>
+                                               class="mb-2 d-block text-title">{{ 'Tipo de usuario' }}</label>
                                         <select required name="user_type" class="custom-select" id="">
                                             <option disabled selected value="">
-                                                {{ translate('Select user type') }}
+                                                {{ 'Seleccionar tipo de usuario' }}
                                             </option>
                                             <option value="customer">
-                                                {{ translate('Customer') }}
+                                                {{ 'Cliente' }}
                                             </option>
                                             <option value="vendor">
-                                                {{ translate('Vendor') }}
+                                                {{ 'Proveedor' }}
                                             </option>
                                             <option value="deliveryman">
-                                                {{ translate('Deliveryman') }}
+                                                {{ 'repartidor' }}
                                             </option>
                                         </select>
                                     </div>
@@ -245,7 +245,7 @@
                                             <ul class="nav nav-tabs mb-4 border-0">
                                                 <li class="nav-item">
                                                     <a class="nav-link lang_link active" href="#"
-                                                       id="default-link">{{translate('messages.default')}}</a>
+                                                       id="default-link">{{'por defecto'}}</a>
                                                 </li>
                                                 @foreach (json_decode($language) as $lang)
                                                     <li class="nav-item">
@@ -261,42 +261,42 @@
                                                     <div class="row g-1">
                                                         <div class="col-12">
                                                             <label for="question"
-                                                                   class="form-label">{{translate('Question')}}
-                                                                ({{ translate('messages.default') }})
+                                                                   class="form-label">{{'Pregunta'}}
+                                                                ({{ 'por defecto' }})
                                                                 <span class="form-label-secondary" data-toggle="tooltip"
                                                                       data-placement="right"
-                                                                      data-original-title="{{ translate('Write_the_title_within_150_characters') }}">
+                                                                      data-original-title="{{ 'Escribe el título dentro de 150 caracteres.' }}">
                         <i class="tio-info color-A7A7A7"></i>
                     </span><span class="form-label-secondary text-danger"
                                  data-toggle="tooltip" data-placement="right"
-                                 data-original-title="{{ translate('messages.Required.')}}"> *
+                                 data-original-title="{{ 'Requerido.'}}"> *
                     </span>
                                                             </label>
                                                             <input id="question" type="text" maxlength="150"
                                                                    name="question[]"
                                                                    value=""
                                                                    class="form-control"
-                                                                   placeholder="{{translate('messages.Question Here...')}}" required>
+                                                                   placeholder="{{'Pregunta aquí...'}}" required>
                                                             <span
                                                                 class="text-right text-counting color-A7A7A7 d-block mt-1">0/150</span>
                                                         </div>
                                                         <div class="col-12">
                                                             <label for="answer"
-                                                                   class="form-label">{{translate('Answer')}}
-                                                                ({{ translate('messages.default') }})
+                                                                   class="form-label">{{'Respuesta'}}
+                                                                ({{ 'por defecto' }})
                                                                 <span class="form-label-secondary" data-toggle="tooltip"
                                                                       data-placement="right"
-                                                                      data-original-title="{{ translate('Write_the_title_within_500_characters') }}">
+                                                                      data-original-title="{{ 'Escribe el título dentro de 500 caracteres.' }}">
                         <i class="tio-info color-A7A7A7"></i>
                     </span><span class="form-label-secondary text-danger"
                                  data-toggle="tooltip" data-placement="right"
-                                 data-original-title="{{ translate('messages.Required.')}}"> *
+                                 data-original-title="{{ 'Requerido.'}}"> *
                     </span>
                                                             </label>
                                                             <textarea id="answer" rows="1" maxlength="500"
                                                                       name="answer[]"
                                                                       class="form-control min-h-45px"
-                                                                      placeholder="{{translate('messages.Answer Here...')}}" required></textarea>
+                                                                      placeholder="{{'Responde aquí...'}}" required></textarea>
                                                             <span
                                                                 class="text-right text-counting color-A7A7A7 d-block mt-1">0/500</span>
                                                         </div>
@@ -309,12 +309,12 @@
                                                         <div class="row g-1">
                                                             <div class="col-12">
                                                                 <label for="question{{$lang}}"
-                                                                       class="form-label">{{translate('Question')}}
+                                                                       class="form-label">{{'Pregunta'}}
                                                                     ({{strtoupper($lang)}})
                                                                     <span class="form-label-secondary"
                                                                           data-toggle="tooltip"
                                                                           data-placement="right"
-                                                                          data-original-title="{{ translate('Write_the_title_within_150_characters') }}">
+                                                                          data-original-title="{{ 'Escribe el título dentro de 150 caracteres.' }}">
                             <i class="tio-info color-A7A7A7"></i>
                         </span>
                                                                 </label>
@@ -323,25 +323,25 @@
                                                                        name="question[]"
                                                                        value=""
                                                                        class="form-control"
-                                                                       placeholder="{{translate('messages.Question Here...')}}">
+                                                                       placeholder="{{'Pregunta aquí...'}}">
                                                                 <span
                                                                     class="text-right text-counting color-A7A7A7 d-block mt-1">0/150</span>
                                                             </div>
                                                             <div class="col-12">
                                                                 <label for="answer{{$lang}}"
-                                                                       class="form-label">{{translate('Answer')}}
+                                                                       class="form-label">{{'Respuesta'}}
                                                                     ({{strtoupper($lang)}})
                                                                     <span class="form-label-secondary"
                                                                           data-toggle="tooltip"
                                                                           data-placement="right"
-                                                                          data-original-title="{{ translate('Write_the_title_within_500_characters') }}">
+                                                                          data-original-title="{{ 'Escribe el título dentro de 500 caracteres.' }}">
                             <i class="tio-info color-A7A7A7"></i>
                         </span>
                                                                 </label>
                                                                 <textarea id="answer{{$lang}}" rows="1" maxlength="500"
                                                                           name="answer[]"
                                                                           class="form-control min-h-45px"
-                                                                          placeholder="{{translate('messages.Answer Here...')}}"></textarea>
+                                                                          placeholder="{{'Responde aquí...'}}"></textarea>
                                                                 <span
                                                                     class="text-right text-counting color-A7A7A7 d-block mt-1">0/500</span>
                                                             </div>
@@ -353,20 +353,20 @@
                                                 <div class="col-12">
                                                     <div class="mb-2">
                                                         <label for="question"
-                                                               class="form-label">{{translate('Question')}}</label>
+                                                               class="form-label">{{'Pregunta'}}</label>
                                                         <input id="question" maxlength="150" type="text"
                                                                name="question[]" class="form-control"
-                                                               placeholder="{{translate('messages.Question Here...')}}">
+                                                               placeholder="{{'Pregunta aquí...'}}">
                                                         <span
                                                             class="text-right text-counting color-A7A7A7 d-block mt-1">0/150</span>
                                                     </div>
                                                     <div class="mb-4">
                                                         <label for="answer"
-                                                               class="form-label">{{translate('Answer')}}</label>
+                                                               class="form-label">{{'Respuesta'}}</label>
                                                         <textarea id="answer" rows="1" maxlength="500"
                                                                   name="answer[]"
                                                                   class="form-control min-h-45px"
-                                                                  placeholder="{{translate('messages.Answer Here...')}}"></textarea>
+                                                                  placeholder="{{'Responde aquí...'}}"></textarea>
                                                         <span
                                                             class="text-right text-counting color-A7A7A7 d-block mt-1">0/500</span>
                                                     </div>
@@ -378,8 +378,8 @@
                                 </div>
                             </div>
                             <div class="btn--container justify-content-end gap-3 mt-20">
-                                <button type="reset" class="btn btn--reset">{{translate('Reset')}}</button>
-                                <button type="submit" class="btn btn--primary">{{translate('Save')}}</button>
+                                <button type="reset" class="btn btn--reset">{{'Reiniciar'}}</button>
+                                <button type="submit" class="btn btn--primary">{{'Ahorrar'}}</button>
                             </div>
                         </form>
                     </div>
@@ -410,9 +410,9 @@
                                 <div class="input-group input--group">
                                     <form action="" method="get" class="d-flex align-items-center gap-2">
                                         <input type="text" name="search" class="form-control w-auto"
-                                               placeholder="{{ translate('Search FAQs') }}"
+                                               placeholder="{{ 'Preguntas frecuentes sobre búsqueda' }}"
                                                value="{{ request('search') }}">
-                                        <button type="submit" class="btn btn-primary">{{ translate('Search') }}</button>
+                                        <button type="submit" class="btn btn-primary">{{ 'Buscar' }}</button>
                                     </form>
                                 </div>
                             </div>
@@ -425,12 +425,12 @@
                                 class="table table-borderless table-thead-borderless table-align-middle table-nowrap card-table">
                                 <thead class="thead-light border-0">
                                 <tr>
-                                    <th class="border-top-0">{{ translate('messages.sl') }}</th>
-                                    <th class="border-top-0">{{ translate('Question') }}</th>
-                                    <th class="border-top-0">{{ translate('Answer') }}</th>
-                                    <th class="border-top-0">{{ translate('User_Type') }}</th>
-                                    <th class="text-center border-top-0">{{ translate('Status') }}</th>
-                                    <th class="text-center border-top-0">{{ translate('Action') }}</th>
+                                    <th class="border-top-0">{{ 'SL' }}</th>
+                                    <th class="border-top-0">{{ 'Pregunta' }}</th>
+                                    <th class="border-top-0">{{ 'Respuesta' }}</th>
+                                    <th class="border-top-0">{{ 'Tipo de usuario' }}</th>
+                                    <th class="text-center border-top-0">{{ 'Estado' }}</th>
+                                    <th class="text-center border-top-0">{{ 'Acción' }}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -461,10 +461,10 @@
                                                        data-type="status"
                                                        data-image-on="{{ asset('assets/admin/img/feature-status-on.png') }}"
                                                        data-image-off="{{ asset('assets/admin/img/off-danger.png') }}"
-                                                       data-title-on="{{ translate('Want_to_Enable_this') }} <strong>{{ translate('faq') }}</strong>"
-                                                       data-title-off="{{ translate('Want_to_Disable_this') }} <strong>{{ translate('faq') }}</strong>"
-                                                       data-text-on="<p>{{ translate('If_enabled,_it_will_be_shown_on_the_React_Landing_page') }}</p>"
-                                                       data-text-off="<p>{{ translate('If_disabled,_it_will_be_hidden_from_the_React_Landing_page') }}</p>"
+                                                       data-title-on="{{ 'Quiere habilitar esto' }} <strong>{{ 'preguntas frecuentes' }}</strong>"
+                                                       data-title-off="{{ 'Quiero desactivar esto' }} <strong>{{ 'preguntas frecuentes' }}</strong>"
+                                                       data-text-on="<p>{{ 'Si está habilitado, se mostrará en la página de inicio de React' }}</p>"
+                                                       data-text-off="<p>{{ 'Si está deshabilitado, se ocultará de la página de inicio de React' }}</p>"
                                                        class="status toggle-switch-input dynamic-checkbox"
                                                        id="faq_status_{{ $faq->id }}"
                                                     {{ $faq->status ? 'checked' : '' }}>
@@ -483,15 +483,15 @@
                                                    data-target="#offcanvas__customBtn3"
                                                    data-id="{{ $faq->id }}"
                                                    data-url="{{ route('admin.business-settings.reactfaqEdit', [$faq['id']]) }}"
-                                                   href="javascript:" title="{{ translate('messages.edit_faq') }}">
+                                                   href="javascript:" title="{{ 'editar preguntas frecuentes' }}">
                                                     <i class="tio-edit"></i>
                                                 </a>
                                                 <a class="btn action-btn btn--danger btn-outline-danger form-alert-faq"
                                                    href="javascript:"
                                                    data-id="faq-{{ $faq->id }}"
-                                                   data-message="{{ translate('Want_to_Delete_this_faq') }}"
-                                                   data-message-2="{{ translate('If_yes,_the_faq_will_be_removed_from_this_list') }}"
-                                                   title="{{ translate('messages.delete_faq') }}">
+                                                   data-message="{{ 'Quiere eliminar estas preguntas frecuentes' }}"
+                                                   data-message-2="{{ 'En caso afirmativo, las preguntas frecuentes se eliminarán de esta lista.' }}"
+                                                   title="{{ 'eliminar preguntas frecuentes' }}">
                                                     <i class="tio-delete-outlined"></i>
                                                 </a>
                                                 <form
@@ -510,7 +510,7 @@
                                 <div class="empty--data">
                                     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                                     <h5>
-                                        {{translate('no_data_found')}}
+                                        {{'no se encontraron datos'}}
                                     </h5>
                                 </div>
                             @endif
@@ -541,7 +541,7 @@
                 <div
                     class="custom-offcanvas-header bg--secondary d-flex justify-content-between align-items-center px-3 py-3">
                     <div class="py-1">
-                        <h3 class="mb-0 line--limit-1">{{ translate('messages.Faq Section Preview') }}</h3>
+                        <h3 class="mb-0 line--limit-1">{{ 'Vista previa de la sección de preguntas frecuentes' }}</h3>
                     </div>
                     <button type="button"
                             class="btn-close w-25px h-25px border rounded-circle d-center bg--secondary text-dark offcanvas-close fz-15px p-0"
@@ -1201,8 +1201,8 @@
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{ translate('messages.No') }}',
-                confirmButtonText: '{{ translate('messages.Yes') }}',
+                cancelButtonText: '{{ 'No' }}',
+                confirmButtonText: '{{ 'Sí' }}',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {

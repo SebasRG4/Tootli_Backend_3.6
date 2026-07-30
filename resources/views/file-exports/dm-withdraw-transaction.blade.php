@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-lg-12 text-center "><h1 >{{ translate('messages.deliveryman_withdraw_transactions') }}</h1></div>
+    <div class="col-lg-12 text-center "><h1 >{{ 'repartidor retirar transacciones' }}</h1></div>
     <div class="col-lg-12">
 
 
@@ -7,13 +7,13 @@
     <table>
         <thead>
             <tr>
-                <th>{{ translate('filter_criteria') }} -</th>
+                <th>{{ 'criterios de filtrado' }} -</th>
                 <th></th>
                 <th></th>
                 <th> 
-                    {{ translate('request_status')  }}- {{  $data['request_status']?translate($data['request_status']):translate('all') }}
+                    {{ 'estado de la solicitud'  }}- {{  $data['request_status']?translate($data['request_status']):'todo' }}
                     <br>
-                    {{ translate('Search_Bar_Content')  }}- {{ $data['search'] ??translate('N/A') }}
+                    {{ 'Contenido de la barra de búsqueda'  }}- {{ $data['search'] ??'N / A' }}
 
                 </th>
                 <th></th>
@@ -22,14 +22,14 @@
                 <th></th>
             </tr>
             <tr>
-                <th>{{ translate('messages.sl') }}</th>
-                <th>{{ translate('messages.request_time') }}</th>
-                <th>{{ translate('messages.requested_amount') }}</th>
-                <th>{{ translate('messages.deliveryman_name') }}</th>
-                <th>{{ translate('messages.phone') }}</th>
-                <th>{{ translate('messages.email') }}</th>
-                <th>{{ translate('messages.bank_account_no.') }}</th>
-                <th>{{ translate('messages.request_status') }}</th>
+                <th>{{ 'SL' }}</th>
+                <th>{{ 'tiempo de solicitud' }}</th>
+                <th>{{ 'cantidad solicitada' }}</th>
+                <th>{{ 'nombre del repartidor' }}</th>
+                <th>{{ 'teléfono' }}</th>
+                <th>{{ 'correo electrónico' }}</th>
+                <th>{{ 'número de cuenta bancaria' }}</th>
+                <th>{{ 'estado de la solicitud' }}</th>
             </tr>
         </thead>
         <tbody>
@@ -42,7 +42,7 @@
                     @if($wr->deliveryman)
                     {{ $wr->deliveryman->f_name }} {{ $wr->deliveryman->l_name }}
                     @else
-                    {{translate('messages.deliveryman deleted!') }}
+                    {{'repartidor eliminado!' }}
                     @endif
                 </td>
                 <td>{{$wr->deliveryman->phone}}</td>
@@ -50,11 +50,11 @@
                 <td>{{$wr->deliveryman && $wr->deliveryman->account_no ? $wr->deliveryman->account_no : 'No Data found'}}</td>
                 <td>
                     @if($wr->approved==0)
-                        {{ translate('messages.pending') }}
+                        {{ 'Pendiente' }}
                     @elseif($wr->approved==1)
-                        {{ translate('messages.approved') }}
+                        {{ 'aprobado' }}
                     @else
-                        {{ translate('messages.denied') }}
+                        {{ 'denegado' }}
                     @endif
                 </td>
             </tr>

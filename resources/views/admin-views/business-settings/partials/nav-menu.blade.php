@@ -5,62 +5,62 @@
             <li class="nav-item">
                 <a class="nav-link  {{ Request::is('admin/business-settings/business-setup') ? 'active' : '' }}"
                     href="{{ route('admin.business-settings.business-setup') }}"
-                    aria-disabled="true">{{translate('messages.business_information')}}</a>
+                    aria-disabled="true">{{'información comercial'}}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/business-setup/order') ? 'active' : '' }}"
                     href="{{ route('admin.business-settings.business-setup', ['tab' => 'order']) }}"
-                    aria-disabled="true">{{translate('messages.order_settings')}}</a>
+                    aria-disabled="true">{{'configuración del pedido'}}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/business-setup/refund-settings') ? 'active' : '' }}"
                     href="{{ route('admin.business-settings.business-setup', ['tab' => 'refund-settings']) }}"
-                    aria-disabled="true">{{translate('messages.refund_settings')}}</a>
+                    aria-disabled="true">{{'configuración de reembolso'}}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/business-setup/store') ? 'active' : '' }}"
                     href="{{ route('admin.business-settings.business-setup', ['tab' => 'store']) }}"
-                    aria-disabled="true">{{translate('messages.Vendor')}}</a>
+                    aria-disabled="true">{{'Proveedor'}}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/business-setup/deliveryman') ? 'active' : '' }}"
                     href="{{ route('admin.business-settings.business-setup', ['tab' => 'deliveryman']) }}"
-                    aria-disabled="true">{{translate('messages.deliveryman')}}</a>
+                    aria-disabled="true">{{'Repartidor'}}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/business-setup/customer') ? 'active' : '' }}"
                     href="{{ route('admin.business-settings.business-setup', ['tab' => 'customer']) }}"
-                    aria-disabled="true">{{translate('messages.customers')}}</a>
+                    aria-disabled="true">{{'Clientes'}}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/business-setup/priority') ? 'active' : '' }}"
                     href="{{ route('admin.business-settings.business-setup', ['tab' => 'priority']) }}"
-                    aria-disabled="true">{{translate('messages.priority_setup')}}</a>
+                    aria-disabled="true">{{'configuración de prioridad'}}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/language') ? 'active' : '' }}"
                     href="{{route('admin.business-settings.language.index')}}"
-                    aria-disabled="true">{{translate('messages.Languages')}}</a>
+                    aria-disabled="true">{{'Idiomas'}}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/business-setup/landing-page') ? 'active' : '' }}"
                     href="{{ route('admin.business-settings.business-setup', ['tab' => 'landing-page']) }}"
-                    aria-disabled="true">{{translate('messages.landing_page')}}</a>
+                    aria-disabled="true">{{'página de destino'}}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/business-setup/websocket') ? 'active' : '' }}"
                     href="{{ route('admin.business-settings.business-setup', ['tab' => 'websocket']) }}"
-                    aria-disabled="true">{{translate('messages.websocket')}}</a>
+                    aria-disabled="true">{{'enchufe web'}}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/business-setup/disbursement') ? 'active' : '' }}"
                     href="{{ route('admin.business-settings.business-setup', ['tab' => 'disbursement']) }}"
-                    aria-disabled="true">{{translate('messages.disbursement')}}</a>
+                    aria-disabled="true">{{'desembolso'}}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/business-setup/automated-message') ? 'active' : '' }}"
                     href="{{ route('admin.business-settings.business-setup', ['tab' => 'automated-message']) }}"
-                    aria-disabled="true">{{translate('messages.Automated_Message')}}</a>
+                    aria-disabled="true">{{'Mensaje automatizado'}}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/business-setup/dynamic-pricing') ? 'active' : '' }}"
@@ -75,12 +75,12 @@
         <div class="blinkings active">
             <i class="tio-info-outined"></i>
             <div class="business-notes">
-                <h6><img src="{{asset('assets/admin/img/notes.png')}}" alt=""> {{translate('Note')}}</h6>
+                <h6><img src="{{asset('assets/admin/img/notes.png')}}" alt=""> {{'Nota'}}</h6>
                 <div>
                     @if (Request::is('admin/business-settings/business-setup/refund-settings'))
-                    {{ translate('messages.*If_the_Admin_enables_the_‘Refund_Request_Mode’,_customers_can_request_a_refund.') }}
+                    {{ '*Si el administrador habilita el "Modo de solicitud de reembolso", los clientes pueden solicitar un reembolso.' }}
                     @else
-                    {{translate('messages.don’t_forget_to_click_the_‘Save Information’_button_below_to_save_changes.')}}
+                    {{'No olvide hacer clic en el botón "Guardar información" a continuación para guardar los cambios.'}}
                     @endif
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-lg-12 text-center ">
-        <h1> {{ translate('Addon_List') }}
+        <h1> {{ 'Lista de complementos' }}
         </h1>
     </div>
     <div class="col-lg-12">
@@ -8,12 +8,12 @@
         <table>
             <thead>
                 <tr>
-                    <th>{{ translate('Filter_Criteria') }}</th>
+                    <th>{{ 'Criterios de filtrado' }}</th>
                     <th></th>
                     <th>
-                        {{ translate('Store') }}: {{ $data['store'] ?? translate('N/A') }}
+                        {{ 'Almacenar' }}: {{ $data['store'] ?? 'N / A' }}
                         <br>
-                        {{ translate('Search_Bar_Content') }}: {{ $data['search'] ?? translate('N/A') }}
+                        {{ 'Contenido de la barra de búsqueda' }}: {{ $data['search'] ?? 'N / A' }}
 
                     </th>
                     <th> </th>
@@ -21,14 +21,14 @@
 
 
                 <tr>
-                    <th>{{ translate('sl') }}</th>
-                    <th>{{ translate('Addon_Name') }}</th>
-                    <th>{{ translate('Price') }}</th>
-                    <th>{{ translate('Store_name') }}</th>
+                    <th>{{ 'SL' }}</th>
+                    <th>{{ 'Nombre del complemento' }}</th>
+                    <th>{{ 'Precio' }}</th>
+                    <th>{{ 'Nombre de la tienda' }}</th>
 
 
                     @if ($data['productWiseTax'])
-                        <th class="border-0 w--1">{{ translate('messages.Vat/Tax') }}</th>
+                        <th class="border-0 w--1">{{ 'IVA/Impuesto' }}</th>
                     @endif
 
             </thead>
@@ -40,7 +40,7 @@
                         <td>
                             {{ \App\CentralLogics\Helpers::format_currency($addon->price) }}
                         </td>
-                        <td>{{ $addon?->store?->name ?? translate('N/A') }}</td>
+                        <td>{{ $addon?->store?->name ?? 'N / A' }}</td>
 
 
                         @if ($data['productWiseTax'])
@@ -54,7 +54,7 @@
                                             </span> </span>
                                         <br>
                                     @empty
-                                        <span> {{ translate('messages.no_tax') }} </span>
+                                        <span> {{ 'sin impuestos' }} </span>
                                     @endforelse
                                 </span>
                             </td>

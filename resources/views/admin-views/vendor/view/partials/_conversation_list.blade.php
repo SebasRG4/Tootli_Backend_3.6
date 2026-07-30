@@ -31,7 +31,7 @@
             </div>
             <div class="chat-user-info-content">
                 <h5 class="mb-0 d-flex justify-content-between">
-                    <span class=" mr-3">{{translate('Account not found')}}</span>
+                    <span class=" mr-3">{{'Cuenta no encontrada'}}</span>
                 </h5>
             </div>
         </div>

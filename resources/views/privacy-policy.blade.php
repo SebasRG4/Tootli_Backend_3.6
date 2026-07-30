@@ -1,13 +1,13 @@
 @extends('layouts.landing.app')
 
-@section('title',translate('messages.privacy_policy'))
+@section('title','política de privacidad')
 
 @section('content')
     <!-- ==== Privacy Section ==== -->
     <section class="about-section py-5 position-relative">
         <div class=" container">
             <div class="section-header">
-                <h2 class="title">{{translate('messages.privacy_policy')}}</span></h2>
+                <h2 class="title">{{'política de privacidad'}}</span></h2>
             </div>
             <div class="privacy-wrapper">
                 <div class="item">

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.banner'))
+@section('title','bandera')
 
 @section('content')
 <div class="content container-fluid">
@@ -10,7 +10,7 @@
                 <img src="{{asset('assets/admin/img/3rd-party.png')}}" class="w--26" alt="">
             </span>
             <span>
-                {{translate('messages.Other_Promotional_Content_Setup')}}
+                {{'Configuración de otro contenido promocional'}}
             </span>
         </h1>
     </div>
@@ -33,7 +33,7 @@
                                             <span class="d-flex g-1">
                                                 <img src="{{asset('assets/admin/img/other-banner.png')}}" class="h-85" alt="">
                                                 <h3 class="form-label d-block mb-2">
-                                                    {{translate('messages.Promotional Banners')}}
+                                                    {{'pancartas promocionales'}}
                                                 </h3>
                                             </span>
                                         </div>
@@ -50,15 +50,15 @@
                                             </label>
                                             <div class="text-center mt-5">
                                                 <h3 class="form-label d-block mt-2">
-                                                {{translate('Banner_Image_Ratio_4:1')}}
+                                                {{'Proporción de imagen de banner 4:1'}}
                                             </h3>
-                                            <p>{{translate('image_format_:_jpg_,_png_,_jpeg_|_maximum_size:_2_MB')}}</p>
+                                            <p>{{'formato de imagen: jpg, png, jpeg | tamaño máximo: 2 MB'}}</p>
 
                                             </div>
                                         </div>
                                     </div>
                                     <div class="btn--container justify-content-end mt-20">
-                                        <button type="submit" class="btn btn--primary mb-2">{{translate('Submit')}}</button>
+                                        <button type="submit" class="btn btn--primary mb-2">{{'Entregar'}}</button>
                                     </div>
                                 </div>
                             </form>
@@ -66,7 +66,7 @@
                             {{-- <div class="card"> --}}
                                 <div class="card-header py-2">
                                     <div class="search--button-wrapper">
-                                        <h5 class="card-title">{{translate('Promotional_Banner_List')}}
+                                        <h5 class="card-title">{{'Lista de banners promocionales'}}
                                         </h5>
                                     </div>
                                 </div>
@@ -83,10 +83,10 @@
                                                 }'>
                                             <thead class="thead-light">
                                             <tr>
-                                                <th class="border-0">{{translate('sl')}}</th>
-                                                <th class="border-0">{{translate('Image')}}</th>
-                                                <th class="border-0">{{translate('Status')}}</th>
-                                                <th class="text-center border-0">{{translate('messages.action')}}</th>
+                                                <th class="border-0">{{'SL'}}</th>
+                                                <th class="border-0">{{'Imagen'}}</th>
+                                                <th class="border-0">{{'Estado'}}</th>
+                                                <th class="text-center border-0">{{'acción'}}</th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -102,11 +102,11 @@
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
                                                                         <h4 class="modal-title" id="myModalLabel">
-                                                                            {{ translate('messages.banner') }}</h4>
+                                                                            {{ 'bandera' }}</h4>
                                                                         <button type="button" class="close"
                                                                                 data-dismiss="modal"><span
                                                                                 aria-hidden="true">&times;</span><span
-                                                                                class="sr-only">{{ translate('messages.cancel') }}</span></button>
+                                                                                class="sr-only">{{ 'Cancelar' }}</span></button>
                                                                     </div>
                                                                     <div class="modal-body">
                                                                         <img src="{{ $banner->value_full_url ?? asset('assets/admin/img/upload-3.png') }}"
@@ -116,7 +116,7 @@
 {{--                                                                        <a class="btn btn-primary"--}}
 {{--                                                                           href="{{ route('admin.file-manager.download', base64_encode('public/promotional_banner/' . $banner->value ?? '')) }}"><i--}}
 {{--                                                                                class="tio-download"></i>--}}
-{{--                                                                            {{ translate('messages.download') }}--}}
+{{--                                                                            {{ 'descargar' }}--}}
 {{--                                                                        </a>--}}
 {{--                                                                    </div>--}}
                                                                 </div>
@@ -130,10 +130,10 @@
                                                                    data-type="status"
                                                                    data-image-on="{{asset('assets/admin/img/modal')}}/promotional-on.png"
                                                                    data-image-off="{{asset('assets/admin/img/modal')}}/promotional-off.png"
-                                                                   data-title-on="{{translate('By Turning ONN Promotional Banner Section')}}"
-                                                                   data-title-off="{{translate('By Turning OFF Promotional Banner Section')}}"
-                                                                   data-text-on="<p>{{translate('Promotional banner will be enabled. You will be able to see promotional activity')}}</p>"
-                                                                   data-text-off="<p>{{translate('Promotional banner will be disabled. You will be unable to see promotional activity')}}</p>"
+                                                                   data-title-on="{{'Al activar la sección de banner promocional ONN'}}"
+                                                                   data-title-off="{{'Desactivando la sección de banners promocionales'}}"
+                                                                   data-text-on="<p>{{'Se habilitará el banner promocional. Podrás ver la actividad promocional.'}}</p>"
+                                                                   data-text-off="<p>{{'El banner promocional estará deshabilitado. No podrás ver la actividad promocional.'}}</p>"
                                                                    id="status-{{$banner->id}}" {{$banner->status?'checked':''}}>
                                                             <span class="toggle-switch-label">
                                                                 <span class="toggle-switch-indicator"></span>
@@ -149,8 +149,8 @@
                                                                 <i class="tio-edit"></i>
                                                             </a>
                                                             <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
-                                                               data-id="banner-{{$banner['id']}}" data-message="{{ translate('Want to delete this banner ?') }}"
-                                                             title="{{translate('messages.delete_banner')}}"><i class="tio-delete-outlined"></i>
+                                                               data-id="banner-{{$banner['id']}}" data-message="{{ '¿Quieres eliminar este banner?' }}"
+                                                             title="{{'eliminar banner'}}"><i class="tio-delete-outlined"></i>
                                                             </a>
                                                             <form action="{{route('admin.promotional-banner.delete',[$banner['id']])}}" method="post" id="banner-{{$banner['id']}}">
                                                                 @csrf @method('delete')
@@ -169,7 +169,7 @@
                                 <div class="empty--data">
                                     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                                     <h5>
-                                        {{translate('no_data_found')}}
+                                        {{'no se encontraron datos'}}
                                     </h5>
                                 </div>
                                 @endif

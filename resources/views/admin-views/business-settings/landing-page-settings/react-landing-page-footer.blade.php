@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.react_landing_page'))
+@section('title','reaccionar página de inicio')
 
 @section('content')
 <div class="content container-fluid">
@@ -11,11 +11,11 @@
                     <img src="{{asset('assets/admin/img/landing.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.react_landing_page') }}
+                    {{ 'reaccionar página de inicio' }}
                 </span>
             </h1>
             <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#how-it-works">
-                <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
+                <strong class="mr-2">{{'¡Mira cómo funciona!'}}</strong>
                 <div>
                     <i class="tio-info-outined"></i>
                 </div>
@@ -30,14 +30,14 @@
     <div class="card py-3 px-xxl-4 px-3 mb-20">
         <div class="d-flex flex-sm-nowrap flex-wrap gap-3 align-items-center justify-content-between">
             <div class="">
-                <h3 class="mb-1">{{ translate('Footer Section') }}</h3>
+                <h3 class="mb-1">{{ 'Sección de pie de página' }}</h3>
                 <p class="mb-0 gray-dark fs-12">
-                    {{ translate('See how your Footer Section will look to customers.') }}
+                    {{ 'Vea cómo se verá su sección de pie de página para los clientes.' }}
                 </p>
             </div>
             <div class="max-w-300px ml-sm-auto">
                 <button type="button" class="btn btn-outline-primary py-2 fs-12 px-3 offcanvas-trigger" data-target="#footerPreview_section">
-                    <i class="tio-invisible"></i> {{ translate('Section Preview') }}
+                    <i class="tio-invisible"></i> {{ 'Vista previa de la sección' }}
                 </button>
             </div>
         </div>
@@ -54,7 +54,7 @@
             <li class="nav-item">
                 <a class="nav-link lang_link active"
                 href="#"
-                id="default-link">{{translate('messages.default')}}</a>
+                id="default-link">{{'por defecto'}}</a>
             </li>
             @foreach (json_decode($language) as $lang)
                 <li class="nav-item">
@@ -70,7 +70,7 @@
             <!-- <form action="{{ route('admin.business-settings.react-landing-page-settings', 'fixed-banner') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <h5 class="card-title mt-3 mb-3">
-                    <span class="card-header-icon mr-2"><i class="tio-settings-outlined"></i></span> <span>{{translate('promotional_Banner')}}</span>
+                    <span class="card-header-icon mr-2"><i class="tio-settings-outlined"></i></span> <span>{{'pancarta promocional'}}</span>
                 </h5>
                 <div class="card mb-3">
                     <div class="card-body">
@@ -78,7 +78,7 @@
                         <div class="row g-3">
                             <div class="col-md-7">
                                 <label class="form-label d-block mb-2">
-                                    {{translate('Banner')}}  <span class="text--primary">{{translate('(size: 2:1)')}}</span>
+                                    {{'Bandera'}}  <span class="text--primary">{{'(tamaño: 2:1)'}}</span>
                                 </label>
                                 <label class="upload-img-3 m-2 d-block">
                                     <div class="position-relative">
@@ -93,8 +93,8 @@
 
                                             <span id="promotional_banner" class="remove_image_button remove-image"
                                                   data-id="promotional_banner"
-                                                  data-title="{{translate('Warning!')}}"
-                                                  data-text="<p>{{translate('Are_you_sure_you_want_to_remove_this_image_?')}}</p>"
+                                                  data-title="{{'¡Advertencia!'}}"
+                                                  data-text="<p>{{'¿Estás seguro de que deseas eliminar esta imagen?'}}</p>"
                                             > <i class="tio-clear"></i></span>
 
                                             @endif
@@ -103,8 +103,8 @@
                             </div>
                         </div>
                         <div class="btn--container justify-content-end mt-20">
-                            <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
-                            <button type="submit"   class="btn btn--primary mb-2">{{translate('Save')}}</button>
+                            <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
+                            <button type="submit"   class="btn btn--primary mb-2">{{'Ahorrar'}}</button>
                         </div>
                     </div>
                 </div>
@@ -121,8 +121,8 @@
                 <div class="card mb-3">
                     <div class="card-body">
                         <div class="mb-20">
-                            <h4 class="mb-1">{{ translate('Newsletter ') }}</h4>
-                            <p class="mb-0 fs-12">{{ translate('Manage the title and subtitle for the email newsletter sign-up section.') }}</p>
+                            <h4 class="mb-1">{{ 'Hoja informativa' }}</h4>
+                            <p class="mb-0 fs-12">{{ 'Administre el título y el subtítulo de la sección de suscripción al boletín por correo electrónico.' }}</p>
                         </div>
                         <div class="bg--secondary rounded p-xxl-4 p-3">
                             @if($language)
@@ -130,7 +130,7 @@
                                     <li class="nav-item">
                                         <a class="nav-link lang_link active"
                                         href="#"
-                                        id="default-link">{{translate('messages.default')}}</a>
+                                        id="default-link">{{'por defecto'}}</a>
                                     </li>
                                     @foreach (json_decode($language) as $lang)
                                         <li class="nav-item">
@@ -144,37 +144,37 @@
                             @if ($language)
                             <div class="row g-1 lang_form default-form">
                                 <div class="col-sm-12">
-                                    <label for="fixed_newsletter_title"  class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})
-                                    <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_30_characters') }}">
+                                    <label for="fixed_newsletter_title"  class="form-label">{{'Título'}} ({{ 'por defecto' }})
+                                    <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de los 30 caracteres.' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span>
                                             <span class="form-label-secondary text-danger"
                                             data-toggle="tooltip" data-placement="right"
-                                            data-original-title="{{ translate('messages.Required.')}}">
+                                            data-original-title="{{ 'Requerido.'}}">
                                             </span>
                                         <span class="form-label-secondary text-danger"
                                               data-toggle="tooltip" data-placement="right"
-                                              data-original-title="{{ translate('messages.Required.')}}"> *
+                                              data-original-title="{{ 'Requerido.'}}"> *
                                                     </span>
 
                                         </label>
-                                    <input id="fixed_newsletter_title" type="text"  maxlength="30" name="fixed_newsletter_title[]" class="form-control" value="{{$fixed_newsletter_title?->getRawOriginal('value')??''}}" placeholder="{{translate('messages.title_here...')}}" required>
+                                    <input id="fixed_newsletter_title" type="text"  maxlength="30" name="fixed_newsletter_title[]" class="form-control" value="{{$fixed_newsletter_title?->getRawOriginal('value')??''}}" placeholder="{{'título aquí...'}}" required>
                                     <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/30</span>
                                 </div>
                                 <div class="col-sm-12">
-                                    <label for="fixed_newsletter_sub_title"  class="form-label">{{translate('Sub Title')}} ({{ translate('messages.default') }})
-                                    <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_100_characters') }}">
+                                    <label for="fixed_newsletter_sub_title"  class="form-label">{{'Subtítulo'}} ({{ 'por defecto' }})
+                                    <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 100 caracteres.' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span><span class="form-label-secondary text-danger"
                                             data-toggle="tooltip" data-placement="right"
-                                            data-original-title="{{ translate('messages.Required.')}}">
+                                            data-original-title="{{ 'Requerido.'}}">
                                             </span>
                                         <span class="form-label-secondary text-danger"
                                               data-toggle="tooltip" data-placement="right"
-                                              data-original-title="{{ translate('messages.Required.')}}"> *
+                                              data-original-title="{{ 'Requerido.'}}"> *
                                                     </span>
                                     </label>
-                                    <input id="fixed_newsletter_sub_title" type="text"  maxlength="100" name="fixed_newsletter_sub_title[]" class="form-control" value="{{$fixed_newsletter_sub_title?->getRawOriginal('value')??''}}" placeholder="{{translate('messages.sub_title_here...')}}" required>
+                                    <input id="fixed_newsletter_sub_title" type="text"  maxlength="100" name="fixed_newsletter_sub_title[]" class="form-control" value="{{$fixed_newsletter_sub_title?->getRawOriginal('value')??''}}" placeholder="{{'subtítulo aquí...'}}" required>
                                     <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/100</span>
                                 </div>
                             </div>
@@ -204,17 +204,17 @@
                                     ?>
                                     <div class="row g-1 d-none lang_form" id="{{$lang}}-form">
                                         <div class="col-sm-12">
-                                            <label for="fixed_newsletter_title{{$lang}}" class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_30_characters') }}">
+                                            <label for="fixed_newsletter_title{{$lang}}" class="form-label">{{'Título'}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de los 30 caracteres.' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span></label>
-                                    <input id="fixed_newsletter_title{{$lang}}" type="text"  maxlength="30" name="fixed_newsletter_title[]" class="form-control" value="{{ $fixed_newsletter_title_translate[$lang]['value']?? '' }}" placeholder="{{translate('messages.title_here...')}}">
+                                    <input id="fixed_newsletter_title{{$lang}}" type="text"  maxlength="30" name="fixed_newsletter_title[]" class="form-control" value="{{ $fixed_newsletter_title_translate[$lang]['value']?? '' }}" placeholder="{{'título aquí...'}}">
                                     <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/30</span>
                                         </div>
                                         <div class="col-sm-12">
-                                            <label for="fixed_newsletter_sub_title{{$lang}}" class="form-label">{{translate('Sub Title')}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_100_characters') }}">
+                                            <label for="fixed_newsletter_sub_title{{$lang}}" class="form-label">{{'Subtítulo'}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 100 caracteres.' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span></label>
-                                    <input id="fixed_newsletter_sub_title{{$lang}}" type="text"  maxlength="100" name="fixed_newsletter_sub_title[]" class="form-control" value="{{ $fixed_newsletter_sub_title_translate[$lang]['value']?? '' }}" placeholder="{{translate('messages.sub_title_here...')}}">
+                                    <input id="fixed_newsletter_sub_title{{$lang}}" type="text"  maxlength="100" name="fixed_newsletter_sub_title[]" class="form-control" value="{{ $fixed_newsletter_sub_title_translate[$lang]['value']?? '' }}" placeholder="{{'subtítulo aquí...'}}">
                                     <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/100</span>
                                         </div>
                                     </div>
@@ -223,13 +223,13 @@
                             @else
                                 <div class="row g-3">
                                     <div class="col-sm-12">
-                                        <label for="fixed_newsletter_title" class="form-label">{{translate('Title')}}</label>
-                                        <input id="fixed_newsletter_title" type="text" maxlength="30" name="fixed_newsletter_title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                        <label for="fixed_newsletter_title" class="form-label">{{'Título'}}</label>
+                                        <input id="fixed_newsletter_title" type="text" maxlength="30" name="fixed_newsletter_title[]" class="form-control" placeholder="{{'título aquí...'}}">
                                         <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/30</span>
                                     </div>
                                     <div class="col-sm-12">
-                                        <label for="fixed_newsletter_sub_title" class="form-label">{{translate('Sub Title')}}</label>
-                                        <input id="fixed_newsletter_sub_title" type="text" maxlength="100" name="fixed_newsletter_sub_title[]" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                        <label for="fixed_newsletter_sub_title" class="form-label">{{'Subtítulo'}}</label>
+                                        <input id="fixed_newsletter_sub_title" type="text" maxlength="100" name="fixed_newsletter_sub_title[]" class="form-control" placeholder="{{'subtítulo aquí...'}}">
                                         <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/100</span>
                                     </div>
                                 </div>
@@ -241,8 +241,8 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="mb-20">
-                            <h4 class="mb-1">{{ translate('Footer Article ') }}</h4>
-                            <p class="mb-0 fs-12">{{ translate('Set the main description or tagline for your company in the footer.') }}</p>
+                            <h4 class="mb-1">{{ 'Artículo de pie de página' }}</h4>
+                            <p class="mb-0 fs-12">{{ 'Establezca la descripción principal o el eslogan de su empresa en el pie de página.' }}</p>
                         </div>
                         <div class="bg--secondary rounded p-xxl-4 p-3">
                             @if($language)
@@ -250,7 +250,7 @@
                                     <li class="nav-item">
                                         <a class="nav-link lang_link active"
                                         href="#"
-                                        id="default-link">{{translate('messages.default')}}</a>
+                                        id="default-link">{{'por defecto'}}</a>
                                     </li>
                                     @foreach (json_decode($language) as $lang)
                                         <li class="nav-item">
@@ -266,10 +266,10 @@
                                     @if ($language)
                                 <div class="row g-3 lang_form default-form">
                                     <div class="col-12">
-                                        <label for="fixed_footer_description" class="form-label">{{translate('short_Description')}} ({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_120_characters') }}">
+                                        <label for="fixed_footer_description" class="form-label">{{'breve descripción'}} ({{ 'por defecto' }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 120 caracteres.' }}">
                                                     <i class="tio-info color-A7A7A7"></i>
                                                 </span></label>
-                                        <input id="fixed_footer_description" type="text"  maxlength="120" name="fixed_footer_description[]" class="form-control" value="{{$fixed_footer_description?->getRawOriginal('value')??''}}" placeholder="{{translate('messages.title_here...')}}">
+                                        <input id="fixed_footer_description" type="text"  maxlength="120" name="fixed_footer_description[]" class="form-control" value="{{$fixed_footer_description?->getRawOriginal('value')??''}}" placeholder="{{'título aquí...'}}">
                                         <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/120</span>
                                     </div>
                                 </div>
@@ -288,10 +288,10 @@
                                         ?>
                                         <div class="row g-3 d-none lang_form" id="{{$lang}}-form1">
                                             <div class="col-12">
-                                                <label for="fixed_footer_description{{$lang}}" class="form-label">{{translate('short_Description')}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_120_characters') }}">
+                                                <label for="fixed_footer_description{{$lang}}" class="form-label">{{'breve descripción'}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 120 caracteres.' }}">
                                                     <i class="tio-info color-A7A7A7"></i>
                                                 </span></label>
-                                        <input id="fixed_footer_description{{$lang}}" type="text"  maxlength="120" name="fixed_footer_description[]" class="form-control" value="{{ $fixed_footer_description_translate[$lang]['value']?? '' }}" placeholder="{{translate('messages.title_here...')}}">
+                                        <input id="fixed_footer_description{{$lang}}" type="text"  maxlength="120" name="fixed_footer_description[]" class="form-control" value="{{ $fixed_footer_description_translate[$lang]['value']?? '' }}" placeholder="{{'título aquí...'}}">
                                         <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/120</span>
                                             </div>
                                         </div>
@@ -299,8 +299,8 @@
                                 @else
                                     <div class="row g-3">
                                         <div class="col-12">
-                                            <label for="fixed_footer_description" class="form-label">{{translate('short_Description')}}</label>
-                                            <input id="fixed_footer_description" type="text" name="fixed_footer_description[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                            <label for="fixed_footer_description" class="form-label">{{'breve descripción'}}</label>
+                                            <input id="fixed_footer_description" type="text" name="fixed_footer_description[]" class="form-control" placeholder="{{'título aquí...'}}">
                                         </div>
                                     </div>
                                 @endif
@@ -308,8 +308,8 @@
                             </div>
                         </div>
                         <div class="btn--container justify-content-end mt-20">
-                            <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
-                            <button type="submit"   class="btn btn--primary mb-2">{{translate('Save')}}</button>
+                            <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
+                            <button type="submit"   class="btn btn--primary mb-2">{{'Ahorrar'}}</button>
                         </div>
                     </div>
                 </div>
@@ -328,7 +328,7 @@
         <div>
             <div class="custom-offcanvas-header bg--secondary d-flex justify-content-between align-items-center px-3 py-3">
                 <div class="py-1">
-                    <h3 class="mb-0 line--limit-1">{{ translate('messages.Footer Section Preview') }}</h3>
+                    <h3 class="mb-0 line--limit-1">{{ 'Vista previa de la sección de pie de página' }}</h3>
                 </div>
                 <button type="button" class="btn-close w-25px h-25px border rounded-circle d-center bg--secondary text-dark offcanvas-close fz-15px p-0"aria-label="Close">
                     &times;

@@ -199,7 +199,7 @@
             <tr>
                 <td>
                     <div class="left">
-                        <h4 class="title">{{ translate('Disbursement_Invoice') }}</h4>
+                        <h4 class="title">{{ 'Factura de Desembolso' }}</h4>
                         <div class="date">{{ \App\CentralLogics\Helpers::time_date_format(date("Y-m-d h:i:s",time())) }}</div>
                     </div>
                 </td>
@@ -224,19 +224,19 @@
                 <tr>
                     <td>
                         <div>
-                            <div class="subtxt">{{ translate('Disbursement_ID') }}</div>
+                            <div class="subtxt">{{ 'ID de desembolso' }}</div>
                             <div>{{ $disbursement->id }}</div>
                         </div>
                     </td>
                     <td>
                         <div>
-                            <div class="subtxt">{{ translate('created_at') }}</div>
+                            <div class="subtxt">{{ 'creado en' }}</div>
                             <div>{{ \App\CentralLogics\Helpers::time_date_format($disbursement->created_at) }}</div>
                         </div>
                     </td>
                     <td class="text-right">
                         <div class="ml-auto text-right">
-                            <div class="subtxt">{{ translate('total_amount') }}</div>
+                            <div class="subtxt">{{ 'cantidad total' }}</div>
                             <div style="font-size: 16px;margin: 0;color: #1455AC;">{{\App\CentralLogics\Helpers::format_currency($disbursement['total_amount'])}}</div>
                         </div>
                     </td>
@@ -249,11 +249,11 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th>{{ translate('sl') }}</th>
-                    <th>{{ translate('Store_Info') }}</th>
-                    <th>{{ translate('Payment_method') }}</th>
+                    <th>{{ 'SL' }}</th>
+                    <th>{{ 'Información de la tienda' }}</th>
+                    <th>{{ 'Método de pago' }}</th>
                     <th>
-                        <div class="text-right"> {{ translate('amount') }}</div>
+                        <div class="text-right"> {{ 'cantidad' }}</div>
                     </th>
                 </tr>
                 </thead>
@@ -294,7 +294,7 @@
                     <td class="border-0"></td>
                     <td class="border-0">
                         <div class="text-right text-12 mr-100px">
-                            {{ translate('total') }}
+                            {{ 'total' }}
                         </div>
                     </td>
                     <td>

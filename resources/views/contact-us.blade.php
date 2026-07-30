@@ -1,6 +1,6 @@
 @extends('layouts.landing.app')
 
-@section('title', translate('messages.contact_us'))
+@section('title', 'contáctanos')
 
 @section('content')
     <!-- ==== Contact Section ==== -->
@@ -43,7 +43,7 @@
                                             </defs>
                                         </svg>
                                     </div>
-                                    <h5 class="subtitle">{{translate("messages.Call_Us")}} </h5>
+                                    <h5 class="subtitle">{{'Llámanos'}} </h5>
                                 </div>
                                 <ul>
                                     <li>
@@ -74,7 +74,7 @@
                                             </defs>
                                         </svg>
                                     </div>
-                                    <h5 class="subtitle">{{translate("messages.Email")}}</h5>
+                                    <h5 class="subtitle">{{'Correo electrónico'}}</h5>
                                 </div>
                                 <ul>
                                     <li>
@@ -107,7 +107,7 @@
                                             </defs>
                                         </svg>
                                     </div>
-                                    <h5 class="subtitle">{{translate("messages.Address")}}</h5>
+                                    <h5 class="subtitle">{{'DIRECCIÓN'}}</h5>
                                 </div>
                                 <ul>
                                     <li>
@@ -150,7 +150,7 @@
                                             </defs>
                                         </svg>
                                     </div>
-                                    <h5 class="subtitle">{{translate("messages.Time")}}</h5>
+                                    <h5 class="subtitle">{{'Tiempo'}}</h5>
                                 </div>
                                 <ul>
                                     <li>
@@ -169,13 +169,13 @@
                         @csrf
                         <div class="row g-4">
                             <div class="col-sm-6">
-                                <input type="text" required name="name" placeholder="{{ translate('Your Name') }}" class="form-control form--control">
+                                <input type="text" required name="name" placeholder="{{ 'Su nombre' }}" class="form-control form--control">
                             </div>
                             <div class="col-sm-6">
-                                <input type="email" required name="email" placeholder="{{ translate('Email') }}" class="form-control form--control">
+                                <input type="email" required name="email" placeholder="{{ 'Correo electrónico' }}" class="form-control form--control">
                             </div>
                             <div class="col-sm-12">
-                                <input type="text" required name="subject" placeholder="{{ translate('Subject') }}" class="form-control form--control">
+                                <input type="text" required name="subject" placeholder="{{ 'Sujeto' }}" class="form-control form--control">
                             </div>
                             <div class="col-sm-12">
                                 <textarea name="message" required class="form-control form--control" placeholder="Message"></textarea>
@@ -187,7 +187,7 @@
                                 <div class="m-auto p-3 row" id="reload-captcha">
                                     <div class="col-6 pr-0">
                                         <input type="text" class="form-control form-control-lg" name="custome_recaptcha"
-                                               id="custome_recaptcha" required placeholder="{{translate('Enter recaptcha value')}}" autocomplete="off" value="{{env('APP_MODE')=='dev'? session('six_captcha'):''}}">
+                                               id="custome_recaptcha" required placeholder="{{'Ingrese el valor de recaptcha'}}" autocomplete="off" value="{{env('APP_MODE')=='dev'? session('six_captcha'):''}}">
                                     </div>
                                     <div class="col-6 bg-white rounded d-flex w-auto">
                                         <img src="<?php echo $custome_recaptcha->inline(); ?>" class="rounded w-100" />
@@ -195,7 +195,7 @@
                                 </div>
                             @endif
                             <div class="col-sm-12 text-center">
-                                <button class="cmn--btn border-0" type="submit" id="signInBtn">{{translate("messages.Send_Message")}} </button>
+                                <button class="cmn--btn border-0" type="submit" id="signInBtn">{{'Enviar mensaje'}} </button>
                             </div>
                         </div>
                     </form>

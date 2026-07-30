@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-lg-12 text-center "><h1 >{{ translate('item_report') }}</h1></div>
+    <div class="col-lg-12 text-center "><h1 >{{ 'informe del artículo' }}</h1></div>
     <div class="col-lg-12">
 
 
@@ -7,27 +7,27 @@
     <table>
         <thead>
             <tr>
-                <th>{{ translate('Search_Criteria') }}</th>
+                <th>{{ 'Criterios de búsqueda' }}</th>
                 <th></th>
                 <th></th>
                 <th>
-                    {{ translate('module' )}} - {{ $data['module']?translate($data['module']):translate('all') }}
+                    {{ 'módulo'}} - {{ $data['module']?translate($data['module']):'todo' }}
                     <br>
-                    {{ translate('zone' )}} - {{ $data['zone']??translate('all') }}
+                    {{ 'zona'}} - {{ $data['zone']??'todo' }}
                     <br>
-                    {{ translate('store' )}} - {{ $data['store']??translate('all') }}
+                    {{ 'Negocio'}} - {{ $data['store']??'todo' }}
                     @if ($data['from'])
                     <br>
-                    {{ translate('from' )}} - {{ $data['from']?Carbon\Carbon::parse($data['from'])->format('d M Y'):'' }}
+                    {{ 'de'}} - {{ $data['from']?Carbon\Carbon::parse($data['from'])->format('d M Y'):'' }}
                     @endif
                     @if ($data['to'])
                     <br>
-                    {{ translate('to' )}} - {{ $data['to']?Carbon\Carbon::parse($data['to'])->format('d M Y'):'' }}
+                    {{ 'a'}} - {{ $data['to']?Carbon\Carbon::parse($data['to'])->format('d M Y'):'' }}
                     @endif
                     <br>
-                    {{ translate('filter')  }}- {{  translate($data['filter']) }}
+                    {{ 'filtrar'  }}- {{  translate($data['filter']) }}
                     <br>
-                    {{ translate('Search_Bar_Content')  }}- {{ $data['search'] ??translate('N/A') }}
+                    {{ 'Contenido de la barra de búsqueda'  }}- {{ $data['search'] ??'N / A' }}
 
                 </th>
                 <th> </th>
@@ -36,19 +36,19 @@
                 <th></th>
                 </tr>
         <tr>
-            <th>{{ translate('sl') }}</th>
-            <th>{{translate('messages.item_image')}}</th>
-            <th>{{translate('messages.item_name')}}</th>
-            <th>{{translate('messages.module')}}</th>
-            <th>{{translate('messages.store_name')}}</th>
-            <th>{{translate('messages.stock')}}</th>
-            <th>{{translate('messages.total_order_count')}}</th>
-            <th>{{translate('messages.unit_price')}}</th>
-            <th>{{translate('messages.total_amount_sold')}}</th>
-            <th>{{translate('messages.total_discount_given')}}</th>
-            <th>{{translate('messages.average_sale_value')}}</th>
-            <th>{{translate('messages.total_ratings_given')}}</th>
-            <th>{{translate('messages.average_ratings')}}</th>
+            <th>{{ 'SL' }}</th>
+            <th>{{'imagen del artículo'}}</th>
+            <th>{{'nombre del artículo'}}</th>
+            <th>{{'módulo'}}</th>
+            <th>{{'nombre de la tienda'}}</th>
+            <th>{{'existencias'}}</th>
+            <th>{{'recuento total de pedidos'}}</th>
+            <th>{{'precio unitario'}}</th>
+            <th>{{'cantidad total vendida'}}</th>
+            <th>{{'descuento total otorgado'}}</th>
+            <th>{{'valor promedio de venta'}}</th>
+            <th>{{'calificaciones totales dadas'}}</th>
+            <th>{{'calificaciones promedio'}}</th>
         </thead>
         <tbody>
         @foreach($data['items'] as $key => $item)
@@ -63,11 +63,11 @@
                     @if($item->store)
                     {{ $item->store->name }}
                     @else
-                    {{translate('messages.store_deleted')}}
+                    {{'tienda eliminada'}}
                     @endif
                 </td>
                 <td>
-                    {{$item->module->module_type == 'food'? translate('N/A') : $item->stock}}
+                    {{$item->module->module_type == 'food'? 'N / A' : $item->stock}}
                 </td>
                 <td>
                     {{$item->orders_sum_quantity ?? 0}}

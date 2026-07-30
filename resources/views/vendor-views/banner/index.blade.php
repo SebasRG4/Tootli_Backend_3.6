@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title',translate('messages.banner'))
+@section('title','bandera')
 
 @push('css_or_js')
 
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/fi_9752284.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.Banner_Setup')}}
+                    {{'Configuración del banner'}}
                 </span>
             </h1>
         </div>
@@ -30,14 +30,14 @@
                                 <div class="col-12 d-flex justify-content-end">
 
                                     <div class="blinkings">
-                                        <strong class="mr-2">{{translate('instructions')}}</strong>
+                                        <strong class="mr-2">{{'instrucciones'}}</strong>
                                         <div>
                                             <i class="tio-info-outined"></i>
                                         </div>
                                         <div class="business-notes">
-                                            <h6><img src="{{asset('assets/admin/img/notes.png')}}" alt=""> {{translate('Note')}}</h6>
+                                            <h6><img src="{{asset('assets/admin/img/notes.png')}}" alt=""> {{'Nota'}}</h6>
                                             <div>
-                                                {{translate('messages.Customer_will_see_there_banners_in_your_store_details_page_in_website_and_user_apps.')}}
+                                                {{'El cliente verá pancartas en la página de detalles de su tienda en el sitio web y en las aplicaciones de usuario.'}}
                                             </div>
                                         </div>
                                     </div>
@@ -45,18 +45,18 @@
                                 <div class="col-sm-6">
                                     <div class="form-group error-wrapper">
 
-                                        <label for="title" class="form-label">{{translate('Banner_title')}}</label>
-                                        <input id="title" type="text" name="title" class="form-control" placeholder="{{translate('messages.title_here...')}}" required>
+                                        <label for="title" class="form-label">{{'Título del banner'}}</label>
+                                        <input id="title" type="text" name="title" class="form-control" placeholder="{{'título aquí...'}}" required>
                                     </div>
                                     <div class="form-group error-wrapper">
 
-                                        <label for="default_link" class="form-label">{{translate('Redirection_URL_/_Link')}}</label>
-                                        <input id="default_link" type="url" name="default_link" class="form-control" placeholder="{{translate('messages.Enter_URL')}}">
+                                        <label for="default_link" class="form-label">{{'URL de redirección/enlace'}}</label>
+                                        <input id="default_link" type="url" name="default_link" class="form-control" placeholder="{{'Ingrese la URL'}}">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                         <h3 class="form-label d-block mb-2">
-                                                {{translate('Upload_Banner')}}
+                                                {{'Subir banner'}}
                                             </h3>
                                     <label class="upload-img-3 m-0 d-block error-wrapper">
                                         <div class="img">
@@ -65,16 +65,16 @@
                                             <input type="file" name="image"  hidden required>
                                     </label>
                                     <h3 class="form-label d-block mt-2">
-                                        {{translate('Banner_Image_Ratio_3:1')}}
+                                        {{'Proporción de imagen de banner 3:1'}}
                                     </h3>
-                                    <p>{{translate('image_format_:_jpg_,_png_,_jpeg_|_maximum_size:_2_MB')}}</p>
+                                    <p>{{'formato de imagen: jpg, png, jpeg | tamaño máximo: 2 MB'}}</p>
                                 </div>
                                 <div class="col-sm-6">
                                 </div>
                             </div>
                             <div class="btn--container justify-content-end mt-20">
-                                <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('Reset')}}</button>
-                                <button type="submit" class="btn btn--primary">{{translate('Submit')}}</button>
+                                <button type="reset" id="reset_btn" class="btn btn--reset">{{'Reiniciar'}}</button>
+                                <button type="submit" class="btn btn--primary">{{'Entregar'}}</button>
                             </div>
                         </div>
                     </div>
@@ -87,12 +87,12 @@
                     <div class="card-header py-2 border-0">
                         <div class="search--button-wrapper">
                             <h5 class="card-title">
-                                {{translate('messages.banner_list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$banners->count()}}</span>
+                                {{'lista de pancartas'}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$banners->count()}}</span>
                             </h5>
                             <form id="search-form" class="search-form">
                                 <!-- Search -->
                                 <div class="input-group input--group">
-                                    <input id="datatableSearch" type="search" name="search" class="form-control" placeholder="{{translate('messages.search_by_title')}}" aria-label="{{translate('messages.search_here')}}" value="{{ request()->search }}">
+                                    <input id="datatableSearch" type="search" name="search" class="form-control" placeholder="{{'buscar por título'}}" aria-label="{{'buscar aquí'}}" value="{{ request()->search }}">
                                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                                 </div>
                                 <!-- End Search -->
@@ -115,12 +115,12 @@
                                >
                             <thead class="thead-light">
                                 <tr>
-                                    <th class="border-0">{{ translate('messages.SL') }}</th>
-                                    <th class="border-0">{{translate('messages.title')}}</th>
-                                    <th class="border-0">{{translate('messages.banner_Image')}}</th>
-                                    <th class="border-0">{{translate('messages.redirection_Link')}}</th>
-                                    <th class="border-0 text-center">{{translate('messages.status')}}</th>
-                                    <th class="border-0 text-center">{{translate('messages.action')}}</th>
+                                    <th class="border-0">{{ 'SL' }}</th>
+                                    <th class="border-0">{{'título'}}</th>
+                                    <th class="border-0">{{'imagen de banner'}}</th>
+                                    <th class="border-0">{{'Enlace de redirección'}}</th>
+                                    <th class="border-0 text-center">{{'estado'}}</th>
+                                    <th class="border-0 text-center">{{'acción'}}</th>
                                 </tr>
                             </thead>
 
@@ -151,12 +151,12 @@
                                     </td>
                                     <td>
                                         <div class="btn--container justify-content-center">
-                                            <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('vendor.banner.edit',[$banner['id']])}}" title="{{translate('messages.edit_banner')}}"><i class="tio-edit"></i>
+                                            <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('vendor.banner.edit',[$banner['id']])}}" title="{{'editar banner'}}"><i class="tio-edit"></i>
                                             </a>
                                             <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
                                                data-id="banner-{{$banner['id']}}"
-                                               data-message="{{ translate('Want to delete this banner ?') }}"
-                                                title="{{translate('messages.delete_banner')}}"><i class="tio-delete-outlined"></i>
+                                               data-message="{{ '¿Quieres eliminar este banner?' }}"
+                                                title="{{'eliminar banner'}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{route('vendor.banner.delete',[$banner['id']])}}"
                                                         method="post" id="banner-{{$banner['id']}}">
@@ -179,7 +179,7 @@
                         <div class="empty--data">
                             <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                             <h5>
-                                {{translate('no_data_found')}}
+                                {{'no se encontraron datos'}}
                             </h5>
                         </div>
                         @endif

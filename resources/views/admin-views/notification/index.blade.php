@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.notification'))
+@section('title','notificación')
 
 @push('css_or_js')
 
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/notification.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.notification')}}
+                    {{'notificación'}}
                 </span>
             </h1>
         </div>
@@ -31,15 +31,15 @@
                                     <div class="row g-2">
                                         <div class="col-12">
                                             <div class="form-group mb-0">
-                                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.title')}}</label>
-                                                <input type="text" name="notification_title" class="form-control" placeholder="{{translate('messages.new_notification')}}" required maxlength="191">
+                                                <label class="input-label" for="exampleFormControlInput1">{{'título'}}</label>
+                                                <input type="text" name="notification_title" class="form-control" placeholder="{{'nueva notificación'}}" required maxlength="191">
                                             </div>
                                         </div>
                                         <div class="col-12">
                                             <div class="form-group mb-0">
-                                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.zone')}}</label>
+                                                <label class="input-label" for="exampleFormControlInput1">{{'zona'}}</label>
                                                 <select name="zone" id="zone" class="form-control js-select2-custom" >
-                                                    <option value="all">{{translate('messages.all')}}</option>
+                                                    <option value="all">{{'todo'}}</option>
                                                     @foreach($zones as $zone)
                                                         <option value="{{$zone['id']}}">{{$zone['name']}}</option>
                                                     @endforeach
@@ -48,18 +48,18 @@
                                         </div>
                                         <div class="col-12">
                                             <div class="form-group mb-0">
-                                                <label class="input-label" for="tergat">{{translate('messages.send_to')}}</label>
+                                                <label class="input-label" for="tergat">{{'enviar a'}}</label>
 
-                                                <select name="tergat" class="form-control" id="tergat" data-placeholder="{{translate('messages.select_tergat')}}" required>
-                                                    <option value="customer">{{translate('messages.customer')}}</option>
-                                                    <option value="deliveryman">{{translate('messages.deliveryman')}}</option>
-                                                    <option value="store">{{translate('messages.store')}}</option>
+                                                <select name="tergat" class="form-control" id="tergat" data-placeholder="{{'seleccionar terga'}}" required>
+                                                    <option value="customer">{{'Cliente'}}</option>
+                                                    <option value="deliveryman">{{'Repartidor'}}</option>
+                                                    <option value="store">{{'Negocio'}}</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-12">
                                             <div class="form-group mb-0">
-                                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.description')}}</label>
+                                                <label class="input-label" for="exampleFormControlInput1">{{'descripción'}}</label>
                                                 <textarea name="description" class="form-control" maxlength="1000" required></textarea>
                                             </div>
                                         </div>
@@ -68,8 +68,8 @@
                                 <div class="col-lg-6">
                                     <div class="h-100 d-flex flex-column">
                                         <label class="d-block text-center mt-auto mb-0">
-                                            {{translate('messages.image')}}
-                                            <small class="text-danger">* ( {{translate('messages.ratio')}} 900x300 )</small>
+                                            {{'imagen'}}
+                                            <small class="text-danger">* ( {{'relación'}} 900x300 )</small>
                                         </label>
                                         <div class="text-center py-3 my-auto">
                                             <img class="img--vertical" id="viewer"
@@ -78,14 +78,14 @@
                                         <div class="custom-file">
                                             <input type="file" name="image" id="customFileEg1" class="custom-file-input"
                                                 accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                            <label class="custom-file-label" for="customFileEg1">{{translate('messages.choose_file')}}</label>
+                                            <label class="custom-file-label" for="customFileEg1">{{'elegir archivo'}}</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="btn--container justify-content-end">
-                                        <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                                        <button type="submit" id="submit" class="btn btn--primary">{{translate('messages.send_notification')}}</button>
+                                        <button type="reset" id="reset_btn" class="btn btn--reset">{{'reiniciar'}}</button>
+                                        <button type="submit" id="submit" class="btn btn--primary">{{'enviar notificación'}}</button>
                                     </div>
                                 </div>
                             </div>
@@ -98,12 +98,12 @@
                 <div class="card">
                     <div class="card-header py-2">
                         <div class="search--button-wrapper">
-                            <h5 class="card-title">{{ translate('Notification list') }}<span class="badge badge-soft-dark ml-2">{{$notifications->total()}}</span></h5>
+                            <h5 class="card-title">{{ 'Lista de notificaciones' }}<span class="badge badge-soft-dark ml-2">{{$notifications->total()}}</span></h5>
                             <form class="search-form" >
                                 <!-- Search -->
                                 <div class="input-group input--group min--270">
                                     <input type="search" name="search"  class="form-control"
-                                    value="{{ request()?->search ?? null }}"  placeholder="{{translate('messages.search_notification')}}">
+                                    value="{{ request()?->search ?? null }}"  placeholder="{{'notificación de búsqueda'}}">
                                     <button type="submit" class="btn btn--secondary">
                                     <i class="tio-search"></i>
                                     </button>
@@ -111,7 +111,7 @@
                                 <!-- End Search -->
                             </form>
                             @if(request()->get('search'))
-                            <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                            <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{'reiniciar'}}</button>
                             @endif
 
 
@@ -122,26 +122,26 @@
                                             "target": "#usersExportDropdown",
                                             "type": "css-animation"
                                         }'>
-                                    <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                                    <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                                 </a>
 
                                 <div id="usersExportDropdown"
                                     class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
 
-                                    <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                                    <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
 
 
                                     <a id="export-excel" class="dropdown-item" href="{{route('admin.notification.export', ['type'=>'excel' , request()->getQueryString()])}}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                             src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                             alt="Image Description">
-                                        {{ translate('messages.excel') }}
+                                        {{ 'sobresalir' }}
                                     </a>
                                     <a id="export-csv" class="dropdown-item" href="{{route('admin.notification.export', ['type'=>'csv', request()->getQueryString()])}}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                             src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                             alt="Image Description">
-                                        .{{ translate('messages.csv') }}
+                                        .{{ 'csv' }}
                                     </a>
 
                                 </div>
@@ -160,14 +160,14 @@
                                }'>
                             <thead class="thead-light">
                                 <tr>
-                                    <th class="border-0">{{ translate('messages.SL') }}</th>
-                                    <th class="border-0">{{translate('messages.title')}}</th>
-                                    <th class="border-0">{{translate('messages.description')}}</th>
-                                    <th class="border-0">{{translate('messages.image')}}</th>
-                                    <th class="border-0">{{translate('messages.zone')}}</th>
-                                    <th class="border-0">{{translate('messages.tergat')}}</th>
-                                    <th class="text-center border-0">{{translate('messages.status')}}</th>
-                                    <th class="text-center border-0">{{translate('messages.action')}}</th>
+                                    <th class="border-0">{{ 'SL' }}</th>
+                                    <th class="border-0">{{'título'}}</th>
+                                    <th class="border-0">{{'descripción'}}</th>
+                                    <th class="border-0">{{'imagen'}}</th>
+                                    <th class="border-0">{{'zona'}}</th>
+                                    <th class="border-0">{{'terga'}}</th>
+                                    <th class="text-center border-0">{{'estado'}}</th>
+                                    <th class="text-center border-0">{{'acción'}}</th>
                                 </tr>
                             </thead>
 
@@ -189,11 +189,11 @@
                                             src="{{ $notification['image_full_url'] }}"
                                                 data-onerror-image="{{asset('assets/admin/img/160x160/img2.jpg')}}">
                                         @else
-                                            <label class="badge badge-soft-warning">{{translate('No Image')}}</label>
+                                            <label class="badge badge-soft-warning">{{'Sin imagen'}}</label>
                                         @endif
                                     </td>
                                     <td>
-                                        {{$notification->zone_id==null?translate('messages.all'):($notification->zone?$notification->zone->name:translate('messages.zone_deleted'))}}
+                                        {{$notification->zone_id==null?'todo':($notification->zone?$notification->zone->name:'zona eliminada')}}
                                     </td>
                                     <td class="text-uppercase">
                                         {{translate($notification->tergat)}}
@@ -209,10 +209,10 @@
                                     <td>
                                         <div class="btn--container justify-content-center">
                                             <a class="btn action-btn btn--primary btn-outline-primary"
-                                            href="{{route('admin.notification.edit',[$notification['id']])}}" title="{{translate('messages.edit_notification')}}"><i class="tio-edit"></i>
+                                            href="{{route('admin.notification.edit',[$notification['id']])}}" title="{{'editar notificación'}}"><i class="tio-edit"></i>
                                             </a>
                                             <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
-                                               data-id="notification-{{$notification['id']}}" data-message="{{ translate('Want to delete this notification ?') }}" title="{{translate('messages.delete_notification')}}"><i class="tio-delete-outlined"></i>
+                                               data-id="notification-{{$notification['id']}}" data-message="{{ '¿Quieres eliminar esta notificación?' }}" title="{{'eliminar notificación'}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{route('admin.notification.delete',[$notification['id']])}}" method="post" id="notification-{{$notification['id']}}">
                                                 @csrf @method('delete')
@@ -234,7 +234,7 @@
                     <div class="empty--data">
                         <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
-                            {{translate('no_data_found')}}
+                            {{'no se encontraron datos'}}
                         </h5>
                     </div>
                     @endif
@@ -256,8 +256,8 @@
             var formData = new FormData(this);
 
             Swal.fire({
-                title: '{{translate('messages.are_you_sure')}}',
-                text: '{{translate('messages.you want to sent notification to ')}}'+$('#tergat').val()+'?',
+                title: '{{'¿está seguro?'}}',
+                text: '{{'desea enviar una notificación a'}}'+$('#tergat').val()+'?',
                 imageUrl: '{{ asset('assets/admin/img/off-danger.png') }}',
                 imageWidth: 80,
                 imageHeight: 80,
@@ -267,8 +267,8 @@
                 closeButtonHtml: '×',
                 cancelButtonColor: 'default',
                 confirmButtonColor: 'primary',
-                cancelButtonText: '{{translate('messages.no')}}',
-                confirmButtonText: '{{translate('messages.send')}}',
+                cancelButtonText: '{{'No'}}',
+                confirmButtonText: '{{'enviar'}}',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {

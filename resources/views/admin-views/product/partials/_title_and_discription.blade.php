@@ -7,7 +7,7 @@
                        <ul class="nav nav-tabs mb-4">
                            <li class="nav-item">
                                <a class="nav-link lang_link active" href="#"
-                                   id="default-link">{{ translate('Default') }}</a>
+                                   id="default-link">{{ 'Por defecto' }}</a>
                            </li>
                            @foreach ($language ?? [] as $lang)
                                <li class="nav-item">
@@ -21,16 +21,16 @@
                    <div class="lang_form" id="default-form">
                        <div class="form-group">
                            <div class="justify-content-between d-flex">
-                               <label class="input-label" for="default_name">{{ translate('messages.name') }}
-                                   ({{ translate('Default') }}) <span class="form-label-secondary text-danger"
+                               <label class="input-label" for="default_name">{{ 'nombre' }}
+                                   ({{ 'Por defecto' }}) <span class="form-label-secondary text-danger"
                                        data-toggle="tooltip" data-placement="right"
-                                       data-original-title="{{ translate('messages.Required.') }}"> *
+                                       data-original-title="{{ 'Requerido.' }}"> *
                                    </span>
                                </label>
                             @if (isset($openai_config) && data_get($openai_config, 'status') == 1)
                             <button type="button" class="btn bg-white text-primary opacity-1 generate_btn_wrapper p-0 mb-2 auto_fill_title"
                                 id="title-default-action-btn" data-type="default"
-                                data-error="{{ translate('Please provide a product name so the AI can generate a suitable title.') }}"
+                                data-error="{{ 'Proporcione un nombre de producto para que la IA pueda generar un título adecuado.' }}"
                                 data-lang="{{ \App\CentralLogics\Helpers::system_default_language() }}"
                                 data-route="{{ route('admin.product.title-auto-fill') }}">
                                 <div class="btn-svg-wrapper">
@@ -38,9 +38,9 @@
                                         src="{{ asset('assets/admin/img/svg/blink-right-small.svg') }}" alt="">
                                 </div>
                                 <span class="ai-text-animation d-none" role="status">
-                                    {{ translate('Just_a_second') }}
+                                    {{ 'Un momento' }}
                                 </span>
-                                <span class="btn-text">{{ translate('Generate') }}</span>
+                                <span class="btn-text">{{ 'Generar' }}</span>
                             </button>
                             @endif
 
@@ -49,7 +49,7 @@
                                <div class="outline-wrapper">
                                    <input type="text" name="name[]" id="default_name" class="form-control"
                                        value="{{ $product?->getRawOriginal('name') ?? old('name.0') }}"
-                                       placeholder="{{ translate('messages.new_food') }}" required>
+                                       placeholder="{{ 'comida nueva' }}" required>
                                </div>
                            </div>
                        </div>
@@ -58,16 +58,16 @@
 
                            <div class="justify-content-between d-flex">
                                <label class="input-label"
-                                   for="exampleFormControlInput1">{{ translate('messages.short_description') }}
-                                   ({{ translate('Default') }}) <span class="form-label-secondary text-danger"
+                                   for="exampleFormControlInput1">{{ 'breve descripción' }}
+                                   ({{ 'Por defecto' }}) <span class="form-label-secondary text-danger"
                                        data-toggle="tooltip" data-placement="right"
-                                       data-original-title="{{ translate('messages.Required.') }}"> *
+                                       data-original-title="{{ 'Requerido.' }}"> *
                                    </span></label>
 
                                    @if (isset($openai_config) && data_get($openai_config, 'status') == 1)
                                    <button type="button" class="btn bg-white text-primary opacity-1 generate_btn_wrapper p-0 mb-2 auto_fill_description"
                                        id="description-default-action-btn" data-type="default"
-                                       data-error="{{ translate('Please provide a product description so the AI can generate a description.') }}"
+                                       data-error="{{ 'Proporcione una descripción del producto para que la IA pueda generar una descripción.' }}"
                                        data-lang="{{ \App\CentralLogics\Helpers::system_default_language() }}"
                                        data-route="{{ route('admin.product.description-auto-fill') }}">
                                        <div class="btn-svg-wrapper">
@@ -75,9 +75,9 @@
                                                 src="{{ asset('assets/admin/img/svg/blink-right-small.svg') }}" alt="">
                                         </div>
                                         <span class="ai-text-animation d-none" role="status">
-                                            {{ translate('Just_a_second') }}
+                                            {{ 'Un momento' }}
                                         </span>
-                                        <span class="btn-text">{{ translate('Generate') }}</span>
+                                        <span class="btn-text">{{ 'Generar' }}</span>
                                    </button>
                                    @endif
 
@@ -113,7 +113,7 @@
 
                                <div class="justify-content-between d-flex">
                                    <label class="input-label"
-                                       for="{{ $lang }}_name">{{ translate('messages.name') }}
+                                       for="{{ $lang }}_name">{{ 'nombre' }}
                                        ({{ strtoupper($lang) }})
                                    </label>
 
@@ -121,16 +121,16 @@
 
                                 <button type="button" class="btn bg-white text-primary opacity-1 generate_btn_wrapper auto_fill_title"
                                     id="title-{{ $lang }}-action-btn" data-lang="{{ $lang }}"
-                                    data-error="{{ translate('Please provide a product name so the AI can generate a suitable title or description.') }}"
+                                    data-error="{{ 'Proporcione un nombre de producto para que la IA pueda generar un título o descripción adecuados.' }}"
                                     data-route="{{ route('admin.product.title-auto-fill') }}">
                                     <div class="btn-svg-wrapper">
                                         <img width="18" height="18" class=""
                                             src="{{ asset('assets/admin/img/svg/blink-right-small.svg') }}" alt="">
                                     </div>
                                     <span class="ai-text-animation d-none" role="status">
-                                        {{ translate('Just_a_second') }}
+                                        {{ 'Un momento' }}
                                     </span>
-                                    <span class="btn-text">{{ translate('Generate') }}</span>
+                                    <span class="btn-text">{{ 'Generar' }}</span>
                                 </button>
                                 @endif
                                </div>
@@ -138,7 +138,7 @@
                                <div class="error-wrapper">
                                    <input type="text" name="name[]" id="{{ $lang }}_name"
                                        value="{{ isset($translate[$lang]['name']) ? $translate[$lang]['name'] : old('name.' . $key + 1) }}"
-                                       class="form-control" placeholder="{{ translate('messages.new_food') }}">
+                                       class="form-control" placeholder="{{ 'comida nueva' }}">
 
                                </div>
                            </div>
@@ -146,13 +146,13 @@
                            <div class="form-group mb-0">
                                <div class="justify-content-between d-flex">
                                    <label class="input-label"
-                                       for="exampleFormControlInput1">{{ translate('messages.short_description') }}
+                                       for="exampleFormControlInput1">{{ 'breve descripción' }}
 
                                        ({{ strtoupper($lang) }})</label>
                                       @if (isset($openai_config) && data_get($openai_config, 'status') == 1)
                                       <button type="button" class="btn bg-white text-primary opacity-1 generate_btn_wrapper auto_fill_description"
                                           id="description-default-action-btn"
-                                          data-error="{{ translate('Please provide a product description so the AI can generate a description.') }}"
+                                          data-error="{{ 'Proporcione una descripción del producto para que la IA pueda generar una descripción.' }}"
                                           data-lang="{{ $lang }}"
                                           data-route="{{ route('admin.product.description-auto-fill') }}">
                                             <div class="btn-svg-wrapper">
@@ -160,9 +160,9 @@
                                                     src="{{ asset('assets/admin/img/svg/blink-right-small.svg') }}" alt="">
                                             </div>
                                             <span class="ai-text-animation d-none" role="status">
-                                                {{ translate('Just_a_second') }}
+                                                {{ 'Un momento' }}
                                             </span>
-                                            <span class="btn-text">{{ translate('Generate') }}</span>
+                                            <span class="btn-text">{{ 'Generar' }}</span>
                                       </button>
 
                                        @endif

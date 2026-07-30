@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('Campaign List'))
+@section('title','Lista de campañas')
 
 
 @section('content')
@@ -13,11 +13,11 @@
                         <img src="{{asset('assets/admin/img/campaign.png')}}" class="w--26" alt="">
                     </span>
                     <span>
-                        {{translate('messages.campaign')}}
+                        {{'campaña'}}
                     </span>
                 </h1>
                     <a class="btn btn--primary" href="{{route('admin.campaign.add-new', 'item')}}">
-                        <i class="tio-add-circle"></i> {{translate('messages.add_new_campaign')}}
+                        <i class="tio-add-circle"></i> {{'agregar nueva campaña'}}
                     </a>
             </div>
         </div>
@@ -26,12 +26,12 @@
         <div class="card">
             <div class="card-header border-0 py-2">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title">{{translate('messages.campaign_list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$campaigns->total()}}</span></h5>
+                    <h5 class="card-title">{{'lista de campaña'}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$campaigns->total()}}</span></h5>
                     <form class="search-form min--270">
 
                         <!-- Search -->
                         <div class="input-group input--group">
-                            <input id="datatableSearch" type="search" value="{{ request()?->search ?? null }}" name="search" class="form-control" placeholder="{{ translate('messages.Ex:_Campaign title...') }}" aria-label="{{translate('messages.search_here')}}">
+                            <input id="datatableSearch" type="search" value="{{ request()?->search ?? null }}" name="search" class="form-control" placeholder="{{ 'Ej: Título de la campaña...' }}" aria-label="{{'buscar aquí'}}">
                             <button type="submit" class="btn btn--secondary">
                                 <i class="tio-search"></i>
                             </button>
@@ -40,7 +40,7 @@
                     </form>
 
                     @if(request()->get('search'))
-                    <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                    <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{'reiniciar'}}</button>
                     @endif
 
 
@@ -50,27 +50,27 @@
                                     "target": "#usersExportDropdown",
                                     "type": "css-animation"
                                 }'>
-                            <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                            <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                         </a>
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
 
-                            <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                            <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                             <a id="export-excel" class="dropdown-item" href="
                                 {{ route('admin.campaign.item_campaign_export', ['type' => 'excel', request()->getQueryString()]) }}
                                 ">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
-                                {{ translate('messages.excel') }}
+                                {{ 'sobresalir' }}
                             </a>
                             <a id="export-csv" class="dropdown-item" href="
                             {{ route('admin.campaign.item_campaign_export', ['type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
-                                .{{ translate('messages.csv') }}
+                                .{{ 'csv' }}
                             </a>
                         </div>
                     </div>
@@ -88,13 +88,13 @@
                         }'>
                         <thead class="thead-light">
                         <tr>
-                            <th class="border-0">{{translate('sl')}}</th>
-                            <th class="border-0" >{{translate('messages.title')}}</th>
-                            <th class="border-0" >{{translate('messages.date')}}</th>
-                            <th class="border-0" >{{translate('messages.time')}}</th>
-                            <th class="border-0" >{{translate('messages.price')}}</th>
-                            <th class="border-0 text-center">{{translate('messages.status')}}</th>
-                            <th class="border-0 text-center">{{translate('messages.action')}}</th>
+                            <th class="border-0">{{'SL'}}</th>
+                            <th class="border-0" >{{'título'}}</th>
+                            <th class="border-0" >{{'fecha'}}</th>
+                            <th class="border-0" >{{'tiempo'}}</th>
+                            <th class="border-0" >{{'precio'}}</th>
+                            <th class="border-0 text-center">{{'estado'}}</th>
+                            <th class="border-0 text-center">{{'acción'}}</th>
                         </tr>
 
                         </thead>
@@ -121,10 +121,10 @@
                                             data-type="status"
                                             data-image-on="{{ asset('assets/admin/img/modal/basic_campaign_on.png') }}"
                                             data-image-off="{{ asset('assets/admin/img/modal/basic_campaign_off.png') }}"
-                                            data-title-on="{{ translate('By_Turning_ON_Campaign!') }}"
-                                            data-title-off="{{ translate('By_Turning_OFF_Campaign!') }}"
-                                            data-text-on="<p>{{ translate('Turned_on_to_customer_website_and_apps._Are_you_sure_you_want_to_turn_on_the_campaign_already_inactive.') }}</p>"
-                                            data-text-off="<p>{{ translate('Turned_off_to_customer_website_and_apps._Are_you_sure_you_want_to_turn_off_the_campaign_already_active') }}</p>"
+                                            data-title-on="{{ '¡Activando la campaña!' }}"
+                                            data-title-off="{{ '¡Apagando la campaña!' }}"
+                                            data-text-on="<p>{{ 'Activado el sitio web y las aplicaciones del cliente. ¿Está seguro de que desea activar la campaña que ya está inactiva?' }}</p>"
+                                            data-text-off="<p>{{ 'Desactivado el sitio web y las aplicaciones del cliente. ¿Estás seguro de que deseas desactivar la campaña que ya está activa?' }}</p>"
                                             id="campaignCheckbox{{$campaign->id}}" {{$campaign->status?'checked':''}}>
                                             <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
@@ -139,10 +139,10 @@
                                 <td>
                                     <div class="btn--container justify-content-center">
                                         <a class="btn action-btn btn--primary btn-outline-primary"
-                                            href="{{route('admin.campaign.edit',['item',$campaign['id']])}}" title="{{translate('messages.edit_campaign')}}"><i class="tio-edit"></i>
+                                            href="{{route('admin.campaign.edit',['item',$campaign['id']])}}" title="{{'editar campaña'}}"><i class="tio-edit"></i>
                                         </a>
                                         <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
-                                            data-id="campaign-{{$campaign['id']}}" data-message="{{ translate('Want to delete this item ?') }}" title="{{translate('messages.delete_campaign')}}"><i class="tio-delete-outlined"></i>
+                                            data-id="campaign-{{$campaign['id']}}" data-message="{{ '¿Quieres eliminar este elemento?' }}" title="{{'eliminar campaña'}}"><i class="tio-delete-outlined"></i>
                                         </a>
                                         <form action="{{route('admin.campaign.delete-item',[$campaign['id']])}}"
                                                     method="post" id="campaign-{{$campaign['id']}}">
@@ -165,7 +165,7 @@
                     <div class="empty--data">
                         <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
-                            {{translate('no_data_found')}}
+                            {{'no se encontraron datos'}}
                         </h5>
                     </div>
                     @endif

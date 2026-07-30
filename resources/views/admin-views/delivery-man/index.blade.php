@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.Add new delivery-man'))
+@section('title', 'Agregar nuevo repartidor')
 
 
 @section('content')
@@ -11,7 +11,7 @@
                 <!-- <span class="page-header-icon">
                     <img src="{{ asset('assets/admin/img/delivery-man.png') }}" class="w--26" alt="">
                 </span> -->
-                <span>{{ translate('messages.add_new_deliveryman') }}</span>
+                <span>{{ 'agregar nuevo repartidor' }}</span>
             </h1>
         </div>
         <!-- End Page Header -->
@@ -21,10 +21,10 @@
                 <div class="card-header">
                    <div>
                         <h3 class="mb-1">
-                            {{ translate('Basic Information') }}
+                            {{ 'Información básica' }}
                         </h3>
                         <p class="mb-0 fs-12">
-                            {{ translate('Here you setup your all business information.') }}
+                            {{ 'Aquí configura toda la información comercial.' }}
                         </p>
                    </div>
                 </div>
@@ -36,76 +36,76 @@
                                     <div class="col-sm-6">
                                         <div class="form-group mb-0">
                                             <label class="input-label"
-                                                for="exampleFormControlInput1">{{ translate('messages.first_name') }}
+                                                for="exampleFormControlInput1">{{ 'nombre de pila' }}
                                                 <span class="form-label-secondary text-danger" data-toggle="tooltip"
                                                     data-placement="right"
-                                                    data-original-title="{{ translate('messages.Required.') }}"> *
+                                                    data-original-title="{{ 'Requerido.' }}"> *
                                                 </span>
 
                                             </label>
                                             <input type="text" name="f_name" class="form-control"
-                                                placeholder="{{ translate('messages.Ex : Jhone') }}" required>
+                                                placeholder="{{ 'Ej: Jhon' }}" required>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group mb-0">
                                             <label class="input-label"
-                                                for="exampleFormControlInput1">{{ translate('messages.last_name') }}
+                                                for="exampleFormControlInput1">{{ 'apellido' }}
                                                <span class="form-label-secondary text-danger" data-toggle="tooltip"
                                                     data-placement="right"
-                                                    data-original-title="{{ translate('messages.Required.') }}"> *
+                                                    data-original-title="{{ 'Requerido.' }}"> *
                                                 </span>
 
                                             </label>
                                             <input type="text" name="l_name" class="form-control"
-                                                placeholder="{{ translate('messages.Ex : doe') }}" required>
+                                                placeholder="{{ 'Ej: cierva' }}" required>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group mb-0">
                                             <label class="input-label"
-                                                for="exampleFormControlInput1">{{ translate('messages.email') }}
+                                                for="exampleFormControlInput1">{{ 'correo electrónico' }}
                                                 <span class="form-label-secondary text-danger" data-toggle="tooltip"
                                                     data-placement="right"
-                                                    data-original-title="{{ translate('messages.Required.') }}"> *
+                                                    data-original-title="{{ 'Requerido.' }}"> *
                                                 </span>
 
                                             </label>
                                             <input type="email" name="email" class="form-control"
-                                                placeholder="{{ translate('messages.Ex:') }} ex@example.com" required>
+                                                placeholder="{{ 'Ex:' }} ex@example.com" required>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group mb-0">
                                             <label class="input-label"
-                                                for="exampleFormControlInput1">{{ translate('messages.deliveryman_type') }}
+                                                for="exampleFormControlInput1">{{ 'tipo de repartidor' }}
                                                 <span class="form-label-secondary text-danger" data-toggle="tooltip"
                                                     data-placement="right"
-                                                    data-original-title="{{ translate('messages.Required.') }}"> *
+                                                    data-original-title="{{ 'Requerido.' }}"> *
                                                 </span>
                                             </label>
-                                            <select name="earning" data-placeholder="{{ translate('messages.Select_deliveryman_type') }}" required class="form-control js-select2-custom">
-                                                <option value="" readonly="true" hidden="true" > {{ translate('messages.Select_deliveryman_type') }}</option>
-                                                <option value="1">{{ translate('messages.freelancer') }}</option>
-                                                <option value="0">{{ translate('messages.salary_based') }}</option>
+                                            <select name="earning" data-placeholder="{{ 'Selecciona el tipo de repartidor' }}" required class="form-control js-select2-custom">
+                                                <option value="" readonly="true" hidden="true" > {{ 'Selecciona el tipo de repartidor' }}</option>
+                                                <option value="1">{{ 'persona de libre dedicación' }}</option>
+                                                <option value="0">{{ 'basado en salario' }}</option>
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="col-sm-12">
                                         <div class="form-group mb-0">
-                                            <label class="input-label">{{translate('messages.service_type')}} <span class="form-label-secondary text-danger" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.Required.') }}"> *</span></label>
+                                            <label class="input-label">{{'tipo de servicio'}} <span class="form-label-secondary text-danger" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Requerido.' }}"> *</span></label>
                                             <div class="resturant-type-group d-flex align-items-center gap-3 border rounded p-2">
                                                 <label class="form-check form--check mr-2 mr-md-4">
                                                     <input class="form-check-input" type="checkbox" name="can_deliver" value="1" checked id="can_deliver">
                                                     <span class="form-check-label">
-                                                        {{translate('messages.delivery_man')}}
+                                                        {{'Repartidor'}}
                                                     </span>
                                                 </label>
                                                 <label class="form-check form--check mr-2 mr-md-4">
                                                     <input class="form-check-input" type="checkbox" name="can_drive_taxi" value="1" id="can_drive_taxi">
                                                     <span class="form-check-label">
-                                                        {{translate('messages.taxi_driver')}}
+                                                        {{'taxista'}}
                                                     </span>
                                                 </label>
                                             </div>
@@ -114,13 +114,13 @@
                                     
                                     <div class="col-sm-6 taxi-info" style="display: none;">
                                         <div class="form-group mb-0">
-                                            <label class="input-label">{{translate('messages.taxi_license_number')}}</label>
-                                            <input type="text" name="taxi_license_number" class="form-control" placeholder="{{translate('messages.Ex: 123456789')}}">
+                                            <label class="input-label">{{'número de licencia de taxi'}}</label>
+                                            <input type="text" name="taxi_license_number" class="form-control" placeholder="{{'Ej: 123456789'}}">
                                         </div>
                                     </div>
                                     <div class="col-sm-6 taxi-info" style="display: none;">
                                         <div class="form-group mb-0">
-                                            <label class="input-label">{{translate('messages.taxi_license_expiry')}}</label>
+                                            <label class="input-label">{{'caducidad de la licencia de taxi'}}</label>
                                             <input type="date" name="taxi_license_expiry" class="form-control">
                                         </div>
                                     </div>
@@ -128,10 +128,10 @@
                                     <div class="col-sm-6" id="ref_code" style="display: none;">
                                         <div class="form-group mb-0">
                                             <label class="input-label"
-                                                for="exampleFormControlInput1">{{ translate('messages.referral_code') }}
+                                                for="exampleFormControlInput1">{{ 'código de referencia' }}
                                             </label>
                                             <input type="text" name="referral_code"  id="referral_code" class="form-control __form-control"
-                                                placeholder="{{ translate('messages.Ex: STAKXPFIDK') }}"
+                                                placeholder="{{ 'Ej: STAKXPFIDK' }}"
                                                 value="">
                                         </div>
                                     </div>
@@ -139,19 +139,19 @@
                                     <div class="col-sm-6">
                                         <div class="form-group mb-0">
                                             <label class="input-label"
-                                                for="exampleFormControlInput1">{{ translate('messages.Select zone') }} <span
+                                                for="exampleFormControlInput1">{{ 'Seleccionar zona' }} <span
                                                     class="form-label-secondary text-danger" data-toggle="tooltip"
                                                     data-placement="right"
-                                                    data-original-title="{{ translate('messages.Required.') }}"> *
+                                                    data-original-title="{{ 'Requerido.' }}"> *
                                                     <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Content need ...">
                                                         <i class="tio-info text-muted"></i>
                                                     </span>
                                                 </span>
                                             </label>
                                             <select name="zone_id" class="form-control js-select2-custom" required
-                                                data-placeholder="{{ translate('messages.select_zone') }}">
+                                                data-placeholder="{{ 'seleccionar zona' }}">
                                                 <option value="" readonly="true" hidden="true">
-                                                    {{ translate('messages.select_zone') }}</option>
+                                                    {{ 'seleccionar zona' }}</option>
                                                 @foreach (\App\Models\Zone::all() as $zone)
                                                     @if (isset(auth('admin')->user()->zone_id))
                                                         @if (auth('admin')->user()->zone_id == $zone->id)
@@ -168,15 +168,15 @@
                                     <div class="col-sm-6">
                                         <div class="form-group m-0">
                                             <label class="input-label"
-                                                for="exampleFormControlInput1">{{ translate('messages.Select Vehicle') }} <span
+                                                for="exampleFormControlInput1">{{ 'Seleccionar vehículo' }} <span
                                                     class="form-label-secondary text-danger" data-toggle="tooltip"
                                                     data-placement="right"
-                                                    data-original-title="{{ translate('messages.Required.') }}"> *
+                                                    data-original-title="{{ 'Requerido.' }}"> *
                                                 </span>
                                             </label>
                                             <select name="vehicle_id" class="form-control js-select2-custom h--45px" required
-                                                data-placeholder="{{ translate('messages.select_vehicle') }}">
-                                                <option value="" readonly="true" hidden="true"> {{ translate('messages.select_vehicle') }}</option>
+                                                data-placeholder="{{ 'seleccionar vehículo' }}">
+                                                <option value="" readonly="true" hidden="true"> {{ 'seleccionar vehículo' }}</option>
                                                 @foreach (\App\Models\DMVehicle::where('status', 1)->get(['id', 'type']) as $v)
                                                     <option value="{{ $v->id }}">{{ $v->type }}
                                                     </option>
@@ -191,7 +191,7 @@
                             <div class="bg-light2 rounded h-100 d-center">
                                 <div class="text-center">
                                     <div class="mb-1">
-                                        <h4 class="mb-1">{{ translate('Deliveryman image') }} <span class="text-danger">*</span></h4>
+                                        <h4 class="mb-1">{{ 'Imagen del repartidor' }} <span class="text-danger">*</span></h4>
                                     </div>
                                     <div class="mx-auto text-center">
                                         @include('admin-views.partials._image-uploader', [
@@ -216,10 +216,10 @@
                 <div class="card-header">
                    <div>
                         <h3 class="mb-1">
-                            {{ translate('General Setup') }}
+                            {{ 'Configuración general' }}
                         </h3>
                         <p class="mb-0 fs-12">
-                            {{ translate('Here you can manage time settings to match with your business criteria') }}
+                            {{ 'Aquí puede administrar la configuración de tiempo para que coincida con los criterios de su negocio.' }}
                         </p>
                    </div>
                 </div>
@@ -227,10 +227,10 @@
                     <div class="shadow-sm p-xxl-20 p-xl-3 p-2 bg-white mb-20">
                         <div class="mb-20">
                             <h4 class="mb-1">
-                                {{ translate('Identity Info') }}
+                                {{ 'Información de identidad' }}
                             </h4>
                             <p class="mb-0 fs-12">
-                                {{ translate('Setup your business time zone and format from here') }}
+                                {{ 'Configure la zona horaria y el formato de su empresa desde aquí' }}
                             </p>
                         </div>
                         <div class="bg-light2 rounded p-xxl-20 p-xl-3 p-3 mb-20">
@@ -238,32 +238,32 @@
                                 <div class="col-sm-6 col-lg-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.identity_type') }}<span
+                                            for="exampleFormControlInput1">{{ 'tipo de identidad' }}<span
                                                 class="form-label-secondary text-danger" data-toggle="tooltip"
                                                 data-placement="right"
-                                                data-original-title="{{ translate('messages.Required.') }}"> *
+                                                data-original-title="{{ 'Requerido.' }}"> *
                                             </span>
                                         </label>
-                                        <select required name="identity_type" data-placeholder="{{ translate('messages.select_identity_type') }}" class="form-control js-select2-custom">
-                                            <option  value="" readonly="true" hidden="true"  > {{ translate('messages.select_identity_type') }}</option>
-                                            <option value="passport">{{ translate('messages.passport') }}</option>
-                                            <option value="driving_license">{{ translate('messages.driving_license') }} </option>
-                                            <option value="nid">{{ translate('messages.nid') }}</option>
-                                            <option value="store_id">{{ translate('messages.store_id') }}</option>
+                                        <select required name="identity_type" data-placeholder="{{ 'seleccione el tipo de identidad' }}" class="form-control js-select2-custom">
+                                            <option  value="" readonly="true" hidden="true"  > {{ 'seleccione el tipo de identidad' }}</option>
+                                            <option value="passport">{{ 'pasaporte' }}</option>
+                                            <option value="driving_license">{{ 'carnet de conducir' }} </option>
+                                            <option value="nid">{{ 'nid' }}</option>
+                                            <option value="store_id">{{ 'identificación de la tienda' }}</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.identity_number') }}<span
+                                            for="exampleFormControlInput1">{{ 'numero de identidad' }}<span
                                                 class="form-label-secondary text-danger" data-toggle="tooltip"
                                                 data-placement="right"
-                                                data-original-title="{{ translate('messages.Required.') }}"> *
+                                                data-original-title="{{ 'Requerido.' }}"> *
                                             </span>
                                         </label>
                                         <input type="text" name="identity_number" class="form-control"
-                                            placeholder="{{ translate('messages.Ex:') }} DH-23434-LS" required>
+                                            placeholder="{{ 'Ex:' }} DH-23434-LS" required>
                                     </div>
                                 </div>
                             </div>
@@ -271,10 +271,10 @@
                         <div class="bg-light2 rounded p-xxl-20 p-xl-3 p-3">
                             <div class="mb-0">
                                 <h4 class="mb-1">
-                                    {{ translate('Identity Image') }} <span class="text-danger">*</span>
+                                    {{ 'Imagen de identidad' }} <span class="text-danger">*</span>
                                 </h4>
                                 <p class="mb-0 fs-12">
-                                    {{ translate(' Jpg, jpeg, png, gif, webp. Less Than 2MB') }} <span class="text-dark">(2:1)</span>
+                                    {{ 'Jpg, jpeg, png, gif, webp. Menos de 2 MB' }} <span class="text-dark">(2:1)</span>
                                 </p>
                             </div>
                             <div class="form-group m-0">
@@ -301,10 +301,10 @@
                     <div class="shadow-sm p-xxl-20 p-xl-3 p-2 bg-white">
                         <div class="mb-20">
                             <h4 class="mb-1">
-                                {{ translate('Account Information') }}
+                                {{ 'Información de la cuenta' }}
                             </h4>
                             <p class="mb-0 fs-12">
-                                {{ translate('Setup your business time zone and format from here') }}
+                                {{ 'Configure la zona horaria y el formato de su empresa desde aquí' }}
                             </p>
                         </div>
                         <div class="bg-light2 rounded p-xxl-20 p-xl-3 p-3">
@@ -312,31 +312,31 @@
                                 <div class="col-md-4 col-12">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.phone') }}<span
+                                            for="exampleFormControlInput1">{{ 'teléfono' }}<span
                                                 class="form-label-secondary text-danger" data-toggle="tooltip"
                                                 data-placement="right"
-                                                data-original-title="{{ translate('messages.Required.') }}"> *
+                                                data-original-title="{{ 'Requerido.' }}"> *
                                             </span>
                                         </label>
                                         <input type="tel" id="phone" name="phone" class="form-control"
-                                            placeholder="{{ translate('messages.Ex:') }} 017********" required>
+                                            placeholder="{{ 'Ex:' }} 017********" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <div class="js-form-message form-group mb-0">
                                         <label class="input-label"
-                                            for="signupSrPassword">{{ translate('messages.password') }}<span
+                                            for="signupSrPassword">{{ 'Contraseña' }}<span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><i class="tio-info text-muted"></i></span> <span
+                                                data-original-title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"><i class="tio-info text-muted"></i></span> <span
                                                     class="form-label-secondary text-danger" data-toggle="tooltip"
                                                     data-placement="right"
-                                                    data-original-title="{{ translate('messages.Required.') }}"> *
+                                                    data-original-title="{{ 'Requerido.' }}"> *
                                                 </span></label>
 
                                         <div class="input-group input-group-merge">
                                             <input type="password" class="js-toggle-password form-control" name="password"
                                                 id="signupSrPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                                                title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"
+                                                title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"
                                                 placeholder="{{ translate('messages.password_length_placeholder', ['length' => '8+']) }}"
                                                 aria-label="8+ characters required" required
                                                 data-msg="Your password is invalid. Please try again."
@@ -357,16 +357,16 @@
                                 <div class="col-md-4 col-12">
                                     <div class="js-form-message form-group mb-0">
                                         <label class="input-label"
-                                            for="signupSrConfirmPassword">{{ translate('messages.confirm_password') }}<span
+                                            for="signupSrConfirmPassword">{{ 'confirmar Contraseña' }}<span
                                                 class="form-label-secondary text-danger" data-toggle="tooltip"
                                                 data-placement="right"
-                                                data-original-title="{{ translate('messages.Required.') }}"> *
+                                                data-original-title="{{ 'Requerido.' }}"> *
                                             </span>
                                         </label>
                                         <div class="input-group input-group-merge">
                                             <input type="password" class="js-toggle-password form-control" name="confirmPassword"
                                                 id="signupSrConfirmPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                                                title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"
+                                                title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"
                                                 placeholder="{{ translate('messages.password_length_placeholder', ['length' => '8+']) }}"
                                                 aria-label="8+ characters required" required
                                                 data-msg="Password does not match the confirm password."
@@ -393,8 +393,8 @@
 
             <div class="btn--container justify-content-end mt-20">
                 <button type="reset" id="reset_btn"
-                    class="btn btn--reset min-w-120px">{{ translate('messages.reset') }}</button>
-                <button type="submit" class="btn btn--primary min-w-120px"><i class="tio-save"></i> {{translate('messages.Save Information')}}</button>
+                    class="btn btn--reset min-w-120px">{{ 'reiniciar' }}</button>
+                <button type="submit" class="btn btn--primary min-w-120px"><i class="tio-save"></i> {{'Guardar información'}}</button>
             </div>
         </form>
     </div>
@@ -446,13 +446,13 @@
                 },
                 onExtensionErr: function(index, file) {
                     toastr.error(
-                    '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
+                    '{{ 'Por favor ingrese solo archivos tipo png o jpg' }}', {
                         CloseButton: true,
                         ProgressBar: true
                     });
                 },
                 onSizeErr: function(index, file) {
-                    toastr.error('{{ translate('messages.file_size_too_big') }}', {
+                    toastr.error('{{ 'tamaño de archivo demasiado grande' }}', {
                         CloseButton: true,
                         ProgressBar: true
                     });
@@ -484,13 +484,13 @@
                 },
                 onExtensionErr: function(index, file) {
                     toastr.error(
-                    '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
+                    '{{ 'Por favor ingrese solo archivos tipo png o jpg' }}', {
                         CloseButton: true,
                         ProgressBar: true
                     });
                 },
                 onSizeErr: function(index, file) {
-                    toastr.error('{{ translate('messages.file_size_too_big') }}', {
+                    toastr.error('{{ 'tamaño de archivo demasiado grande' }}', {
                         CloseButton: true,
                         ProgressBar: true
                     });
@@ -537,7 +537,7 @@
     if (identity_image === 0) {
         e.preventDefault();  
         e.stopImmediatePropagation(); 
-        toastr.error(`{{ translate('messages.please_upload_at_least_one_identity_image') }}`, {
+        toastr.error(`{{ 'sube al menos una imagen de identidad' }}`, {
             closeButton: true,
             progressBar: true
         });

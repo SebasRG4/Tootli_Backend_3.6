@@ -1,5 +1,5 @@
 @extends('layouts.admin.app')
-@section('title',translate('Withdraw information View'))
+@section('title','Retirar información Ver')
 @push('css_or_js')
     <!-- Custom styles for this page -->
     <link href="{{asset('assets')}}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
@@ -33,34 +33,34 @@
                     <div class="row">
                         <div class="col-4">
                             <h5 class="d-flex __gap-5px text-capitalize">
-                                <span>{{translate('messages.amount')}}</span>
+                                <span>{{'cantidad'}}</span>
                                 <span>:</span>
                                 <span>{{\App\CentralLogics\Helpers::format_currency($wr->amount)}}</span>
                             </h5>
                             <h5 class="d-flex __gap-5px">
-                                <span>{{ translate('messages.request_time') }}</span><span>:</span><span>{{$wr->created_at}}</span>
+                                <span>{{ 'tiempo de solicitud' }}</span><span>:</span><span>{{$wr->created_at}}</span>
                             </h5>
                         </div>
                         <div class="col-4">
                             <div class="d-flex __gap-5px">
-                                <span>{{ translate('messages.note') }}</span><span>:</span><span> {{translate($wr->transaction_note)}}</span>
+                                <span>{{ 'nota' }}</span><span>:</span><span> {{translate($wr->transaction_note)}}</span>
                             </div>
                         </div>
                         <div class="col-4">
                             @if ($wr->approved== 0)
                                 <button type="button" class="btn btn-success float-right" data-toggle="modal"
-                                        data-target="#exampleModal">{{translate('messages.proceed')}}
+                                        data-target="#exampleModal">{{'proceder'}}
                                     <i class="tio-arrow-forward"></i>
                                 </button>
                             @else
                                 <div class="text-center float-right text-capitalize">
                                     @if($wr->approved==1)
                                         <label class="badge badge-success p-2 rounded-bottom">
-                                            {{translate('messages.approved')}}
+                                            {{'aprobado'}}
                                         </label>
                                     @else
                                         <label class="badge badge-danger p-2 rounded-bottom">
-                                            {{translate('messages.denied')}}
+                                            {{'denegado'}}
                                         </label>
                                     @endif
                                 </div>
@@ -86,7 +86,7 @@
                     @forelse(json_decode($wr->withdrawal_method_fields, true) as $key=> $item)
                     <h5 class="text-capitalize "> {{  translate($key) }}: {{$item}}</h5>
                     @empty
-                    <h5 class="text-capitalize"> {{translate('messages.No_Data_found')}}</h5>
+                    <h5 class="text-capitalize"> {{'No se encontraron datos'}}</h5>
                     @endforelse
                     </div>
                 </div>
@@ -102,9 +102,9 @@
                     </div>
                     <div class="card-body">
                         <h5 class="d-flex __gap-5px"><span>{{translate($vendor)}}</span> <span>:</span> <span>{{$wr->vendor->stores[0]->name}}</span></h5>
-                        <h5 class="d-flex __gap-5px"><span>{{translate('messages.phone')}}</span> <span>:</span> <span>{{$wr->vendor->stores[0]->contact}}</span></h5>
-                        <h5 class="d-flex __gap-5px"><span>{{translate('messages.address')}}</span> <span>:</span> <span>{{$wr->vendor->stores[0]->address}}</span></h5>
-                        <h5 class="text-capitalize badge badge-success d-flex __gap-5px"><span>{{translate('messages.balance')}}</span> <span>:</span> <span>{{$wr->vendor->wallet->balance}}</span></h5>
+                        <h5 class="d-flex __gap-5px"><span>{{'teléfono'}}</span> <span>:</span> <span>{{$wr->vendor->stores[0]->contact}}</span></h5>
+                        <h5 class="d-flex __gap-5px"><span>{{'DIRECCIÓN'}}</span> <span>:</span> <span>{{$wr->vendor->stores[0]->address}}</span></h5>
+                        <h5 class="text-capitalize badge badge-success d-flex __gap-5px"><span>{{'balance'}}</span> <span>:</span> <span>{{$wr->vendor->wallet->balance}}</span></h5>
                     </div>
                 </div>
             </div>
@@ -112,16 +112,16 @@
         <div class="col-md-4">
             <div class="card min-height-260">
                 <div class="card-header">
-                    <h3 class="h3 mb-0 "> {{translate('messages.owner_info')}}</h3>
+                    <h3 class="h3 mb-0 "> {{'información del propietario'}}</h3>
                     <i class="tio tio-user-big-outlined"></i>
                 </div>
                 <div class="card-body">
                     @if ($wr->vendor)
-                        <h5 class="d-flex __gap-5px"><span>{{translate('messages.name')}}</span> <span>:</span> <span>{{$wr->vendor->f_name}} {{$wr->vendor->l_name}}</span></h5>
-                        <h5 class="d-flex __gap-5px"><span>{{translate('messages.email')}}</span> <span>:</span> <span>{{$wr->vendor->email}}</span></h5>
-                        <h5 class="d-flex __gap-5px"><span>{{translate('messages.phone')}}</span> <span>:</span> <span>{{$wr->vendor->phone}}</span></h5>
+                        <h5 class="d-flex __gap-5px"><span>{{'nombre'}}</span> <span>:</span> <span>{{$wr->vendor->f_name}} {{$wr->vendor->l_name}}</span></h5>
+                        <h5 class="d-flex __gap-5px"><span>{{'correo electrónico'}}</span> <span>:</span> <span>{{$wr->vendor->email}}</span></h5>
+                        <h5 class="d-flex __gap-5px"><span>{{'teléfono'}}</span> <span>:</span> <span>{{$wr->vendor->phone}}</span></h5>
                     @else
-                        <h5>{{translate('messages.'.$vendor.' deleted!')}}</h5>
+                        <h5>{{'\'.$vendedor.\' eliminado!'}}</h5>
                     @endif
 
                 </div>
@@ -133,7 +133,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">{{translate('Withdraw request process')}}</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">{{'Proceso de solicitud de retiro'}}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -142,20 +142,20 @@
                         @csrf
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="recipient-name" class="col-form-label">{{translate('messages.request')}}:</label>
+                                <label for="recipient-name" class="col-form-label">{{'pedido'}}:</label>
                                 <select name="approved" class="custom-select" id="inputGroupSelect02">
-                                    <option value="1">{{translate('messages.approve')}}</option>
-                                    <option value="2">{{translate('messages.deny')}}</option>
+                                    <option value="1">{{'aprobar'}}</option>
+                                    <option value="2">{{'denegar'}}</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="message-text" class="col-form-label">{{translate('Note_about_transaction_or_request')}}:</label>
+                                <label for="message-text" class="col-form-label">{{'Nota sobre transacción o solicitud'}}:</label>
                                 <textarea class="form-control" name="note" id="message-text"></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{translate('messages.Close')}}</button>
-                            <button type="submit" class="btn btn-primary">{{translate('messages.Submit')}}</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{'Cerca'}}</button>
+                            <button type="submit" class="btn btn-primary">{{'Entregar'}}</button>
                         </div>
                     </form>
                 </div>

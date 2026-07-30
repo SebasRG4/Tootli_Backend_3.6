@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{translate('order_transaction_statement')}}</title>
+    <title>{{'declaración de transacción de pedido'}}</title>
     <meta http-equiv="Content-Type" content="text/html;"/>
     <meta charset="UTF-8">
     <style media="all">
@@ -214,10 +214,10 @@
     <table class="bs-0 mb-30 px-10">
         <tr>
             <th class="content-position-y text-left">
-                <h2>{{translate('messages.order_transaction_statement')}}</h2>
-                <p class="fz-14">{{translate('date')}} : {{ date('d M Y ' . config('timeformat'), strtotime(now())) }}</p>
+                <h2>{{'declaración de transacción de pedido'}}</h2>
+                <p class="fz-14">{{'fecha'}} : {{ date('d M Y ' . config('timeformat'), strtotime(now())) }}</p>
                 <h4 class="text-uppercase mb-1 fz-14">
-                    {{translate('statement')}}: #{{ $order_transaction->order->id }}
+                    {{'declaración'}}: #{{ $order_transaction->order->id }}
                 </h4>
             </th>
             <th class="content-position-y text-right">
@@ -235,16 +235,16 @@
                         <tr>
                             <td>
                                 <div class="">
-                                    <p class="fz-14">{{translate('date')}} :
+                                    <p class="fz-14">{{'fecha'}} :
                                         {{ date('d M Y ' . config('timeformat'), strtotime($order_transaction->order['created_at'])) }}
                                     </p>
                                     @if ($order_transaction->order->store)
-                                        <p class="fz-14" style="margin-top: 6px; margin-bottom:0px;">{{translate('store')}} : {{$order_transaction->order->store->name}}</p>
+                                        <p class="fz-14" style="margin-top: 6px; margin-bottom:0px;">{{'Negocio'}} : {{$order_transaction->order->store->name}}</p>
                                         @else
-                                        <p class="fz-14" style="margin-top: 6px; margin-bottom:0px;">{{translate('messages.store_not_found')}}</p>
+                                        <p class="fz-14" style="margin-top: 6px; margin-bottom:0px;">{{'tienda no encontrada'}}</p>
                                     @endif
                                     @if (isset($order_transaction->order->customer) )
-                                        <p class="fz-14" style=" margin-top: 6px; margin-bottom:0px;">{{translate('customer')}} : {{$order_transaction->order->customer['f_name'] . ' ' . $order_transaction->order->customer['l_name']}}</p>
+                                        <p class="fz-14" style=" margin-top: 6px; margin-bottom:0px;">{{'Cliente'}} : {{$order_transaction->order->customer['f_name'] . ' ' . $order_transaction->order->customer['l_name']}}</p>
                                     @endif
                                 </div>
                                 </p>
@@ -257,20 +257,20 @@
                     <table>
                         <tr>
                             <td class="text-right">
-                                <p class="fz-14">{{translate('delivered_by')}} : {{ucfirst($order_transaction->received_by)}}
+                                <p class="fz-14">{{'entregado por'}} : {{ucfirst($order_transaction->received_by)}}
                                     @if ($order_transaction->received_by == 'deliveryman')
                                             @if (isset($order_transaction->delivery_man) && $order_transaction->delivery_man->earning == 1)
-                                                <br><small>{{translate('messages.Freelance')}}</small>
+                                                <br><small>{{'Independiente'}}</small>
                                             @elseif (isset($order_transaction->delivery_man) && $order_transaction->delivery_man->earning == 0 && $order_transaction->delivery_man->type == 'restaurant_wise')
-                                            <br><small>{{translate('messages.Restaurant')}}</small>
+                                            <br><small>{{'Restaurante'}}</small>
                                             @elseif (isset($order_transaction->delivery_man) && $order_transaction->delivery_man->earning == 0 && $order_transaction->delivery_man->type == 'zone_wise')
-                                            <br><small>{{translate('messages.Admin')}}</small>
+                                            <br><small>{{'Administración'}}</small>
                                             @endif
                                         </div>
                                     @endif
                                 </p>
-                                <p class="fz-14">{{translate('payment_method')}} : {{ translate(str_replace('_', ' ', $order_transaction->order['payment_method'])) }}</p>
-                                <p class="fz-14">{{translate('payment_status')}} : {{$order_transaction->status ? translate('messages.refunded') : translate('messages.completed')}}</p>
+                                <p class="fz-14">{{'método de pago'}} : {{ translate(str_replace('_', ' ', $order_transaction->order['payment_method'])) }}</p>
+                                <p class="fz-14">{{'estado de pago'}} : {{$order_transaction->status ? 'Reembolsado' : 'terminado'}}</p>
                             </td>
                         </tr>
                     </table>
@@ -289,9 +289,9 @@
         <table class="customers bs-0">
             <thead>
                 <tr>
-                    <th style="background-color: #107980 important">{{translate('SL')}}</th>
-                    <th style="background-color: #107980 important">{{translate('details')}}</th>
-                    <th style="background-color: #107980 important">{{translate('amount')}}</th>
+                    <th style="background-color: #107980 important">{{'SL'}}</th>
+                    <th style="background-color: #107980 important">{{'detalles'}}</th>
+                    <th style="background-color: #107980 important">{{'cantidad'}}</th>
                 </tr>
             </thead>
             @php
@@ -299,53 +299,53 @@
             <tbody>
                 <tr>
                     <td>1</td>
-                    <td>{{translate('messages.total_item_amount')}}</td>
+                    <td>{{'importe total del artículo'}}</td>
                     <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->order['order_amount'] - $order_transaction->additional_charge - $order_transaction->order['dm_tips']-$order_transaction->order['delivery_charge'] - $order_transaction['tax']  + $order_transaction->order['coupon_discount_amount'] + $order_transaction->order['store_discount_amount']+$order_transaction->order['flash_admin_discount_amount']  +$order_transaction->order['flash_store_discount_amount'] + $order_transaction->order['ref_bonus_amount'] - $order_transaction->order['extra_packaging_amount']) }}</td>
                 </tr>
                 <tr>
                     <td>2</td>
-                    <td>{{translate('messages.item_discount')}}</td>
+                    <td>{{'descuento del artículo'}}</td>
                     <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->order->details()->sum(DB::raw('discount_on_item * quantity')) + $order_transaction->order['flash_admin_discount_amount'] +$order_transaction->order['flash_store_discount_amount']) }}</td>
                 </tr>
                 <tr>
                     <td>3</td>
-                    <td>{{translate('messages.total_coupon_discount')}}</td>
+                    <td>{{'descuento total del cupón'}}</td>
                     <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->order['coupon_discount_amount']) }}</td>
                 </tr>
                 <tr>
                     <td>4</td>
-                    <td>{{translate('messages.referral_discount')}}</td>
+                    <td>{{'descuento por referencia'}}</td>
                     <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->order['ref_bonus_amount']) }}</td>
                 </tr>
                 <tr>
                     <td>5</td>
-                    <td>{{translate('messages.total_discounted_amount')}}</td>
+                    <td>{{'importe total descontado'}}</td>
                     <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->order['coupon_discount_amount'] + $order_transaction->order['store_discount_amount']+$order_transaction->order['ref_bonus_amount'] +$order_transaction->order['flash_admin_discount_amount'] +$order_transaction->order['flash_store_discount_amount']) }}</td>
                 </tr>
                 <tr>
                     <td>6</td>
-                    <td>{{translate('messages.total_vat/_tax')}}</td>
+                    <td>{{'total iva/impuesto'}}</td>
                     <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->tax) }}</td>
                 </tr>
                 <tr>
                     <td>7</td>
-                    <td>{{translate('messages.total_delivery_charge')}}</td>
+                    <td>{{'cargo total de entrega'}}</td>
                     <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->delivery_charge) }}</td>
                 </tr>
                 <tr>
                     <td>8</td>
-                    <td>{{\App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge')}}</td>
+                    <td>{{\App\CentralLogics\Helpers::get_business_data('additional_charge_name')??'cargo adicional'}}</td>
                     <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->additional_charge) }}</td>
                 </tr>
                 <tr>
                     <td>9</td>
-                    <td>{{translate('messages.extra_packaging_amount')}}</td>
+                    <td>{{'cantidad de embalaje adicional'}}</td>
                     <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->extra_packaging_amount) }}</td>
                 </tr>
 
                 <tr>
                     <td>10</td>
-                    <td>{{translate('messages.total_order_amount')}}</td>
+                    <td>{{'monto total del pedido'}}</td>
                     <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->order_amount) }}</td>
                 </tr>
             </tbody>
@@ -354,30 +354,30 @@
         <table class="customers bs-0">
             <thead>
                 <tr>
-                    <th style="background-color: transparent !important; color: #333542">{{translate('additional_information')}}</th>
-                    <th style="background-color: transparent !important; color: #333542">{{translate('totals')}}</th>
+                    <th style="background-color: transparent !important; color: #333542">{{'información adicional'}}</th>
+                    <th style="background-color: transparent !important; color: #333542">{{'totales'}}</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>{{translate('messages.admin_discount')}}</td>
+                    <td>{{'descuento de administrador'}}</td>
                     <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->admin_expense) }}</td>
                 </tr>
                 <tr>
-                    <td>{{translate('messages.store_discount')}}</td>
+                    <td>{{'descuento de tienda'}}</td>
                     <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->discount_amount_by_store+$order_transaction->order['flash_store_discount_amount']) }}</td>
                     {{-- <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->order->store_discount_amount) }}</td> --}}
                 </tr>
                 <tr>
-                    <td>{{translate('messages.admin_commission')}}</td>
+                    <td>{{'comisión administrativa'}}</td>
                     <td>{{ \App\CentralLogics\Helpers::format_currency(($order_transaction->admin_commission + $order_transaction->admin_expense) - $order_transaction->delivery_fee_comission -$order_transaction->additional_charge  - $order_transaction->order['flash_admin_discount_amount']) }}</td>
                 </tr>
                 <tr>
-                    <td>{{translate('messages.admin_net_income')}}</td>
+                    <td>{{'ingresos netos administrativos'}}</td>
                     <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->admin_commission-$order_transaction->order['flash_admin_discount_amount']) }}</td>
                 </tr>
                 <tr>
-                    <td>{{translate('messages.store_net_income')}}</td>
+                    <td>{{'ingresos netos de la tienda'}}</td>
                     <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->store_amount - ($order_transaction?->order?->order_type == 'parcel' ? 0: $order_transaction->tax)) }}</td>
                 </tr>
             </tbody>
@@ -393,7 +393,7 @@
         <table class="">
             <tr>
                 <th class="fz-12 font-normal pb-3">
-                    {{translate('If_you_require_any_assistance_or_have_feedback_or_suggestions_about_our_site,_you')}} <br /> {{translate('can_email_us_at')}} <a href="mailto:({{ $company_email }})">{{ $company_email }}</a>
+                    {{'Si necesita ayuda o tiene comentarios o sugerencias sobre nuestro sitio, usted'}} <br /> {{'puede enviarnos un correo electrónico a'}} <a href="mailto:({{ $company_email }})">{{ $company_email }}</a>
                 </th>
             </tr>
             <tr>
@@ -401,12 +401,12 @@
                     <div class="d-flex justify-content-center gap-2">
                         <div class="mb-2">
                             <i class="fa fa-phone"></i>
-                            {{translate('phone')}}
+                            {{'teléfono'}}
                             : {{ $company_phone }}
                         </div>
                         <div class="mb-2">
                             <i class="fa fa-envelope" aria-hidden="true"></i>
-                            {{translate('email')}}
+                            {{'correo electrónico'}}
                             : {{$company_email}}
                         </div>
                     </div>

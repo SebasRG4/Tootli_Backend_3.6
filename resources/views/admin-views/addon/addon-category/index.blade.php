@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.Add Addon Category'))
+@section('title', 'Agregar categoría de complemento')
 
 @push('css_or_js')
 @endpush
@@ -14,7 +14,7 @@
                     <img src="{{ asset('assets/admin/img/category.png') }}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{ translate('add_new_addon_category') }}
+                    {{ 'agregar nueva categoría de complemento' }}
                 </span>
             </h1>
         </div>
@@ -28,7 +28,7 @@
                         <ul class="nav nav-tabs mb-4 border-0">
                             <li class="nav-item">
                                 <a class="nav-link lang_link active offcanvas-close" href="#"
-                                    id="default-link">{{ translate('messages.default') }}</a>
+                                    id="default-link">{{ 'por defecto' }}</a>
                             </li>
                             @foreach ($language as $lang)
                                 <li class="nav-item">
@@ -43,36 +43,36 @@
                             @if ($language)
                                 <div class="form-group lang_form" id="default-form">
                                     <label class="input-label"
-                                        for="exampleFormControlInput1">{{ translate('messages.Category_Name') }}
-                                        ({{ translate('messages.default') }})
+                                        for="exampleFormControlInput1">{{ 'Nombre de categoría' }}
+                                        ({{ 'por defecto' }})
                                         <span class="form-label-secondary text-danger" data-toggle="tooltip"
                                             data-placement="right"
-                                            data-original-title="{{ translate('messages.Required.') }}"> *
+                                            data-original-title="{{ 'Requerido.' }}"> *
                                         </span>
 
                                     </label>
                                     <input type="text" name="name[]" value="{{ old('name.0') }}" class="form-control"
-                                        placeholder="{{ translate('messages.new_category') }}" maxlength="255">
+                                        placeholder="{{ 'nueva categoría' }}" maxlength="255">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 @foreach ($language as $key => $lang)
                                     <div class="form-group d-none lang_form" id="{{ $lang }}-form">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.Category_Name') }}
+                                            for="exampleFormControlInput1">{{ 'Nombre de categoría' }}
                                             ({{ strtoupper($lang) }})
                                         </label>
                                         <input type="text" name="name[]" value="{{ old('name.' . $key + 1) }}"
                                             class="form-control"
-                                            placeholder="{{ translate('messages.Type_Category_Name') }}" maxlength="191">
+                                            placeholder="{{ 'Tipo Nombre de categoría' }}" maxlength="191">
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{ $lang }}">
                                 @endforeach
                             @else
                                 <div class="form-group">
                                     <label class="input-label"
-                                        for="exampleFormControlInput1">{{ translate('messages.Category_Name') }}</label>
+                                        for="exampleFormControlInput1">{{ 'Nombre de categoría' }}</label>
                                     <input type="text" name="name" class="form-control"
-                                        placeholder="{{ translate('messages.new_category') }}"
+                                        placeholder="{{ 'nueva categoría' }}"
                                         value="{{ old('name') }}" maxlength="191">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
@@ -81,7 +81,7 @@
                         </div>
                         <div class="col-md-6">
                             @if ($categoryWiseTax)
-                                <span class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rate') }}</span>
+                                <span class="mb-2 d-block title-clr fw-normal">{{ 'Seleccionar tasa impositiva' }}</span>
                                 <select name="tax_ids[]" required id="tax__rate" class="form-control js-select2-custom"
                                     multiple="multiple" placeholder="Type & Select Tax Rate">
                                     @foreach ($taxVats as $taxVat)
@@ -96,8 +96,8 @@
                     </div>
                     <div class="btn--container justify-content-end mt-20">
                         <button type="reset" id="reset_btn"
-                            class="btn btn--reset">{{ translate('messages.reset') }}</button>
-                        <button type="submit" class="btn btn--primary">{{ translate('messages.add') }}</button>
+                            class="btn btn--reset">{{ 'reiniciar' }}</button>
+                        <button type="submit" class="btn btn--primary">{{ 'agregar' }}</button>
                     </div>
 
                 </form>
@@ -107,15 +107,15 @@
         <div class="card mt-3">
             <div class="card-header py-2 border-0">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title">{{ translate('messages.category_list') }}<span
+                    <h5 class="card-title">{{ 'lista de categorías' }}<span
                             class="badge badge-soft-dark ml-2" id="itemCount">{{ $categories->total() }}</span></h5>
 
                     <form class="search-form">
                         <!-- Search -->
                         <div class="input-group input--group">
                             <input type="search" name="search" value="{{ request()?->search ?? null }}"
-                                class="form-control min-height-45" placeholder="{{ translate('messages.search_here') }}"
-                                aria-label="{{ translate('messages.ex_:_categories') }}">
+                                class="form-control min-height-45" placeholder="{{ 'buscar aquí' }}"
+                                aria-label="{{ 'ej: categorías' }}">
                             <input type="hidden" name="position" value="0">
                             <button type="submit" class="btn btn--secondary min-height-45"><i
                                     class="tio-search"></i></button>
@@ -131,26 +131,26 @@
                                     "target": "#usersExportDropdown",
                                     "type": "css-animation"
                                 }'>
-                            <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                            <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                         </a>
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
 
-                            <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                            <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                             <a id="export-excel" class="dropdown-item"
                                 href="{{ route('admin.addon.addon-category-export', ['type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
-                                {{ translate('messages.excel') }}
+                                {{ 'sobresalir' }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
                                 href="{{ route('admin.addon.addon-category-export', ['type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
-                                .{{ translate('messages.csv') }}
+                                .{{ 'csv' }}
                             </a>
 
                         </div>
@@ -169,14 +169,14 @@
                         }'>
                         <thead class="thead-light">
                             <tr>
-                                <th class="border-0">{{ translate('sl') }}</th>
-                                <th class="border-0">{{ translate('messages.id') }}</th>
-                                <th class="">{{ translate('messages.Category_Name') }}</th>
+                                <th class="border-0">{{ 'SL' }}</th>
+                                <th class="border-0">{{ 'identificación' }}</th>
+                                <th class="">{{ 'Nombre de categoría' }}</th>
                                 @if ($categoryWiseTax)
-                                    <th class="border-0 w--1">{{ translate('messages.Vat/Tax') }}</th>
+                                    <th class="border-0 w--1">{{ 'IVA/Impuesto' }}</th>
                                 @endif
-                                <th class="border-0 text-center">{{ translate('messages.status') }}</th>
-                                <th class="border-0 text-center">{{ translate('messages.action') }}</th>
+                                <th class="border-0 text-center">{{ 'estado' }}</th>
+                                <th class="border-0 text-center">{{ 'acción' }}</th>
                             </tr>
                         </thead>
 
@@ -200,7 +200,7 @@
                                                         </span> </span>
                                                     <br>
                                                 @empty
-                                                    <span> {{ translate('messages.no_tax') }} </span>
+                                                    <span> {{ 'sin impuestos' }} </span>
                                                 @endforelse
                                             </span>
                                         </td>
@@ -225,13 +225,13 @@
                                             <a class="btn btn-sm text-end action-btn info--outline text--info info-hover offcanvas-trigger get_data data-info-show"
                                                 data-target="#offcanvas__customBtn3" data-id="{{ $category['id'] }}"
                                                 data-url="{{ route('admin.addon.addon-category-edit', [$category['id']]) }}"
-                                                href="javascript:" title="{{ translate('messages.edit_category') }}"><i
+                                                href="javascript:" title="{{ 'editar categoría' }}"><i
                                                     class="tio-edit"></i>
                                             </a>
                                             <a class="btn action-btn btn--danger btn-outline-danger form-alert"
                                                 href="javascript:" data-id="category-{{ $category['id'] }}"
-                                                data-message="{{ translate('Want to delete this category') }}"
-                                                title="{{ translate('messages.delete_category') }}"><i
+                                                data-message="{{ 'Quiere eliminar esta categoría' }}"
+                                                title="{{ 'eliminar categoría' }}"><i
                                                     class="tio-delete-outlined"></i>
                                             </a>
                                         </div>
@@ -257,7 +257,7 @@
                 <div class="empty--data">
                     <img src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
                     <h5>
-                        {{ translate('no_data_found') }}
+                        {{ 'no se encontraron datos' }}
                     </h5>
                 </div>
             @endif

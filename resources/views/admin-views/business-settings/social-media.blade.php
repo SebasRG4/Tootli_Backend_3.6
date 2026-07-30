@@ -1,5 +1,5 @@
 @extends('layouts.admin.app')
-@section('title', translate('messages.social_media'))
+@section('title', 'redes sociales')
 @push('css_or_js')
     <!-- Custom styles for this page -->
     <link href="{{ asset('assets/admin/css/croppie.css') }}" rel="stylesheet">
@@ -13,7 +13,7 @@
                     <img src="{{asset('assets/admin/img/social.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                     {{translate('social_media')}}
+                     {{'redes sociales'}}
                 </span>
             </h1>
         </div>
@@ -25,22 +25,22 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="name" class="form-label">{{ translate('messages.name') }}</label>
+                                <label for="name" class="form-label">{{ 'nombre' }}</label>
                                 <select class="form-control w-100" name="name" id="name">
-                                    <option>---{{ translate('messages.select') }}---</option>
-                                    <option value="instagram">{{ translate('messages.Instagram') }}</option>
-                                    <option value="facebook">{{ translate('messages.Facebook') }}</option>
-                                    <option value="twitter">{{ translate('messages.Twitter') }}</option>
-                                    <option value="linkedin">{{ translate('messages.LinkedIn') }}</option>
-                                    <option value="pinterest">{{ translate('messages.Pinterest') }}</option>
+                                    <option>---{{ 'seleccionar' }}---</option>
+                                    <option value="instagram">{{ 'Instagram' }}</option>
+                                    <option value="facebook">{{ 'Facebook' }}</option>
+                                    <option value="twitter">{{ 'Gorjeo' }}</option>
+                                    <option value="linkedin">{{ 'LinkedIn' }}</option>
+                                    <option value="pinterest">{{ 'Pinterest' }}</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
                                 <input type="hidden" id="id">
                                 <label for="link"
-                                    class="form-label {{ Session::get('direction') === 'rtl' ? 'mr-1' : '' }}">{{ translate('messages.social_media_link') }}</label>
+                                    class="form-label {{ Session::get('direction') === 'rtl' ? 'mr-1' : '' }}">{{ 'enlace de redes sociales' }}</label>
                                 <input type="text" name="link" class="form-control" id="link"
-                                    placeholder="{{ translate('messages.social_media_link') }}" required>
+                                    placeholder="{{ 'enlace de redes sociales' }}" required>
                             </div>
                             <div class="col-md-12">
                                 <input type="hidden" id="id">
@@ -49,9 +49,9 @@
                         </div>
                     </div>
                     <div class="btn--container justify-content-end">
-                        <button type="reset" class="btn btn--reset">{{ translate('messages.reset') }}</button>
-                        <button id="add" class="btn btn--primary">{{ translate('messages.save') }}</button>
-                        <a href="javascript:" id="update" class="initial-hidden btn btn--primary">{{ translate('messages.update') }}</a>
+                        <button type="reset" class="btn btn--reset">{{ 'reiniciar' }}</button>
+                        <button id="add" class="btn btn--primary">{{ 'ahorrar' }}</button>
+                        <a href="javascript:" id="update" class="initial-hidden btn btn--primary">{{ 'actualizar' }}</a>
                     </div>
                 </form>
             </div>
@@ -62,11 +62,11 @@
                     <table class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
                         <thead class="thead-light">
                             <tr>
-                                <th class="border-0" scope="col">{{ translate('messages.sl') }}</th>
-                                <th class="border-0" scope="col">{{ translate('messages.name') }}</th>
-                                <th class="border-0" scope="col">{{ translate('messages.link') }}</th>
-                                <th class="border-0" scope="col">{{ translate('messages.status') }}</th>
-                                <th class="border-0" scope="col">{{ translate('messages.action') }}</th>
+                                <th class="border-0" scope="col">{{ 'SL' }}</th>
+                                <th class="border-0" scope="col">{{ 'nombre' }}</th>
+                                <th class="border-0" scope="col">{{ 'enlace' }}</th>
+                                <th class="border-0" scope="col">{{ 'estado' }}</th>
+                                <th class="border-0" scope="col">{{ 'acción' }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -121,11 +121,11 @@
             let name = $('#name').val();
             let link = $('#link').val();
             if (name === "") {
-                toastr.error('{{ translate('messages.social_media_required') }}.');
+                toastr.error('{{ 'Se requieren redes sociales' }}.');
                 return false;
             }
             if (link === "") {
-                toastr.error('{{ translate('messages.social_media_required') }}.');
+                toastr.error('{{ 'Se requieren redes sociales' }}.');
                 return false;
             }
             $.ajaxSetup({
@@ -143,9 +143,9 @@
                 },
                 success: function(response) {
                     if (response.error === 1) {
-                        toastr.error('{{ translate('messages.social_media_exist') }}');
+                        toastr.error('{{ 'las redes sociales existen' }}');
                     } else {
-                        toastr.success('{{ translate('messages.social_media_inserted') }}.');
+                        toastr.success('{{ 'redes sociales insertadas' }}.');
                     }
                     $('#name').val('');
                     $('#link').val('');
@@ -198,7 +198,7 @@
                     $('#name').val('');
                     $('#link').val('');
 
-                    toastr.success('{{ translate('messages.social_media_updated') }}');
+                    toastr.success('{{ 'redes sociales actualizadas' }}');
                     $('#update').hide();
                     $('#add').show();
                     fetch_social_media();
@@ -209,7 +209,7 @@
         });
         $(document).on('click', '.delete', function() {
             let id = $(this).attr("id");
-            if (confirm("{{ translate('messages.are_u_sure_want_to_delete') }}?")) {
+            if (confirm("{{ '¿Estás seguro de que quieres eliminar?' }}?")) {
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -223,7 +223,7 @@
                     },
                     success: function() {
                         fetch_social_media();
-                        toastr.success('{{ translate('messages.social_media_deleted') }}.');
+                        toastr.success('{{ 'redes sociales eliminadas' }}.');
                     }
                 });
             }
@@ -251,7 +251,7 @@
                     status: status
                 },
                 success: function() {
-                    toastr.success('{{ translate('messages.status_updated') }}');
+                    toastr.success('{{ 'estado actualizado' }}');
                 }
             });
         });

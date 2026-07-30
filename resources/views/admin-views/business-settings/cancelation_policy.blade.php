@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.cancellation_policy'))
+@section('title','política de cancelación')
 
 @push('css_or_js')
 
@@ -13,13 +13,13 @@
             <h1 class="d-flex flex-wrap justify-content-between page-header-title">
                 <span class="page-header-icon">
                     <img src="{{asset('assets/admin/img/privacy-policy.png')}}" class="w--26" alt="">
-                    {{translate('messages.Cancellation Policy')}}
+                    {{'Política de cancelación'}}
                 </span>
             </h1>
             <h5 class="d-flex flex-wrap justify-content-end">
                 <label class="switch--custom-label toggle-switch toggle-switch-sm d-inline-flex">
-                    <span class="mr-2 switch--custom-label-text text-primary on text-uppercase">{{ translate('messages.on') }}</span>
-                    <span class="mr-2 switch--custom-label-text off text-uppercase">{{ translate('messages.Status') }}</span>
+                    <span class="mr-2 switch--custom-label-text text-primary on text-uppercase">{{ 'en' }}</span>
+                    <span class="mr-2 switch--custom-label-text off text-uppercase">{{ 'Estado' }}</span>
                     <input type="checkbox" id="data_status"   class="toggle-switch-input"
                     {{$cancellation_policy_status?->value == 1?'checked':''}}>
                     <span class="toggle-switch-label text">
@@ -42,7 +42,7 @@
                         <li class="nav-item">
                             <a class="nav-link lang_link active"
                             href="#"
-                            id="default-link">{{translate('messages.default')}}</a>
+                            id="default-link">{{'por defecto'}}</a>
                         </li>
 
                         @foreach (json_decode($language) as $lang)
@@ -82,7 +82,7 @@
                     @endif
 
                     <div class="btn--container justify-content-end">
-                        <button type="submit" class="btn btn--primary">{{translate('messages.submit')}}</button>
+                        <button type="submit" class="btn btn--primary">{{'entregar'}}</button>
                     </div>
                 </form>
             </div>
@@ -109,7 +109,7 @@
                 url: '{{ url('admin/business-settings/pages/cancellation-policy') }}/'+status,
                 method: 'get',
                 success: function() {
-                    toastr.success('{{ translate('messages.status updated!') }}', {
+                    toastr.success('{{ 'estado actualizado!' }}', {
                     CloseButton: true,
                     ProgressBar: true
                     });

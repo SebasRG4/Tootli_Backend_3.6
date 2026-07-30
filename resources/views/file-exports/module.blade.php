@@ -1,28 +1,28 @@
 
 <div class="row">
-    <div class="col-lg-12 text-center "><h1 > {{translate('Module_List')}}
+    <div class="col-lg-12 text-center "><h1 > {{'Lista de módulos'}}
     </h1></div>
     <div class="col-lg-12">
 
     <table>
         <thead>
             <tr>
-                <th>{{ translate('Filter_Criteria') }}</th>
+                <th>{{ 'Criterios de filtrado' }}</th>
                 <th></th>
                 <th>
-                    {{ translate('Search_Bar_Content')  }}: {{ $data['search'] ?? translate('N/A') }}
+                    {{ 'Contenido de la barra de búsqueda'  }}: {{ $data['search'] ?? 'N / A' }}
                 </th>
                 <th> </th>
                 </tr>
 
 
         <tr>
-            <th>{{ translate('sl') }}</th>
-            <th>{{ translate('name') }}</th>
-            <th>{{ translate('module_id') }}</th>
-            <th>{{ translate('business_Module_type') }}</th>
-            <th>{{ translate('total_stores') }}</th>
-            <th>{{ translate('Status') }}</th>
+            <th>{{ 'SL' }}</th>
+            <th>{{ 'nombre' }}</th>
+            <th>{{ 'identificación del módulo' }}</th>
+            <th>{{ 'tipo de módulo empresarial' }}</th>
+            <th>{{ 'tiendas totales' }}</th>
+            <th>{{ 'Estado' }}</th>
 
         </thead>
         <tbody>
@@ -38,7 +38,7 @@
             {{ $addon->stores_count }}
         </td>
 
-        <td>{{ $addon?->status == 1 ? translate('Active') : translate('Inactive') }}</td>
+        <td>{{ $addon?->status == 1 ? 'Activo' : 'Inactivo' }}</td>
 
             </tr>
         @endforeach

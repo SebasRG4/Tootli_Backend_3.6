@@ -1,9 +1,9 @@
 <div class="card-header border-0 order-header-shadow">
     <h5 class="card-title d-flex justify-content-between">
-        <span>{{ translate('top selling') }} @if (Config::get('module.current_module_type') == 'food')
-                {{ translate('messages.foods') }}
+        <span>{{ 'más vendidos' }} @if (Config::get('module.current_module_type') == 'food')
+                {{ 'alimentos' }}
             @else
-                {{ translate('messages.items') }}
+                {{ 'Productos' }}
             @endif
         </span>
     </h5>
@@ -11,9 +11,9 @@
     @if ($params['zone_id'] != 'all')
         @php($zone_name = \App\Models\Zone::where('id', $params['zone_id'])->first()->name)
     @else
-        @php($zone_name = translate('messages.all'))
+        @php($zone_name = 'todo')
     @endif
-    <a href="{{ route('admin.item.list') }}" class="fz-12px font-medium text-006AE5">{{ translate('view_all') }}</a>
+    <a href="{{ route('admin.item.list') }}" class="fz-12px font-medium text-006AE5">{{ 'ver todo' }}</a>
 </div>
 
 <div class="card-body">
@@ -31,7 +31,7 @@
                     </div>
                     <div class="ml-auto">
                         <span class="badge badge-soft">
-                            {{ translate('messages.sold') }} : {{ $item['order_count'] }}
+                            {{ 'vendido' }} : {{ $item['order_count'] }}
                         </span>
                     </div>
                 </a>
@@ -41,13 +41,13 @@
         <!-- <div class="empty--data">
             <img src="{{ asset('assets/admin/svg/illustrations/empty-state.svg') }}" alt="public">
             <h5>
-                {{ translate('no_data_found') }}
+                {{ 'no se encontraron datos' }}
             </h5>
         </div> -->
         <div class="empty--data d-flex flex-column align-items-center justify-content-center h-100 w-100">
             <img src="{{ asset('assets/admin/img/no-items.png') }}" alt="public">
             <h5 class="secondary-clr">
-                {{ translate('No items available') }}
+                {{ 'No hay artículos disponibles' }}
             </h5>
         </div>
     @endif

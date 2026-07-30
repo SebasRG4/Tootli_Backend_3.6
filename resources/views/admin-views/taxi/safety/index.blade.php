@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Safety Alerts'))
+@section('title', 'Alertas de seguridad')
 
 @push('css_or_js')
     <style>
@@ -93,7 +93,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <i class="tio-shield-check mr-2"></i>
-                {{ translate('Safety Alerts') }}
+                {{ 'Alertas de seguridad' }}
             </h1>
         </div>
 
@@ -103,21 +103,21 @@
                 <div class="stat-card danger {{ $stats['emergency'] > 0 ? 'pulse-animation' : '' }}">
                     <i class="tio-warning text-white" style="font-size: 32px;"></i>
                     <h2 class="mb-0 mt-2">{{ $stats['emergency'] }}</h2>
-                    <p class="mb-0">{{ translate('Emergency Alerts') }}</p>
+                    <p class="mb-0">{{ 'Alertas de emergencia' }}</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="stat-card warning">
                     <i class="tio-time text-white" style="font-size: 32px;"></i>
                     <h2 class="mb-0 mt-2">{{ $stats['pending'] }}</h2>
-                    <p class="mb-0">{{ translate('Pending Alerts') }}</p>
+                    <p class="mb-0">{{ 'Alertas pendientes' }}</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="stat-card info">
                     <i class="tio-calendar text-white" style="font-size: 32px;"></i>
                     <h2 class="mb-0 mt-2">{{ $stats['today'] }}</h2>
-                    <p class="mb-0">{{ translate('Today\'s Alerts') }}</p>
+                    <p class="mb-0">{{ 'Alertas de hoy' }}</p>
                 </div>
             </div>
         </div>
@@ -127,32 +127,32 @@
             <div class="card-body">
                 <form method="GET" class="row g-3">
                     <div class="col-md-4">
-                        <label class="form-label">{{ translate('Status') }}</label>
+                        <label class="form-label">{{ 'Estado' }}</label>
                         <select name="status" class="form-control" onchange="this.form.submit()">
-                            <option value="all">{{ translate('All') }}</option>
+                            <option value="all">{{ 'Todo' }}</option>
                             <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>
-                                {{ translate('Pending') }}
+                                {{ 'Pendiente' }}
                             </option>
                             <option value="contacted" {{ request('status') == 'contacted' ? 'selected' : '' }}>
-                                {{ translate('Contacted') }}
+                                {{ 'Contactado' }}
                             </option>
                             <option value="resolved" {{ request('status') == 'resolved' ? 'selected' : '' }}>
-                                {{ translate('Resolved') }}
+                                {{ 'Resuelto' }}
                             </option>
                             <option value="escalated" {{ request('status') == 'escalated' ? 'selected' : '' }}>
-                                {{ translate('Escalated') }}
+                                {{ 'escalado' }}
                             </option>
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">{{ translate('Type') }}</label>
+                        <label class="form-label">{{ 'Tipo' }}</label>
                         <select name="type" class="form-control" onchange="this.form.submit()">
-                            <option value="all">{{ translate('All') }}</option>
+                            <option value="all">{{ 'Todo' }}</option>
                             <option value="insecure" {{ request('type') == 'insecure' ? 'selected' : '' }}>
-                                {{ translate('Insecure') }}
+                                {{ 'Inseguro' }}
                             </option>
                             <option value="emergency" {{ request('type') == 'emergency' ? 'selected' : '' }}>
-                                {{ translate('Emergency') }}
+                                {{ 'Emergencia' }}
                             </option>
                         </select>
                     </div>
@@ -163,20 +163,20 @@
         <!-- Alerts Table -->
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">{{ translate('Alert List') }}</h5>
+                <h5 class="mb-0">{{ 'Lista de alertas' }}</h5>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-hover mb-0">
                         <thead class="thead-light">
                             <tr>
-                                <th>{{ translate('ID') }}</th>
-                                <th>{{ translate('Type') }}</th>
-                                <th>{{ translate('User') }}</th>
-                                <th>{{ translate('Ride') }}</th>
-                                <th>{{ translate('Status') }}</th>
-                                <th>{{ translate('Created') }}</th>
-                                <th>{{ translate('Actions') }}</th>
+                                <th>{{ 'IDENTIFICACIÓN' }}</th>
+                                <th>{{ 'Tipo' }}</th>
+                                <th>{{ 'Usuario' }}</th>
+                                <th>{{ 'Conducir' }}</th>
+                                <th>{{ 'Estado' }}</th>
+                                <th>{{ 'Creado' }}</th>
+                                <th>{{ 'Comportamiento' }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -212,7 +212,7 @@
                                     <td>
                                         <a href="{{ route('admin.taxi.safety.show', $alert->id) }}"
                                             class="btn btn-sm btn-primary">
-                                            <i class="tio-visible"></i> {{ translate('View') }}
+                                            <i class="tio-visible"></i> {{ 'Vista' }}
                                         </a>
                                     </td>
                                 </tr>
@@ -220,7 +220,7 @@
                                 <tr>
                                     <td colspan="7" class="text-center py-4">
                                         <i class="tio-shield-check" style="font-size: 48px; color: #ccc;"></i>
-                                        <p class="mt-2 mb-0">{{ translate('No safety alerts found') }}</p>
+                                        <p class="mt-2 mb-0">{{ 'No se encontraron alertas de seguridad' }}</p>
                                     </td>
                                 </tr>
                             @endforelse

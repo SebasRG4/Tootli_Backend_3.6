@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.react_landing_page'))
+@section('title', 'reaccionar página de inicio')
 
 @section('content')
 <div class="content container-fluid">
@@ -11,12 +11,12 @@
                     <img src="{{asset('assets/admin/img/landing.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.react_landing_page') }}
+                    {{ 'reaccionar página de inicio' }}
                 </span>
             </h1>
             <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal"
                 data-target="#how-it-works">
-                <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
+                <strong class="mr-2">{{'¡Mira cómo funciona!'}}</strong>
                 <div>
                     <i class="tio-info-outined"></i>
                 </div>
@@ -46,15 +46,15 @@
     <div class="card py-3 px-xxl-4 px-3 mb-20">
         <div class="d-flex flex-sm-nowrap flex-wrap gap-3 align-items-center justify-content-between">
             <div class="">
-                <h3 class="mb-1">{{ translate('Hero Section') }}</h3>
+                <h3 class="mb-1">{{ 'Sección de héroe' }}</h3>
                 <p class="mb-0 gray-dark fs-12">
-                    {{ translate('See how your Hero Section will look to customers.') }}
+                    {{ 'Vea cómo se verá su Sección de Héroes ante los clientes.' }}
                 </p>
             </div>
             <div class="max-w-300px ml-sm-auto">
                 <button type="button" class="btn btn-outline-primary py-2 fs-12 px-3 offcanvas-trigger"
                     data-target="#hero_section">
-                    <i class="tio-invisible"></i> {{ translate('Section Preview') }}
+                    <i class="tio-invisible"></i> {{ 'Vista previa de la sección' }}
                 </button>
             </div>
         </div>
@@ -68,7 +68,7 @@
                 <h5 class="card-title mb-3 mt-3">
                     <div class="d-flex justify-content-between align-items-center w-100">
                         <span>
-                            <span class="card-header-icon mr-2"><i class="tio-settings-outlined"></i></span> <span>{{translate('Header Section')}}</span>
+                            <span class="card-header-icon mr-2"><i class="tio-settings-outlined"></i></span> <span>{{'Sección de encabezado'}}</span>
                         </span>
                     </div>
                 </h5>
@@ -81,30 +81,30 @@
                                     @if ($language)
                                     <div class="col-12 lang_form default-form">
                                         <div class="mb-2">
-                                            <label for="header_title" class="form-label">{{translate('Title')}}({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
+                                            <label for="header_title" class="form-label">{{'Título'}}({{ 'por defecto' }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 20 caracteres.' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span> <span class="form-label-secondary text-danger"
                             data-toggle="tooltip" data-placement="right"
-                            data-original-title="{{ translate('messages.Required.')}}"> *
+                            data-original-title="{{ 'Requerido.'}}"> *
                             </span>
                                 </label>
-                                    <input id="header_title" type="text"  maxlength="20" name="header_title[]" value="{{ $header_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                    <input id="header_title" type="text"  maxlength="20" name="header_title[]" value="{{ $header_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{'título aquí...'}}">
                                         </div>
                                         <div class="mb-2">
-                                            <label for="header_sub_title" class="form-label">{{translate('Sub Title')}}({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
+                                            <label for="header_sub_title" class="form-label">{{'Subtítulo'}}({{ 'por defecto' }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 40 caracteres.' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span> <span class="form-label-secondary text-danger"
                             data-toggle="tooltip" data-placement="right"
-                            data-original-title="{{ translate('messages.Required.')}}"> *
+                            data-original-title="{{ 'Requerido.'}}"> *
                             </span>
                                 </label>
-                                    <input id="header_sub_title" type="text"  maxlength="40" name="header_sub_title[]" value="{{ $header_sub_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                    <input id="header_sub_title" type="text"  maxlength="40" name="header_sub_title[]" value="{{ $header_sub_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{'subtítulo aquí...'}}">
                                         </div>
                                         <div class="mb-2">
-                                            <label for="header_tag_line" class="form-label">{{translate('Tag Line')}}({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_120_characters') }}">
+                                            <label for="header_tag_line" class="form-label">{{'Línea de etiqueta'}}({{ 'por defecto' }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 120 caracteres.' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span></label>
-                                    <input id="header_tag_line" type="text"  maxlength="120" name="header_tag_line[]" value="{{ $header_tag_line?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{translate('messages.tag_line...')}}">
+                                    <input id="header_tag_line" type="text"  maxlength="120" name="header_tag_line[]" value="{{ $header_tag_line?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{'eslogan...'}}">
                                         </div>
                                     </div>
                                 <input type="hidden" name="lang[]" value="default">
@@ -141,22 +141,22 @@ if (isset($header_tag_line->translations) && count($header_tag_line->translation
                                         ?>
                                         <div class="col-12 d-none lang_form" id="{{$lang}}-form">
                                             <div class="mb-2">
-                                                <label for="header_title{{$lang}}" class="form-label">{{translate('Title')}}({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
+                                                <label for="header_title{{$lang}}" class="form-label">{{'Título'}}({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 20 caracteres.' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span></label>
-                                    <input id="header_title{{$lang}}" type="text"  maxlength="20" name="header_title[]" value="{{ $header_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                    <input id="header_title{{$lang}}" type="text"  maxlength="20" name="header_title[]" value="{{ $header_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{'título aquí...'}}">
                                             </div>
                                             <div class="mb-2">
-                                                <label for="header_sub_title{{$lang}}" class="form-label">{{translate('Sub Title')}}({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
+                                                <label for="header_sub_title{{$lang}}" class="form-label">{{'Subtítulo'}}({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 40 caracteres.' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span></label>
-                                    <input id="header_sub_title{{$lang}}" type="text"  maxlength="40" name="header_sub_title[]" value="{{ $header_sub_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                    <input id="header_sub_title{{$lang}}" type="text"  maxlength="40" name="header_sub_title[]" value="{{ $header_sub_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{'subtítulo aquí...'}}">
                                             </div>
                                             <div class="mb-2">
-                                                <label for="header_tag_line{{$lang}}" class="form-label">{{translate('Tag Line')}}({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_120_characters') }}">
+                                                <label for="header_tag_line{{$lang}}" class="form-label">{{'Línea de etiqueta'}}({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 120 caracteres.' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span></label>
-                                    <input id="header_tag_line{{$lang}}" type="text"  maxlength="120" name="header_tag_line[]" value="{{ $header_tag_line_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{translate('messages.tag_line...')}}">
+                                    <input id="header_tag_line{{$lang}}" type="text"  maxlength="120" name="header_tag_line[]" value="{{ $header_tag_line_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{'eslogan...'}}">
                                             </div>
                                         </div>
                                         <input type="hidden" name="lang[]" value="{{$lang}}">
@@ -164,16 +164,16 @@ if (isset($header_tag_line->translations) && count($header_tag_line->translation
                                 @else
                                 <div class="col-12">
                                     <div class="mb-2">
-                                        <label for="header_title" class="form-label">{{translate('Title')}}</label>
-                                        <input id="header_title" type="text" name="header_title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                        <label for="header_title" class="form-label">{{'Título'}}</label>
+                                        <input id="header_title" type="text" name="header_title[]" class="form-control" placeholder="{{'título aquí...'}}">
                                     </div>
                                     <div class="mb-2">
-                                        <label for="header_sub_title" class="form-label">{{translate('Sub Title')}}</label>
-                                        <input id="header_sub_title" type="text" name="header_sub_title[]" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                        <label for="header_sub_title" class="form-label">{{'Subtítulo'}}</label>
+                                        <input id="header_sub_title" type="text" name="header_sub_title[]" class="form-control" placeholder="{{'subtítulo aquí...'}}">
                                     </div>
                                     <div class="mb-2">
-                                        <label for="header_tag_line" class="form-label">{{translate('Tag Line')}}</label>
-                                        <input id="header_tag_line" type="text" name="header_tag_line[]" class="form-control" placeholder="{{translate('messages.tag_line...')}}">
+                                        <label for="header_tag_line" class="form-label">{{'Línea de etiqueta'}}</label>
+                                        <input id="header_tag_line" type="text" name="header_tag_line[]" class="form-control" placeholder="{{'eslogan...'}}">
                                     </div>
                                 </div>
                                     <input type="hidden" name="lang[]" value="default">
@@ -182,7 +182,7 @@ if (isset($header_tag_line->translations) && count($header_tag_line->translation
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label d-block mb-2">
-                                    {{ translate('messages.Icon') }} <span class="text--primary">{{ translate('(size: 1:1)') }}</span>
+                                    {{ 'Icono' }} <span class="text--primary">{{ '(tamaño: 1:1)' }}</span>
                                 </label>
                                 <label class="upload-img-3 m-0">
                                     <div class="position-relative">
@@ -194,8 +194,8 @@ if (isset($header_tag_line->translations) && count($header_tag_line->translation
                                        @if (isset($header_icon['value']))
                                             <span id="header_icon" class="remove_image_button remove-image"
                                                   data-id="header_icon"
-                                                  data-title="{{translate('Warning!')}}"
-                                                  data-text="<p>{{translate('Are_you_sure_you_want_to_remove_this_image_?')}}</p>"
+                                                  data-title="{{'¡Advertencia!'}}"
+                                                  data-text="<p>{{'¿Estás seguro de que deseas eliminar esta imagen?'}}</p>"
                                             > <i class="tio-clear"></i></span>
                                             @endif
                                         </div>
@@ -203,9 +203,9 @@ if (isset($header_tag_line->translations) && count($header_tag_line->translation
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label d-block mb-2">
-                                    {{translate('Banner')}}  <span class="text--primary">{{translate('(size: 1:1)')}} <span class="form-label-secondary text-danger"
+                                    {{'Bandera'}}  <span class="text--primary">{{'(tamaño: 1:1)'}} <span class="form-label-secondary text-danger"
                                         data-toggle="tooltip" data-placement="right"
-                                        data-original-title="{{ translate('messages.Required.')}}"> *
+                                        data-original-title="{{ 'Requerido.'}}"> *
                                         </span>
                                 </span>
                                 </label>
@@ -225,8 +225,8 @@ if (isset($header_tag_line->translations) && count($header_tag_line->translation
                     </div>
                 </div>
                 <div class="btn--container justify-content-end mt-20">
-                    <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
-                    <button type="submit"   class="btn btn--primary mb-2">{{translate('Save Information')}}</button>
+                    <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
+                    <button type="submit"   class="btn btn--primary mb-2">{{'Guardar información'}}</button>
                 </div>
             </form> -->
             <form action="{{ route('admin.business-settings.react-landing-page-settings', 'header-section') }}"
@@ -234,7 +234,7 @@ if (isset($header_tag_line->translations) && count($header_tag_line->translation
                 @csrf
                 <div class="card mb-20">
                     <div class="card-body">
-                        <h3 class="mb-20">{{ translate('Intro Section ') }}</h3>
+                        <h3 class="mb-20">{{ 'Sección de introducción' }}</h3>
                         <div class="bg--secondary rounded p-xxl-4 p-3">
                             @php($header_title = \App\Models\DataSetting::withoutGlobalScope('translate')->where('type', 'react_landing_page')->where('key', 'header_title')->first())
                             @php($header_sub_title = \App\Models\DataSetting::withoutGlobalScope('translate')->where('type', 'react_landing_page')->where('key', 'header_sub_title')->first())
@@ -248,7 +248,7 @@ if (isset($header_tag_line->translations) && count($header_tag_line->translation
                                 <ul class="nav nav-tabs mb-4 border-bottom">
                                     <li class="nav-item">
                                         <a class="nav-link lang_link active" href="#"
-                                            id="default-link">{{translate('messages.default')}}</a>
+                                            id="default-link">{{'por defecto'}}</a>
                                     </li>
                                     @foreach (json_decode($language) as $lang)
                                         <li class="nav-item">
@@ -265,65 +265,65 @@ if (isset($header_tag_line->translations) && count($header_tag_line->translation
                                             <div class="col-12 lang_form default-form">
                                                 <div class="mb-2">
                                                     <label for="header_title"
-                                                        class="form-label">{{translate('Title')}}({{ translate('messages.default') }})<span
+                                                        class="form-label">{{'Título'}}({{ 'por defecto' }})<span
                                                             class="form-label-secondary" data-toggle="tooltip"
                                                             data-placement="right"
-                                                            data-original-title="{{ translate('This is the main website headline, keep it short and impactful. Write it under 50 characters.') }}">
+                                                            data-original-title="{{ 'Este es el título principal del sitio web, sea breve e impactante. Escríbalo en menos de 50 caracteres.' }}">
                                                             <i class="tio-info color-A7A7A7"></i>
                                                         </span> <span class="form-label-secondary text-danger"
                                                             data-toggle="tooltip" data-placement="right"
-                                                            data-original-title="{{ translate('messages.Required.')}}">
+                                                            data-original-title="{{ 'Requerido.'}}">
                                                         </span>
                                                          <span class="form-label-secondary text-danger"
                                                                       data-toggle="tooltip" data-placement="right"
-                                                                      data-original-title="{{ translate('messages.Required.')}}"> *
+                                                                      data-original-title="{{ 'Requerido.'}}"> *
                                                     </span>
                                                     </label>
                                                     <input id="header_title" type="text" maxlength="50"
                                                         name="header_title[]"
                                                         value="{{ $header_title?->getRawOriginal('value') ?? '' }}"
                                                         class="form-control"
-                                                        placeholder="{{translate('messages.title_here...')}}">
+                                                        placeholder="{{'título aquí...'}}">
                                                     <span
                                                         class="text-right text-counting color-A7A7A7 d-block mt-1">0/50</span>
                                                 </div>
                                                 <div class="mb-2">
                                                     <label for="header_sub_title"
-                                                        class="form-label">{{translate('Sub Title')}}({{ translate('messages.default') }})<span
+                                                        class="form-label">{{'Subtítulo'}}({{ 'por defecto' }})<span
                                                             class="form-label-secondary" data-toggle="tooltip"
                                                             data-placement="right"
-                                                            data-original-title="{{ translate('Write_the_title_within_120_characters') }}">
+                                                            data-original-title="{{ 'Escribe el título dentro de 120 caracteres.' }}">
                                                             <i class="tio-info color-A7A7A7"></i>
                                                         </span> <span class="form-label-secondary text-danger"
                                                             data-toggle="tooltip" data-placement="right"
-                                                            data-original-title="{{ translate('messages.Required.')}}">
+                                                            data-original-title="{{ 'Requerido.'}}">
                                                         </span>
                                                         <span class="form-label-secondary text-danger"
                                                               data-toggle="tooltip" data-placement="right"
-                                                              data-original-title="{{ translate('messages.Required.')}}"> *
+                                                              data-original-title="{{ 'Requerido.'}}"> *
                                                     </span>
                                                     </label>
                                                     <input id="header_sub_title" type="text" maxlength="120"
                                                         name="header_sub_title[]"
                                                         value="{{ $header_sub_title?->getRawOriginal('value') ?? '' }}"
                                                         class="form-control"
-                                                        placeholder="{{translate('messages.sub_title_here...')}}">
+                                                        placeholder="{{'subtítulo aquí...'}}">
                                                     <span
                                                         class="text-right text-counting color-A7A7A7 d-block mt-1">0/120</span>
                                                 </div>
                                                 <div class="mb-0">
                                                     <label for="header_tag_line"
-                                                        class="form-label">{{translate('Tag Line')}}({{ translate('messages.default') }})<span
+                                                        class="form-label">{{'Línea de etiqueta'}}({{ 'por defecto' }})<span
                                                             class="form-label-secondary" data-toggle="tooltip"
                                                             data-placement="right"
-                                                            data-original-title="{{ translate('Write_the_title_within_120_characters') }}">
+                                                            data-original-title="{{ 'Escribe el título dentro de 120 caracteres.' }}">
                                                             <i class="tio-info color-A7A7A7"></i>
                                                         </span></label>
                                                     <input id="header_tag_line" type="text" maxlength="120"
                                                         name="header_tag_line[]"
                                                         value="{{ $header_tag_line?->getRawOriginal('value') ?? '' }}"
                                                         class="form-control"
-                                                        placeholder="{{translate('messages.tag_line...')}}">
+                                                        placeholder="{{'eslogan...'}}">
                                                     <span
                                                         class="text-right text-counting color-A7A7A7 d-block mt-1">0/120</span>
                                                 </div>
@@ -363,49 +363,49 @@ if (isset($header_tag_line->translations) && count($header_tag_line->translation
                                                                                 <div class="col-12 d-none lang_form" id="{{$lang}}-form">
                                                                                     <div class="mb-2">
                                                                                         <label for="header_title{{$lang}}"
-                                                                                            class="form-label">{{translate('Title')}}({{strtoupper($lang)}})<span
+                                                                                            class="form-label">{{'Título'}}({{strtoupper($lang)}})<span
                                                                                                 class="form-label-secondary" data-toggle="tooltip"
                                                                                                 data-placement="right"
-                                                                                                data-original-title="{{ translate('This is the main website headline, keep it short and impactful. Write it under 50 characters.') }}">
+                                                                                                data-original-title="{{ 'Este es el título principal del sitio web, sea breve e impactante. Escríbalo en menos de 50 caracteres.' }}">
                                                                                                 <i class="tio-info color-A7A7A7"></i>
                                                                                             </span></label>
                                                                                         <input id="header_title{{$lang}}" type="text" maxlength="50"
                                                                                             name="header_title[]"
                                                                                             value="{{ $header_title_translate[$lang]['value'] ?? '' }}"
                                                                                             class="form-control"
-                                                                                            placeholder="{{translate('messages.title_here...')}}">
+                                                                                            placeholder="{{'título aquí...'}}">
                                                                                         <span
                                                                                             class="text-right text-counting color-A7A7A7 d-block mt-1">0/50</span>
                                                                                     </div>
                                                                                     <div class="mb-2">
                                                                                         <label for="header_sub_title{{$lang}}"
-                                                                                            class="form-label">{{translate('Sub Title')}}({{strtoupper($lang)}})<span
+                                                                                            class="form-label">{{'Subtítulo'}}({{strtoupper($lang)}})<span
                                                                                                 class="form-label-secondary" data-toggle="tooltip"
                                                                                                 data-placement="right"
-                                                                                                data-original-title="{{ translate('Write_the_title_within_120_characters') }}">
+                                                                                                data-original-title="{{ 'Escribe el título dentro de 120 caracteres.' }}">
                                                                                                 <i class="tio-info color-A7A7A7"></i>
                                                                                             </span></label>
                                                                                         <input id="header_sub_title{{$lang}}" type="text" maxlength="120"
                                                                                             name="header_sub_title[]"
                                                                                             value="{{ $header_sub_title_translate[$lang]['value'] ?? '' }}"
                                                                                             class="form-control"
-                                                                                            placeholder="{{translate('messages.sub_title_here...')}}">
+                                                                                            placeholder="{{'subtítulo aquí...'}}">
                                                                                         <span
                                                                                             class="text-right text-counting color-A7A7A7 d-block mt-1">0/120</span>
                                                                                     </div>
                                                                                     <div class="mb-0">
                                                                                         <label for="header_tag_line{{$lang}}"
-                                                                                            class="form-label">{{translate('Tag Line')}}({{strtoupper($lang)}})<span
+                                                                                            class="form-label">{{'Línea de etiqueta'}}({{strtoupper($lang)}})<span
                                                                                                 class="form-label-secondary" data-toggle="tooltip"
                                                                                                 data-placement="right"
-                                                                                                data-original-title="{{ translate('Write_the_title_within_120_characters') }}">
+                                                                                                data-original-title="{{ 'Escribe el título dentro de 120 caracteres.' }}">
                                                                                                 <i class="tio-info color-A7A7A7"></i>
                                                                                             </span></label>
                                                                                         <input id="header_tag_line{{$lang}}" type="text" maxlength="120"
                                                                                             name="header_tag_line[]"
                                                                                             value="{{ $header_tag_line_translate[$lang]['value'] ?? '' }}"
                                                                                             class="form-control"
-                                                                                            placeholder="{{translate('messages.tag_line...')}}">
+                                                                                            placeholder="{{'eslogan...'}}">
                                                                                         <span
                                                                                             class="text-right text-counting color-A7A7A7 d-block mt-1">0/120</span>
                                                                                     </div>
@@ -416,28 +416,28 @@ if (isset($header_tag_line->translations) && count($header_tag_line->translation
                                             <div class="col-12">
                                                 <div class="mb-2">
                                                     <label for="header_title"
-                                                        class="form-label">{{translate('Title')}}</label>
+                                                        class="form-label">{{'Título'}}</label>
                                                     <input id="header_title" maxlength="50" type="text"
                                                         name="header_title[]" class="form-control"
-                                                        placeholder="{{translate('messages.title_here...')}}">
+                                                        placeholder="{{'título aquí...'}}">
                                                     <span
                                                         class="text-right text-counting color-A7A7A7 d-block mt-1">0/50</span>
                                                 </div>
                                                 <div class="mb-4">
                                                     <label for="header_sub_title"
-                                                        class="form-label">{{translate('Sub Title')}}</label>
+                                                        class="form-label">{{'Subtítulo'}}</label>
                                                     <input id="header_sub_title" maxlength="120" type="text"
                                                         name="header_sub_title[]" class="form-control"
-                                                        placeholder="{{translate('messages.sub_title_here...')}}">
+                                                        placeholder="{{'subtítulo aquí...'}}">
                                                     <span
                                                         class="text-right text-counting color-A7A7A7 d-block mt-1">0/120</span>
                                                 </div>
                                                 <div class="mb-0">
                                                     <label for="header_tag_line"
-                                                        class="form-label">{{translate('Tag Line')}}</label>
+                                                        class="form-label">{{'Línea de etiqueta'}}</label>
                                                     <input id="header_tag_line" type="text" name="header_tag_line[]"
                                                         class="form-control"
-                                                        placeholder="{{translate('messages.tag_line...')}}">
+                                                        placeholder="{{'eslogan...'}}">
                                                     <span
                                                         class="text-right text-counting color-A7A7A7 d-block mt-1">0/120</span>
                                                 </div>
@@ -452,7 +452,7 @@ if (isset($header_tag_line->translations) && count($header_tag_line->translation
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <h3 class="mb-20">{{ translate('Pick Location Section ') }}</h3>
+                        <h3 class="mb-20">{{ 'Seleccionar sección de ubicación' }}</h3>
                         <div class="bg--secondary rounded p-xxl-4 p-3">
                             @php($pick_location_title = \App\Models\DataSetting::withoutGlobalScope('translate')->where('type', 'react_landing_page')->where('key', 'pick_location_title')->first())
                             @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
@@ -462,7 +462,7 @@ if (isset($header_tag_line->translations) && count($header_tag_line->translation
                                 <ul class="nav nav-tabs mb-4 border-bottom">
                                     <li class="nav-item">
                                         <a class="nav-link lang_link active" href="#"
-                                            id="default-link-location">{{translate('messages.default')}}</a>
+                                            id="default-link-location">{{'por defecto'}}</a>
                                     </li>
                                     @foreach (json_decode($language) as $lang)
                                         <li class="nav-item">
@@ -478,21 +478,21 @@ if (isset($header_tag_line->translations) && count($header_tag_line->translation
                                         <div class="lang_form default-form">
                                             <div class="mb-0">
                                                 <label for="pick_location_title"
-                                                    class="form-label">{{translate('Title')}}({{ translate('messages.default') }})<span
+                                                    class="form-label">{{'Título'}}({{ 'por defecto' }})<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('This text appears as the label or heading above the location search bar. Write it under 50 characters.') }}">
+                                                        data-original-title="{{ 'Este texto aparece como etiqueta o encabezado encima de la barra de búsqueda de ubicación. Escríbalo en menos de 50 caracteres.' }}">
                                                         <i class="tio-info color-A7A7A7"></i>
                                                     </span> <span class="form-label-secondary text-danger"
                                                         data-toggle="tooltip" data-placement="right"
-                                                        data-original-title="{{ translate('messages.Required.')}}"> *
+                                                        data-original-title="{{ 'Requerido.'}}"> *
                                                     </span>
                                                 </label>
                                                 <input id="pick_location_title" type="text" maxlength="50"
                                                     name="pick_location_title[]"
                                                     value="{{ $pick_location_title?->getRawOriginal('value') ?? '' }}"
                                                     class="form-control"
-                                                    placeholder="{{translate('messages.title_here...')}}">
+                                                    placeholder="{{'título aquí...'}}">
                                                 <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/50</span>
                                             </div>
                                         </div>
@@ -510,17 +510,17 @@ if (isset($header_tag_line->translations) && count($header_tag_line->translation
                                                                         <div class="d-none lang_form" id="{{$lang}}-form-location">
                                                                             <div class="mb-0">
                                                                                 <label for="pick_location_title{{$lang}}"
-                                                                                    class="form-label">{{translate('Title')}}({{strtoupper($lang)}})<span
+                                                                                    class="form-label">{{'Título'}}({{strtoupper($lang)}})<span
                                                                                         class="form-label-secondary" data-toggle="tooltip"
                                                                                         data-placement="right"
-                                                                                        data-original-title="{{ translate('This text appears as the label or heading above the location search bar. Write it under 50 characters.') }}">
+                                                                                        data-original-title="{{ 'Este texto aparece como etiqueta o encabezado encima de la barra de búsqueda de ubicación. Escríbalo en menos de 50 caracteres.' }}">
                                                                                         <i class="tio-info color-A7A7A7"></i>
                                                                                     </span></label>
                                                                                 <input id="pick_location_title{{$lang}}" type="text" maxlength="50"
                                                                                     name="pick_location_title[]"
                                                                                     value="{{ $pick_location_title_translate[$lang]['value'] ?? '' }}"
                                                                                     class="form-control"
-                                                                                    placeholder="{{translate('messages.title_here...')}}">
+                                                                                    placeholder="{{'título aquí...'}}">
                                                                                 <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/50</span>
                                                                             </div>
                                                                         </div>
@@ -528,10 +528,10 @@ if (isset($header_tag_line->translations) && count($header_tag_line->translation
                                     @else
                                         <div class="mb-0">
                                             <label for="pick_location_title"
-                                                class="form-label">{{translate('Title')}}</label>
+                                                class="form-label">{{'Título'}}</label>
                                             <input id="pick_location_title" maxlength="50" type="text"
                                                 name="pick_location_title[]" class="form-control"
-                                                placeholder="{{translate('messages.title_here...')}}">
+                                                placeholder="{{'título aquí...'}}">
                                             <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/50</span>
                                         </div>
                                         <input type="hidden" name="lang[]" value="default">
@@ -542,8 +542,8 @@ if (isset($header_tag_line->translations) && count($header_tag_line->translation
                     </div>
                 </div>
                 <div class="btn--container justify-content-end mt-20">
-                    <button type="reset" class="btn min-w--120 btn--reset mb-2">{{translate('Reset')}}</button>
-                    <button type="submit" class="btn min-w--120 btn--primary mb-2">{{translate('Save')}}</button>
+                    <button type="reset" class="btn min-w--120 btn--reset mb-2">{{'Reiniciar'}}</button>
+                    <button type="submit" class="btn min-w--120 btn--primary mb-2">{{'Ahorrar'}}</button>
                 </div>
             </form>
             <form id="header_icon_form" action="{{ route('admin.remove_image') }}" method="post">
@@ -567,7 +567,7 @@ if (isset($header_tag_line->translations) && count($header_tag_line->translation
             <div
                 class="custom-offcanvas-header bg--secondary d-flex justify-content-between align-items-center px-3 py-3">
                 <div class="py-1">
-                    <h3 class="mb-0 line--limit-1">{{ translate('messages.Hero Section Preview') }}</h3>
+                    <h3 class="mb-0 line--limit-1">{{ 'Vista previa de la sección de héroe' }}</h3>
                 </div>
                 <button type="button"
                     class="btn-close w-25px h-25px border rounded-circle d-center bg--secondary text-dark offcanvas-close fz-15px p-0"

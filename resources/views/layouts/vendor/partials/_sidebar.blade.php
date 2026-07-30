@@ -42,17 +42,17 @@
                     <div class="search--form-group">
                         <button type="button" class="btn"><i class="tio-search"></i></button>
                         <input type="text" class="form-control form--control"
-                            placeholder="{{ translate('messages.Search Menu...') }}" id="search-sidebar-menu">
+                            placeholder="{{ 'Menú de búsqueda...' }}" id="search-sidebar-menu">
                     </div>
                 </form>
                 <ul class="navbar-nav navbar-nav-lg nav-tabs">
                     <!-- Dashboards -->
                     <li class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('vendor.dashboard') }}"
-                            title="{{ translate('messages.dashboard') }}">
+                            title="{{ 'Panel de Control' }}">
                             <i class="tio-home-vs-1-outlined nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('messages.dashboard') }}
+                                {{ 'Panel de Control' }}
                             </span>
                         </a>
                     </li>
@@ -61,16 +61,16 @@
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/pos') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link  "
-                                href="{{ route('vendor.pos.index') }}" title="{{ translate('messages.pos') }}">
+                                href="{{ route('vendor.pos.index') }}" title="{{ 'posición' }}">
                                 <i class="tio-shopping-basket-outlined nav-icon"></i>
-                                <span class="text-truncate">{{ translate('messages.pos') }}</span>
+                                <span class="text-truncate">{{ 'posición' }}</span>
                             </a>
                         </li>
                     @endif
                     @if (\App\CentralLogics\Helpers::employee_module_permission_check('order'))
                         <li class="nav-item">
                             <small class="nav-subtitle"
-                                title="{{ translate('Order Management') }}">{{ translate('Order Management') }}</small>
+                                title="{{ 'Gestión de pedidos' }}">{{ 'Gestión de pedidos' }}</small>
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
 
@@ -78,20 +78,20 @@
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/order*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
-                                title="{{ translate('messages.orders') }}">
+                                title="{{ 'Pedidos' }}">
                                 <i class="tio-shopping-cart nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    {{ translate('messages.orders') }}
+                                    {{ 'Pedidos' }}
                                 </span>
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                 style="display: {{ Request::is('vendor-panel/order*') ? 'block' : 'none' }}">
                                 <li class="nav-item {{ Request::is('vendor-panel/order/list/all') ? 'active' : '' }}">
                                     <a class="nav-link" href="{{ route('vendor.order.list', ['all']) }}"
-                                        title="{{ translate('messages.all_orders') }}">
+                                        title="{{ 'todos los pedidos' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate sidebar--badge-container">
-                                            {{ translate('messages.all') }}
+                                            {{ 'todo' }}
                                             <span class="badge badge-soft-info badge-pill ml-1">
                                                 {{ \App\Models\Order::where('store_id', \App\CentralLogics\Helpers::get_store_id())->where(function ($query) {
                                                         return $query->whereNotIn(
@@ -111,11 +111,11 @@
                                 <li
                                     class="nav-item {{ Request::is('vendor-panel/order/list/pending') ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('vendor.order.list', ['pending']) }}"
-                                        title="{{ translate('messages.pending_orders') }}">
+                                        title="{{ 'pedidos pendientes' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate sidebar--badge-container">
-                                            {{ translate('messages.pending') }}
-                                            {{ config('order_confirmation_model') == 'store' || \App\CentralLogics\Helpers::get_store_data()->sub_self_delivery ? '' : translate('messages.take_away') }}
+                                            {{ 'Pendiente' }}
+                                            {{ config('order_confirmation_model') == 'store' || \App\CentralLogics\Helpers::get_store_data()->sub_self_delivery ? '' : 'llevar' }}
                                             <span class="badge badge-soft-success badge-pill ml-1">
                                                 @if (config('order_confirmation_model') == 'store' || \App\CentralLogics\Helpers::get_store_data()->sub_self_delivery)
                                                     {{ \App\Models\Order::where(['order_status' => 'pending', 'store_id' => \App\CentralLogics\Helpers::get_store_id()])->StoreOrder()->OrderScheduledIn(30)->NotDigitalOrder()->count() }}
@@ -130,10 +130,10 @@
                                 <li
                                     class="nav-item {{ Request::is('vendor-panel/order/list/confirmed') ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('vendor.order.list', ['confirmed']) }}"
-                                        title="{{ translate('messages.confirmed_orders') }}">
+                                        title="{{ 'pedidos confirmados' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate sidebar--badge-container">
-                                            {{ translate('messages.confirmed') }}
+                                            {{ 'confirmado' }}
                                             <span class="badge badge-soft-success badge-pill ml-1">
                                                 {{ \App\Models\Order::whereIn('order_status', ['confirmed', 'accepted'])->StoreOrder()->whereNotNull('confirmed')->where('store_id', \App\CentralLogics\Helpers::get_store_id())->OrderScheduledIn(30)->NotDigitalOrder()->count() }}
                                             </span>
@@ -144,13 +144,13 @@
                                 <li
                                     class="nav-item {{ Request::is('vendor-panel/order/list/cooking') ? 'active' : '' }}">
                                     <a class="nav-link" href="{{ route('vendor.order.list', ['cooking']) }}"
-                                        title="{{ translate('messages.processing_orders') }}">
+                                        title="{{ 'procesando pedidos' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate sidebar--badge-container">
                                             @if ($store_data->module->module_type == 'food')
-                                                {{ translate('messages.cooking') }}
+                                                {{ 'cocinando' }}
                                             @else
-                                                {{ translate('messages.processing') }}
+                                                {{ 'tratamiento' }}
                                             @endif
                                             <span class="badge badge-soft-info badge-pill ml-1">
                                                 {{ \App\Models\Order::where(['order_status' => 'processing', 'store_id' => \App\CentralLogics\Helpers::get_store_id()])->StoreOrder()->NotDigitalOrder()->count() }}
@@ -161,10 +161,10 @@
                                 <li
                                     class="nav-item {{ Request::is('vendor-panel/order/list/ready_for_delivery') ? 'active' : '' }}">
                                     <a class="nav-link" href="{{ route('vendor.order.list', ['ready_for_delivery']) }}"
-                                        title="{{ translate('messages.ready_for_delivery') }}">
+                                        title="{{ 'listo para la entrega' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate sidebar--badge-container">
-                                            {{ translate('messages.ready_for_delivery') }}
+                                            {{ 'listo para la entrega' }}
                                             <span class="badge badge-soft-info badge-pill ml-1">
                                                 {{ \App\Models\Order::where(['order_status' => 'handover', 'store_id' => \App\CentralLogics\Helpers::get_store_id()])->StoreOrder()->NotDigitalOrder()->count() }}
                                             </span>
@@ -174,10 +174,10 @@
                                 <li
                                     class="nav-item {{ Request::is('vendor-panel/order/list/item_on_the_way') ? 'active' : '' }}">
                                     <a class="nav-link" href="{{ route('vendor.order.list', ['item_on_the_way']) }}"
-                                        title="{{ translate('messages.items_on_the_way') }}">
+                                        title="{{ 'artículos en el camino' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate sidebar--badge-container">
-                                            {{ translate('messages.item_on_the_way') }}
+                                            {{ 'artículo en camino' }}
                                             <span class="badge badge-soft-info badge-pill ml-1">
                                                 {{ \App\Models\Order::where(['order_status' => 'picked_up', 'store_id' => \App\CentralLogics\Helpers::get_store_id()])->StoreOrder()->NotDigitalOrder()->count() }}
                                             </span>
@@ -187,10 +187,10 @@
                                 <li
                                     class="nav-item {{ Request::is('vendor-panel/order/list/delivered') ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('vendor.order.list', ['delivered']) }}"
-                                        title="{{ translate('messages.delivered_orders') }}">
+                                        title="{{ 'pedidos entregados' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate sidebar--badge-container">
-                                            {{ translate('messages.delivered') }}
+                                            {{ 'Entregado' }}
                                             <span class="badge badge-soft-success badge-pill ml-1">
                                                 {{ \App\Models\Order::where(['order_status' => 'delivered', 'store_id' => \App\CentralLogics\Helpers::get_store_id()])->StoreOrder()->NotDigitalOrder()->count() }}
                                             </span>
@@ -200,10 +200,10 @@
                                 <li
                                     class="nav-item {{ Request::is('vendor-panel/order/list/refunded') ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('vendor.order.list', ['refunded']) }}"
-                                        title="{{ translate('messages.refunded_orders') }}">
+                                        title="{{ 'pedidos reembolsados' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate sidebar--badge-container">
-                                            {{ translate('messages.refunded') }}
+                                            {{ 'Reembolsado' }}
                                             <span class="badge badge-soft-danger bg-light badge-pill ml-1">
                                                 {{ \App\Models\Order::Refunded()->where(['store_id' => \App\CentralLogics\Helpers::get_store_id()])->StoreOrder()->NotDigitalOrder()->count() }}
                                             </span>
@@ -213,10 +213,10 @@
                                 <li
                                     class="nav-item {{ Request::is('vendor-panel/order/list/scheduled') ? 'active' : '' }}">
                                     <a class="nav-link" href="{{ route('vendor.order.list', ['scheduled']) }}"
-                                        title="{{ translate('messages.scheduled_orders') }}">
+                                        title="{{ 'pedidos programados' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate sidebar--badge-container">
-                                            {{ translate('messages.scheduled') }}
+                                            {{ 'programado' }}
                                             <span class="badge badge-soft-info badge-pill ml-1">
                                                 {{ \App\Models\Order::where('store_id', \App\CentralLogics\Helpers::get_store_id())->StoreOrder()->Scheduled()->where(function ($q) {
                                                         if (
@@ -246,10 +246,10 @@
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/item/flash-sale*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('vendor.item.flash_sale') }}"
-                                title="{{ translate('messages.flash_sales') }}">
+                                title="{{ 'ventas flash' }}">
                                 <i class="tio-apps nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    {{ translate('messages.flash_sales') }}
+                                    {{ 'ventas flash' }}
                                 </span>
                             </a>
                         </li>
@@ -260,7 +260,7 @@
                             \App\CentralLogics\Helpers::employee_module_permission_check('item') ||
                             \App\CentralLogics\Helpers::employee_module_permission_check('category'))
                         <li class="nav-item">
-                            <small class="nav-subtitle">{{ translate('messages.item_management') }}</small>
+                            <small class="nav-subtitle">{{ 'gestión de artículos' }}</small>
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
                     @endif
@@ -271,25 +271,25 @@
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/item*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
-                                title="{{ translate('messages.items') }}">
+                                title="{{ 'Productos' }}">
                                 <i class="tio-premium-outlined nav-icon"></i>
                                 <span
-                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.items') }}</span>
+                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ 'Productos' }}</span>
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                 style="display: {{ Request::is('vendor-panel/item*') ? 'block' : 'none' }}">
                                 <li class="nav-item {{ Request::is('vendor-panel/item/add-new') ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('vendor.item.add-new') }}"
-                                        title="{{ translate('messages.add_new_item') }}">
+                                        title="{{ 'agregar nuevo elemento' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">{{ translate('messages.add_new') }}</span>
+                                        <span class="text-truncate">{{ 'agregar nuevo' }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item {{ Request::is('vendor-panel/item/list') ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('vendor.item.list') }}"
-                                        title="{{ translate('messages.items_list') }}">
+                                        title="{{ 'lista de elementos' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">{{ translate('messages.list') }}</span>
+                                        <span class="text-truncate">{{ 'lista' }}</span>
                                     </a>
                                 </li>
 
@@ -297,10 +297,10 @@
                                     <li
                                         class="nav-item {{ Request::is('vendor-panel/item/pending/item/list') || Request::is('vendor-panel/item/requested/item/view/*') ? 'active' : '' }}">
                                         <a class="nav-link " href="{{ route('vendor.item.pending_item_list') }}"
-                                            title="{{ translate('messages.pending_item_list') }}">
+                                            title="{{ 'lista de elementos pendientes' }}">
                                             <span class="tio-circle nav-indicator-icon"></span>
                                             <span
-                                                class="text-truncate">{{ translate('messages.pending_item_list') }}</span>
+                                                class="text-truncate">{{ 'lista de elementos pendientes' }}</span>
                                         </a>
                                     </li>
                                 @endif
@@ -308,10 +308,10 @@
                                     <li
                                         class="nav-item {{ Request::is('vendor-panel/item/product-gallery') ? 'active' : '' }}">
                                         <a class="nav-link " href="{{ route('vendor.item.product_gallery') }}"
-                                            title="{{ translate('messages.Product_Gallery') }}">
+                                            title="{{ 'Galería de productos' }}">
                                             <span class="tio-circle nav-indicator-icon"></span>
                                             <span
-                                                class="text-truncate">{{ translate('messages.Product_Gallery') }}</span>
+                                                class="text-truncate">{{ 'Galería de productos' }}</span>
                                         </a>
                                     </li>
                                 @endif
@@ -320,10 +320,10 @@
                                     <li
                                         class="nav-item {{ Request::is('vendor-panel/item/stock-limit-list') ? 'active' : '' }}">
                                         <a class="nav-link " href="{{ route('vendor.item.stock-limit-list') }}"
-                                            title="{{ translate('messages.Low_stock_list') }}">
+                                            title="{{ 'Lista de existencias bajas' }}">
                                             <span class="tio-circle nav-indicator-icon"></span>
                                             <span
-                                                class="text-truncate">{{ translate('messages.Low_stock_list') }}</span>
+                                                class="text-truncate">{{ 'Lista de existencias bajas' }}</span>
                                         </a>
                                     </li>
                                 @endif
@@ -331,19 +331,19 @@
                                     <li
                                         class="nav-item {{ Request::is('vendor-panel/item/bulk-import') ? 'active' : '' }}">
                                         <a class="nav-link " href="{{ route('vendor.item.bulk-import') }}"
-                                            title="{{ translate('messages.bulk_import') }}">
+                                            title="{{ 'importación a granel' }}">
                                             <span class="tio-circle nav-indicator-icon"></span>
                                             <span
-                                                class="text-truncate text-capitalize">{{ translate('messages.bulk_import') }}</span>
+                                                class="text-truncate text-capitalize">{{ 'importación a granel' }}</span>
                                         </a>
                                     </li>
                                     <li
                                         class="nav-item {{ Request::is('vendor-panel/item/bulk-export') ? 'active' : '' }}">
                                         <a class="nav-link " href="{{ route('vendor.item.bulk-export-index') }}"
-                                            title="{{ translate('messages.bulk_export') }}">
+                                            title="{{ 'exportación a granel' }}">
                                             <span class="tio-circle nav-indicator-icon"></span>
                                             <span
-                                                class="text-truncate text-capitalize">{{ translate('messages.bulk_export') }}</span>
+                                                class="text-truncate text-capitalize">{{ 'exportación a granel' }}</span>
                                         </a>
                                     </li>
                                 @endif
@@ -357,10 +357,10 @@
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/addon*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('vendor.addon.add-new') }}"
-                                title="{{ translate('messages.addons') }}">
+                                title="{{ 'complementos' }}">
                                 <i class="tio-add-circle-outlined nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    {{ translate('messages.addons') }}
+                                    {{ 'complementos' }}
                                 </span>
                             </a>
                         </li>
@@ -370,27 +370,27 @@
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/category*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
-                                title="{{ translate('messages.categories') }}">
+                                title="{{ 'categorias' }}">
                                 <i class="tio-category nav-icon"></i>
                                 <span
-                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.categories') }}</span>
+                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ 'categorias' }}</span>
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                 style="display: {{ Request::is('vendor-panel/category*') ? 'block' : 'none' }}">
                                 <li class="nav-item {{ Request::is('vendor-panel/category/list') ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('vendor.category.add') }}"
-                                        title="{{ translate('messages.category') }}">
+                                        title="{{ 'categoría' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">{{ translate('messages.category') }}</span>
+                                        <span class="text-truncate">{{ 'categoría' }}</span>
                                     </a>
                                 </li>
 
                                 <li
                                     class="nav-item {{ Request::is('vendor-panel/category/sub-category-list') ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('vendor.category.add-sub-category') }}"
-                                        title="{{ translate('messages.sub_category') }}">
+                                        title="{{ 'subcategoría' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">{{ translate('messages.sub_category') }}</span>
+                                        <span class="text-truncate">{{ 'subcategoría' }}</span>
                                     </a>
                                 </li>
                             </ul>
@@ -403,7 +403,7 @@
                             \App\CentralLogics\Helpers::employee_module_permission_check('coupon') ||
                             \App\CentralLogics\Helpers::employee_module_permission_check('banner'))
                         <li class="nav-item">
-                            <small class="nav-subtitle">{{ translate('messages.marketing_section') }}</small>
+                            <small class="nav-subtitle">{{ 'sección de marketing' }}</small>
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
                     @endif
@@ -412,27 +412,27 @@
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/campaign*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
-                                title="{{ translate('messages.campaigns') }}">
+                                title="{{ 'campañas' }}">
                                 <i class="tio-image nav-icon"></i>
                                 <span
-                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.campaigns') }}</span>
+                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ 'campañas' }}</span>
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                 style="display: {{ Request::is('vendor-panel/campaign*') ? 'block' : 'none' }}">
                                 <li class="nav-item {{ Request::is('vendor-panel/campaign/list') ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('vendor.campaign.list') }}"
-                                        title="{{ translate('messages.basic_campaigns') }}">
+                                        title="{{ 'campañas básicas' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span
-                                            class="text-truncate">{{ translate('messages.basic_campaigns') }}</span>
+                                            class="text-truncate">{{ 'campañas básicas' }}</span>
                                     </a>
                                 </li>
                                 <li
                                     class="nav-item {{ Request::is('vendor-panel/campaign/item/list') ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('vendor.campaign.itemlist') }}"
-                                        title="{{ translate('messages.Item Campaigns') }}">
+                                        title="{{ 'Campañas de artículos' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">{{ translate('messages.Item Campaigns') }}</span>
+                                        <span class="text-truncate">{{ 'Campañas de artículos' }}</span>
                                     </a>
                                 </li>
                             </ul>
@@ -446,10 +446,10 @@
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/coupon*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('vendor.coupon.add-new') }}"
-                                title="{{ translate('messages.coupons') }}">
+                                title="{{ 'cupones' }}">
                                 <i class="tio-ticket nav-icon"></i>
                                 <span
-                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.coupons') }}</span>
+                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ 'cupones' }}</span>
                             </a>
                         </li>
                     @endif
@@ -460,10 +460,10 @@
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/banner*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('vendor.banner.list') }}"
-                                title="{{ translate('messages.banners') }}">
+                                title="{{ 'pancartas' }}">
                                 <i class="tio-image nav-icon"></i>
                                 <span
-                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.banners') }}</span>
+                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ 'pancartas' }}</span>
                             </a>
                         </li>
                     @endif
@@ -474,7 +474,7 @@
                         \App\CentralLogics\Helpers::employee_module_permission_check('advertisement') ||
                             \App\CentralLogics\Helpers::employee_module_permission_check('advertisement_list'))
                         <li class="nav-item">
-                            <small class="nav-subtitle">{{ translate('Advertisement Management') }}</small>
+                            <small class="nav-subtitle">{{ 'Gestión de publicidad' }}</small>
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
                     @endif
@@ -483,10 +483,10 @@
                         <li class="navbar-vertical-aside-has-menu @yield('advertisement_create')">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('vendor.advertisement.create') }}"
-                                title="{{ translate('messages.New_Advertisement') }}">
+                                title="{{ 'Nuevo anuncio' }}">
                                 <i class="tio-tv-old nav-icon"></i>
                                 <span
-                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.New_Advertisement') }}</span>
+                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ 'Nuevo anuncio' }}</span>
                             </a>
                         </li>
                     @endif
@@ -494,27 +494,27 @@
                     @if (\App\CentralLogics\Helpers::employee_module_permission_check('advertisement_list'))
                         <li class="navbar-vertical-aside-has-menu @yield('advertisement')">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
-                                title="{{ translate('messages.Advertisement_List') }}">
+                                title="{{ 'Lista de anuncios' }}">
                                 <i class="tio-format-bullets nav-icon"></i>
                                 <span
-                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.Advertisement_List') }}</span>
+                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ 'Lista de anuncios' }}</span>
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                 style="display: {{ !Request::is('vendor-panel/advertisement/create*') && Request::is('vendor-panel/advertisement*') ? 'block' : 'none' }}">
                                 <li class="nav-item @yield('advertisement_pending_list')">
                                     <a class="nav-link "
                                         href="{{ route('vendor.advertisement.index', ['type' => 'pending']) }}"
-                                        title="{{ translate('messages.Pending') }}">
+                                        title="{{ 'Pendiente' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">{{ translate('messages.Pending') }}</span>
+                                        <span class="text-truncate">{{ 'Pendiente' }}</span>
                                     </a>
                                 </li>
 
                                 <li class="nav-item @yield('advertisement_list')">
                                     <a class="nav-link " href="{{ route('vendor.advertisement.index') }}"
-                                        title="{{ translate('messages.Ad_List') }}">
+                                        title="{{ 'Lista de anuncios' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">{{ translate('messages.Ad_List') }}</span>
+                                        <span class="text-truncate">{{ 'Lista de anuncios' }}</span>
                                     </a>
                                 </li>
                             </ul>
@@ -526,7 +526,7 @@
                         \App\CentralLogics\Helpers::employee_module_permission_check('deliveryman') || App\CentralLogics\Helpers::employee_module_permission_check('deliveryman_list'))
                         <li class="nav-item">
                             <small class="nav-subtitle"
-                                title="{{ translate('messages.deliveryman_section') }}">{{ translate('messages.deliveryman_section') }}</small>
+                                title="{{ 'sección de repartidor' }}">{{ 'sección de repartidor' }}</small>
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
                     @endif
@@ -536,10 +536,10 @@
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/delivery-man/add') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('vendor.delivery-man.add') }}"
-                                title="{{ translate('messages.add_delivery_man') }}">
+                                title="{{ 'agregar repartidor' }}">
                                 <i class="tio-running nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    {{ translate('messages.add_delivery_man') }}
+                                    {{ 'agregar repartidor' }}
                                 </span>
                             </a>
                         </li>
@@ -550,10 +550,10 @@
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/delivery-man/list') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('vendor.delivery-man.list') }}"
-                                title="{{ translate('messages.deliveryman') }}">
+                                title="{{ 'Repartidor' }}">
                                 <i class="tio-filter-list nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    {{ translate('messages.deliverymen_list') }}
+                                    {{ 'lista de repartidores' }}
                                 </span>
                             </a>
                         </li>
@@ -568,7 +568,7 @@
                         <!-- Business Section-->
                         <li class="nav-item">
                             <small class="nav-subtitle"
-                                title="{{ translate('messages.Wallet Management') }}">{{ translate('messages.Wallet Management') }}</small>
+                                title="{{ 'Gestión de billetera' }}">{{ 'Gestión de billetera' }}</small>
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
                     @endif
@@ -580,10 +580,10 @@
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/wallet') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('vendor.wallet.index') }}"
-                                title="{{ translate('messages.my_wallet') }}">
+                                title="{{ 'mi billetera' }}">
                                 <i class="tio-table nav-icon"></i>
                                 <span
-                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.my_wallet') }}</span>
+                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ 'mi billetera' }}</span>
                             </a>
                         </li>
                     @endif
@@ -592,10 +592,10 @@
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/withdraw-method*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('vendor.wallet-method.index') }}"
-                                title="{{ translate('messages.my_wallet') }}">
+                                title="{{ 'mi billetera' }}">
                                 <i class="tio-museum nav-icon"></i>
                                 <span
-                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.disbursement_method') }}</span>
+                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ 'método de desembolso' }}</span>
                             </a>
                         </li>
                     @endif
@@ -610,7 +610,7 @@
                             \App\CentralLogics\Helpers::employee_module_permission_check('employee'))
                         <li class="nav-item">
                             <small class="nav-subtitle"
-                                title="{{ translate('messages.employee_section') }}">{{ translate('messages.employee_section') }}</small>
+                                title="{{ 'sección de empleados' }}">{{ 'sección de empleados' }}</small>
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
                     @endif
@@ -620,10 +620,10 @@
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/custom-role*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('vendor.custom-role.create') }}"
-                                title="{{ translate('messages.employee_Role') }}">
+                                title="{{ 'Rol del empleado' }}">
                                 <i class="tio-incognito nav-icon"></i>
                                 <span
-                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.employee_Role') }}</span>
+                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ 'Rol del empleado' }}</span>
                             </a>
                         </li>
                     @endif
@@ -632,26 +632,26 @@
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/employee*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
-                                title="{{ translate('messages.employees') }}">
+                                title="{{ 'empleados' }}">
                                 <i class="tio-user nav-icon"></i>
                                 <span
-                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.employees') }}</span>
+                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ 'empleados' }}</span>
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                 style="display: {{ Request::is('vendor-panel/employee*') ? 'block' : 'none' }}">
                                 <li
                                     class="nav-item {{ Request::is('vendor-panel/employee/add-new') ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('vendor.employee.add-new') }}"
-                                        title="{{ translate('messages.add_new_Employee') }}">
+                                        title="{{ 'agregar nuevo empleado' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">{{ translate('messages.add_new') }}</span>
+                                        <span class="text-truncate">{{ 'agregar nuevo' }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item {{ Request::is('vendor-panel/employee/list') ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('vendor.employee.list') }}"
-                                        title="{{ translate('messages.Employee_list') }}">
+                                        title="{{ 'lista de empleados' }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">{{ translate('messages.list') }}</span>
+                                        <span class="text-truncate">{{ 'lista' }}</span>
                                     </a>
                                 </li>
 
@@ -667,7 +667,7 @@
                             \App\CentralLogics\Helpers::employee_module_permission_check('disbursement_report'))
                         <li class="nav-item">
                             <small class="nav-subtitle"
-                                title="{{ translate('messages.Report_section') }}">{{ translate('messages.Report_section') }}</small>
+                                title="{{ 'Sección de informe' }}">{{ 'Sección de informe' }}</small>
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
                     @endif
@@ -676,9 +676,9 @@
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor/report/expense-report') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('vendor.report.expense-report') }}"
-                                title="{{ translate('messages.expense_report') }}">
+                                title="{{ 'informe de gastos' }}">
                                 <span class="tio-money nav-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.expense_report') }}</span>
+                                <span class="text-truncate">{{ 'informe de gastos' }}</span>
                             </a>
                         </li>
                     @endif
@@ -687,9 +687,9 @@
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/report/disbursement-report') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('vendor.report.disbursement-report') }}"
-                                title="{{ translate('messages.disbursement_report') }}">
+                                title="{{ 'informe de desembolso' }}">
                                 <span class="tio-saving nav-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.disbursement_report') }}</span>
+                                <span class="text-truncate">{{ 'informe de desembolso' }}</span>
                             </a>
                         </li>
                     @endif
@@ -697,9 +697,9 @@
                     @if (\App\CentralLogics\Helpers::employee_module_permission_check('vat_report'))
                         <li class="navbar-vertical-aside-has-menu @yield('vendor_tax_report')">
                             <a class="nav-link " href="{{ route('vendor.report.vendorTax') }}"
-                                title="{{ translate('Vat_Report') }}">
+                                title="{{ 'Informe de IVA' }}">
                                 <span class="tio-saving nav-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.Vat_Report') }}</span>
+                                <span class="text-truncate">{{ 'Informe de IVA' }}</span>
                             </a>
                         </li>
                     @endif
@@ -715,7 +715,7 @@
                         <!-- Business Section-->
                         <li class="nav-item">
                             <small class="nav-subtitle"
-                                title="{{ translate('messages.business_section') }}">{{ translate('messages.business_section') }}</small>
+                                title="{{ 'sección de negocios' }}">{{ 'sección de negocios' }}</small>
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
                     @endif
@@ -725,9 +725,9 @@
                         <li
                             class="nav-item {{ Request::is('vendor-panel/business-settings/store-setup') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('vendor.business-settings.store-setup') }}"
-                                title="{{ translate('messages.storeConfig') }}">
+                                title="{{ 'configuración de tienda' }}">
                                 <span class="tio-settings nav-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.storeConfig') }}</span>
+                                <span class="text-truncate">{{ 'configuración de tienda' }}</span>
                             </a>
                         </li>
                     @endif
@@ -736,9 +736,9 @@
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/business-settings/notification-setup') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('vendor.business-settings.notification-setup') }}"
-                                title="{{ translate('messages.notification_setup') }}">
+                                title="{{ 'configuración de notificación' }}">
                                 <span class="tio-notifications nav-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.notification_setup') }}</span>
+                                <span class="text-truncate">{{ 'configuración de notificación' }}</span>
                             </a>
                         </li>
                     @endif
@@ -748,10 +748,10 @@
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/store/*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('vendor.shop.view') }}"
-                                title="{{ translate('messages.my_shop') }}">
+                                title="{{ 'mi tienda' }}">
                                 <i class="tio-home nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    {{ translate('messages.my_shop') }}
+                                    {{ 'mi tienda' }}
                                 </span>
                             </a>
                         </li>
@@ -760,10 +760,10 @@
                         <li class="navbar-vertical-aside-has-menu @yield('subscriberList')">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('vendor.subscriptionackage.subscriberDetail') }}"
-                                title="{{ translate('messages.My_Subscription') }}">
+                                title="{{ 'Mi suscripción' }}">
                                 <i class="tio-crown nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    {{ translate('messages.My_Business_Plan') }}
+                                    {{ 'Mi plan de negocios' }}
                                 </span>
                             </a>
                         </li>
@@ -774,10 +774,10 @@
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/reviews') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
-                                href="{{ route('vendor.reviews') }}" title="{{ translate('messages.reviews') }}">
+                                href="{{ route('vendor.reviews') }}" title="{{ 'opiniones' }}">
                                 <i class="tio-star-outlined nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    {{ translate('messages.reviews') }}
+                                    {{ 'opiniones' }}
                                 </span>
                             </a>
                         </li>
@@ -788,10 +788,10 @@
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/message*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('vendor.message.list') }}"
-                                title="{{ translate('messages.chat') }}">
+                                title="{{ 'charlar' }}">
                                 <i class="tio-chat nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    {{ translate('messages.Chat') }}
+                                    {{ 'Charlar' }}
                                 </span>
                             </a>
                         </li>
@@ -805,12 +805,12 @@
                                 <div class="position-relative">
                                     <img src="{{ asset('assets/admin/img/promo-2.png') }}" class="mw-100"
                                         alt="">
-                                    <h4 class="mb-2 mt-3">{{ translate('Want_to_get_highlighted?') }}</h4>
+                                    <h4 class="mb-2 mt-3">{{ '¿Quieres destacar?' }}</h4>
                                     <p class="mb-4">
-                                        {{ translate('Create_ads_to_get_highlighted_on_the_app_and_web_browser') }}
+                                        {{ 'Cree anuncios para destacarse en la aplicación y el navegador web.' }}
                                     </p>
                                     <a href="{{ route('vendor.advertisement.create') }}"
-                                        class="btn btn--primary">{{ translate('Create_Ads') }}</a>
+                                        class="btn btn--primary">{{ 'Crear anuncios' }}</a>
                                 </div>
                             </div>
                         </li>

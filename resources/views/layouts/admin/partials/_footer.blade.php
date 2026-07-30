@@ -11,11 +11,11 @@
                 <!-- List Dot -->
                 <ul class="list-inline list-separator">
                     <li class="list-inline-item">
-                        <a class="list-separator-link" href="{{route('admin.business-settings.business-setup')}}">{{translate('messages.business_setup')}}</a>
+                        <a class="list-separator-link" href="{{route('admin.business-settings.business-setup')}}">{{'configuración de negocios'}}</a>
                     </li>
 
                     <li class="list-inline-item">
-                        <a class="list-separator-link" href="{{route('admin.settings')}}">{{translate('messages.profile')}}</a>
+                        <a class="list-separator-link" href="{{route('admin.settings')}}">{{'perfil'}}</a>
                     </li>
 
                     <li class="list-inline-item">
@@ -23,14 +23,14 @@
                         <div class="hs-unfold">
                             <a class="js-hs-unfold-invoker h-unset btn btn-icon btn-ghost-secondary rounded-circle"
                                href="{{route('admin.dashboard')}}">
-                                {{translate('messages.home')}}
+                                {{'hogar'}}
                             </a>
                         </div>
                         <!-- End Keyboard Shortcuts Toggle -->
                     </li>
                     <li class="list-inline-item">
                         <label class="badge badge-soft-primary m-0">
-                            {{translate('messages.software_version')}} : {{env('SOFTWARE_VERSION')}}
+                            {{'Versión del sistema'}} : {{env('SOFTWARE_VERSION')}}
                         </label>
                     </li>
                 </ul>

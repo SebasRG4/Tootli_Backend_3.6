@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title',translate('messages.Campaign List'))
+@section('title','Lista de campañas')
 
 @push('css_or_js')
 
@@ -16,7 +16,7 @@
                     <img src="{{asset('assets/admin/img/campaign.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.campaign_list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$campaigns->total()}}</span>
+                    {{'lista de campaña'}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$campaigns->total()}}</span>
                 </span>
             </h1>
         </div>
@@ -28,7 +28,7 @@
                     @csrf
                     <!-- Search -->
                     <div class="input-group input--group">
-                        <input id="datatableSearch_"  value="{{request()?->search ?? ''}}" type="search" name="search" class="form-control" placeholder="{{translate('messages.ex_search_name')}}" aria-label="{{translate('messages.search')}}">
+                        <input id="datatableSearch_"  value="{{request()?->search ?? ''}}" type="search" name="search" class="form-control" placeholder="{{'ex nombre de búsqueda'}}" aria-label="{{'buscar'}}">
                         <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                     </div>
                     <!-- End Search -->
@@ -45,13 +45,13 @@
                         }'>
                     <thead class="thead-light">
                         <tr>
-                            <th class="border-0">{{translate('messages.#')}}</th>
-                            <th class="border-0 w-30p">{{translate('messages.title')}}</th>
-                            <th class="border-0 w-25p">{{translate('messages.image')}}</th>
-                            <th class="border-0 w-25p">{{translate('messages.date_duration')}}</th>
-                            <th class="border-0 w-25p">{{translate('messages.time_duration')}}</th>
-                            <th class="border-0 text-center">{{translate('messages.status')}}</th>
-                            <th class="border-0 text-center">{{translate('messages.action')}}</th>
+                            <th class="border-0">{{'#'}}</th>
+                            <th class="border-0 w-30p">{{'título'}}</th>
+                            <th class="border-0 w-25p">{{'imagen'}}</th>
+                            <th class="border-0 w-25p">{{'duración de la fecha'}}</th>
+                            <th class="border-0 w-25p">{{'duración del tiempo'}}</th>
+                            <th class="border-0 text-center">{{'estado'}}</th>
+                            <th class="border-0 text-center">{{'acción'}}</th>
                         </tr>
                     </thead>
 
@@ -90,15 +90,15 @@
                             <td class="text-capitalize">
                                 @if ($store_status == 'pending')
                                     <span class="badge badge-soft-info">
-                                        {{ translate('messages.not_approved') }}
+                                        {{ 'no aprobado' }}
                                     </span>
                                 @elseif($store_status == 'confirmed')
                                     <span class="badge badge-soft-success">
-                                        {{ translate('messages.confirmed') }}
+                                        {{ 'confirmado' }}
                                     </span>
                                 @elseif($store_status == 'rejected')
                                     <span class="badge badge-soft-danger">
-                                        {{ translate('messages.rejected') }}
+                                        {{ 'rechazado' }}
                                     </span>
                                 @else
                                     <span class="badge badge-soft-info">
@@ -109,14 +109,14 @@
                             </td>
                             <td class="text-center">
                                 @if ($store_status == 'rejected')
-                                    <span class="badge badge-pill badge-danger">{{ translate('Rejected') }}</span>
+                                    <span class="badge badge-pill badge-danger">{{ 'Rechazado' }}</span>
                                 @else
                                     @if(in_array($store_id,$store_ids))
 
                                     <span type="button"
                                           data-id="campaign-{{$campaign['id']}}"
-                                          data-message="{{translate('messages.alert_store_out_from_campaign')}}"
-                                          title="You are already joined. Click to out from the campaign." class="badge btn--danger text-white  form-alert ">{{translate('messages.leave')}}</span>
+                                          data-message="{{'alerta de tienda fuera de la campaña'}}"
+                                          title="You are already joined. Click to out from the campaign." class="badge btn--danger text-white  form-alert ">{{'dejar'}}</span>
                                     <form action="{{route('vendor.campaign.remove-store',[$campaign['id'],$store_id])}}"
                                             method="GET" id="campaign-{{$campaign['id']}}">
                                         @csrf
@@ -124,8 +124,8 @@
                                     @else
                                     <span type="button" class="badge btn--primary text-white form-alert"
                                           data-id="campaign-{{$campaign['id']}}"
-                                          data-message="{{translate('messages.alert_store_join_campaign')}}"
-                                        title="Click to join the campaign">{{translate('messages.join')}}</span>
+                                          data-message="{{'campaña de alerta para unirse a la tienda'}}"
+                                        title="Click to join the campaign">{{'unirse'}}</span>
                                     <form action="{{route('vendor.campaign.add-store',[$campaign['id'],$store_id])}}"
                                             method="GET" id="campaign-{{$campaign['id']}}">
                                         @csrf
@@ -149,7 +149,7 @@
                 <div class="empty--data">
                     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
-                        {{translate('no_data_found')}}
+                        {{'no se encontraron datos'}}
                     </h5>
                 </div>
                 @endif

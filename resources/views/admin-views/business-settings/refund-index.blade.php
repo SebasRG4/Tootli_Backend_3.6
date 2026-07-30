@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('refund_settings'))
+@section('title', 'configuración de reembolso')
 
 
 @section('content')
@@ -12,7 +12,7 @@
                     <img src="{{ asset('assets/admin/img/business.png') }}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.business_setup') }}
+                    {{ 'configuración de negocios' }}
                 </span>
             </h1>
             @include('admin-views.business-settings.partials.nav-menu')
@@ -25,7 +25,7 @@
                     @php($config = $refund_active_status->value ?? null)
                     <h5 class="text-capitalize m-0 text--info text--primary">
                         <i class="tio-settings-outlined"></i>
-                        {{ translate('messages.Refund Request_Mode') }}
+                        {{ 'Modo de solicitud de reembolso' }}
                     </h5>
                     <label class="toggle-switch toggle-switch-sm">
                         <input type="checkbox" class="status toggle-switch-input refund-mode"
@@ -36,7 +36,7 @@
                     </label>
                 </div>
                 <div class="mt-2">
-                    {{ translate('messages.*Customers_cannot_request_a_Refund_if_the_Admin_does_not_specify_a_cause_for_refund_even_though_they_see_the_Refund_option._So_Admin_MUST_provide_a_proper_Refund_Reason._At_least_one_reason_Must_be_ON_in_the_reason_list.') }}
+                    {{ '*Los clientes no pueden solicitar un reembolso si el administrador no especifica una causa para el reembolso aunque vean la opción Reembolso. Por lo tanto, el administrador DEBE proporcionar un motivo de reembolso adecuado. Al menos un motivo debe estar activado en la lista de motivos.' }}
                 </div>
             </div>
         </div>
@@ -50,7 +50,7 @@
                     <div class="d-flex flex-wrap justify-content-between align-items-center mb-md-0 mb-3">
                         <div class="mx-1">
                             <h5 class="form-label mb-0">
-                                {{translate('messages.Add a Refund Reason')}}
+                                {{'Agregar un motivo de reembolso'}}
                             </h5>
                         </div>
                     </div>
@@ -62,7 +62,7 @@
                         <li class="nav-item">
                             <a class="nav-link lang_link1 active"
                             href="#"
-                            id="default-link1">{{ translate('Default') }}</a>
+                            id="default-link1">{{ 'Por defecto' }}</a>
                         </li>
                         @foreach (json_decode($language) as $lang)
                             <li class="nav-item">
@@ -78,18 +78,18 @@
 
 
                         <div class="col-md-10 lang_form1 default-form1">
-                            <label for="reason" class="form-label">{{translate('Reason')}} ({{ translate('Default') }})</label>
+                            <label for="reason" class="form-label">{{'Razón'}} ({{ 'Por defecto' }})</label>
                             <input id="reason" type="text" class="form-control h--45px" name="reason[]"
-                                        placeholder="{{ translate('Ex:_Item_is_Broken') }}">
+                                        placeholder="{{ 'Ej: el artículo está roto' }}">
                                         <input type="hidden" name="lang[]" value="default">
                         </div>
 .
                         @if ($language)
                         @foreach(json_decode($language) as $lang)
                             <div class="col-md-10 d-none lang_form1" id="{{$lang}}-form1">
-                                <label for="reason{{$lang}}" class="form-label">{{translate('Reason')}} ({{strtoupper($lang)}})</label>
+                                <label for="reason{{$lang}}" class="form-label">{{'Razón'}} ({{strtoupper($lang)}})</label>
                                 <input id="reason{{$lang}}" type="text" class="form-control h--45px" name="reason[]"
-                                        placeholder="{{ translate('Ex:_Item_is_Broken') }}">
+                                        placeholder="{{ 'Ej: el artículo está roto' }}">
                                 <input type="hidden" name="lang[]" value="{{$lang}}">
                             </div>
                         @endforeach
@@ -97,7 +97,7 @@
 
 
                         <div class="col-md-auto">
-                            <button type="submit" class="btn btn--primary h--45px btn-block">{{translate('messages.Add Now')}}</button>
+                            <button type="submit" class="btn btn--primary h--45px btn-block">{{'Añadir ahora'}}</button>
                         </div>
                     </div>
                 </form>
@@ -109,7 +109,7 @@
                 <div class="d-flex flex-wrap justify-content-between align-items-center mb-md-0 mb-3">
                     <div class="mx-1">
                         <h5 class="form-label mb-5">
-                            {{translate('Refund Reason List')}}
+                            {{'Lista de motivos de reembolso'}}
                         </h5>
                     </div>
                 </div>
@@ -128,10 +128,10 @@
                     }'>
                     <thead class="thead-light">
                         <tr>
-                            <th class="border-0">{{ translate('messages.SL') }}</th>
-                            <th class="border-0">{{translate('messages.Reason')}}</th>
-                            <th class="border-0">{{translate('messages.status')}}</th>
-                            <th class="border-0 text-center">{{translate('messages.action')}}</th>
+                            <th class="border-0">{{ 'SL' }}</th>
+                            <th class="border-0">{{'Razón'}}</th>
+                            <th class="border-0">{{'estado'}}</th>
+                            <th class="border-0 text-center">{{'acción'}}</th>
                         </tr>
                     </thead>
 
@@ -157,16 +157,16 @@
                             <td>
                                 <div class="btn--container justify-content-center">
                                     <a class="btn btn-sm btn--primary btn-outline-primary action-btn edit-reason"
-                                        title="{{ translate('messages.edit') }}"
+                                        title="{{ 'editar' }}"
                                             data-toggle="modal"   data-target="#add_update_reason_{{$reason->id}}"
                                         ><i class="tio-edit"></i>
                                     </a>
 
                                     <a class="btn btn-sm btn--danger btn-outline-danger action-btn form-alert" href="javascript:"
                                        data-id="refund_reason-{{$reason['id']}}"
-                                       data-message="{{ translate('Want to delete this refund reason ?') }}"
+                                       data-message="{{ '¿Quieres eliminar este motivo de reembolso?' }}"
 
-                                title="{{translate('messages.delete')}}">
+                                title="{{'borrar'}}">
                                 <i class="tio-delete-outlined"></i>
                             </a>
                                     <form action="{{route('admin.refund.reason_delete',[$reason['id']])}}"
@@ -182,7 +182,7 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">{{ translate('messages.Refund_Reason_Update') }}</label></h5>
+                                        <h5 class="modal-title" id="exampleModalLabel">{{ 'Actualización del motivo del reembolso' }}</label></h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -201,7 +201,7 @@
                                                 <a class="nav-link update-lang_link add_active active"
                                                 href="#"
 
-                                                id="default-link">{{ translate('Default') }}</a>
+                                                id="default-link">{{ 'Por defecto' }}</a>
                                             </li>
                                             @if($language)
                                             @foreach (json_decode($language) as $lang)
@@ -217,7 +217,7 @@
                                             <input type="hidden" name="reason_id"  value="{{$reason->id}}" />
 
                                             <div class="form-group mb-3 add_active_2  update-lang_form" id="default-form_{{$reason->id}}">
-                                                <label for="reason" class="form-label">{{translate('Reason')}} ({{translate('messages.default')}}) </label>
+                                                <label for="reason" class="form-label">{{'Razón'}} ({{'por defecto'}}) </label>
                                                 <input id="reason" class="form-control" name='reason[]' value="{{$reason?->getRawOriginal('reason')}}" type="text">
                                                 <input type="hidden" name="lang1[]" value="default">
                                             </div>
@@ -235,7 +235,7 @@
                                                                     }
                                                                     ?>
                                                                     <div class="form-group mb-3 d-none update-lang_form" id="{{$lang}}-langform_{{$reason->id}}">
-                                                                        <label for="reason{{$lang}}" class="form-label">{{translate('Reason')}} ({{strtoupper($lang)}})</label>
+                                                                        <label for="reason{{$lang}}" class="form-label">{{'Razón'}} ({{strtoupper($lang)}})</label>
                                                                         <input id="reason{{$lang}}" class="form-control" name='reason[]' value="{{ $translate[$lang]['reason'] ?? null }}"  type="text">
                                                                         <input type="hidden" name="lang1[]" value="{{$lang}}">
                                                                     </div>
@@ -245,8 +245,8 @@
 
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ translate('Close') }}</button>
-                                                    <button type="submit" class="btn btn-primary">{{ translate('Save_changes') }}</button>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'Cerca' }}</button>
+                                                    <button type="submit" class="btn btn-primary">{{ 'Guardar cambios' }}</button>
                                                 </div>
                                         </form>
                                 </div>
@@ -259,7 +259,7 @@
                 <div class="empty--data">
                     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
-                        {{translate('no_data_found')}}
+                        {{'no se encontraron datos'}}
                     </h5>
                 </div>
                 @endif
@@ -289,14 +289,14 @@
     $('.refund-mode').on('click', function(event){
         event.preventDefault();
         Swal.fire({
-            title: '{{ translate('Are you sure?') }}' ,
+            title: '{{ '¿Está seguro?' }}' ,
             text: 'Be careful before you turn on/off Refund Request mode',
             type: 'warning',
             showCancelButton: true,
             cancelButtonColor: 'default',
             confirmButtonColor: '#377dff',
-            cancelButtonText: '{{translate('messages.no')}}',
-            confirmButtonText: '{{translate('messages.yes')}}',
+            cancelButtonText: '{{'No'}}',
+            confirmButtonText: '{{'Sí'}}',
             reverseButtons: true
         }).then((result) => {
             if (result.value) {

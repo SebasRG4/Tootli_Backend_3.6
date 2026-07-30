@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title', translate('messages.expense_report'))
+@section('title', 'informe de gastos')
 
 @push('css_or_js')
 @endpush
@@ -21,11 +21,11 @@
                     {{-- <img src="{{ asset('assets/admin/img/report.png') }}" class="w--22" alt=""> --}}
                 </span>
                 <span>
-                    {{ translate('messages.expense_report') }}
+                    {{ 'informe de gastos' }}
                 </span>
             </h1>
             <div class="__page-header-txt mt-3">
-                {{ translate('This report will show all the '.$orderOrTrip.' in which the '.$title.' discount has been used. The '.$title.' discounts are: Free delivery, Coupon discount & '.$type.' discounts(partial according to '.$orderOrTrip.' commission).') }}
+                {{ 'Este informe mostrará todos los \'.$orderOrTrip.\' en el que el \'.$title.\' Se ha utilizado el descuento. El \'.$título.\' Los descuentos son: entrega gratuita, cupón de descuento y \'.$tipo\'. descuentos (parciales según comisión \'.$orderOrTrip.\').' }}
             </div>
 
         </div>
@@ -33,43 +33,43 @@
 
         <div class="card mb-20">
             <div class="card-body">
-                <h4 class="">{{ translate('Search Data') }}</h4>
+                <h4 class="">{{ 'Buscar datos' }}</h4>
                 <form method="get">
                     <div class="row g-3">
                         <div class="col-sm-6 col-md-3">
                             <select class="form-control set-filter" name="filter"
                                     data-url="{{ url()->full() }}" data-filter="filter">
                                 <option value="all_time" {{ isset($filter) && $filter == 'all_time' ? 'selected' : '' }}>
-                                    {{ translate('messages.All Time') }}</option>
+                                    {{ 'Todo el tiempo' }}</option>
                                 <option value="this_year" {{ isset($filter) && $filter == 'this_year' ? 'selected' : '' }}>
-                                    {{ translate('messages.This Year') }}</option>
+                                    {{ 'este año' }}</option>
                                 <option value="previous_year"
                                     {{ isset($filter) && $filter == 'previous_year' ? 'selected' : '' }}>
-                                    {{ translate('messages.Previous Year') }}</option>
+                                    {{ 'Año anterior' }}</option>
                                 <option value="this_month"
                                     {{ isset($filter) && $filter == 'this_month' ? 'selected' : '' }}>
-                                    {{ translate('messages.This Month') }}</option>
+                                    {{ 'este mes' }}</option>
                                 <option value="this_week" {{ isset($filter) && $filter == 'this_week' ? 'selected' : '' }}>
-                                    {{ translate('messages.This Week') }}</option>
+                                    {{ 'Esta semana' }}</option>
                                 <option value="custom" {{ isset($filter) && $filter == 'custom' ? 'selected' : '' }}>
-                                    {{ translate('messages.Custom') }}</option>
+                                    {{ 'Costumbre' }}</option>
                             </select>
                         </div>
                         @if (isset($filter) && $filter == 'custom')
                             <div class="col-sm-6 col-md-3">
                                 <input type="date" name="from" id="from_date" class="form-control"
-                                    placeholder="{{ translate('Start Date') }}"
+                                    placeholder="{{ 'Fecha de inicio' }}"
                                     value={{ $from ? $from  : '' }} required>
                             </div>
                             <div class="col-sm-6 col-md-3">
                                 <input type="date" name="to" id="to_date" class="form-control"
-                                    placeholder="{{ translate('End Date') }}"
+                                    placeholder="{{ 'Fecha de finalización' }}"
                                     value={{ $to ? $to  : '' }}  required>
                             </div>
                         @endif
                         <div class="col-sm-6 col-md-3 ml-auto">
                             <button type="submit"
-                                class="btn btn-primary btn-block h--45px">{{ translate('Filter') }}</button>
+                                class="btn btn-primary btn-block h--45px">{{ 'Filtrar' }}</button>
                         </div>
                     </div>
                 </form>
@@ -82,13 +82,13 @@
             <div class="card-header border-0 py-2">
                 <div class="search--button-wrapper">
                     <h3 class="card-title">
-                        {{ translate('messages.expense_lists') }} <span
+                        {{ 'listas de gastos' }} <span
                             class="badge badge-soft-secondary" id="countItems">{{ $expense->total() }}</span>
                     </h3>
                     <form  class="search-form">
                         <!-- Search -->
                         <div class="input--group input-group input-group-merge input-group-flush">
-                            <input name="search" value="{{ request()->search ?? null }}"   type="search" class="form-control" placeholder="{{ translate('Search by Order ID') }}">
+                            <input name="search" value="{{ request()->search ?? null }}"   type="search" class="form-control" placeholder="{{ 'Buscar por ID de pedido' }}">
                             <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                         </div>
                         <!-- End Search -->
@@ -102,24 +102,24 @@
                                 &quot;type&quot;: &quot;css-animation&quot;
                             }"
                             data-hs-unfold-target="#usersExportDropdown" data-hs-unfold-invoker="">
-                            <i class="tio-download-to mr-1"></i> {{ translate('export') }}
+                            <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                         </a>
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right hs-unfold-content-initialized hs-unfold-css-animation animated hs-unfold-reverse-y hs-unfold-hidden">
 
-                            <span class="dropdown-header">{{ translate('download_options') }}</span>
+                            <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                             <a id="export-excel" class="dropdown-item" href="{{route('vendor.report.expense-export', ['type'=>'excel',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
-                                {{ translate('messages.excel') }}
+                                {{ 'sobresalir' }}
                             </a>
                             <a id="export-csv" class="dropdown-item" href="{{route('vendor.report.expense-export', ['type'=>'csv',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
-                                .{{ translate('messages.csv') }}
+                                .{{ 'csv' }}
                             </a>
                         </div>
                     </div>
@@ -134,18 +134,18 @@
                     <table class="table table-borderless middle-align __txt-14px">
                         <thead class="thead-light white--space-false">
                             <tr>
-                                <th >{{translate('sl')}}</th>
+                                <th >{{'SL'}}</th>
                                 @if($module_type == 'rental')
-                                <th class="text-center" >{{translate('trip_id')}}</th>
+                                <th class="text-center" >{{'identificación del viaje'}}</th>
                                 @else
-                                <th class="text-center" >{{translate('messages.order_id')}}</th>
+                                <th class="text-center" >{{'identificación del pedido'}}</th>
                                 @endif
-                                <th class="text-center" >{{translate('Date & Time')}}</th>
-                                <th class="text-center" >{{ translate('Expense Type') }}</th>
-                                <th class="text-center" >{{ translate('Customer Name') }}</th>
+                                <th class="text-center" >{{'Fecha y hora'}}</th>
+                                <th class="text-center" >{{ 'Tipo de gasto' }}</th>
+                                <th class="text-center" >{{ 'Nombre del cliente' }}</th>
                                 <th class="border-0 text-right pr-xl-5">
                                     <div class="pr-xl-5">
-                                        {{translate('expense amount')}}
+                                        {{'monto del gasto'}}
                                     </div>
                                 </th>
                             </tr>
@@ -159,7 +159,7 @@
                                         @if (isset($exp['trip_id']))
                                             <a href="{{route('vendor.trip.details',['id'=>$exp['trip_id']])}}">{{$exp['trip_id']}}</a>
                                         @else
-                                            <label class="badge badge-danger">{{translate('messages.invalid_trip_data')}}</label>
+                                            <label class="badge badge-danger">{{'datos de viaje no válidos'}}</label>
                                         @endif
                                     </td>
                                 @else
@@ -167,7 +167,7 @@
                                         @if (isset($exp['order_id']))
                                             <a href="{{route('vendor.order.details',['id'=>$exp['order_id']])}}">{{$exp['order_id']}}</a>
                                         @else
-                                            <label class="badge badge-danger">{{translate('messages.invalid_order_data')}}</label>
+                                            <label class="badge badge-danger">{{'datos de pedido no válidos'}}</label>
                                         @endif
                                     </td>
                                 @endif
@@ -175,7 +175,7 @@
                                     {{date('Y-m-d '.config('timeformat'),strtotime($exp->created_at))}}
                                 </td>
                                 <td class="text-center" >
-                                    {{Str::title(translate("messages.{$exp['type']}"))}}</td>
+                                    {{Str::title('{$exp[\'tipo\']}')}}</td>
 
 
 
@@ -192,7 +192,7 @@
                                         {{$exp->order?->customer['f_name'].' '.$exp->order?->customer['l_name']}}
                                         @else
                                             <label
-                                                class="badge badge-danger">{{translate('messages.invalid_customer_data')}}</label>
+                                                class="badge badge-danger">{{'datos de cliente no válidos'}}</label>
                                         @endif
 
                                         @elseif($exp->trip)
@@ -205,14 +205,14 @@
                                                     {{$exp?->trip?->user_info['contact_person_name'] }}
                                                 </div>
                                             @else
-                                                {{ translate('messages.Guest_user') }}
+                                                {{ 'Usuario invitado' }}
                                             @endif
 
 
                                         @elseif ($exp['type'] == 'add_fund_bonus')
                                         {{ $exp->user->f_name.' '.$exp->user->l_name }}
                                         @else
-                                        <label class="badge badge-danger">{{translate('messages.invalid_customer_data')}}</label>
+                                        <label class="badge badge-danger">{{'datos de cliente no válidos'}}</label>
 
                                         @endif
                                     </td>
@@ -239,7 +239,7 @@
                     <div class="empty--data">
                         <img src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
                         <h5>
-                            {{ translate('no_data_found') }}
+                            {{ 'no se encontraron datos' }}
                         </h5>
                     </div>
                 @endif

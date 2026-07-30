@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Customer List'))
+@section('title', 'Lista de clientes')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/people.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                     {{ translate('messages.customers') }}
+                     {{ 'Clientes' }}
                 </span>
             </h1>
         </div>
@@ -25,48 +25,48 @@
                 <form>
                     <div class="row g-3">
                         <div class="col-md-4">
-                            <label class="form-label">{{translate('Order Date')}}</label>
+                            <label class="form-label">{{'Fecha del pedido'}}</label>
                             <div class="position-relative">
                                 <span class="tio-calendar icon-absolute-on-right"></span>
-                                <input type="text" data-title="{{ translate('Select_Order_Date_Range') }}" data-startDate="09/04/2024"  data-endDate="09/24/2024" readonly name="order_date" value="{{ request()->get('order_date')  ?? null }}" class="date-range-picker form-control">
+                                <input type="text" data-title="{{ 'Seleccione el rango de fechas del pedido' }}" data-startDate="09/04/2024"  data-endDate="09/24/2024" readonly name="order_date" value="{{ request()->get('order_date')  ?? null }}" class="date-range-picker form-control">
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">{{translate('Customer Joining Date')}}</label>
+                            <label class="form-label">{{'Fecha de incorporación del cliente'}}</label>
                             <div class="position-relative">
                                 <span class="tio-calendar icon-absolute-on-right"></span>
-                                <input type="text" data-title="{{ translate('Select_Customer_Joining_Date_Range') }}" readonly name="join_date" value="{{ request()->get('join_date') ?? null }}" class="date-range-picker form-control">
+                                <input type="text" data-title="{{ 'Seleccionar rango de fechas de incorporación de clientes' }}" readonly name="join_date" value="{{ request()->get('join_date') ?? null }}" class="date-range-picker form-control">
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">{{translate('Customer status')}}</label>
-                            <select name="filter" data-placeholder="{{ translate('messages.Select_Status') }}" class="form-control js-select2-custom ">
-                                <option  value="" selected disabled > {{ translate('messages.Select_Status') }} </option>
-                                <option  {{ request()->get('filter')  == 'all'?'selected':''}} value="all">{{ translate('messages.All_Customers') }}</option>
-                                <option  {{ request()->get('filter')  == 'active'?'selected':''}} value="active">{{ translate('messages.Active_Customers') }}</option>
-                                <option  {{ request()->get('filter')  == 'blocked'?'selected':''}} value="blocked">{{ translate('messages.Inactive_Customers') }}</option>
+                            <label class="form-label">{{'Estado del cliente'}}</label>
+                            <select name="filter" data-placeholder="{{ 'Seleccionar estado' }}" class="form-control js-select2-custom ">
+                                <option  value="" selected disabled > {{ 'Seleccionar estado' }} </option>
+                                <option  {{ request()->get('filter')  == 'all'?'selected':''}} value="all">{{ 'Todos los clientes' }}</option>
+                                <option  {{ request()->get('filter')  == 'active'?'selected':''}} value="active">{{ 'Clientes activos' }}</option>
+                                <option  {{ request()->get('filter')  == 'blocked'?'selected':''}} value="blocked">{{ 'Clientes inactivos' }}</option>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">{{translate('Sort By')}}</label>
-                            <select name="order_wise"  data-placeholder="{{ translate('messages.Select Customer Sorting Order') }}"
+                            <label class="form-label">{{'Ordenar por'}}</label>
+                            <select name="order_wise"  data-placeholder="{{ 'Seleccionar orden de clasificación del cliente' }}"
 
                             class="form-control js-select2-custom">
-                                <option value="" selected disabled > {{ translate('messages.Select Customer Sorting Order') }} </option>
-                                <option  {{ request()->get('order_wise')  == 'top'?'selected':''}}  value="top">{{ translate('messages.Sort by order count') }}</option>
-                                <option {{ request()->get('order_wise')  == 'order_amount'?'selected':''}}  value="order_amount">{{ translate('messages.Sort by order amount') }}</option>
-                                <option {{ request()->get('order_wise')  == 'oldest'?'selected':''}}  value="oldest">{{ translate('messages.Sort by oldest') }}</option>
-                                <option {{ request()->get('order_wise')  == 'latest'?'selected':''}}  value="latest">{{ translate('messages.Sort by newest') }}</option>
+                                <option value="" selected disabled > {{ 'Seleccionar orden de clasificación del cliente' }} </option>
+                                <option  {{ request()->get('order_wise')  == 'top'?'selected':''}}  value="top">{{ 'Ordenar por recuento de pedidos' }}</option>
+                                <option {{ request()->get('order_wise')  == 'order_amount'?'selected':''}}  value="order_amount">{{ 'Ordenar por monto del pedido' }}</option>
+                                <option {{ request()->get('order_wise')  == 'oldest'?'selected':''}}  value="oldest">{{ 'Ordenar por más antiguo' }}</option>
+                                <option {{ request()->get('order_wise')  == 'latest'?'selected':''}}  value="latest">{{ 'Ordenar por más reciente' }}</option>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">{{translate('Choose First')}}</label>
-                            <input type="number" min="1" name="show_limit" class="form-control" value="{{ request()->get('show_limit')}}" placeholder="{{translate('Ex : 100')}}">
+                            <label class="form-label">{{'Elige primero'}}</label>
+                            <input type="number" min="1" name="show_limit" class="form-control" value="{{ request()->get('show_limit')}}" placeholder="{{'Ej: 100'}}">
                         </div>
                         <div class="col-md-4">
                             <label class="d-md-block">&nbsp;</label>
                             <div class="btn--container justify-content-end">
-                                <button type="submit" class="btn btn--primary">{{translate('Filter')}}</button>
+                                <button type="submit" class="btn btn--primary">{{'Filtrar'}}</button>
                             </div>
                         </div>
                     </div>
@@ -78,7 +78,7 @@
             <!-- Header -->
             <div class="card-header border-0  py-2">
                 <h3>
-                    {{ translate('messages.customer_list') }} <span class="badge badge-soft-dark ml-2" id="count">{{ $customers->total() }}</span>
+                    {{ 'lista de clientes' }} <span class="badge badge-soft-dark ml-2" id="count">{{ $customers->total() }}</span>
                 </h3>
                 <div class="search--button-wrapper justify-content-end">
 
@@ -87,7 +87,7 @@
                         <!-- Search -->
                         <div class="input-group input--group">
                             <input id="datatableSearch_" type="search" name="search" class="form-control min-height-40"
-                                value="{{ request()->get('search') }}" placeholder="{{ translate('ex:_name_email_or_phone') }}"
+                                value="{{ request()->get('search') }}" placeholder="{{ 'ej: nombre correo electrónico o teléfono' }}"
                                 aria-label="Search" >
                             <button type="submit" class="btn btn--secondary min-height-40"><i class="tio-search"></i></button>
 
@@ -95,7 +95,7 @@
                         <!-- End Search -->
                     </form>
                     @if(request()->get('search'))
-                    <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                    <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{'reiniciar'}}</button>
                     @endif
 
                     <!-- Unfold -->
@@ -105,23 +105,23 @@
                                     "target": "#usersExportDropdown",
                                     "type": "css-animation"
                                 }'>
-                            <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                            <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                         </a>
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                            <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                            <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                             <a id="export-excel" class="dropdown-item" href="{{route('admin.customer.export', ['type'=>'excel',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
-                                {{ translate('messages.excel') }}
+                                {{ 'sobresalir' }}
                             </a>
                             <a id="export-csv" class="dropdown-item" href="{{route('admin.customer.export', ['type'=>'csv',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
-                                .{{ translate('messages.csv') }}
+                                .{{ 'csv' }}
                             </a>
                         </div>
                     </div>
@@ -153,15 +153,15 @@
                         <thead class="thead-light">
                             <tr>
                                 <th class="border-0">
-                                    {{ translate('sl') }}
+                                    {{ 'SL' }}
                                 </th>
-                                <th class="table-column-pl-0 border-0">{{ translate('messages.name') }}</th>
-                                <th class="border-0">{{ translate('messages.contact_information') }}</th>
-                                <th class="border-0">{{ translate('messages.total_order') }}</th>
-                                <th class="border-0">{{ translate('messages.total_order_amount') }}</th>
-                                <th class="border-0">{{ translate('messages.Joining_date') }}</th>
-                                <th class="border-0">{{ translate('messages.active') }}/{{ translate('messages.inactive') }}</th>
-                                <th class="border-0">{{ translate('messages.actions') }}</th>
+                                <th class="table-column-pl-0 border-0">{{ 'nombre' }}</th>
+                                <th class="border-0">{{ 'Información del contacto' }}</th>
+                                <th class="border-0">{{ 'orden total' }}</th>
+                                <th class="border-0">{{ 'monto total del pedido' }}</th>
+                                <th class="border-0">{{ 'fecha de incorporación' }}</th>
+                                <th class="border-0">{{ 'activo' }}/{{ 'inactivo' }}</th>
+                                <th class="border-0">{{ 'comportamiento' }}</th>
                             </tr>
                         </thead>
                         @php
@@ -178,7 +178,7 @@
                                         <div class="d-flex align-items-center gap-2">
                                             <img class="rounded aspect-1-1 object-cover" width="40" data-onerror-image="{{asset('assets/admin/img/160x160/img1.jpg')}}" src="{{ $customer->image_full_url }}" alt="Image Description">
                                             <a href="{{ route('admin.users.customer.view', [$customer['id']]) }}" class="text--hover max-w-400px min-w-220">
-                                                {{ $customer['f_name'] ?  $customer['f_name'] . ' ' . $customer['l_name'] : translate('messages.Incomplete_Profile') }}
+                                                {{ $customer['f_name'] ?  $customer['f_name'] . ' ' . $customer['l_name'] : 'Perfil incompleto' }}
                                             </a>
                                         </div>
                                     </td>
@@ -211,7 +211,7 @@
                                     </td>
                                     <td>
                                         <label class="toggle-switch toggle-switch-sm ml-xl-4" for="stocksCheckbox{{ $customer->id }}">
-                                            <input type="checkbox" data-url="{{ route('admin.users.customer.status', [$customer->id, $customer->status ? 0 : 1]) }}" data-message="{{ $customer->status? translate('messages.you_want_to_block_this_customer'): translate('messages.you_want_to_unblock_this_customer') }}"
+                                            <input type="checkbox" data-url="{{ route('admin.users.customer.status', [$customer->id, $customer->status ? 0 : 1]) }}" data-message="{{ $customer->status? 'quieres bloquear a este cliente': 'quieres desbloquear a este cliente' }}"
                                                 class="toggle-switch-input status_change_alert" id="stocksCheckbox{{ $customer->id }}"
                                                 {{ $customer->status ? 'checked' : '' }}>
                                             <span class="toggle-switch-label">
@@ -223,12 +223,12 @@
                                         <div class="btn--container justify-content-center">
                                             <a class="btn action-btn btn--warning btn-outline-warning"
                                                 href="{{ route('admin.users.customer.view', [$customer['id']]) }}"
-                                                title="{{ translate('messages.view_customer') }}"><i
+                                                title="{{ 'ver cliente' }}"><i
                                                     class="tio-visible-outlined"></i>
                                             </a>
                                             <a class="btn action-btn btn--primary btn-outline-primary"
                                                 href="{{ route('admin.customer.edit', [$customer['id']]) }}"
-                                                title="{{ translate('messages.edit_customer') }}"><i
+                                                title="{{ 'editar cliente' }}"><i
                                                     class="tio-edit"></i>
                                             </a>
                                         </div>
@@ -251,7 +251,7 @@
             <div class="empty--data">
                 <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                 <h5>
-                    {{translate('no_data_found')}}
+                    {{'no se encontraron datos'}}
                 </h5>
             </div>
             @endif
@@ -275,14 +275,14 @@
         function status_change_alert(url, message, e) {
             e.preventDefault();
             Swal.fire({
-                title: '{{ translate('messages.Are you sure?') }}',
+                title: '{{ '¿Está seguro?' }}',
                 text: message,
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{ translate('messages.no') }}',
-                confirmButtonText: '{{ translate('messages.Yes') }}',
+                cancelButtonText: '{{ 'No' }}',
+                confirmButtonText: '{{ 'Sí' }}',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {

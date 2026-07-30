@@ -1,5 +1,5 @@
 @extends('layouts.admin.app')
-@section('title', translate('add_Offline_Payment_Method'))
+@section('title', 'agregar método de pago sin conexión')
 
 @push('css_or_js')
 
@@ -13,7 +13,7 @@
         <div class="mb-0 pb-2">
             <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
 
-                {{translate('Add_Offline_Payment_Method')}}
+                {{'Agregar método de pago sin conexión'}}
             </h2>
         </div>
 
@@ -21,7 +21,7 @@
                         @csrf
                         <div class="d-flex justify-content-end mb-3 mt-3">
                             <div class="text--primary-2 d-flex flex-wrap align-items-center " id="bkashInfoModalButton">
-                                    {{ translate('Section_View') }}
+                                    {{ 'Vista en sección' }}
                                 <div class="ml-2 blinkings">
                                     <i class="tio-info-outined"></i>
                                 </div>
@@ -32,10 +32,10 @@
                                 <div class="d-flex align-items-center gap-2">
 
                                     <img width="25" src="{{asset('assets/admin/img/payment-card.png')}}" alt="">
-                                    <h4 class="page-title mt-2">{{translate('payment_information')}}</h4>
+                                    <h4 class="page-title mt-2">{{'información de pago'}}</h4>
                                 </div>
                                 <button class="btn btn--primary" id="add-more-field-payment">
-                                    <i class="tio-add"></i> {{ translate('Add_New_Field') }}
+                                    <i class="tio-add"></i> {{ 'Agregar nuevo campo' }}
                                 </button>
                             </div>
                             <div class="card-body">
@@ -43,8 +43,8 @@
                                 <div class="row">
                                     <div class="col-xl-4 col-sm-6">
                                         <div class="form-group">
-                                            <label for="method_name" class="title_color">{{ translate('payment_Method_Name') }}</label>
-                                            <input type="text" class="form-control text-break" id="method_name" placeholder="{{ translate('ex:_bkash') }}" name="method_name" required>
+                                            <label for="method_name" class="title_color">{{ 'Nombre del método de pago' }}</label>
+                                            <input type="text" class="form-control text-break" id="method_name" placeholder="{{ 'ej: bkash' }}" name="method_name" required>
                                         </div>
                                     </div>
                                 </div>
@@ -54,7 +54,7 @@
 
                         <div class="d-flex justify-content-end mb-3 mt-4">
                             <div class="d-flex gap-2 justify-content-end text-primary fw-bold" id="paymentInfoModalButton">
-                                {{ translate('Section_View') }}
+                                {{ 'Vista en sección' }}
                                 <div class="ml-2 blinkings">
                                     <i class="tio-info-outined"></i>
                                 </div>
@@ -64,19 +64,19 @@
                             <div class="card-header d-flex flex-wrap align-items-center justify-content-between gap-2">
                                 <div class="d-flex align-items-center gap-2">
                                 <img width="25" src="{{asset('assets/admin/img/payment-card-fill.png')}}" alt="">
-                                <h4 class="page-title mt-2">{{translate('Required Information from Customer')}}</h4>
+                                <h4 class="page-title mt-2">{{'Información requerida del cliente'}}</h4>
                                 </div>
                                 <button class="btn btn--primary" id="add-more-field-customer">
-                                    <i class="tio-add"></i> {{ translate('Add_New_Field') }}
+                                    <i class="tio-add"></i> {{ 'Agregar nuevo campo' }}
                                 </button>
                             </div>
                             <div class="card-body">
                                 <div class="row mb-2">
                                     <div class="col-xl-4 col-sm-6">
-                                        <label for="payment_note">{{translate('Payment_Note')}} </label>
+                                        <label for="payment_note">{{'Nota de pago'}} </label>
                                         <div class="form-floating">
                                             <textarea class="form-control" name="payment_note" id="payment_note"
-                                                placeholder="{{ translate('Ex:ABC_Company') }}"  disabled></textarea>
+                                                placeholder="{{ 'Ej: Compañía ABC' }}"  disabled></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -87,8 +87,8 @@
 
                         <!-- BUTTON -->
                         <div class="btn--container justify-content-end mt-20">
-                            <button type="reset" class="btn btn--secondary">{{translate('Reset')}}</button>
-                            <button type="submit" class="btn btn--primary demo_check">{{translate('Submit')}}</button>
+                            <button type="reset" class="btn btn--secondary">{{'Reiniciar'}}</button>
+                            <button type="submit" class="btn btn--primary demo_check">{{'Entregar'}}</button>
                         </div>
                     </form>
                 </div>
@@ -106,10 +106,10 @@
                 </div>
             <div class="modal-body">
             <div class="d-flex align-items-center flex-column gap-3 text-center">
-                <h3>{{translate('Offline Payment')}}
+                <h3>{{'Pago sin conexión'}}
                 </h3>
                 <img width="100" src="{{asset('assets/admin/img/offline_payment.png')}}" alt="">
-                <p class="text-muted">{{translate('This view is from the user app.')}} <br class="d-none d-sm-block"> {{translate('This is how customer will see in the app')}}</p>
+                <p class="text-muted">{{'Esta vista es desde la aplicación del usuario.'}} <br class="d-none d-sm-block"> {{'Así verá el cliente en la aplicación'}}</p>
             </div>
 
             <div class="rounded p-4 mt-3" id="offline_payment_top_part">
@@ -118,7 +118,7 @@
                 <div class="d-flex justify-content-between gap-2 mb-3">
                     <h4 id="payment_modal_method_name"><span></span></h4>
                     <div class="text-primary d-flex align-items-center gap-2">
-                        {{translate('Pay on this account')}}
+                        {{'Pagar en esta cuenta'}}
                         <img width="25" src="{{asset('assets/admin/img/tick.png')}}" alt="">
                     </div>
                 </div>
@@ -130,9 +130,9 @@
         </div>
 
             <div class="rounded p-4 mt-3 mt-4" id="offline_payment_bottom_part">
-                <h2 class="text-center mb-4">{{translate('Amount')}} : xxx</h2>
+                <h2 class="text-center mb-4">{{'Cantidad'}} : xxx</h2>
 
-                <h4 class="mb-3">{{translate('Payment Info')}}</h4>
+                <h4 class="mb-3">{{'Información de pago'}}</h4>
                 <div class="d-flex flex-column gap-3 mb-3" id="customer-info-display-div">
 
                 </div>
@@ -186,16 +186,16 @@
                             <div class="row align-items-end">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>{{translate('input_field_name')}} *</label>
+                                        <label>{{'nombre del campo de entrada'}} *</label>
                                         <input type="text" class="form-control" name="customer_input[${counter}]"
-                                        placeholder="{{ translate('ex') }}: {{ translate('payment_By') }}" value="" required>
+                                        placeholder="{{ 'ex' }}: {{ 'pago por' }}" value="" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>{{translate('placeholder')}} *</label>
+                                        <label>{{'marcador de posición'}} *</label>
                                         <input type="text" class="form-control" name="customer_placeholder[${counter}]"
-                                        placeholder="{{ translate('ex') }}: {{ translate('Enter Name') }}" value="" required>
+                                        placeholder="{{ 'ex' }}: {{ 'Introduzca el nombre' }}" value="" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -204,7 +204,7 @@
                                             <div class="form-check text-start mb-3">
                                             <input class="form-check-input" type="checkbox" value="1" name="is_required[${counter}]" id="flexCheckDefault__${counter}" checked>
                                             <label class="form-check-label" for="flexCheckDefault__${counter}">
-                                                {{translate('is_required_?')}}
+                                                {{'se requiere ?'}}
                                             </label>
                                         </div>
                                         <span class="btn action-btn btn--danger btn-outline-danger remove-field"  data-id="${counter}" style="cursor: pointer;">
@@ -223,8 +223,8 @@
                     counter++;
                 } else {
                     Swal.fire({
-                        title: '{{translate('Reached maximum')}}',
-                        confirmButtonText: '{{translate('ok')}}',
+                        title: '{{'Máximo alcanzado'}}',
+                        confirmButtonText: '{{'OK'}}',
                     });
                 }
             })
@@ -238,14 +238,14 @@
                             <div class="row align-items-end">
                                 <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="title_color">{{ translate('Title') }}</label>
-                                    <input type="text" name="input_name[]" class="form-control" placeholder="{{ translate('ex') }}: {{ translate('Bank_Name') }}" required>
+                                    <label class="title_color">{{ 'Título' }}</label>
+                                    <input type="text" name="input_name[]" class="form-control" placeholder="{{ 'ex' }}: {{ 'Nombre del banco' }}" required>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="input_data" class="title_color">{{ translate('Data') }}</label>
-                                    <input type="text" name="input_data[]" class="form-control" placeholder="{{ translate('ex') }}: {{ translate('ABC_bank') }}" required>
+                                    <label for="input_data" class="title_color">{{ 'Datos' }}</label>
+                                    <input type="text" name="input_data[]" class="form-control" placeholder="{{ 'ex' }}: {{ 'banco abc' }}" required>
                                 </div>
                             </div>
                                 <div class="col-md-4">
@@ -266,8 +266,8 @@
                     counterPayment++;
                 } else {
                     Swal.fire({
-                        title: '{{translate('Reached maximum')}}',
-                        confirmButtonText: '{{translate('ok')}}',
+                        title: '{{'Máximo alcanzado'}}',
+                        confirmButtonText: '{{'OK'}}',
                     });
                 }
             })

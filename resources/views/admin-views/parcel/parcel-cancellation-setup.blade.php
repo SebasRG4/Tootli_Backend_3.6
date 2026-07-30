@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Parcel Cancellation Setup'))
+@section('title', 'Configuración de cancelación de paquetes')
 @section('parcel_cancellation')
     active
 @endsection
@@ -11,24 +11,24 @@
         <div class="d-flex align-items-center mb-20 gap-2">
             <img width="22" height="22" src="{{ asset('assets/admin/img/parcel-cancellation-setup.png') }}"
                 alt="cencellation-icon">
-            <h2 class="mb-0 fs-24 lh-base">{{ translate('Parcel Cancellation Setup') }}</h2>
+            <h2 class="mb-0 fs-24 lh-base">{{ 'Configuración de cancelación de paquetes' }}</h2>
         </div>
         <div class="card mb-20">
             <div class="card-header rounded-10 flex-sm-nowrap flex-wrap gap-2">
                 <div class="max-w-700">
-                    <h4 class="mb-1 text-title">{{ translate('Parcel Cancellation Feature') }}</h4>
+                    <h4 class="mb-1 text-title">{{ 'Función de cancelación de paquetes' }}</h4>
                     <p class="fs-12 m-0 text-title">
-                        {{ translate('Enable and configure cancellation rules that apply after parcel pickup.') }}</p>
+                        {{ 'Habilite y configure reglas de cancelación que se aplican después de la recogida del paquete.' }}</p>
                 </div>
                 {{-- <label class="toggle-switch toggle-switch-sm">
                     <input type="checkbox" data-id="parcel_cancellation_status"
                         {{ $parcel_cancellation_status == 1 ? 'checked' : '' }}
                         data-image-off="{{ asset('assets/admin/img/off-danger.png') }}"
                         data-image-on="{{ asset('assets/admin/img/on-theme.png') }}"
-                        data-title-on="<strong>{{ translate('Are you sure you want to enable the Parcel Cancellation feature?') }}</strong>"
-                        data-title-off="<strong>{{ translate('Are you sure you want to Disable the Parcel Cancellation feature?') }}</strong>"
-                        data-text-on="<p>{{ translate('If enabled, both customers and deliverymen can cancel delivery orders') }}</p>"
-                        data-text-off="<p>{{ translate('If disable, both customers and deliverymen can’t cancel delivery orders') }}</p>"
+                        data-title-on="<strong>{{ '¿Está seguro de que desea habilitar la función de cancelación de paquetes?' }}</strong>"
+                        data-title-off="<strong>{{ '¿Está seguro de que desea desactivar la función de cancelación de paquetes?' }}</strong>"
+                        data-text-on="<p>{{ 'Si está habilitado, tanto los clientes como los repartidores pueden cancelar los pedidos de entrega.' }}</p>"
+                        data-text-off="<p>{{ 'Si está deshabilitado, tanto los clientes como los repartidores no podrán cancelar los pedidos de entrega.' }}</p>"
                         class="status toggle-switch-input dynamic-checkbox" name="parcel_cancellation_status"
                         id="parcel_cancellation_status">
 
@@ -51,9 +51,9 @@
                             <div class="row align-items-center g-3">
                                 <div class="col-lg-4 col-md-5">
                                     <div class="max-w-353px">
-                                        <h4 class="mb-1 text-title">{{ translate('Basic Setup') }}</h4>
+                                        <h4 class="mb-1 text-title">{{ 'Configuración básica' }}</h4>
                                         <p class="fs-12 m-0 color-758590">
-                                            {{ translate('Setup additional delivery cancelation fee & return fee for customer and rider.') }}
+                                            {{ 'Configure una tarifa adicional de cancelación de entrega y una tarifa de devolución para el cliente y el pasajero.' }}
                                         </p>
                                     </div>
                                 </div>
@@ -66,7 +66,7 @@
                                                     <div
                                                         class="d-flex align-items-center gap-1 justify-content-between flex-wrap mb-2">
                                                         <label for=""
-                                                            class="fs-14 mb-0 color-222324">{{ translate('Return Fee (%)') }}
+                                                            class="fs-14 mb-0 color-222324">{{ 'Tarifa de devolución (%)' }}
                                                          <span class="text-danger">* </span>
                                                         </label>
                                                         <label class="toggle-switch toggle-switch-sm-extra">
@@ -96,7 +96,7 @@
                                                         id="cancalation_address_">
                                                 </div>
                                                 <label class="form-check-label ml-2 fs-14 " for="cancalation_address_">
-                                                    {{ translate('Do not charge any return fee to customer if deliveryman cancel the order after pickup') }}
+                                                    {{ 'No cobre ninguna tarifa de devolución al cliente si el repartidor cancela el pedido después de la recogida.' }}
                                                 </label>
                                             </div>
                                         </div>
@@ -106,9 +106,9 @@
                             <div class="row align-items-center g-3">
                                 <div class="col-lg-4 col-md-5">
                                     <div class="max-w-353px">
-                                        <h4 class="mb-1 text-title">{{ translate('Parcel Return Time & Fee') }}</h4>
+                                        <h4 class="mb-1 text-title">{{ 'Tiempo y tarifa de devolución del paquete' }}</h4>
                                         <p class="fs-12 m-0 color-758590">
-                                            {{ translate('When the toggle is turned ON the parcel return time and fee are activated for rider.') }}
+                                            {{ 'Cuando la palanca está activada, la hora de devolución del paquete y la tarifa se activan para el pasajero.' }}
                                         </p>
                                     </div>
                                 </div>
@@ -119,7 +119,7 @@
                                                 <div
                                                     class="d-flex align-items-center justify-content-between bg-white border px-3 py-2 rounded h-45px">
                                                     <label for=""
-                                                        class="fs-14 fs-14 w-100 mb-0">{{ translate('Status') }}</label>
+                                                        class="fs-14 fs-14 w-100 mb-0">{{ 'Estado' }}</label>
                                                     <label class="toggle-switch toggle-switch-sm-extra">
                                                         <input id="return_time_fee_status" name='status' type="checkbox"
                                                             class="status toggle-switch-input" value='1'
@@ -134,10 +134,10 @@
                                             <div class="col-sm-6 col-md-12 col-lg-6">
                                                 <div class="form-group m-0">
                                                     <label for="" class="fs-14 mb-2 color-222324">
-                                                        {{ translate('Set Time') }}
+                                                        {{ 'Establecer hora' }}
                                                         <span class="fs-12 color-A7A7A7" data-toggle="tooltip"
                                                             data-placement="top"
-                                                            data-original-title="{{ translate('Set Time') }}">
+                                                            data-original-title="{{ 'Establecer hora' }}">
                                                             <i class="tio-info"></i>
                                                         </span>
                                                         <span class="text-danger">* </span>
@@ -151,7 +151,7 @@
 
                                                         <select name="return_time_type" id=""
                                                             class="custom-select bg-F3F4F5 w-auto border-0 rounded-0  disableClass {{ $parcel_return_time_fee['status'] ?? null ? '' : 'disabled' }}">
-                                                            <option selected value="day">{{ translate('Day') }}</option>
+                                                            <option selected value="day">{{ 'Día' }}</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -159,11 +159,11 @@
                                             <div class="col-sm-6 col-md-12 col-lg-6">
                                                 <div class="form-group m-0">
                                                     <label for="" class="fs-14 mb-2 color-222324">
-                                                        {{ translate('Return Fee for Driver if Time Exceeds ') }}
+                                                        {{ 'Tarifa de devolución para el conductor si el tiempo excede' }}
                                                         ({{ \App\CentralLogics\Helpers::currency_symbol() }})
                                                         <span class="fs-12 color-A7A7A7" data-toggle="tooltip"
                                                             data-placement="top"
-                                                            data-original-title="{{ translate('Return Fee for Driver if Time Exceeds ') }}">
+                                                            data-original-title="{{ 'Tarifa de devolución para el conductor si el tiempo excede' }}">
                                                             <i class="tio-info"></i>
                                                             <span class="text-danger">* </span>
                                                         </span>
@@ -182,9 +182,9 @@
                         </div>
                         <div class="btn--container justify-content-end mt-4">
                             <button type="reset"
-                                class="btn min-w-120px btn--reset">{{ translate('messages.reset') }}</button>
+                                class="btn min-w-120px btn--reset">{{ 'reiniciar' }}</button>
                             <button type="submit"
-                                class="btn min-w-120px btn--primary">{{ translate('messages.save') }}</button>
+                                class="btn min-w-120px btn--primary">{{ 'ahorrar' }}</button>
                         </div>
                     </div>
                 </form>
@@ -196,14 +196,14 @@
             @csrf
             @method('post')
             <div class="card-header flex-sm-nowrap flex-wrap gap-2">
-                <h3 class="m-0 text-title">{{ translate('Parcel cancellation reason') }}</h3>
+                <h3 class="m-0 text-title">{{ 'Motivo de cancelación del paquete' }}</h3>
             </div>
             <div class="card-body">
                 @if ($language)
                     <ul class="nav nav-tabs border-0 mb-4">
                         <li class="nav-item">
                             <a class="nav-link lang_link active" href="#"
-                                id="default-link">{{ translate('messages.default') }}</a>
+                                id="default-link">{{ 'por defecto' }}</a>
                         </li>
                         @foreach ($language as $lang)
                             <li class="nav-item">
@@ -218,8 +218,8 @@
                 <div class="row g-3">
                     <div class="col-sm-6 lang_form" id="default-form">
                         <div class="form-group m-0">
-                            <label class="fs-14 mb-2 color-222324">{{ translate('Parcel cancellation reason') }}
-                                ({{ translate('Default') }})
+                            <label class="fs-14 mb-2 color-222324">{{ 'Motivo de cancelación del paquete' }}
+                                ({{ 'Por defecto' }})
                                  <span class="text-danger">* </span>
                             </label>
                             <textarea rows="1" name="reason[]" data-target="#char-count"
@@ -232,7 +232,7 @@
                     @if ($language)
                         @foreach ($language as $lang)
                             <div class="col-sm-6  lang_form d-none" id="{{ $lang }}-form">
-                                <label class="fs-14 mb-2 color-222324 ">{{ translate('Parcel cancellation reason') }}
+                                <label class="fs-14 mb-2 color-222324 ">{{ 'Motivo de cancelación del paquete' }}
                                     ({{ strtoupper($lang) }})
                                      <span class="text-danger">* </span>
                                 </label>
@@ -247,46 +247,46 @@
                     <div class="col-sm-6 col-lg-3">
                         <div class="form-group m-0">
                             <label for="" class="fs-14 mb-2 color-222324">
-                                {{ translate('Cancellation type') }}
+                                {{ 'Tipo de cancelación' }}
                                  <span class="text-danger">* </span>
                             </label>
                             <select name="cancellation_type" required id=""
                                 class="custom-select fs-12 title-clr">
-                                <option value="" selected disabled>{{ translate('Select Cancellation Type') }}
+                                <option value="" selected disabled>{{ 'Seleccione el tipo de cancelación' }}
                                 </option>
-                                <option value="before_pickup">{{ translate('before_pickup') }}</option>
-                                <option value="after_pickup">{{ translate('after_pickup') }}</option>
+                                <option value="before_pickup">{{ 'antes de la recogida' }}</option>
+                                <option value="after_pickup">{{ 'después de la recogida' }}</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-sm-6 col-lg-3">
                         <div class="form-group m-0">
                             <label for="" class="fs-14 mb-2 color-222324">
-                                {{ translate('User Type') }}
+                                {{ 'Tipo de usuario' }}
                                  <span class="text-danger">* </span>
                             </label>
                             <select name="user_type" required id="" class="custom-select fs-12 title-clr">
-                                <option value="" selected disabled>{{ translate('Select User Type') }}</option>
-                                <option value="customer">{{ translate('Customer') }}</option>
-                                {{-- <option value="admin">{{ translate('Admin') }}</option> --}}
-                                {{-- <option value="vendor">{{ translate('Vendor') }}</option> --}}
-                                <option value="deliveryman">{{ translate('Deliveryman') }}</option>
+                                <option value="" selected disabled>{{ 'Seleccionar tipo de usuario' }}</option>
+                                <option value="customer">{{ 'Cliente' }}</option>
+                                {{-- <option value="admin">{{ 'Administración' }}</option> --}}
+                                {{-- <option value="vendor">{{ 'Proveedor' }}</option> --}}
+                                <option value="deliveryman">{{ 'repartidor' }}</option>
                             </select>
                         </div>
                     </div>
 
                 </div>
                 <div class="btn--container justify-content-end mt-4">
-                    <button type="reset" class="btn min-w-120px btn--reset">{{ translate('messages.reset') }}</button>
+                    <button type="reset" class="btn min-w-120px btn--reset">{{ 'reiniciar' }}</button>
                     <button type="submit"
-                        class="btn min-w-120px btn--primary">{{ translate('messages.submit') }}</button>
+                        class="btn min-w-120px btn--primary">{{ 'entregar' }}</button>
                 </div>
             </div>
         </form>
 
         <div class="card border-0">
             <div class="card-header border-0 flex-wrap gap-2">
-                <h4 class="title-clr m-0">{{ translate('messages.parcel_cancellation_reason') }}</h4>
+                <h4 class="title-clr m-0">{{ 'motivo de cancelación del paquete' }}</h4>
                 <div class="d-flex align-items-center flex-wrap gap-3">
                     <form class="search-form w-340-lg">
                         <div class="input-group input--group">
@@ -302,24 +302,24 @@
                                 "target": "#usersExportDropdown",
                                 "type": "css-animation"
                             }'>
-                            <i class="tio-download-to mr-1 text-title"></i> {{ translate('messages.export') }}
+                            <i class="tio-download-to mr-1 text-title"></i> {{ 'exportar' }}
                         </a>
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                            <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                            <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                             <a id="export-excel" class="dropdown-item"
                                 href="{{ route('admin.parcel.cancellationReasonExport', ['type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
-                                {{ translate('messages.excel') }}
+                                {{ 'sobresalir' }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
                                 href="{{ route('admin.parcel.cancellationReasonExport', ['type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
-                                .{{ translate('messages.csv') }}
+                                .{{ 'csv' }}
                             </a>
                         </div>
                     </div>
@@ -330,22 +330,22 @@
                     <thead class="bg-table-head">
                         <tr>
                             <th class="fs-14 text-title font-semibold top-border-table">
-                                {{ translate('SL') }}
+                                {{ 'SL' }}
                             </th>
                             <th class="fs-14 text-title font-semibold top-border-table">
-                                {{ translate('messages.reason') }}
+                                {{ 'razón' }}
                             </th>
                             <th class="fs-14 text-title font-semibold top-border-table">
-                                {{ translate('messages.cancellation_type') }}
+                                {{ 'tipo de cancelación' }}
                             </th>
                             <th class="fs-14 text-title font-semibold top-border-table">
-                                {{ translate('messages.user_type') }}
+                                {{ 'tipo de usuario' }}
                             </th>
                             <th class="fs-14 text-title font-semibold top-border-table">
-                                {{ translate('messages.status') }}
+                                {{ 'estado' }}
                             </th>
                             <th class="fs-14 text-center text-title font-semibold top-border-table">
-                                {{ translate('messages.action') }}
+                                {{ 'acción' }}
                             </th>
                         </tr>
                     </thead>
@@ -380,14 +380,14 @@
                                         <a class="btn btn-sm text-end action-btn btn-outline-theme-dark text--info info-hover offcanvas-trigger get_data data-info-show"
                                             data-target="#offcanvas__customBtn3" data-id="{{ $item['id'] }}"
                                             data-url="{{ route('admin.parcel.cancellationReasonEdit', [$item['id']]) }}"
-                                            href="javascript:" title="{{ translate('messages.edit_reason') }}"><i
+                                            href="javascript:" title="{{ 'editar motivo' }}"><i
                                                 class="tio-edit"></i></a>
 
 
                                         <a class="btn action-btn btn--danger btn-outline-danger form-alert"
                                             href="javascript:" data-id="reason-{{ $item['id'] }}"
-                                            data-message="{{ translate('Want to delete this cancellation reason?') }}"
-                                            title="{{ translate('messages.delete_cancellation_reason') }}"><i
+                                            data-message="{{ '¿Quieres eliminar este motivo de cancelación?' }}"
+                                            title="{{ 'eliminar motivo de cancelación' }}"><i
                                                 class="tio-delete-outlined"></i>
                                         </a>
 
@@ -414,7 +414,7 @@
                 <div class="empty--data">
                     <img src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
                     <h5>
-                        {{ translate('no_data_found') }}
+                        {{ 'no se encontraron datos' }}
                     </h5>
                 </div>
             @endif

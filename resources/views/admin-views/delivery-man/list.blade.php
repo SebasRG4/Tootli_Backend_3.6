@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.deliverymen'))
+@section('title','repartidores')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -14,7 +14,7 @@
                 <span class="page-header-icon">
                     <img src="{{asset('assets/admin/img/delivery-man.png')}}" class="w--26" alt="">
                 </span>
-                <span>{{translate('messages.deliveryman')}}</span>
+                <span>{{'Repartidor'}}</span>
             </h1>
         </div>
         <!-- End Page Header -->
@@ -24,30 +24,30 @@
             <div class="card-header py-2 border-0">
                 <div class="search--button-wrapper justify-content-end">
                     <h5 class="card-title mr-auto">
-                        {{translate('messages.deliveryman_list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$deliveryMen->total()}}</span>
+                        {{'lista de repartidor'}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$deliveryMen->total()}}</span>
                     </h5>
                     <div class="min--200">
                         <select name="filter" class="form-control js-select2-custom set-filter" data-filter="filter"
                         data-url="{{ url()->full() }}">
-                            <option  value="all">{{ translate('messages.All_Types') }}</option>
-                            <option {{  request()?->get('filter') == 'active' ? 'selected' : '' }}  value="active">{{ translate('messages.Online') }}</option>
-                            <option  {{  request()?->get('filter') == 'inactive' ? 'selected' : '' }} value="inactive">{{ translate('messages.Offline') }}</option>
-                            <option {{  request()?->get('filter') == 'blocked' ? 'selected' : '' }}  value="blocked">{{ translate('messages.Suspended') }}</option>
+                            <option  value="all">{{ 'Todos los tipos' }}</option>
+                            <option {{  request()?->get('filter') == 'active' ? 'selected' : '' }}  value="active">{{ 'En línea' }}</option>
+                            <option  {{  request()?->get('filter') == 'inactive' ? 'selected' : '' }} value="inactive">{{ 'Desconectado' }}</option>
+                            <option {{  request()?->get('filter') == 'blocked' ? 'selected' : '' }}  value="blocked">{{ 'Suspendido' }}</option>
                         </select>
                     </div>
                     <div class="min--200">
                         <select name="job_type" class="form-control js-select2-custom set-filter" data-filter="job_type"
                         data-url="{{ url()->full() }}">
-                            <option  value="all">{{ translate('messages.All_Job_Types') }}</option>
-                            <option  {{ request()?->get('job_type') == 'freelancer' ? 'selected' : '' }} value="freelancer">{{ translate('messages.Freelancer') }}</option>
-                            <option {{  request()?->get('job_type') == 'salary_base' ? 'selected' : '' }}  value="salary_base">{{ translate('messages.Salary_Base') }}</option>
+                            <option  value="all">{{ 'Todos los tipos de trabajo' }}</option>
+                            <option  {{ request()?->get('job_type') == 'freelancer' ? 'selected' : '' }} value="freelancer">{{ 'Persona de libre dedicación' }}</option>
+                            <option {{  request()?->get('job_type') == 'salary_base' ? 'selected' : '' }}  value="salary_base">{{ 'Base salarial' }}</option>
                         </select>
                     </div>
                     @if(!isset(auth('admin')->user()->zone_id))
                     <div class="min--200">
                         <select name="zone_id" class="form-control js-select2-custom set-filter" data-filter="zone_id"
                         data-url="{{ url()->full() }}">
-                            <option value="all">{{ translate('messages.All_Zones') }}</option>
+                            <option value="all">{{ 'Todas las Zonas' }}</option>
                             @foreach(\App\Models\Zone::orderBy('name')->get() as $z)
                                 <option
                                     value="{{$z['id']}}" {{isset($zone) && $zone->id == $z['id']?'selected':''}}>
@@ -61,14 +61,14 @@
                     <form class="search-form">
                         <div class="input-group input--group">
                             <input id="datatableSearch_" type="search" name="search" class="form-control h--45px"
-                            placeholder="{{translate('ex:_DM_name_email_or_phone')}}" value="{{ request()->get('search') }}" aria-label="Search" required>
+                            placeholder="{{'ej: DM nombre correo electrónico o teléfono'}}" value="{{ request()->get('search') }}" aria-label="Search" required>
                             <button type="submit" class="btn btn--secondary h--45px"><i class="tio-search"></i></button>
 
                         </div>
                         <!-- End Search -->
                     </form>
                     @if(request()->get('search'))
-                    <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                    <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{'reiniciar'}}</button>
                     @endif
 
                     <!-- Unfold -->
@@ -78,23 +78,23 @@
                                     "target": "#usersExportDropdown",
                                     "type": "css-animation"
                                 }'>
-                            <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                            <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                         </a>
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                            <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                            <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                             <a id="export-excel" class="dropdown-item" href="{{route('admin.users.delivery-man.export', ['type'=>'excel',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
-                                {{ translate('messages.excel') }}
+                                {{ 'sobresalir' }}
                             </a>
                             <a id="export-csv" class="dropdown-item" href="{{route('admin.users.delivery-man.export', ['type'=>'csv',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
-                                .{{ translate('messages.csv') }}
+                                .{{ 'csv' }}
                             </a>
                         </div>
                     </div>
@@ -114,15 +114,15 @@
                         }'>
                     <thead class="thead-light">
                     <tr>
-                        <th class="border-0 text-capitalize">{{translate('sl')}}</th>
-                        <th class="border-0 text-capitalize">{{translate('messages.name')}}</th>
-                        <th class="border-0 text-capitalize">{{translate('messages.contact_info')}}</th>
-                        <th class="border-0 text-capitalize">{{translate('messages.zone')}}</th>
-                        <th class="border-0 text-capitalize">{{translate('messages.services')}}</th>
-                        <th class="border-0 text-capitalize">{{translate('messages.Total_Completed_Orders')}}</th>
-                        <th class="border-0 text-capitalize">{{translate('messages.availability_status')}}</th>
-                        <th class="border-0 text-capitalize">{{translate('messages.Status')}}</th>
-                        <th class="border-0 text-center text-capitalize">{{translate('messages.action')}}</th>
+                        <th class="border-0 text-capitalize">{{'SL'}}</th>
+                        <th class="border-0 text-capitalize">{{'nombre'}}</th>
+                        <th class="border-0 text-capitalize">{{'información de contacto'}}</th>
+                        <th class="border-0 text-capitalize">{{'zona'}}</th>
+                        <th class="border-0 text-capitalize">{{'servicios'}}</th>
+                        <th class="border-0 text-capitalize">{{'Total de pedidos completados'}}</th>
+                        <th class="border-0 text-capitalize">{{'estado de disponibilidad'}}</th>
+                        <th class="border-0 text-capitalize">{{'Estado'}}</th>
+                        <th class="border-0 text-center text-capitalize">{{'acción'}}</th>
                     </tr>
                     </thead>
 
@@ -152,20 +152,20 @@
                                 @if($dm->zone)
                                 <label class="text--title font-medium mb-0">{{$dm->zone->name}}</label>
                                 @else
-                                <label class="text--title font-medium mb-0">{{translate('messages.zone_deleted')}}</label>
+                                <label class="text--title font-medium mb-0">{{'zona eliminada'}}</label>
                                 @endif
                             </td>
                             <td>
                                 @if($dm->can_deliver)
-                                <span class="badge badge-soft-info mb-1">{{translate('messages.delivery')}}</span>
+                                <span class="badge badge-soft-info mb-1">{{'entrega'}}</span>
                                 @endif
                                 @if($dm->can_drive_taxi)
                                 <div class="d-flex align-items-center gap-1">
-                                    <span class="badge badge-soft-warning">{{translate('messages.taxi')}}</span>
+                                    <span class="badge badge-soft-warning">{{'Taxi'}}</span>
                                     @if($dm->taxi_is_verified)
-                                        <i class="tio-checkmark-circle text-success" title="{{translate('messages.verified')}}"></i>
+                                        <i class="tio-checkmark-circle text-success" title="{{'verificado'}}"></i>
                                     @else
-                                        <i class="tio-warning text-warning" title="{{translate('messages.unverified')}}"></i>
+                                        <i class="tio-warning text-warning" title="{{'inconfirmado'}}"></i>
                                     @endif
                                 </div>
                                 @endif
@@ -175,29 +175,29 @@
                             </td>
                             <td>
                                 <div>
-                                    {{translate('messages.currently_assigned_orders')}} : {{$dm->current_orders}}
+                                    {{'órdenes actualmente asignadas'}} : {{$dm->current_orders}}
                                 </div>
                                 <div>
-                                    {{translate('messages.active_status')}} :
+                                    {{'estado activo'}} :
                                     @if($dm->application_status == 'approved')
                                         @if($dm->active)
-                                        <strong class="text-capitalize text-primary">{{translate('messages.online')}}</strong>
+                                        <strong class="text-capitalize text-primary">{{'en línea'}}</strong>
                                         @else
-                                        <strong class="text-capitalize text-secondary">{{translate('messages.offline')}}</strong>
+                                        <strong class="text-capitalize text-secondary">{{'desconectado'}}</strong>
                                         @endif
                                     @elseif ($dm->application_status == 'denied')
-                                        <strong class="text-capitalize text-danger">{{translate('messages.denied')}}</strong>
+                                        <strong class="text-capitalize text-danger">{{'denegado'}}</strong>
                                     @else
-                                        <strong class="text-capitalize text-info">{{translate('messages.pending')}}</strong>
+                                        <strong class="text-capitalize text-info">{{'Pendiente'}}</strong>
                                     @endif
                                 </div>
                             </td>
 
                             <td>
                                 @if ($dm->status == 1)
-                                <strong class="text-capitalize text-primary">{{translate('messages.Active')}}</strong>
+                                <strong class="text-capitalize text-primary">{{'Activo'}}</strong>
                                 @else
-                                <strong class="text-capitalize text-danger">{{translate('messages.Suspended')}}</strong>
+                                <strong class="text-capitalize text-danger">{{'Suspendido'}}</strong>
 
                                 @endif
 
@@ -206,12 +206,12 @@
                                 <div class="btn--container justify-content-center">
                                     <a class="btn action-btn btn--warning btn-outline-warning"
                                             href="{{route('admin.users.delivery-man.preview',[$dm['id']])}}"
-                                            title="{{ translate('messages.view') }}"><i
+                                            title="{{ 'vista' }}"><i
                                                 class="tio-visible-outlined"></i>
                                         </a>
-                                    <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.users.delivery-man.edit',[$dm['id']])}}" title="{{translate('messages.edit')}}"><i class="tio-edit"></i>
+                                    <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.users.delivery-man.edit',[$dm['id']])}}" title="{{'editar'}}"><i class="tio-edit"></i>
                                         </a>
-                                        <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="delivery-man-{{$dm['id']}}" data-message="{{ translate('Want to remove this deliveryman ?') }}" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
+                                        <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="delivery-man-{{$dm['id']}}" data-message="{{ '¿Quieres eliminar a este repartidor?' }}" title="{{'borrar'}}"><i class="tio-delete-outlined"></i>
                                     </a>
                                     <form action="{{route('admin.users.delivery-man.delete',[$dm['id']])}}" method="post" id="delivery-man-{{$dm['id']}}">
                                         @csrf @method('delete')
@@ -233,7 +233,7 @@
                 <div class="empty--data">
                     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
-                        {{translate('no_data_found')}}
+                        {{'no se encontraron datos'}}
                     </h5>
                 </div>
                 @endif

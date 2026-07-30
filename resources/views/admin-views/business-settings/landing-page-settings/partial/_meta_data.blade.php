@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-body">
-        <h3 class="mb-1">{{ translate('Meta Data Setup') }}</h3>
-        <p class="text--secondary m-0">{{ translate('Include meta title, description, and image to improve search engine visibility and social media sharing.') }}</p>
+        <h3 class="mb-1">{{ 'Configuración de metadatos' }}</h3>
+        <p class="text--secondary m-0">{{ 'Incluya metatítulo, descripción e imagen para mejorar la visibilidad en los motores de búsqueda y el intercambio en las redes sociales.' }}</p>
     </div>
 
     <div class="row px-4 mb-4  g-3">
@@ -10,7 +10,7 @@
                 <ul class="nav nav-tabs mb-4">
                     <li class="nav-item">
                         <a class="nav-link lang_link active" href="#"
-                           id="default-link">{{ translate('Default') }}</a>
+                           id="default-link">{{ 'Por defecto' }}</a>
                     </li>
                     @foreach ($language as $lang)
                         <li class="nav-item">
@@ -21,28 +21,28 @@
                 </ul>
                 <div class="lang_form" id="default-form">
                     <div class="form-group mb-2">
-                        <label class="input-label" for="default_title">{{ translate('Meta_Title') }}
-                            ({{ translate('messages.Default') }})<span class="form-label-secondary"
+                        <label class="input-label" for="default_title">{{ 'Metatítulo' }}
+                            ({{ 'Por defecto' }})<span class="form-label-secondary"
                                                                        data-toggle="tooltip" data-placement="right"
-                                                                       data-original-title="{{ translate('This title appears in browser tabs, search results, and link previews.Use a short, clear, and keyword-focused title (recommended: 50–60 characters)') }}">
+                                                                       data-original-title="{{ 'Este título aparece en las pestañas del navegador, en los resultados de búsqueda y en las vistas previas de enlaces. Utilice un título breve, claro y centrado en palabras clave (recomendado: entre 50 y 60 caracteres).' }}">
                                 <i class="tio-info color-A7A7A7"></i>
                             </span>
                         </label>
                         <input type="text" name="meta_title[]" id="default_title" maxlength="100" class="form-control"
-                               placeholder="{{ translate('Meta_Title') }}"
+                               placeholder="{{ 'Metatítulo' }}"
                                value="{{ isset($landingData['meta_title']) ? $landingData['meta_title']->getRawOriginal('value') : '' }}">
                         <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/100</span>
                     </div>
                     <input type="hidden" name="lang[]" value="default">
                     <div class="form-group mb-0">
-                        <label class="input-label" for="exampleFormControlInput1">{{ translate('Meta_Description') }}
-                            ({{ translate('messages.default') }})<span class="form-label-secondary"
+                        <label class="input-label" for="exampleFormControlInput1">{{ 'Meta descripción' }}
+                            ({{ 'por defecto' }})<span class="form-label-secondary"
                                                                        data-toggle="tooltip" data-placement="right"
-                                                                       data-original-title="{{ translate('A brief summary that appears under your page title in search results.Keep it compelling and relevant (recommended: 120–160 characters)') }}">
+                                                                       data-original-title="{{ 'Un breve resumen que aparece debajo del título de su página en los resultados de búsqueda. Manténgalo atractivo y relevante (recomendado: 120 a 160 caracteres).' }}">
                                 <i class="tio-info color-A7A7A7"></i>
                             </span></label>
                         <textarea type="text" name="meta_description[]" maxlength="200"
-                                  placeholder="{{ translate('Meta_Description') }}"
+                                  placeholder="{{ 'Meta descripción' }}"
                                   class="form-control min-h-90px ckeditor">{{ isset($landingData['meta_description']) ? $landingData['meta_description']->getRawOriginal('value') : '' }}</textarea>
                         <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/200</span>
                     </div>
@@ -68,29 +68,29 @@
                         ?>
                     <div class="d-none lang_form" id="{{ $lang }}-form">
                         <div class="form-group mb-2">
-                            <label class="input-label" for="{{ $lang }}_title">{{ translate('Meta_Title') }}
+                            <label class="input-label" for="{{ $lang }}_title">{{ 'Metatítulo' }}
                                 ({{ strtoupper($lang) }})
                                 <span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                      data-original-title="{{ translate('This title appears in browser tabs, search results, and link previews.Use a short, clear, and keyword-focused title (recommended: 50–60 characters)') }}">
+                                      data-original-title="{{ 'Este título aparece en las pestañas del navegador, en los resultados de búsqueda y en las vistas previas de enlaces. Utilice un título breve, claro y centrado en palabras clave (recomendado: entre 50 y 60 caracteres).' }}">
                                     <i class="tio-info color-A7A7A7"></i>
                                 </span>
                             </label>
                             <input type="text" name="meta_title[]" maxlength="100" id="{{ $lang }}_title"
                                    class="form-control" value="{{ $meta_title[$lang]['value'] ?? '' }}"
-                                   placeholder="{{ translate('Meta_Title') }}">
+                                   placeholder="{{ 'Metatítulo' }}">
                             <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/100</span>
                         </div>
                         <input type="hidden" name="lang[]" value="{{ $lang }}">
                         <div class="form-group mb-0">
                             <label class="input-label"
-                                   for="exampleFormControlInput1">{{ translate('Meta_Description') }}
+                                   for="exampleFormControlInput1">{{ 'Meta descripción' }}
                                 ({{ strtoupper($lang) }})<span class="form-label-secondary" data-toggle="tooltip"
                                                                data-placement="right"
-                                                               data-original-title="{{ translate('A brief summary that appears under your page title in search results.Keep it compelling and relevant (recommended: 120–160 characters)') }}">
+                                                               data-original-title="{{ 'Un breve resumen que aparece debajo del título de su página en los resultados de búsqueda. Manténgalo atractivo y relevante (recomendado: 120 a 160 caracteres).' }}">
                                     <i class="tio-info color-A7A7A7"></i>
                                 </span></label>
                             <textarea type="text" name="meta_description[]" maxlength="200"
-                                      placeholder="{{ translate('Meta_Description') }}"
+                                      placeholder="{{ 'Meta descripción' }}"
                                       class="form-control min-h-90px ckeditor">{{ $meta_description[$lang]['value'] ?? '' }}</textarea>
                             <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/200</span>
                         </div>
@@ -104,11 +104,11 @@
                     <div>
                         <div class="d-flex justify-content-center">
                             <label class="text-dark d-block mb-4">
-                                <strong>{{ translate('Meta Image') }}</strong>
-                                <small class=""> {{ translate('( Ratio 2:1 )') }}</small>
+                                <strong>{{ 'Metaimagen' }}</strong>
+                                <small class=""> {{ '(Relación 2:1)' }}</small>
                                 <span class="form-label-secondary"
                                     data-toggle="tooltip" data-placement="right"
-                                    data-original-title="{{ translate('This image is used as a preview thumbnail when the page link is shared on social media or messaging platforms.') }}">
+                                    data-original-title="{{ 'Esta imagen se utiliza como miniatura de vista previa cuando el enlace de la página se comparte en redes sociales o plataformas de mensajería.' }}">
                                     <i class="tio-info color-A7A7A7"></i>
                                 </span></label>
                             </label>
@@ -130,7 +130,7 @@
                         </div>
                         <div class="d-flex justify-content-center">
                             <div class="text-center">
-                                <small>{{ translate('Upload a rectangular image (recommended size: 800×400 px, format: JPG or PNG)') }}</small>
+                                <small>{{ 'Sube una imagen rectangular (tamaño recomendado: 800×400 px, formato: JPG o PNG)' }}</small>
                             </div>
                         </div>
                     </div>
@@ -140,8 +140,8 @@
             <div class="bg--secondary h-100 rounded p-md-4 p-3 d-center">
                 <div class="text-center">
                     <div class="mb-30">
-                        <h5 class="mb-1">{{ translate('Meta Image') }}</h5>
-                        <p class="mb-0 fs-12 gray-dark">{{ translate('Upload a rectangular image ') }}</p>
+                        <h5 class="mb-1">{{ 'Metaimagen' }}</h5>
+                        <p class="mb-0 fs-12 gray-dark">{{ 'Sube una imagen rectangular' }}</p>
 
                     </div>
                     <div class="mx-auto text-center error-wrapper">
@@ -188,15 +188,15 @@
                         <div class="card-body d-flex">
                             <i class="mr-2 mt-3 text-danger tio-info-outined"></i>
                             <p class="fs-15 text-dark m-0">
-                                <strong>{{ translate('Note:') }}</strong> {{ translate('Customize the section by adding a title, short description, and images in the') }} <a href="{{ route('admin.business-settings.zone.home') }}" target="_blank" class="text--underline text-006AE5">{{ translate('Zone Setup') }}</a> {{ translate('section. All created zones will be automatically displayed on the') }} <a href="{{route('home')}}" target="_blank" class="text-primary">{{ translate('Admin Landing') }}</a> {{ translate('Page. The zones will be based on the Zone Display Name.') }}
+                                <strong>{{ 'Nota:' }}</strong> {{ 'Personalice la sección agregando un título, una breve descripción e imágenes en el' }} <a href="{{ route('admin.business-settings.zone.home') }}" target="_blank" class="text--underline text-006AE5">{{ 'Configuración de zona' }}</a> {{ 'sección. Todas las zonas creadas se mostrarán automáticamente en la' }} <a href="{{route('home')}}" target="_blank" class="text-primary">{{ 'Aterrizaje de administrador' }}</a> {{ 'Página. Las zonas se basarán en el nombre para mostrar de la zona.' }}
                             </p>
                         </div>
                     </div>
                 </div> --}}
         <div class="col-12">
             <div class="btn--container justify-content-end">
-                <button class="btn btn--reset " type="reset">{{ translate('reset') }}</button>
-                <button class="btn btn--primary" type="submit">{{ translate('Save') }}</button>
+                <button class="btn btn--reset " type="reset">{{ 'reiniciar' }}</button>
+                <button class="btn btn--primary" type="submit">{{ 'Ahorrar' }}</button>
             </div>
         </div>
     </div>

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Donation Settings'))
+@section('title', 'Configuración de donación')
 
 @push('css_or_js')
 
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/setting.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('Donation Settings')}}
+                    {{'Configuración de donación'}}
                 </span>
             </h1>
         </div>
@@ -35,20 +35,20 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="input-label" for="donation_button_status">{{translate('Donation Button Status')}}</label>
+                                <label class="input-label" for="donation_button_status">{{'Estado del botón de donación'}}</label>
                                 <select name="donation_button_status" id="donation_button_status" class="form-control">
-                                    <option value="1" {{$donation_button_status == 1 ? 'selected' : ''}}>{{translate('Active')}}</option>
-                                    <option value="0" {{$donation_button_status == 0 ? 'selected' : ''}}>{{translate('Inactive')}}</option>
+                                    <option value="1" {{$donation_button_status == 1 ? 'selected' : ''}}>{{'Activo'}}</option>
+                                    <option value="0" {{$donation_button_status == 0 ? 'selected' : ''}}>{{'Inactivo'}}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{translate('Donation Button Image')}}</label>
+                                <label class="form-label">{{'Imagen del botón de donación'}}</label>
                                 <div class="custom-file">
                                     <input type="file" name="donation_button_image" id="donationFile" class="custom-file-input"
                                         accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                    <label class="custom-file-label" for="donationFile">{{translate('Choose File')}}</label>
+                                    <label class="custom-file-label" for="donationFile">{{'Elija archivo'}}</label>
                                 </div>
                             </div>
                         </div>
@@ -65,8 +65,8 @@
                         </div>
                     </div>
                     <div class="btn--container justify-content-end mt-20">
-                        <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                        <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}"  class="btn btn--primary call-demo">{{translate('messages.submit')}}</button>
+                        <button type="reset" class="btn btn--reset">{{'reiniciar'}}</button>
+                        <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}"  class="btn btn--primary call-demo">{{'entregar'}}</button>
                     </div>
                 </div>
             </div>

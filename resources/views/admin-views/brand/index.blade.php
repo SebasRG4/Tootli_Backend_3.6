@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.add_new_brand'))
+@section('title','agregar nueva marca')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/category.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{translate('messages.Brand_Setup')}}
+                    {{'Configuración de marca'}}
                 </span>
             </h1>
         </div>
@@ -23,18 +23,18 @@
         <div class="card mt-2">
             <div class="card-header py-2 border-0">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title">{{translate('messages.All_Brand_List')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$brands->total()}}</span></h5>
+                    <h5 class="card-title">{{'Lista de todas las marcas'}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$brands->total()}}</span></h5>
                     <div class="d-flex gap-3 flex-wrap">
                         <form  class="search-form">
                             <!-- Search -->
                             <div class="input-group input--group">
-                                <input id="datatableSearch" name="search" value="{{ request()?->search ?? null }}"  type="search" class="form-control" placeholder="{{translate('messages.search_by_name')}}" aria-label="{{translate('messages.Brands')}}">
+                                <input id="datatableSearch" name="search" value="{{ request()?->search ?? null }}"  type="search" class="form-control" placeholder="{{'buscar por nombre'}}" aria-label="{{'Marcas'}}">
                                 <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                             </div>
                             <!-- End Search -->
                         </form>
 
-                        <button  type="button" class="btn btn-primary withdraw-info-show2"><i class="tio-add"></i> {{translate('messages.add_new_brand')}}</button>
+                        <button  type="button" class="btn btn-primary withdraw-info-show2"><i class="tio-add"></i> {{'agregar nueva marca'}}</button>
                     </div>
                 </div>
             </div>
@@ -51,11 +51,11 @@
                         }'>
                         <thead class="thead-light">
                             <tr>
-                                <th class="border-0">{{translate('sl')}}</th>
-                                <th class="border-0 w--1">{{translate('messages.Brand_Info')}}</th>
-                                <th class="border-0 text-center">{{translate('messages.Total_Products')}}</th>
-                                <th class="border-0 text-center">{{translate('messages.status')}}</th>
-                                <th class="border-0 text-center">{{translate('messages.action')}}</th>
+                                <th class="border-0">{{'SL'}}</th>
+                                <th class="border-0 w--1">{{'Información de la marca'}}</th>
+                                <th class="border-0 text-center">{{'Productos totales'}}</th>
+                                <th class="border-0 text-center">{{'estado'}}</th>
+                                <th class="border-0 text-center">{{'acción'}}</th>
                             </tr>
                         </thead>
 
@@ -70,7 +70,7 @@
                                         <div  class="media-body">
                                             <h5   class="text-hover-primary mb-0">{{Str::limit($brand['name'],20,'...')}}
                                                 @if($brand->module_id == null)
-                                                    <span class="ml-2 badge badge-soft-success">{{translate('messages.All_module')}}</span>
+                                                    <span class="ml-2 badge badge-soft-success">{{'Todo el módulo'}}</span>
                                                 @endif
                                             </h5>
                                         </div>
@@ -93,7 +93,7 @@
                                 <td>
                                     <div class="btn--container justify-content-center">
                                         @if ($brand->module_id == null)
-                                        <button  title="{{translate('Module_Assign')}}" class="btn action-btn btn--primary btn-outline-primary withdraw-info-show" type="button" data-brand_id="{{ $brand['id'] }}"
+                                        <button  title="{{'Asignación de módulo'}}" class="btn action-btn btn--primary btn-outline-primary withdraw-info-show" type="button" data-brand_id="{{ $brand['id'] }}"
                                         data-image_src="{{ $brand['image_full_url'] }}"
                                         data-name="{{ $brand['name'] }}"
                                             ><i class="tio-apps"></i>
@@ -101,10 +101,10 @@
                                         @endif
                                         <a class="btn action-btn withdraw-info-show3 btn--primary btn-outline-primary"
                                         data-id="{{$brand['id']}}"
-                                        href="#" title="{{translate('messages.edit_brand')}}">
+                                        href="#" title="{{'editar marca'}}">
                                         <i class="tio-edit"></i>
                                     </a>
-                                    <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="brand-{{$brand['id']}}" data-message="{{ translate('messages.Want to delete this brand') }}"  title="{{translate('messages.delete_brand')}}"><i class="tio-delete-outlined"></i>
+                                    <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="brand-{{$brand['id']}}" data-message="{{ 'Quiere eliminar esta marca' }}"  title="{{'eliminar marca'}}"><i class="tio-delete-outlined"></i>
                                     </a>
                                     <form action="{{route('admin.brand.delete',[$brand['id']])}}" method="post" id="brand-{{$brand['id']}}">
                                         @csrf @method('delete')
@@ -127,7 +127,7 @@
             <div class="empty--data">
                 <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                 <h5>
-                    {{translate('no_data_found')}}
+                    {{'no se encontraron datos'}}
                 </h5>
             </div>
             @endif
@@ -139,7 +139,7 @@
         <div class="modal-dialog modal-dialog-centered ">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="text-center">{{ translate('Update_Module') }}</h3>
+                    <h3 class="text-center">{{ 'Módulo de actualización' }}</h3>
                     <button type="button" class="close" data-dismiss="modal">
                         <span aria-hidden="true" class="tio-clear"></span>
                     </button>
@@ -153,9 +153,9 @@
 
                         </div>
                         <div class="btn--container justify-content-center">
-                            <button type="button" class="btn btn-outline-info min-w-120" data-toggle="modal" data-target="#Keep_only_this_module_confirmation" data-dismiss="modal" >{{translate('Keep_only_this_module')}}</button>
+                            <button type="button" class="btn btn-outline-info min-w-120" data-toggle="modal" data-target="#Keep_only_this_module_confirmation" data-dismiss="modal" >{{'Mantener sólo este módulo'}}</button>
                             <button type="button" class="btn btn-outline-warning min-w-120" data-toggle="modal"  data-target="#make_a_new_brand_confirmation"  data-dismiss="modal">
-                                {{translate("Make it a new Brand")}}
+                                {{'Conviértelo en una nueva marca'}}
                             </button>
                         </div>
                     </div>
@@ -171,7 +171,7 @@
                 @csrf
                 <div class="d-flex flex-column h-100">
                     <div class="d-flex p-3 justify-content-between mb-3 bg-light">
-                        <h4 class="mb-0">{{translate('add_New_Brand')}}</h4>
+                        <h4 class="mb-0">{{'agregar nueva marca'}}</h4>
                         <span class="circle bg-light withdraw-info-hide2 cursor-pointer">
                             <i class="tio-clear"></i>
                         </span>
@@ -180,11 +180,11 @@
 
                     <div class="p-3">
                         <div class="bg-light p-3 rounded">
-                            <h4>{{translate('messages.status')}}</h4>
-                            <p class="fs-12">{{ translate('messages.If you turn off the switch the brand will not active or visible in customer app & website.') }}</p>
+                            <h4>{{'estado'}}</h4>
+                            <p class="fs-12">{{ 'Si apaga el interruptor, la marca no estará activa ni visible en la aplicación y el sitio web del cliente.' }}</p>
 
                             <div class="maintenance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center py-2 px-3">
-                                <h5 class="text-capitalize m-0 text--primary">{{translate('messages.Status')}}</h5>
+                                <h5 class="text-capitalize m-0 text--primary">{{'Estado'}}</h5>
 
                                 <label class="toggle-switch toggle-switch-sm">
                                     <input type="checkbox" name="brand_status" checked class="status toggle-switch-input">
@@ -199,7 +199,7 @@
                             @if($language)
                                 <ul class="nav nav-tabs mb-4">
                                     <li class="nav-item">
-                                        <a class="nav-link lang_link active" href="#" id="default-link">{{translate('messages.default')}}</a>
+                                        <a class="nav-link lang_link active" href="#" id="default-link">{{'por defecto'}}</a>
                                     </li>
                                     @foreach ($language as $lang)
                                         <li class="nav-item">
@@ -212,40 +212,40 @@
                             @if($language)
                                 <div class="form-group lang_form" id="default-form">
                                     <label class="input-label">
-                                        {{translate('messages.name')}} ({{ translate('messages.default') }})
+                                        {{'nombre'}} ({{ 'por defecto' }})
                                         <small class="text-danger">*</small>
                                         {{-- <i class="tio-info text-muted" data-toggle="tooltip" title="hello title"></i> --}}
                                     </label>
-                                    <input type="text" name="name[]" value="{{ old('name.0') }}"  class="form-control" placeholder="{{translate('messages.new_brand')}}" maxlength="191">
+                                    <input type="text" name="name[]" value="{{ old('name.0') }}"  class="form-control" placeholder="{{'nueva marca'}}" maxlength="191">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 @foreach($language as $key => $lang)
                                     <div class="form-group d-none lang_form" id="{{$lang}}-form">
                                         <label class="input-label">
-                                            {{translate('messages.name')}} ({{strtoupper($lang)}})
+                                            {{'nombre'}} ({{strtoupper($lang)}})
                                             <small class="text-danger">*</small>
                                             {{-- <i class="tio-info text-muted" data-toggle="tooltip" title="hello title"></i> --}}
                                         </label>
-                                        <input type="text" name="name[]" value="{{ old('name.'.$key+1) }}"  class="form-control" placeholder="{{translate('messages.new_brand')}}" maxlength="191">
+                                        <input type="text" name="name[]" value="{{ old('name.'.$key+1) }}"  class="form-control" placeholder="{{'nueva marca'}}" maxlength="191">
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
                                 @endforeach
                             @else
                                 <div class="form-group">
                                     <label class="input-label">
-                                        {{translate('messages.name')}}
+                                        {{'nombre'}}
                                         <small class="text-danger">*</small>
                                         {{-- <i class="tio-info text-muted" data-toggle="tooltip" title="hello title"></i> --}}
                                     </label>
-                                    <input type="text" name="name" class="form-control" placeholder="{{translate('messages.type_brand_name')}}" value="{{old('name')}}" maxlength="191">
+                                    <input type="text" name="name" class="form-control" placeholder="{{'escriba el nombre de la marca'}}" value="{{old('name')}}" maxlength="191">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                             @endif
                         </div>
 
                         <div class="bg-light p-3 rounded my-4">
-                            <h4>{{translate('messages.Brand Logo')}} <small class="text-danger">*</small></h4>
-                            <p class="fs-12">{{ translate('messages.It will show in website & app.') }}</p>
+                            <h4>{{'Logotipo de la marca'}} <small class="text-danger">*</small></h4>
+                            <p class="fs-12">{{ 'Se mostrará en el sitio web y la aplicación.' }}</p>
                             <div class="d-flex justify-content-center">
                                 <label class="text-center position-relative d-inline-block mb-3">
                                     <img class="img--176 border" id="viewer"
@@ -264,14 +264,14 @@
                                     </div>
                                 </label>
                             </div>
-                            <p class="text-center fs-12">{{translate('messages.JPG, JPEG, PNG Less Than 1MB (Ratio 1 : 1)')}}</p>
+                            <p class="text-center fs-12">{{'JPG, JPEG, PNG Menos de 1 MB (Relación 1: 1)'}}</p>
                         </div>
 
                     </div>
 
                     <div class="bg-white bottom-0 d-flex gap-3 mt-auto p-3 position-sticky shadow-lg">
-                        <button  type="reset" id="reset_btn" class="btn btn-secondary btn-block ">{{translate('messages.reset')}}</button>
-                        <button type="submit" class="btn btn-primary btn-block mt-0" >{{ translate('messages.save') }}</button>
+                        <button  type="reset" id="reset_btn" class="btn btn-secondary btn-block ">{{'reiniciar'}}</button>
+                        <button type="submit" class="btn btn-primary btn-block mt-0" >{{ 'ahorrar' }}</button>
                     </div>
                 </div>
             </form>
@@ -296,7 +296,7 @@
                 @csrf
                 <div class="d-flex flex-column h-100">
                     <div class="d-flex p-3 justify-content-between mb-3 bg-light">
-                        <h4 class="mb-0">{{translate('Module Assign')}}</h4>
+                        <h4 class="mb-0">{{'Asignación de módulo'}}</h4>
                         <span class="circle bg-light withdraw-info-hide cursor-pointer">
                             <i class="tio-clear"></i>
                         </span>
@@ -313,24 +313,24 @@
 
                                 <div class="alert fs-12 alert-primary-light text-dark mb-0  mt-md-0 add_text_mute mt-2"  role="alert">
                                     <img src="{{ asset('assets/admin/img/lnfo_light.png') }}" alt="">
-                                    {{translate('Currently, this brand is active in all modules of the')}} <b>{{ Config::get('module.current_module_name') }}</b> {{ translate('Module_Type') }}
+                                    {{'Actualmente, esta marca está activa en todos los módulos del'}} <b>{{ Config::get('module.current_module_name') }}</b> {{ 'Tipo de módulo' }}
                                 </div>
                             </div>
                         </div>
 
                         <input type="text" hidden  name="brand_id"  id="brand_id">
                         <div class="bg-light p-3 rounded mb-3">
-                            <h4 class="card-title mb-2 font-medium">{{translate('Assign Brand')}}</h4>
-                            <small class="card-text">{{ translate('Select your preferred assign option for this brand') }}</small>
+                            <h4 class="card-title mb-2 font-medium">{{'Asignar marca'}}</h4>
+                            <small class="card-text">{{ 'Seleccione su opción de asignación preferida para esta marca' }}</small>
 
                             <div class="bg-white p-3 rounded mt-4 mb-3">
                                 <div class="radio-card selected mb-4 media gap-3" data-value="module-only">
                                     <input class="mt-2" type="radio" id="only-brands" name="type" value="only_this_module" checked>
                                     <label for="only-brands" class="media-body">
-                                        <strong>{{ translate('Use this Brand only for this module’s product') }}</strong>
+                                        <strong>{{ 'Utilice esta marca sólo para el producto de este módulo' }}</strong>
                                         <br>
                                         <small class="text-muted mt-1 mb-0">
-                                        {{ translate(' This brand will only use for') }} <strong>{{ Config::get('module.current_module_name') }}</strong> {{ translate('Module and will be removed from other module’s product.') }}
+                                        {{ 'Esta marca sólo se utilizará para' }} <strong>{{ Config::get('module.current_module_name') }}</strong> {{ 'Módulo y se eliminará del producto de otro módulo.' }}
                                         </small>
                                     </label>
                                 </div>
@@ -338,10 +338,10 @@
                                 <div class="radio-card media gap-3"  data-value="all-modules">
                                     <input class="mt-2" type="radio" id="same-brands" name="type" value="copy_this_brand">
                                     <label for="same-brands" class="media-body">
-                                        <strong>{{ translate('Create the same brand for other modules also') }}</strong>
+                                        <strong>{{ 'Crea la misma marca para otros módulos también.' }}</strong>
                                         <br>
                                         <small class="text-muted mt-1 mb-0">
-                                            {{ translate('This brand will be created automatically for every module. And the products in each module will automatically be assigned to that brand.') }}
+                                            {{ 'Esta marca se creará automáticamente para cada módulo. Y los productos de cada módulo se asignarán automáticamente a esa marca.' }}
                                         </small>
                                     </label>
                                 </div>
@@ -351,9 +351,9 @@
 
                     <div class="mt-auto shadow-lg p-3 bg-white d-flex gap-3">
                         <button  type="reset" class="btn btn-secondary btn-block withdraw-info-hide">
-                            {{translate("Cancel")}}
+                            {{'Cancelar'}}
                         </button>
-                        <button type="submit" class="btn btn-primary btn-block mt-0" >{{translate('Transfer')}}</button>
+                        <button type="submit" class="btn btn-primary btn-block mt-0" >{{'Transferir'}}</button>
                     </div>
                 </div>
             </form>

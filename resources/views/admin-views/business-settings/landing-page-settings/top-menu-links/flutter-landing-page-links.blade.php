@@ -4,23 +4,23 @@
         <ul class="nav nav-tabs border-0 nav--tabs nav--pills">
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/pages/flutter-landing-page-settings/fixed-data') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.flutter-landing-page-settings', 'fixed-data') }}">{{translate('messages.fixed_data')}}</a>
+                href="{{ route('admin.business-settings.flutter-landing-page-settings', 'fixed-data') }}">{{'datos fijos'}}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/pages/flutter-landing-page-settings/special-criteria*') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.flutter-landing-page-settings', 'special-criteria') }}">{{translate('messages.special_criteria')}}</a>
+                href="{{ route('admin.business-settings.flutter-landing-page-settings', 'special-criteria') }}">{{'criterios especiales'}}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/pages/flutter-landing-page-settings/available-zone*') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.flutter-landing-page-settings', 'available-zone') }}">{{translate('messages.available_zone')}}</a>
+                href="{{ route('admin.business-settings.flutter-landing-page-settings', 'available-zone') }}">{{'zona disponible'}}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/pages/flutter-landing-page-settings/join-as') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.flutter-landing-page-settings', 'join-as') }}">{{translate('messages.join_as')}}</a>
+                href="{{ route('admin.business-settings.flutter-landing-page-settings', 'join-as') }}">{{'unirse como'}}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/pages/flutter-landing-page-settings/download-apps') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.flutter-landing-page-settings', 'download-apps') }}">{{translate('messages.download_apps')}}</a>
+                href="{{ route('admin.business-settings.flutter-landing-page-settings', 'download-apps') }}">{{'descargar aplicaciones'}}</a>
             </li>
         </ul>
         <!-- End Nav -->

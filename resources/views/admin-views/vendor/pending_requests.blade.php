@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.new_joining_requests'))
+@section('title','nuevas solicitudes de unión')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -10,13 +10,13 @@
     <div class="content container-fluid">
         <!-- Page Header -->
         <div class="page-header">
-            <h1 class="page-header-title"><i class="tio-filter-list"></i> {{translate('messages.new_joining_requests')}}</h1>
+            <h1 class="page-header-title"><i class="tio-filter-list"></i> {{'nuevas solicitudes de unión'}}</h1>
             <div class="page-header-select-wrapper">
 
                 @if(!isset(auth('admin')->user()->zone_id))
                 <div class="select-item">
                     <select name="zone_id" class="form-control js-select2-custom set-filter" data-url="{{url()->full()}}" data-filter="zone_id">
-                        <option value="" {{!request('zone_id')?'selected':''}}>{{ translate('messages.All_Zones') }}</option>
+                        <option value="" {{!request('zone_id')?'selected':''}}>{{ 'Todas las Zonas' }}</option>
                         @foreach(\App\Models\Zone::orderBy('name')->get() as $z)
                             <option
                                     value="{{$z['id']}}" {{isset($zone) && $zone->id == $z['id']?'selected':''}}>
@@ -33,10 +33,10 @@
                         <!-- Nav -->
                         <ul class="nav nav-tabs mb-3 border-0 nav--tabs nav--pills">
                             <li class="nav-item">
-                                <a class="nav-link active" href="{{ route('admin.store.pending-requests') }}"   aria-disabled="true">{{translate('messages.pending_stores')}}</a>
+                                <a class="nav-link active" href="{{ route('admin.store.pending-requests') }}"   aria-disabled="true">{{'tiendas pendientes'}}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('admin.store.deny-requests') }}"  aria-disabled="true">{{translate('messages.denied_stores')}}</a>
+                                <a class="nav-link" href="{{ route('admin.store.deny-requests') }}"  aria-disabled="true">{{'tiendas denegadas'}}</a>
                             </li>
                         </ul>
                         <!-- End Nav -->
@@ -51,14 +51,14 @@
             <!-- Header -->
             <div class="card-header py-2">
                 <div class="search--button-wrapper">
-                    <h4 class="card-title text-title">{{translate('messages.stores_list')}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$stores->total()}}</span></h4>
+                    <h4 class="card-title text-title">{{'lista de tiendas'}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$stores->total()}}</span></h4>
 
                     <div class="d-flex align-items-center gap-3 flex-sm-nowrap flex-wrap">
                         <form action="javascript:" id="search-form" class="search-form w-100">
                             @csrf
                             <div class="input-group input--group">
                                 <input id="datatableSearch_" type="search" name="search" class="form-control"
-                                        placeholder="{{translate('ex_:_Search_Store_Name')}}" value="{{isset($search_by) ? $search_by : ''}}" aria-label="{{translate('messages.search')}}" required>
+                                        placeholder="{{'ej: buscar nombre de tienda'}}" value="{{isset($search_by) ? $search_by : ''}}" aria-label="{{'buscar'}}" required>
                                 <button type="submit" class="btn btn--primary"><i class="tio-search"></i></button>
                             </div>
                         </form>
@@ -69,22 +69,22 @@
                                             "target": "#usersExportDropdown",
                                             "type": "css-animation"
                                         }'>
-                                    <i class="tio-download-to mr-1 text-title"></i> {{ translate('messages.export') }}
+                                    <i class="tio-download-to mr-1 text-title"></i> {{ 'exportar' }}
                                 </a>
                                 <div id="usersExportDropdown"
                                     class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                                    <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                                    <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                                     <a id="export-excel" class="dropdown-item" href="{{route('admin.business-settings.module.export', ['type'=>'excel',request()->getQueryString()])}}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                             src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                             alt="Image Description">
-                                        {{ translate('messages.excel') }}
+                                        {{ 'sobresalir' }}
                                     </a>
                                     <a id="export-csv" class="dropdown-item" href="{{route('admin.business-settings.module.export', ['type'=>'csv',request()->getQueryString()])}}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                             src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                             alt="Image Description">
-                                        .{{ translate('messages.csv') }}
+                                        .{{ 'csv' }}
                                     </a>
                                 </div>
                             </div>
@@ -106,13 +106,13 @@
                         }'>
                     <thead class="bg-table-head">
                     <tr>
-                        <th class="border-0">{{translate('sl')}}</th>
-                        <th class="border-0">{{translate('messages.store_information')}}</th>
-                        <th class="border-0">{{translate('messages.module')}}</th>
-                        <th class="border-0">{{translate('messages.owner_information')}}</th>
-                        <th class="border-0">{{translate('messages.zone')}}</th>
-                        <th class="text-uppercase border-0">{{translate('messages.status')}}</th>
-                        <th class="border-0 text-center">{{translate('messages.action')}}</th>
+                        <th class="border-0">{{'SL'}}</th>
+                        <th class="border-0">{{'almacenar información'}}</th>
+                        <th class="border-0">{{'módulo'}}</th>
+                        <th class="border-0">{{'información del propietario'}}</th>
+                        <th class="border-0">{{'zona'}}</th>
+                        <th class="text-uppercase border-0">{{'estado'}}</th>
+                        <th class="border-0 text-center">{{'acción'}}</th>
                     </tr>
                     </thead>
 
@@ -129,7 +129,7 @@
                                             {{Str::limit($store->name,20,'...')}}
                                             </div>
                                             <div class="font-light">
-                                                {{translate('messages.id')}}:{{$store->id}}
+                                                {{'identificación'}}:{{$store->id}}
                                             </div>
                                         </div>
                                     </a>
@@ -149,23 +149,23 @@
                                 </div>
                             </td>
                             <td>
-                                {{$store->zone?$store->zone->name:translate('messages.zone_deleted')}}
+                                {{$store->zone?$store->zone->name:'zona eliminada'}}
                             </td>
 
                             <td>
                                 @if(isset($store->vendor->status))
                                     @if($store->vendor->status)
                                         <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$store->id}}">
-                                            <input type="checkbox" data-url="{{route('admin.store.status',[$store->id,$store->status?0:1])}}" data-message="{{translate('messages.you_want_to_change_this_store_status')}}" class="toggle-switch-input status_change_alert" id="stocksCheckbox{{$store->id}}" {{$store->status?'checked':''}}>
+                                            <input type="checkbox" data-url="{{route('admin.store.status',[$store->id,$store->status?0:1])}}" data-message="{{'quieres cambiar el estado de esta tienda'}}" class="toggle-switch-input status_change_alert" id="stocksCheckbox{{$store->id}}" {{$store->status?'checked':''}}>
                                         <span class="toggle-switch-label">
                                             <span class="toggle-switch-indicator"></span>
                                         </span>
                                     </label>
                                     @else
-                                    <span class="badge badge-soft-danger">{{translate('messages.denied')}}</span>
+                                    <span class="badge badge-soft-danger">{{'denegado'}}</span>
                                     @endif
                                 @else
-                                    <span class="badge badge-soft-danger">{{translate('messages.pending')}}</span>
+                                    <span class="badge badge-soft-danger">{{'Pendiente'}}</span>
                                 @endif
                             </td>
 
@@ -173,25 +173,25 @@
                                 <div class="btn--container justify-content-center">
 
                                     <a class="btn action-btn btn-outline-theme-dark"
-                                    href="{{route('admin.store.edit',[$store['id'],'pending'=>1])}}" title="{{translate('messages.edit_store')}}"><i class="tio-edit"></i>
+                                    href="{{route('admin.store.edit',[$store['id'],'pending'=>1])}}" title="{{'editar tienda'}}"><i class="tio-edit"></i>
                                     </a>
 
 
                                     @if($store->vendor->status == 0)
                                         <a class="btn action-btn btn--primary btn-outline-primary float-right swal_fire_alert" data-toggle="tooltip" data-placement="top"
-                                        data-original-title="{{ translate('messages.approve') }}"
-                                       data-title="{{translate('messages.are_you_sure_?')}}"
+                                        data-original-title="{{ 'aprobar' }}"
+                                       data-title="{{'está seguro ?'}}"
                                        data-image_url="{{ asset('assets/admin/img/off-danger.png') }}"
-                                       data-confirm_button_text="{{ translate('messages.yes') }}"
-                                       data-cancel_button_text="{{ translate('messages.No') }}"
-                                       data-message="{{translate('messages.you_want_to_approve_the_vendor_joining_request.')}}"
+                                       data-confirm_button_text="{{ 'Sí' }}"
+                                       data-cancel_button_text="{{ 'No' }}"
+                                       data-message="{{'desea aprobar la solicitud de incorporación del proveedor.'}}"
                                         data-url="{{route('admin.store.application',[$store['id'],1])}}"
                                             href="javascript:"><i class="tio-done font-weight-bold"></i></a>
                                     @endif
                                     @if (!isset($store->vendor->status))
                                         <button class="btn action-btn btn--danger btn-outline-danger float-right"
-                                        data-original-title="{{ translate('Reject') }}" data-toggle="modal" data-target="#confirmation-reason-btn{{ $store->id }}"
-                                        data-message="{{translate('messages.you_want_to_deny_this_application')}}"
+                                        data-original-title="{{ 'Rechazar' }}" data-toggle="modal" data-target="#confirmation-reason-btn{{ $store->id }}"
+                                        data-message="{{'quieres rechazar esta solicitud'}}"
                                             href="javascript:"><i class="tio-clear font-weight-bold"></i></button>
                                     @endif
                                 </div>
@@ -215,18 +215,18 @@
                     <div class="text-center">
                         <img src="{{ asset('assets/admin/img/delete-confirmation.png') }}" alt="icon"
                             class="mb-3">
-                        <h3 class="mb-2">{{ translate('messages.Are_you_sure_?') }}</h3>
-                        <p class="mb-0">{{ translate('You want to deny this joining application?') }}</p>
+                        <h3 class="mb-2">{{ 'Está seguro ?' }}</h3>
+                        <p class="mb-0">{{ '¿Quiere rechazar esta solicitud de incorporación?' }}</p>
                     </div>
                     <div class="px-3 mt-4">
-                        <h5 class="mb-2">{{ translate('messages.Reason') }}</h5>
+                        <h5 class="mb-2">{{ 'Razón' }}</h5>
                         <textarea name="rejection_note" id="" class="form-control" rows="2" required
-                            placeholder="{{ translate('messages.Type_here_the_denied_reason...') }}"></textarea>
+                            placeholder="{{ 'Escriba aquí el motivo del rechazo...' }}"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-center border-0 pt-0 gap-2">
-                    <button type="button" class="btn min-w-120px btn--reset" data-dismiss="modal">{{ translate('messages.No') }}</button>
-                    <button type="submit" class="btn min-w-120px btn--primary">{{ translate('messages.Yes') }}</button>
+                    <button type="button" class="btn min-w-120px btn--reset" data-dismiss="modal">{{ 'No' }}</button>
+                    <button type="submit" class="btn min-w-120px btn--primary">{{ 'Sí' }}</button>
                 </div>
             </form>
             </div>
@@ -267,7 +267,7 @@
                 <div class="empty--data">
                     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
-                        {{translate('no_data_found')}}
+                        {{'no se encontraron datos'}}
                     </h5>
                 </div>
                 @endif
@@ -288,14 +288,14 @@
         function status_change_alert(url, message, e) {
             e.preventDefault();
             Swal.fire({
-                title: '{{ translate('Are you sure?') }}' ,
+                title: '{{ '¿Está seguro?' }}' ,
                 text: message,
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{translate('messages.no')}}',
-                confirmButtonText: '{{translate('messages.yes')}}',
+                cancelButtonText: '{{'No'}}',
+                confirmButtonText: '{{'Sí'}}',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {

@@ -3,11 +3,11 @@
 <div class="pos--saved-address w-100">
     <ul class="list-unstyled mb-1">
         <li class="mb-1">
-            <span class="text-muted small">{{ translate('messages.pos_contact_name') }}:</span>
+            <span class="text-muted small">{{ 'nombre de contacto pos' }}:</span>
             <strong class="ml-1">{{ $address['contact_person_name'] }}</strong>
         </li>
         <li>
-            <span class="text-muted small">{{ translate('messages.pos_contact_phone') }}:</span>
+            <span class="text-muted small">{{ 'teléfono de contacto pos' }}:</span>
             <strong class="ml-1">{{ $address['contact_person_number'] }}</strong>
         </li>
     </ul>
@@ -19,9 +19,9 @@
         class="btn btn-sm btn-outline-secondary pos--new-address-btn"
         data-toggle="modal"
         data-target="#paymentModal">
-        <i class="tio-add-circle-outlined mr-1"></i>{{ translate('messages.pos_new_address') }}
+        <i class="tio-add-circle-outlined mr-1"></i>{{ 'pos nueva dirección' }}
     </button>
 </div>
 @else
-<span class="text-muted small">{{ translate('messages.pos_no_address_yet') }}</span>
+<span class="text-muted small">{{ 'pos no hay dirección todavía' }}</span>
 @endif

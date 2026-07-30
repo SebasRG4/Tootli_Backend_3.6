@@ -2,7 +2,7 @@
 <tr scope="row">
     <td>{{ $k + 1 }}</td>
     @if ($ot->order_id == 0)
-        <td><span class="badge badge-soft-success">{{ translate('Pago QR') }}</span></td>
+        <td><span class="badge badge-soft-success">{{ 'PagoQR' }}</span></td>
     @elseif (isset($ot->order) && $ot->order->order_type == 'parcel')
         <td><a
                 href="{{ route('admin.transactions.parcel.order.details', $ot->order_id) }}">{{ $ot->order_id }}</a>
@@ -16,7 +16,7 @@
         @if($ot->order->store)
             {{Str::limit($ot->order->store->name,25,'...')}}
         @else
-            <label class="badge badge-soft-success white-space-nowrap">{{ translate('messages.parcel_order') }}
+            <label class="badge badge-soft-success white-space-nowrap">{{ 'orden de paquete' }}
         @endif
     </td>
     <td class="white-space-nowrap">
@@ -26,9 +26,9 @@
                 <strong>{{ $ot->order->customer['f_name'] . ' ' . $ot->order->customer['l_name'] }}</strong>
             </a>
         @else
-            <label class="badge badge-danger">{{ translate('messages.invalid') }}
-                {{ translate('messages.customer') }}
-                {{ translate('messages.data') }}</label>
+            <label class="badge badge-danger">{{ 'inválido' }}
+                {{ 'Cliente' }}
+                {{ 'datos' }}</label>
         @endif
     </td>
     <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency($ot->order['order_amount'] - $ot->order['dm_tips']-$ot->order['delivery_charge'] - $ot['tax'] + $ot->order['coupon_discount_amount'] + $ot->order['store_discount_amount']) }}</td>
@@ -45,28 +45,28 @@
     <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency(($ot->admin_commission)) }}</td>
     <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency($ot->store_amount - $ot->tax) }}</td>
     @if ($ot->received_by == 'admin')
-        <td class="text-capitalize white-space-nowrap">{{ translate('messages.admin') }}</td>
+        <td class="text-capitalize white-space-nowrap">{{ 'administración' }}</td>
     @elseif ($ot->received_by == 'deliveryman')
         <td class="text-capitalize white-space-nowrap">
-            <div>{{ translate('messages.delivery_man') }}</div>
+            <div>{{ 'Repartidor' }}</div>
             <div class="text-right mw--85px">
                 @if (isset($ot->delivery_man) && $ot->delivery_man->earning == 1)
                 <span class="badge badge-soft-primary">
-                    {{translate('messages.freelance')}}
+                    {{'independiente'}}
                 </span>
                 @elseif (isset($ot->delivery_man) && $ot->delivery_man->earning == 0 && $ot->delivery_man->type == 'restaurant_wise')
                 <span class="badge badge-soft-warning">
-                    {{translate('messages.restaurant')}}
+                    {{'restaurante'}}
                 </span>
                 @elseif (isset($ot->delivery_man) && $ot->delivery_man->earning == 0 && $ot->delivery_man->type == 'zone_wise')
                 <span class="badge badge-soft-success">
-                    {{translate('messages.admin')}}
+                    {{'administración'}}
                     </span>
                 @endif
             </div>
         </td>
     @elseif ($ot->received_by == 'store')
-        <td class="text-capitalize white-space-nowrap">{{ translate('messages.store') }}</td>
+        <td class="text-capitalize white-space-nowrap">{{ 'Negocio' }}</td>
     @endif
     <td class="mw--85px text-capitalize min-w-120 ">
             {{ translate(str_replace('_', ' ', $ot->order['payment_method'])) }}
@@ -74,11 +74,11 @@
     <td class="text-capitalize white-space-nowrap">
         @if ($ot->status)
         <span class="badge badge-soft-danger">
-            {{translate('messages.refunded')}}
+            {{'Reembolsado'}}
           </span>
         @else
         <span class="badge badge-soft-success">
-            {{translate('messages.completed')}}
+            {{'terminado'}}
           </span>
         @endif
     </td>

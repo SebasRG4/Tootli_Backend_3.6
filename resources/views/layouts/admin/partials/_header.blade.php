@@ -24,7 +24,7 @@
                         <a href="{{ route('admin.users.dashboard')}}" id="tourb-6"
                            class="__nav-link {{ Request::is('admin/users*') ? 'active' : '' }}">
                             <img src="{{asset('assets/admin/img/new-img/user.svg')}}" alt="public/img">
-                            <span>{{ translate('Users')}}</span>
+                            <span>{{ 'Usuarios'}}</span>
                         </a>
                     </li>
 
@@ -33,7 +33,7 @@
                            class="__nav-link {{ Request::is('admin/transactions*') ? 'active' : '' }}">
                             <img src="{{asset('assets/admin/img/new-img/transaction-and-report.svg')}}"
                                  alt="public/img">
-                            <span>{{ translate('Transactions & Reports')}}</span>
+                            <span>{{ 'Transacciones y Reportes'}}</span>
                         </a>
                     </li>
 
@@ -41,7 +41,7 @@
                         <a href="{{ route('admin.business-settings.business-setup') }}" id="tourb-3"
                            class="__nav-link {{ Request::is('admin/business-settings*') ? 'active' : '' }}">
                             <img src="{{asset('assets/admin/img/new-img/setting-icon.svg')}}" alt="public/img">
-                            <span>{{ translate('messages.Settings') }}</span>
+                            <span>{{ 'Configuración' }}</span>
                             <svg width="14" viewBox="0 0 14 14" fill="none">
                                 <path d="M2.33325 5.25L6.99992 9.91667L11.6666 5.25" stroke="#006161" stroke-width="1.5"
                                       stroke-linecap="round" stroke-linejoin="round"/>
@@ -50,9 +50,9 @@
                         <div class="__nav-module" id="tourb-4">
                             <div class="__nav-module-header">
                                 <div class="inner">
-                                    <h4>{{translate('Settings')}}</h4>
+                                    <h4>{{'Configuración'}}</h4>
                                     <p>
-                                        {{translate('Monitor your business general settings from here')}}
+                                        {{'Supervise la configuración general de su empresa desde aquí'}}
                                     </p>
                                 </div>
                             </div>
@@ -65,7 +65,7 @@
                                                 <img
                                                     src="{{asset('assets/admin/img/navbar-setting-icon/module.svg')}}"
                                                     alt="">
-                                                <span>{{translate('System Module Setup')}}</span>
+                                                <span>{{'Configuración del módulo del sistema'}}</span>
                                             </a>
                                         </li>
                                     @endif
@@ -76,7 +76,7 @@
                                                 <img
                                                     src="{{asset('assets/admin/img/navbar-setting-icon/location.svg')}}"
                                                     alt="">
-                                                <span>{{translate('Zone Setup')}}</span>
+                                                <span>{{'Configuración de zona'}}</span>
                                             </a>
                                         </li>
                                     @endif
@@ -87,7 +87,7 @@
                                                 <img
                                                     src="{{asset('assets/admin/img/navbar-setting-icon/business.svg')}}"
                                                     alt="">
-                                                <span>{{translate('Business Settings')}}</span>
+                                                <span>{{'Configuración empresarial'}}</span>
                                             </a>
                                         </li>
                                     @endif
@@ -99,7 +99,7 @@
                                                 <img
                                                     src="{{asset('assets/admin/img/navbar-setting-icon/third-party.svg')}}"
                                                     alt="">
-                                                <span>{{translate('3rd Party')}}</span>
+                                                <span>{{'Tercero'}}</span>
                                             </a>
                                         </li>
                                         <li>
@@ -108,14 +108,14 @@
                                                 <img
                                                     src="{{asset('assets/admin/img/navbar-setting-icon/social.svg')}}"
                                                     alt="">
-                                                <span>{{translate('Social Media and Page Setup')}}</span>
+                                                <span>{{'Redes sociales y configuración de página'}}</span>
                                             </a>
                                         </li>
                                     @endif
                                 </ul>
                                 <div class="text-center mt-2">
                                     <a href="{{ route('admin.business-settings.business-setup') }}"
-                                       class="next-tour">{{translate('View All')}}</a>
+                                       class="next-tour">{{'Ver todo'}}</a>
                                 </div>
                             </div>
                         </div>
@@ -125,7 +125,7 @@
                             <a href="{{ route('admin.dispatch.dashboard')}}" id="tourb-8"
                                class="__nav-link {{ Request::is('admin/dispatch*') ? 'active' : '' }}">
                                 <img src="{{asset('assets/admin/img/new-img/dispatch.svg')}}" alt="public/img">
-                                <span>{{ translate('Dispatch Management')}}</span>
+                                <span>{{ 'Gestión de despacho'}}</span>
                             </a>
                         </li>
                     @endif
@@ -134,7 +134,7 @@
                     <li class="nav-item max-sm-m-0 w-xxl-200px ml-auto flex-grow-0">
                         <button type="button" id="modalOpener" class="title-color bg--secondary border-0 rounded justify-content-between w-100 align-items-center py-2 px-2 px-md-3 d-flex gap-1" data-toggle="modal" data-target="#staticBackdrop">
                             <div class="align-items-center d-flex flex-grow-1 gap-1 justify-content-between">
-                                <span class="align-items-center d-none d-xxl-flex gap-2 text-muted">{{translate('Search_or')}}
+                                <span class="align-items-center d-none d-xxl-flex gap-2 text-muted">{{'Buscar o'}}
 
                                     <span class="bg-E7E6E8 border ctrlplusk d-md-block d-none font-bold fs-12 fw-bold lh-1 ms-1 px-1 rounded text-muted">Ctrl+K</span>
 
@@ -146,7 +146,7 @@
 
                     <li class="nav-item max-sm-m-0 mr-lg-2">
                         <a class="btn btn-icon rounded-circle nav-msg-icon"
-                           href="{{route('admin.delivery-man.offline_payment_list', ['status' => 'pending'])}}" title="{{translate('Pagos de Repartidores Pendientes')}}">
+                           href="{{route('admin.delivery-man.offline_payment_list', ['status' => 'pending'])}}" title="{{'Pendientes Pagos de Repartidores'}}">
                             <i class="tio-wallet-outlined" style="font-size: 20px; color: #006161;"></i>
                             @php($pending_payments = \App\Models\DeliveryManOfflinePayment::where('status', 'pending')->count())
                             @if($pending_payments != 0)
@@ -215,7 +215,7 @@
                                 <img src="{{asset('assets/admin/img/new-img/module-icon.svg')}}"
                                      alt="public/img">
                             @endif
-                            <span class="text-white">{{ $mod ? $mod->module_name : translate('modules') }}</span>
+                            <span class="text-white">{{ $mod ? $mod->module_name : 'módulos' }}</span>
                             <img src="{{asset('assets/admin/img/new-img/angle-white.svg')}}"
                                  class="d-none d-lg-block ml-xl-2" alt="public/img">
                         </a>
@@ -230,9 +230,9 @@
                                     <div class="inner">
                                         <div class="row g-3 align-items-center">
                                             <div class="col-6">
-                                                <h5>{{translate('Modules Section')}}</h5>
+                                                <h5>{{'Sección de Módulos'}}</h5>
                                                 <p class="m-0">
-                                                    {{translate('Select Module & Monitor your business module wise')}}
+                                                    {{'Seleccione el módulo y supervise el módulo de su negocio'}}
                                                 </p>
                                             </div>
 
@@ -265,7 +265,7 @@
                                         @if (\App\CentralLogics\Helpers::module_permission_check('module'))
                                             <a href="{{ route('admin.business-settings.module.create') }}"
                                                class="__nav-module-item" data-toggle="tooltip"
-                                               data-placement="top" title="{{ translate('add_new_module') }}">
+                                               data-placement="top" title="{{ 'agregar nuevo módulo' }}">
                                                 <i class="tio-add display-3"></i>
                                             </a>
                                         @endif
@@ -275,9 +275,9 @@
                                 <div class="__nav-module-body text-center py-5">
                                     <img class="w--120px" src="{{ asset('assets/admin/img/empty-box.png') }}"
                                          alt="">
-                                    <h2 class="my-4">{{ translate('Please, Enable or Create Module First') }}</h2>
+                                    <h2 class="my-4">{{ 'Por favor, habilite o cree el módulo primero' }}</h2>
                                     <a href="{{ route('admin.business-settings.module.index') }}"
-                                       class="btn btn--primary">{{ translate('messages.Module Setup') }}</a>
+                                       class="btn btn--primary">{{ 'Configuración del módulo' }}</a>
                                 </div>
                             @endif
                         </div>
@@ -300,16 +300,16 @@
                     <form class="flex-grow-1" id="searchForm" action="{{ route('admin.search.routing') }}">
                         @csrf
                         <div class="d-flex align-items-center global-search-container">
-                            <input  autocomplete="off" class="form-control flex-grow-1 rounded-10 search-input" id="searchInput" maxlength="255" name="search" type="search" placeholder="{{ translate('Search_by_keyword') }}" aria-label="Search" autofocus>
+                            <input  autocomplete="off" class="form-control flex-grow-1 rounded-10 search-input" id="searchInput" maxlength="255" name="search" type="search" placeholder="{{ 'Buscar por palabra clave' }}" aria-label="Search" autofocus>
                         </div>
                     </form>
                     <div class="position-absolute right-0 pr-2">
-                        <button class="border-0 rounded px-2 py-1" type="button" data-dismiss="modal">{{ translate('Esc') }}</button>
+                        <button class="border-0 rounded px-2 py-1" type="button" data-dismiss="modal">{{ 'ESC' }}</button>
                     </div>
                 </div>
                 <div class="min-h-350">
                     <div class="search-result" id="searchResults">
-                        <div class="text-center text-muted py-5">{{translate('It appears that you have not yet searched.')}}.</div>
+                        <div class="text-center text-muted py-5">{{'Parece que aún no has buscado.'}}.</div>
                     </div>
                 </div>
             </div>
@@ -326,21 +326,21 @@
     <div class="d-flex flex-column">
 
     @if (Request::is('taxvat*'))
-        <div class="tour-guide-items offcanvas-trigger text-capitalize fs-14 text-title cursor-pointer" data-target="#global_guideline_offcanvas">{{ translate('Guideline') }}</div>
+        <div class="tour-guide-items offcanvas-trigger text-capitalize fs-14 text-title cursor-pointer" data-target="#global_guideline_offcanvas">{{ 'Pauta' }}</div>
     @endif
 
         <div class="tour-guide-items">
             <a href="https://youtube.com/playlist?list=PLLFMbDpKMZBxgtX3n3rKJvO5tlU8-ae2Y" target="_blank"
                class="d-flex align-items-center gap-10px">
-                <span class="text-capitalize fs-14 text-title">{{ translate('Turotial') }}</span>
+                <span class="text-capitalize fs-14 text-title">{{ 'Turocial' }}</span>
             </a>
         </div>
         <div class="tour-guide-items d-flex cursor-pointer align-items-center gap-10px restart-Tour">
-            <span class="text-capitalize fs-14 text-title">{{ translate('Tour') }}</span>
+            <span class="text-capitalize fs-14 text-title">{{ 'Recorrido' }}</span>
         </div>
         @if ( getEnvMode() == 'demo')
         <div class="tour-guide-items text-capitalize d-flex align-items-center gap-3 fs-14 text-title">
-            {{ translate('Toggle RTL') }}
+            {{ 'Alternar RTL' }}
             <label class="toggle-switch toggle-switch-sm" for="rtl_toggle">
                 <input type="checkbox" class="toggle-switch-input" id="rtl_toggle">
                 <span class="toggle-switch-label">

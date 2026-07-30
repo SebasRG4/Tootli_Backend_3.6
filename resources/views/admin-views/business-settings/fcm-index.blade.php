@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('FCM Settings'))
+@section('title','Configuración de FCM')
 
 @push('css_or_js')
 
@@ -14,7 +14,7 @@
                 <span class="page-header-icon">
                     <img src="{{asset('assets/admin/img/firebase.png')}}" class="w--26" alt="">
                 </span>
-                <span>{{translate('messages.firebase_push_notification_setup')}}
+                <span>{{'configuración de notificaciones push de Firebase'}}
                 </span>
             </h1>
         </div>
@@ -32,26 +32,26 @@
                         <li class="nav-item mr-2 mr-md-4">
                             <a href="{{ route('admin.business-settings.fcm-index') }}" class="nav-link pb-2 px-0 pb-sm-3 active" data-slide="1">
                                 <img src="{{asset('assets/admin/img/notify.png')}}" alt="">
-                                <span>{{translate('Push Notification')}}</span>
+                                <span>{{'Notificación push'}}</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('admin.business-settings.fcm-config') }}" class="nav-link pb-2 px-0 pb-sm-3" data-slide="2">
                                 <img src="{{asset('assets/admin/img/firebase2.png')}}" alt="">
-                                <span>{{translate('Firebase Configuration')}}</span>
+                                <span>{{'Configuración de base de fuego'}}</span>
                             </a>
                         </li>
                     </ul>
                     <div class="py-1">
                         <div class="tab--content">
                             <div class="item show text--primary-2 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#push-notify-modal">
-                                <strong class="mr-2">{{translate('Read Documentation')}}</strong>
+                                <strong class="mr-2">{{'Leer documentación'}}</strong>
                                 <div class="blinkings">
                                     <i class="tio-info-outined"></i>
                                 </div>
                             </div>
                             <div class="item text--primary-2 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#firebase-modal">
-                                <strong class="mr-2">{{translate('Where to get this information')}}</strong>
+                                <strong class="mr-2">{{'Dónde obtener esta información'}}</strong>
                                 <div class="blinkings">
                                     <i class="tio-info-outined"></i>
                                 </div>
@@ -83,7 +83,7 @@
                                 <select name="module_type" class="form-control js-select2-custom set-filter"
                                 data-url="{{url()->full()}}"
                                 data-filter="module_type"
-                                title="{{translate('messages.select_modules')}}">
+                                title="{{'seleccionar módulos'}}">
                                     @foreach (config('module.module_type') as $module)
                                         <option
                                             value="{{$module}}" {{$mod_type == $module?'selected':''}}>
@@ -91,7 +91,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                <small>{{translate('*Select Module Here')}}</small>
+                                <small>{{'*Seleccione el módulo aquí'}}</small>
                             </div>
                         </div>
                         <form action="{{route('admin.business-settings.update-fcm-messages')}}" method="post"
@@ -122,7 +122,7 @@
                                             <div class="form-group">
                                                 <div class="d-flex flex-wrap justify-content-between mb-2">
                                                     <span class="d-block form-label">
-                                                        {{translate('messages.order_pending_message')}} ({{strtoupper($lang)}})
+                                                        {{'mensaje de pedido pendiente'}} ({{strtoupper($lang)}})
                                                     </span>
                                                 @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center"
@@ -132,10 +132,10 @@
                                                                    data-type="toggle"
                                                                    data-image-on="{{ asset('assets/admin/img/modal/pending-order-on.png') }}"
                                                                    data-image-off="{{ asset('assets/admin/img/modal/pending-order-off.png') }}"
-                                                                   data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('pending Message') }}</strong>"
-                                                                   data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('pending Message') }}</strong>"
-                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the order is pending.') }}</p>"
-                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the order is pending or not.') }}</p>"
+                                                                   data-title-on="{{ 'Al activar el pedido' }} <strong>{{ 'Mensaje pendiente' }}</strong>"
+                                                                   data-title-off="{{ 'Desactivando el pedido' }} <strong>{{ 'Mensaje pendiente' }}</strong>"
+                                                                   data-text-on="<p>{{ 'El usuario recibirá un mensaje claro para saber que el pedido está pendiente.' }}</p>"
+                                                                   data-text-off="<p>{{ 'El usuario no puede recibir un mensaje claro para saber si el pedido está pendiente o no.' }}</p>"
                                                                    class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
                                                                    name="pending_status"
 
@@ -148,7 +148,7 @@
 
                                                 @endif
                                                 </div>
-                                                <textarea name="pending_message[]" placeholder="{{translate('Write your message')}}" class="form-control pending_messages"
+                                                <textarea name="pending_message[]" placeholder="{{'Escribe tu mensaje'}}" class="form-control pending_messages"
                                                 @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif
@@ -175,7 +175,7 @@
                                             <div class="form-group">
                                                 <div class="d-flex flex-wrap justify-content-between mb-2">
                                                     <span class="d-block form-label">
-                                                        {{translate('messages.order_confirmation_message')}}
+                                                        {{'mensaje de confirmación del pedido'}}
                                                     </span>
                                                     @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
@@ -185,10 +185,10 @@
                                                                    data-type="toggle"
                                                                    data-image-on="{{ asset('assets/admin/img/modal/pending-order-on.png') }}"
                                                                    data-image-off="{{ asset('assets/admin/img/modal/pending-order-off.png') }}"
-                                                                   data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('confirmation Message') }}</strong>"
-                                                                   data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('confirmation Message') }}</strong>"
-                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the order is confirmed.') }}</p>"
-                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the order is confirmed or not.') }}</p>"
+                                                                   data-title-on="{{ 'Al activar el pedido' }} <strong>{{ 'mensaje de confirmación' }}</strong>"
+                                                                   data-title-off="{{ 'Desactivando el pedido' }} <strong>{{ 'mensaje de confirmación' }}</strong>"
+                                                                   data-text-on="<p>{{ 'El usuario recibirá un mensaje claro para saber que el pedido está confirmado.' }}</p>"
+                                                                   data-text-off="<p>{{ 'El usuario no puede recibir un mensaje claro para saber si el pedido está confirmado o no.' }}</p>"
                                                                    class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
                                                                    name="confirm_status"
                                                                    data-textarea-name="confirm_message"
@@ -201,7 +201,7 @@
 
                                                     @endif
                                                 </div>
-                                                <textarea name="confirm_message[]"  placeholder="{{translate('Write your message')}}" class="form-control confirm_message"
+                                                <textarea name="confirm_message[]"  placeholder="{{'Escribe tu mensaje'}}" class="form-control confirm_message"
                                                 @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif >{!! (isset($translate_2) && isset($translate_2[$lang]))?$translate_2[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -231,7 +231,7 @@
                                             <div class="form-group">
                                                 <div class="d-flex flex-wrap justify-content-between mb-2">
                                                     <span class="d-block form-label">
-                                                        {{translate('messages.order_processing_message')}}
+                                                        {{'mensaje de procesamiento de pedido'}}
                                                     </span>
                                                     @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0" for="processing_status">
@@ -240,10 +240,10 @@
                                                                    data-type="toggle"
                                                                    data-image-on="{{ asset('assets/admin/img/modal/pending-order-on.png') }}"
                                                                    data-image-off="{{ asset('assets/admin/img/modal/pending-order-off.png') }}"
-                                                                   data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('processing Message') }}</strong>"
-                                                                   data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('processing Message') }}</strong>"
-                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the order is processing.') }}</p>"
-                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the order is processing or not.') }}</p>"
+                                                                   data-title-on="{{ 'Al activar el pedido' }} <strong>{{ 'mensaje de procesamiento' }}</strong>"
+                                                                   data-title-off="{{ 'Desactivando el pedido' }} <strong>{{ 'mensaje de procesamiento' }}</strong>"
+                                                                   data-text-on="<p>{{ 'El usuario recibirá un mensaje claro para saber que el pedido se está procesando.' }}</p>"
+                                                                   data-text-off="<p>{{ 'El usuario no puede recibir un mensaje claro para saber si el pedido se está procesando o no.' }}</p>"
                                                                    class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
                                                                    name="processing_status"
                                                                    data-textarea-name="processing_message"
@@ -255,7 +255,7 @@
 
                                                     @endif
                                                 </div>
-                                                <textarea name="processing_message[]"  placeholder="{{translate('Write your message')}}" class="form-control processing_message"                                           @if ($lang == 'en')
+                                                <textarea name="processing_message[]"  placeholder="{{'Escribe tu mensaje'}}" class="form-control processing_message"                                           @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif
                                                 >{!! (isset($translate_3) && isset($translate_3[$lang]))?$translate_3[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -281,7 +281,7 @@
                                             <div class="form-group">
                                                 <div class="d-flex flex-wrap justify-content-between mb-2">
                                                     <span class="d-block form-label">
-                                                        {{translate('messages.order_Handover_message')}}
+                                                        {{'mensaje de entrega de pedido'}}
                                                     </span>
                                                     @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
@@ -291,10 +291,10 @@
                                                                    data-type="toggle"
                                                                    data-image-on="{{ asset('assets/admin/img/modal/pending-order-on.png') }}"
                                                                    data-image-off="{{ asset('assets/admin/img/modal/pending-order-off.png') }}"
-                                                                   data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('Order Handover Message') }}</strong>"
-                                                                   data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('Order Handover Message') }}</strong>"
-                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the order is handovered.') }}</p>"
-                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the order is handovered or not.') }}</p>"
+                                                                   data-title-on="{{ 'Al activar el pedido' }} <strong>{{ 'Mensaje de entrega de pedido' }}</strong>"
+                                                                   data-title-off="{{ 'Desactivando el pedido' }} <strong>{{ 'Mensaje de entrega de pedido' }}</strong>"
+                                                                   data-text-on="<p>{{ 'El usuario recibirá un mensaje claro para saber que el pedido ha sido entregado.' }}</p>"
+                                                                   data-text-off="<p>{{ 'El usuario no puede recibir un mensaje claro para saber si el pedido se entregó o no.' }}</p>"
                                                                    class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
 
                                                                    name="order_handover_message_status"
@@ -308,7 +308,7 @@
 
                                                     @endif
                                                 </div>
-                                                <textarea name="order_handover_message[]"  placeholder="{{translate('Write your message')}}" class="form-control order_handover_message"                                           @if ($lang == 'en')
+                                                <textarea name="order_handover_message[]"  placeholder="{{'Escribe tu mensaje'}}" class="form-control order_handover_message"                                           @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif
                                                 >{!! (isset($translate_4) && isset($translate_4[$lang]))?$translate_4[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -337,7 +337,7 @@
                                             <div class="form-group">
                                                 <div class="d-flex flex-wrap justify-content-between mb-2">
                                                     <span class="d-block form-label">
-                                                        {{translate('messages.order_out_for_delivery_message')}}
+                                                        {{'ordenar para mensaje de entrega'}}
                                                     </span>
                                                     @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
@@ -347,10 +347,10 @@
                                                                    data-type="toggle"
                                                                    data-image-on="{{ asset('assets/admin/img/modal/pending-order-on.png') }}"
                                                                    data-image-off="{{ asset('assets/admin/img/modal/pending-order-off.png') }}"
-                                                                   data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('Out For Delivery Message') }}</strong>"
-                                                                   data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('Out For Delivery Message') }}</strong>"
-                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the order is out for delivery.') }}</p>"
-                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the order is out for delivery or not.') }}</p>"
+                                                                   data-title-on="{{ 'Al activar el pedido' }} <strong>{{ 'Mensaje de salida para entrega' }}</strong>"
+                                                                   data-title-off="{{ 'Desactivando el pedido' }} <strong>{{ 'Mensaje de salida para entrega' }}</strong>"
+                                                                   data-text-on="<p>{{ 'El usuario recibirá un mensaje claro para saber que el pedido ya está listo para entrega.' }}</p>"
+                                                                   data-text-off="<p>{{ 'El usuario no puede recibir un mensaje claro para saber si el pedido está disponible para entrega o no.' }}</p>"
                                                                    class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
                                                                    name="out_for_delivery_status"
                                                                    data-textarea-name="out_for_delivery_message"
@@ -361,7 +361,7 @@
                                                         </label>
                                                     @endif
                                                 </div>
-                                                <textarea name="out_for_delivery_message[]"  placeholder="{{translate('Write your message')}}" class="form-control out_for_delivery_message"                                           @if ($lang == 'en')
+                                                <textarea name="out_for_delivery_message[]"  placeholder="{{'Escribe tu mensaje'}}" class="form-control out_for_delivery_message"                                           @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif
                                                 >{!! (isset($translate_5) && isset($translate_5[$lang]))?$translate_5[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -387,7 +387,7 @@
                                             <div class="form-group">
                                                 <div class="d-flex flex-wrap justify-content-between mb-2">
                                                     <span class="d-block form-label">
-                                                        {{translate('messages.order_delivered_message')}}
+                                                        {{'mensaje de pedido entregado'}}
                                                     </span>
                                                     @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
@@ -397,10 +397,10 @@
                                                                    data-type="toggle"
                                                                    data-image-on="{{ asset('assets/admin/img/modal/pending-order-on.png') }}"
                                                                    data-image-off="{{ asset('assets/admin/img/modal/pending-order-off.png') }}"
-                                                                   data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('delivered Message') }}</strong>"
-                                                                   data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('delivered Message') }}</strong>"
-                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the order is delivered.') }}</p>"
-                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the order is delivered or not.') }}</p>"
+                                                                   data-title-on="{{ 'Al activar el pedido' }} <strong>{{ 'mensaje entregado' }}</strong>"
+                                                                   data-title-off="{{ 'Desactivando el pedido' }} <strong>{{ 'mensaje entregado' }}</strong>"
+                                                                   data-text-on="<p>{{ 'El usuario recibirá un mensaje claro para saber que el pedido ha sido entregado.' }}</p>"
+                                                                   data-text-off="<p>{{ 'El usuario no puede recibir un mensaje claro para saber si el pedido se entregó o no.' }}</p>"
                                                                    class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
                                                                    name="delivered_status"
                                                                    data-textarea-name="delivered_message"
@@ -412,7 +412,7 @@
 
                                                     @endif
                                                 </div>
-                                                <textarea name="delivered_message[]"  placeholder="{{translate('Write your message')}}" class="form-control delivered_message"                                           @if ($lang == 'en')
+                                                <textarea name="delivered_message[]"  placeholder="{{'Escribe tu mensaje'}}" class="form-control delivered_message"                                           @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif
                                                 >{!! (isset($translate_6) && isset($translate_6[$lang]))?$translate_6[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -438,7 +438,7 @@
                                             <div class="form-group">
                                                 <div class="d-flex flex-wrap justify-content-between mb-2">
                                                     <span class="d-block form-label">
-                                                        {{translate('messages.deliveryman_assign_message')}}
+                                                        {{'repartidor asigna mensaje'}}
                                                     </span>
                                                     @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
@@ -448,10 +448,10 @@
                                                                    data-type="toggle"
                                                                    data-image-on="{{ asset('assets/admin/img/modal/pending-order-on.png') }}"
                                                                    data-image-off="{{ asset('assets/admin/img/modal/pending-order-off.png') }}"
-                                                                   data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('Delivery Man Assigned Message') }}</strong>"
-                                                                   data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('Delivery Man Assigned Message') }}</strong>"
-                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the order is assigned to a delivery man.') }}</p>"
-                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the order is assigned to a delivery man or not.') }}</p>"
+                                                                   data-title-on="{{ 'Al activar el pedido' }} <strong>{{ 'Mensaje asignado al repartidor' }}</strong>"
+                                                                   data-title-off="{{ 'Desactivando el pedido' }} <strong>{{ 'Mensaje asignado al repartidor' }}</strong>"
+                                                                   data-text-on="<p>{{ 'El usuario recibirá un mensaje claro para saber que el pedido está asignado a un repartidor.' }}</p>"
+                                                                   data-text-off="<p>{{ 'El usuario no puede recibir un mensaje claro para saber si el pedido está asignado a un repartidor o no.' }}</p>"
                                                                    class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
                                                                    data-textarea-name="delivery_boy_assign_message"
                                                                    name="delivery_boy_assign_status"
@@ -464,7 +464,7 @@
 
                                                     @endif
                                                 </div>
-                                                <textarea name="delivery_boy_assign_message[]"  placeholder="{{translate('Write your message')}}" class="form-control delivery_boy_assign_message"                                           @if ($lang == 'en')
+                                                <textarea name="delivery_boy_assign_message[]"  placeholder="{{'Escribe tu mensaje'}}" class="form-control delivery_boy_assign_message"                                           @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif
                                                 >{!! (isset($translate_7) && isset($translate_7[$lang]))?$translate_7[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -491,7 +491,7 @@
                                             <div class="form-group">
                                                 <div class="d-flex flex-wrap justify-content-between mb-2">
                                                     <span class="d-block form-label">
-                                                        {{translate('messages.deliveryman_delivered_message')}}
+                                                        {{'mensaje entregado repartidor'}}
                                                     </span>
                                                     @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
@@ -501,10 +501,10 @@
                                                                    data-type="toggle"
                                                                    data-image-on="{{ asset('assets/admin/img/modal/pending-order-on.png') }}"
                                                                    data-image-off="{{ asset('assets/admin/img/modal/pending-order-off.png') }}"
-                                                                   data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('Delivery Man Delivered Message') }}</strong>"
-                                                                   data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('Delivery Man Delivered Message') }}</strong>"
-                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the order is delivered by a delivery man.') }}</p>"
-                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the order is delivered by a delivery man or not.') }}</p>"
+                                                                   data-title-on="{{ 'Al activar el pedido' }} <strong>{{ 'Mensaje entregado por el hombre de entrega' }}</strong>"
+                                                                   data-title-off="{{ 'Desactivando el pedido' }} <strong>{{ 'Mensaje entregado por el hombre de entrega' }}</strong>"
+                                                                   data-text-on="<p>{{ 'El usuario recibirá un mensaje claro para saber que el pedido es entregado por un repartidor.' }}</p>"
+                                                                   data-text-off="<p>{{ 'El usuario no puede recibir un mensaje claro para saber si el pedido lo entrega un repartidor o no.' }}</p>"
                                                                    class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
                                                                    name="delivery_boy_delivered_status"
                                                                    data-textarea-name="delivery_boy_delivered_message"
@@ -518,7 +518,7 @@
                                                     @endif
                                                 </div>
 
-                                                <textarea name="delivery_boy_delivered_message[]"  placeholder="{{translate('Write your message')}}" class="form-control delivery_boy_delivered_message"                                           @if ($lang == 'en')
+                                                <textarea name="delivery_boy_delivered_message[]"  placeholder="{{'Escribe tu mensaje'}}" class="form-control delivery_boy_delivered_message"                                           @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif
                                                 >{!! (isset($translate_8) && isset($translate_8[$lang]))?$translate_8[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -545,7 +545,7 @@
                                             <div class="form-group">
                                                 <div class="d-flex flex-wrap justify-content-between mb-2">
                                                     <span class="d-block form-label">
-                                                        {{translate('messages.order_canceled_message')}}
+                                                        {{'mensaje de pedido cancelado'}}
                                                     </span>
                                                     @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
@@ -556,10 +556,10 @@
                                                                    data-type="toggle"
                                                                    data-image-on="{{ asset('assets/admin/img/modal/pending-order-on.png') }}"
                                                                    data-image-off="{{ asset('assets/admin/img/modal/pending-order-off.png') }}"
-                                                                   data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('canceled Message') }}</strong>"
-                                                                   data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('canceled Message') }}</strong>"
-                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the order is canceled.') }}</p>"
-                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the order is canceled or not.') }}</p>"
+                                                                   data-title-on="{{ 'Al activar el pedido' }} <strong>{{ 'Mensaje cancelado' }}</strong>"
+                                                                   data-title-off="{{ 'Desactivando el pedido' }} <strong>{{ 'Mensaje cancelado' }}</strong>"
+                                                                   data-text-on="<p>{{ 'El usuario recibirá un mensaje claro para saber que el pedido está cancelado.' }}</p>"
+                                                                   data-text-off="<p>{{ 'El usuario no puede recibir un mensaje claro para saber si el pedido está cancelado o no.' }}</p>"
                                                                    class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
                                                                    data-textarea-name="order_cancled_message"
                                                                     value="1"
@@ -572,7 +572,7 @@
                                                     @endif
                                                 </div>
 
-                                                <textarea name="order_cancled_message[]"  placeholder="{{translate('Write your message')}}" class="form-control order_cancled_message"                                           @if ($lang == 'en')
+                                                <textarea name="order_cancled_message[]"  placeholder="{{'Escribe tu mensaje'}}" class="form-control order_cancled_message"                                           @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif
                                                 >{!! (isset($translate_9) && isset($translate_9[$lang]))?$translate_9[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -598,7 +598,7 @@
                                                 <div class="form-group">
                                                     <div class="d-flex flex-wrap justify-content-between mb-2">
                                                         <span class="d-block form-label">
-                                                            {{translate('messages.order_refunded_message')}}
+                                                            {{'mensaje de pedido reembolsado'}}
                                                         </span>
                                                         @if ($lang == 'en')
                                                             <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
@@ -608,10 +608,10 @@
                                                                        data-type="toggle"
                                                                        data-image-on="{{ asset('assets/admin/img/modal/pending-order-on.png') }}"
                                                                        data-image-off="{{ asset('assets/admin/img/modal/pending-order-off.png') }}"
-                                                                       data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('Order Refund Message') }}</strong>"
-                                                                       data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('Order Refund Message') }}</strong>"
-                                                                       data-text-on="<p>{{ translate('User will get a clear message to know that the order is refunded.') }}</p>"
-                                                                       data-text-off="<p>{{ translate('User cannot get a clear message to know that the order is refunded or not.') }}</p>"
+                                                                       data-title-on="{{ 'Al activar el pedido' }} <strong>{{ 'Mensaje de reembolso del pedido' }}</strong>"
+                                                                       data-title-off="{{ 'Desactivando el pedido' }} <strong>{{ 'Mensaje de reembolso del pedido' }}</strong>"
+                                                                       data-text-on="<p>{{ 'El usuario recibirá un mensaje claro para saber que el pedido ha sido reembolsado.' }}</p>"
+                                                                       data-text-off="<p>{{ 'El usuario no puede recibir un mensaje claro para saber si el pedido se reembolsa o no.' }}</p>"
                                                                        class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
                                                                        name="order_refunded_message_status"
                                                                        data-textarea-name="order_refunded_message"
@@ -624,7 +624,7 @@
                                                         @endif
                                                     </div>
 
-                                                    <textarea name="order_refunded_message[]"  placeholder="{{translate('Write your message')}}" class="form-control order_refunded_message"                                           @if ($lang == 'en')
+                                                    <textarea name="order_refunded_message[]"  placeholder="{{'Escribe tu mensaje'}}" class="form-control order_refunded_message"                                           @if ($lang == 'en')
                                                     {{$data?($data['status']==1?'required':''):''}}
                                                     @endif
                                                     >{!! (isset($translate_10) && isset($translate_10[$lang]))?$translate_10[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -649,7 +649,7 @@
                                                 <div class="form-group">
                                                     <div class="d-flex flex-wrap justify-content-between mb-2">
                                                         <span class="d-block form-label">
-                                                            {{translate('messages.refund_request_canceled_message')}}
+                                                            {{'mensaje de solicitud de reembolso cancelada'}}
                                                         </span>
                                                         @if ($lang == 'en')
                                                             <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
@@ -659,10 +659,10 @@
                                                                        data-type="toggle"
                                                                        data-image-on="{{ asset('assets/admin/img/modal/pending-order-on.png') }}"
                                                                        data-image-off="{{ asset('assets/admin/img/modal/pending-order-off.png') }}"
-                                                                       data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('Refund Request Cancel Message') }}</strong>"
-                                                                       data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('Refund Request Cancel Message') }}</strong>"
-                                                                       data-text-on="<p>{{ translate('User will get a clear message to know that the order\'s refund request is canceled.') }}</p>"
-                                                                       data-text-off="<p>{{ translate('User cannot get a clear message to know that the order\'s refund request is canceled or not.') }}</p>"
+                                                                       data-title-on="{{ 'Al activar el pedido' }} <strong>{{ 'Mensaje de cancelación de solicitud de reembolso' }}</strong>"
+                                                                       data-title-off="{{ 'Desactivando el pedido' }} <strong>{{ 'Mensaje de cancelación de solicitud de reembolso' }}</strong>"
+                                                                       data-text-on="<p>{{ 'El usuario recibirá un mensaje claro para saber que la solicitud de reembolso del pedido está cancelada.' }}</p>"
+                                                                       data-text-off="<p>{{ 'El usuario no puede recibir un mensaje claro para saber si la solicitud de reembolso del pedido está cancelada o no.' }}</p>"
                                                                        class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
 
                                                                        name="refund_request_canceled_status"
@@ -676,7 +676,7 @@
                                                             </label>
                                                         @endif
                                                     </div>
-                                                    <textarea name="refund_request_canceled[]"  placeholder="{{translate('Write your message')}}" class="form-control refund_request_canceled"                                           @if ($lang == 'en')
+                                                    <textarea name="refund_request_canceled[]"  placeholder="{{'Escribe tu mensaje'}}" class="form-control refund_request_canceled"                                           @if ($lang == 'en')
                                                     {{$data?($data['status']==1?'required':''):''}}
                                                     @endif
                                                     >{!! (isset($translate_11) && isset($translate_11[$lang]))?$translate_11[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -703,7 +703,7 @@
                                             <div class="form-group">
                                                 <div class="d-flex flex-wrap justify-content-between mb-2">
                                                     <span class="d-block form-label">
-                                                        {{translate('messages.offline_order_accept_message')}}
+                                                        {{'mensaje de aceptación de pedido fuera de línea'}}
                                                     </span>
                                                     @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
@@ -714,10 +714,10 @@
                                                                    data-type="toggle"
                                                                    data-image-on="{{ asset('assets/admin/img/modal/pending-order-on.png') }}"
                                                                    data-image-off="{{ asset('assets/admin/img/modal/pending-order-off.png') }}"
-                                                                   data-title-on="{{ translate('By Turning ON Offline Order') }} <strong>{{ translate('accept Message') }}</strong>"
-                                                                   data-title-off="{{ translate('By Turning OFF Offline Order') }} <strong>{{ translate('accept Message') }}</strong>"
-                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the offline order is accepted.') }}</p>"
-                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the offline order is accepted or not.') }}</p>"
+                                                                   data-title-on="{{ 'Al activar el pedido sin conexión' }} <strong>{{ 'aceptar mensaje' }}</strong>"
+                                                                   data-title-off="{{ 'Desactivando el pedido sin conexión' }} <strong>{{ 'aceptar mensaje' }}</strong>"
+                                                                   data-text-on="<p>{{ 'El usuario recibirá un mensaje claro para saber que se acepta el pedido fuera de línea.' }}</p>"
+                                                                   data-text-off="<p>{{ 'El usuario no puede recibir un mensaje claro para saber si el pedido fuera de línea se acepta o no.' }}</p>"
                                                                    class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
                                                                    name="offline_order_accept_message_status"
                                                                    data-textarea-name="offline_order_accept_message"
@@ -731,7 +731,7 @@
                                                     @endif
                                                 </div>
 
-                                                <textarea name="offline_order_accept_message[]"  placeholder="{{translate('Write your message')}}" class="form-control offline_order_accept_message"                                           @if ($lang == 'en')
+                                                <textarea name="offline_order_accept_message[]"  placeholder="{{'Escribe tu mensaje'}}" class="form-control offline_order_accept_message"                                           @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif
                                                 >{!! (isset($translate_12) && isset($translate_12[$lang]))?$translate_12[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -757,7 +757,7 @@
                                             <div class="form-group">
                                                 <div class="d-flex flex-wrap justify-content-between mb-2">
                                                     <span class="d-block form-label">
-                                                        {{translate('messages.offline_order_deny_message')}}
+                                                        {{'mensaje de denegación de pedido fuera de línea'}}
                                                     </span>
                                                     @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
@@ -767,10 +767,10 @@
                                                                    data-type="toggle"
                                                                    data-image-on="{{ asset('assets/admin/img/modal/pending-order-on.png') }}"
                                                                    data-image-off="{{ asset('assets/admin/img/modal/pending-order-off.png') }}"
-                                                                   data-title-on="{{ translate('By Turning ON Offline Order') }} <strong>{{ translate('deny Message') }}</strong>"
-                                                                   data-title-off="{{ translate('By Turning OFF Offline Order') }} <strong>{{ translate('deny Message') }}</strong>"
-                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the offline order is denied.') }}</p>"
-                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the offline order is denied or not.') }}</p>"
+                                                                   data-title-on="{{ 'Al activar el pedido sin conexión' }} <strong>{{ 'negar mensaje' }}</strong>"
+                                                                   data-title-off="{{ 'Desactivando el pedido sin conexión' }} <strong>{{ 'negar mensaje' }}</strong>"
+                                                                   data-text-on="<p>{{ 'El usuario recibirá un mensaje claro para saber que el pedido fuera de línea ha sido rechazado.' }}</p>"
+                                                                   data-text-off="<p>{{ 'El usuario no puede recibir un mensaje claro para saber si el pedido fuera de línea ha sido rechazado o no.' }}</p>"
                                                                    class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
                                                                    name="offline_order_deny_message_status"
                                                                    data-textarea-name="offline_order_deny_message"
@@ -784,7 +784,7 @@
                                                     @endif
                                                 </div>
 
-                                                <textarea name="offline_order_deny_message[]"  placeholder="{{translate('Write your message')}}" class="form-control offline_order_deny_message"                                           @if ($lang == 'en')
+                                                <textarea name="offline_order_deny_message[]"  placeholder="{{'Escribe tu mensaje'}}" class="form-control offline_order_deny_message"                                           @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif
                                                 >{!! (isset($translate_13) && isset($translate_13[$lang]))?$translate_13[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -797,8 +797,8 @@
                                 @endforeach
                             @endif
                             <div class="btn--container justify-content-end">
-                                <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                                <button type="submit" class="btn btn--primary">{{translate('messages.submit')}}</button>
+                                <button type="reset" class="btn btn--reset">{{'reiniciar'}}</button>
+                                <button type="submit" class="btn btn--primary">{{'entregar'}}</button>
                             </div>
                         </form>
                     </div>
@@ -821,20 +821,20 @@
                                 <div class="mb-20">
                                     <div class="text-center">
                                         <img src="{{asset('assets/admin/img/email-templates/3.png')}}" alt="" class="mb-20">
-                                        <h5 class="modal-title">{{translate('Write_a_message_in_the_Notification_Body')}}</h5>
+                                        <h5 class="modal-title">{{'Escribir un mensaje en el cuerpo de la notificación'}}</h5>
                                     </div>
                                     <p>
-                                        {{ translate('you_can_add_your_message_using_placeholders_to_include_dynamic_content._Here_are_some_examples_of_placeholders_you_can_use:') }}
+                                        {{ 'puede agregar su mensaje usando marcadores de posición para incluir contenido dinámico. A continuación se muestran algunos ejemplos de marcadores de posición que puede utilizar:' }}
                                     </p>
                                     <ul>
                                         <li>
-                                            {userName}: {{ translate('the_name_of_the_user.') }}
+                                            {userName}: {{ 'el nombre del usuario.' }}
                                         </li>
                                         <li>
-                                            {storeName}: {{ translate('the_name_of_the_store.') }}
+                                            {storeName}: {{ 'el nombre de la tienda.' }}
                                         </li>
                                         <li>
-                                            {orderId}: {{ translate('the_order_id.') }}
+                                            {orderId}: {{ 'la identificación del pedido.' }}
                                         </li>
                                     </ul>
                                 </div>
@@ -843,13 +843,13 @@
                                 <div class="mb-20">
                                     <div class="text-center">
                                         <img src="{{asset('assets/admin/img/firebase/slide-4.png')}}" alt="" class="mb-20">
-                                        <h5 class="modal-title">{{translate('Please Visit the Docs to Set FCM on Mobile Apps')}}</h5>
+                                        <h5 class="modal-title">{{'Visite los documentos para configurar FCM en aplicaciones móviles'}}</h5>
                                     </div>
                                     <div class="text-center">
                                         <p>
-                                            {{translate('Please check the documentation below for detailed instructions on setting up your mobile app to receive Firebase Cloud Messaging (FCM) notifications.')}}
+                                            {{'Consulte la documentación a continuación para obtener instrucciones detalladas sobre cómo configurar su aplicación móvil para recibir notificaciones de Firebase Cloud Messaging (FCM).'}}
                                         </p>
-                                        <a href="https://docs.6amtech.com/docs-six-am-mart/mobile-apps/mandatory-setup" target="_blank">{{translate('Click Here')}}</a>
+                                        <a href="https://docs.6amtech.com/docs-six-am-mart/mobile-apps/mandatory-setup" target="_blank">{{'Haga clic aquí'}}</a>
                                     </div>
                                 </div>
                             </div>

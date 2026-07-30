@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Auditoría de Depósitos de Efectivo'))
+@section('title', 'Auditoría de Depósitos Efectivos')
 
 @section('content')
     <div class="content container-fluid">
@@ -10,7 +10,7 @@
                     <img src="{{asset('assets/admin/img/cash.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('Auditoría de Depósitos de Efectivo')}}
+                    {{'Auditoría de Depósitos Efectivos'}}
                 </span>
             </h1>
         </div>
@@ -19,13 +19,13 @@
             <div class="card-header border-0 pb-0">
                 <ul class="nav nav-tabs mb-0 border-0">
                     <li class="nav-item">
-                        <a class="nav-link {{$status == 'pending' ? 'active' : ''}}" href="{{route('admin.delivery-man.cash-deposit-list', ['status' => 'pending'])}}">{{translate('Pendientes')}}</a>
+                        <a class="nav-link {{$status == 'pending' ? 'active' : ''}}" href="{{route('admin.delivery-man.cash-deposit-list', ['status' => 'pending'])}}">{{'Pendientes'}}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{$status == 'approved' ? 'active' : ''}}" href="{{route('admin.delivery-man.cash-deposit-list', ['status' => 'approved'])}}">{{translate('Aprobados')}}</a>
+                        <a class="nav-link {{$status == 'approved' ? 'active' : ''}}" href="{{route('admin.delivery-man.cash-deposit-list', ['status' => 'approved'])}}">{{'Aprobados'}}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{$status == 'denied' ? 'active' : ''}}" href="{{route('admin.delivery-man.cash-deposit-list', ['status' => 'denied'])}}">{{translate('Rechazados')}}</a>
+                        <a class="nav-link {{$status == 'denied' ? 'active' : ''}}" href="{{route('admin.delivery-man.cash-deposit-list', ['status' => 'denied'])}}">{{'Rechazados'}}</a>
                     </li>
                 </ul>
             </div>
@@ -34,12 +34,12 @@
                 <table class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
                     <thead class="thead-light">
                         <tr>
-                            <th>{{translate('ID')}}</th>
-                            <th>{{translate('Repartidor')}}</th>
-                            <th>{{translate('Monto')}}</th>
-                            <th>{{translate('Fecha Reporte')}}</th>
-                            <th>{{translate('Comprobante')}}</th>
-                            <th class="text-center">{{translate('Acción')}}</th>
+                            <th>{{'IDENTIFICACIÓN'}}</th>
+                            <th>{{'repartidor'}}</th>
+                            <th>{{'monte'}}</th>
+                            <th>{{'Fecha Reporte'}}</th>
+                            <th>{{'Comprobante'}}</th>
+                            <th class="text-center">{{'acción'}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,7 +55,7 @@
                                 <td>{{ $deposit->created_at->format('d M Y, h:i A') }}</td>
                                 <td>
                                     <button class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#photoModal{{$deposit->id}}">
-                                        {{translate('Ver Foto')}}
+                                        {{'Ver foto'}}
                                     </button>
                                 </td>
                                 <td class="text-center">
@@ -65,10 +65,10 @@
                                                 @csrf
                                                 <input type="hidden" name="id" value="{{$deposit->id}}">
                                                 <input type="hidden" name="status" value="approved">
-                                                <button type="submit" class="btn btn-sm btn-success">{{translate('Aprobar')}}</button>
+                                                <button type="submit" class="btn btn-sm btn-success">{{'aprobar'}}</button>
                                             </form>
                                             <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#denyModal{{$deposit->id}}">
-                                                {{translate('Rechazar')}}
+                                                {{'rechazar'}}
                                             </button>
                                         </div>
                                     @else
@@ -84,7 +84,7 @@
                                 <div class="modal-dialog modal-lg" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">{{translate('Comprobante de Depósito')}} - {{$deposit->delivery_man->f_name}}</h5>
+                                            <h5 class="modal-title">{{'Comprobante de Depósito'}} - {{$deposit->delivery_man->f_name}}</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -94,11 +94,11 @@
                                                  onerror="this.src='{{asset('assets/admin/img/900x400/img1.jpg')}}'"
                                                  class="img-fluid rounded border" alt="">
                                             <div class="mt-3 text-left">
-                                                <p><strong>{{translate('Monto')}}:</strong> {{ \App\CentralLogics\Helpers::format_currency($deposit->amount) }}</p>
+                                                <p><strong>{{'monte'}}:</strong> {{ \App\CentralLogics\Helpers::format_currency($deposit->amount) }}</p>
                                                 @if($deposit->latitude)
-                                                    <p><strong>{{translate('Ubicación Reporte')}}:</strong> 
+                                                    <p><strong>{{'Ubicación Reporte'}}:</strong> 
                                                         <a href="https://www.google.com/maps?q={{$deposit->latitude}},{{$deposit->longitude}}" target="_blank">
-                                                            {{translate('Ver en Mapas')}}
+                                                            {{'Ver en mapas'}}
                                                         </a>
                                                     </p>
                                                 @endif
@@ -113,7 +113,7 @@
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">{{translate('Rechazar Depósito')}}</h5>
+                                            <h5 class="modal-title">{{'Rechazar Depósito'}}</h5>
                                         </div>
                                         <form action="{{route('admin.delivery-man.cash-deposit-update')}}" method="POST">
                                             @csrf
@@ -121,13 +121,13 @@
                                                 <input type="hidden" name="id" value="{{$deposit->id}}">
                                                 <input type="hidden" name="status" value="denied">
                                                 <div class="form-group">
-                                                    <label>{{translate('Razón del rechazo')}}</label>
+                                                    <label>{{'Razón del rechazo'}}</label>
                                                     <textarea name="admin_note" class="form-control" rows="3" required></textarea>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{translate('Cancelar')}}</button>
-                                                <button type="submit" class="btn btn-danger">{{translate('Rechazar')}}</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{'Cancelar'}}</button>
+                                                <button type="submit" class="btn btn-danger">{{'rechazar'}}</button>
                                             </div>
                                         </form>
                                     </div>

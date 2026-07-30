@@ -5,7 +5,7 @@
     <!-- Total Orders -->
     <div class="total--orders">
         <h3 class="text-uppercase mb-xxl-2">{{ $data['customer'] + $data['delivery_man'] }}</h3>
-        <span class="text-capitalize">{{translate('messages.total_users')}}</span>
+        <span class="text-capitalize">{{'usuarios totales'}}</span>
     </div>
     <!-- Total Orders -->
 </div>
@@ -13,13 +13,13 @@
     <div class="chart--label">
         <span class="indicator chart-bg-1"></span>
         <span class="info">
-            {{translate('messages.customer')}} {{$data['customer']}}
+            {{'Cliente'}} {{$data['customer']}}
         </span>
     </div>
     <div class="chart--label">
         <span class="indicator chart-bg-3"></span>
         <span class="info">
-            {{translate('messages.delivery_man')}} {{$data['delivery_man']}}
+            {{'Repartidor'}} {{$data['delivery_man']}}
         </span>
     </div>
 </div>
@@ -33,7 +33,7 @@
             width: 320,
             type: 'donut',
         },
-        labels: ['{{ translate('Customer') }}', '{{ translate('Delivery man') }}'],
+        labels: ['{{ 'Cliente' }}', '{{ 'repartidor' }}'],
         dataLabels: {
             enabled: false,
             style: {

@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title',translate('messages.store_wallet'))
+@section('title','billetera de la tienda')
 
 @push('css_or_js')
 
@@ -17,7 +17,7 @@
                             <img src="{{asset('assets/admin/img/image_90.png')}}" alt="public">
                         </div>
                         <span>
-                            {{translate('messages.store_wallet')}}
+                            {{'billetera de la tienda'}}
                         </span>
                     </h2>
                 </div>
@@ -47,11 +47,11 @@
                                 }' >
                     <thead class="thead-light">
                     <tr>
-                        <th>{{ translate('messages.sl') }}</th>
-                        <th>{{translate('messages.amount')}}</th>
-                        <th>{{translate('messages.Payment_Time')}}</th>
-                        <th>{{translate('messages.Payment_method')}}</th>
-                        <th>{{translate('messages.status')}}</th>
+                        <th>{{ 'SL' }}</th>
+                        <th>{{'cantidad'}}</th>
+                        <th>{{'Tiempo de pago'}}</th>
+                        <th>{{'Método de pago'}}</th>
+                        <th>{{'estado'}}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -68,11 +68,11 @@
                                 @if($wr->method)
                                     {{ translate($wr->method) }}
                                 @else
-                                    {{ translate('Default_method') }}
+                                    {{ 'Método predeterminado' }}
                                 @endif
                             </td>
                             <td>
-                                <label class="badge badge-soft-success">{{translate('messages.approved')}}</label>
+                                <label class="badge badge-soft-success">{{'aprobado'}}</label>
                             </td>
 
                         </tr>
@@ -83,7 +83,7 @@
                     <div class="empty--data">
                         <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
-                            {{translate('no_data_found')}}
+                            {{'no se encontraron datos'}}
                         </h5>
                     </div>
                 @endif
@@ -98,7 +98,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">{{translate('messages.Pay_Via_Online')}}  </h5>
+                    <h5 class="modal-title" id="exampleModalLabel">{{'Pagar en línea'}}  </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -109,7 +109,7 @@
                         @csrf
                         <input type="hidden" value="{{ \App\CentralLogics\Helpers::get_store_id() }}" name="store_id"/>
                         <input type="hidden" value="{{  abs($wallet->collected_cash) }}" name="amount"/>
-                        <h5 class="mb-5 ">{{ translate('Pay_Via_Online') }} &nbsp; <small>({{ translate('Faster_&_secure_way_to_pay_bill') }})</small></h5>
+                        <h5 class="mb-5 ">{{ 'Pagar en línea' }} &nbsp; <small>({{ 'Forma más rápida y segura de pagar la factura' }})</small></h5>
                         <div class="row g-3">
                             @forelse ($data as $item)
                                 <div class="col-sm-6">
@@ -122,14 +122,14 @@
                                     </div>
                                 </div>
                             @empty
-                                <h1>{{ translate('no_payment_gateway_found') }}</h1>
+                                <h1>{{ 'no se encontró ninguna pasarela de pago' }}</h1>
                             @endforelse
                         </div>
                     </div>
 
                     <div class="modal-footer">
-                        <button id="reset_btn" type="reset" data-dismiss="modal" class="btn btn-secondary" >{{ translate('Close') }} </button>
-                        <button type="submit" class="btn btn-primary">{{ translate('Proceed') }}</button>
+                        <button id="reset_btn" type="reset" data-dismiss="modal" class="btn btn-secondary" >{{ 'Cerca' }} </button>
+                        <button type="submit" class="btn btn-primary">{{ 'Proceder' }}</button>
                     </div>
                 </form>
             </div>
@@ -142,7 +142,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">{{translate('messages.Adjust_Wallet')}}  </h5>
+                    <h5 class="modal-title" id="exampleModalLabel">{{'Ajustar billetera'}}  </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -151,12 +151,12 @@
                 <form action="{{ route('vendor.wallet.make_wallet_adjustment') }}" method="POST" class="needs-validation">
                     <div class="modal-body">
                         @csrf
-                        <h5 class="mb-5 ">{{ translate('This_will_adjust_the_collected_cash_on_your_earning') }} </h5>
+                        <h5 class="mb-5 ">{{ 'Esto ajustará el efectivo recaudado en función de sus ganancias.' }} </h5>
                     </div>
 
                     <div class="modal-footer">
-                        <button id="reset_btn" type="reset" data-dismiss="modal" class="btn btn-secondary" >{{ translate('Close') }} </button>
-                        <button type="submit" class="btn btn-primary">{{ translate('Proceed') }}</button>
+                        <button id="reset_btn" type="reset" data-dismiss="modal" class="btn btn-secondary" >{{ 'Cerca' }} </button>
+                        <button type="submit" class="btn btn-primary">{{ 'Proceder' }}</button>
                     </div>
                 </form>
             </div>
@@ -207,7 +207,7 @@
 $('.payment-warning').on('click',function (event ){
             event.preventDefault();
             toastr.info(
-                "{{ translate('messages.Currently,_there_are_no_payment_options_available._Please_contact_admin_regarding_any_payment_process_or_queries.') }}", {
+                "{{ 'Actualmente, no hay opciones de pago disponibles. Comuníquese con el administrador con respecto a cualquier proceso de pago o consulta.' }}", {
                     CloseButton: true,
                     ProgressBar: true
                 });

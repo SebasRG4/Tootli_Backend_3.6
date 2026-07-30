@@ -433,7 +433,7 @@
                                 <div class="card-body">
                                     <div class="mb-3">
                                         <h4 class="fs-5 mb-2">{{ 'Información Fiscal' }} <span class="text-danger" style="font-size: 0.8em; font-weight: bold;">(OPCIONAL)</span></h4>
-                                        {{-- <p class="fz-12px mb-0">{{translate('Lorem ipsum dolor sit amet, consectetur adipiscing elit.')}}</p> --}}
+                                        {{-- <p class="fz-12px mb-0">{{'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'}}</p> --}}
                                     </div>
                                     <div class="row g-3">
                                         <div class="col-md-8 col-xxl-8">
@@ -530,16 +530,16 @@
                                         <div class="col-md-4 col-sm-12 col-lg-4">
                                             <div class="form-group">
                                                 <label class="input-label"
-                                                       title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"
+                                                       title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"
                                                        for="exampleInputPassword">{{ 'Contraseña' }}
                                                     <span
                                                         class="text-danger">*</span>
                                                     &nbsp;
                                                     <span class="form-label-secondary" data-toggle="tooltip"
                                                           data-placement="right"
-                                                          data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><img
+                                                          data-original-title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"><img
                                                             src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                            alt="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"></span>
+                                                            alt="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"></span>
 
                                                 </label>
                                                 <label class="position-relative m-0 d-block">
@@ -841,7 +841,7 @@ function submitForm() {
     }
 
     if (!selectedValue) {
-        toastr.error("{{ translate('messages.please_select_business_plan') }}");
+        toastr.error("{{ 'por favor seleccione plan de negocios' }}");
         return;
     }
 
@@ -856,7 +856,7 @@ function submitForm() {
         }
 
         if (!selectedpValue) {
-            toastr.error("{{ translate('You_must_select_a_package') }}");
+            toastr.error("{{ 'Debes seleccionar un paquete' }}");
             return;
         }
     }
@@ -890,7 +890,7 @@ function submitForm() {
                     });
                 }
             } else {
-                toastr.success("{{ translate('your_store_registration_is_successful') }}", {
+                toastr.success("{{ 'el registro de su tienda fue exitoso' }}", {
                     CloseButton: true,
                     ProgressBar: true
                 });
@@ -918,10 +918,10 @@ function submitForm() {
             const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
             if (minLength && hasLowerCase && hasUpperCase && hasNumber && hasSymbol) {
-                feedback.text("{{ translate('Password is valid') }}");
+                feedback.text("{{ 'La contraseña es válida' }}");
                 feedback.removeClass('invalid').addClass('valid');
             } else {
-                feedback.text("{{ translate('Password format is invalid') }}");
+                feedback.text("{{ 'El formato de contraseña no es válido' }}");
                 feedback.removeClass('valid').addClass('invalid');
             }
         });
@@ -936,61 +936,61 @@ function submitForm() {
             const maxFileSize = 2 * 1024 * 1024; // 2MB in bytes
 
             if (!$('#default_name').val()) {
-                toastr.error("{{ translate('Vendor_name_is_required') }}");
+                toastr.error("{{ 'El nombre del proveedor es obligatorio.' }}");
                 e.preventDefault();
             } else if (!$('#address').val()) {
-                toastr.error("{{ translate('Vendor_address_is_required') }}");
+                toastr.error("{{ 'Se requiere la dirección del proveedor' }}");
                 e.preventDefault();
             } else if (!logo.files.length) {
-                toastr.error("{{ translate('Vendor_logo_required') }}");
+                toastr.error("{{ 'Se requiere el logotipo del proveedor' }}");
                 e.preventDefault();
             } else if (!cover.files.length) {
-                toastr.error("{{ translate('Vendor_cover_photo_required') }}");
+                toastr.error("{{ 'Se requiere foto de portada del proveedor' }}");
                 e.preventDefault();
             } else if (logo.files[0].size > maxFileSize) {
-                toastr.error("{{ translate('Vendor_logo_must_be_less_than_2MB') }}");
+                toastr.error("{{ 'El logotipo del proveedor debe tener menos de 2 MB.' }}");
                 e.preventDefault();
             } else if (tin_certificate_image.files.length && tin_certificate_image.files[0].size > maxFileSize) {
-                toastr.error("{{ translate('Tin_certificate_must_be_less_than_2MB') }}");
+                toastr.error("{{ 'El certificado de estaño debe tener menos de 2 MB.' }}");
                 e.preventDefault();
             } else if (cover.files[0].size > maxFileSize) {
-                toastr.error("{{ translate('Vendor_cover_photo_must_be_less_than_2MB') }}");
+                toastr.error("{{ 'La foto de portada del proveedor debe tener menos de 2 MB.' }}");
                 e.preventDefault();
             } else if (!$('#choice_zones').val()) {
-                toastr.error("{{ translate('You_must_select_a_zone') }}");
+                toastr.error("{{ 'Debes seleccionar una zona' }}");
                 e.preventDefault();
             } else if (!$('#module_id').val()) {
-                toastr.error("{{ translate('You_must_select_a_module') }}");
+                toastr.error("{{ 'Debes seleccionar un módulo' }}");
                 e.preventDefault();
             } else if (!$('#latitude').val() || !$('#longitude').val()) {
-                toastr.error("{{ translate('Must_click_on_the_map_for_lat/long') }}");
+                toastr.error("{{ 'Debe hacer clic en el mapa para conocer la latitud y la longitud.' }}");
                 e.preventDefault();
             } else if (!$('#minimum_delivery_time').val()) {
-                toastr.error("{{ translate('minimum_time_is_required') }}");
+                toastr.error("{{ 'se requiere un tiempo minimo' }}");
                 e.preventDefault();
             } else if (!$('#max_delivery_time').val()) {
-                toastr.error("{{ translate('max_time_is_required') }}");
+                toastr.error("{{ 'se requiere tiempo máximo' }}");
                 e.preventDefault();
             } else if (!$('#f_name').val()) {
-                toastr.error("{{ translate('first_name_is_required') }}");
+                toastr.error("{{ 'el nombre es obligatorio' }}");
                 e.preventDefault();
             } else if (!$('#l_name').val()) {
-                toastr.error("{{ translate('last_name_is_required') }}");
+                toastr.error("{{ 'el apellido es requerido' }}");
                 e.preventDefault();
             } else if ($('#phone').val().length < 5) {
-                toastr.error("{{ translate('valid_phone_number_is_required') }}");
+                toastr.error("{{ 'Se requiere un número de teléfono válido.' }}");
                 e.preventDefault();
             } else if (!$('#email').val()) {
-                toastr.error("{{ translate('email_is_required') }}");
+                toastr.error("{{ 'se requiere correo electrónico' }}");
                 e.preventDefault();
             } else if (!$('#exampleInputPassword').val()) {
-                toastr.error("{{ translate('password_is_required') }}");
+                toastr.error("{{ 'se requiere contraseña' }}");
                 e.preventDefault();
             } else if ($('#exampleRepeatPassword').val() !== $('#exampleInputPassword').val()) {
-                toastr.error("{{ translate('confirm_password_does_not_match') }}");
+                toastr.error("{{ 'confirmar la contraseña no coincide' }}");
                 e.preventDefault();
             } else if (!isPasswordStrong($('#exampleRepeatPassword').val()) && !isPasswordStrong($('#exampleInputPassword').val())) {
-                toastr.error("{{ translate('Password format is invalid') }}");
+                toastr.error("{{ 'El formato de contraseña no es válido' }}");
                 e.preventDefault();
             } else {
                 e.preventDefault();
@@ -1111,7 +1111,7 @@ function submitForm() {
 
                             if (!isValidType) {
                                 if (typeof toastr !== 'undefined') {
-                                    toastr.error("{{ translate('messages.Invalid file type. Please upload a supported image.') }}");
+                                    toastr.error("{{ 'Tipo de archivo no válido. Cargue una imagen compatible.' }}");
                                 }
 
                                 $(this).val('');
@@ -1125,7 +1125,7 @@ function submitForm() {
                         const maxSize = 2 * 1024 * 1024; // 2 MB in bytes
                         if (file.size > maxSize) {
                             if (typeof toastr !== 'undefined') {
-                                toastr.error("{{ translate('messages.Image size must be less than 2 MB') }}");
+                                toastr.error("{{ 'El tamaño de la imagen debe ser inferior a 2 MB.' }}");
                             }
 
                             $(this).val('');

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Analytics'))
+@section('title', 'Analítica')
 
 @push('css_or_js')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -14,15 +14,15 @@
                 <div class="col-sm mb-2 mb-sm-0">
                     <h1 class="page-header-title">
                         <span class="page-header-icon"><i class="tio-chart-bar-4"></i></span>
-                        <span>{{ translate('Usage Analytics') }}</span>
+                        <span>{{ 'Análisis de uso' }}</span>
                     </h1>
                 </div>
                 <div class="col-sm-auto">
                     <select class="form-control"
                         onchange="location.href='{{ route('admin.sabores.analytics') }}?period=' + this.value">
-                        <option value="7" {{ $period == 7 ? 'selected' : '' }}>{{ translate('Last 7 days') }}</option>
-                        <option value="30" {{ $period == 30 ? 'selected' : '' }}>{{ translate('Last 30 days') }}</option>
-                        <option value="90" {{ $period == 90 ? 'selected' : '' }}>{{ translate('Last 90 days') }}</option>
+                        <option value="7" {{ $period == 7 ? 'selected' : '' }}>{{ 'últimos 7 días' }}</option>
+                        <option value="30" {{ $period == 30 ? 'selected' : '' }}>{{ 'últimos 30 días' }}</option>
+                        <option value="90" {{ $period == 90 ? 'selected' : '' }}>{{ 'últimos 90 días' }}</option>
                     </select>
                 </div>
             </div>
@@ -33,16 +33,16 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
-                        <h6 class="card-subtitle">{{ translate('Average Party Size') }}</h6>
+                        <h6 class="card-subtitle">{{ 'Tamaño promedio del grupo' }}</h6>
                         <h2 class="card-title">{{ number_format($avg_party_size, 1) }}
-                            <small>{{ translate('people') }}</small></h2>
+                            <small>{{ 'gente' }}</small></h2>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
-                        <h6 class="card-subtitle">{{ translate('Cancellation Rate') }}</h6>
+                        <h6 class="card-subtitle">{{ 'Tasa de cancelación' }}</h6>
                         <h2 class="card-title">{{ $cancellation_rate }}%</h2>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
-                        <h6 class="card-subtitle">{{ translate('Peak Reservation Hour') }}</h6>
+                        <h6 class="card-subtitle">{{ 'Hora pico de reservas' }}</h6>
                         <h2 class="card-title">
                             @if($peak_times->isNotEmpty())
                                 {{ $peak_times->first()->hour }}:00
@@ -68,7 +68,7 @@
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-header-title">{{ translate('Reservations Over Time') }}</h4>
+                        <h4 class="card-header-title">{{ 'Reservas a lo largo del tiempo' }}</h4>
                     </div>
                     <div class="card-body">
                         <canvas id="reservationsChart" height="100"></canvas>
@@ -80,7 +80,7 @@
             <div class="col-lg-4">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-header-title">{{ translate('By Status') }}</h4>
+                        <h4 class="card-header-title">{{ 'Por estado' }}</h4>
                     </div>
                     <div class="card-body">
                         <canvas id="statusChart"></canvas>
@@ -92,7 +92,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-header-title">{{ translate('Top Restaurants by Reservations') }}</h4>
+                        <h4 class="card-header-title">{{ 'Mejores restaurantes por reservas' }}</h4>
                     </div>
                     <div class="card-body">
                         <canvas id="topRestaurantsChart" height="60"></canvas>
@@ -114,7 +114,7 @@
         return \Carbon\Carbon::parse($date)->format('M d');
     })) !!},
                 datasets: [{
-                    label: '{{ translate("Reservations") }}',
+                    label: '{{ 'Reservas' }}',
                     data: {!! json_encode($reservations_chart->pluck('count')) !!},
                     borderColor: 'rgb(75, 192, 192)',
                     backgroundColor: 'rgba(75, 192, 192, 0.1)',
@@ -151,7 +151,7 @@
             data: {
                 labels: {!! json_encode($top_restaurants_chart->pluck('name')) !!},
                 datasets: [{
-                    label: '{{ translate("Reservations") }}',
+                    label: '{{ 'Reservas' }}',
                     data: {!! json_encode($top_restaurants_chart->pluck('reservations_count')) !!},
                     backgroundColor: 'rgba(54, 162, 235, 0.5)',
                     borderColor: 'rgb(54, 162, 235)',

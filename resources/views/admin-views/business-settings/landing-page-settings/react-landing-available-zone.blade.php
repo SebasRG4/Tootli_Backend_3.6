@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.react_landing_page'))
+@section('title','reaccionar página de inicio')
 
 @section('content')
     <div class="content container-fluid">
@@ -11,12 +11,12 @@
                     <img src="{{asset('assets/admin/img/landing.png')}}" class="w--20" alt="">
                 </span>
                     <span>
-                    {{ translate('messages.react_landing_page') }}
+                    {{ 'reaccionar página de inicio' }}
                 </span>
                 </h1>
                 <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal"
                      data-target="#how-it-works">
-                    <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
+                    <strong class="mr-2">{{'¡Mira cómo funciona!'}}</strong>
                     <div>
                         <i class="tio-info-outined"></i>
                     </div>
@@ -31,15 +31,15 @@
         <div class="card py-3 px-xxl-4 px-3 mb-20">
             <div class="d-flex flex-sm-nowrap flex-wrap gap-3 align-items-center justify-content-between">
                 <div class="">
-                    <h3 class="mb-1">{{ translate('Available zone section') }}</h3>
+                    <h3 class="mb-1">{{ 'Sección de zona disponible' }}</h3>
                     <p class="mb-0 gray-dark fs-12">
-                        {{ translate('See how your Available zone Section will look to customers.') }}
+                        {{ 'Vea cómo verá su sección de zona disponible para los clientes.' }}
                     </p>
                 </div>
                 <div class="max-w-300px ml-sm-auto">
                     <button type="button" class="btn btn-outline-primary py-2 fs-12 px-3 offcanvas-trigger"
                             data-target="#AvailableZone_section">
-                        <i class="tio-invisible"></i> {{ translate('Section Preview') }}
+                        <i class="tio-invisible"></i> {{ 'Vista previa de la sección' }}
                     </button>
                 </div>
             </div>
@@ -48,9 +48,9 @@
             <div class="card-body d-flex gap-2 align-items-center">
                 <img width="20" src="{{asset('assets/admin/img/info-idea.svg')}}" alt="img">
                 <p class="fs-12 color-656566 m-0">
-                    {{ translate('Customize the section by adding a title, short description, and images in the') }} <a
+                    {{ 'Personalice la sección agregando un título, una breve descripción e imágenes en el' }} <a
                         href="{{ route('admin.business-settings.zone.home') }}" target="_blank"
-                        class="text--underline text-006AE5">{{ translate('Zone Setup') }}</a> {{ translate('section. All created zones will be automatically displayed on the React Landing Page. The zones will be based on the Zone Display Name.') }}
+                        class="text--underline text-006AE5">{{ 'Configuración de zona' }}</a> {{ 'sección. Todas las zonas creadas se mostrarán automáticamente en la página de inicio de React. Las zonas se basarán en el nombre para mostrar de la zona.' }}
                 </p>
             </div>
         </div>
@@ -70,13 +70,13 @@
                 <div class="row g-3 align-items-center justify-content-between">
                     <div class="col-xxl-9 col-lg-8 col-md-7 col-sm-6">
                         <div>
-                            <h3 class="mb-1">{{translate('messages.Show available zone') }}</h3>
-                            <p class="m-0 fs-12 color-656566">{{ translate('To view a list of all active zones on your React Landing Page Enable the') }}  {{ translate('')}} {{ translate('`Available Zones`') }} {{translate('feature') }}</p>
+                            <h3 class="mb-1">{{'Mostrar zona disponible' }}</h3>
+                            <p class="m-0 fs-12 color-656566">{{ 'Para ver una lista de todas las zonas activas en su página de inicio de React, habilite el' }}  {{ ''}} {{ '`Zonas disponibles`' }} {{'característica' }}</p>
                         </div>
                     </div>
                     <div class="col-xxl-3 col-lg-4 col-md-5 col-sm-6">
                         <div class="py-2 px-3 rounded d-flex justify-content-between border align-items-center w-300">
-                            <h5 class="text-capitalize fw-normal mb-0">{{ translate('Status') }}</h5>
+                            <h5 class="text-capitalize fw-normal mb-0">{{ 'Estado' }}</h5>
 
                             <form
                                 action="{{ route('admin.business-settings.statusUpdate', ['type' => 'react_landing_page', 'key' => 'available_zone_status']) }}"
@@ -86,10 +86,10 @@
                                 <input type="checkbox" data-id="CheckboxStatus" data-type="status"
                                        data-image-on="{{ asset('assets/admin/img/status-ons.png') }}"
                                        data-image-off="{{ asset('assets/admin/img/off-danger.png') }}"
-                                       data-title-on="{{ translate('Do you want turn on this section ?') }}"
-                                       data-title-off="{{ translate('Do you want to turn off this section ?') }}"
-                                       data-text-on="<p>{{ translate('If you turn on this section will be show in react landing page.') }}"
-                                       data-text-off="<p>{{ translate('If you turn off this section will not be show in react landing page.') }}</p>"
+                                       data-title-on="{{ '¿Quieres activar esta sección?' }}"
+                                       data-title-off="{{ '¿Quieres desactivar esta sección?' }}"
+                                       data-text-on="<p>{{ 'Si activa esta sección, se mostrará en la página de inicio de reacción.' }}"
+                                       data-text-off="<p>{{ 'Si desactiva esta sección no se mostrará en la página de inicio de reacción.' }}</p>"
                                        class="toggle-switch-input  status dynamic-checkbox" id="CheckboxStatus"
                                     {{ $available_zone_status ? 'checked' : '' }}>
                                 <span class="toggle-switch-label text">
@@ -109,8 +109,8 @@
                     <div class="card shadow--card-2">
                         <div class="card-body">
                             <div class="mb-20">
-                                <h3 class="mb-1">{{ translate('Available Zone Content ') }}</h3>
-                                <p class="mb-0 fs-12">{{ translate('Manage delivery zones or cities available for your service.') }}</p>
+                                <h3 class="mb-1">{{ 'Contenido de zona disponible' }}</h3>
+                                <p class="mb-0 fs-12">{{ 'Gestiona zonas o ciudades de entrega disponibles para tu servicio.' }}</p>
                             </div>
                             <div class="bg--secondary rounded p-xxl-4 p-3">
                                 @if($language)
@@ -118,7 +118,7 @@
                                         <li class="nav-item">
                                             <a class="nav-link lang_link active"
                                                href="#"
-                                               id="default-link">{{ translate('Default') }}</a>
+                                               id="default-link">{{ 'Por defecto' }}</a>
                                         </li>
                                         @foreach (json_decode($language) as $lang)
                                             <li class="nav-item">
@@ -134,33 +134,33 @@
                                          id="default-form">
                                         <div class="form-group mb-2">
                                             <label class="input-label"
-                                                   for="default_title">{{ translate('messages.title') }}
-                                                ({{ translate('messages.Default') }})<span class="form-label-secondary"
+                                                   for="default_title">{{ 'título' }}
+                                                ({{ 'Por defecto' }})<span class="form-label-secondary"
                                                                                            data-toggle="tooltip"
                                                                                            data-placement="right"
-                                                                                           data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                                                                           data-original-title="{{ 'Escribe el título dentro de 50 caracteres.' }}">
                                                     <i class="tio-info color-A7A7A7"></i>
                                                 </span>
                                             </label>
                                             <input type="text" name="available_zone_title[]" maxlength="50"
                                                    id="default_title"
-                                                   class="form-control" placeholder="{{ translate('messages.title') }}"
+                                                   class="form-control" placeholder="{{ 'título' }}"
                                                    value="{{$available_zone_title?->getRawOriginal('value')}}">
                                             <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/50</span>
                                         </div>
                                         <input type="hidden" name="lang[]" value="default">
                                         <div class="form-group mb-0">
                                             <label class="input-label"
-                                                   for="exampleFormControlInput1">{{ translate('messages.sub title') }}
-                                                ({{ translate('messages.default') }})<span class="form-label-secondary"
+                                                   for="exampleFormControlInput1">{{ 'subtítulo' }}
+                                                ({{ 'por defecto' }})<span class="form-label-secondary"
                                                                                            data-toggle="tooltip"
                                                                                            data-placement="right"
-                                                                                           data-original-title="{{ translate('Write_the_short_description_within_1000_characters') }}">
+                                                                                           data-original-title="{{ 'Escriba la breve descripción dentro de 1000 caracteres.' }}">
                                                     <i class="tio-info color-A7A7A7"></i>
                                                 </span></label>
                                             <textarea type="text" name="available_zone_short_description[]"
                                                       maxlength="1000"
-                                                      placeholder="{{translate('messages.short_description')}}"
+                                                      placeholder="{{'breve descripción'}}"
                                                       class="form-control min-h-90px ckeditor">{{$available_zone_short_description?->getRawOriginal('value')}}</textarea>
                                         </div>
                                     </div>
@@ -189,11 +189,11 @@
                                              id="{{ $lang }}-form">
                                             <div class="form-group mb-2">
                                                 <label class="input-label"
-                                                       for="{{ $lang }}_title">{{ translate('messages.title') }}
+                                                       for="{{ $lang }}_title">{{ 'título' }}
                                                     ({{ strtoupper($lang) }})<span class="form-label-secondary"
                                                                                    data-toggle="tooltip"
                                                                                    data-placement="right"
-                                                                                   data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                                                                   data-original-title="{{ 'Escribe el título dentro de 50 caracteres.' }}">
                                                     <i class="tio-info color-A7A7A7"></i>
                                                 </span>
                                                 </label>
@@ -201,23 +201,23 @@
                                                        id="{{ $lang }}_title"
                                                        class="form-control"
                                                        value="{{ $available_zone_title_translate[$lang]['value']??'' }}"
-                                                       placeholder="{{ translate('messages.title') }}">
+                                                       placeholder="{{ 'título' }}">
                                                 <span
                                                     class="text-right text-counting color-A7A7A7 d-block mt-1">0/50</span>
                                             </div>
                                             <input type="hidden" name="lang[]" value="{{ $lang }}">
                                             <div class="form-group mb-0">
                                                 <label class="input-label"
-                                                       for="exampleFormControlInput1">{{ translate('messages.sub title') }}
+                                                       for="exampleFormControlInput1">{{ 'subtítulo' }}
                                                     ({{ strtoupper($lang) }})<span class="form-label-secondary"
                                                                                    data-toggle="tooltip"
                                                                                    data-placement="right"
-                                                                                   data-original-title="{{ translate('Write_the_short_description_within_200_characters') }}">
+                                                                                   data-original-title="{{ 'Escriba la breve descripción dentro de 200 caracteres.' }}">
                                                     <i class="tio-info color-A7A7A7"></i>
                                                 </span></label>
                                                 <textarea type="text" name="available_zone_short_description[]"
                                                           maxlength="1000"
-                                                          placeholder="{{translate('messages.short_description')}}"
+                                                          placeholder="{{'breve descripción'}}"
                                                           class="form-control min-h-90px ckeditor">{{ $available_zone_short_description_translate[$lang]['value']??'' }}</textarea>
                                             </div>
                                         </div>
@@ -226,26 +226,26 @@
                                     <div id="default-form">
                                         <div class="form-group">
                                             <label class="input-label"
-                                                   for="exampleFormControlInput1">{{ translate('messages.title') }}
-                                                ({{ translate('messages.default') }})</label>
+                                                   for="exampleFormControlInput1">{{ 'título' }}
+                                                ({{ 'por defecto' }})</label>
                                             <input type="text" name="available_zone_title[]" class="form-control"
-                                                   placeholder="{{ translate('messages.title') }}">
+                                                   placeholder="{{ 'título' }}">
                                         </div>
                                         <input type="hidden" name="lang[]" value="default">
                                         <div class="form-group mb-0">
                                             <label class="input-label"
-                                                   for="exampleFormControlInput1">{{ translate('messages.short_description') }}
+                                                   for="exampleFormControlInput1">{{ 'breve descripción' }}
                                             </label>
                                             <textarea type="text" name="available_zone_short_description[]"
-                                                      placeholder="{{translate('messages.short_description')}}"
+                                                      placeholder="{{'breve descripción'}}"
                                                       class="form-control min-h-90px ckeditor"></textarea>
                                         </div>
                                     </div>
                                 @endif
                             </div>
                             <div class="btn--container justify-content-end mt-20">
-                                <button class="btn btn--reset " type="reset">{{translate('reset')}}</button>
-                                <button class="btn btn--primary" type="submit">{{translate('Save')}}</button>
+                                <button class="btn btn--reset " type="reset">{{'reiniciar'}}</button>
+                                <button class="btn btn--primary" type="submit">{{'Ahorrar'}}</button>
                             </div>
                         </div>
                     </div>
@@ -264,7 +264,7 @@
                 <div
                     class="custom-offcanvas-header bg--secondary d-flex justify-content-between align-items-center px-3 py-3">
                     <div class="py-1">
-                        <h3 class="mb-0 line--limit-1">{{ translate('messages.Available zone section Preview') }}</h3>
+                        <h3 class="mb-0 line--limit-1">{{ 'Vista previa de la sección de zona disponible' }}</h3>
                     </div>
                     <button type="button"
                             class="btn-close w-25px h-25px border rounded-circle d-center bg--secondary text-dark offcanvas-close fz-15px p-0"

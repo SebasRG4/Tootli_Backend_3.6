@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title',translate('messages.Delivery Man Preview'))
+@section('title','Vista previa del repartidor')
 
 @push('css_or_js')
 
@@ -15,16 +15,16 @@
                     <img src="{{asset('assets/admin/img/deliveryman.png')}}" class="w--30" alt="">
                 </span>
                 <span>
-                    {{translate('messages.delivery_man_details')}}
+                    {{'detalles del repartidor'}}
                 </span>
             </h1>
             <div class="js-nav-scroller hs-nav-scroller-horizontal">
                 <ul class="nav nav-tabs mb-3 border-0 nav--tabs">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{route('vendor.delivery-man.preview', ['id'=>$dm->id, 'tab'=> 'info'])}}"  aria-disabled="true">{{translate('messages.info')}}</a>
+                        <a class="nav-link active" href="{{route('vendor.delivery-man.preview', ['id'=>$dm->id, 'tab'=> 'info'])}}"  aria-disabled="true">{{'información'}}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{route('vendor.delivery-man.preview', ['id'=>$dm->id, 'tab'=> 'transaction'])}}"  aria-disabled="true">{{translate('messages.transaction')}}</a>
+                        <a class="nav-link" href="{{route('vendor.delivery-man.preview', ['id'=>$dm->id, 'tab'=> 'transaction'])}}"  aria-disabled="true">{{'transacción'}}</a>
                     </li>
                 </ul>
             </div>
@@ -39,7 +39,7 @@
                         {{$dm->orders->count()}}
                     </h2>
                     <h5 class="subtitle">
-                        {{translate('messages.total_delivered_orders')}}
+                        {{'pedidos totales entregados'}}
                     </h5>
                     <img class="resturant-icon w--30" src="{{asset('assets/admin/img/tick.png')}}" alt="img">
                 </div>
@@ -52,7 +52,7 @@
                         {{\App\CentralLogics\Helpers::format_currency($dm->wallet?$dm->wallet->collected_cash:0.0)}}
                     </h2>
                     <h5 class="subtitle">
-                        {{translate('messages.cash_in_hand')}}
+                        {{'efectivo en mano'}}
                     </h5>
                     <img class="resturant-icon w--30" src="{{asset('assets/admin/img/withdraw-amount.png')}}" alt="img">
                 </div>
@@ -65,7 +65,7 @@
                         {{\App\CentralLogics\Helpers::format_currency($dm->wallet?$dm->wallet->total_earning:0.00)}}
                     </h2>
                     <h5 class="subtitle">
-                        {{translate('messages.total_earning')}}
+                        {{'ganancia total'}}
                     </h5>
                     <img class="resturant-icon w--30" src="{{asset('assets/admin/img/pending.png')}}" alt="img">
                 </div>
@@ -76,14 +76,14 @@
         <div class="card mb-3 mb-lg-5">
             <div class="card-header py-2">
                 <div class="search--button-wrapper">
-                    <h4 class="card-title mb-md-0">{{$dm['f_name'].' '.$dm['l_name']}}@if($dm['status']) @if($dm['active']) <label class="badge badge-soft-primary m-0 ml-2">{{translate('messages.online')}}</label> @else <label class="badge badge-soft-danger m-0 ml-2">{{translate('messages.offline')}}</label> @endif  @else <span class="badge badge-danger">{{translate('messages.suspended')}}</span> @endif</h4>
+                    <h4 class="card-title mb-md-0">{{$dm['f_name'].' '.$dm['l_name']}}@if($dm['status']) @if($dm['active']) <label class="badge badge-soft-primary m-0 ml-2">{{'en línea'}}</label> @else <label class="badge badge-soft-danger m-0 ml-2">{{'desconectado'}}</label> @endif  @else <span class="badge badge-danger">{{'suspendido'}}</span> @endif</h4>
 
                     <a  href="javascript:"
                         data-url="{{route('vendor.delivery-man.status',[$dm['id'],$dm->status?0:1])}}"
-                        data-title="{{translate('Are_you_sure_?')}}"
+                        data-title="{{'Está seguro ?'}}"
                         data-message="{{$dm->status?'Want to suspend this deliveryman ?':'Want to unsuspend this deliveryman'}}"
                         class="btn {{$dm->status?'btn-danger':'btn-success'}}  route-alert">
-                            {{$dm->status?translate('messages.suspend_this_delivery_man'):translate('messages.unsuspend_this_delivery_man')}}
+                            {{$dm->status?'suspender a este repartidor':'suspender a este repartidor'}}
                     </a>
                 </div>
             </div>
@@ -200,7 +200,7 @@
                                     @endif
                                     <div class="info">
 
-                                        <span>{{$dm->reviews->count()}} {{translate('messages.reviews')}}</span>
+                                        <span>{{$dm->reviews->count()}} {{'opiniones'}}</span>
                                     </div>
                                     </div>
                                 </div>
@@ -215,7 +215,7 @@
                             <li class="d-flex align-items-center font-size-sm">
                                 @php($five=\App\CentralLogics\Helpers::dm_rating_count($dm['id'],5))
                                 <span
-                                    class="progress-name mr-3">{{translate('excellent')}}</span>
+                                    class="progress-name mr-3">{{'excelente'}}</span>
                                 <div class="progress flex-grow-1">
                                     <div class="progress-bar" role="progressbar"
                                          style="width: {{$total==0?0:($five/$total)*100}}%;"
@@ -229,7 +229,7 @@
                             <!-- Review Ratings -->
                             <li class="d-flex align-items-center font-size-sm">
                                 @php($four=\App\CentralLogics\Helpers::dm_rating_count($dm['id'],4))
-                                <span class="progress-name mr-3">{{translate('good')}}</span>
+                                <span class="progress-name mr-3">{{'bien'}}</span>
                                 <div class="progress flex-grow-1">
                                     <div class="progress-bar" role="progressbar"
                                          style="width: {{$total==0?0:($four/$total)*100}}%;"
@@ -243,7 +243,7 @@
                             <!-- Review Ratings -->
                             <li class="d-flex align-items-center font-size-sm">
                                 @php($three=\App\CentralLogics\Helpers::dm_rating_count($dm['id'],3))
-                                <span class="progress-name mr-3">{{translate('average')}}</span>
+                                <span class="progress-name mr-3">{{'promedio'}}</span>
                                 <div class="progress flex-grow-1">
                                     <div class="progress-bar" role="progressbar"
                                          style="width: {{$total==0?0:($three/$total)*100}}%;"
@@ -257,7 +257,7 @@
                             <!-- Review Ratings -->
                             <li class="d-flex align-items-center font-size-sm">
                                 @php($two=\App\CentralLogics\Helpers::dm_rating_count($dm['id'],2))
-                                <span class="progress-name mr-3">{{translate('below_average')}}</span>
+                                <span class="progress-name mr-3">{{'por debajo del promedio'}}</span>
                                 <div class="progress flex-grow-1">
                                     <div class="progress-bar" role="progressbar"
                                          style="width: {{$total==0?0:($two/$total)*100}}%;"
@@ -271,7 +271,7 @@
                             <!-- Review Ratings -->
                             <li class="d-flex align-items-center font-size-sm">
                                 @php($one=\App\CentralLogics\Helpers::dm_rating_count($dm['id'],1))
-                                <span class="progress-name mr-3">{{translate('poor')}}</span>
+                                <span class="progress-name mr-3">{{'pobre'}}</span>
                                 <div class="progress flex-grow-1">
                                     <div class="progress-bar" role="progressbar"
                                          style="width: {{$total==0?0:($one/$total)*100}}%;"
@@ -316,10 +316,10 @@
                    }'>
                     <thead class="thead-light">
                     <tr>
-                        <th class="border-0">{{translate('messages.reviewer')}}</th>
-                        <th class="border-0">{{translate('messages.review')}}</th>
-                        <th class="border-0">{{translate('messages.attachment')}}</th>
-                        <th class="border-0">{{translate('messages.date')}}</th>
+                        <th class="border-0">{{'crítico'}}</th>
+                        <th class="border-0">{{'revisar'}}</th>
+                        <th class="border-0">{{'adjunto'}}</th>
+                        <th class="border-0">{{'fecha'}}</th>
                     </tr>
                     </thead>
 
@@ -344,7 +344,7 @@
                                         </div>
                                     </div>
                                 @else
-                                    {{translate('messages.customer_not_found')}}
+                                    {{'cliente no encontrado'}}
                                 @endif
                             </td>
                             <td>
@@ -382,7 +382,7 @@
                 <div class="empty--data">
                     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
-                        {{translate('no_data_found')}}
+                        {{'no se encontraron datos'}}
                     </h5>
                 </div>
             @endif

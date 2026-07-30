@@ -1,7 +1,7 @@
 
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.Store_Transactions'))
+@section('title','Transacciones de la tienda')
 
 @section('subscriberList')
 active
@@ -20,15 +20,15 @@ active
                     <div class="d-flex align-items-start">
                         <img src="{{asset('assets/admin/img/store.png')}}" width="24" alt="img">
                         <div class="w-0 flex-grow pl-2">
-                            <h1 class="page-header-title">{{ $store->name }} {{translate('Subscription')}} &nbsp; &nbsp;
+                            <h1 class="page-header-title">{{ $store->name }} {{'Suscripción'}} &nbsp; &nbsp;
                                 @if($store?->status == 0 &&  $store?->vendor?->status == 0)
-                                <span class=" badge badge-pill badge-info">  &nbsp; {{ translate('Approval_Pending') }}  &nbsp; </span>
+                                <span class=" badge badge-pill badge-info">  &nbsp; {{ 'Aprobación pendiente' }}  &nbsp; </span>
                                 @elseif($store?->store_sub_update_application?->status == 0)
-                                <span class=" badge badge-pill badge-danger">  &nbsp; {{ translate('Expired') }}  &nbsp; </span>
+                                <span class=" badge badge-pill badge-danger">  &nbsp; {{ 'Venció' }}  &nbsp; </span>
                                 @elseif ($store?->store_sub_update_application?->is_canceled == 1)
-                                <span class=" badge badge-pill badge-warning">  &nbsp; {{ translate('canceled') }}  &nbsp; </span>
+                                <span class=" badge badge-pill badge-warning">  &nbsp; {{ 'Cancelado' }}  &nbsp; </span>
                                 @elseif($store?->store_sub_update_application?->status == 1)
-                                <span class=" badge badge-pill badge-success">  &nbsp; {{ translate('Active') }}  &nbsp; </span>
+                                <span class=" badge badge-pill badge-success">  &nbsp; {{ 'Activo' }}  &nbsp; </span>
                                 @endif
                             </h1>
                         </div>
@@ -39,13 +39,13 @@ active
         <div class="js-nav-scroller hs-nav-scroller-horizontal mb-4">
             <ul class="nav nav-tabs border-0 nav--tabs nav--pills">
                 <li class="nav-item">
-                    <a href="{{ route('admin.business-settings.subscriptionackage.subscriberDetail',$store->id) }}" class="nav-link ">{{ translate('Subscription_Details') }} </a>
+                    <a href="{{ route('admin.business-settings.subscriptionackage.subscriberDetail',$store->id) }}" class="nav-link ">{{ 'Detalles de suscripción' }} </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('admin.business-settings.subscriptionackage.subscriberTransactions',$store->id) }}" class="nav-link">{{ translate('Transactions') }}</a>
+                    <a href="{{ route('admin.business-settings.subscriptionackage.subscriberTransactions',$store->id) }}" class="nav-link">{{ 'Actas' }}</a>
                 </li>
                 <li class="nav-item ">
-                    <a href="3" class="nav-link active">{{ translate('Subscription_Refunds') }}</a>
+                    <a href="3" class="nav-link active">{{ 'Reembolsos de suscripción' }}</a>
                 </li>
             </ul>
         </div>
@@ -53,30 +53,30 @@ active
         <div class="card">
             <div class="card-header flex-wrap py-2 border-0">
                 <div class="d-flex align-items-center gap-2 mb-2">
-                    <h4 class="mb-0">{{ translate('Refund_History') }}</h4>
+                    <h4 class="mb-0">{{ 'Historial de reembolsos' }}</h4>
                     <span class="badge badge-soft-dark rounded-circle">{{ $transactions->total() }}</span>
                 </div>
                 {{-- <div class="search--button-wrapper justify-content-end">
                     <div class="max-sm-flex-1">
                         <select name="plan_type"  data-url="{{ url()->full() }}" data-filter="plan_type" class="custom-select h--40px py-0 status-filter set-filter">
                             <option {{ request()?->plan_type == 'all' ? 'selected' : '' }}  value="all">
-                                {{ translate('all') }}
+                                {{ 'todo' }}
                             </option>
                             <option {{ request()?->plan_type == 'renew' ? 'selected' : '' }}  value="renew">
-                                {{ translate('renewal') }}
+                                {{ 'renovación' }}
                             </option>
                             <option {{ request()?->plan_type == 'new_plan' ? 'selected' : '' }}  value="new_plan">
-                                {{ translate('Migrate_to_New_Plan') }}
+                                {{ 'Migrar al nuevo plan' }}
                             </option>
                             <option {{ request()?->plan_type == 'first_purchased' ? 'selected' : '' }}  value="first_purchased">
-                                {{ translate('Purchased') }}
+                                {{ 'Comprado' }}
                             </option>
 
                         </select>
                     </div>
                     <form class="search-form">
                         <div class="input-group input--group">
-                            <input name="search" type="search" value="{{ request()?->search }}" class="form-control h--40px" placeholder="{{ translate('Ex : Search by Transaction ID ') }}" aria-label="Search here">
+                            <input name="search" type="search" value="{{ request()?->search }}" class="form-control h--40px" placeholder="{{ 'Ej: buscar por ID de transacción' }}" aria-label="Search here">
                             <button type="submit" class="btn btn--secondary h--40px"><i class="tio-search"></i></button>
                         </div>
                     </form>
@@ -89,26 +89,26 @@ active
                                 &quot;type&quot;: &quot;css-animation&quot;
                             }"
                             data-hs-unfold-target="#usersExportDropdown" data-hs-unfold-invoker="">
-                            <i class="tio-download-to mr-1"></i> {{ translate('export') }}
+                            <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                         </a>
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right hs-unfold-content-initialized hs-unfold-css-animation animated hs-unfold-reverse-y hs-unfold-hidden">
 
-                            <span class="dropdown-header">{{ translate('download_options') }}</span>
+                            <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                             <a id="export-excel" class="dropdown-item"
                                 href="{{ route('admin.business-settings.subscriptionackage.subscriberTransactionExport', [ 'id' =>$store->id, 'export_type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin/svg/components/excel.svg') }}"
                                     alt="Image Description">
-                                {{ translate('messages.excel') }}
+                                {{ 'sobresalir' }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
                                 href="{{ route('admin.business-settings.subscriptionackage.subscriberTransactionExport', [ 'id' =>$store->id, 'export_type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin/svg/components/placeholder-csv-format.svg') }}"
                                     alt="Image Description">
-                                .{{ translate('messages.csv') }}
+                                .{{ 'csv' }}
                             </a>
 
                         </div>
@@ -121,12 +121,12 @@ active
                 <div class="table-responsive">
                     <table class="table table-borderless middle-align __txt-14px">
                         <thead class="thead-light white--space-false">
-                            <th class="border-top px-4 border-bottom text-center">{{ translate('sl') }}</th>
-                            <th class="border-top px-4 border-bottom"><div class="text-title">{{ translate('Transaction_Date') }}</div></th>
-                            <th class="border-top px-4 border-bottom">{{ translate('Package_Name') }}</th>
-                            <th class="border-top px-4 border-bottom">{{ translate('Refund_Amount') }}</th>
-                            <th class="border-top px-4 border-bottom">{{ translate('Refunded_for') }}</th>
-                            <th class="border-top px-4 border-bottom">{{ translate('Status') }}</th>
+                            <th class="border-top px-4 border-bottom text-center">{{ 'SL' }}</th>
+                            <th class="border-top px-4 border-bottom"><div class="text-title">{{ 'Fecha de transacción' }}</div></th>
+                            <th class="border-top px-4 border-bottom">{{ 'Nombre del paquete' }}</th>
+                            <th class="border-top px-4 border-bottom">{{ 'Monto del reembolso' }}</th>
+                            <th class="border-top px-4 border-bottom">{{ 'Reembolsado por' }}</th>
+                            <th class="border-top px-4 border-bottom">{{ 'Estado' }}</th>
                         </thead>
                         <tbody>
                             @foreach ($transactions as $k=> $transaction)
@@ -145,13 +145,13 @@ active
                                     <div class="w--120px text-title text-right pr-5">{{ \App\CentralLogics\Helpers::format_currency($transaction->amount) }}</div>
                                 </td>
                                 <td class="px-4">
-                                    <div class="w--120px text-title text-right pr-5">{{ str_replace(['validity_left_'], '', $transaction->reference)  }} {{ translate('messages.Days') }}</div>
+                                    <div class="w--120px text-title text-right pr-5">{{ str_replace(['validity_left_'], '', $transaction->reference)  }} {{ 'Días' }}</div>
                                 </td>
 
 
                                 <td class="px-4">
                                     <span class="text-success">
-                                        {{ translate('success')  }}
+                                        {{ 'éxito'  }}
                                     </span>
 
                                 </td>
@@ -172,7 +172,7 @@ active
                 <div class="empty--data">
                     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
-                        {{translate('no_data_found')}}
+                        {{'no se encontraron datos'}}
                     </h5>
                 </div>
                 @endif

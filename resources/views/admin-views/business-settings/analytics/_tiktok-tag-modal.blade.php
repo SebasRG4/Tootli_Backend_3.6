@@ -20,33 +20,33 @@
                                     </div>
                                     <div class="text-dark mb-3">
                                         <h3 class="lh-base">
-                                            {{ translate('how_to_get_the_tiktok_pixel_id') }}
+                                            {{ 'cómo obtener la identificación del píxel de tiktok' }}
                                         </h3>
                                         <p class="opacity-75">
-                                            {{ translate('from_the_tiktok_business_account_click_on_tools_in_the_menu_and_select_events.') }}
-                                            {{ translate('access_the_events_manager_by_clicking_on_connect_data_sources_in_the_top_right_corner.') }}
-                                            {{ translate('from_the_popup,_choose_the_web_option_and_click_next.') }}
-                                            {{ translate('now,_create_your_pixel_by_selecting_manual_setup.') }}
-                                            {{ translate('to_find_your_pixel_id,_go_to_data_sources_in_the_left-hand_menu,_where_you_can_view_and_copy_your_pixel_id.') }}
+                                            {{ 'desde la cuenta comercial de tiktok, haga clic en herramientas en el menú y seleccione eventos.' }}
+                                            {{ 'acceda al administrador de eventos haciendo clic en conectar fuentes de datos en la esquina superior derecha.' }}
+                                            {{ 'En la ventana emergente, elija la opción web y haga clic en Siguiente.' }}
+                                            {{ 'ahora, crea tu píxel seleccionando la configuración manual.' }}
+                                            {{ 'Para encontrar su ID de píxel, vaya a fuentes de datos en el menú de la izquierda, donde puede ver y copiar su ID de píxel.' }}
                                         </p>
                                     </div>
 
                                     <div class="text-dark mb-3">
                                         <h3 class="lh-base">
-                                            {{ translate('where_to_use_the_tiktok_pixel_id') }}
+                                            {{ 'dónde usar la identificación del píxel tiktok' }}
                                         </h3>
                                         <p class="opacity-75">
-                                            {{ translate('go_to_the_marketing_tools_section_in_your_admin_panel_and_complete_the_steps:') }}
+                                            {{ 'vaya a la sección de herramientas de marketing en su panel de administración y complete los pasos:' }}
                                         </p>
                                         <ol class="d-flex flex-column gap-2 opacity-75">
                                             <li>
-                                                {{ translate('navigate_to_the_tiktok_pixel_id_section_under_marketing_tools.') }}
+                                                {{ 'navegue hasta la sección de identificación de píxeles de tiktok en herramientas de marketing.' }}
                                             </li>
                                             <li>
-                                                {{ translate('turn_on_the_toggle_button.') }}
+                                                {{ 'encienda el botón de alternancia.' }}
                                             </li>
                                             <li>
-                                                {{ translate('paste_your_tiktok_pixel_id_into_the_input_box_and_click_submit.') }}
+                                                {{ 'pegue su identificación de píxel de tiktok en el cuadro de entrada y haga clic en enviar.' }}
                                             </li>
                                         </ol>
                                     </div>

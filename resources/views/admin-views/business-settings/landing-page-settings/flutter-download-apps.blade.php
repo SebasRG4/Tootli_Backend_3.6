@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.flutter_web_landing_page'))
+@section('title','página de inicio web de aleteo')
 
 @section('content')
 
@@ -12,11 +12,11 @@
                     <img src="{{asset('assets/admin/img/flutter.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.flutter_web_landing_page') }}
+                    {{ 'página de inicio web de aleteo' }}
                 </span>
             </h1>
             <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#how-it-works">
-                <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
+                <strong class="mr-2">{{'¡Mira cómo funciona!'}}</strong>
                 <div>
                     <i class="tio-info-outined"></i>
                 </div>
@@ -36,7 +36,7 @@
             <li class="nav-item">
                 <a class="nav-link lang_link active"
                 href="#"
-                id="default-link">{{translate('messages.default')}}</a>
+                id="default-link">{{'por defecto'}}</a>
             </li>
             @foreach (json_decode($language) as $lang)
                 <li class="nav-item">
@@ -57,7 +57,7 @@
             <form action="{{ route('admin.business-settings.flutter-landing-page-settings', 'download-app-section') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <h5 class="card-title mb-3 mt-3">
-                    <span class="card-header-icon mr-2"><i class="tio-settings-outlined"></i></span> <span>{{translate('Download User App Section Content')}}</span>
+                    <span class="card-header-icon mr-2"><i class="tio-settings-outlined"></i></span> <span>{{'Descargar el contenido de la sección de la aplicación del usuario'}}</span>
                 </h5>
 
                 <div class="card">
@@ -68,20 +68,20 @@
                                 <div class="col-md-12 lang_form default-form">
                                     <div class="row g-3">
                                         <div class="col-12">
-                                            <label for="download_user_app_title" class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})
-                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
+                                            <label for="download_user_app_title" class="form-label">{{'Título'}} ({{ 'por defecto' }})
+                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 40 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span>
                                         </label>
-                                            <input id="download_user_app_title" type="text" maxlength="40" name="download_user_app_title[]" value="{{ $download_user_app_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                            <input id="download_user_app_title" type="text" maxlength="40" name="download_user_app_title[]" value="{{ $download_user_app_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{'título aquí...'}}">
                                         </div>
                                         <div class="col-12">
-                                            <label for="download_user_app_sub_title" class="form-label">{{translate('Sub Title')}} ({{ translate('messages.default') }})
-                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
+                                            <label for="download_user_app_sub_title" class="form-label">{{'Subtítulo'}} ({{ 'por defecto' }})
+                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 20 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span>
                                         </label>
-                                            <input  id="download_user_app_sub_title" type="text" maxlength="20" name="download_user_app_sub_title[]" value="{{ $download_user_app_sub_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                            <input  id="download_user_app_sub_title" type="text" maxlength="20" name="download_user_app_sub_title[]" value="{{ $download_user_app_sub_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{'subtítulo aquí...'}}">
                                         </div>
                                     </div>
                                 </div>
@@ -112,20 +112,20 @@
                                     <div class="col-md-12 d-none lang_form" id="{{$lang}}-form1">
                                         <div class="row g-3">
                                             <div class="col-12">
-                                                <label for="download_user_app_title{{$lang}}" class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})
-                                                <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
+                                                <label for="download_user_app_title{{$lang}}" class="form-label">{{'Título'}} ({{strtoupper($lang)}})
+                                                <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 40 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span>
                                         </label>
-                                                <input id="download_user_app_title{{$lang}}" type="text" maxlength="40" name="download_user_app_title[]" value="{{ $download_user_app_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                                <input id="download_user_app_title{{$lang}}" type="text" maxlength="40" name="download_user_app_title[]" value="{{ $download_user_app_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{'título aquí...'}}">
                                             </div>
                                             <div class="col-12">
-                                                <label for="download_user_app_sub_title{{$lang}}" class="form-label">{{translate('Sub Title')}} ({{strtoupper($lang)}})
-                                                <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
+                                                <label for="download_user_app_sub_title{{$lang}}" class="form-label">{{'Subtítulo'}} ({{strtoupper($lang)}})
+                                                <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 20 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span>
                                         </label>
-                                                <input id="download_user_app_sub_title{{$lang}}" type="text" maxlength="20" name="download_user_app_sub_title[]" value="{{ $download_user_app_sub_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                                <input id="download_user_app_sub_title{{$lang}}" type="text" maxlength="20" name="download_user_app_sub_title[]" value="{{ $download_user_app_sub_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{'subtítulo aquí...'}}">
                                             </div>
                                         </div>
                                     </div>
@@ -135,20 +135,20 @@
                                 <div class="col-md-12">
                                     <div class="row g-3">
                                         <div class="col-12">
-                                            <label for="download_user_app_title" class="form-label">{{translate('Title')}}
-                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
+                                            <label for="download_user_app_title" class="form-label">{{'Título'}}
+                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 40 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span>
                                         </label>
-                                            <input id="download_user_app_title" type="text" maxlength="40" name="download_user_app_title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                            <input id="download_user_app_title" type="text" maxlength="40" name="download_user_app_title[]" class="form-control" placeholder="{{'título aquí...'}}">
                                         </div>
                                         <div class="col-12">
-                                            <label for="download_user_app_sub_title" class="form-label">{{translate('Sub Title')}}
-                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
+                                            <label for="download_user_app_sub_title" class="form-label">{{'Subtítulo'}}
+                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de 20 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span>
                                         </label>
-                                            <input id="download_user_app_sub_title" type="text" maxlength="20" name="download_user_app_sub_title[]" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                            <input id="download_user_app_sub_title" type="text" maxlength="20" name="download_user_app_sub_title[]" class="form-control" placeholder="{{'subtítulo aquí...'}}">
                                         </div>
                                     </div>
                                 </div>
@@ -157,7 +157,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label d-block mb-2">
-                                    {{ translate('messages.Banner') }}  <span class="text--primary">{{translate('(size: 2:1)')}}</span>
+                                    {{ 'Bandera' }}  <span class="text--primary">{{'(tamaño: 2:1)'}}</span>
                                 </label>
                                 <label class="upload-img-3 m-0">
                                     <div class="position-relative">
@@ -170,8 +170,8 @@
                                       @if (isset($download_user_app_image['value']))
                                             <span id="download_user_app_image" class="remove_image_button remove-image"
                                                   data-id="download_user_app_image"
-                                                  data-title="{{translate('Warning!')}}"
-                                                  data-text="<p>{{translate('Are_you_sure_you_want_to_remove_this_image_?')}}</p>"
+                                                  data-title="{{'¡Advertencia!'}}"
+                                                  data-text="<p>{{'¿Estás seguro de que deseas eliminar esta imagen?'}}</p>"
                                             > <i class="tio-clear"></i></span>
 
                                             @endif
@@ -183,14 +183,14 @@
                             <div class="col-md-6">
                                 <h5 class="card-title mb-2">
                                     <img src="{{asset('assets/admin/img/playstore.png')}}" class="mr-2" alt="">
-                                    {{translate('Playstore Button')}}
+                                    {{'Botón de tienda de juegos'}}
                                 </h5>
                                 <div class="__bg-F8F9FC-card">
                                     <div class="form-group mb-md-0">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
                                             <label   for="playstore_url" class="form-label text-capitalize m-0">
-                                                {{translate('Download Link')}}
-                                                <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('When_disabled,_the_Play_Store_download_button_will_be_hidden_from_the_landing_page') }}">
+                                                {{'Enlace de descarga'}}
+                                                <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Cuando esté deshabilitado, el botón de descarga de Play Store estará oculto en la página de inicio.' }}">
                                                     <i class="tio-info-outined"></i>
                                                 </span>
                                             </label>
@@ -204,10 +204,10 @@
                                                        data-type="toggle"
                                                        data-image-on="{{ asset('assets/admin/img/modal/play-store-on.png') }}"
                                                        data-image-off="{{ asset('assets/admin/img/modal/play-store-off.png') }}"
-                                                       data-title-on="{{ translate('Want_to_enable_the_Play_Store_button_for_User_App?') }}"
-                                                       data-title-off="{{ translate('Want_to_disable_the_Play_Store_button_for_User_App?') }}"
-                                                       data-text-on="<p>{{ translate('If_enabled,_the_User_app_download_button_will_be_visible_on_the_Landing_page.') }}</p>"
-                                                       data-text-off="<p>{{ translate('If_disabled,_this_button_will_be_hidden_from_the_landing_page.')}}</p>"
+                                                       data-title-on="{{ '¿Quieres habilitar el botón Play Store para la aplicación de usuario?' }}"
+                                                       data-title-off="{{ '¿Quiere desactivar el botón Play Store para la aplicación de usuario?' }}"
+                                                       data-text-on="<p>{{ 'Si está habilitado, el botón de descarga de la aplicación del usuario será visible en la página de inicio.' }}</p>"
+                                                       data-text-off="<p>{{ 'Si está deshabilitado, este botón estará oculto en la página de destino.'}}</p>"
                                                        class="status toggle-switch-input dynamic-checkbox-toggle"
 
                                                        value="1" {{(isset($download_user_app_links) && $download_user_app_links['playstore_url_status'])?'checked':''}}>
@@ -216,21 +216,21 @@
                                                 </span>
                                             </label>
                                         </div>
-                                        <input id="playstore_url" type="text" placeholder="{{translate('Ex: https://play.google.com/store/apps')}}" class="form-control h--45px" name="playstore_url" value="{{ $download_user_app_links['playstore_url']?? ''}}">
+                                        <input id="playstore_url" type="text" placeholder="{{'Ej: https://play.google.com/store/apps'}}" class="form-control h--45px" name="playstore_url" value="{{ $download_user_app_links['playstore_url']?? ''}}">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <h5 class="card-title mb-2">
                                     <img src="{{asset('assets/admin/img/ios.png')}}" class="mr-2" alt="">
-                                    {{translate('App Store Button')}}
+                                    {{'Botón de la tienda de aplicaciones'}}
                                 </h5>
                                 <div class="__bg-F8F9FC-card">
                                     <div class="form-group mb-md-0">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
                                             <label for="apple_store_url" class="form-label text-capitalize m-0">
-                                                {{translate('Download Link')}}
-                                                <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('When_disabled,_the_App_Store_download_button_will_be_hidden_from_the_landing_page') }}">
+                                                {{'Enlace de descarga'}}
+                                                <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Cuando esté deshabilitado, el botón de descarga de la App Store estará oculto en la página de inicio.' }}">
                                                     <i class="tio-info-outined"></i>
                                                 </span>
                                             </label>
@@ -241,10 +241,10 @@
                                                        data-type="toggle"
                                                        data-image-on="{{ asset('assets/admin/img/modal/apple-on.png') }}"
                                                        data-image-off="{{ asset('assets/admin/img/modal/apple-off.png') }}"
-                                                       data-title-on="{{ translate('want_to_enable_the_app_store_button_for_user_app?') }}"
-                                                       data-title-off="{{ translate('want_to_disable_the_app_store_button_for_user_app?') }}"
-                                                       data-text-on="<p>{{ translate('if_enabled,_the_user_app_download_button_will_be_visible_on_the_landing_page.') }}</p>"
-                                                       data-text-off="<p>{{ translate('if_disabled,_this_button_will_be_hidden_from_the_landing_page.') }}</p>"
+                                                       data-title-on="{{ '¿Quieres habilitar el botón de la tienda de aplicaciones para la aplicación del usuario?' }}"
+                                                       data-title-off="{{ '¿Quieres desactivar el botón de la tienda de aplicaciones para la aplicación del usuario?' }}"
+                                                       data-text-on="<p>{{ 'Si está habilitado, el botón de descarga de la aplicación del usuario será visible en la página de inicio.' }}</p>"
+                                                       data-text-off="<p>{{ 'Si está deshabilitado, este botón estará oculto en la página de inicio.' }}</p>"
                                                        class="status toggle-switch-input dynamic-checkbox-toggle"
                                                        value="1"
                                                     {{(isset($download_user_app_links) && $download_user_app_links['apple_store_url_status'])?'checked':''}}>
@@ -253,14 +253,14 @@
                                                 </span>
                                             </label>
                                         </div>
-                                        <input id="apple_store_url" type="text" placeholder="{{translate('Ex: https://www.apple.com/app-store/')}}" class="form-control h--45px" name="apple_store_url" value="{{ $download_user_app_links['apple_store_url'] ?? ''}}">
+                                        <input id="apple_store_url" type="text" placeholder="{{'Ejemplo: https://www.apple.com/app-store/'}}" class="form-control h--45px" name="apple_store_url" value="{{ $download_user_app_links['apple_store_url'] ?? ''}}">
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="btn--container justify-content-end mt-20">
-                            <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
-                            <button type="submit"   class="btn btn--primary mb-2">{{translate('Save')}}</button>
+                            <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
+                            <button type="submit"   class="btn btn--primary mb-2">{{'Ahorrar'}}</button>
                         </div>
                     </div>
                 </div>

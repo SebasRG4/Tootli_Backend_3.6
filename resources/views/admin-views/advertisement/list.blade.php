@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Advertisement List'))
+@section('title', 'Lista de anuncios')
 @section('advertisement')
 active
 @endsection
@@ -22,20 +22,20 @@ active
 
 
 
-    <h1 class="page-header-title mb-3">{{ translate('Advertisement List') }}</h1>
+    <h1 class="page-header-title mb-3">{{ 'Lista de anuncios' }}</h1>
 
     <div class="card">
         <div class="card-body">
             <div class="text-center max-w-700 mb-10 mt-10 mx-auto pt-5">
                 <img src="{{asset('assets/admin/img/advertisement-list.png')}}" class="mw-100 mb-3" alt="">
-                <h4 class="mb-2">{{ translate('Advertisement List') }}</h4>
-                <p class="mb-4">{{ translate('Create an advertisement for your targeted audience, as none has been created yet.') }}</p>
+                <h4 class="mb-2">{{ 'Lista de anuncios' }}</h4>
+                <p class="mb-4">{{ 'Cree un anuncio para su público objetivo, ya que aún no se ha creado ninguno.' }}</p>
                 {{-- <div class="pb-4">
-                    <a href="{{ route('vendor.advertisement.create') }}" class="btn btn--primary">{{ translate('Create Ads') }}</a>
+                    <a href="{{ route('vendor.advertisement.create') }}" class="btn btn--primary">{{ 'Crear anuncios' }}</a>
                 </div> --}}
                 {{-- <hr>
                 <div class="max-w-471 mx-auto fs-12 py-4">
-                    {{ translate('By') }} <strong>{{ translate('Creating Advertisement') }}</strong> {{ translate('you can showcase your items or store to a wider audience through targeted ad campaigns.') }}
+                    {{ 'Por' }} <strong>{{ 'Creando publicidad' }}</strong> {{ 'puede mostrar sus artículos o tiendas a un público más amplio a través de campañas publicitarias específicas.' }}
                 </div> --}}
             </div>
         </div>
@@ -51,10 +51,10 @@ active
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="page-header-title d-flex align-items-center gap-2">
             <img src="{{asset('assets/admin/img/advertisement.png')}}" alt="">
-            {{ translate('messages.Ads_list') }}
+            {{ 'Lista de anuncios' }}
             <span class="badge badge-soft-dark ml-2">{{ $adds->total() }}</span>
         </h1>
-        <a href="{{ route('admin.advertisement.create') }}" class="btn btn-primary">  <i class="tio-add"></i> {{ translate('New Advertisement') }}</a>
+        <a href="{{ route('admin.advertisement.create') }}" class="btn btn-primary">  <i class="tio-add"></i> {{ 'Nuevo anuncio' }}</a>
     </div>
     <!-- Title -->
 
@@ -67,7 +67,7 @@ active
             <form >
                 <!-- Search -->
                 <div class="input--group input-group input-group-merge input-group-flush">
-                    <input id="datatableSearch" type="search" name="search"  value="{{ request()?->search ?? null }}"  class="form-control" placeholder="{{ translate('Search by ads ID or store name') }}" aria-label="{{translate('messages.search_here')}}">
+                    <input id="datatableSearch" type="search" name="search"  value="{{ request()?->search ?? null }}"  class="form-control" placeholder="{{ 'Buscar por ID de anuncios o nombre de tienda' }}" aria-label="{{'buscar aquí'}}">
                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                 </div>
                 <!-- End Search -->
@@ -75,11 +75,11 @@ active
             <div class="select-item min-w-135px">
                 <select name="subscription_list" class="form-control js-select2-custom set-filter"
                 data-url="{{url()->full()}}" data-filter="ads_type">
-                    <option  value="all">{{translate('messages.All Ads')}}</option>
-                    <option {{ request()?->ads_type =='running'?'selected':''}} value="running">{{translate('running')}} </option>
-                    <option {{request()?->ads_type =='paused'?'selected':''}} value="paused">{{translate('paused')}} </option>
-                    <option {{request()?->ads_type =='approved'?'selected':''}} value="approved">{{translate('approved')}} </option>
-                    <option {{request()?->ads_type =='expired'?'selected':''}} value="expired">{{translate('expired')}} </option>
+                    <option  value="all">{{'Todos los anuncios'}}</option>
+                    <option {{ request()?->ads_type =='running'?'selected':''}} value="running">{{'correr'}} </option>
+                    <option {{request()?->ads_type =='paused'?'selected':''}} value="paused">{{'pausado'}} </option>
+                    <option {{request()?->ads_type =='approved'?'selected':''}} value="approved">{{'aprobado'}} </option>
+                    <option {{request()?->ads_type =='expired'?'selected':''}} value="expired">{{'venció'}} </option>
                 </select>
             </div>
             </div>
@@ -90,15 +90,15 @@ active
                 <table class="font-size-sm table table-borderless table-thead-bordered table-nowrap table-align-middle card-table min-h-225px">
                     <thead class="thead-light">
                         <tr>
-                            <th>{{ translate('sl') }}</th>
-                            <th >{{translate('Ads ID')}}</th>
-                            <th >{{translate('Ads Title')}}</th>
-                            <th >{{translate('Store Info')}}</th>
-                            <th >{{translate('Ads Type')}}</th>
-                            <th >{{translate('Duration')}}</th>
-                            <th >{{translate('Status')}}</th>
-                            <th >{{translate('Priority')}}</th>
-                            <th >{{translate('Action')}}</th>
+                            <th>{{ 'SL' }}</th>
+                            <th >{{'ID de anuncios'}}</th>
+                            <th >{{'Título del anuncio'}}</th>
+                            <th >{{'Información de la tienda'}}</th>
+                            <th >{{'Tipo de anuncios'}}</th>
+                            <th >{{'Duración'}}</th>
+                            <th >{{'Estado'}}</th>
+                            <th >{{'Prioridad'}}</th>
+                            <th >{{'Acción'}}</th>
                         </tr>
                     </thead>
 
@@ -121,7 +121,7 @@ active
                                     </div>
                                 </a>
                                 @else
-                                    <span class="badge badge-soft-info">{{ translate('Global_Advertisement') }}</span>
+                                    <span class="badge badge-soft-info">{{ 'Publicidad mundial' }}</span>
                                 @endif
                             </td>
 
@@ -131,15 +131,15 @@ active
                             </td>
                             <td>
                                 @if ($add->status == 'approved' && $add->active == 1 )
-                                <label class="badge badge-soft-primary rounded-pill">{{ translate('messages.running') }}</label>
+                                <label class="badge badge-soft-primary rounded-pill">{{ 'correr' }}</label>
                                 @elseif ($add->status == 'approved' && $add->active == 2 )
-                                <label class="badge badge-soft-success rounded-pill">{{ translate('messages.approved') }}</label>
+                                <label class="badge badge-soft-success rounded-pill">{{ 'aprobado' }}</label>
                                 @elseif ($add->status == 'paused' && $add->active == 1 )
-                                <label class="badge badge-soft-warning rounded-pill">{{ translate('messages.paused') }}</label>
+                                <label class="badge badge-soft-warning rounded-pill">{{ 'pausado' }}</label>
                                 @elseif (in_array($add->status ,['denied','expired'] ))
                                 <label class="badge badge-soft-danger rounded-pill">{{ translate($add->status) }}</label>
                                 @elseif ($add->active == 0)
-                                <label class="badge badge-soft-secondary rounded-pill">{{ translate('messages.Expired') }}</label>
+                                <label class="badge badge-soft-secondary rounded-pill">{{ 'Venció' }}</label>
                                 @else
                                 <label class="badge badge-soft-info rounded-pill">{{ translate($add->status) }}</label>
                                 @endif
@@ -147,20 +147,20 @@ active
                             </td>
                             <td>
                                 @if ( in_array($add->status ,['denied','expired']) || $add->active == 0)
-                                <div class="d-flex align-items-center gap-2 ml-3" data-toggle="tooltip" title="{{ translate('Expired & Denied ads has no priority.') }}">
-                                    <span>{{  translate('N/A') }}</span> <img src="{{asset('assets/admin/img/na.png')}}" alt="">
+                                <div class="d-flex align-items-center gap-2 ml-3" data-toggle="tooltip" title="{{ 'Los anuncios caducados y denegados no tienen prioridad.' }}">
+                                    <span>{{  'N / A' }}</span> <img src="{{asset('assets/admin/img/na.png')}}" alt="">
                                 </div>
                                 @else
 
                                 <select id="select_option_{{ $add->id }}" data-priority_old_value="{{ $add?->priority }}" data-prority_id="{{ $add->id }}" class="form-control w-70px p-0 h-30px js-select2-custom update-priority">
-                                    <option value="{{ $add?->priority == null ||  $add?->priority == 0 ?  '' : $add?->priority }}">{{ $add?->priority == null ||  $add?->priority == 0 ?  translate('N/A') : $add?->priority }} </option>
+                                    <option value="{{ $add?->priority == null ||  $add?->priority == 0 ?  '' : $add?->priority }}">{{ $add?->priority == null ||  $add?->priority == 0 ?  'N / A' : $add?->priority }} </option>
                                     @for ($i = 1; $i <= $total_adds; $i++)
                                     @if ($add?->priority != $i )
                                     <option value="{{ $i }}">{{ $i }}</option>
                                     @endif
                                     @endfor
                                     @if ( $add?->priority !== null)
-                                        <option value="">{{  translate('N/A') }} </option>
+                                        <option value="">{{  'N / A' }} </option>
                                     @endif
                                 </select>
                                 @endif
@@ -176,19 +176,19 @@ active
                                     <ul class="dropdown-menu" dir="ltr">
                                         <a class="dropdown-item d-flex gap-2 align-items-center" href="{{ route('admin.advertisement.show',$add->id) }}">
                                             <i class="tio-visible-outlined"></i>
-                                            {{ translate('View Ads') }}
+                                            {{ 'Ver anuncios' }}
                                         </a>
 
                                         @if ($add->active == 0)
                                         <a class="dropdown-item d-flex gap-2 align-items-center" href="{{ route('admin.advertisement.edit',$add->id) }}">
                                             <i class="tio-edit"></i>
-                                            {{ translate('Edit & Resubmit Ads') }}
+                                            {{ 'Editar y volver a enviar anuncios' }}
                                             </a>
 
                                             @else
                                             <a class="dropdown-item d-flex gap-2 align-items-center" href="{{ route('admin.advertisement.edit',$add->id) }}">
                                                 <i class="tio-edit"></i>
-                                                {{ translate('Edit Ads') }}
+                                                {{ 'Editar anuncios' }}
                                             </a>
                                         @endif
 
@@ -202,8 +202,8 @@ active
                                             id="data-add-{{ $add->id }}"
                                             data-id="data-add-{{ $add->id }}"
 
-                                            data-title="{{translate('Are you sure you want to Resume the request?')}}"
-                                            data-text="<p>{{translate('This ad will be run again and will show in the user app & websites.')}}</p>"
+                                            data-title="{{'¿Está seguro de que desea reanudar la solicitud?'}}"
+                                            data-text="<p>{{'Este anuncio se publicará nuevamente y se mostrará en la aplicación y los sitios web del usuario.'}}</p>"
                                             data-image="{{asset('assets/admin/img/modal/resume.png')}}"
                                             data-type="resume"
                                             data-btn_class = "btn-primary"
@@ -211,7 +211,7 @@ active
 
                                             href="#">
                                                 <i class="tio-pause-circle"></i>
-                                                {{ translate('Resume_Ads') }}
+                                                {{ 'Reanudar anuncios' }}
                                             </a>
 
                                             <form  id="data-add-{{ $add->id }}_form" action="{{ route('admin.advertisement.status',['status' => 'approved' ,'id' => $add->id]) }}" method="get">
@@ -228,14 +228,14 @@ active
                                         <a class="dropdown-item d-flex gap-2 align-items-center new-dynamic-submit-model"
                                         id="data-add-{{ $add->id }}"
                                         data-id="data-add-{{ $add->id }}"
-                                        data-title="{{translate('Are you sure you want to Pause the request?')}}"
-                                        data-text="<p>{{translate('This ad will be pause and not show in the user app & websites.')}}</p>"
+                                        data-title="{{'¿Está seguro de que desea pausar la solicitud?'}}"
+                                        data-text="<p>{{'Este anuncio se detendrá y no se mostrará en la aplicación ni en los sitios web del usuario.'}}</p>"
                                         data-image="{{asset('assets/admin/img/modal/pause.png')}}"
                                         data-type="pause"
 
                                         href="#">
                                             <i class="tio-pause-circle"></i>
-                                            {{ translate('Pause_Ads') }}
+                                            {{ 'Pausar anuncios' }}
                                             </a>
 
                                             <form  id="data-add-{{ $add->id }}_form" action="{{ route('admin.advertisement.status',['status' => 'paused' ,'id' => $add->id]) }}" method="get">
@@ -253,7 +253,7 @@ active
 
                                         <a class="dropdown-item d-flex gap-2 align-items-center" href="{{ route('admin.advertisement.copyAdd', $add->id) }}" >
                                             <i class="tio-copy"></i>
-                                            {{ translate('Copy_Ads') }}
+                                            {{ 'Copiar anuncios' }}
                                             </a>
 
 
@@ -261,19 +261,19 @@ active
                                         id="delete-add-{{ $add->id }}"
                                             data-id="delete-add-{{ $add->id }}"
                                             @if ($add->status != 'paused' && $add->active == 1)
-                                                data-title="{{translate('You can’t delete the ad')}}"
-                                                data-text="<p>{{translate('This Advertisement is currently running, To delete this ad from the list, please  resume the Ad first . Once the status is updated, you can proceed with deletion')}}</p>"
+                                                data-title="{{'No puedes eliminar el anuncio.'}}"
+                                                data-text="<p>{{'Este anuncio se está publicando actualmente. Para eliminar este anuncio de la lista, reanude primero el anuncio. Una vez actualizado el estado, puede continuar con la eliminación.'}}</p>"
                                                 data-image="{{asset('assets/admin/img/modal/package-status-disable.png')}}"
                                                 data-type="warning"
                                             @else
                                                 data-type="delete"
-                                                data-title="{{translate('Confirm Ad Deletion')}}"
-                                                data-text="<p>{{translate('Deleting this ad will remove it permanently. Are you sure you want to proceed?')}}</p>"
+                                                data-title="{{'Confirmar la eliminación de anuncios'}}"
+                                                data-text="<p>{{'Eliminar este anuncio lo eliminará permanentemente. ¿Estás seguro de que quieres continuar?'}}</p>"
                                                 data-image="{{asset('assets/admin/img/modal/delete-icon.png')}}"
                                             @endif
                                             >
                                             <i class="tio-delete"></i>
-                                            {{ translate('Delete_Ads') }}
+                                            {{ 'Eliminar anuncios' }}
                                             </a>
                                             <form  id="delete-add-{{ $add->id }}_form" action="{{ route('admin.advertisement.destroy',$add->id) }}" method="post">
                                                 @csrf
@@ -294,7 +294,7 @@ active
                 <div class="empty--data">
                     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
-                        {{translate('no_data_found')}}
+                        {{'no se encontraron datos'}}
                     </h5>
                 </div>
                 @endif
@@ -333,7 +333,7 @@ active
                             <h5 class="modal-title" id="toggle-title"></h5>
                         </div>
                         <div class="text-center" id="toggle-message">
-                            <h3 >{{ translate('Are_you_sure_you_want_to_Priority_of_this_Advertisement?') }}</h3>
+                            <h3 >{{ '¿Está seguro de que desea la prioridad de este anuncio?' }}</h3>
                         </div>
                         <input id="update_priority_value"   name="priority_value" type="hidden">
                         <input id="update_priority_id" name="priority_id" type="hidden">
@@ -341,8 +341,8 @@ active
                         </div>
 
                     <div class="btn--container justify-content-center mt-3">
-                        <button data-dismiss="modal" type="reset" id="reset_btn" class="btn btn--cancel" >{{translate("Not_Now")}}</button>
-                        <button type="sbmit" class="btn btn-primary min-w-120">{{translate('Yes')}}</button>
+                        <button data-dismiss="modal" type="reset" id="reset_btn" class="btn btn--cancel" >{{'Ahora no'}}</button>
+                        <button type="sbmit" class="btn btn-primary min-w-120">{{'Sí'}}</button>
                     </div>
                 </div>
             </form>

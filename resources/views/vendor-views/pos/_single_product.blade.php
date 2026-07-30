@@ -17,7 +17,7 @@
         <p class="pos-grill-card-desc {{ $desc === '' ? 'pos-grill-card-desc--empty' : '' }}">{{ $desc !== '' ? $desc : '—' }}</p>
         <div class="pos-grill-card-footer">
             <span class="pos-grill-card-rating"><i class="tio-star"></i> {{ $rating }}</span>
-            <span class="pos-grill-card-add-btn" role="button" tabindex="0">{{ translate('messages.add_to_cart') }}</span>
+            <span class="pos-grill-card-add-btn" role="button" tabindex="0">{{ 'añadir a la cesta' }}</span>
         </div>
     </div>
 </div>

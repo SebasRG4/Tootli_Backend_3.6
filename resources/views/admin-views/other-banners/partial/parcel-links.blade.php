@@ -4,15 +4,15 @@
         <ul class="nav nav-tabs border-0 nav--tabs nav--pills">
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/promotional-banner/add-new') || Request::is('admin/promotional-banner/edit*') ? 'active' : '' }}"
-                href="{{ route('admin.promotional-banner.add-new') }}">{{translate('messages.Promotional Banners')}}</a>
+                href="{{ route('admin.promotional-banner.add-new') }}">{{'pancartas promocionales'}}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/promotional-banner/add-video') ? 'active' : '' }}"
-                href="{{ route('admin.promotional-banner.add-video') }}">{{translate('messages.video')}}</a>
+                href="{{ route('admin.promotional-banner.add-video') }}">{{'video'}}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/promotional-banner/add-why-choose') ||  Request::is('admin/promotional-banner/why-choose/edit*') ? 'active' : '' }}"
-                href="{{ route('admin.promotional-banner.add-why-choose') }}">{{translate('messages.why_choose_us')}}</a>
+                href="{{ route('admin.promotional-banner.add-why-choose') }}">{{'¿Por qué elegirnos?'}}</a>
             </li>
         </ul>
         <!-- End Nav -->

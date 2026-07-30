@@ -1,5 +1,5 @@
 @extends('layouts.landing.app')
-@section('title', translate('messages.vendor_registration'))
+@section('title', 'registro de proveedores')
 @push('css_or_js')
     <link rel="stylesheet" href="{{ asset('assets/admin/css/toastr.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/admin/css/view-pages/vendor-registration.css') }}">
@@ -38,7 +38,7 @@
                 <div class="card __card mb-3 pt-4">
                     <div class="card-header border-0">
                         <h5 class="card-title text-center">
-                            {{ translate('Make Payment For Your Business Plan') }}
+                            {{ 'Realice el pago de su plan comercial' }}
                         </h5>
                     </div>
                     <div class="card-body p-4 pt-0">
@@ -60,7 +60,7 @@
                                         {{-- <img src="{{asset('assets/admin/img/check-1.png')}}" class="uncheck" alt=""> --}}
                                         <img src="{{asset('assets/admin/img/check-2.png')}}" class="check" alt="">
                                     </div>
-                                    <span>{{ translate('Continue with') }} {{ $trial_period }}  {{ data_get($free_trial_settings, 'subscription_free_trial_type') }} {{ 'Prueba Gratuita' }}</span>
+                                    <span>{{ 'Continuar con' }} {{ $trial_period }}  {{ data_get($free_trial_settings, 'subscription_free_trial_type') }} {{ 'Prueba Gratuita' }}</span>
                                 </div>
                             </label>
                         @endif
@@ -68,7 +68,7 @@
 
                         <br>
                         <br>
-                        <h6 class="text-16 mb-4">{{ translate('Pay Via Online') }} <span class="font-regular text-body">({{ translate('Faster & secure way to pay bill') }})</span></h6>
+                        <h6 class="text-16 mb-4">{{ 'Pagar en línea' }} <span class="font-regular text-body">({{ 'Forma más rápida y segura de pagar la factura' }})</span></h6>
                         <div class="row g-3">
 
 

@@ -9,7 +9,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Title -->
-    <title>{{translate('messages.login')}}</title>
+    <title>{{'acceso'}}</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{asset('favicon.ico')}}">
@@ -300,8 +300,8 @@
     <main class="admin-login-body">
         <div class="admin-login-card">
             <span class="admin-section-tag">{{ translate(strtoupper($role ?? 'admin')) }} ACCESS</span>
-            <h1 class="admin-login-title">{{ translate('Log in') }}</h1>
-            <p class="admin-login-subtitle">{{ translate('Use your admin account to access the dashboard.') }}</p>
+            <h1 class="admin-login-title">{{ 'Iniciar Sesión' }}</h1>
+            <p class="admin-login-subtitle">{{ 'Utilice su cuenta de administrador para acceder al panel.' }}</p>
 
             <form action="{{route('login_post')}}" method="post" id="form-id" class="js-validate">
                 @csrf
@@ -310,12 +310,12 @@
                 <!-- Email Input -->
                 <div class="form-group-custom js-form-message">
                     <label class="custom-input-label" for="signinSrEmail">
-                        {{translate('Email')}} <span class="required-star">*</span>
+                        {{'Correo electrónico'}} <span class="required-star">*</span>
                     </label>
                     <div class="input-pill-wrapper">
                         <input type="email" class="input-pill" name="email" id="signinSrEmail"
                                tabindex="1" placeholder="admin@demo.com" value="{{ $email ?? '' }}" aria-label="admin@demo.com"
-                               required data-msg="{{ translate('Please_enter_a_valid_email_address.') }}">
+                               required data-msg="{{ 'Por favor, introduce una dirección de correo electrónico válida.' }}">
                         <span class="input-pill-icon"><i class="bi bi-key-fill"></i></span>
                     </div>
                 </div>
@@ -323,13 +323,13 @@
                 <!-- Password Input -->
                 <div class="form-group-custom js-form-message">
                     <label class="custom-input-label" for="signupSrPassword">
-                        {{translate('Password')}} <span class="required-star">*</span>
+                        {{'Contraseña'}} <span class="required-star">*</span>
                     </label>
                     <div class="input-pill-wrapper">
                         <input type="password" class="input-pill js-toggle-password"
                                name="password" id="signupSrPassword" placeholder="••••••••" value="{{ $password ?? '' }}"
                                aria-label="••••••••" required
-                               data-msg="{{translate('messages.invalid_password_warning')}}"
+                               data-msg="{{'advertencia de contraseña no válida'}}"
                                data-hs-toggle-password-options='{
                                    "target": "#changePassTarget",
                                    "defaultClass": "bi-eye-slash-fill",
@@ -346,14 +346,14 @@
                 <div class="form-options-row">
                     <label class="remember-checkbox-label" for="termsCheckbox">
                         <input type="checkbox" id="termsCheckbox" name="remember" {{ $password ? 'checked' : '' }}>
-                        <span>{{translate('Remember me')}}</span>
+                        <span>{{'Recordarme'}}</span>
                     </label>
 
                     <div id="forget-password" style="display: {{ $role == 'admin' ? '' : 'none' }};">
-                        <span type="button" data-toggle="modal" class="forgot-password-link" data-target="#forgetPassModal">{{ translate('Forgot password?') }}</span>
+                        <span type="button" data-toggle="modal" class="forgot-password-link" data-target="#forgetPassModal">{{ '¿Olvidaste tu contraseña?' }}</span>
                     </div>
                     <div id="forget-password1" style="display: {{ $role == 'vendor' ? '' : 'none' }};">
-                        <span type="button" data-toggle="modal" class="forgot-password-link" data-target="#forgetPassModal1">{{ translate('messages.Forget Password') }}?</span>
+                        <span type="button" data-toggle="modal" class="forgot-password-link" data-target="#forgetPassModal1">{{ 'Olvidar Contraseña' }}?</span>
                     </div>
                 </div>
 
@@ -364,7 +364,7 @@
 
                 <!-- Submit Button -->
                 <button type="submit" class="btn-pill-submit" id="signInBtn">
-                    <span>{{translate('Log in')}}</span>
+                    <span>{{'Iniciar Sesión'}}</span>
                     <i class="bi bi-arrow-right"></i>
                 </button>
             </form>
@@ -404,7 +404,7 @@
 
     <!-- Footer -->
     <footer class="admin-login-footer">
-        © {{ date('Y') }} {{ \App\Models\BusinessSetting::where(['key' => 'business_name'])->first()?->value ?? 'Tootli' }}. {{ translate('All rights reserved.') }}
+        © {{ date('Y') }} {{ \App\Models\BusinessSetting::where(['key' => 'business_name'])->first()?->value ?? 'Tootli' }}. {{ 'Reservados todos los derechos.' }}
     </footer>
 </div>
 
@@ -421,13 +421,13 @@
         <div class="forget-pass-content">
             <img src="{{asset('assets/admin/img/send-mail.svg')}}" alt="">
             <h4>
-                {{ translate('Send_Mail_to_Your_Email') }} ?
+                {{ 'Enviar correo a su correo electrónico' }} ?
             </h4>
             <p>
-                {{ translate('A mail will be send to your registered email') }} {{ isset($role) && $role == 'admin'  ? \App\Models\Admin::where('role_id',1)->first()?->masked_email : ''  }} {{ translate('with a  link to change passowrd') }}
+                {{ 'Se enviará un correo a su correo electrónico registrado.' }} {{ isset($role) && $role == 'admin'  ? \App\Models\Admin::where('role_id',1)->first()?->masked_email : ''  }} {{ 'con un enlace para cambiar la contraseña' }}
             </p>
             <a class="btn btn-lg btn-block btn--primary mt-3" href="{{route('reset-password')}}">
-                {{ translate('Send Mail') }}
+                {{ 'Enviar Correo' }}
             </a>
         </div>
       </div>
@@ -447,12 +447,12 @@
         <div class="forget-pass-content">
             <img src="{{asset('assets/admin/img/send-mail.svg')}}" alt="">
             <h4>
-                {{ translate('messages.Send_Mail_to_Your_Email') }} ?
+                {{ 'Enviar correo a su correo electrónico' }} ?
             </h4>
             <form class="" action="{{ route('vendor-reset-password') }}" method="post">
                 @csrf
-                <input type="email" name="email" id="" class="form-control" placeholder="{{ translate('messages.plesae_enter_your_registerd_email') }}" required>
-                <button type="submit" class="btn btn-lg btn-block btn--primary mt-3">{{ translate('messages.Send Mail') }}</button>
+                <input type="email" name="email" id="" class="form-control" placeholder="{{ 'por favor ingrese su correo electrónico registrado' }}" required>
+                <button type="submit" class="btn btn-lg btn-block btn--primary mt-3">{{ 'Enviar Correo' }}</button>
             </form>
         </div>
       </div>
@@ -472,13 +472,13 @@
           <div class="forget-pass-content">
               <img src="{{asset('assets/admin/img/sent-mail.svg')}}" alt="">
               <h4>
-                {{ translate('A mail has been sent to your registered email') }}!
+                {{ 'Se ha enviado un correo a su correo electrónico registrado.' }}!
               </h4>
               <p>
-                {{ translate('Click the link in the mail description to change password') }}
+                {{ 'Haga clic en el enlace en la descripción del correo para cambiar la contraseña.' }}
               </p>
               <button class="btn btn-lg btn-block btn--primary mt-3" data-dismiss="modal">
-                {{ translate('Got_It') }}
+                {{ 'Entendido' }}
               </button>
           </div>
         </div>

@@ -5,82 +5,82 @@
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/user/registration') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['user','registration']) }}">
-                    {{translate('New_Customer_Registration')}}
+                    {{'Registro de nuevo cliente'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/user/pos-registration') ? 'active' : '' }}"
                    href="{{ route('admin.business-settings.email-setup', ['user','pos-registration']) }}">
-                    {{translate('POS_New_Customer_Registration')}}
+                    {{'POS Registro de nuevos clientes'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/user/registration-otp') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['user','registration-otp']) }}">
-                    {{translate('Registration OTP')}}
+                    {{'OTP de registro'}}
                 </a>
             </li>
             {{-- <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/user/login-otp') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['user','login-otp']) }}">
-                    {{translate('Login OTP')}}
+                    {{'Iniciar sesión OTP'}}
                 </a>
             </li> --}}
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/user/forgot-password') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['user','forgot-password']) }}">
-                    {{translate('Forgot Password')}}
+                    {{'Has olvidado tu contraseña'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/user/order-verification') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['user','order-verification']) }}">
-                    {{translate('Delivery_Verification')}}
+                    {{'Verificación de entrega'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/user/new-order') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.email-setup', ['user','new-order']) }}">{{translate('Order_Placement')}}</a>
+                href="{{ route('admin.business-settings.email-setup', ['user','new-order']) }}">{{'Colocación de pedidos'}}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/user/refund-order') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.email-setup', ['user','refund-order']) }}">{{translate('messages.refund_order')}}</a>
+                href="{{ route('admin.business-settings.email-setup', ['user','refund-order']) }}">{{'orden de reembolso'}}</a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/user/refund-request-deny') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['user','refund-request-deny']) }}">
-                    {{translate('Refund_Request_Rejected')}}
+                    {{'Solicitud de reembolso rechazada'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/user/add-fund') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['user','add-fund']) }}">
-                    {{translate('Fund_Add')}}
+                    {{'Añadir fondo'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/user/offline-payment-approve') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['user','offline-payment-approve']) }}">
-                    {{translate('Offline_Payment_Approve')}}
+                    {{'Aprobación de pago sin conexión'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/user/offline-payment-deny') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['user','offline-payment-deny']) }}">
-                    {{translate('Offline_Payment_Deny')}}
+                    {{'Denegación de pago sin conexión'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/user/suspend') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['user','suspend']) }}">
-                    {{translate('Account_Suspension')}}
+                    {{'Suspensión de cuenta'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/user/unsuspend') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['user','unsuspend']) }}">
-                    {{translate('Account_Unsuspension')}}
+                    {{'Dessuspensión de cuenta'}}
                 </a>
             </li>
         </ul>

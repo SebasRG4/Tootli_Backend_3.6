@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',$store->name."'s ".translate('messages.orders'))
+@section('title',$store->name."'s ".'Pedidos')
 
 @push('css_or_js')
     <!-- Custom styles for this page -->
@@ -22,35 +22,35 @@
                             <div class="order-info-icon">
                                 <img src="{{asset('assets/admin/img/navbar/all.png')}}" alt="public">
                             </div>
-                            <h6 class="card-subtitle">{{translate('messages.all')}}<span class="amount text--primary">{{\App\Models\Order::where('store_id', $store->id)->StoreOrder()->count()}}</span></h6>
+                            <h6 class="card-subtitle">{{'todo'}}<span class="amount text--primary">{{\App\Models\Order::where('store_id', $store->id)->StoreOrder()->count()}}</span></h6>
                         </div>
                         <span class="order-info-seperator"></span>
                         <div class="order-info-item filter-on-click"  data-filter="filter"  data-type="scheduled_orders" data-url="{{route('admin.store.view', ['store'=>$store->id, 'tab'=> 'order'])}}"  >
                             <div class="order-info-icon">
                                 <img src="{{asset('assets/admin/img/navbar/schedule.png')}}" alt="public">
                             </div>
-                            <h6 class="card-subtitle">{{translate('messages.scheduled')}}<span class="amount text--warning">{{\App\Models\Order::Scheduled()->where('store_id', $store->id)->StoreOrder()->count()}}</span></h6>
+                            <h6 class="card-subtitle">{{'programado'}}<span class="amount text--warning">{{\App\Models\Order::Scheduled()->where('store_id', $store->id)->StoreOrder()->count()}}</span></h6>
                         </div>
                         <span class="order-info-seperator"></span>
                         <div class="order-info-item filter-on-click"   data-filter="filter"  data-type="pending_orders" data-url="{{route('admin.store.view', ['store'=>$store->id, 'tab'=> 'order'])}}" >
                             <div class="order-info-icon">
                                 <img src="{{asset('assets/admin/img/navbar/pending.png')}}" alt="public">
                             </div>
-                            <h6 class="card-subtitle">{{translate('messages.pending')}}<span class="amount text--info">{{\App\Models\Order::where(['order_status'=>'pending','store_id'=>$store->id])->StoreOrder()->OrderScheduledIn(30)->count()}}</span></h6>
+                            <h6 class="card-subtitle">{{'Pendiente'}}<span class="amount text--info">{{\App\Models\Order::where(['order_status'=>'pending','store_id'=>$store->id])->StoreOrder()->OrderScheduledIn(30)->count()}}</span></h6>
                         </div>
                         <span class="order-info-seperator"></span>
                         <div class="order-info-item filter-on-click"  data-filter="filter"  data-type="delivered_orders" data-url="{{route('admin.store.view', ['store'=>$store->id, 'tab'=> 'order'])}}" >
                             <div class="order-info-icon">
                                 <img src="{{asset('assets/admin/img/navbar/delivered.png')}}" alt="public">
                             </div>
-                            <h6 class="card-subtitle">{{translate('messages.delivered')}}<span class="amount text--success">{{\App\Models\Order::where(['order_status'=>'delivered', 'store_id'=>$store->id])->StoreOrder()->count()}}</span></h6>
+                            <h6 class="card-subtitle">{{'Entregado'}}<span class="amount text--success">{{\App\Models\Order::where(['order_status'=>'delivered', 'store_id'=>$store->id])->StoreOrder()->count()}}</span></h6>
                         </div>
                         <span class="order-info-seperator"></span>
                         <div class="order-info-item filter-on-click"  data-filter="filter"  data-type="canceled_orders" data-url="{{route('admin.store.view', ['store'=>$store->id, 'tab'=> 'order'])}}" >
                             <div class="order-info-icon">
                                 <img src="{{asset('assets/admin/img/navbar/cancel.png')}}" alt="public">
                             </div>
-                            <h6 class="card-subtitle">{{translate('messages.canceled')}}<span class="amount text--success">{{\App\Models\Order::where(['order_status'=>'canceled', 'store_id'=>$store->id])->StoreOrder()->count()}}</span></h6>
+                            <h6 class="card-subtitle">{{'Cancelado'}}<span class="amount text--success">{{\App\Models\Order::where(['order_status'=>'canceled', 'store_id'=>$store->id])->StoreOrder()->count()}}</span></h6>
                         </div>
 
                     </div>
@@ -67,13 +67,13 @@
 
                                 <div class="input-group input--group">
                                     <input id="datatableSearch_" type="search" value="{{ request()->search ?? null }}" name="search" class="form-control"
-                                            placeholder="{{translate('ex_:_order_id')}}" aria-label="Search">
+                                            placeholder="{{'ej: identificación del pedido'}}" aria-label="Search">
                                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                                 </div>
                                 <!-- End Search -->
                             </form>
                             @if(request()->get('search'))
-                            <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                            <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{'reiniciar'}}</button>
                             @endif
                             <!-- Unfold -->
                             <div class="hs-unfold mr-2">
@@ -82,24 +82,24 @@
                                             "target": "#usersExportDropdown",
                                             "type": "css-animation"
                                         }'>
-                                    <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                                    <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                                 </a>
 
                                 <div id="usersExportDropdown"
                                     class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
 
-                                    <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                                    <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                                     <a id="export-excel" class="dropdown-item" href="{{route('admin.order.store-export', ['type'=>'excel', 'store_id'=>$store->id , request()->getQueryString()])}}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                             src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                             alt="Image Description">
-                                        {{ translate('messages.excel') }}
+                                        {{ 'sobresalir' }}
                                     </a>
                                     <a id="export-csv" class="dropdown-item" href="{{route('admin.order.store-export', ['type'=>'csv', 'store_id'=>$store->id , request()->getQueryString() ])}}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                             src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                             alt="Image Description">
-                                        .{{ translate('messages.csv') }}
+                                        .{{ 'csv' }}
                                     </a>
 
                                 </div>
@@ -131,15 +131,15 @@
                                     <thead class="thead-light">
                                     <tr>
                                         <th class="border-0">
-                                            {{translate('sl')}}
+                                            {{'SL'}}
                                         </th>
-                                        <th class="table-column-pl-0 border-0">{{translate('messages.order')}}</th>
-                                        <th class="border-0">{{translate('messages.date')}}</th>
-                                        <th class="border-0">{{translate('messages.customer')}}</th>
-                                        <th class="border-0">{{translate('messages.payment_status')}}</th>
-                                        <th class="border-0">{{translate('messages.total')}}</th>
-                                        <th class="border-0 text-center">{{translate('messages.order_status')}}</th>
-                                        <th class="border-0 text-center">{{translate('messages.actions')}}</th>
+                                        <th class="table-column-pl-0 border-0">{{'Pedido'}}</th>
+                                        <th class="border-0">{{'fecha'}}</th>
+                                        <th class="border-0">{{'Cliente'}}</th>
+                                        <th class="border-0">{{'estado de pago'}}</th>
+                                        <th class="border-0">{{'total'}}</th>
+                                        <th class="border-0 text-center">{{'estado del pedido'}}</th>
+                                        <th class="border-0 text-center">{{'comportamiento'}}</th>
                                     </tr>
                                     </thead>
 
@@ -183,17 +183,17 @@
                                                     </a>
                                                 </div>
                                                 @else
-                                                    <label class="badge badge-danger">{{translate('messages.invalid_customer_data')}}</label>
+                                                    <label class="badge badge-danger">{{'datos de cliente no válidos'}}</label>
                                                 @endif
                                             </td>
                                             <td>
                                                 @if($order->payment_status=='paid')
                                                     <span class="badge badge-soft-success">
-                                                    {{translate('messages.paid')}}
+                                                    {{'pagado'}}
                                                     </span>
                                                 @else
                                                     <span class="badge badge-soft-danger">
-                                                    {{translate('messages.unpaid')}}
+                                                    {{'no pagado'}}
                                                     </span>
                                                 @endif
                                             </td>
@@ -201,23 +201,23 @@
                                             <td class="text-capitalize text-center">
                                                 @if($order['order_status']=='pending')
                                                     <span class="badge badge-soft-info">
-                                                    {{translate('messages.pending')}}
+                                                    {{'Pendiente'}}
                                                     </span>
                                                 @elseif($order['order_status']=='confirmed')
                                                     <span class="badge badge-soft-info">
-                                                    {{translate('messages.confirmed')}}
+                                                    {{'confirmado'}}
                                                     </span>
                                                 @elseif($order['order_status']=='processing')
                                                     <span class="badge badge-soft-warning">
-                                                    {{translate('messages.processing')}}
+                                                    {{'tratamiento'}}
                                                     </span>
                                                 @elseif($order['order_status']=='out_for_delivery')
                                                     <span class="badge badge-soft-warning">
-                                                    {{translate('messages.out_for_delivery')}}
+                                                    {{'En Camino de Entrega'}}
                                                     </span>
                                                 @elseif($order['order_status']=='delivered')
                                                     <span class="badge badge-soft-success">
-                                                    {{translate('messages.delivered')}}
+                                                    {{'Entregado'}}
                                                     </span>
                                                 @else
                                                     <span class="badge badge-soft-danger">
@@ -249,7 +249,7 @@
                             <div class="empty--data">
                                 <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                                 <h5>
-                                    {{translate('no_data_found')}}
+                                    {{'no se encontraron datos'}}
                                 </h5>
                             </div>
                             @endif

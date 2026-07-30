@@ -46,13 +46,13 @@
                             <div class="dropdown-divider"></div>
 
                             <a class="dropdown-item" href="{{route('admin.settings')}}">
-                                <span class="text-truncate pr-2" title="Settings">{{translate('messages.settings')}}</span>
+                                <span class="text-truncate pr-2" title="Settings">{{'Configuración'}}</span>
                             </a>
 
                             <div class="dropdown-divider"></div>
 
                            <a class="dropdown-item log-out" href="javascript:">
-                                <span class="text-truncate pr-2" title="Sign out">{{translate('messages.sign_out')}}</span>
+                                <span class="text-truncate pr-2" title="Sign out">{{'desconectar'}}</span>
                             </a>
                         </div>
                     </div>

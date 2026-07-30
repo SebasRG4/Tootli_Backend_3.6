@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',  translate('Update Withdraw Method'))
+@section('title',  'Actualizar método de retiro')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -13,10 +13,10 @@
             <div class="page-title-wrap d-flex justify-content-between flex-wrap align-items-center gap-3">
                 <h2 class="page-title m-0">
                     <img width="20" src="{{asset('assets/admin/img/withdraw-icon.png')}}" alt="">
-                    {{ translate('Update Withdraw Method')}}
+                    {{ 'Actualizar método de retiro'}}
                 </h2>
                 <button class="btn btn--primary" id="add-more-field">
-                    <i class="tio-add-circle"></i> {{ translate('messages.Add_New_Field')}}
+                    <i class="tio-add-circle"></i> {{ 'Agregar nuevo campo'}}
                 </button>
             </div>
         </div>
@@ -32,7 +32,7 @@
                         <div class="card card-body">
                             <div class="bg-1079801A p--20 rounded">
                                 <div class="form-floating">
-                                    <label class="text-title">{{ translate('messages.method_name')}} <span
+                                    <label class="text-title">{{ 'nombre del método'}} <span
                                                 class="input-label-secondary text-danger">*</span></label>
                                     
                                     <input type="text" class="form-control " name="method_name" id="method_name"
@@ -43,7 +43,7 @@
                             <div class="form-check mb-2">
                                 <input class="form-check-input checkbox-theme single-select" type="checkbox" value="1" name="is_default" id="flexCheckDefaultMethod" {{$withdrawal_method['is_default'] == 1 ? 'checked' : ''}}>
                                 <label class="form-check-label" for="flexCheckDefaultMethod">
-                                    {{ translate('Mark this Method as Default')}}
+                                    {{ 'Marcar este método como predeterminado'}}
                                 </label>
                             </div>
                         </div>
@@ -58,33 +58,33 @@
                                             <div class="row gy-2 align-items-center">
                                                 <div class="col-md-4 col-12">
                                                     <div class="form-floating">
-                                                        <label class="text-title">{{ translate('messages.Input_Field_Type')}} <span
+                                                        <label class="text-title">{{ 'Tipo de campo de entrada'}} <span
                                                                 class="input-label-secondary text-danger">*</span></label>
                                                         <select class="form-control" name="field_type[]" required>
-                                                            <option value="string" {{$field['input_type']=='string'?'selected':''}}>{{ translate('messages.Text')}}</option>
-                                                            <option value="number" {{$field['input_type']=='number'?'selected':''}}>{{ translate('messages.Number')}}</option>
-                                                            <option value="date" {{$field['input_type']=='date'?'selected':''}}>{{ translate('messages.Date')}}</option>
-                                                            <option value="email" {{$field['input_type']=='email'?'selected':''}}>{{ translate('messages.Email')}}</option>
-                                                            <option value="phone" {{$field['input_type']=='phone'?'selected':''}}>{{ translate('messages.Phone')}}</option>
+                                                            <option value="string" {{$field['input_type']=='string'?'selected':''}}>{{ 'Texto'}}</option>
+                                                            <option value="number" {{$field['input_type']=='number'?'selected':''}}>{{ 'Número'}}</option>
+                                                            <option value="date" {{$field['input_type']=='date'?'selected':''}}>{{ 'Fecha'}}</option>
+                                                            <option value="email" {{$field['input_type']=='email'?'selected':''}}>{{ 'Correo electrónico'}}</option>
+                                                            <option value="phone" {{$field['input_type']=='phone'?'selected':''}}>{{ 'Teléfono'}}</option>
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 col-12">
                                                     <div class="form-floating">
-                                                        <label class="text-title">{{ translate('messages.field_name')}} <span
+                                                        <label class="text-title">{{ 'nombre del campo'}} <span
                                                                 class="input-label-secondary text-danger">*</span></label>
                                                         <input type="text" class="form-control" name="field_name[]"
-                                                               placeholder="{{ translate('messages.Ex:_Bank')}}"
+                                                               placeholder="{{ 'Ej: banco'}}"
                                                                value="{{  Str::title(str_replace('_', " ", $field['input_name']))  ?? ''}}"
                                                                required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 col-12">
                                                     <div class="form-floating">
-                                                        <label class="text-title">{{ translate('messages.placeholder_text')}} <span
+                                                        <label class="text-title">{{ 'texto de marcador de posición'}} <span
                                                                 class="input-label-secondary text-danger">*</span></label>
                                                         <input type="text" class="form-control" name="placeholder_text[]"
-                                                               placeholder="{{ translate('messages.Ex:_John')}}"
+                                                               placeholder="{{ 'Ej: Juan'}}"
                                                                value="{{$field['placeholder'] ?? ''}}"
                                                                required>
                                                     </div>
@@ -96,7 +96,7 @@
                                                                name="is_required[{{$key}}]" id="flexCheckDefault__e{{$key}}"
                                                             {{$field['is_required'] ? 'checked' : ''}}>
                                                         <label class="form-check-label" for="flexCheckDefault__e{{$key}}">
-                                                            {{ translate('messages.Is_required_')}}
+                                                            {{ 'Se requiere'}}
                                                         </label>
                                                     </div>
                                                 </div>--}}
@@ -108,7 +108,7 @@
                                                                    name="is_required[{{$key}}]" id="flexCheckDefault__e{{$key}}"
                                                                 {{$field['is_required'] ? 'checked' : ''}}>
                                                             <label class="form-check-label" for="flexCheckDefault__e{{$key}}">
-                                                                {{ translate('messages.Is_required_')}}
+                                                                {{ 'Se requiere'}}
                                                             </label>
                                                         </div>
                                                         <span class="btn btn-danger remove-field w-30px h-30 py-1 px-1" data-id="{{$key}}">
@@ -134,8 +134,8 @@
 
                         <!-- BUTTON -->
                         <div class="d-flex justify-content-end mt-4">
-                            <button type="reset" class="btn btn--reset min-w-120px mx-2">{{ translate('messages.Reset')}}</button>
-                            <button type="submit" class="btn btn--primary min-w-120px demo_check">{{ translate('messages.Submit')}}</button>
+                            <button type="reset" class="btn btn--reset min-w-120px mx-2">{{ 'Reiniciar'}}</button>
+                            <button type="submit" class="btn btn--primary min-w-120px demo_check">{{ 'Entregar'}}</button>
                         </div>
                     </div>
                 </form>
@@ -163,39 +163,39 @@
                             <div class="bg-1079801A p--20 rounded">
                                 <div class="row gy-2 align-items-center">
                                     <div class="col-md-4 col-12">
-                                        <label class="text-title">{{ translate('messages.Input_Field_Type')}} <span
+                                        <label class="text-title">{{ 'Tipo de campo de entrada'}} <span
                                                 class="input-label-secondary text-danger">*</span></label>
                                         <select class="form-control js-select2-custom js-select" name="field_type[]" required>
-                                            <option value="" selected disabled>{{ translate('messages.Input_Field_Type')}} <span
+                                            <option value="" selected disabled>{{ 'Tipo de campo de entrada'}} <span
                                                 class="input-label-secondary text-danger">*</span></option>
-                                            <option value="string">{{ translate('messages.Text')}}</option>
-                                            <option value="number">{{ translate('messages.Number')}}</option>
-                                            <option value="date">{{ translate('messages.Date')}}</option>
-                                            <option value="email">{{ translate('messages.Email')}}</option>
-                                            <option value="phone">{{ translate('messages.Phone')}}</option>
+                                            <option value="string">{{ 'Texto'}}</option>
+                                            <option value="number">{{ 'Número'}}</option>
+                                            <option value="date">{{ 'Fecha'}}</option>
+                                            <option value="email">{{ 'Correo electrónico'}}</option>
+                                            <option value="phone">{{ 'Teléfono'}}</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4 col-12">
                                         <div class="form-floating">
-                                            <label class="text-title">{{ translate('messages.field_name')}} <span
+                                            <label class="text-title">{{ 'nombre del campo'}} <span
                                                 class="input-label-secondary text-danger">*</span></label>
                                             <input type="text" class="form-control" name="field_name[]"
-                                                placeholder="{{ translate('messages.Ex:_Bank')}}" value="" required>
+                                                placeholder="{{ 'Ej: banco'}}" value="" required>
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-12">
                                         <div class="form-floating">
-                                            <label class="text-title">{{ translate('messages.placeholder_text')}} <span
+                                            <label class="text-title">{{ 'texto de marcador de posición'}} <span
                                                 class="input-label-secondary text-danger">*</span></label>
                                             <input type="text" class="form-control" name="placeholder_text[]"
-                                                placeholder="{{ translate('messages.Ex:_John')}}" value="" required>
+                                                placeholder="{{ 'Ej: Juan'}}" value="" required>
                                         </div>
                                     </div>
                                     {{--<div class="col-md-2 col-12">
                                         <div class="form-check">
                                             <input class="form-check-input checkbox-theme single-select" type="checkbox" value="1" name="is_required[${counter}]" id="flexCheckDefault__${counter}" checked>
                                             <label class="form-check-label" for="flexCheckDefault__${counter}">
-                                                {{ translate('messages.Is_required_')}}
+                                                {{ 'Se requiere'}}
                                             </label>
                                         </div>
                                     </div>--}}
@@ -204,7 +204,7 @@
                                             <div class="form-check">
                                                 <input class="form-check-input checkbox-theme single-select" type="checkbox" value="1" name="is_required[${counter}]" id="flexCheckDefault__${counter}" checked>
                                                 <label class="form-check-label" for="flexCheckDefault__${counter}">
-                                                    {{ translate('messages.Is_required_')}}
+                                                    {{ 'Se requiere'}}
                                                 </label>
                                             </div>
                                             <span class="btn btn-danger remove-field w-30px h-30 py-1 px-1" data-id="${counter}">
@@ -240,8 +240,8 @@
                     counter++;
                 } else {
                     Swal.fire({
-                        title: '{{ translate('messages.Reached_maximum')}}',
-                        confirmButtonText: '{{ translate('messages.ok')}}',
+                        title: '{{ 'Máximo alcanzado'}}',
+                        confirmButtonText: '{{ 'OK'}}',
                     });
                 }
             })

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.edit_dynamic_section'))
+@section('title', 'editar sección dinámica')
 
 @push('css_or_js')
 <link href="{{asset('assets/admin/css/select2.min.css')}}" rel="stylesheet" />
@@ -15,7 +15,7 @@
                 <img src="{{asset('assets/admin/img/banner.png')}}" class="w--26" alt="">
             </span>
             <span>
-                {{translate('messages.edit_dynamic_section')}}
+                {{'editar sección dinámica'}}
             </span>
         </h1>
     </div>
@@ -29,21 +29,21 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="form-label" for="title">{{translate('messages.title')}} <span class="text-danger">*</span></label>
+                            <label class="form-label" for="title">{{'título'}} <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="title" name="title" 
-                                value="{{$section->title}}" placeholder="{{translate('messages.enter_title')}}" required>
+                                value="{{$section->title}}" placeholder="{{'introduce el título'}}" required>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="form-label" for="subtitle">{{translate('messages.subtitle')}}</label>
+                            <label class="form-label" for="subtitle">{{'subtitular'}}</label>
                             <input type="text" class="form-control" id="subtitle" name="subtitle" 
-                                value="{{$section->subtitle}}" placeholder="{{translate('messages.enter_subtitle')}}">
+                                value="{{$section->subtitle}}" placeholder="{{'introducir subtítulo'}}">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="form-label">{{translate('messages.background_image')}}</label>
+                            <label class="form-label">{{'imagen de fondo'}}</label>
                             <label class="__upload-img aspect-4-1 m-auto d-block">
                                 <div class="img">
                                     <img class="onerror-image" id="viewer"
@@ -54,13 +54,13 @@
                                 <input type="file" name="background_image" accept="image/*" hidden 
                                     onchange="document.getElementById('viewer').src = window.URL.createObjectURL(this.files[0])">
                             </label>
-                            <p class="text-center mt-2">{{translate('messages.image_ratio_16:9')}}</p>
+                            <p class="text-center mt-2">{{'relación de imagen 16:9'}}</p>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="form-label">{{translate('messages.select_items')}}</label>
-                            <select name="items[]" class="form-control select2-items" multiple data-placeholder="{{translate('messages.select_items')}}">
+                            <label class="form-label">{{'seleccionar elementos'}}</label>
+                            <select name="items[]" class="form-control select2-items" multiple data-placeholder="{{'seleccionar elementos'}}">
                                 @foreach($items as $item)
                                     <option value="{{$item->id}}" {{in_array($item->id, $selectedItems) ? 'selected' : ''}}>{{$item->name}}</option>
                                 @endforeach
@@ -74,14 +74,14 @@
                                 <span class="toggle-switch-label">
                                     <span class="toggle-switch-indicator"></span>
                                 </span>
-                                <span class="ml-2">{{translate('messages.show_title')}}</span>
+                                <span class="ml-2">{{'mostrar título'}}</span>
                             </label>
                         </div>
                     </div>
                 </div>
                 <div class="btn--container justify-content-end">
-                    <a href="{{route('admin.dynamic-section.add-new')}}" class="btn btn--reset">{{translate('messages.back')}}</a>
-                    <button type="submit" class="btn btn--primary">{{translate('messages.update')}}</button>
+                    <a href="{{route('admin.dynamic-section.add-new')}}" class="btn btn--reset">{{'atrás'}}</a>
+                    <button type="submit" class="btn btn--primary">{{'actualizar'}}</button>
                 </div>
             </form>
         </div>
@@ -94,7 +94,7 @@
 <script>
     $(document).ready(function() {
         $('.select2-items').select2({
-            placeholder: "{{translate('messages.select_items')}}",
+            placeholder: "{{'seleccionar elementos'}}",
             allowClear: true
         });
     });

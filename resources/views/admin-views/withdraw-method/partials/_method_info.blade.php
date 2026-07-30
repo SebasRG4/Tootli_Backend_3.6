@@ -1,9 +1,9 @@
 {{-- {{ dd($withdrawal_method) }} --}}
 
 <div class="modal-body pt-0 pb-2">
-    <h4 class="text-center mb-1">{{translate('withdraw_Method_List')}}</h4>
+    <h4 class="text-center mb-1">{{'retirar lista de métodos'}}</h4>
     <div class="d-flex justify-content-center  align-items-center gap-2">
-        <span>{{translate('method_Name')}}</span>
+        <span>{{'Nombre del método'}}</span>
         :
         <span class="font-semibold text-dark">{{ $withdrawal_method->method_name }}</span>
     </div>
@@ -17,9 +17,9 @@
                 <td class="px-4 {{1+$key === 1 ? "border-top-0" : ""}}">{{1+$key}}</td>
                 <td class="{{1+$key === 1 ? "border-top-0" : ""}}">
                     <div>
-                        <div>{{ translate('messages.Name')}}: {{ translate($method_field['input_name'])}}</div>
-                        <div>{{ translate('messages.Type')}}: {{ translate($method_field['input_type']) }}</div>
-                        <div>{{ translate('messages.Placeholder')}}: {{ $method_field['placeholder'] }}</div>
+                        <div>{{ 'Nombre'}}: {{ translate($method_field['input_name'])}}</div>
+                        <div>{{ 'Tipo'}}: {{ translate($method_field['input_type']) }}</div>
+                        <div>{{ 'Marcador de posición'}}: {{ $method_field['placeholder'] }}</div>
                     </div>
                 </td>
                 <td class="{{1+$key === 1 ? "border-top-0" : ""}}">
@@ -30,7 +30,7 @@
                             </svg>' :
                             ''
                         !!}
-                        {{ $method_field['is_required'] ? translate('messages.Required') :  translate('messages.Optional') }}
+                        {{ $method_field['is_required'] ? 'Requerido' :  'Opcional' }}
                     </div>
                 </td>
             </tr>

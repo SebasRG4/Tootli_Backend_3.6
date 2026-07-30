@@ -24,7 +24,7 @@
                 <div>{{$order->customer['phone']}}</div>
             </a>
         @else
-            <label class="badge badge-danger">{{translate('messages.invalid_customer_data')}}</label>
+            <label class="badge badge-danger">{{'datos de cliente no válidos'}}</label>
         @endif
     </td>
     @if ($parcel_order)
@@ -32,11 +32,11 @@
     @endif
     <td>
         @if ($parcel_order)
-            <div>{{Str::limit($order->parcel_category?$order->parcel_category->name:translate('messages.not_found'),20,'...')}}</div>
+            <div>{{Str::limit($order->parcel_category?$order->parcel_category->name:'extraviado',20,'...')}}</div>
         @elseif ($order->store)
-            <div><a  class="text--title" href="{{route('admin.store.view', [$order->store_id,'module_id'=>$order['module_id']])}}" alt="view store">{{Str::limit($order->store?$order->store->name:translate('messages.store deleted!'),20,'...')}}</a></div>
+            <div><a  class="text--title" href="{{route('admin.store.view', [$order->store_id,'module_id'=>$order['module_id']])}}" alt="view store">{{Str::limit($order->store?$order->store->name:'tienda eliminada!',20,'...')}}</a></div>
         @else
-            <div>{{Str::limit(translate('messages.not_found'),20,'...')}}</div>
+            <div>{{Str::limit('extraviado',20,'...')}}</div>
         @endif
     </td>
     <td>
@@ -46,15 +46,15 @@
             </div>
             @if($order->payment_status=='paid')
             <strong class="text-success">
-                {{translate('messages.paid')}}
+                {{'pagado'}}
             </strong>
             @elseif($order->payment_status=='partially_paid')
             <strong class="text-success">
-                {{translate('messages.partially_paid')}}
+                {{'parcialmente pagado'}}
             </strong>
             @else
             <strong class="text-danger">
-                {{translate('messages.unpaid')}}
+                {{'no pagado'}}
             </strong>
             @endif
         </div>
@@ -62,27 +62,27 @@
     <td class="text-capitalize text-center">
         @if($order['order_status']=='pending')
             <span class="badge badge-soft-info">
-              {{translate('messages.pending')}}
+              {{'Pendiente'}}
             </span>
         @elseif($order['order_status']=='confirmed')
             <span class="badge badge-soft-info">
-              {{translate('messages.confirmed')}}
+              {{'confirmado'}}
             </span>
         @elseif($order['order_status']=='processing')
             <span class="badge badge-soft-warning">
-              {{translate('messages.processing')}}
+              {{'tratamiento'}}
             </span>
         @elseif($order['order_status']=='picked_up')
             <span class="badge badge-soft-warning">
-              {{translate('messages.out_for_delivery')}}
+              {{'En Camino de Entrega'}}
             </span>
         @elseif($order['order_status']=='delivered')
             <span class="badge badge-soft-success">
-              {{translate('messages.delivered')}}
+              {{'Entregado'}}
             </span>
         @elseif($order['order_status']=='failed')
             <span class="badge badge-soft-danger">
-              {{translate('messages.payment_failed')}}
+              {{'pago fallido'}}
             </span>
         @else
             <span class="badge badge-soft-danger">
@@ -91,11 +91,11 @@
         @endif
         @if($order['order_type']=='take_away')
             <div class="text-info mt-1">
-                {{translate('messages.take_away')}}
+                {{'llevar'}}
             </div>
         @else
             <div class="text-title mt-1">
-              {{translate('messages.home Delivery')}}
+              {{'entrega a domicilio'}}
             </div>
         @endif
     </td>
@@ -120,7 +120,7 @@
         <div class="empty--data">
             <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
             <h5>
-                {{translate('no_data_found')}}
+                {{'no se encontraron datos'}}
             </h5>
         </div>
     </td>

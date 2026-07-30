@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Review List'))
+@section('title', 'Lista de revisión')
 
 @push('css_or_js')
 @endpush
@@ -11,7 +11,7 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-sm mb-2 mb-sm-0">
-                    <h1 class="page-header-title">{{ translate('Review List') }} <span
+                    <h1 class="page-header-title">{{ 'Lista de revisión' }} <span
                             class="badge badge-soft-dark ml-2">{{ $reviews->total() }}</span></h1>
                 </div>
             </div>
@@ -23,14 +23,14 @@
             <!-- Header -->
             <div class="card-header">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title">{{ translate('Review List') }} </h5>
+                    <h5 class="card-title">{{ 'Lista de revisión' }} </h5>
                     <form action="{{ url()->current() }}">
                         <div class="input-group input--group">
                             <input id="datatableSearch_" type="search" name="search" class="form-control"
-                                placeholder="{{ translate('Search by Reviewer Name or Comment') }}"
-                                aria-label="{{ translate('messages.search') }}" value="{{ $search }}">
+                                placeholder="{{ 'Buscar por nombre del revisor o comentario' }}"
+                                aria-label="{{ 'buscar' }}" value="{{ $search }}">
                             <div class="input-group-append">
-                                <button type="submit" class="btn btn-primary">{{ translate('messages.search') }}</button>
+                                <button type="submit" class="btn btn-primary">{{ 'buscar' }}</button>
                             </div>
                         </div>
                     </form>
@@ -38,7 +38,7 @@
                     <!-- Filter by Store -->
                     <form action="{{ url()->current() }}" method="GET" class="ml-2">
                         <select name="store_id" class="form-control js-select2-custom" onchange="this.form.submit()">
-                            <option value="">{{ translate('All Restaurants') }}</option>
+                            <option value="">{{ 'Todos los restaurantes' }}</option>
                             @foreach($stores as $store)
                                 <option value="{{ $store->id }}" {{ $store_id == $store->id ? 'selected' : '' }}>
                                     {{ $store->name }}</option>
@@ -60,13 +60,13 @@
                         }'>
                     <thead class="thead-light">
                         <tr>
-                            <th>{{ translate('messages.sl') }}</th>
-                            <th>{{ translate('messages.item') }}</th>
-                            <th>{{ translate('messages.reviewer') }}</th>
-                            <th>{{ translate('messages.review') }}</th>
-                            <th>{{ translate('messages.rating') }}</th>
-                            <th>{{ translate('messages.status') }}</th>
-                            <th>{{ translate('messages.action') }}</th>
+                            <th>{{ 'SL' }}</th>
+                            <th>{{ 'Producto' }}</th>
+                            <th>{{ 'crítico' }}</th>
+                            <th>{{ 'revisar' }}</th>
+                            <th>{{ 'clasificación' }}</th>
+                            <th>{{ 'estado' }}</th>
+                            <th>{{ 'acción' }}</th>
                         </tr>
                     </thead>
 
@@ -80,7 +80,7 @@
                                             {{ Str::limit($review->item['name'], 20, '...') }}
                                         </a>
                                     @else
-                                        <label class="badge badge-soft-danger">{{ translate('messages.Item deleted') }}</label>
+                                        <label class="badge badge-soft-danger">{{ 'Artículo eliminado' }}</label>
                                     @endif
                                 </td>
                                 <td>
@@ -89,7 +89,7 @@
                                             {{ $review->customer['f_name'] . ' ' . $review->customer['l_name'] }}
                                         </a>
                                     @else
-                                        <label class="badge badge-soft-danger">{{ translate('messages.Customer deleted') }}</label>
+                                        <label class="badge badge-soft-danger">{{ 'Cliente eliminado' }}</label>
                                     @endif
                                 </td>
                                 <td>
@@ -104,9 +104,9 @@
                                 </td>
                                 <td>
                                     @if ($review->status == 1)
-                                        <label class="badge badge-soft-success">{{ translate('messages.Active') }}</label>
+                                        <label class="badge badge-soft-success">{{ 'Activo' }}</label>
                                     @else
-                                        <label class="badge badge-soft-danger">{{ translate('messages.Blocked') }}</label>
+                                        <label class="badge badge-soft-danger">{{ 'Obstruido' }}</label>
                                     @endif
                                 </td>
                                 <td>
@@ -116,7 +116,7 @@
                                             <i class="tio-edit"></i>
                                         </a>
                                         <a class="btn btn-sm btn--danger btn-outline-danger action-btn" href="javascript:"
-                                            onclick="form_alert('review-{{ $review['id'] }}','{{ translate('Want to delete this review ?') }}')">
+                                            onclick="form_alert('review-{{ $review['id'] }}','{{ '¿Quieres eliminar esta reseña?' }}')">
                                             <i class="tio-delete-outlined"></i>
                                         </a>
                                         <form action="{{ route('admin.sabores.reviews.delete', ['id' => $review['id']]) }}"

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.Add new category'))
+@section('title', 'Agregar nueva categoría')
 
 @push('css_or_js')
 @endpush
@@ -14,7 +14,7 @@
                     <img src="{{ asset('assets/admin/img/category.png') }}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{ translate('add_new_category') }}
+                    {{ 'agregar nueva categoría' }}
                 </span>
             </h1>
         </div>
@@ -30,7 +30,7 @@
                         <ul class="nav nav-tabs mb-4 border-0">
                             <li class="nav-item">
                                 <a class="nav-link lang_link active" href="#"
-                                    id="default-link">{{ translate('messages.default') }}</a>
+                                    id="default-link">{{ 'por defecto' }}</a>
                             </li>
                             @foreach ($language as $lang)
                                 <li class="nav-item">
@@ -45,26 +45,26 @@
                             @if ($language)
                                 <div class="form-group lang_form" id="default-form">
                                     <label class="input-label"
-                                        for="exampleFormControlInput1">{{ translate('messages.name') }}
-                                        ({{ translate('messages.default') }})
+                                        for="exampleFormControlInput1">{{ 'nombre' }}
+                                        ({{ 'por defecto' }})
                                         <span class="form-label-secondary text-danger" data-toggle="tooltip"
                                             data-placement="right"
-                                            data-original-title="{{ translate('messages.Required.') }}"> *
+                                            data-original-title="{{ 'Requerido.' }}"> *
                                         </span>
 
                                     </label>
                                     <input type="text" name="name[]" value="{{ old('name.0') }}" class="form-control"
-                                        placeholder="{{ translate('messages.new_category') }}" maxlength="191">
+                                        placeholder="{{ 'nueva categoría' }}" maxlength="191">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 @foreach ($language as $key => $lang)
                                     <div class="form-group d-none lang_form" id="{{ $lang }}-form">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.name') }}
+                                            for="exampleFormControlInput1">{{ 'nombre' }}
                                             ({{ strtoupper($lang) }})
                                         </label>
                                         <input type="text" name="name[]" value="{{ old('name.' . $key + 1) }}"
-                                            class="form-control" placeholder="{{ translate('messages.new_category') }}"
+                                            class="form-control" placeholder="{{ 'nueva categoría' }}"
                                             maxlength="191">
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{ $lang }}">
@@ -72,9 +72,9 @@
                             @else
                                 <div class="form-group">
                                     <label class="input-label"
-                                        for="exampleFormControlInput1">{{ translate('messages.name') }}</label>
+                                        for="exampleFormControlInput1">{{ 'nombre' }}</label>
                                     <input type="text" name="name" class="form-control"
-                                        placeholder="{{ translate('messages.new_category') }}" value="{{ old('name') }}"
+                                        placeholder="{{ 'nueva categoría' }}" value="{{ old('name') }}"
                                         maxlength="191">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
@@ -83,20 +83,20 @@
 
                             <div class="form-group">
                                 <label class="input-label" for="">
-                                    {{ translate('messages.Priority') }}
+                                    {{ 'Prioridad' }}
                                 </label>
                                 <select required name="priority"
-                                    data-original-title="{{ translate('messages.Select_Priority') }}"
+                                    data-original-title="{{ 'Seleccionar prioridad' }}"
                                     class="custom-select">
-                                    <option value="0">{{ translate('messages.Normal') }}</option>
-                                    <option value="1">{{ translate('messages.Medium') }}</option>
-                                    <option value="2">{{ translate('messages.High') }}</option>
+                                    <option value="0">{{ 'Normal' }}</option>
+                                    <option value="1">{{ 'Medio' }}</option>
+                                    <option value="2">{{ 'Alto' }}</option>
                                 </select>
                             </div>
 
                             <div class="form-group">
                                 <label class="toggle-switch toggle-switch-sm d-flex justify-content-between align-items-center" for="is_abastos">
-                                    <span class="input-label mb-0 text-capitalize">{{ translate('Tootli Abastos') }}</span>
+                                    <span class="input-label mb-0 text-capitalize">{{ 'Tootli Abastos' }}</span>
                                     <input type="checkbox" name="is_abastos" class="toggle-switch-input" id="is_abastos" value="1"
                                         {{ request()->query('is_abastos') == 1 ? 'checked' : '' }}>
                                     <span class="toggle-switch-label mx-auto">
@@ -109,7 +109,7 @@
                             </div>
 
                             @if ($categoryWiseTax)
-                                <span class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rate') }}</span>
+                                <span class="mb-2 d-block title-clr fw-normal">{{ 'Seleccionar tasa impositiva' }}</span>
                                 <select name="tax_ids[]" id="tax__rate"
                                     class="form-control js-select2-custom js-select2-counting" multiple="multiple" required
                                     placeholder="Type & Select Tax Rate">
@@ -124,8 +124,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="h-100 d-flex align-items-center flex-column">
-                                <label class="mb-3 text-center">{{ translate('messages.image') }} <small
-                                        class="text-danger">* ( {{ translate('messages.ratio') }} 1:1)</small></label>
+                                <label class="mb-3 text-center">{{ 'imagen' }} <small
+                                        class="text-danger">* ( {{ 'relación' }} 1:1)</small></label>
                                 <label class="text-center my-auto position-relative d-inline-block">
                                     <img class="img--176 border" id="viewer"
                                         @if (isset($category)) src="{{ asset('storage/app/public/category') }}/{{ $category['image'] }}"
@@ -146,9 +146,9 @@
                     </div>
                     <div class="btn--container justify-content-end mt-20">
                         <button type="reset" id="reset_btn"
-                            class="btn btn--reset">{{ translate('messages.reset') }}</button>
+                            class="btn btn--reset">{{ 'reiniciar' }}</button>
                         <button type="submit"
-                            class="btn btn--primary">{{ isset($category) ? translate('messages.update') : translate('messages.add') }}</button>
+                            class="btn btn--primary">{{ isset($category) ? 'actualizar' : 'agregar' }}</button>
                     </div>
 
                 </form>
@@ -158,15 +158,15 @@
         <div class="card mt-3">
             <div class="card-header py-2 border-0">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title">{{ translate('messages.category_list') }}<span
+                    <h5 class="card-title">{{ 'lista de categorías' }}<span
                             class="badge badge-soft-dark ml-2" id="itemCount">{{ $categories->total() }}</span></h5>
 
                     <form class="search-form w-340-lg">
                         <!-- Search -->
                         <div class="input-group input--group">
                             <input type="search" name="search" value="{{ request()?->search ?? null }}"
-                                class="form-control h-40" placeholder="{{ translate('messages.search_categories') }}"
-                                aria-label="{{ translate('messages.ex_:_categories') }}">
+                                class="form-control h-40" placeholder="{{ 'categorías de búsqueda' }}"
+                                aria-label="{{ 'ej: categorías' }}">
                             <input type="hidden" name="position" value="0">
                             <button type="submit" class="btn btn--primary h-40"><i class="tio-search"></i></button>
                         </div>
@@ -174,7 +174,7 @@
                     </form>
                     @if (request()->get('search'))
                         <button type="reset" class="btn btn--primary ml-2 location-reload-to-category"
-                            data-url="{{ url()->full() }}">{{ translate('messages.reset') }}</button>
+                            data-url="{{ url()->full() }}">{{ 'reiniciar' }}</button>
                     @endif
                     <!-- Unfold -->
                     <div class="hs-unfold mr-2">
@@ -184,26 +184,26 @@
                                     "target": "#usersExportDropdown",
                                     "type": "css-animation"
                                 }'>
-                            <i class="tio-download-to mr-1 text-title"></i> {{ translate('messages.export') }}
+                            <i class="tio-download-to mr-1 text-title"></i> {{ 'exportar' }}
                         </a>
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
 
-                            <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                            <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                             <a id="export-excel" class="dropdown-item"
                                 href="{{ route('admin.category.export-categories', ['type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
-                                {{ translate('messages.excel') }}
+                                {{ 'sobresalir' }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
                                 href="{{ route('admin.category.export-categories', ['type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
-                                .{{ translate('messages.csv') }}
+                                .{{ 'csv' }}
                             </a>
 
                         </div>
@@ -222,16 +222,16 @@
                         }'>
                         <thead class="bg-table-head">
                             <tr>
-                                <th class=" text-title border-0">{{ translate('sl') }}</th>
-                                <th class=" text-title border-0">{{ translate('messages.id') }}</th>
-                                <th class=" text-title border-0 w--1">{{ translate('messages.name') }}</th>
-                                <th class=" text-title border-0 text-center">{{ translate('messages.status') }}</th>
-                                <th class=" text-title border-0 text-center">{{ translate('messages.featured') }}</th>
+                                <th class=" text-title border-0">{{ 'SL' }}</th>
+                                <th class=" text-title border-0">{{ 'identificación' }}</th>
+                                <th class=" text-title border-0 w--1">{{ 'nombre' }}</th>
+                                <th class=" text-title border-0 text-center">{{ 'estado' }}</th>
+                                <th class=" text-title border-0 text-center">{{ 'presentado' }}</th>
                                 @if ($categoryWiseTax)
-                                    <th class=" text-title border-0 ">{{ translate('messages.Vat/Tax') }}</th>
+                                    <th class=" text-title border-0 ">{{ 'IVA/Impuesto' }}</th>
                                 @endif
-                                <th class=" text-title border-0 text-center">{{ translate('messages.priority') }}</th>
-                                <th class=" text-title border-0 text-center">{{ translate('messages.action') }}</th>
+                                <th class=" text-title border-0 text-center">{{ 'prioridad' }}</th>
+                                <th class=" text-title border-0 text-center">{{ 'acción' }}</th>
                             </tr>
                         </thead>
 
@@ -265,10 +265,10 @@
                                                 data-type="status"
                                                 data-image-on="{{ asset('assets/admin/img/status-ons.png') }}"
                                                 data-image-off="{{ asset('assets/admin/img/off-danger.png') }}"
-                                                data-title-on="{{ translate('Do you want to Featured this category ?') }}"
-                                                data-title-off="{{ translate('Do you want to remove this category from featured ?') }}"
-                                                data-text-on="<p>{{ translate('If you turn on this category as a featured category it will show in customer app landing page.') }}"
-                                                data-text-off="<p>{{ translate('If you turn off this category from featured category it will not show in customer app landing page.') }}</p>"
+                                                data-title-on="{{ '¿Quieres destacar esta categoría?' }}"
+                                                data-title-off="{{ '¿Quieres eliminar esta categoría de destacados?' }}"
+                                                data-text-on="<p>{{ 'Si activa esta categoría como categoría destacada, se mostrará en la página de inicio de la aplicación del cliente.' }}"
+                                                data-text-off="<p>{{ 'Si desactiva esta categoría de la categoría destacada, no se mostrará en la página de inicio de la aplicación del cliente.' }}</p>"
                                                 class="toggle-switch-input dynamic-checkbox"
                                                 id="featuredCheckbox{{ $category->id }}"
                                                 {{ $category->featured ? 'checked' : '' }}>
@@ -293,7 +293,7 @@
                                                         </span> </span>
                                                     <br>
                                                 @empty
-                                                    <span> {{ translate('messages.no_tax') }} </span>
+                                                    <span> {{ 'sin impuestos' }} </span>
                                                 @endforelse
                                             </span>
                                         </td>
@@ -305,13 +305,13 @@
                                                 class="form-control form--control-select  priority-select  mx-auto {{ $category->priority == 0 ? 'text-title' : '' }} {{ $category->priority == 1 ? 'text-info' : '' }} {{ $category->priority == 2 ? 'text-success' : '' }}">
                                                 <option value="0" class="text--title"
                                                     {{ $category->priority == 0 ? 'selected' : '' }}>
-                                                    {{ translate('messages.normal') }}</option>
+                                                    {{ 'normal' }}</option>
                                                 <option value="1" class="text--title"
                                                     {{ $category->priority == 1 ? 'selected' : '' }}>
-                                                    {{ translate('messages.medium') }}</option>
+                                                    {{ 'medio' }}</option>
                                                 <option value="2" class="text--title"
                                                     {{ $category->priority == 2 ? 'selected' : '' }}>
-                                                    {{ translate('messages.high') }}</option>
+                                                    {{ 'alto' }}</option>
                                             </select>
                                         </form>
 
@@ -327,8 +327,8 @@
                                             </a>
                                             <a class="btn action-btn btn--danger btn-outline-danger form-alert"
                                                 href="javascript:" data-id="category-{{ $category['id'] }}"
-                                                data-message="{{ translate('Want to delete this category') }}"
-                                                title="{{ translate('messages.delete_category') }}"><i
+                                                data-message="{{ 'Quiere eliminar esta categoría' }}"
+                                                title="{{ 'eliminar categoría' }}"><i
                                                     class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{ route('admin.category.delete', [$category['id']]) }}"
@@ -351,7 +351,7 @@
                 <div class="empty--data">
                     <img src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
                     <h5>
-                        {{ translate('no_data_found') }}
+                        {{ 'no se encontraron datos' }}
                     </h5>
                 </div>
             @endif

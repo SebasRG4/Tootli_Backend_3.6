@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title',translate('messages.profile_settings'))
+@section('title','configuración de perfil')
 
 @push('css_or_js')
 <link href="{{asset('assets/back-end/css/croppie.css')}}" rel="stylesheet">
@@ -14,12 +14,12 @@
         <div class="page-header">
             <div class="row align-items-end">
                 <div class="col-sm mb-2 mb-sm-0">
-                    <h1 class="page-header-title">{{translate('messages.Settings')}}</h1>
+                    <h1 class="page-header-title">{{'Configuración'}}</h1>
                 </div>
 
                 <div class="col-sm-auto">
                     <a class="btn btn-primary" href="{{route('seller.dashboard')}}">
-                        <i class="tio-home mr-1"></i> {{translate('messages.Dashboard')}}
+                        <i class="tio-home mr-1"></i> {{'Panel de Control'}}
                     </a>
                 </div>
             </div>
@@ -36,7 +36,7 @@
                             aria-label="Toggle navigation" aria-expanded="false" aria-controls="navbarVerticalNavMenu"
                             data-toggle="collapse" data-target="#navbarVerticalNavMenu">
                 <span class="d-flex justify-content-between align-items-center">
-                  <span class="h5 mb-0"> {{translate('messages.Nav_menu')}} </span>
+                  <span class="h5 mb-0"> {{'Menú de navegación'}} </span>
 
                   <span class="navbar-toggle-default">
                     <i class="tio-menu-hamburger"></i>
@@ -55,12 +55,12 @@
                             class="js-sticky-block js-scrollspy navbar-nav navbar-nav-lg nav-tabs card card-navbar-nav">
                             <li class="nav-item">
                                 <a class="nav-link active" href="javascript:" id="generalSection">
-                                    <i class="tio-user-outlined nav-icon"></i>{{translate('messages.Basic_information')}}
+                                    <i class="tio-user-outlined nav-icon"></i>{{'Información básica'}}
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="javascript:" id="passwordSection">
-                                    <i class="tio-lock-outlined nav-icon"></i> {{translate('messages.Password')}}
+                                    <i class="tio-lock-outlined nav-icon"></i> {{'Contraseña'}}
                                 </a>
                             </li>
                         </ul>
@@ -98,7 +98,7 @@
                     <!-- Card -->
                     <div class="card mb-3 mb-lg-5">
                         <div class="card-header">
-                            <h2 class="card-title h4">{{translate('messages.Basic_information')}}</h2>
+                            <h2 class="card-title h4">{{'Información básica'}}</h2>
                         </div>
 
                         <!-- Body -->
@@ -106,19 +106,19 @@
                             <!-- Form -->
                             <!-- Form Group -->
                             <div class="row form-group">
-                                <label for="firstNameLabel" class="col-sm-3 col-form-label input-label">{{translate('messages.Full_name')}}  <i
+                                <label for="firstNameLabel" class="col-sm-3 col-form-label input-label">{{'nombre completo'}}  <i
                                         class="tio-help-outlined text-body ml-1" data-toggle="tooltip"
                                         data-placement="top"
-                                        title="{{ translate('Display_name') }}"></i></label>
+                                        title="{{ 'Nombre para mostrar' }}"></i></label>
 
                                 <div class="col-sm-9 row">
                                     <div class="col-md-6">
-                                        <label for="name">First {{translate('messages.Name')}}  <span class="text-danger">*</span></label>
+                                        <label for="name">First {{'Nombre'}}  <span class="text-danger">*</span></label>
                                         <input type="text" name="f_name" value="{{$data->f_name}}" class="form-control" id="name"
                                                required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="name">{{translate('messages.Last_Name')}}  <span class="text-danger">*</span></label>
+                                        <label for="name">{{'Apellido'}}  <span class="text-danger">*</span></label>
                                         <input type="text" name="l_name" value="{{$data->l_name}}" class="form-control" id="name"
                                                required>
                                     </div>
@@ -128,8 +128,8 @@
 
                             <!-- Form Group -->
                             <div class="row form-group">
-                                <label for="phoneLabel" class="col-sm-3 col-form-label input-label">{{translate('messages.Phone')}} <span
-                                        class="input-label-secondary">({{ translate('Optional') }})</span></label>
+                                <label for="phoneLabel" class="col-sm-3 col-form-label input-label">{{'Teléfono'}} <span
+                                        class="input-label-secondary">({{ 'Opcional' }})</span></label>
 
                                 <div class="col-sm-9">
                                     <input type="tel" class="js-masked-input form-control" name="phone" id="phoneLabel"
@@ -143,12 +143,12 @@
                             <!-- End Form Group -->
 
                             <div class="row form-group">
-                                <label for="newEmailLabel" class="col-sm-3 col-form-label input-label">{{translate('messages.Email')}}</label>
+                                <label for="newEmailLabel" class="col-sm-3 col-form-label input-label">{{'Correo electrónico'}}</label>
 
                                 <div class="col-sm-9">
                                     <input type="email" class="form-control" name="email" id="newEmailLabel"
                                            value="{{$data->email}}"
-                                           placeholder="{{translate('messages.enter_new_email_address')}}" aria-label="{{translate('messages.enter_new_email_address')}}">
+                                           placeholder="{{'introduce una nueva dirección de correo electrónico'}}" aria-label="{{'introduce una nueva dirección de correo electrónico'}}">
                                 </div>
                             </div>
 
@@ -159,13 +159,13 @@
                                     <div class="custom-file">
                                         <input type="file" name="image" id="customFileUpload" class="custom-file-input"
                                             accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                        <label class="custom-file-label" for="customFileUpload">{{translate('messages.image_Upload')}}</label>
+                                        <label class="custom-file-label" for="customFileUpload">{{'subir imagen'}}</label>
                                     </div>
                                 </div>
                                 </div>
 
                             <div class="d-flex justify-content-end">
-                                <button type="button" data-id="seller-profile-form" data-message="{{ translate('Want to update seller info') }}" class="btn btn-primary {{env('APP_MODE')!='demo'?'form-alert':'call-demo'}}">{{ translate('messages.Save_changes') }}</button>
+                                <button type="button" data-id="seller-profile-form" data-message="{{ 'Quiere actualizar la información del vendedor' }}" class="btn btn-primary {{env('APP_MODE')!='demo'?'form-alert':'call-demo'}}">{{ 'Guardar cambios' }}</button>
                             </div>
 
                             <!-- End Form -->
@@ -178,7 +178,7 @@
                 <!-- Card -->
                 <div id="passwordDiv" class="card mb-3 mb-lg-5">
                     <div class="card-header">
-                        <h4 class="card-title">{{translate('messages.Change_your_password')}}</h4>
+                        <h4 class="card-title">{{'Cambia tu contraseña'}}</h4>
                     </div>
 
                     <!-- Body -->
@@ -190,12 +190,12 @@
 
                         <!-- Form Group -->
                             <div class="row form-group">
-                                <label for="newPassword" class="col-sm-3 col-form-label input-label"> {{translate('messages.New_password')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-        data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"></span></label>
+                                <label for="newPassword" class="col-sm-3 col-form-label input-label"> {{'Nueva contraseña'}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+        data-original-title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"></span></label>
 
                                 <div class="col-sm-9">
                                     <input type="password" class="js-pwstrength form-control" name="password"
-                                           id="newPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"
+                                           id="newPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"
                                            placeholder="{{ translate('messages.password_length_placeholder', ['length' => '8+']) }}"
                                            aria-label="8+ characters required"
                                            data-hs-pwstrength-options='{
@@ -217,12 +217,12 @@
 
                             <!-- Form Group -->
                             <div class="row form-group">
-                                <label for="confirmNewPasswordLabel" class="col-sm-3 col-form-label input-label"> {{translate('messages.Confirm_password')}} </label>
+                                <label for="confirmNewPasswordLabel" class="col-sm-3 col-form-label input-label"> {{'Confirmar Contraseña'}} </label>
 
                                 <div class="col-sm-9">
                                     <div class="mb-3">
                                         <input type="password" class="form-control" name="confirm_password"
-                                               id="confirmNewPasswordLabel" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"
+                                               id="confirmNewPasswordLabel" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"
                                                placeholder="{{ translate('messages.password_length_placeholder', ['length' => '8+']) }}"
                                                aria-label="8+ characters required">
                                     </div>
@@ -231,7 +231,7 @@
                             <!-- End Form Group -->
 
                             <div class="d-flex justify-content-end">
-                                <button type="button" data-id="changePasswordForm" data-message="{{translate('messages.want_to_update_password')}}" class="btn btn-primary {{env('APP_MODE')!='demo'?'form-alert':'call-demo'}}">{{translate('messages.Save_changes')}}</button>
+                                <button type="button" data-id="changePasswordForm" data-message="{{'quiero actualizar la contraseña'}}" class="btn btn-primary {{env('APP_MODE')!='demo'?'form-alert':'call-demo'}}">{{'Guardar cambios'}}</button>
                             </div>
                         </form>
                         <!-- End Form -->

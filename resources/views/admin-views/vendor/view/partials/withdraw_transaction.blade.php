@@ -3,11 +3,11 @@
         <table id="datatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
             <thead class="thead-light">
                 <tr>
-                    <th class="border-0">{{translate('messages.sl#')}}</th>
-                    <th class="border-0">{{translate('messages.created_at')}}</th>
-                    <th class="border-0">{{translate('messages.amount')}}</th>
-                    <th class="border-0">{{translate('messages.status')}}</th>
-                    <th class="border-0">{{translate('messages.action')}}</th>
+                    <th class="border-0">{{'sl#'}}</th>
+                    <th class="border-0">{{'creado en'}}</th>
+                    <th class="border-0">{{'cantidad'}}</th>
+                    <th class="border-0">{{'estado'}}</th>
+                    <th class="border-0">{{'acción'}}</th>
                 </tr>
             </thead>
             <tbody>
@@ -19,11 +19,11 @@
                     <td>{{\App\CentralLogics\Helpers::format_currency($wt->amount)}}</td>
                     <td>
                         @if($wt->approved==0)
-                            <label class="badge badge-primary">{{ translate('messages.pending') }}</label>
+                            <label class="badge badge-primary">{{ 'Pendiente' }}</label>
                         @elseif($wt->approved==1)
-                            <label class="badge badge-success">{{ translate('messages.approved') }}</label>
+                            <label class="badge badge-success">{{ 'aprobado' }}</label>
                         @else
-                            <label class="badge badge-danger">{{ translate('messages.denied') }}</label>
+                            <label class="badge badge-danger">{{ 'denegado' }}</label>
                         @endif
                     </td>
                     <td>
@@ -47,7 +47,7 @@
 <div class="empty--data">
     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
     <h5>
-        {{translate('no_data_found')}}
+        {{'no se encontraron datos'}}
     </h5>
 </div>
 @endif

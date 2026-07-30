@@ -168,15 +168,15 @@
                 </div>
                 <div class="col-lg-2">
                     <h5 class="text-white mb-4">Compañía</h5>
-                    <a href="{{route('about-us')}}" class="footer-link">{{ translate('messages.about_us') }}</a>
-                    <a href="{{route('contact-us')}}" class="footer-link">{{ translate('messages.contact_us') }}</a>
+                    <a href="{{route('about-us')}}" class="footer-link">{{ 'sobre nosotros' }}</a>
+                    <a href="{{route('contact-us')}}" class="footer-link">{{ 'contáctanos' }}</a>
                 </div>
                 <div class="col-lg-2">
                     <h5 class="text-white mb-4">Legal</h5>
-                    <a href="{{route('privacy-policy')}}" class="footer-link">{{ translate('messages.privacy_policy') }}</a>
-                    <a href="{{route('terms-and-conditions')}}" class="footer-link">{{ translate('messages.terms_and_condition') }}</a>
+                    <a href="{{route('privacy-policy')}}" class="footer-link">{{ 'política de privacidad' }}</a>
+                    <a href="{{route('terms-and-conditions')}}" class="footer-link">{{ 'términos y condiciones' }}</a>
                     @if (isset($landing_data['refund_policy_status']) && $landing_data['refund_policy_status'] == 1)
-                        <a href="{{route('refund')}}" class="footer-link">{{ translate('messages.Refund Policy') }}</a>
+                        <a href="{{route('refund')}}" class="footer-link">{{ 'Política de reembolso' }}</a>
                     @endif
                 </div>
                 <div class="col-lg-4">

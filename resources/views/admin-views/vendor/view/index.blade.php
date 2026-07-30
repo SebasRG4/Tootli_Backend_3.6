@@ -19,7 +19,7 @@
                     <div class="card h-100 card--bg-1">
                         <div class="card-body text-center d-flex flex-column justify-content-center align-items-center">
                             <h5 class="cash--subtitle text-white">
-                                {{ translate('messages.collected_cash_by_store') }}
+                                {{ 'efectivo cobrado por tienda' }}
                             </h5>
                             <div class="d-flex align-items-center justify-content-center mt-3">
                                 <div class="cash-icon mr-3">
@@ -32,9 +32,9 @@
                         <div class="card-footer pt-0 bg-transparent border-0">
                             <button class="btn text-white text-capitalize bg--title h--45px w-100" id="collect_cash"
                                 type="button" data-toggle="modal" data-target="#collect-cash"
-                                title="Collect Cash">{{ translate('messages.collect_cash_from_store') }}
+                                title="Collect Cash">{{ 'recoger efectivo de la tienda' }}
                             </button>
-                            {{-- <a class="btn text-white text-capitalize bg--title h--45px w-100" href="{{$store->vendor->status ? route('admin.transactions.account-transaction.index') : '#'}}" title="{{translate('messages.goto_account_transaction')}}">{{translate('messages.collect_cash_from_store')}}</a> --}}
+                            {{-- <a class="btn text-white text-capitalize bg--title h--45px w-100" href="{{$store->vendor->status ? route('admin.transactions.account-transaction.index') : '#'}}" title="{{'ir a transacción de cuenta'}}">{{'recoger efectivo de la tienda'}}</a> --}}
                         </div>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
                             <div class="resturant-card card--bg-2">
                                 <h4 class="title">
                                     {{ \App\CentralLogics\Helpers::format_currency($wallet->pending_withdraw) }}</h4>
-                                <div class="subtitle">{{ translate('messages.pending_withdraw') }}</div>
+                                <div class="subtitle">{{ 'pendiente de retiro' }}</div>
                                 <img class="resturant-icon w--30"
                                     src="{{ asset('assets/admin/img/transactions/pending.png') }}" alt="transaction">
                             </div>
@@ -56,7 +56,7 @@
                             <div class="resturant-card card--bg-3">
                                 <h4 class="title">
                                     {{ \App\CentralLogics\Helpers::format_currency($wallet->total_withdrawn) }}</h4>
-                                <div class="subtitle">{{ translate('messages.total_withdrawal_amount') }}</div>
+                                <div class="subtitle">{{ 'monto total de retiro' }}</div>
                                 <img class="resturant-icon w--30"
                                     src="{{ asset('assets/admin/img/transactions/withdraw-amount.png') }}"
                                     alt="transaction">
@@ -69,7 +69,7 @@
                                 <h4 class="title">
                                     {{ \App\CentralLogics\Helpers::format_currency($wallet->balance > 0 ? $wallet->balance : 0) }}
                                 </h4>
-                                <div class="subtitle">{{ translate('messages.withdraw_able_balance') }}</div>
+                                <div class="subtitle">{{ 'retirar saldo capaz' }}</div>
                                 <img class="resturant-icon w--30"
                                     src="{{ asset('assets/admin/img/transactions/withdraw-balance.png') }}"
                                     alt="transaction">
@@ -81,7 +81,7 @@
                             <div class="resturant-card card--bg-1">
                                 <h4 class="title">
                                     {{ \App\CentralLogics\Helpers::format_currency($wallet->total_earning) }}</h4>
-                                <div class="subtitle">{{ translate('messages.total_earning') }}</div>
+                                <div class="subtitle">{{ 'ganancia total' }}</div>
                                 <img class="resturant-icon w--30"
                                     src="{{ asset('assets/admin/img/transactions/earning.png') }}"
                                     alt="transaction">
@@ -97,7 +97,7 @@
                         <span class="card-header-icon mr-2">
                             <i class="tio-shop-outlined"></i>
                         </span>
-                        <span class="ml-1">{{ translate('messages.store_info') }}</span>
+                        <span class="ml-1">{{ 'información de la tienda' }}</span>
                     </h5>
                 </div>
                 <div class="card-body">
@@ -117,7 +117,7 @@
                                     <li>
 
                                         <i class="tio-city nav-icon"></i>
-                                        <span>{{ translate('messages.address') }}</span> <span>:</span> &nbsp; <span>
+                                        <span>{{ 'DIRECCIÓN' }}</span> <span>:</span> &nbsp; <span>
 
                                             <a href="https://www.google.com/maps/search/?api=1&query={{ data_get($store, 'latitude', 0) }},{{ data_get($store, 'longitude', 0) }}"
                                                 target="_blank">{{ $store->address }}</a></span>
@@ -126,22 +126,22 @@
 
                                     <li>
                                         <i class="tio-email nav-icon"></i>
-                                        <span>{{ translate('messages.email') }}</span> <span>:</span> &nbsp; <a
+                                        <span>{{ 'correo electrónico' }}</span> <span>:</span> &nbsp; <a
                                             href="mailto:{{ $store->email }}"><span>{{ $store->email }}</span></a>
                                     </li>
                                     <li>
                                         <i class="tio-call-talking  nav-icon"></i>
-                                        <span>{{ translate('messages.phone') }}</span> <span>:</span> &nbsp; <a
+                                        <span>{{ 'teléfono' }}</span> <span>:</span> &nbsp; <a
                                             href="tel:{{ $store->phone }}"><span>{{ $store->phone }}</span></a>
                                     </li>
                                     <li>
                                         <i class="tio-map nav-icon"></i>
-                                        <span>{{ translate('messages.Zone') }}</span> <span>:</span> &nbsp;
-                                        <span>{{ $store?->zone?->name ?? translate('zone_deleted') }}</span>
+                                        <span>{{ 'Zona' }}</span> <span>:</span> &nbsp;
+                                        <span>{{ $store?->zone?->name ?? 'zona eliminada' }}</span>
                                     </li>
                                     <li>
                                         <i class="tio-globe nav-icon"></i>
-                                        <span>{{ translate('TootliClick Menu') }}</span> <span>:</span> &nbsp;
+                                        <span>{{ 'TootliHaga clic en Menú' }}</span> <span>:</span> &nbsp;
                                         <a href="{{ route('tootliclick', $store->slug) }}" target="_blank" class="text-primary font-weight-bold">
                                             {{ route('tootliclick', $store->slug) }}
                                         </a>
@@ -168,7 +168,7 @@
                                 <span class="card-header-icon mr-2">
                                     <i class="tio-qr-code"></i>
                                 </span>
-                                <span class="ml-1">{{ translate('messages.store_qr_code') }}</span>
+                                <span class="ml-1">{{ 'almacenar código qr' }}</span>
                             </h5>
                         </div>
                         <div class="card-body text-center">
@@ -176,9 +176,9 @@
                                 <div class="mb-3">
                                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={{ $store->id }}" alt="QR Code" class="img-fluid border" style="max-width: 150px;">
                                 </div>
-                                <p class="text-muted small mb-2">{{translate('messages.scan_this_qr_to_pay_to_this_store')}}</p>
+                                <p class="text-muted small mb-2">{{'escanea este qr para pagar en esta tienda'}}</p>
                                 <a href="https://api.qrserver.com/v1/create-qr-code/?size=500x500&data={{ $store->id }}" download="qr_code_{{$store->id}}.png" target="_blank" class="btn btn-sm btn--primary">
-                                    <i class="tio-download"></i> {{translate('messages.download_qr')}}
+                                    <i class="tio-download"></i> {{'descargar qr'}}
                                 </a>
                             </div>
                         </div>
@@ -191,15 +191,15 @@
                                 <span class="card-header-icon mr-2">
                                     <i class="tio-money"></i>
                                 </span>
-                                <span class="ml-1">{{ translate('Tootli Lana Settings') }}</span>
+                                <span class="ml-1">{{ 'Configuración de Tootli Lana' }}</span>
                             </h5>
                         </div>
                         <div class="card-body d-flex flex-column justify-content-center">
                             <div class="form-group mb-0">
                                 <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border rounded px-4 py-3 form-control align-items-center" for="tootli_lana">
                                     <span class="pr-2 text-dark">
-                                        <strong>{{translate('Acepta tootli lana')}}</strong>
-                                        <span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Permite a los usuarios pagar con puntos de su billetera Tootli Lana.')}}">
+                                        <strong>{{'Acepta tootli lana'}}</strong>
+                                        <span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{'Permite a los usuarios pagar con puntos de su billetera Tootli Lana.'}}">
                                             <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="info">
                                         </span>
                                     </span>
@@ -210,7 +210,7 @@
                                 </label>
                             </div>
                             <p class="text-muted mt-3 small">
-                                {{translate('Si está activo, los clientes podrán utilizar sus fondos de Tootli Lana para pagar en este restaurante.')}}
+                                {{'Si está activo, los clientes podrán utilizar sus fondos de Tootli Lana para pagar en este restaurante.'}}
                             </p>
                         </div>
                     </div>
@@ -225,7 +225,7 @@
                                 <span class="card-header-icon mr-2">
                                     <i class="tio-user"></i>
                                 </span>
-                                <span class="ml-1">{{ translate('messages.owner_info') }}</span>
+                                <span class="ml-1">{{ 'información del propietario' }}</span>
                             </h5>
                         </div>
                         <div class="card-body">
@@ -263,7 +263,7 @@
                                 <span class="card-header-icon mr-2">
                                     <i class="tio-crown"></i>
                                 </span>
-                                <span class="ml-1">{{ translate('messages.Business_Plan') }}</span>
+                                <span class="ml-1">{{ 'plan de negocios' }}</span>
                             </h5>
                         </div>
                         <div class="card-body">
@@ -272,63 +272,63 @@
 
                                     @if ($store->store_business_model == 'commission')
                                         <li>
-                                            <span> <strong>{{ translate('messages.Business_Plan') }}</span></strong>
+                                            <span> <strong>{{ 'plan de negocios' }}</span></strong>
                                             <span>:</span> &nbsp; {{ translate($store->store_business_model) }}
                                         </li>
                                         @php($admin_commission = \App\Models\BusinessSetting::where(['key' => 'admin_commission'])->first()?->value)
                                         <li>
-                                            <span><strong>{{ translate('messages.Commission_percentage') }}</strong></span>
+                                            <span><strong>{{ 'Porcentaje de comisión' }}</strong></span>
                                             <span>:</span> &nbsp;
                                             {{ $store->comission > 0 ? $store->comission : $admin_commission }} %
                                         </li>
                                     @elseif ($store->store_business_model == 'subscription')
                                         <li>
-                                            <span> <strong>{{ translate('messages.Business_Plan') }}</span></strong>
+                                            <span> <strong>{{ 'plan de negocios' }}</span></strong>
                                             <span>:</span> &nbsp; {{ translate($store->store_business_model) }} &nbsp;
                                             @if ($store?->store_sub_update_application->is_trial == '1')
                                                 <small> <span
-                                                        class="badge badge-info">{{ translate('messages.Free_trial') }}</span>
+                                                        class="badge badge-info">{{ 'Prueba gratuita' }}</span>
                                                 </small>
                                             @endif
                                         </li>
                                         <li>
-                                            <span> <strong>{{ translate('messages.Package_name') }}</strong></span>
+                                            <span> <strong>{{ 'Nombre del paquete' }}</strong></span>
                                             <span>:</span> &nbsp;
-                                            {{ $store?->store_sub_update_application?->package?->package_name ?? translate('Pacakge_not_found!!!') }}
+                                            {{ $store?->store_sub_update_application?->package?->package_name ?? '¡¡¡Paquete no encontrado!!!' }}
                                         </li>
                                     @elseif ($store->store_business_model == 'unsubscribed')
                                         <li>
-                                            <span> <strong>{{ translate('messages.Business_Plan') }}</span></strong>
+                                            <span> <strong>{{ 'plan de negocios' }}</span></strong>
                                             <span>:</span> &nbsp; {{ translate($store->store_business_model) }} &nbsp;
 
                                             <small> <span
-                                                    class="badge badge-danger">{{ translate('messages.Expired') }}</span>
+                                                    class="badge badge-danger">{{ 'Venció' }}</span>
                                             </small>
 
                                         </li>
                                         <li>
-                                            <span> <strong>{{ translate('messages.Package_name') }}</strong></span>
+                                            <span> <strong>{{ 'Nombre del paquete' }}</strong></span>
                                             <span>:</span> &nbsp;
-                                            {{ $store?->store_sub_update_application?->package?->package_name ?? translate('Pacakge_not_found!!!') }}
+                                            {{ $store?->store_sub_update_application?->package?->package_name ?? '¡¡¡Paquete no encontrado!!!' }}
                                         </li>
                                     @elseif($store->store_business_model == 'none' && $store->package_id)
                                         <li>
-                                            <span> <strong>{{ translate('messages.Business_Plan') }}</span></strong>
-                                            <span>:</span> &nbsp; {{ translate('messages.Subscription') }}
+                                            <span> <strong>{{ 'plan de negocios' }}</span></strong>
+                                            <span>:</span> &nbsp; {{ 'Suscripción' }}
                                         </li>
                                         <li>
-                                            <span> <strong>{{ translate('messages.Package_Name') }}</span></strong>
+                                            <span> <strong>{{ 'Nombre del paquete' }}</span></strong>
                                             <span>:</span> &nbsp;
                                             {{ App\Models\SubscriptionPackage::where('id', $store->package_id)->first()?->package_name }}
                                         </li>
                                         <li>
-                                            <span> <strong>{{ translate('Payment_status') }}</span></strong> <span>:</span>
-                                            &nbsp; {{ translate('messages.payment_failed') }}
+                                            <span> <strong>{{ 'Estado de pago' }}</span></strong> <span>:</span>
+                                            &nbsp; {{ 'pago fallido' }}
                                         </li>
                                     @else
                                         <li>
-                                            <span> <strong>{{ translate('messages.Business_Plan') }}</span></strong>
-                                            <span>:</span> &nbsp; {{ translate('Have_n’t_Selected_Yet.') }}
+                                            <span> <strong>{{ 'plan de negocios' }}</span></strong>
+                                            <span>:</span> &nbsp; {{ 'Aún no lo he seleccionado.' }}
                                         </li>
                                     @endif
 
@@ -351,7 +351,7 @@
                                     <span class="card-header-icon mr-2">
                                         <i class="tio-user"></i>
                                     </span>
-                                    <span class="ml-1">{{ translate('Business TIN') }}</span>
+                                    <span class="ml-1">{{ 'NIF empresarial' }}</span>
                                 </h5>
                             </div>
                             <div class="card-body">
@@ -381,7 +381,7 @@
                                                 <div class="fs-13 text--title d-flex flex-column">
                                                     <span class="file-name js-filename-truncate"></span>
                                                     <span
-                                                        class="opacity-50">{{ translate('Click to view the file') }}</span>
+                                                        class="opacity-50">{{ 'Haga clic para ver el archivo' }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -391,14 +391,14 @@
 
                                         <div class=" d-flex justify-content-start gap-1">
                                             <span class="text-custom-nowrap text-wrap"><strong class=" text-dark">
-                                                    {{ translate('Taxpayer Identification Number(TIN)') }}:
+                                                    {{ 'Número de Identificación del Contribuyente (TIN)' }}:
                                                 </strong></span>
                                             <span class="pl-1">{{ $store->tin }}</span>
                                         </div>
 
                                         <div class=" d-flex justify-content-start gap-1">
                                             <span class="text-custom-nowrap text-wrap"><strong
-                                                    class=" text-dark">{{ translate('Expire Date') }}: </strong></span>
+                                                    class=" text-dark">{{ 'Fecha de vencimiento' }}: </strong></span>
                                             <span class="pl-1">{{ $store->tin_expire_date }}</span>
                                         </div>
                                     </div>
@@ -438,7 +438,7 @@
                                             alt="banner" class="object-contain">
                                     </div>
                                     <div>
-                                        <h5 class="fs-14 font-semibold color-3C3C3C m-0">{{ translate('Business Zone') }}</h5>
+                                        <h5 class="fs-14 font-semibold color-3C3C3C m-0">{{ 'Zona de Negocios' }}</h5>
                                         <span class="d-block fs-12 color-484848">{{ $store->address }}</span>
                                     </div>
                                 </div>
@@ -451,10 +451,10 @@
                                             alt="banner" class="object-contain">
                                     </div>
                                     <div>
-                                        <h5 class="fs-14 font-semibold color-3C3C3C m-0">{{ translate('Business Plan') }}</h5>
+                                        <h5 class="fs-14 font-semibold color-3C3C3C m-0">{{ 'plan de negocios' }}</h5>
                                          @if($store->store_business_model == 'none')
                                     <span class="d-block fs-12 color-484848">{{ translate($store?->package?->package_name ) }}</span><br>
-                                    <span class="d-block fs-12 color-484848">{{ translate('payment_failed') }}</span>
+                                    <span class="d-block fs-12 color-484848">{{ 'pago fallido' }}</span>
                                 @else
                                 <span class="d-block fs-12 color-484848">{{ translate($store->store_business_model ) }}</span>
                                 @endif
@@ -472,7 +472,7 @@
                                             alt="banner" class="object-contain">
                                     </div>
                                     <div>
-                                        <h5 class="fs-14 font-semibold color-3C3C3C m-0">{{ translate('Approx. Pickup Time') }}</h5>
+                                        <h5 class="fs-14 font-semibold color-3C3C3C m-0">{{ 'Aprox. Hora de recogida' }}</h5>
                                         <span class="d-block fs-12 color-484848">{{  $store->delivery_time  }}</span>
                                     </div>
                                 </div>
@@ -489,9 +489,9 @@
                         <div class="card-header">
                             <div>
                                 <h4 class="text-title m-1">
-                                    {{ translate('Registration Information') }}
+                                    {{ 'Información de registro' }}
                                 </h4>
-                                <p class="fs-12 m-0 color-334257B2">{{ translate('Here you can see all the information that Vendor submit during registration') }}</p>
+                                <p class="fs-12 m-0 color-334257B2">{{ 'Aquí puedes ver toda la información que el Proveedor envía durante el registro.' }}</p>
                             </div>
                         </div>
                            <div class="card-body">
@@ -499,7 +499,7 @@
                     <div class="col-lg-6">
                         <div class="card __bg-FAFAFA border-0 h-100">
                             <div class="card-body">
-                                <h5 class="mb-10px font-bold"> {{ translate('messages.General_Information') }}
+                                <h5 class="mb-10px font-bold"> {{ 'Información general' }}
                                 </h5>
                                 @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
                                 @php($language = $language->value ?? null)
@@ -509,7 +509,7 @@
                                         <ul class="nav nav-tabs mb-4">
                                             <li class="nav-item">
                                                 <a class="nav-link lang_link active" href="#"
-                                                   id="default-link">{{ translate('Default') }}</a>
+                                                   id="default-link">{{ 'Por defecto' }}</a>
                                             </li>
                                             @foreach (json_decode($language) as $lang)
                                                 <li class="nav-item">
@@ -524,11 +524,11 @@
                                             <div class="resturant--info-address">
                                                 <ul class="address-info address-info-2 p-0 text-dark">
                                                     <li class="d-flex align-items-start">
-                                                        <span class="label min-w-sm-auto">{{ translate('Vendor Name') }}</span>
+                                                        <span class="label min-w-sm-auto">{{ 'Nombre del proveedor' }}</span>
                                                         <span>: {{$store->getRawOriginal('name')}} </span>
                                                     </li>
                                                     <li class="d-flex align-items-start">
-                                                        <span class="label min-w-sm-auto">{{ translate('messages.Business Address') }}</span>
+                                                        <span class="label min-w-sm-auto">{{ 'Dirección comercial' }}</span>
                                                         <span>: {{$store->getRawOriginal('address')}} </span>
                                                     </li>
                                                 </ul>
@@ -554,11 +554,11 @@
                                                 <div class="resturant--info-address">
                                                     <ul class="address-info address-info-2 p-0 text-dark">
                                                         <li class="d-flex align-items-start">
-                                                            <span class="label min-w-sm-auto">{{ translate('Vendor Name') }}</span>
+                                                            <span class="label min-w-sm-auto">{{ 'Nombre del proveedor' }}</span>
                                                             <span>: {{$translate[$lang]['name']??''}}</span>
                                                         </li>
                                                         <li class="d-flex align-items-start">
-                                                            <span class="label min-w-sm-auto">{{ translate('messages.Business Address') }}</span>
+                                                            <span class="label min-w-sm-auto">{{ 'Dirección comercial' }}</span>
                                                             <span>: {{ $translate[$lang]['address']??'' }} </span>
                                                         </li>
                                                     </ul>
@@ -570,11 +570,11 @@
                                             <div class="resturant--info-address">
                                                 <ul class="address-info address-info-2 p-0 text-dark">
                                                     <li class="d-flex align-items-start">
-                                                        <span class="label min-w-sm-auto">{{ translate('messages.Provider Name') }}</span>
+                                                        <span class="label min-w-sm-auto">{{ 'Nombre del proveedor' }}</span>
                                                         <span>: {{ $store->name }}</span>
                                                     </li>
                                                     <li class="d-flex align-items-start">
-                                                        <span class="label min-w-sm-auto">{{ translate('messages.Business Address') }}</span>
+                                                        <span class="label min-w-sm-auto">{{ 'Dirección comercial' }}</span>
                                                         <span>: {{ $store->address }}</span>
                                                     </li>
                                                 </ul>
@@ -589,20 +589,20 @@
                     <div class="col-lg-6">
                         <div class="card __bg-FAFAFA border-0 h-100">
                             <div class="card-body">
-                                <h5 class="mb-10px font-bold"> {{ translate('messages.Owner_Information') }}
+                                <h5 class="mb-10px font-bold"> {{ 'Información del propietario' }}
                                 </h5>
                                 <div class="resturant--info-address">
                                     <ul class="address-info address-info-2 p-0 text-dark">
                                         <li class="d-flex align-items-start">
-                                            <span class="label min-w-sm-auto">{{ translate('messages.First Name') }}</span>
+                                            <span class="label min-w-sm-auto">{{ 'Nombre de pila' }}</span>
                                             <span>: {{$store->vendor->f_name}} </span>
                                         </li>
                                         <li class="d-flex align-items-start">
-                                            <span class="label min-w-sm-auto">{{ translate('messages.Last Name') }}</span>
+                                            <span class="label min-w-sm-auto">{{ 'Apellido' }}</span>
                                             <span>: {{$store->vendor->l_name}}</span>
                                         </li>
                                         <li class="d-flex align-items-start">
-                                            <span class="label min-w-sm-auto">{{ translate('messages.Phone') }}</span>
+                                            <span class="label min-w-sm-auto">{{ 'Teléfono' }}</span>
                                             <span>: {{$store->vendor->phone}}</span>
                                         </li>
                                     </ul>
@@ -616,19 +616,19 @@
                     <div class="col-lg-6">
                         <div class="card __bg-FAFAFA border-0 h-100">
                             <div class="card-body">
-                                <h5 class="mb-10px font-bold"> {{ translate('messages.Login Information') }}
+                                <h5 class="mb-10px font-bold"> {{ 'Información de inicio de sesión' }}
                                 </h5>
 
 
                                 <div class="resturant--info-address">
                                     <ul class="address-info address-info-2 p-0 text-dark">
                                         <li class="d-flex align-items-start">
-                                            <span class="label min-w-sm-auto">{{ translate('messages.Email') }}</span>
+                                            <span class="label min-w-sm-auto">{{ 'Correo electrónico' }}</span>
                                             <span>: {{ $store->vendor->email }}</span>
                                         </li>
                                         <li class="d-flex align-items-start">
-                                            <span class="label min-w-sm-auto">{{ translate('messages.Password') }}</span>
-                                            <span>: {{ translate('*************') }}</span>
+                                            <span class="label min-w-sm-auto">{{ 'Contraseña' }}</span>
+                                            <span>: {{ '*************' }}</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -657,7 +657,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ translate('messages.collect_cash_from_store') }}</h5>
+                    <h5 class="modal-title">{{ 'recoger efectivo de la tienda' }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -669,25 +669,25 @@
                         <input type="hidden" name="type" value="store">
                         <input type="hidden" name="store_id" value="{{ $store->id }}">
                         <div class="form-group">
-                            <label class="input-label">{{ translate('messages.payment_method') }} <span
+                            <label class="input-label">{{ 'método de pago' }} <span
                                     class="input-label-secondary text-danger">*</span></label>
                             <input class="form-control" type="text" name="method" id="method" required
-                                maxlength="191" placeholder="{{ translate('messages.Ex_:_Card') }}">
+                                maxlength="191" placeholder="{{ 'Ej: tarjeta' }}">
                         </div>
                         <div class="form-group">
-                            <label class="input-label">{{ translate('messages.reference') }}</label>
+                            <label class="input-label">{{ 'referencia' }}</label>
                             <input class="form-control" type="text" name="ref" id="ref" maxlength="191">
                         </div>
                         <div class="form-group">
-                            <label class="input-label">{{ translate('messages.amount') }} <span
+                            <label class="input-label">{{ 'cantidad' }} <span
                                     class="input-label-secondary text-danger">*</span></label>
                             <input class="form-control" type="number" min=".01" step="0.01" name="amount"
                                 id="amount" max="999999999999.99"
-                                placeholder="{{ translate('messages.Ex_:_1000') }}">
+                                placeholder="{{ 'Ej: 1000' }}">
                         </div>
                         <div class="btn--container justify-content-end">
                             <button type="submit" id="submit_new_customer"
-                                class="btn btn--primary">{{ translate('submit') }}</button>
+                                class="btn btn--primary">{{ 'entregar' }}</button>
                         </div>
                     </form>
                 </div>
@@ -809,7 +809,7 @@
                             });
                         }
                     } else {
-                        toastr.success('{{ translate('messages.transaction_saved') }}', {
+                        toastr.success('{{ 'transacción guardada' }}', {
                             CloseButton: true,
                             ProgressBar: true
                         });
@@ -828,7 +828,7 @@
             dummy.select();
             document.execCommand("copy");
             document.body.removeChild(dummy);
-            toastr.success('{{ translate('URL copiada al portapapeles') }}');
+            toastr.success('{{ 'URL copiada al portapapeles' }}');
         }
     </script>
 @endpush

@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-lg-12 text-center "><h1 >{{ translate('messages.delivery_man_payments') }}</h1></div>
+    <div class="col-lg-12 text-center "><h1 >{{ 'pagos del repartidor' }}</h1></div>
     <div class="col-lg-12">
 
 
@@ -7,12 +7,12 @@
     <table>
         <thead>
             <tr>
-                <th>{{ translate('filter_criteria') }} -</th>
+                <th>{{ 'criterios de filtrado' }} -</th>
                 <th></th>
                 <th></th>
                 <th>
 
-                    {{ translate('Search_Bar_Content')  }}- {{ $data['search'] ??translate('N/A') }}
+                    {{ 'Contenido de la barra de búsqueda'  }}- {{ $data['search'] ??'N / A' }}
 
                 </th>
                 <th></th>
@@ -21,14 +21,14 @@
                 <th></th>
             </tr>
             <tr>
-                <th>{{ translate('messages.sl') }}</th>
-                <th>{{ translate('messages.transaction_id') }}</th>
-                <th>{{ translate('messages.provided_st') }}</th>
-                <th>{{ translate('messages.payment_amount') }}</th>
-                <th>{{ translate('messages.delivery_man_name') }}</th>
-                <th>{{ translate('messages.phone') }}</th>
-                <th>{{ translate('messages.payment_method') }}</th>
-                <th>{{ translate('messages.references') }}</th>
+                <th>{{ 'SL' }}</th>
+                <th>{{ 'identificación de transacción' }}</th>
+                <th>{{ 'proporcionado st' }}</th>
+                <th>{{ 'monto del pago' }}</th>
+                <th>{{ 'nombre del repartidor' }}</th>
+                <th>{{ 'teléfono' }}</th>
+                <th>{{ 'método de pago' }}</th>
+                <th>{{ 'referencias' }}</th>
             </tr>
         </thead>
         <tbody>
@@ -42,21 +42,21 @@
                     @if($at->delivery_man)
                     {{$at->delivery_man->f_name.' '.$at->delivery_man->l_name}}
                     @else
-                    {{translate('messages.deliveryman_deleted')}}
+                    {{'repartidor eliminado'}}
                     @endif
                 </td>
                 <td>
                     @if($at->delivery_man)
                     {{$at->delivery_man->phone}}
                     @else
-                    {{translate('messages.deliveryman_deleted')}}
+                    {{'repartidor eliminado'}}
                     @endif
                 </td>
                 <td>{{translate($at->method)}}</td>
                 @if(  $at['ref'] == 'delivery_man_wallet_adjustment_full')
-                    <td>{{ translate('wallet_adjusted') }}</td>
+                    <td>{{ 'billetera ajustada' }}</td>
                 @elseif( $at['ref'] == 'delivery_man_wallet_adjustment_partial')
-                    <td>{{ translate('wallet_adjusted_partially') }}</td>
+                    <td>{{ 'cartera ajustada parcialmente' }}</td>
                 @else
                     <td>{{$at['ref']}}</td>
                 @endif

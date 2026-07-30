@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.order_report'))
+@section('title', 'informe de pedido')
 
 @push('css_or_js')
 @endpush
@@ -14,7 +14,7 @@
                     <img src="{{asset('assets/admin/img/report/report.png')}}" class="w--22" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.order_report') }}
+                    {{ 'informe de pedido' }}
                 </span>
             </h1>
         </div>
@@ -22,15 +22,15 @@
 
         <div class="card mb-20">
             <div class="card-body">
-                <h4 class="">{{ translate('Search Data') }}</h4>
+                <h4 class="">{{ 'Buscar datos' }}</h4>
                 <form action="{{ route('admin.transactions.report.set-date') }}" method="post">
                     @csrf
                     <div class="row g-3">
                         <div class="col-sm-6 col-md-3">
                             <select name="module_id" class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}" data-filter="module_id"
-                                title="{{ translate('messages.select_modules') }}">
+                                title="{{ 'seleccionar módulos' }}">
                                 <option value="" {{ !request('module_id') ? 'selected' : '' }}>
-                                    {{ translate('messages.all_modules') }}</option>
+                                    {{ 'todos los módulos' }}</option>
                                 @foreach (\App\Models\Module::notParcel()->get() as $module)
                                     <option value="{{ $module->id }}"
                                         {{ request('module_id') == $module->id ? 'selected' : '' }}>
@@ -41,7 +41,7 @@
                         </div>
                         <div class="col-sm-6 col-md-3">
                             <select name="zone_id" class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}" data-filter="zone_id" id="zone">
-                                <option value="all">{{ translate('messages.All_Zones') }}</option>
+                                <option value="all">{{ 'Todas las Zonas' }}</option>
                                 @foreach (\App\Models\Zone::orderBy('name')->get() as $z)
                                     <option value="{{ $z['id'] }}"
                                         {{ isset($zone) && $zone->id == $z['id'] ? 'selected' : '' }}>
@@ -52,63 +52,63 @@
                         </div>
                         <div class="col-sm-6 col-md-3">
                             <select name="store_id"
-                                data-placeholder="{{ translate('messages.select_store') }}"
+                                data-placeholder="{{ 'seleccionar tienda' }}"
                                 class="js-data-example-ajax form-control set-filter" data-url="{{ url()->full() }}" data-filter="store_id">
                                 @if (isset($store))
                                     <option value="{{ $store->id }}" selected>{{ $store->name }}</option>
                                 @else
-                                    <option value="all" selected>{{ translate('messages.all_stores') }}</option>
+                                    <option value="all" selected>{{ 'todas las tiendas' }}</option>
                                 @endif
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-3">
                             <select name="customer_id"
-                                data-placeholder="{{ translate('messages.select_customer') }}"
+                                data-placeholder="{{ 'seleccionar cliente' }}"
                                 class="js-data-example-ajax-2 form-control set-filter" data-url="{{ url()->full() }}" data-filter="customer_id">
                                 @if (isset($customer))
                                     <option value="{{ $customer->id }}" selected>{{ $customer->f_name . ' ' .$customer->l_name }}</option>
                                 @else
-                                    <option value="all" selected>{{ translate('messages.all_customers') }}</option>
+                                    <option value="all" selected>{{ 'todos los clientes' }}</option>
                                 @endif
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-3">
                             <select class="form-control set-filter" data-url="{{ url()->full() }}" data-filter="filter" name="filter">
                                 <option value="all_time" {{ isset($filter) && $filter == 'all_time' ? 'selected' : '' }}>
-                                    {{ translate('messages.All Time') }}</option>
+                                    {{ 'Todo el tiempo' }}</option>
                                 <option value="this_year" {{ isset($filter) && $filter == 'this_year' ? 'selected' : '' }}>
-                                    {{ translate('messages.This Year') }}</option>
+                                    {{ 'este año' }}</option>
                                 <option value="previous_year"
                                     {{ isset($filter) && $filter == 'previous_year' ? 'selected' : '' }}>
-                                    {{ translate('messages.Previous Year') }}</option>
+                                    {{ 'Año anterior' }}</option>
                                 <option value="this_month"
                                     {{ isset($filter) && $filter == 'this_month' ? 'selected' : '' }}>
-                                    {{ translate('messages.This Month') }}</option>
+                                    {{ 'este mes' }}</option>
                                 <option value="this_week" {{ isset($filter) && $filter == 'this_week' ? 'selected' : '' }}>
-                                    {{ translate('messages.This Week') }}</option>
+                                    {{ 'Esta semana' }}</option>
                                 <option value="custom" {{ isset($filter) && $filter == 'custom' ? 'selected' : '' }}>
-                                    {{ translate('messages.Custom') }}</option>
+                                    {{ 'Costumbre' }}</option>
                             </select>
                         </div>
                         @if (isset($filter) && $filter == 'custom')
                             <div class="col-sm-6 col-md-3">
 
                                 <input type="date" name="from" id="from_date" class="form-control"
-                                    placeholder="{{ translate('Start Date') }}"
+                                    placeholder="{{ 'Fecha de inicio' }}"
                                     {{ session()->has('from_date') ? 'value=' . session('from_date') : '' }} required>
 
                             </div>
                             <div class="col-sm-6 col-md-3">
 
                                 <input type="date" name="to" id="to_date" class="form-control"
-                                    placeholder="{{ translate('End Date') }}"
+                                    placeholder="{{ 'Fecha de finalización' }}"
                                     {{ session()->has('to_date') ? 'value=' . session('to_date') : '' }} required>
 
                             </div>
                         @endif
                         <div class="col-sm-6 col-md-3 ml-auto">
                             <button type="submit"
-                                class="btn btn-primary btn-block h--45px">{{ translate('Filter') }}</button>
+                                class="btn btn-primary btn-block h--45px">{{ 'Filtrar' }}</button>
                         </div>
                     </div>
                 </form>
@@ -124,7 +124,7 @@
                     <a class="__card-1 h-100" href="#">
                         <img src="{{asset('assets/admin/img/report/new/total.png')}}" class="icon" alt="report/new">
                         <h3 class="title">{{$orders->total()}}</h3>
-                        <h6 class="subtitle">{{translate('messages.total_orders')}}</h6>
+                        <h6 class="subtitle">{{'pedidos totales'}}</h6>
                     </a>
                 </div>
                 <div class="col-lg-9">
@@ -132,42 +132,42 @@
                         <div class="col-sm-6 col-md-4">
                             <a class="__card-2 __bg-1" href="#">
                             <h4 class="title">{{$total_progress_count}}</h4>
-                            <span class="subtitle">{{translate('messages.in_progress_orders')}} <span data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Including accepted and processing orders')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.in_progress_orders')}}"></span></span>
+                            <span class="subtitle">{{'pedidos en curso'}} <span data-toggle="tooltip" data-placement="right" data-original-title="{{'Incluyendo pedidos aceptados y en procesamiento.'}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{'pedidos en curso'}}"></span></span>
                             <img src="{{asset('assets/admin/img/report/new/progress-report.png')}}" alt="report/new" class="card-icon">
                             </a>
                         </div>
                         <div class="col-sm-6 col-md-4">
                             <a class="__card-2 __bg-2" href="#">
                             <h4 class="title">{{$total_on_the_way_count}}</h4>
-                            <span class="subtitle">{{translate('messages.on_the_way')}}</span>
+                            <span class="subtitle">{{'en el camino'}}</span>
                             <img src="{{asset('assets/admin/img/report/new/on-the-way.png')}}" alt="report/new" class="card-icon">
                             </a>
                         </div>
                         <div class="col-sm-6 col-md-4">
                             <a class="__card-2 __bg-3" href="#">
                             <h4 class="title">{{$total_delivered_count}}</h4>
-                            <span class="subtitle">{{ translate('messages.delivered_orders') }}</span>
+                            <span class="subtitle">{{ 'pedidos entregados' }}</span>
                             <img src="{{asset('assets/admin/img/report/new/delivered.png')}}" alt="report/new" class="card-icon">
                             </a>
                         </div>
                         <div class="col-sm-6 col-md-4">
                             <a class="__card-2 __bg-4" href="#">
                             <h4 class="title">{{$total_failed_count}}</h4>
-                            <span class="subtitle">{{translate('messages.failed_orders')}}</span>
+                            <span class="subtitle">{{'pedidos fallidos'}}</span>
                             <img src="{{asset('assets/admin/img/report/new/failed.png')}}" alt="report/new" class="card-icon">
                             </a>
                         </div>
                         <div class="col-sm-6 col-md-4">
                             <a class="__card-2 __bg-5" href="#">
                             <h4 class="title">{{$total_refunded_count}}</h4>
-                            <span class="subtitle">{{translate('messages.refunded_orders')}}</span>
+                            <span class="subtitle">{{'pedidos reembolsados'}}</span>
                             <img src="{{asset('assets/admin/img/report/new/refunded.png')}}" alt="report/new" class="card-icon">
                             </a>
                         </div>
                         <div class="col-sm-6 col-md-4">
                             <a class="__card-2 __bg-6" href="#">
                             <h4 class="title">{{$total_canceled_count}}</h4>
-                            <span class="subtitle">{{translate('messages.canceled_orders')}}</span>
+                            <span class="subtitle">{{'pedidos cancelados'}}</span>
                             <img src="{{asset('assets/admin/img/report/new/canceled.png')}}" alt="report/new" class="card-icon">
                             </a>
                         </div>
@@ -183,13 +183,13 @@
             <div class="card-header border-0 py-2">
                 <div class="search--button-wrapper">
                     <h3 class="card-title">
-                        {{ translate('messages.Total Orders') }} <span
+                        {{ 'Órdenes totales' }} <span
                             class="badge badge-soft-secondary" id="countItems">{{ $orders->total() }}</span>
                     </h3>
                     <form class="search-form">
                         <!-- Search -->
                         <div class="input--group input-group input-group-merge input-group-flush">
-                            <input name="search" type="search" class="form-control" value="{{request()->query('search')}}" placeholder="{{ translate('Search by Order ID') }}">
+                            <input name="search" type="search" class="form-control" value="{{request()->query('search')}}" placeholder="{{ 'Buscar por ID de pedido' }}">
                             <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                         </div>
                         <!-- End Search -->
@@ -203,26 +203,26 @@
                                 &quot;type&quot;: &quot;css-animation&quot;
                             }"
                             data-hs-unfold-target="#usersExportDropdown" data-hs-unfold-invoker="">
-                            <i class="tio-download-to mr-1"></i> {{ translate('export') }}
+                            <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                         </a>
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right hs-unfold-content-initialized hs-unfold-css-animation animated hs-unfold-reverse-y hs-unfold-hidden">
 
-                            <span class="dropdown-header">{{ translate('download_options') }}</span>
+                            <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                             <a id="export-excel" class="dropdown-item"
                                 href="{{ route('admin.transactions.report.order-report-export', ['type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin/svg/components/excel.svg') }}"
                                     alt="Image Description">
-                                {{ translate('messages.excel') }}
+                                {{ 'sobresalir' }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
                                 href="{{ route('admin.transactions.report.order-report-export', ['type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin/svg/components/placeholder-csv-format.svg') }}"
                                     alt="Image Description">
-                                .{{ translate('messages.csv') }}
+                                .{{ 'csv' }}
                             </a>
 
                         </div>
@@ -238,24 +238,24 @@
                     <table class="table table-borderless middle-align __txt-14px">
                         <thead class="thead-light white--space-false">
                             <tr>
-                                <th class="border-top border-bottom">{{ translate('messages.sl') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.order_id') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.store') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.customer_name') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.total_item_amount') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.item_discount') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.coupon_discount') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.referral_discount') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.discounted_amount') }}</th>
-                                <th class="border-top border-bottom text-center">{{ translate('messages.tax') }}</th>
-                                <th class="border-top border-bottom text-center">{{ translate('messages.delivery_charge') }}</th>
-                                <th class="border-top border-bottom text-center">{{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge') }}</th>
-                                <th class="border-top border-bottom text-center">{{ translate('messages.extra_packaging_amount') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.order_amount') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.amount_received_by') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.payment_method') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.order_status') }}</th>
-                                <th class="border-top border-bottom text-center">{{ translate('messages.action') }}
+                                <th class="border-top border-bottom">{{ 'SL' }}</th>
+                                <th class="border-top border-bottom">{{ 'identificación del pedido' }}</th>
+                                <th class="border-top border-bottom">{{ 'Negocio' }}</th>
+                                <th class="border-top border-bottom">{{ 'nombre del cliente' }}</th>
+                                <th class="border-top border-bottom">{{ 'importe total del artículo' }}</th>
+                                <th class="border-top border-bottom">{{ 'descuento del artículo' }}</th>
+                                <th class="border-top border-bottom">{{ 'cupón de descuento' }}</th>
+                                <th class="border-top border-bottom">{{ 'descuento por referencia' }}</th>
+                                <th class="border-top border-bottom">{{ 'cantidad descontada' }}</th>
+                                <th class="border-top border-bottom text-center">{{ 'impuesto' }}</th>
+                                <th class="border-top border-bottom text-center">{{ 'cargo de entrega' }}</th>
+                                <th class="border-top border-bottom text-center">{{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??'cargo adicional' }}</th>
+                                <th class="border-top border-bottom text-center">{{ 'cantidad de embalaje adicional' }}</th>
+                                <th class="border-top border-bottom">{{ 'monto del pedido' }}</th>
+                                <th class="border-top border-bottom">{{ 'cantidad recibida por' }}</th>
+                                <th class="border-top border-bottom">{{ 'método de pago' }}</th>
+                                <th class="border-top border-bottom">{{ 'estado del pedido' }}</th>
+                                <th class="border-top border-bottom text-center">{{ 'acción' }}
                                 </th>
                             </tr>
                         </thead>
@@ -273,7 +273,7 @@
                                         @if($order->store)
                                             {{Str::limit($order->store->name,25,'...')}}
                                         @else
-                                            <label class="badge badge-danger">{{ translate('messages.invalid') }}
+                                            <label class="badge badge-danger">{{ 'inválido' }}
                                         @endif
                                     </td>
                                     <td>
@@ -288,7 +288,7 @@
                                             <strong>{{ $order->customer['f_name'] . ' ' . $order->customer['l_name'] }}</strong>
                                         </a>
                                         @else
-                                            <label class="badge badge-danger">{{ translate('messages.invalid_customer_data') }}</label>
+                                            <label class="badge badge-danger">{{ 'datos de cliente no válidos' }}</label>
                                         @endif
                                     </td>
                                     <td>
@@ -298,11 +298,11 @@
                                             </div>
                                             @if ($order->payment_status == 'paid')
                                                 <strong class="text-success">
-                                                    {{ translate('messages.paid') }}
+                                                    {{ 'pagado' }}
                                                 </strong>
                                             @else
                                                 <strong class="text-danger">
-                                                    {{ translate('messages.unpaid') }}
+                                                    {{ 'no pagado' }}
                                                 </strong>
                                             @endif
                                         </div>
@@ -338,17 +338,17 @@
                                             </div>
                                             @if ($order->payment_status == 'paid')
                                                 <strong class="text-success">
-                                                    {{ translate('messages.paid') }}
+                                                    {{ 'pagado' }}
                                                 </strong>
                                             @else
                                                 <strong class="text-danger">
-                                                    {{ translate('messages.unpaid') }}
+                                                    {{ 'no pagado' }}
                                                 </strong>
                                             @endif
                                         </div>
                                     </td>
                                     <td class="text-center mw--85px text-capitalize">
-                                        {{isset($order->transaction) ? $order->transaction->received_by : translate('messages.not_received_yet')}}
+                                        {{isset($order->transaction) ? $order->transaction->received_by : 'aún no recibido'}}
                                     </td>
                                     <td class="text-center mw--85px text-capitalize">
                                             {{ translate(str_replace('_', ' ', $order['payment_method'])) }}
@@ -356,43 +356,43 @@
                                     <td class="text-center mw--85px text-capitalize">
                                         @if($order['order_status']=='pending')
                                                 <span class="badge badge-soft-info">
-                                                  {{translate('messages.pending')}}
+                                                  {{'Pendiente'}}
                                                 </span>
                                             @elseif($order['order_status']=='confirmed')
                                                 <span class="badge badge-soft-info">
-                                                  {{translate('messages.confirmed')}}
+                                                  {{'confirmado'}}
                                                 </span>
                                             @elseif($order['order_status']=='processing')
                                                 <span class="badge badge-soft-warning">
-                                                  {{translate('messages.processing')}}
+                                                  {{'tratamiento'}}
                                                 </span>
                                             @elseif($order['order_status']=='picked_up')
                                                 <span class="badge badge-soft-warning">
-                                                  {{translate('messages.out_for_delivery')}}
+                                                  {{'En Camino de Entrega'}}
                                                 </span>
                                             @elseif($order['order_status']=='delivered')
                                                 <span class="badge badge-soft-success">
-                                                  {{translate('messages.delivered')}}
+                                                  {{'Entregado'}}
                                                 </span>
                                             @elseif($order['order_status']=='failed')
                                                 <span class="badge badge-soft-danger">
-                                                  {{translate('messages.payment_failed')}}
+                                                  {{'pago fallido'}}
                                                 </span>
                                             @elseif($order['order_status']=='handover')
                                                 <span class="badge badge-soft-danger">
-                                                  {{translate('messages.handover')}}
+                                                  {{'Entregar'}}
                                                 </span>
                                             @elseif($order['order_status']=='canceled')
                                                 <span class="badge badge-soft-danger">
-                                                  {{translate('messages.canceled')}}
+                                                  {{'Cancelado'}}
                                                 </span>
                                             @elseif($order['order_status']=='accepted')
                                                 <span class="badge badge-soft-danger">
-                                                  {{translate('messages.accepted')}}
+                                                  {{'aceptado'}}
                                                 </span>
                                             @elseif($order['order_status']=='refund_request_canceled')
                                                 <span class="badge badge-soft-danger">
-                                                  {{translate('messages.refund_request_canceled')}}
+                                                  {{'solicitud de reembolso cancelada'}}
                                                 </span>
                                             @else
                                                 <span class="badge badge-soft-danger">
@@ -435,7 +435,7 @@
                 <div class="empty--data">
                     <img src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
                     <h5>
-                        {{ translate('no_data_found') }}
+                        {{ 'no se encontraron datos' }}
                     </h5>
                 </div>
             @endif

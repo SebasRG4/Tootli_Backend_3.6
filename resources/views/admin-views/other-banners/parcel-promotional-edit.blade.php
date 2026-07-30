@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.banner'))
+@section('title','bandera')
 
 @section('content')
 <div class="content container-fluid">
@@ -10,7 +10,7 @@
                 <img src="{{asset('assets/admin/img/3rd-party.png')}}" class="w--26" alt="">
             </span>
             <span>
-                {{translate('messages.Other_Promotional_Content_Setup')}}
+                {{'Configuración de otro contenido promocional'}}
             </span>
         </h1>
     </div>
@@ -33,7 +33,7 @@
                                             <span class="d-flex g-1">
                                                 <img src="{{asset('assets/admin/img/other-banner.png')}}" class="h-85" alt="">
                                                 <h3 class="form-label d-block mb-2">
-                                                    {{translate('messages.Promotional_Banner_Edit')}}
+                                                    {{'Banner promocional Editar'}}
                                                 </h3>
                                             </span>
                                         </div>
@@ -48,15 +48,15 @@
                                             </label>
                                             <div class="text-center mt-5">
                                                 <h3 class="form-label d-block mt-2">
-                                                {{translate('Banner_Image_Ratio_4:1')}}
+                                                {{'Proporción de imagen de banner 4:1'}}
                                             </h3>
-                                            <p>{{translate('image_format_:_jpg_,_png_,_jpeg_|_maximum_size:_2_MB')}}</p>
+                                            <p>{{'formato de imagen: jpg, png, jpeg | tamaño máximo: 2 MB'}}</p>
 
                                             </div>
                                         </div>
                                     </div>
                                     <div class="btn--container justify-content-end mt-20">
-                                        <button type="submit" class="btn btn--primary mb-2">{{translate('messages.Update')}}</button>
+                                        <button type="submit" class="btn btn--primary mb-2">{{'Actualizar'}}</button>
                                     </div>
                                 </div>
                             </form>

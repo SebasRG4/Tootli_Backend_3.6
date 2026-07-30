@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title', translate('messages.Order Details'))
+@section('title', 'Detalles del pedido')
 
 
 @section('content')
@@ -23,7 +23,7 @@
                                 alt="">
                         </span>
                         <span>
-                            {{ translate('order_details') }} <span
+                            {{ 'detalles del pedido' }} <span
                                 class="badge badge-soft-dark rounded-circle ml-1">{{ $order->details->count() }}</span>
                         </span>
                     </h1>
@@ -54,13 +54,13 @@
                         <div class="order-invoice-left d-flex d-sm-flex justify-content-between">
                             <div>
                                 <h1 class="page-header-title">
-                                    {{ translate('messages.order') }} #{{ $order['id'] }}
+                                    {{ 'Pedido' }} #{{ $order['id'] }}
                                     @if (!empty($order->tootli_direct))
-                                        <span class="badge badge-soft-dark ml-sm-3">{{ translate('messages.tootli_direct_order_badge') }}</span>
+                                        <span class="badge badge-soft-dark ml-sm-3">{{ 'insignia de pedido directo de tootli' }}</span>
                                     @endif
                                     @if ($order->edited)
                                         <span class="badge badge-soft-danger ml-sm-3">
-                                            {{ translate('messages.edited') }}
+                                            {{ 'editado' }}
                                         </span>
                                     @endif
                                 </h1>
@@ -70,24 +70,24 @@
                                 </span>
                                 @if ($order->schedule_at && $order->scheduled)
                                     <h6 class="text-capitalize">
-                                        {{ translate('messages.scheduled_at') }}
+                                        {{ 'programado en' }}
                                         : <label
                                             class="fz--10 badge badge-soft-warning">{{ date('d M Y ' . config('timeformat'), strtotime($order['schedule_at'])) }}</label>
                                     </h6>
                                     @if ($order->delivery_time_window)
                                         <h6 class="text-capitalize">
-                                            {{ translate('messages.delivery_time_window') }}
+                                            {{ 'ventana de tiempo de entrega' }}
                                             : <label class="fz--10 badge badge-soft-info">{{ $order->delivery_time_window }}</label>
                                         </h6>
                                         <div class="info-notes-bg px-3 color-222324CC py-2 rounded fs-12 gap-2 mt-2" style="background-color: #ffeeba; border: 1px solid #ffeeba; color: #856404;">
-                                            ⚠️ <strong>{{ translate('messages.scheduled_order_warning') }}:</strong>
-                                            {{ translate('messages.prepare_to_be_ready_by') }} <strong>{{ date('h:i A', strtotime($order->schedule_at)) }}</strong> {{ translate('messages.at_the_latest') }}.
+                                            ⚠️ <strong>{{ 'advertencia de orden programada' }}:</strong>
+                                            {{ 'prepárate para estar listo por' }} <strong>{{ date('h:i A', strtotime($order->schedule_at)) }}</strong> {{ 'a más tardar' }}.
                                         </div>
                                     @endif
                                 @endif
                                 @if($order['cancellation_reason'])
                                 <h6>
-                                    <span class="text-danger">{{ translate('messages.order_cancellation_reason') }} :</span>
+                                    <span class="text-danger">{{ 'motivo de cancelación del pedido' }} :</span>
                                     {{ $order['cancellation_reason'] }}
                                 </h6>
                                 @endif
@@ -96,7 +96,7 @@
                                 <!-- New Note -->
                                 @if ($order['bring_change_amount'] > 0)
                                 <div class="info-notes-bg px-3 color-222324CC py-2 rounded fs-12  gap-2 mt-2">
-                                    {{ translate('Please_bring') }} <strong class="text-title"> {{  \App\CentralLogics\Helpers::format_currency($order['bring_change_amount']) }}</strong> {{ translate('in_change_when_making_the_delivery') }}.
+                                    {{ 'por favor trae' }} <strong class="text-title"> {{  \App\CentralLogics\Helpers::format_currency($order['bring_change_amount']) }}</strong> {{ 'en cambio al realizar la entrega' }}.
                                 </div>
                                 @endif
                                 <!-- New Note End -->
@@ -105,16 +105,16 @@
                                 @if ($order['payment_method'] == 'cash_on_delivery' && $order['order_type'] == 'delivery' && $order->cash_on_pickup_amount > 0)
                                 <div class="info-notes-bg px-3 color-222324CC py-2 rounded fs-12 gap-2 mt-2" style="background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404;">
                                     <i class="tio-money-clean"></i>
-                                    <strong>{{ translate('messages.pago_en_recoleccion') }}:</strong>
-                                    {{ translate('messages.recibiras') }}
+                                    <strong>{{ 'pago en recoleccion' }}:</strong>
+                                    {{ 'recibirías' }}
                                     <strong class="text-title" style="color: #856404;"> {{ \App\CentralLogics\Helpers::format_currency($order->cash_on_pickup_amount) }} </strong>
-                                    {{ translate('messages.en_efectivo_del_repartidor_al_recoger_el_pedido') }}.
+                                    {{ 'en efectivo del repartidor al recoger el pedido' }}.
                                 </div>
                                 @endif
                                 @if ($order['unavailable_item_note'])
                                     <h6 class="w-100 badge-soft-warning p-1 rounded mt-2">
                                         <span class="text-dark">
-                                            {{ translate('messages.order_unavailable_item_note') }} :
+                                            {{ 'nota de artículo no disponible del pedido' }} :
                                         </span>
                                         {{ $order['unavailable_item_note'] }}
                                     </h6>
@@ -122,14 +122,14 @@
                                 @if ($order['delivery_instruction'])
                                     <h6 class="w-100 badge-soft-warning p-1 rounded mt-2">
                                         <span class="text-dark">
-                                            {{ translate('messages.order_delivery_instruction') }} :
+                                            {{ 'instrucción de entrega del pedido' }} :
                                         </span>
                                         {{ $order['delivery_instruction'] }}
                                     </h6>
                                 @endif
                                 @if ($order['order_note'])
                                     <h6>
-                                        {{ translate('messages.order_note') }} :
+                                        {{ 'nota de pedido' }} :
                                         {{ $order['order_note'] }}
                                     </h6>
                                 @endif
@@ -137,7 +137,7 @@
                             <div class="d-sm-none">
                                 <a class="btn btn--primary print--btn font-regular"
                                     href={{ route('vendor.order.generate-invoice', [$order['id']]) }}>
-                                    <i class="tio-print mr-sm-1"></i> <span>{{ translate('messages.print_invoice') }}</span>
+                                    <i class="tio-print mr-sm-1"></i> <span>{{ 'imprimir factura' }}</span>
                                 </a>
                             </div>
                         </div>
@@ -147,65 +147,65 @@
                             <div class="btn--container ml-auto align-items-center justify-content-end">
                                 <a class="btn btn--primary print--btn font-regular d-none d-sm-block"
                                     href={{ route('vendor.order.generate-invoice', [$order['id']]) }}>
-                                    <i class="tio-print mr-sm-1"></i> <span>{{ translate('messages.print_invoice') }}</span>
+                                    <i class="tio-print mr-sm-1"></i> <span>{{ 'imprimir factura' }}</span>
                                 </a>
                             </div>
                             <div class="text-right mt-3 order-invoice-right-contents text-capitalize">
                                 <h6>
-                                    {{ translate('messages.payment_status') }} :
+                                    {{ 'estado de pago' }} :
                                     @if ($order['payment_status'] == 'paid')
                                         <span class="badge badge-soft-success ml-sm-3">
-                                            {{ translate('messages.paid') }}
+                                            {{ 'pagado' }}
                                         </span>
                                         @elseif ($order['payment_status'] == 'partially_paid')
 
                                         @if ($order->payments()->where('payment_status','unpaid')->exists())
-                                        <span class="text-danger">{{ translate('messages.partially_paid') }}</span>
+                                        <span class="text-danger">{{ 'parcialmente pagado' }}</span>
                                         @else
-                                        <span class="text-success">{{ translate('messages.paid') }}</span>
+                                        <span class="text-success">{{ 'pagado' }}</span>
                                         @endif
                                     @else
                                         <span class="badge badge-soft-danger ml-sm-3">
-                                            {{ translate('messages.unpaid') }}
+                                            {{ 'no pagado' }}
                                         </span>
                                     @endif
                                 </h6>
                                 @if ($order->store && $order->store->module->module_type == 'food')
                                 <h6>
-                                    <span>{{ translate('cutlery') }}</span> <span>:</span>
+                                    <span>{{ 'cuchillería' }}</span> <span>:</span>
                                     @if ($order['cutlery'] == '1')
                                         <span class="badge badge-soft-success ml-sm-3">
-                                            {{ translate('messages.yes') }}
+                                            {{ 'Sí' }}
                                         </span>
                                     @else
                                         <span class="badge badge-soft-danger ml-sm-3">
-                                            {{ translate('messages.no') }}
+                                            {{ 'No' }}
                                         </span>
                                     @endif
 
                                 </h6>
                                 @endif
                                 <h6 class="text-capitalize">
-                                    {{ translate('messages.payment_method') }} :
+                                    {{ 'método de pago' }} :
                                     {{ translate(str_replace('_', ' ', $order['payment_method'])) }}
                                 </h6>
                                 @if ($order['transaction_reference'])
                                     <h6 class="">
-                                        {{ translate('messages.reference_code') }} :
+                                        {{ 'código de referencia' }} :
                                         <button class="btn btn-outline-primary btn-sm" data-toggle="modal"
                                             data-target=".bd-example-modal-sm">
-                                            {{ translate('messages.add') }}
+                                            {{ 'agregar' }}
                                         </button>
                                     </h6>
                                 @endif
-                                <h6 class="text-capitalize">{{ translate('messages.order_type') }}
+                                <h6 class="text-capitalize">{{ 'tipo de orden' }}
                                     : <label
                                         class="fz--10 badge m-0 badge-soft-primary">
                                         {{ $order['order_type'] === 'dine_in'
-                                            ? translate('En restaurante')
+                                            ? 'En restaurante'
                                             : ($order['order_type'] === 'take_away'
-                                                ? translate('Llevar')
-                                                : (!empty($order->tootli_direct) ? translate('Domicilio (Tootli Direct)') : translate('messages.home Delivery'))) }}
+                                                ? 'Llevar'
+                                                : (!empty($order->tootli_direct) ? 'Domicilio (Tootli Directo)' : 'entrega a domicilio')) }}
                                     </label>
                                 </h6>
                                 @php
@@ -216,38 +216,38 @@
                                             : null);
                                 @endphp
                                 @if (is_array($posMeta) && isset($posMeta['card_gross_amount']) && $posMeta['card_gross_amount'] !== null)
-                                    <h6>{{ translate('Monto cobrado') }}:
+                                    <h6>{{ 'Monto cobrado' }}:
                                         {{ \App\CentralLogics\Helpers::format_currency((float) $posMeta['card_gross_amount']) }}
                                     </h6>
-                                    <h6>{{ translate('Monto después de comisión') }}:
+                                    <h6>{{ 'Monto después de la comisión' }}:
                                         {{ \App\CentralLogics\Helpers::format_currency((float) ($posMeta['card_net_amount'] ?? 0)) }}
                                     </h6>
                                 @endif
                                 <h6>
-                                    {{ translate('messages.order_status') }} :
+                                    {{ 'estado del pedido' }} :
                                     @if ($order['order_status'] == 'pending')
                                         <span class="badge badge-soft-info ml-2 ml-sm-3 text-capitalize">
-                                            {{ translate('messages.pending') }}
+                                            {{ 'Pendiente' }}
                                         </span>
                                     @elseif($order['order_status'] == 'confirmed')
                                         <span class="badge badge-soft-info ml-2 ml-sm-3 text-capitalize">
-                                            {{ translate('messages.confirmed') }}
+                                            {{ 'confirmado' }}
                                         </span>
                                     @elseif($order['order_status'] == 'processing')
                                         <span class="badge badge-soft-warning ml-2 ml-sm-3 text-capitalize">
-                                            {{ translate('messages.processing') }}
+                                            {{ 'tratamiento' }}
                                         </span>
                                     @elseif($order['order_status'] == 'picked_up')
                                         <span class="badge badge-soft-warning ml-2 ml-sm-3 text-capitalize">
-                                            {{ translate('messages.out_for_delivery') }}
+                                            {{ 'En Camino de Entrega' }}
                                         </span>
                                     @elseif($order['order_status'] == 'delivered')
                                         <span class="badge badge-soft-success ml-2 ml-sm-3 text-capitalize">
-                                            {{ translate('messages.delivered') }}
+                                            {{ 'Entregado' }}
                                         </span>
                                     @elseif($order['order_status'] == 'failed')
                                         <span class="badge badge-soft-danger ml-2 ml-sm-3 text-capitalize">
-                                            {{ translate('messages.payment_failed') }}
+                                            {{ 'pago fallido' }}
                                         </span>
                                     @else
                                         <span class="badge badge-soft-danger ml-2 ml-sm-3 text-capitalize">
@@ -261,7 +261,7 @@
                                         @endphp
                                     {{-- @if (is_array($order_images)) --}}
                                         <h5 class="text-dark">
-                                            {{ translate('messages.prescription') }}:
+                                            {{ 'prescripción' }}:
                                         </h5>
                                         <div class="d-flex flex-wrap flex-md-row-reverse __gap-15px" >
                                             @foreach ($order_images as $key => $item)
@@ -269,10 +269,10 @@
                                                 <div>
                                                     <button class="btn w-100 px-0" data-toggle="modal"
                                                         data-target="#prescriptionimagemodal{{ $key }}"
-                                                        title="{{ translate('messages.order_attachment') }}">
+                                                        title="{{ 'archivo adjunto de pedido' }}">
                                                         <div class="gallary-card ml-auto">
                                                             <img  src="{{\App\CentralLogics\Helpers::get_full_url('order',$item['img'],$item['storage']) }}"
-                                                                alt="{{ translate('messages.prescription') }}"
+                                                                alt="{{ 'prescripción' }}"
                                                                 class="initial--22 object-cover">
                                                         </div>
                                                     </button>
@@ -283,11 +283,11 @@
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h4 class="modal-title" id="myModalLabel">
-                                                                    {{ translate('messages.prescription') }}</h4>
+                                                                    {{ 'prescripción' }}</h4>
                                                                 <button type="button" class="close"
                                                                     data-dismiss="modal"><span
                                                                         aria-hidden="true">&times;</span><span
-                                                                        class="sr-only">{{ translate('messages.cancel') }}</span></button>
+                                                                        class="sr-only">{{ 'Cancelar' }}</span></button>
                                                             </div>
                                                             <div class="modal-body">
                                                                 <img src="{{\App\CentralLogics\Helpers::get_full_url('order',$item['img'],$item['storage']) }}"
@@ -299,7 +299,7 @@
                                                                 <a class="btn btn-primary"
                                                                     href="{{ route('admin.file-manager.download', [$file,$storage]) }}"><i
                                                                         class="tio-download"></i>
-                                                                    {{ translate('messages.download') }}
+                                                                    {{ 'descargar' }}
                                                                 </a>
                                                             </div>
                                                         </div>
@@ -338,12 +338,12 @@
                                 class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table dataTable no-footer mb-0">
                                 <thead class="thead-light">
                                     <tr>
-                                        <th class="border-0">{{ translate('messages.#') }}</th>
-                                        <th class="border-0">{{ translate('messages.item_details') }}</th>
+                                        <th class="border-0">{{ '#' }}</th>
+                                        <th class="border-0">{{ 'detalles del artículo' }}</th>
                                         @if ($order->store->module->module_type == 'food')
-                                            <th class="border-0">{{ translate('messages.addons') }}</th>
+                                            <th class="border-0">{{ 'complementos' }}</th>
                                         @endif
-                                        <th class="text-right  border-0">{{ translate('messages.price') }}</th>
+                                        <th class="text-right  border-0">{{ 'precio' }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -394,7 +394,7 @@
                                                                             @else
                                                                                 @if (isset(json_decode($detail['variation'], true)[0]))
                                                                                     <strong><u>
-                                                                                            {{ translate('messages.Variation') }}
+                                                                                            {{ 'Variación' }}
                                                                                             : </u></strong>
                                                                                     @foreach (json_decode($detail['variation'], true)[0] as $key1 => $variation)
                                                                                         <div
@@ -412,7 +412,7 @@
                                                                     @endif
                                                                 @else
                                                                     @if (count(json_decode($detail['variation'], true)) > 0)
-                                                                        <strong><u>{{ translate('messages.variation') }}
+                                                                        <strong><u>{{ 'variación' }}
                                                                                 :
                                                                             </u></strong>
                                                                     <?php
@@ -435,11 +435,11 @@
                                                                 @if(isset($detail->item['delivery_time_type']))
                                                                     <div class="mt-1 d-flex gap-1 align-items-center">
                                                                         <span class="badge badge-soft-info text-capitalize">
-                                                                            {{ translate('messages.delivery_type') }}: {{ translate('messages.'.$detail->item['delivery_time_type']) }}
+                                                                            {{ 'tipo de entrega' }}: {{ translate('messages.'.$detail->item['delivery_time_type']) }}
                                                                         </span>
                                                                         @if(isset($detail->item['store_delivery_time']))
                                                                             <span class="text-muted fs-12">
-                                                                                ({{ $detail->item['store_delivery_time'] }} {{ $detail->item['delivery_time_type'] == 'minutes' ? translate('messages.min') : '' }})
+                                                                                ({{ $detail->item['store_delivery_time'] }} {{ $detail->item['delivery_time_type'] == 'minutes' ? 'mín.' : '' }})
                                                                             </span>
                                                                         @endif
                                                                     </div>
@@ -454,7 +454,7 @@
                                                         <div>
                                                             @foreach (json_decode($detail['add_ons'], true) as $key2 => $addon)
                                                                 @if ($key2 == 0)
-                                                                    <strong><u>{{ translate('messages.addons') }} :
+                                                                    <strong><u>{{ 'complementos' }} :
                                                                         </u></strong>
                                                                 @endif
                                                                 <div class="font-size-sm text-body">
@@ -510,7 +510,7 @@
                                                                 </h6>
 
                                                                 @if (count(json_decode($detail['variation'], true)) > 0)
-                                                                    <strong><u>{{ translate('messages.variation') }} :
+                                                                    <strong><u>{{ 'variación' }} :
                                                                         </u></strong>
                                                                     @foreach (json_decode($detail['variation'], true)[0] as $key1 => $variation)
                                                                         @if ($key1 != 'stock')
@@ -531,7 +531,7 @@
                                                     <td>
                                                         @foreach (json_decode($detail['add_ons'], true) as $key2 => $addon)
                                                             @if ($key2 == 0)
-                                                                <strong><u>{{ translate('messages.addons') }} :
+                                                                <strong><u>{{ 'complementos' }} :
                                                                     </u></strong>
                                                             @endif
                                                             <div class="font-size-sm text-body">
@@ -581,11 +581,11 @@
                         <div class="row justify-content-md-end mb-3 mx-0 mt-4">
                             <div class="col-md-9 col-lg-8">
                                 <dl class="row text-right">
-                                    <dt class="col-6">{{ translate('messages.items_price') }}:</dt>
+                                    <dt class="col-6">{{ 'precio de los artículos' }}:</dt>
                                     <dd class="col-6">{{ \App\CentralLogics\Helpers::format_currency($product_price) }}
                                     </dd>
                                     @if ($order->store->module->module_type == 'food')
-                                        <dt class="col-6">{{ translate('messages.addon_cost') }}:</dt>
+                                        <dt class="col-6">{{ 'costo adicional' }}:</dt>
 
                                         <dd class="col-6">
                                             {{ \App\CentralLogics\Helpers::format_currency($total_addon_price) }}
@@ -593,9 +593,9 @@
                                         </dd>
                                     @endif
 
-                                    <dt class="col-6">{{ translate('messages.subtotal') }}
+                                    <dt class="col-6">{{ 'total parcial' }}
                                         @if ($order->tax_status == 'included' ||  $tax_included ==  1)
-                                        ({{ translate('messages.TAX_Included') }})
+                                        ({{ 'IVA incluido' }})
                                         @endif
                                         :</dt>
 
@@ -606,7 +606,7 @@
                                         @endif
                                         {{ \App\CentralLogics\Helpers::format_currency($product_price + $total_addon_price) }}
                                     </dd>
-                                    <dt class="col-6">{{ translate('messages.discount') }}:</dt>
+                                    <dt class="col-6">{{ 'descuento' }}:</dt>
                                     <dd class="col-6">
                                         @if ($order->prescription_order == 1 && in_array($order['order_status'],['pending','confirmed','processing','accepted']))
                                             <button class="btn btn-sm" type="button" data-toggle="modal"
@@ -617,51 +617,51 @@
 
 
 
-                                    <dt class="col-6">{{ translate('messages.coupon_discount') }}:</dt>
+                                    <dt class="col-6">{{ 'cupón de descuento' }}:</dt>
                                     <dd class="col-6">
                                         - {{ \App\CentralLogics\Helpers::format_currency($coupon_discount_amount) }}</dd>
 
                                     @if ($ref_bonus_amount > 0)
-                                    <dt class="col-6">{{ translate('messages.Referral_Discount') }}:</dt>
+                                    <dt class="col-6">{{ 'Descuento por recomendación' }}:</dt>
                                     <dd class="col-6">
                                         - {{ \App\CentralLogics\Helpers::format_currency($ref_bonus_amount) }}</dd>
 
                                     @endif
 
                                     @if ($order->tax_status == 'excluded' || $order->tax_status == null  )
-                                    <dt class="col-sm-6">{{ translate('messages.vat/tax') }}:</dt>
+                                    <dt class="col-sm-6">{{ 'iva/impuesto' }}:</dt>
                                     <dd class="col-sm-6">
                                         +
                                         {{ \App\CentralLogics\Helpers::format_currency($total_tax_amount) }}
                                     </dd>
                                     @endif
-                                    <dt class="col-6">{{ translate('messages.delivery_man_tips') }}</dt>
+                                    <dt class="col-6">{{ 'consejos de repartidor' }}</dt>
                                     <dd class="col-6">
                                         + {{ \App\CentralLogics\Helpers::format_currency($order->dm_tips) }}</dd>
-                                    <dt class="col-6">{{ translate('messages.delivery_fee') }}:</dt>
+                                    <dt class="col-6">{{ 'tarifa de entrega' }}:</dt>
                                     <dd class="col-6">
                                         @php($del_c = $order['delivery_charge'])
                                         + {{ \App\CentralLogics\Helpers::format_currency($del_c) }}
                                         <hr>
                                     </dd>
-                                    <dt class="col-6">{{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge') }}:</dt>
+                                    <dt class="col-6">{{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??'cargo adicional' }}:</dt>
                                     <dd class="col-6">
                                         @php($additional_charge = $order['additional_charge'])
                                         + {{ \App\CentralLogics\Helpers::format_currency($additional_charge) }}
                                     </dd>
                                     @if ($extra_packaging_amount > 0)
-                                    <dt class="col-6">{{ translate('messages.Extra_Packaging_Amount') }}:</dt>
+                                    <dt class="col-6">{{ 'Cantidad de embalaje adicional' }}:</dt>
                                     <dd class="col-6">
                                         + {{ \App\CentralLogics\Helpers::format_currency($extra_packaging_amount) }}</dd>
                                     @endif
                                     @if ($order['partially_paid_amount'] > 0)
 
-                                    <dt class="col-6">{{ translate('messages.partially_paid_amount') }}:</dt>
+                                    <dt class="col-6">{{ 'cantidad parcialmente pagada' }}:</dt>
                                     <dd class="col-6">
                                         @php($partially_paid_amount = $order['partially_paid_amount'])
                                             {{ \App\CentralLogics\Helpers::format_currency($partially_paid_amount) }}
                                     </dd>
-                                    <dt class="col-6">{{ translate('messages.due_amount') }}:</dt>
+                                    <dt class="col-6">{{ 'monto adeudado' }}:</dt>
                                     @if ($order['payment_method'] == 'partial_payment')
 
                                     <dd class="col-6">
@@ -674,7 +674,7 @@
                                     @endif
                                     @endif
 
-                                    <dt class="col-6">{{ translate('messages.total') }}:</dt>
+                                    <dt class="col-6">{{ 'total' }}:</dt>
                                     <dd class="col-6">
                                         {{ \App\CentralLogics\Helpers::format_currency($product_price + $del_c + $total_tax_amount + $total_addon_price + $additional_charge - $coupon_discount_amount - $store_discount_amount - $admin_flash_discount_amount  - $ref_bonus_amount + $extra_packaging_amount-$store_flash_discount_amount + $order->dm_tips) }}
                                     </dd>
@@ -683,14 +683,14 @@
                                             @if ($payment->payment_status == 'paid')
                                                 @if ( $payment->payment_method == 'cash_on_delivery')
 
-                                                <dt class="col-sm-6">{{ translate('messages.Paid_with_Cash') }} ({{  translate('COD')}}) :</dt>
+                                                <dt class="col-sm-6">{{ 'Pagado en efectivo' }} ({{  'BACALAO'}}) :</dt>
                                                 @else
 
-                                                <dt class="col-sm-6">{{ translate('messages.Paid_by') }} {{  translate($payment->payment_method)}} :</dt>
+                                                <dt class="col-sm-6">{{ 'Pagado por' }} {{  translate($payment->payment_method)}} :</dt>
                                                 @endif
                                             @else
 
-                                            <dt class="col-sm-6">{{ translate('Due_Amount') }} ({{  $payment->payment_method == 'cash_on_delivery' ?  translate('messages.COD') : translate($payment->payment_method) }}) :</dt>
+                                            <dt class="col-sm-6">{{ 'Monto adeudado' }} ({{  $payment->payment_method == 'cash_on_delivery' ?  'BACALAO' : translate($payment->payment_method) }}) :</dt>
                                             @endif
                                         <dd class="col-sm-6">
                                             {{ \App\CentralLogics\Helpers::format_currency($payment->amount) }}
@@ -717,7 +717,7 @@
                         <!-- Header -->
                         <div class="card-header justify-content-center text-center px-0 mx-4">
                             <h5 class="card-header-title text-capitalize">
-                                <span>{{ translate('messages.order_setup') }}</span>
+                                <span>{{ 'configuración del pedido' }}</span>
                             </h5>
                         </div>
                         <!-- End Header -->
@@ -732,13 +732,13 @@
                                     <div class="{{ config('canceled_by_store') ? 'col-6' : 'col-12' }}">
                                         <a class="btn btn--primary w-100 fz--13 px-2 {{ $order['order_status'] == 'pending' ? '' : 'd-none' }} route-alert"
                                            data-url="{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'confirmed']) }}"
-                                           data-message="{{ translate('messages.confirm_this_order_?') }}"
-                                            href="javascript:">{{ translate('messages.confirm_this_order') }}</a>
+                                           data-message="{{ '¿Confirmar este pedido?' }}"
+                                            href="javascript:">{{ 'confirmar este pedido' }}</a>
                                     </div>
                                     @if (config('canceled_by_store'))
                                         <div class="col-6">
                                             <a class="btn btn--danger w-100 fz--13 px-2 cancelled-status {{ $order['order_status'] == 'pending' ? '' : 'd-none' }}"
-                                               >{{ translate('Cancel Order') }}</a>
+                                               >{{ 'Cancelar pedido' }}</a>
                                         </div>
                                     @endif
                                 </div>
@@ -746,27 +746,27 @@
                                         <a class="btn btn--primary w-100 order-status-change-alert {{ $order['order_status'] == 'confirmed' || $order['order_status'] == 'accepted' ? '' : 'd-none' }}"
 
                                            data-url="{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'processing']) }}"
-                                           data-message="{{ translate('Change status to cooking ?') }}"
+                                           data-message="{{ '¿Cambiar estado a cocinar?' }}"
                                            data-verification="false"
                                            data-processing-time="{{ $max_processing_time }}"
-                                           href="javascript:">{{ translate('messages.proceed_for_processing') }}</a>
+                                           href="javascript:">{{ 'proceder para el procesamiento' }}</a>
                                     @else
                                     <a class="btn btn--primary w-100 route-alert  {{ $order['order_status'] == 'confirmed' || $order['order_status'] == 'accepted' ? '' : 'd-none' }}"
                                        data-url="{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'processing']) }}"
-                                       data-message="{{ translate('messages.proceed_for_processing') }}"
-                                    href="javascript:">{{ translate('messages.proceed_for_processing') }}</a>
+                                       data-message="{{ 'proceder para el procesamiento' }}"
+                                    href="javascript:">{{ 'proceder para el procesamiento' }}</a>
                                     @endif
                                 <a class="btn btn--primary w-100 route-alert {{ $order['order_status'] == 'processing' ? '' : 'd-none' }}"
                                    data-url="{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'handover']) }}"
-                                   data-message="{{ translate('messages.make_ready_for_handover') }}"
-                                    href="javascript:">{{ translate('messages.make_ready_for_handover') }}</a>
+                                   data-message="{{ 'prepararse para la entrega' }}"
+                                    href="javascript:">{{ 'prepararse para la entrega' }}</a>
                                  @if($order['order_status'] == 'handover'|| ($order['order_status'] == 'picked_up' && $order->store->sub_self_delivery == 1))
                                     <a class="btn  w-100
                                     {{ (in_array($order['order_type'], ['take_away', 'dine_in'], true) || $order->store->sub_self_delivery == 1)  ?  'btn--primary order-status-change-alert'  :  'btn--secondary  self-delivery-warning' }} "
                                        data-url="{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'delivered']) }}"
-                                       data-message="{{ translate('messages.Change status to delivered (payment status will be paid if not)?') }}"
+                                       data-message="{{ '¿Cambiar el estado a entregado (el estado del pago se pagará si no es así)?' }}"
                                        data-verification="{{ $order_delivery_verification ? 'true' : 'false' }}"
-                                        href="javascript:">{{ translate('messages.make_delivered') }}</a>
+                                        href="javascript:">{{ 'hacer entregado' }}</a>
                                  @endif
 
                             </div>
@@ -779,16 +779,16 @@
                 @if ($order->order_status == 'canceled')
                 <ul class="delivery--information-single mt-3">
                     <li>
-                        <span class=" badge badge-soft-danger "> {{ translate('messages.Cancel_Reason') }} :</span>
+                        <span class=" badge badge-soft-danger "> {{ 'Cancelar motivo' }} :</span>
                         <span class="info">  {{ $order->cancellation_reason }} </span>
                     </li>
 
                     <li>
-                        <span class="name">{{ translate('Cancel_Note') }} </span>
-                        <span class="info">  {{ $order->cancellation_note ?? translate('messages.N/A')}} </span>
+                        <span class="name">{{ 'Cancelar nota' }} </span>
+                        <span class="info">  {{ $order->cancellation_note ?? 'N / A'}} </span>
                     </li>
                     <li>
-                        <span class="name">{{ translate('Canceled_By') }} </span>
+                        <span class="name">{{ 'Cancelado por' }} </span>
                         <span class="info">  {{ translate($order->canceled_by) }} </span>
                     </li>
                     @if ($order->payment_status == 'paid' || $order->payment_status == 'partially_paid' )
@@ -796,13 +796,13 @@
                                 @php( $pay_infos =$order->payments()->where('payment_status','paid')->get())
                                 @foreach ($pay_infos as $pay_info)
                                     <li>
-                                        <span class="name">{{ translate('Amount_paid_by') }} {{ translate($pay_info->payment_method) }} </span>
+                                        <span class="name">{{ 'Monto pagado por' }} {{ translate($pay_info->payment_method) }} </span>
                                         <span class="info">  {{ \App\CentralLogics\Helpers::format_currency($pay_info->amount)  }} </span>
                                     </li>
                                 @endforeach
                             @else
                             <li>
-                                <span class="name">{{ translate('Amount_paid_by') }} {{ translate($order->payment_method) }} </span>
+                                <span class="name">{{ 'Monto pagado por' }} {{ translate($order->payment_method) }} </span>
                                 <span class="info ">  {{ \App\CentralLogics\Helpers::format_currency($order->order_amount)  }} </span>
                             </li>
                             @endif
@@ -812,12 +812,12 @@
                         @if ( $order?->payments)
                             @php( $amount =$order->payments()->where('payment_status','paid')->sum('amount'))
                                 <li>
-                                    <span class="name">{{ translate('Amount_Returned_To_Wallet') }} </span>
+                                    <span class="name">{{ 'Monto devuelto a la billetera' }} </span>
                                     <span class="info">  {{ \App\CentralLogics\Helpers::format_currency($amount)  }} </span>
                                 </li>
                         @else
                         <li>
-                            <span class="name">{{ translate('Amount_Returned_To_Wallet') }} </span>
+                            <span class="name">{{ 'Monto devuelto a la billetera' }} </span>
                             <span class="info">  {{ \App\CentralLogics\Helpers::format_currency($order->order_amount)  }} </span>
                         </li>
                         @endif
@@ -832,7 +832,7 @@
                         <div class="card-header">
                             <h4 class="card-header-title">
                                 <span class="card-header-icon"><i class="tio-user"></i></span>
-                                <span>{{ translate('messages.Delivery Man') }}</span>
+                                <span>{{ 'repartidor' }}</span>
                             </h4>
                         </div>
                         <!-- End Header -->
@@ -854,7 +854,7 @@
                                         <span class="text--title font-semibold d-flex align-items-center">
                                             <i class="tio-shopping-basket-outlined mr-2"></i>
                                             {{ $order->delivery_man->orders_count }}
-                                            {{ translate('messages.orders_delivered') }}
+                                            {{ 'pedidos entregados' }}
                                         </span>
 
                                         <span class="text--title font-semibold d-flex align-items-center">
@@ -873,7 +873,7 @@
                                     <hr>
                                     @php($address = $order->dm_last_location)
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <h5>{{ translate('messages.last_location') }}</h5>
+                                        <h5>{{ 'última ubicación' }}</h5>
                                     </div>
                                     @if (isset($address))
                                         <span class="d-block">
@@ -884,13 +884,13 @@
                                         </span>
                                     @else
                                         <span class="d-block text-lowercase qcont">
-                                            {{ translate('messages.location_not_found') }}
+                                            {{ 'ubicación no encontrada' }}
                                         </span>
                                     @endif
                                 @endif
                             @else
                                 <span class="badge badge-soft-danger py-2 d-block qcont">
-                                    {{ translate('messages.deliveryman_not_found') }}
+                                    {{ 'repartidor no encontrado' }}
                                 </span>
                             @endif
                         </div>
@@ -902,12 +902,12 @@
                 <!-- order proof -->
                 <div class="card mb-2 mt-2">
                     <div class="card-header border-0 text-center pb-0">
-                        <h4 class="m-0">{{ translate('messages.delivery_proof') }} </h4>
+                        <h4 class="m-0">{{ 'prueba de entrega' }} </h4>
                         @if ($order['store']['sub_self_delivery'])
 
                         <button class="btn btn-outline-primary btn-sm" data-toggle="modal"
                                             data-target=".order-proof-modal">
-                                            {{ translate('messages.add') }}
+                                            {{ 'agregar' }}
                                         </button>
                         @endif
                     </div>
@@ -915,7 +915,7 @@
                     <div class="card-body pt-2">
                         @if ($data)
                         <label class="input-label"
-                            for="order_proof">{{ translate('messages.image') }} : </label>
+                            for="order_proof">{{ 'imagen' }} : </label>
                         <div class="row g-3">
                                 @foreach ($data as $key => $img)
                                 @php($img = is_array($img)?$img:['img'=>$img,'storage'=>'public'])
@@ -934,11 +934,11 @@
                                                 <div class="modal-header">
                                                     <h4 class="modal-title"
                                                         id="order_proof_{{ $key }}">
-                                                        {{ translate('order_proof_image') }}</h4>
+                                                        {{ 'imagen de prueba de pedido' }}</h4>
                                                     <button type="button" class="close"
                                                         data-dismiss="modal"><span
                                                             aria-hidden="true">&times;</span><span
-                                                            class="sr-only">{{ translate('messages.cancel') }}</span></button>
+                                                            class="sr-only">{{ 'Cancelar' }}</span></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <img src="{{\App\CentralLogics\Helpers::get_full_url('order',$img['img'],$img['storage']) }}"
@@ -950,7 +950,7 @@
                                                     <a class="btn btn-primary"
                                                         href="{{ route('admin.file-manager.download', [$file,$storage]) }}"><i
                                                             class="tio-download"></i>
-                                                        {{ translate('messages.download') }}
+                                                        {{ 'descargar' }}
                                                     </a>
                                                 </div>
                                             </div>
@@ -968,7 +968,7 @@
                     <div class="card-header">
                         <h4 class="card-header-title">
                             <span class="card-header-icon"><i class="tio-user"></i></span>
-                            <span>{{ translate('messages.customer') }}</span>
+                            <span>{{ 'Cliente' }}</span>
                         </h4>
                     </div>
                     <!-- End Header -->
@@ -991,7 +991,7 @@
                                     <span class="text--title font-semibold d-flex align-items-center">
                                         <i class="tio-shopping-basket-outlined mr-2"></i>
                                         {{ $order->customer->orders_count }}
-                                        {{ translate('messages.orders_delivered') }}
+                                        {{ 'pedidos entregados' }}
                                     </span>
 
                                     <span class="text--title font-semibold d-flex align-items-center">
@@ -1014,33 +1014,33 @@
                             @if ($order->delivery_address)
                                 @php($address = json_decode($order->delivery_address, true))
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <h5>{{ translate('messages.delivery_info') }}</h5>
+                                    <h5>{{ 'información de entrega' }}</h5>
                                 </div>
                                 @if (isset($address))
                                     <span class="delivery--information-single d-block">
                                         <div class="d-flex">
-                                            <span class="name">{{ translate('messages.name') }}:</span>
+                                            <span class="name">{{ 'nombre' }}:</span>
                                             <span class="info">{{ $address['contact_person_name'] }}</span>
                                         </div>
                                         <div class="d-flex">
-                                            <span class="name">{{ translate('messages.contact') }}:</span>
+                                            <span class="name">{{ 'contacto' }}:</span>
                                             <a class="info deco-none"
                                                 href="tel:{{ $address['contact_person_number'] }}">
                                                 {{ $address['contact_person_number'] }}</a>
                                         </div>
                                         <div class="d-flex">
-                                            <span class="name">{{ translate('Floor') }}:</span>
+                                            <span class="name">{{ 'Piso' }}:</span>
                                             <span
                                                 class="info">{{ isset($address['floor']) ? $address['floor'] : '' }}</span>
                                         </div>
 
                                         <div class="d-flex mb-2">
-                                            <span class="name">{{ translate('House') }}:</span>
+                                            <span class="name">{{ 'Casa' }}:</span>
                                             <span
                                                 class="info">{{ isset($address['house']) ? $address['house'] : '' }}</span>
                                         </div>
                                         <div class="d-flex">
-                                            <span class="name">{{ translate('Road') }}:</span>
+                                            <span class="name">{{ 'Camino' }}:</span>
                                             <span
                                                 class="info">{{ isset($address['road']) ? $address['road'] : '' }}</span>
                                         </div>
@@ -1062,39 +1062,39 @@
                     @elseif($order->is_guest)
                         <div class="card-body">
                             <span class="badge badge-soft-success py-2 mb-2 d-block qcont">
-                                {{ translate('Guest_user') }}
+                                {{ 'Usuario invitado' }}
                             </span>
                             @if ($order->delivery_address)
                             @php($address = json_decode($order->delivery_address, true))
                             <div class="d-flex justify-content-between align-items-center">
-                                <h5>{{ translate('messages.delivery_info') }}</h5>
+                                <h5>{{ 'información de entrega' }}</h5>
                             </div>
                             @if (isset($address))
                                 <span class="delivery--information-single d-block">
                                     <div class="d-flex">
-                                        <span class="name">{{ translate('messages.name') }}:</span>
+                                        <span class="name">{{ 'nombre' }}:</span>
                                         <span class="info">{{ $address['contact_person_name'] }}</span>
                                     </div>
                                     <div class="d-flex">
-                                        <span class="name">{{ translate('messages.contact') }}:</span>
+                                        <span class="name">{{ 'contacto' }}:</span>
                                         <a class="info deco-none"
                                             href="tel:{{ $address['contact_person_number'] }}">
                                             {{ $address['contact_person_number'] }}</a>
                                     </div>
                                     <div class="d-flex">
-                                        <span class="name">{{ translate('Floor') }}:</span>
+                                        <span class="name">{{ 'Piso' }}:</span>
                                         <span
                                             class="info">{{ isset($address['floor']) ? $address['floor'] : '' }}</span>
                                     </div>
 
                                     <div class="d-flex mb-2">
-                                        <span class="name">{{ translate('House') }}:</span>
+                                        <span class="name">{{ 'Casa' }}:</span>
                                         <span
                                             class="info">{{ isset($address['house']) ? $address['house'] : '' }}</span>
                                     </div>
 
                                     <div class="d-flex">
-                                        <span class="name">{{ translate('Road') }}:</span>
+                                        <span class="name">{{ 'Camino' }}:</span>
                                         <span
                                             class="info">{{ isset($address['road']) ? $address['road'] : '' }}</span>
                                     </div>
@@ -1118,7 +1118,7 @@
                     @else
                         <div class="card-body">
                             <span class="badge badge-soft-danger py-2 d-block qcont">
-                                {{ translate('Customer Not found!') }}
+                                {{ 'Cliente no encontrado!' }}
                             </span>
                         </div>
                     @endif
@@ -1138,7 +1138,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title h4" id="mySmallModalLabel">{{ translate('messages.add_delivery_proof') }}</h5>
+                    <h5 class="modal-title h4" id="mySmallModalLabel">{{ 'agregar comprobante de entrega' }}</h5>
                     <button type="button" class="btn btn-xs btn-icon btn-ghost-secondary" data-dismiss="modal"
                         aria-label="Close">
                         <i class="tio-clear tio-lg"></i>
@@ -1173,7 +1173,7 @@
                         </div>
                         <!-- End Input Group -->
                         <div class="text-right mt-2">
-                            <button class="btn btn--primary">{{ translate('messages.submit') }}</button>
+                            <button class="btn btn--primary">{{ 'entregar' }}</button>
                         </div>
                     </div>
                 </form>
@@ -1187,7 +1187,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ translate('messages.update_order_amount') }}</h5>
+                    <h5 class="modal-title">{{ 'actualizar el monto del pedido' }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -1197,14 +1197,14 @@
                         @csrf
                         <input type="hidden" name="order_id" value="{{ $order->id }}">
                         <div class="form-group col-12">
-                            <label for="order_amount">{{ translate('messages.order_amount') }}</label>
+                            <label for="order_amount">{{ 'monto del pedido' }}</label>
                             <input id="order_amount" type="number" class="form-control" name="order_amount" min="0"
                                 value="{{ round($order['order_amount'] - $order['total_tax_amount']  - $order['additional_charge'] -  $order['delivery_charge'] + $order['store_discount_amount'] - $order['dm_tips'] ,6) }}" step=".01">
                         </div>
 
                         <div class="form-group col-sm-12">
                             <button class="btn btn-sm btn-primary"
-                                type="submit">{{ translate('messages.submit') }}</button>
+                                type="submit">{{ 'entregar' }}</button>
                         </div>
                     </form>
                 </div>
@@ -1215,7 +1215,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ translate('messages.update_discount_amount') }}</h5>
+                    <h5 class="modal-title">{{ 'actualizar importe de descuento' }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -1225,14 +1225,14 @@
                         @csrf
                         <input type="hidden" name="order_id" value="{{ $order->id }}">
                         <div class="form-group col-12">
-                            <label for="discount_amount">{{ translate('messages.discount_amount') }}</label>
+                            <label for="discount_amount">{{ 'monto de descuento' }}</label>
                             <input type="number" id="discount_amount" class="form-control" name="discount_amount" min="0"
                                 value="{{ $order['store_discount_amount'] }}" step=".01">
                         </div>
 
                         <div class="form-group col-sm-12">
                             <button class="btn btn-sm btn-primary"
-                                type="submit">{{ translate('messages.submit') }}</button>
+                                type="submit">{{ 'entregar' }}</button>
                         </div>
                     </form>
                 </div>
@@ -1253,7 +1253,7 @@
         $('.self-delivery-warning').on('click',function (event ){
             event.preventDefault();
             toastr.info(
-                "{{ translate('messages.Self_Delivery_is_Disable') }}", {
+                "{{ 'La autoentrega está deshabilitada' }}", {
                     CloseButton: true,
                     ProgressBar: true
                 });
@@ -1263,8 +1263,8 @@
 
         $('.cancelled-status').on('click',function (){
             Swal.fire({
-                title: '{{ translate('messages.are_you_sure') }}',
-                text: '{{ translate('messages.Change status to canceled ?') }}',
+                title: '{{ '¿está seguro?' }}',
+                text: '{{ '¿Cambiar estado a cancelado?' }}',
                 type: 'warning',
                 html:
                     `   <select class="form-control js-select2-custom mx-1" name="reason" id="reason">
@@ -1278,8 +1278,8 @@
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{ translate('messages.no') }}',
-                confirmButtonText: '{{ translate('messages.yes') }}',
+                cancelButtonText: '{{ 'No' }}',
+                confirmButtonText: '{{ 'Sí' }}',
                 reverseButtons: true,
                 onOpen: function () {
                     $('.js-select2-custom').select2({
@@ -1292,7 +1292,7 @@
             }).then((result) => {
                 if (result.value) {
                     let reason = document.getElementById('reason').value;
-                    location.href = '{!! route('vendor.order.status', ['id' => $order['id'],'order_status' => 'canceled']) !!}&reason='+reason,'{{ translate('Change status to canceled ?') }}';
+                    location.href = '{!! route('vendor.order.status', ['id' => $order['id'],'order_status' => 'canceled']) !!}&reason='+reason,'{{ '¿Cambiar estado a cancelado?' }}';
                 }
             })
 
@@ -1306,7 +1306,7 @@
 
             if (verification) {
                 Swal.fire({
-                    title: '{{ translate('Enter order verification code') }}',
+                    title: '{{ 'Ingrese el código de verificación del pedido' }}',
                     input: 'text',
                     inputAttributes: {
                         autocapitalize: 'off'
@@ -1314,7 +1314,7 @@
                     showCancelButton: true,
                     cancelButtonColor: 'default',
                     confirmButtonColor: '#FC6A57',
-                    confirmButtonText: '{{ translate('messages.submit') }}',
+                    confirmButtonText: '{{ 'entregar' }}',
                     showLoaderOnConfirm: true,
                     preConfirm: (otp) => {
                         location.href = route + '&otp=' + otp;
@@ -1323,16 +1323,16 @@
                 })
             } else if (processing) {
                 Swal.fire({
-                    title: '{{ translate('messages.Are you sure ?') }}',
+                    title: '{{ 'Está seguro ?' }}',
                     type: 'warning',
                     showCancelButton: true,
                     cancelButtonColor: 'default',
                     confirmButtonColor: '#FC6A57',
-                    cancelButtonText: '{{ translate('messages.Cancel') }}',
-                    confirmButtonText: '{{ translate('messages.submit') }}',
-                    inputPlaceholder: "{{ translate('Enter processing time') }}",
+                    cancelButtonText: '{{ 'Cancelar' }}',
+                    confirmButtonText: '{{ 'entregar' }}',
+                    inputPlaceholder: "{{ 'Ingrese el tiempo de procesamiento' }}",
                     input: 'text',
-                    html: message + '<br/>'+'<label>{{ translate('Enter Processing time in minutes') }}</label>',
+                    html: message + '<br/>'+'<label>{{ 'Ingrese el tiempo de procesamiento en minutos' }}</label>',
                     inputValue: processing,
                     preConfirm: (processing_time) => {
                         location.href = route + '&processing_time=' + processing_time;
@@ -1341,14 +1341,14 @@
                 })
             } else {
                 Swal.fire({
-                    title: '{{ translate('messages.Are you sure ?') }}',
+                    title: '{{ 'Está seguro ?' }}',
                     text: message,
                     type: 'warning',
                     showCancelButton: true,
                     cancelButtonColor: 'default',
                     confirmButtonColor: '#FC6A57',
-                    cancelButtonText: '{{ translate('messages.No') }}',
-                    confirmButtonText: '{{ translate('messages.Yes') }}',
+                    cancelButtonText: '{{ 'No' }}',
+                    confirmButtonText: '{{ 'Sí' }}',
                     reverseButtons: true
                 }).then((result) => {
                     if (result.value) {
@@ -1382,13 +1382,13 @@
                 },
                 onExtensionErr: function() {
                     toastr.error(
-                        "{{ translate('messages.please_only_input_png_or_jpg_type_file') }}", {
+                        "{{ 'Por favor ingrese solo archivos tipo png o jpg' }}", {
                             CloseButton: true,
                             ProgressBar: true
                         });
                 },
                 onSizeErr: function() {
-                    toastr.error("{{ translate('messages.file_size_too_big') }}", {
+                    toastr.error("{{ 'tamaño de archivo demasiado grande' }}", {
                         CloseButton: true,
                         ProgressBar: true
                     });

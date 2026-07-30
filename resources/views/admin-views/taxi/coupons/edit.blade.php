@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Edit Taxi Coupon'))
+@section('title', 'Editar cupón de taxi')
 
 @section('content')
     <div class="content container-fluid">
@@ -9,12 +9,12 @@
             <div class="row align-items-center">
                 <div class="col-sm mb-2 mb-sm-0">
                     <h1 class="page-header-title">
-                        <i class="tio-ticket"></i> {{ translate('Edit Coupon') }}: {{ $coupon->code }}
+                        <i class="tio-ticket"></i> {{ 'Editar cupón' }}: {{ $coupon->code }}
                     </h1>
                 </div>
                 <div class="col-sm-auto">
                     <a href="{{ route('admin.taxi.coupons.index') }}" class="btn btn-secondary">
-                        <i class="tio-arrow-left"></i> {{ translate('Back') }}
+                        <i class="tio-arrow-left"></i> {{ 'Atrás' }}
                     </a>
                 </div>
             </div>
@@ -28,14 +28,14 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>{{ translate('Title') }} *</label>
+                                <label>{{ 'Título' }} *</label>
                                 <input type="text" name="title" class="form-control" required
                                     value="{{ old('title', $coupon->title) }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>{{ translate('Code') }} *</label>
+                                <label>{{ 'Código' }} *</label>
                                 <input type="text" name="code" class="form-control" required
                                     value="{{ old('code', $coupon->code) }}" style="text-transform: uppercase;">
                             </div>
@@ -45,34 +45,34 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>{{ translate('Discount Type') }} *</label>
+                                <label>{{ 'Tipo de descuento' }} *</label>
                                 <select name="discount_type" class="form-control" required>
                                     <option value="percent" {{ $coupon->discount_type == 'percent' ? 'selected' : '' }}>
-                                        {{ translate('Percentage') }}
+                                        {{ 'Porcentaje' }}
                                     </option>
                                     <option value="amount" {{ $coupon->discount_type == 'amount' ? 'selected' : '' }}>
-                                        {{ translate('Fixed Amount') }}
+                                        {{ 'Monto Fijo' }}
                                     </option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>{{ translate('Discount') }} *</label>
+                                <label>{{ 'Descuento' }} *</label>
                                 <input type="number" name="discount" class="form-control" required
                                     step="0.01" min="0" value="{{ old('discount', $coupon->discount) }}">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>{{ translate('Min Purchase') }} *</label>
+                                <label>{{ 'Compra mínima' }} *</label>
                                 <input type="number" name="min_purchase" class="form-control" required
                                     step="0.01" min="0" value="{{ old('min_purchase', $coupon->min_purchase) }}">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>{{ translate('Max Discount') }} *</label>
+                                <label>{{ 'Descuento máximo' }} *</label>
                                 <input type="number" name="max_discount" class="form-control" required
                                     step="0.01" min="0" value="{{ old('max_discount', $coupon->max_discount) }}">
                             </div>
@@ -82,23 +82,23 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>{{ translate('Start Date') }} *</label>
+                                <label>{{ 'Fecha de inicio' }} *</label>
                                 <input type="date" name="start_date" class="form-control" required
                                     value="{{ old('start_date', date('Y-m-d', strtotime($coupon->start_date))) }}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>{{ translate('Expire Date') }} *</label>
+                                <label>{{ 'Fecha de vencimiento' }} *</label>
                                 <input type="date" name="expire_date" class="form-control" required
                                     value="{{ old('expire_date', date('Y-m-d', strtotime($coupon->expire_date))) }}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>{{ translate('Usage Limit') }}</label>
+                                <label>{{ 'Límite de uso' }}</label>
                                 <input type="number" name="limit" class="form-control" min="0"
-                                    placeholder="{{ translate('Unlimited') }}" value="{{ old('limit', $coupon->limit) }}">
+                                    placeholder="{{ 'Ilimitado' }}" value="{{ old('limit', $coupon->limit) }}">
                             </div>
                         </div>
                     </div>
@@ -106,8 +106,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>{{ translate('Vehicle Types') }}</label>
-                                <small class="text-muted d-block mb-2">{{ translate('Leave empty for all vehicle types') }}</small>
+                                <label>{{ 'Tipos de vehículos' }}</label>
+                                <small class="text-muted d-block mb-2">{{ 'Dejar vacío para todo tipo de vehículos' }}</small>
                                 @php
                                     $selectedTypes = $coupon->vehicle_types ?? [];
                                 @endphp
@@ -130,16 +130,16 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="input-label">{{ translate('Coupon For') }}</label>
+                                <label class="input-label">{{ 'Cupón para' }}</label>
                                 <select name="coupon_type" class="form-control" onchange="toggleCustomerType(this.value)">
-                                    <option value="all" {{ !$isSpecific ? 'selected' : '' }}>{{ translate('All Customers') }}</option>
-                                    <option value="specific" {{ $isSpecific ? 'selected' : '' }}>{{ translate('Specific Customers') }}</option>
+                                    <option value="all" {{ !$isSpecific ? 'selected' : '' }}>{{ 'Todos los clientes' }}</option>
+                                    <option value="specific" {{ $isSpecific ? 'selected' : '' }}>{{ 'Clientes específicos' }}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-12" id="customer_select_div" style="display: {{ $isSpecific ? 'block' : 'none' }};">
                             <div class="form-group">
-                                <label class="input-label">{{ translate('Select Customers') }}</label>
+                                <label class="input-label">{{ 'Seleccionar clientes' }}</label>
                                 <select name="customer_ids[]" id="customer_ids" class="form-control js-data-example-ajax" multiple>
                                     @if($isSpecific && !empty($customers))
                                         @foreach($customers as $customer)
@@ -192,12 +192,12 @@
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" name="status" class="custom-control-input" id="couponStatus"
                                 {{ $coupon->status ? 'checked' : '' }}>
-                            <label class="custom-control-label" for="couponStatus">{{ translate('Active') }}</label>
+                            <label class="custom-control-label" for="couponStatus">{{ 'Activo' }}</label>
                         </div>
                     </div>
 
                     <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn btn-primary">{{ translate('Update Coupon') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ 'Cupón de actualización' }}</button>
                     </div>
                 </form>
             </div>

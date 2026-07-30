@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('AddOn Bulk Import'))
+@section('title','Importación masiva de complementos')
 
 @push('css_or_js')
 
@@ -14,7 +14,7 @@
                     <img src="{{asset('assets/admin/img/addon.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{translate('messages.addons_bulk_import')}}
+                    {{'importación masiva de complementos'}}
                 </span>
             </h1>
         </div>
@@ -27,23 +27,23 @@
                             <div class="export-steps-item-2 h-100">
                                 <div class="top">
                                     <div>
-                                        <h3 class="fs-20">{{translate('Step_1')}}</h3>
+                                        <h3 class="fs-20">{{'Paso 1'}}</h3>
                                         <div>
-                                            {{translate('Download_Excel_File')}}
+                                            {{'Descargar archivo Excel'}}
                                         </div>
                                     </div>
                                     <img src="{{asset('assets/admin/img/bulk-import-1.png')}}" alt="">
                                 </div>
-                                <h4>{{ translate('Instruction') }}</h4>
+                                <h4>{{ 'Instrucción' }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                        {{ translate('Download_the_format_file_and_fill_it_with_proper_data.') }}
+                                        {{ 'Descargue el archivo de formato y rellénelo con los datos adecuados.' }}
                                     </li>
                                     <li>
-                                        {{ translate('You_can_download_the_example_file_to_understand_how_the_data_must_be_filled.') }}
+                                        {{ 'Puede descargar el archivo de ejemplo para comprender cómo se deben completar los datos.' }}
                                     </li>
                                     <li>
-                                        {{ translate('Have_to_upload_excel_file.') }}
+                                        {{ 'Tienes que subir el archivo de Excel.' }}
                                     </li>
 
                                 </ul>
@@ -53,20 +53,20 @@
                             <div class="export-steps-item-2 h-100">
                                 <div class="top">
                                     <div>
-                                        <h3 class="fs-20">{{translate('Step_2')}}</h3>
+                                        <h3 class="fs-20">{{'Paso 2'}}</h3>
                                         <div>
-                                            {{translate('Match_Spread_sheet_data_according_to_instruction')}}
+                                            {{'Haga coincidir los datos de la hoja de cálculo según las instrucciones'}}
                                         </div>
                                     </div>
                                     <img src="{{asset('assets/admin/img/bulk-import-2.png')}}" alt="">
                                 </div>
-                                <h4>{{ translate('Instruction') }}</h4>
+                                <h4>{{ 'Instrucción' }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                        {{ translate('Fill_up_the_data_according_to_the_format') }}
+                                        {{ 'Complete los datos según el formato.' }}
                                     </li>
                                     <li>
-                                        {{ translate('You_can_get_store_id_from_their_list_please_input_the_right_ids')}}
+                                        {{ 'Puede obtener la identificación de la tienda de su lista, ingrese las identificaciones correctas'}}
                                     </li>
 
                                 </ul>
@@ -76,23 +76,23 @@
                             <div class="export-steps-item-2 h-100">
                                 <div class="top">
                                     <div>
-                                        <h3 class="fs-20">{{translate('Step_3')}}</h3>
+                                        <h3 class="fs-20">{{'Paso 3'}}</h3>
                                         <div>
-                                            {{translate('Validate_data_and_complete_import')}}
+                                            {{'Validar datos y completar la importación.'}}
                                         </div>
                                     </div>
                                     <img src="{{asset('assets/admin/img/bulk-import-3.png')}}" alt="">
                                 </div>
-                                  <h4>{{ translate('Instruction') }}</h4>
+                                  <h4>{{ 'Instrucción' }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                        {{ translate('In_the_Excel_file_upload_section,_first_select_the_upload_option.') }}
+                                        {{ 'En la sección de carga de archivos de Excel, primero seleccione la opción de carga.' }}
                                      </li>
                                      <li>
-                                        {{ translate('Upload_your_file_in_.xls,_.xlsx_format.') }}
+                                        {{ 'Sube tu archivo en formato .xls, .xlsx.' }}
                                      </li>
                                      <li>
-                                        {{ translate('Finally_click_the_upload_button.') }}
+                                        {{ 'Finalmente haga clic en el botón cargar.' }}
                                      </li>
 
 
@@ -102,11 +102,11 @@
                     </div>
                 </div>
                 <div class="text-center pb-4">
-                    <h3 class="mb-3 export--template-title font-regular">{{translate('download_spreadsheet_template')}}</h3>
+                    <h3 class="mb-3 export--template-title font-regular">{{'descargar plantilla de hoja de cálculo'}}</h3>
                     <div class="btn--container justify-content-center export--template-btns">
 
-                        <a href="{{asset('assets/addons_bulk_format.xlsx')}}" download="" class="btn btn--primary btn-outline-primary">{{ translate('Template with Existing Data') }}</a>
-                        <a href="{{asset('assets/addons_bulk_format_nodata.xlsx')}}" download="" class="btn btn--primary">{{ translate('Template without Data') }}</a>
+                        <a href="{{asset('assets/addons_bulk_format.xlsx')}}" download="" class="btn btn--primary btn-outline-primary">{{ 'Plantilla con datos existentes' }}</a>
+                        <a href="{{asset('assets/addons_bulk_format_nodata.xlsx')}}" download="" class="btn btn--primary">{{ 'Plantilla sin datos' }}</a>
 
                     </div>
                 </div>
@@ -121,31 +121,31 @@
         <div class="card-body">
             <div class="row g-3">
                 <div class="col-sm-6">
-                    <h5 class="text-capitalize mb-3">{{ translate('Select_Data_Upload_type') }}</h5>
+                    <h5 class="text-capitalize mb-3">{{ 'Seleccione el tipo de carga de datos' }}</h5>
                     <div class="module-radio-group border rounded">
                         <label class="form-check form--check">
                             <input class="form-check-input "   value="import" type="radio" name="upload_type" checked>
                             <span class="form-check-label py-20">
-                                {{ translate('Upload_New_Data') }}
+                                {{ 'Cargar nuevos datos' }}
                             </span>
                         </label>
                         <label class="form-check form--check">
                             <input class="form-check-input " value="update" type="radio" name="upload_type">
                             <span class="form-check-label py-20">
-                                {{ translate('Update_Existing_Data') }}
+                                {{ 'Actualizar datos existentes' }}
                             </span>
                         </label>
                     </div>
                 </div>
                 <div class="col-sm-6">
-                    <h5 class="text-capitalize mb-3">{{ translate('Import_Addons_file') }}</h5>
+                    <h5 class="text-capitalize mb-3">{{ 'Importar archivo de complementos' }}</h5>
                     <label class="uploadDnD d-block">
                         <div class="form-group inputDnD input_image input_image_edit position-relative">
                             <div class="upload-text">
                                 <div>
                                     <img src="{{asset('assets/admin/img/bulk-import-3.png')}}" alt="">
                                 </div>
-                                <div class="filename">{{translate('Must_be_Excel_files_using_our_Excel_template_above')}}</div>
+                                <div class="filename">{{'Deben ser archivos de Excel usando nuestra plantilla de Excel anterior'}}</div>
                             </div>
                             <input type="file" name="products_file" class="form-control-file text--primary font-weight-bold action-upload-section-dot-area" id="products_file">
                         </div>
@@ -154,8 +154,8 @@
                 </div>
             </div>
             <div class="btn--container justify-content-end mt-20">
-                <button id="reset_btn" type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                <button type="button" class="btn btn--primary update_or_import">{{translate('messages.Upload')}}</button>
+                <button id="reset_btn" type="reset" class="btn btn--reset">{{'reiniciar'}}</button>
+                <button type="button" class="btn btn--primary update_or_import">{{'Subir'}}</button>
             </div>
         </div>
     </div>
@@ -169,19 +169,19 @@
     "use strict";
     $('#reset_btn').click(function(){
     $('#products_file').val('');
-    $('.filename').text('{{translate('Must_be_Excel_files_using_our_Excel_template_above')}}');
+    $('.filename').text('{{'Deben ser archivos de Excel usando nuestra plantilla de Excel anterior'}}');
 })
 
     function myFunction(data) {
         Swal.fire({
-        title: '{{ translate('Are you sure?') }}' ,
-        text: "{{ translate('You_want_to_') }}" +data,
+        title: '{{ '¿Está seguro?' }}' ,
+        text: "{{ 'Tú quieres' }}" +data,
         type: 'warning',
         showCancelButton: true,
         cancelButtonColor: 'default',
         confirmButtonColor: '#FC6A57',
-        cancelButtonText: '{{translate('messages.no')}}',
-        confirmButtonText: '{{translate('messages.yes')}}',
+        cancelButtonText: '{{'No'}}',
+        confirmButtonText: '{{'Sí'}}',
         reverseButtons: true
         }).then((result) => {
             if (result.value) {

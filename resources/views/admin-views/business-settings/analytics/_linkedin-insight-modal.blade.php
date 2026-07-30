@@ -21,32 +21,32 @@
                                     </div>
                                     <div class="text-dark mb-3">
                                         <h3 class="lh-base">
-                                            {{ translate('how_to_get_the_linkedin_partner_id') }}
+                                            {{ 'cómo obtener la identificación del socio de linkedin' }}
                                         </h3>
                                         <p class="opacity-75">
-                                            {{ translate('to_find_your_linkedin_partner_id,_go_to_your_ad_account_in_campaign_manager.') }}
-                                            {{ translate('in_the_left_menu,_click_data_and_then_sources.') }}
-                                            {{ translate('next_click_on_insight_tag.') }}
-                                            {{ translate('after_that,_select_the_i_will_use_a_tag_manager_dropdown_and_copy_your_partner_id_from_the_box_provided.') }}
+                                            {{ 'Para encontrar su ID de socio de LinkedIn, vaya a su cuenta publicitaria en el administrador de campañas.' }}
+                                            {{ 'en el menú de la izquierda, haga clic en datos y luego en fuentes.' }}
+                                            {{ 'Luego haga clic en la etiqueta de información.' }}
+                                            {{ 'después de eso, seleccione el menú desplegable Usaré un administrador de etiquetas y copie su identificación de socio en el cuadro provisto.' }}
                                         </p>
                                     </div>
 
                                     <div class="text-dark mb-3">
                                         <h3 class="lh-base">
-                                            {{ translate('where_to_use_the_linkedin_partner_id') }}
+                                            {{ 'dónde utilizar la identificación de socio de linkedin' }}
                                         </h3>
                                         <p class="opacity-75">
-                                            {{ translate('open_the_marketing_tools_feature_in_your_admin_panel_and_follow_the_directions:') }}
+                                            {{ 'abra la función de herramientas de marketing en su panel de administración y siga las instrucciones:' }}
                                         </p>
                                         <ol class="d-flex flex-column gap-2 opacity-75">
                                             <li>
-                                                {{ translate('go_to_the_linkedin_partner_id_section_under_marketing_tools.') }}
+                                                {{ 'vaya a la sección de identificación de socio de LinkedIn en herramientas de marketing.' }}
                                             </li>
                                             <li>
-                                                {{ translate('turn_on_the_toggle_button.') }}
+                                                {{ 'encienda el botón de alternancia.' }}
                                             </li>
                                             <li>
-                                                {{ translate('paste_your_linkedin_partner_id_into_the_input_box_and_click_submit.') }}
+                                                {{ 'pegue su identificación de socio de LinkedIn en el cuadro de entrada y haga clic en enviar.' }}
                                             </li>
                                         </ol>
                                     </div>

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.Delivery Man Preview'))
+@section('title', 'Vista previa del repartidor')
 
 @push('css_or_js')
 
@@ -36,7 +36,7 @@
                                             <i class="tio-copy theme-clr fs-16"></i>
                                         </button>
                                     </div>
-                                    <p class="text-dark fs-14 mb-0">{{ translate('messages.Referral Code') }}</p>
+                                    <p class="text-dark fs-14 mb-0">{{ 'Código de referencia' }}</p>
                                 </div>
                             </div>
                         </div>
@@ -50,7 +50,7 @@
                                 </div>
                                 <div>
                                     <h3 class="text-00AA6D mb-1 fs-26">{{ $totalReferred }}</h3>
-                                    <p class="text-dark fs-14 mb-0">{{ translate('messages.Total Referred') }}</p>
+                                    <p class="text-dark fs-14 mb-0">{{ 'Total referido' }}</p>
                                 </div>
                             </div>
                         </div>
@@ -64,7 +64,7 @@
                                 </div>
                                 <div>
                                     <h3 class="title mb-1 fs-26">{{ $totalReferralEarning }}</h3>
-                                    <p class="text-dark fs-14 mb-0">{{ translate('messages.Total Earning') }}</p>
+                                    <p class="text-dark fs-14 mb-0">{{ 'Ganancia total' }}</p>
                                 </div>
                             </div>
                         </div>
@@ -76,11 +76,11 @@
         <div class="card">
             <div class="card-header flex-wrap pt-3 pb-3 border-0 gap-2">
                 <div class="search--button-wrapper mr-1">
-                    <h4 class="card-title fs-16 text-dark">{{ translate('messages.Refer & Earn History')}}</h4>
+                    <h4 class="card-title fs-16 text-dark">{{ 'Referir y ganar historial'}}</h4>
                     <form class="search-form min--260">
                         <div class="input-group input--group">
                             <input id="datatableSearch_" type="search" name="search" class="form-control h--40px"
-                                placeholder="{{ translate('messages.Search Here') }}" value="{{ request()->search ?? '' }}"
+                                placeholder="{{ 'Buscar aquí' }}" value="{{ request()->search ?? '' }}"
                                 aria-label="Search" tabindex="1">
 
                             <button type="submit" class="btn btn--secondary bg-modal-btn"><i
@@ -90,7 +90,7 @@
                     <button type="button" class="btn btn--primary h-40px btn-outline-primary py-2 offcanvas-trigger"
                         data-target="#transaction__list">
                         <i class="tio-tune-horizontal"></i>
-                        {{ translate('messages.Filter') }}
+                        {{ 'Filtrar' }}
                         @if(request()->input('date_range') && request()->input('date_range') != 'all_time')
                             <span class="badge-danger rounded-circle position-absolute"
                                 style="top: -3px; right: -3px; width: 10px; height: 10px; padding: 0;"></span>
@@ -104,24 +104,24 @@
                                         "target": "#usersExportDropdown",
                                         "type": "css-animation"
                                     }'>
-                        <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                        <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                     </a>
 
                     <div id="usersExportDropdown"
                         class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                        <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                        <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                         <a id="export-excel" class="dropdown-item"
                             href="{{ route('admin.users.delivery-man.referral-export', ['type' => 'excel', 'id' => $deliveryMan->id, request()->getQueryString()]) }}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
                                 src="{{ asset('assets/admin') }}/svg/components/excel.svg" alt="Image Description">
-                            {{ translate('messages.excel') }}
+                            {{ 'sobresalir' }}
                         </a>
                         <a id="export-csv" class="dropdown-item"
                             href="{{ route('admin.users.delivery-man.referral-export', ['type' => 'csv', 'id' => $deliveryMan->id, request()->getQueryString()]) }}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
                                 src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                 alt="Image Description">
-                            {{ translate('messages.csv') }}
+                            {{ 'csv' }}
                         </a>
                     </div>
                 </div>
@@ -133,10 +133,10 @@
                     <table class="table table-border table-thead-borderless table-align-middle table-nowrap card-table m-0">
                         <thead class="thead-light">
                             <tr>
-                                <th class="border-0 text-center">{{ translate('messages.SL') }}</th>
-                                <th class="border-0">{{ translate('messages.Transaction ID') }}</th>
-                                <th class="border-0">{{ translate('messages.Date') }}</th>
-                                <th class="border-0 text-center">{{ translate('messages.Amount') }}</th>
+                                <th class="border-0 text-center">{{ 'SL' }}</th>
+                                <th class="border-0">{{ 'ID de transacción' }}</th>
+                                <th class="border-0">{{ 'Fecha' }}</th>
+                                <th class="border-0 text-center">{{ 'Cantidad' }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -154,7 +154,7 @@
                                         </div>
                                             @if ($referralEarning->refer_type == 'referrerBonus')
                                             <div>
-                                                <span class="text--title">({{ translate('messages.Referral_Bonus') }})</span>
+                                                <span class="text--title">({{ 'Bono por recomendación' }})</span>
                                             </div>
                                             @endif
                                     </td>
@@ -171,7 +171,7 @@
                         <div class="empty--data">
                             <img src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
                             <h5>
-                                {{translate('no_data_found')}}
+                                {{'no se encontraron datos'}}
                             </h5>
                         </div>
                     @endif
@@ -199,7 +199,7 @@
                 method="get">
                 <div
                     class="custom-offcanvas-header bg--secondary d-flex justify-content-between align-items-center px-3 py-3">
-                    <h3 class="mb-0">{{ translate('messages.Filter') }}</h2>
+                    <h3 class="mb-0">{{ 'Filtrar' }}</h2>
                         <button type="button"
                             class="btn-close w-25px h-25px border rounded-circle d-center bg--secondary text-dark offcanvas-close fz-15px p-0"
                             aria-label="Close">&times;</button>
@@ -211,8 +211,8 @@
         <div class="offcanvas-footer p-3 d-flex align-items-center justify-content-center gap-3">
             <button
                 data-url="{{ route('admin.users.delivery-man.preview', ['id' => $deliveryMan->id, 'tab' => 'referal-earn']) }}"
-                type="reset" class="btn w-100 btn--reset h--40px redirect-url">{{ translate('messages.reset') }}</button>
-            <button type="submit" class="btn w-100 btn--primary h--40px">{{ translate('messages.Filter') }}</button>
+                type="reset" class="btn w-100 btn--reset h--40px redirect-url">{{ 'reiniciar' }}</button>
+            <button type="submit" class="btn w-100 btn--primary h--40px">{{ 'Filtrar' }}</button>
         </div>
         </form>
     </div>

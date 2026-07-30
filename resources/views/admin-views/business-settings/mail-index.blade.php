@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('mail_config'))
+@section('title', 'configuración de correo')
 
 @push('css_or_js')
 @endpush
@@ -13,7 +13,7 @@
                 <span class="page-header-icon">
                     <img src="{{asset('assets/admin/img/email.png')}}" class="w--26" alt="">
                 </span>
-                <span>{{ translate('messages.smtp_mail_setup') }}
+                <span>{{ 'configuración de correo smtp' }}
                 </span>
             </h1>
             @include('admin-views.business-settings.partials.third-party-links')
@@ -27,19 +27,19 @@
                         <li class="nav-item mr-2 mr-md-4">
                             <a href="{{route('admin.business-settings.third-party.mail-config')}}" class="nav-link pb-2 px-0 pb-sm-3 active">
                                 <img src="{{asset('assets/admin/img/mail-config.png')}}" alt="">
-                                <span>{{translate('Mail Config')}}</span>
+                                <span>{{'Configuración de correo'}}</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{route('admin.business-settings.third-party.test')}}" class="nav-link pb-2 px-0 pb-sm-3">
                                 <img src="{{asset('assets/admin/img/test-mail.png')}}" alt="">
-                                <span>{{translate('Send Test Mail')}}</span>
+                                <span>{{'Enviar correo de prueba'}}</span>
                             </a>
                         </li>
                     </ul>
                     <div class="py-1">
                         <div class="text--primary-2 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#works-modal">
-                            <strong class="mr-2">{{translate('How it Works')}}</strong>
+                            <strong class="mr-2">{{'Cómo funciona'}}</strong>
                             <div class="blinkings">
                                 <i class="tio-info-outined"></i>
                             </div>
@@ -60,13 +60,13 @@
                                 <label class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control mb-2">
                                     <span class="pr-1 d-flex align-items-center switch--label text--primary">
                                         <span class="line--limit-1">
-                                            {{isset($data) && isset($data['status'])&&$data['status']==1?translate('Turn OFF'):translate('Turn ON')}}
+                                            {{isset($data) && isset($data['status'])&&$data['status']==1?'Apagar':'Encender'}}
                                         </span>
                                     </span>
 
                                     <?php
                                         if (App\Models\BusinessSetting::where('key', 'firebase_otp_verification')->first()?->value == 1) {
-                                            $text= "<p class=text--danger>" .translate('NOTE: Currently_Your_FireBase_OTP_System_is_Active.Users_won’t_get_any_OTP_related_mails.') ."</p>" ;
+                                            $text= "<p class=text--danger>" .'NOTA: Actualmente su sistema FireBase OTP está activo. Los usuarios no recibirán ningún correo electrónico relacionado con OTP.' ."</p>" ;
                                         }
                                     ?>
 
@@ -76,11 +76,11 @@
                                             data-type="status"
                                             data-image-on="{{ asset('assets/admin/img/modal/mail-success.png') }}"
                                             data-image-off="{{ asset('assets/admin/img/modal/mail-warning.png') }}"
-                                            data-title-on="{{ translate('Important!') }}"
-                                            data-title-off="{{ translate('Warning!') }}"
-                                            data-text-on="<p>{{ translate('Enabling mail configuration services will allow the system to send emails. Please ensure that you have correctly configured the SMTP settings to avoid potential issues with email delivery.') }}</p>
+                                            data-title-on="{{ '¡Importante!' }}"
+                                            data-title-off="{{ '¡Advertencia!' }}"
+                                            data-text-on="<p>{{ 'Habilitar los servicios de configuración de correo permitirá que el sistema envíe correos electrónicos. Asegúrese de haber configurado correctamente los ajustes SMTP para evitar posibles problemas con la entrega de correo electrónico.' }}</p>
                                             {{ $text ?? '' }} "
-                                            data-text-off="<p>{{ translate('Disabling mail configuration services will prevent the system from sending emails. Please only turn off this service if you intend to temporarily suspend email sending. Note that this may affect system functionality that relies on email communication.') }}</p>"
+                                            data-text-off="<p>{{ 'Deshabilitar los servicios de configuración de correo evitará que el sistema envíe correos electrónicos. Desactive este servicio únicamente si tiene intención de suspender temporalmente el envío de correo electrónico. Tenga en cuenta que esto puede afectar la funcionalidad del sistema que depende de la comunicación por correo electrónico.' }}</p>"
                                             class="status toggle-switch-input dynamic-checkbox"
 
 
@@ -89,7 +89,7 @@
                                         <span class="toggle-switch-indicator"></span>
                                     </span>
                                 </label>
-                                <small>{{translate('*By Turning OFF mail configuration, all your mailing services will be off.')}}</small>
+                                <small>{{'*Al desactivar la configuración de correo, todos sus servicios de correo se desactivarán.'}}</small>
                             </div>
                         </form>
                         <form action="javascript:"
@@ -100,66 +100,66 @@
                                 <div class="row g-3">
                                     <div class="col-sm-12">
                                         <div class="form-group mb-0">
-                                            <label for="name" class="form-label">{{ translate('messages.mailer_name') }}</label><br>
-                                            <input id="name" type="text" placeholder="{{ translate('messages.Ex:') }} Alex" class="form-control" name="name"
+                                            <label for="name" class="form-label">{{ 'nombre del remitente' }}</label><br>
+                                            <input id="name" type="text" placeholder="{{ 'Ex:' }} Alex" class="form-control" name="name"
                                                 value="{{ env('APP_MODE') != 'demo' ? $data['name'] ?? '' : '' }}" required>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group mb-0">
-                                            <label for="host" class="form-label">{{ translate('messages.host') }}</label><br>
-                                            <input id="host" type="text" class="form-control" name="host" placeholder="{{translate('messages.Ex_:_mail.6am.one')}}"
+                                            <label for="host" class="form-label">{{ 'anfitrión' }}</label><br>
+                                            <input id="host" type="text" class="form-control" name="host" placeholder="{{'Ej: correo.6am.one'}}"
                                                 value="{{ env('APP_MODE') != 'demo' ? $data['host'] ?? '' : '' }}" required>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group mb-0">
-                                            <label for="driver" class="form-label">{{ translate('messages.driver') }}</label><br>
-                                            <input id="driver" type="text" class="form-control" name="driver" placeholder="{{translate('messages.Ex : smtp')}}"
+                                            <label for="driver" class="form-label">{{ 'conductor' }}</label><br>
+                                            <input id="driver" type="text" class="form-control" name="driver" placeholder="{{'Ej: smtp'}}"
                                                 value="{{ env('APP_MODE') != 'demo' ? $data['driver'] ?? '' : '' }}" required>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group mb-0">
-                                            <label for="port" class="form-label">{{ translate('messages.port') }}</label><br>
-                                            <input id="port" type="text" class="form-control" name="port" placeholder="{{translate('messages.Ex : 587')}}"
+                                            <label for="port" class="form-label">{{ 'puerto' }}</label><br>
+                                            <input id="port" type="text" class="form-control" name="port" placeholder="{{'Ej: 587'}}"
                                                 value="{{ env('APP_MODE') != 'demo' ? $data['port'] ?? '' : '' }}" required>
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
                                         <div class="form-group mb-0">
-                                            <label for="username" class="form-label">{{ translate('messages.username') }}</label><br>
-                                            <input id="username" type="text" placeholder="{{ translate('messages.Ex:') }} ex@yahoo.com" class="form-control" name="username"
+                                            <label for="username" class="form-label">{{ 'nombre de usuario' }}</label><br>
+                                            <input id="username" type="text" placeholder="{{ 'Ex:' }} ex@yahoo.com" class="form-control" name="username"
                                                 value="{{ env('APP_MODE') != 'demo' ? $data['username'] ?? '' : '' }}" required>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group mb-0">
-                                            <label for="email" class="form-label">{{ translate('messages.email_id') }}</label><br>
-                                            <input id="email" type="text" placeholder="{{ translate('messages.Ex:') }} ex@yahoo.com" class="form-control" name="email"
+                                            <label for="email" class="form-label">{{ 'identificación de correo electrónico' }}</label><br>
+                                            <input id="email" type="text" placeholder="{{ 'Ex:' }} ex@yahoo.com" class="form-control" name="email"
                                                 value="{{ env('APP_MODE') != 'demo' ? $data['email_id'] ?? '' : '' }}" required>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group mb-0">
-                                            <label for="encryption" class="form-label">{{ translate('messages.encryption') }}</label><br>
-                                            <input id="encryption" type="text" placeholder="{{ translate('messages.Ex:') }} tls" class="form-control" name="encryption"
+                                            <label for="encryption" class="form-label">{{ 'cifrado' }}</label><br>
+                                            <input id="encryption" type="text" placeholder="{{ 'Ex:' }} tls" class="form-control" name="encryption"
                                                 value="{{ env('APP_MODE') != 'demo' ? $data['encryption'] ?? '' : '' }}" required>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group mb-0">
-                                            <label for="password" class="form-label">{{ translate('messages.password') }}</label><br>
-                                            <input id="password" type="text" class="form-control" name="password" placeholder="{{translate('messages.Ex : 5+ Characters')}}"
+                                            <label for="password" class="form-label">{{ 'Contraseña' }}</label><br>
+                                            <input id="password" type="text" class="form-control" name="password" placeholder="{{'Ej: 5+ personajes'}}"
                                                 value="{{ env('APP_MODE') != 'demo' ? $data['password'] ?? '' : '' }}" required>
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
                                         <div class="btn--container justify-content-end">
-                                            <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
+                                            <button type="reset" class="btn btn--reset">{{'reiniciar'}}</button>
                                             <button type="{{ env('APP_MODE') != 'demo' ? 'submit' : 'button' }}"
                                             class="btn btn--primary call-demo"
-                                            >{{ translate('messages.save') }}</button>
+                                            >{{ 'ahorrar' }}</button>
                                         </div>
                                     </div>
                                 </div>
@@ -183,14 +183,14 @@
                 <div class="modal-body pt-0">
                     <div class="text-center mb-20">
                         <img src="{{asset('assets/admin/img/sent-mail-box.png')}}" alt="" class="mb-20">
-                        <h5 class="modal-title">{{translate('Congratulations! Your SMTP mail has been setup successfully!')}}</h5>
+                        <h5 class="modal-title">{{'¡Felicidades! ¡Su correo SMTP se ha configurado correctamente!'}}</h5>
                         <p class="txt">
-                            {{translate("Go to test mail to check that its work perfectly or not!")}}
+                            {{'¡Vaya al correo de prueba para comprobar que funciona perfectamente o no!'}}
                         </p>
                     </div>
                     <div class="btn--container justify-content-center">
                         <a href="{{route('admin.business-settings.third-party.test')}}" class="btn btn--primary min-w-120">
-                            <img src="{{asset('assets/admin/img/paper-plane.png')}}" alt=""> {{translate('Send Test Mail')}}
+                            <img src="{{asset('assets/admin/img/paper-plane.png')}}" alt=""> {{'Enviar correo de prueba'}}
                         </a>
                     </div>
                 </div>
@@ -210,14 +210,14 @@
                 <div class="modal-body pt-0">
                     <div class="text-center mb-20">
                         <img src="{{asset('assets/admin/img/mail-config/save-data.png')}}" alt="" class="mb-20">
-                        <h5 class="modal-title">{{translate('Send a Test Mail to Your Email ? ')}}</h5>
+                        <h5 class="modal-title">{{'¿Enviar un correo de prueba a su correo electrónico?'}}</h5>
                         <p class="txt">
-                            {{translate("A test mail will be send to your email to confirm it works perfectly.")}}
+                            {{'Se enviará un correo de prueba a su correo electrónico para confirmar que funciona perfectamente.'}}
                         </p>
                     </div>
                     <div class="btn--container justify-content-center">
                         <button type="submit" class="btn btn--primary min-w-120" data-dismiss="modal">
-                            {{translate('Send Test Mail')}}
+                            {{'Enviar correo de prueba'}}
                         </button>
                     </div>
                 </div>
@@ -240,14 +240,14 @@
                             <div class="mb-20">
                                 <div class="text-center">
                                     <img src="{{asset('assets/admin/img/mail-config/slide-1.png')}}" alt="" class="mb-20">
-                                    <h5 class="modal-title">{{translate('Find SMTP Server Details')}}</h5>
+                                    <h5 class="modal-title">{{'Buscar detalles del servidor SMTP'}}</h5>
                                 </div>
                                 <ul>
                                     <li>
-                                        {{translate('Contact your email service provider or IT administrator to obtain the SMTP server details, such as hostname, port, username, and password.')}}
+                                        {{'Póngase en contacto con su proveedor de servicios de correo electrónico o administrador de TI para obtener los detalles del servidor SMTP, como el nombre de host, el puerto, el nombre de usuario y la contraseña.'}}
                                     </li>
                                     <li>
-                                        {{translate("Note: If you're not sure where to find these details, check the email provider's documentation or support resources for guidance.")}}
+                                        {{'Nota: Si no está seguro de dónde encontrar estos detalles, consulte la documentación del proveedor de correo electrónico o los recursos de soporte para obtener orientación.'}}
                                     </li>
                                 </ul>
                             </div>
@@ -256,17 +256,17 @@
                             <div class="mb-20">
                                 <div class="text-center">
                                     <img src="{{asset('assets/admin/img/mail-config/slide-2.png')}}" alt="" class="mb-20">
-                                    <h5 class="modal-title">{{translate('Configure SMTP Settings')}}</h5>
+                                    <h5 class="modal-title">{{'Configurar los ajustes SMTP'}}</h5>
                                 </div>
                                 <ul>
                                     <li>
-                                        {{translate('Go to the SMTP mail setup page in the admin panel.')}}
+                                        {{'Vaya a la página de configuración de correo SMTP en el panel de administración.'}}
                                     </li>
                                     <li>
-                                        {{translate('Enter the obtained SMTP server details, including the hostname, port, username, and password.')}}
+                                        {{'Ingrese los detalles del servidor SMTP obtenidos, incluido el nombre de host, el puerto, el nombre de usuario y la contraseña.'}}
                                     </li>
                                     <li>
-                                        {{translate('Choose the appropriate encryption method (e.g., SSL, TLS) if required. Save the settings.')}}
+                                        {{'Elija el método de cifrado adecuado (por ejemplo, SSL, TLS) si es necesario. Guarde la configuración.'}}
                                     </li>
                                 </ul>
                             </div>
@@ -275,20 +275,20 @@
                             <div class="mb-20">
                                 <div class="text-center">
                                     <img src="{{asset('assets/admin/img/mail-config/slide-3.png')}}" alt="" class="mb-20">
-                                    <h5 class="modal-title">{{translate('Test SMTP Connection')}}</h5>
+                                    <h5 class="modal-title">{{'Probar la conexión SMTP'}}</h5>
                                 </div>
                                 <ul>
                                     <li>
-                                        {{translate('Click on the "Send Test Mail" button to verify the SMTP connection.')}}
+                                        {{'Haga clic en el botón "Enviar correo de prueba" para verificar la conexión SMTP.'}}
                                     </li>
                                     <li>
-                                        {{translate('If successful, you will see a confirmation message indicating that the connection is working fine.')}}
+                                        {{'Si tiene éxito, verá un mensaje de confirmación que indica que la conexión está funcionando bien.'}}
                                     </li>
                                     <li>
-                                        {{translate('If not, double-check your SMTP settings and try again.')}}
+                                        {{'De lo contrario, vuelva a verificar su configuración SMTP e inténtelo nuevamente.'}}
                                     </li>
                                     <li>
-                                        {{translate("Note: If you're unsure about the SMTP settings, contact your email service provider or IT administrator for assistance.")}}
+                                        {{'Nota: Si no está seguro acerca de la configuración SMTP, comuníquese con su proveedor de servicios de correo electrónico o administrador de TI para obtener ayuda.'}}
                                     </li>
                                 </ul>
                             </div>
@@ -297,18 +297,18 @@
                             <div class="mw-353px mb-20 mx-auto">
                                 <div class="text-center">
                                     <img src="{{asset('assets/admin/img/mail-config/slide-4.png')}}" alt="" class="mb-20">
-                                    <h5 class="modal-title">{{translate('Enable Mail Configuration')}}</h5>
+                                    <h5 class="modal-title">{{'Habilitar configuración de correo'}}</h5>
                                 </div>
                                 <ul class="px-3">
                                     <li>
-                                        {{translate('If the SMTP connection test is successful, you can now enable the mail configuration services by toggling the switch to "ON."')}}
+                                        {{'Si la prueba de conexión SMTP es exitosa, ahora puede habilitar los servicios de configuración de correo colocando el interruptor en "ON".'}}
                                     </li>
                                     <li>
-                                        {{translate('This will allow the system to send emails using the configured SMTP settings.')}}
+                                        {{'Esto permitirá que el sistema envíe correos electrónicos utilizando la configuración SMTP configurada.'}}
                                     </li>
                                 </ul>
                                 <div class="btn-wrap">
-                                    <button type="submit" class="btn btn--primary w-100" data-dismiss="modal">{{translate('Got It')}}</button>
+                                    <button type="submit" class="btn btn--primary w-100" data-dismiss="modal">{{'Entiendo'}}</button>
                                 </div>
                             </div>
                         </div>
@@ -352,7 +352,7 @@
                     $('#loading').show();
                 },
                 success: function() {
-                    toastr.success('{{ translate('messages.configuration_updated_successfully') }}');
+                    toastr.success('{{ 'configuración actualizada exitosamente' }}');
                     $('#sent-mail-modal').modal('show');
                 },
                 complete: function() {

@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title',translate('messages.sub_category'))
+@section('title','subcategoría')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/categories.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{translate('messages.sub_category')}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$categories->total()}}</span>
+                    {{'subcategoría'}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$categories->total()}}</span>
                 </span>
             </h1>
         </div>
@@ -29,7 +29,7 @@
                                 @csrf
                                 <!-- Search -->
                                 <div class="input-group input--group">
-                                    <input   value="{{ request()?->search ?? null }}" type="search" name="search" class="form-control" placeholder="{{translate('messages.ex_:_search_sub_category')}}" aria-label="{{translate('messages.search_here')}}">
+                                    <input   value="{{ request()?->search ?? null }}" type="search" name="search" class="form-control" placeholder="{{'ej: buscar subcategoría'}}" aria-label="{{'buscar aquí'}}">
                                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                                 </div>
                                 <!-- End Search -->
@@ -41,31 +41,31 @@
                                         "target": "#usersExportDropdown",
                                         "type": "css-animation"
                                     }'>
-                                    <i class="tio-download-to mr-1"></i> {{translate('messages.export')}}
+                                    <i class="tio-download-to mr-1"></i> {{'exportar'}}
                                 </a>
 
                                 <div id="usersExportDropdown"
                                         class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
 
                                     <span
-                                        class="dropdown-header">{{translate('messages.download_options')}}</span>
+                                        class="dropdown-header">{{'opciones de descarga'}}</span>
                                     <a id="export-excel" class="dropdown-item" href="{{route('vendor.category.export-sub-categories',['type'=>'excel',request()->getQueryString()])}}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                                 src="{{asset('assets/admin/svg/components/excel.svg')}}"
                                                 alt="Image Description">
-                                        {{translate('messages.excel')}}
+                                        {{'sobresalir'}}
                                     </a>
                                     <a id="export-csv" class="dropdown-item" href="{{route('vendor.category.export-sub-categories', ['type'=>'csv',request()->getQueryString()])}}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                                 src="{{asset('assets/admin/svg/components/placeholder-csv-format.svg')}}"
                                                 alt="Image Description">
-                                        .{{translate('messages.csv')}}
+                                        .{{'csv'}}
                                     </a>
                                     {{-- <a id="export-pdf" class="dropdown-item" href="javascript:;">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                                 src="{{asset('assets/admin')}}/svg/components/pdf.svg"
                                                 alt="Image Description">
-                                        {{translate('messages.pdf')}}
+                                        {{'pdf'}}
                                     </a> --}}
                                 </div>
                             </div>
@@ -85,10 +85,10 @@
                                 }'>
                                 <thead class="thead-light">
                                     <tr>
-                                        <th class="border-0">{{translate('messages.#')}}</th>
-                                        <th class="border-0">{{translate('messages.category_id')}}</th>
-                                        <th class="border-0">{{translate('messages.main_category')}}</th>
-                                        <th class="border-0">{{translate('messages.sub_category')}}</th>
+                                        <th class="border-0">{{'#'}}</th>
+                                        <th class="border-0">{{'identificación de categoría'}}</th>
+                                        <th class="border-0">{{'categoría principal'}}</th>
+                                        <th class="border-0">{{'subcategoría'}}</th>
                                     </tr>
                                 </thead>
 
@@ -99,7 +99,7 @@
                                         <td>{{$category->id}}</td>
                                         <td>
                                             <span class="d-block font-size-sm text-body">
-                                                {{Str::limit($category->parent?$category->parent['name']:translate('messages.category_deleted'),20,'...')}}
+                                                {{Str::limit($category->parent?$category->parent['name']:'categoría eliminada',20,'...')}}
                                             </span>
                                         </td>
                                         <td>
@@ -121,7 +121,7 @@
                         <div class="empty--data">
                             <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                             <h5>
-                                {{translate('no_data_found')}}
+                                {{'no se encontraron datos'}}
                             </h5>
                         </div>
                         @endif

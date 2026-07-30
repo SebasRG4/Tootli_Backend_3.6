@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.Subscription'))
+@section('title','Suscripción')
 
 @section('subscription_index')
 active
@@ -18,7 +18,7 @@ active
                 <div class="d-flex align-items-start">
                     <img src="{{asset('assets/admin/img/store.png')}}" width="24" alt="img">
                     <div class="w-0 flex-grow pl-2">
-                        <h1 class="page-header-title">{{translate('Subscription Package')}}</h1>
+                        <h1 class="page-header-title">{{'Paquete de suscripción'}}</h1>
                     </div>
                 </div>
             </div>
@@ -27,10 +27,10 @@ active
     <div class="js-nav-scroller hs-nav-scroller-horizontal mb-4">
         <ul class="nav nav-tabs border-0 nav--tabs nav--pills">
             <li class="nav-item">
-                <a href="#" class="nav-link active">{{ translate('Package_Details') }}</a>
+                <a href="#" class="nav-link active">{{ 'Detalles del paquete' }}</a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('admin.business-settings.subscriptionackage.transaction',$subscriptionackage->id) }}" class="nav-link">{{ translate('Transactions') }}</a>
+                <a href="{{ route('admin.business-settings.subscriptionackage.transaction',$subscriptionackage->id) }}" class="nav-link">{{ 'Actas' }}</a>
             </li>
         </ul>
     </div>
@@ -40,26 +40,26 @@ active
         <div class="card-header border-0">
             <div class="w-100 d-flex flex-wrap align-items-center justify-content-between gap-2">
                 <div>
-                    <h3 class="text--title card-title">{{ translate('Overview') }}</h3>
-                    <div>{{ translate('See_overview_of_all_the_packages') }}</div>
+                    <h3 class="text--title card-title">{{ 'Descripción general' }}</h3>
+                    <div>{{ 'Ver resumen de todos los paquetes' }}</div>
                 </div>
                 <div class="status-filter-wrap m-0">
                     <div class="statistics-btn-grp">
                         <label>
                             <input type="radio" name="statistics" value="all" class="order_stats_update" hidden="" checked>
-                            <span>{{ translate('All') }}</span>
+                            <span>{{ 'Todo' }}</span>
                         </label>
                         <label>
                             <input type="radio" name="statistics" value="this_year" class="order_stats_update" hidden="">
-                            <span>{{ translate('This_Year') }}</span>
+                            <span>{{ 'Este Año' }}</span>
                         </label>
                         <label>
                             <input type="radio" name="statistics" value="this_month" class="order_stats_update" hidden="">
-                            <span>{{ translate('This_Month') }}</span>
+                            <span>{{ 'Este Mes' }}</span>
                         </label>
                         <label>
                             <input type="radio" name="statistics" value="this_week" class="order_stats_update" hidden="">
-                            <span>{{ translate('This_Week') }}</span>
+                            <span>{{ 'Esta Semana' }}</span>
                         </label>
                     </div>
                 </div>
@@ -81,17 +81,17 @@ active
                 <span class="card-header-icon">
                     <img width="25" src="{{asset('assets/admin/img/subscription-plan/subscribed-user.png')}}" alt="">
                 </span>
-                <span>{{ translate('Package_details') }}</span>
+                <span>{{ 'Detalles del paquete' }}</span>
             </h4>
             <div class="d-flex gap-2 align-items-center justify-content-center">
-                <label class="toggle-switch toggle-switch-sm"> {{ translate('Status') }}:&nbsp;
+                <label class="toggle-switch toggle-switch-sm"> {{ 'Estado' }}:&nbsp;
                     <input type="checkbox"  data-package_id="{{$subscriptionackage->id}}" data-package_name="{{$subscriptionackage->package_name}}" data-url="{{route('admin.business-settings.subscriptionackage.status',[$subscriptionackage->id,$subscriptionackage->status?0:1])}}" class="toggle-switch-input {{$subscriptionackage->status?'status_change_alert':'status_change_alert_reenable'}}" {{$subscriptionackage->status?'checked':''}}>
                     <span class="toggle-switch-label">
                         <span class="toggle-switch-indicator"></span>
                     </span>
                 </label>
                 <div>
-                    <a class="btn btn--primary py-2" href="{{ route('admin.business-settings.subscriptionackage.edit',$subscriptionackage->id) }}" title="Edit Package"><i class="tio-edit"> </i> {{ translate('Edit') }}</a>
+                    <a class="btn btn--primary py-2" href="{{ route('admin.business-settings.subscriptionackage.edit',$subscriptionackage->id) }}" title="Edit Package"><i class="tio-edit"> </i> {{ 'Editar' }}</a>
                 </div>
             </div>
         </div>
@@ -105,7 +105,7 @@ active
                     </div>
                     <h3 class="right">{{\App\CentralLogics\Helpers::format_currency($subscriptionackage->price) }}
                         /<small class="font-medium text--title">{{ $subscriptionackage->validity }} {{
-                            translate('messages.days') }}</small></h3>
+                            'días' }}</small></h3>
                 </div>
 
                 <div class="check--grid-wrapper mt-3 max-w-850px">
@@ -115,10 +115,10 @@ active
                         <div class="d-flex align-items-center gap-2">
                             <img src="{{asset('assets/admin/img/subscription-plan/check.png')}}" alt="">
                             @if ( $subscriptionackage->max_order == 'unlimited' )
-                            <span class="form-check-label text-dark">{{ $subscriptionackage->module_type == 'rental' ? translate('messages.unlimited_trips') : translate('messages.unlimited_orders') }}</span>
+                            <span class="form-check-label text-dark">{{ $subscriptionackage->module_type == 'rental' ? 'viajes ilimitados' : 'pedidos ilimitados' }}</span>
                             @else
                             <span class="form-check-label text-dark"> {{ $subscriptionackage->max_order }} {{
-                                  $subscriptionackage->module_type == 'rental' ? translate('messages.trips') : translate('messages.Orders') }}</span>
+                                  $subscriptionackage->module_type == 'rental' ? 'viajes' : 'Órdenes' }}</span>
                             @endif
                         </div>
                     </div>
@@ -132,7 +132,7 @@ active
                             @else
                             <img src="{{asset('assets/admin/img/subscription-plan/check-1.png')}}" alt="">
                             @endif
-                            <span class="form-check-label text-dark">{{ translate('messages.POS') }}</span>
+                            <span class="form-check-label text-dark">{{ 'punto de venta' }}</span>
                         </div>
                     </div>
                     @endif
@@ -144,7 +144,7 @@ active
                             @else
                             <img src="{{asset('assets/admin/img/subscription-plan/check-1.png')}}" alt="">
                             @endif
-                            <span class="form-check-label text-dark">{{ translate('messages.Mobile_App') }}</span>
+                            <span class="form-check-label text-dark">{{ 'Aplicación móvil' }}</span>
                         </div>
                     </div>
                     @if ( $subscriptionackage->module_type !== 'rental')
@@ -156,7 +156,7 @@ active
                             @else
                             <img src="{{asset('assets/admin/img/subscription-plan/check-1.png')}}" alt="">
                             @endif
-                            <span class="form-check-label text-dark">{{ translate('messages.self_delivery') }}</span>
+                            <span class="form-check-label text-dark">{{ 'autoentrega' }}</span>
                         </div>
                     </div>
                     @endif
@@ -165,11 +165,11 @@ active
                         <div class="d-flex align-items-center gap-2">
                             <img src="{{asset('assets/admin/img/subscription-plan/check.png')}}" alt="">
                             @if ( $subscriptionackage->max_product == 'unlimited' )
-                            <span class="form-check-label text-dark">{{  $subscriptionackage->module_type == 'rental' ? translate('messages.unlimited_Upload') : translate('messages.unlimited_item_Upload')
+                            <span class="form-check-label text-dark">{{  $subscriptionackage->module_type == 'rental' ? 'Subida ilimitada' : 'Carga ilimitada de artículos'
                                 }}</span>
                             @else
                             <span class="form-check-label text-dark"> {{ $subscriptionackage->max_product }} {{
-                               $subscriptionackage->module_type == 'rental' ? translate('messages.Vehicle_Upload') : translate('messages.product_Upload') }}</span>
+                               $subscriptionackage->module_type == 'rental' ? 'Carga de vehículos' : 'Subir producto' }}</span>
                             @endif
                         </div>
                     </div>
@@ -181,7 +181,7 @@ active
                             @else
                             <img src="{{asset('assets/admin/img/subscription-plan/check-1.png')}}" alt="">
                             @endif
-                            <span class="form-check-label text-dark">{{ translate('messages.review') }}</span>
+                            <span class="form-check-label text-dark">{{ 'revisar' }}</span>
                         </div>
                     </div>
 
@@ -192,7 +192,7 @@ active
                             @else
                             <img src="{{asset('assets/admin/img/subscription-plan/check-1.png')}}" alt="">
                             @endif
-                            <span class="form-check-label text-dark">{{ translate('messages.chat') }}</span>
+                            <span class="form-check-label text-dark">{{ 'charlar' }}</span>
                         </div>
                     </div>
 
@@ -222,15 +222,15 @@ active
                             <h5 class="modal-title" id="toggle-title"></h5>
                         </div>
                         <div class="text-center" id="toggle-message">
-                            <h3>{{ translate('Are_You_Sure_You_want_To_Off_The_Status?') }}</h3>
-                            <p>{{ translate('You_are_about_to_deactivate_a_subscription_package._You_have_the_option_to_either_switch_all_stores_plans_or_allow_stores_to_make_changes._Please_choose_an_option_below_to_proceed.') }}</p>
+                            <h3>{{ '¿Estás seguro de que quieres salir del estado?' }}</h3>
+                            <p>{{ 'Estás a punto de desactivar un paquete de suscripción. Tiene la opción de cambiar los planes de todas las tiendas o permitir que las tiendas realicen cambios. Elija una de las siguientes opciones para continuar.' }}</p>
                         </div>
                     </div>
                     <div class="btn--container justify-content-center">
-                        <a href="#" data-toggle="tooltip" data-placement="bottom" title="{{ translate('Stores_will_be_subscribed_untill_their_package_expires') }}"  id="status_change_now" class="btn btn-outline-primary min-w-120" >
-                            {{translate("Allow Store to Change")}}
+                        <a href="#" data-toggle="tooltip" data-placement="bottom" title="{{ 'Las tiendas estarán suscritas hasta que caduque su paquete.' }}"  id="status_change_now" class="btn btn-outline-primary min-w-120" >
+                            {{'Permitir que la tienda cambie'}}
                         </a>
-                        <button type="button"  class="btn btn--primary min-w-120  shift_package"  data-dismiss="modal" >{{translate('Switch_Plan')}}</button>
+                        <button type="button"  class="btn btn--primary min-w-120  shift_package"  data-dismiss="modal" >{{'Cambiar plan'}}</button>
                     </div>
                 </div>
             </div>
@@ -254,14 +254,14 @@ active
                             <h5 class="modal-title" id="toggle-title"></h5>
                         </div>
                         <div class="text-center" id="toggle-message">
-                            <h3>{{ translate('Are_You_Sure_You_want_To_ON_The_Status?') }}</h3>
-                            <p>{{ translate('This_package_will_be_available_for_the_stores.') }}</p>
+                            <h3>{{ '¿Está seguro de que desea activar el estado?' }}</h3>
+                            <p>{{ 'Este paquete estará disponible para las tiendas.' }}</p>
                         </div>
                     </div>
                     <div class="btn--container justify-content-center">
-                        <button type="button"  class="btn btn--cancel min-w-120 "  data-dismiss="modal" >{{translate('Close')}}</button>
+                        <button type="button"  class="btn btn--cancel min-w-120 "  data-dismiss="modal" >{{'Cerca'}}</button>
                         <a href="#"  id="status_change_now2" class="btn btn--primary  min-w-120" >
-                            {{translate("Active_now")}}
+                            {{'Activo ahora'}}
                         </a>
                     </div>
                 </div>
@@ -289,13 +289,13 @@ active
                             <h5 class="modal-title" id="toggle-title"></h5>
                         </div>
                         <div class="text-center" id="toggle-message">
-                            <h3>{{ translate('Switch_existing_business_plan.') }}</h3>
+                            <h3>{{ 'Cambiar el plan de negocios existente.' }}</h3>
                             <div class="form-group">
                                 <label class="input-label text-capitalize"> <span  id="package_name"  class="badge badge-secondary"></span> </label>
-                                <label class="input-label text-capitalize mt-2 mb-2">{{ translate('Select_Business_Plan') }} </label>
+                                <label class="input-label text-capitalize mt-2 mb-2">{{ 'Seleccionar plan de negocios' }} </label>
                                     <select class="form-control js-select2-custom  " name="package_id">
-                                        <option value="" selected > {{translate('select_a_package') }}</option>
-                                        <option value="commission"  > {{translate('Commission_base') }}</option>
+                                        <option value="" selected > {{'seleccione un paquete' }}</option>
+                                        <option value="commission"  > {{'Base de comisiones' }}</option>
                                         @foreach ($packages as $key => $package)
                                         @if ($package->status == 1 && $subscriptionackage->id != $package->id)
                                             <option class="show_all" id="package_{{ $package->id }}" value="{{ $package->id }}"> {{$package->package_name }}</option>
@@ -307,7 +307,7 @@ active
                     </div>
                     <div class="btn--container justify-content-center">
 
-                        <button type="submit"  class="btn btn--primary min-w-120 ">{{translate('Switch & Turn Of The Status')}}</button>
+                        <button type="submit"  class="btn btn--primary min-w-120 ">{{'Cambiar y girar el estado'}}</button>
                     </div>
                 </div>
             </div>
@@ -333,14 +333,14 @@ active
     function status_change_alert(url, message, e) {
         e.preventDefault();
         Swal.fire({
-            title: '{{ translate('Are_you_sure?') }}',
+            title: '{{ '¿Está seguro?' }}',
             text: message,
             type: 'warning',
             showCancelButton: true,
             cancelButtonColor: 'default',
             confirmButtonColor: '#FC6A57',
-            cancelButtonText: '{{ translate('no') }}',
-            confirmButtonText: '{{ translate('yes') }}',
+            cancelButtonText: '{{ 'No' }}',
+            confirmButtonText: '{{ 'Sí' }}',
             reverseButtons: true
         }).then((result) => {
             if (result.value) {

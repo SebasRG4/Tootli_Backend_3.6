@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title',Request::is('vendor-panel/advertisement/copy-advertisement/*') ? translate('New_Advertisement')  : translate('Advertisement_Edit'))
+@section('title',Request::is('vendor-panel/advertisement/copy-advertisement/*') ? 'Nuevo anuncio'  : 'Publicidad Editar')
 
 
 @section('advertisement')
@@ -26,10 +26,10 @@ active
     <!-- Advertisement -->
     <h1 class="page-header-title mb-3">
         @if (Request::is('vendor-panel/advertisement/copy-advertisement/*'))
-            {{  translate('New_Advertisement') }}
+            {{  'Nuevo anuncio' }}
         @else
 
-        {{ translate('Advertisement_Edit') }}
+        {{ 'Publicidad Editar' }}
         @endif
     </h1>
 
@@ -57,7 +57,7 @@ active
                             <li class="nav-item">
                                 <a class="nav-link lang_link active"
                                 href="#"
-                                id="default-link">{{translate('messages.default')}}</a>
+                                id="default-link">{{'por defecto'}}</a>
                             </li>
                             @foreach ($language as $lang)
                                 <li class="nav-item">
@@ -71,15 +71,15 @@ active
 
                                 <div class="lang_form" id="default-form">
                                     <div class="mb-20">
-                                        <label class="form-label">{{ translate('Advertisement_Title') }}   ({{ translate('Default') }})</label>
+                                        <label class="form-label">{{ 'Título del anuncio' }}   ({{ 'Por defecto' }})</label>
                                         <input type="text" class="form-control" id="title" name="title[]"
-                                            value="{{  $advertisement?->getRawOriginal('title') }}" placeholder="{{ translate('Exclusive_Offer') }}" maxlength="255"
+                                            value="{{  $advertisement?->getRawOriginal('title') }}" placeholder="{{ 'Oferta exclusiva' }}" maxlength="255"
                                             data-preview-text="preview-title">
                                     </div>
                                     <div class="form-floating mb-20">
-                                        <label class="form-label">{{ translate('Short_Description') }}  ({{ translate('Default') }})</label>
+                                        <label class="form-label">{{ 'Breve descripción' }}  ({{ 'Por defecto' }})</label>
                                         <textarea class="form-control resize-none" id="description"
-                                            placeholder="{{ translate('Get_Discount') }}" name="description[]"
+                                            placeholder="{{ 'Obtener descuento' }}" name="description[]"
                                             data-preview-text="preview-description">{{$advertisement?->getRawOriginal('description') }}</textarea>
                                     </div>
                                 <input type="hidden" name="lang[]" value="default">
@@ -107,15 +107,15 @@ active
 
                     <div class="d-none lang_form" id="{{ $lang }}-form">
                         <div class="mb-20">
-                            <label class="form-label">{{ translate('Advertisement_Title') }}    ({{ strtoupper($lang) }})</label>
+                            <label class="form-label">{{ 'Título del anuncio' }}    ({{ strtoupper($lang) }})</label>
                             <input type="text" class="form-control" id="title" name="title[]"
-                            value="{{$translate[$lang]['title']??''}}"  placeholder="{{ translate('Exclusive_Offer') }}" maxlength="255"
+                            value="{{$translate[$lang]['title']??''}}"  placeholder="{{ 'Oferta exclusiva' }}" maxlength="255"
                                 data-preview-text="preview-title">
                         </div>
                         <div class="form-floating mb-20">
-                            <label class="form-label">{{ translate('Short_Description') }}   ({{ strtoupper($lang) }})</label>
+                            <label class="form-label">{{ 'Breve descripción' }}   ({{ strtoupper($lang) }})</label>
                             <textarea class="form-control resize-none" id="description"
-                                placeholder="{{ translate('Get_Discount') }}" name="description[]"
+                                placeholder="{{ 'Obtener descuento' }}" name="description[]"
                                 data-preview-text="preview-description">{{$translate[$lang]['description']??'' }}</textarea>
                         </div>
                         <input type="hidden" name="lang[]" value="{{ $lang }}">
@@ -126,15 +126,15 @@ active
                                 @else
 
                                 <div class="mb-20">
-                                    <label class="form-label">{{ translate('Advertisement_Title') }}</label>
+                                    <label class="form-label">{{ 'Título del anuncio' }}</label>
                                     <input type="text" class="form-control" id="title" name="title[]"
-                                        value="{{  $advertisement?->getRawOriginal('title') }}" placeholder="{{ translate('Exclusive_Offer') }}" maxlength="255"
+                                        value="{{  $advertisement?->getRawOriginal('title') }}" placeholder="{{ 'Oferta exclusiva' }}" maxlength="255"
                                         data-preview-text="preview-title">
                                 </div>
                                 <div class="form-floating mb-20">
-                                    <label class="form-label">{{ translate('Short_Description') }}</label>
+                                    <label class="form-label">{{ 'Breve descripción' }}</label>
                                     <textarea class="form-control resize-none" id="description"
-                                        placeholder="{{ translate('Get_Discount') }}" name="description[]"
+                                        placeholder="{{ 'Obtener descuento' }}" name="description[]"
                                         data-preview-text="preview-description">{{$advertisement?->getRawOriginal('description') }}</textarea>
                                 </div>
                                 @endif
@@ -151,14 +151,14 @@ active
 
 
                         <div class="mb-20">
-                            <label class="form-label">{{ translate('Advertisement_Type') }}</label>
+                            <label class="form-label">{{ 'Tipo de anuncio' }}</label>
                             <select class="js-select form-control w-100 promotion_type" name="advertisement_type">
-                                <option value="video_promotion" {{ $advertisement?->add_type == 'video_promotion' ? 'selected' : '' }}>{{ translate('Video_Promotion') }}</option>
-                                <option value="store_promotion" {{ $advertisement?->add_type == 'store_promotion' ? 'selected' : '' }} >{{ translate('store_promotion') }}</option>
+                                <option value="video_promotion" {{ $advertisement?->add_type == 'video_promotion' ? 'selected' : '' }}>{{ 'Vídeo de promoción' }}</option>
+                                <option value="store_promotion" {{ $advertisement?->add_type == 'store_promotion' ? 'selected' : '' }} >{{ 'promoción de la tienda' }}</option>
                             </select>
                         </div>
                         <div class="mb-20">
-                            <label class="form-label">{{ translate('Validity') }}</label>
+                            <label class="form-label">{{ 'Validez' }}</label>
                             <div class="position-relative">
                                 <i class="tio-calendar-month icon-absolute-on-right"></i>
                                 <input type="text" class="form-control h-45 position-relative bg-transparent" name="dates" value="{{ Carbon\Carbon::parse($advertisement?->start_date)->format('m/d/Y')  . ' - '.  Carbon\Carbon::parse($advertisement?->end_date)->format('m/d/Y')  }}" placeholder="dd/mm/yyyy - dd/mm/yyyy">
@@ -166,12 +166,12 @@ active
                         </div>
 
                         <div class="promotion-typewise-upload-box" id="video-upload-box">
-                            <label class="form-label">{{ translate('Upload Related Files') }}</label>
+                            <label class="form-label">{{ 'Cargar archivos relacionados' }}</label>
                             <div class="border rounded p-3">
                                 <div class="d-flex flex-column align-items-center gap-3">
-                                    <p class="title-color mb-0 ">{{ translate('Upload Your Video') }}
+                                    <p class="title-color mb-0 ">{{ 'Sube tu vídeo' }}
 
-                                        ({{ translate('16:9') }})</p>
+                                        ({{ '16:9' }})</p>
 
                                     <div class="upload-file">
                                         <input type="file" class="video_attachment" name="video_attachment"
@@ -184,34 +184,34 @@ active
                                     </div>
 
                                     <p class="opacity-75 max-w220 mx-auto text-center fs-12">
-                                        {{ translate('Maximum 5 MB') }}
+                                        {{ 'Máximo 5MB' }}
                                         <br>
-                                        {{ translate('Supports: MP4, WEBM, MKV') }}
+                                        {{ 'Soporta: MP4, WEBM, MKV' }}
                                     </p>
                                 </div>
                             </div>
                         </div>
                         <div class="promotion-typewise-upload-box" id="profile-upload-box">
-                            <h5 class="mb-3">{{ translate('Show Review') }} &amp; {{ translate('Ratings') }}</h5>
+                            <h5 class="mb-3">{{ 'Mostrar reseña' }} &amp; {{ 'Calificaciones' }}</h5>
                             <div class="card bg--secondary shadow-none">
                                 <div class="card-body p-3">
                                     <div class="w-100 d-flex flex-wrap gap-3">
                                         <label class="form-check form--check-2 me-3">
                                             <input type="checkbox" value='1' class="form-check-input" name="review" {{ $advertisement?->is_review_active  == 1 ?  ' checked' :" " }} >
-                                            <span class="form-check-label">{{ translate('Review') }}</span>
+                                            <span class="form-check-label">{{ 'Revisar' }}</span>
                                         </label>
                                         <label class="form-check form--check-2">
                                             <input type="checkbox" class="form-check-input"  value="1" name="rating"  {{ $advertisement?->is_rating_active  == 1 ?  'checked' :" " }} >
-                                            <span class="form-check-label">{{ translate('Rating') }}</span>
+                                            <span class="form-check-label">{{ 'Clasificación' }}</span>
                                         </label>
                                     </div>
                                 </div>
                             </div>
                             <br>
-                            <label class="form-label">{{ translate('Upload Related Files') }}</label>
+                            <label class="form-label">{{ 'Cargar archivos relacionados' }}</label>
                             <div class="d-flex flex-wrap flex-sm-nowrap justify-content-center gap-3 border rounded p-3">
                                 <div class="d-flex flex-column align-items-center gap-3 flex-shrink-0">
-                                    <p class="title-color mb-0">{{ translate('Profile Image') }} <span class="text-danger">({{ translate('Ratio - 1:1') }})</span></p>
+                                    <p class="title-color mb-0">{{ 'Imagen de perfil' }} <span class="text-danger">({{ 'Relación - 1:1' }})</span></p>
 
                                     <div class="upload-file">
                                         <input type="file" class="cover_attachment js-upload-input"
@@ -226,13 +226,13 @@ active
                                     </div>
 
                                     <p class="opacity-75 max-w220 mx-auto text-center fs-12">
-                                        {{ translate('Supports: PNG, JPG, JPEG, WEBP') }}
+                                        {{ 'Compatible con: PNG, JPG, JPEG, WEBP' }}
                                         <br>
-                                        {{ translate('Maximum 2 MB') }}
+                                        {{ 'Máximo 2 MB' }}
                                     </p>
                                 </div>
                                 <div class="d-flex flex-column align-items-center gap-3">
-                                    <p class="title-color mb-0">{{ translate('Upload Cover') }} <span class="text-danger">({{ translate('Ratio - 2:1') }})</span></p>
+                                    <p class="title-color mb-0">{{ 'Subir portada' }} <span class="text-danger">({{ 'Relación - 2:1' }})</span></p>
                                     <div class="upload-file">
                                         <input type="file" class="cover_attachment js-upload-input"
                                             data-target="main-image" name="cover_image"
@@ -246,9 +246,9 @@ active
                                     </div>
 
                                     <p class="opacity-75 max-w220 mx-auto text-center fs-12">
-                                        {{ translate('Supports: PNG, JPG, JPEG, WEBP') }}
+                                        {{ 'Compatible con: PNG, JPG, JPEG, WEBP' }}
                                         <br>
-                                        {{ translate('Maximum 2 MB') }}
+                                        {{ 'Máximo 2 MB' }}
                                     </p>
                                 </div>
                             </div>
@@ -257,12 +257,12 @@ active
                     <div class="col-lg-6">
                         <div class="position-sticky top-80px text-8797AB">
                             <div class="bg-light p-3 p-sm-4 rounded">
-                                <label class="form-label">{{ translate('Advertisement Preview') }}</label>
+                                <label class="form-label">{{ 'Vista previa del anuncio' }}</label>
                                 <div id="video-preview-box" class="video-preview-box">
                                     <div class="bg--secondary rounded">
                                         <div class="video h-200">
                                             <video src="{{ $advertisement?->video_attachment_full_url }}" controls>
-                                                {{ translate('Your browser does not support the video tag.') }}
+                                                {{ 'Su navegador no soporta la etiqueta de video.' }}
                                             </video>
                                         </div>
                                         <div
@@ -344,8 +344,8 @@ active
                             </div>
                             </div>
                                 <div class="btn--container justify-content-end">
-                                    <button type="reset" id="reset_btn" class="btn btn--reset">{{ translate('Reset') }}</button>
-                                    <button type="submit" class="btn btn--primary">{{ translate('Submit') }}</button>
+                                    <button type="reset" id="reset_btn" class="btn btn--reset">{{ 'Reiniciar' }}</button>
+                                    <button type="submit" class="btn btn--primary">{{ 'Entregar' }}</button>
                                 </div>
             </form>
         </div>

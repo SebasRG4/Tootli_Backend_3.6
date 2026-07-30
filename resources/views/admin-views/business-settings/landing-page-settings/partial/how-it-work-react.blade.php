@@ -11,42 +11,42 @@
                     <div class="item">
                         <div class="max-349 mx-auto mb-20 text-center">
                             <img src="{{asset('assets/admin/img/landing-how.png')}}" alt="" class="mb-20">
-                            <h5 class="modal-title">{{translate('Notice!')}}</h5>
+                            <h5 class="modal-title">{{'¡Aviso!'}}</h5>
                             <p>
-                                {{translate("If you want to disable or turn off any section please leave that section empty, don’t make any changes there!")}}
+                                {{'Si desea deshabilitar o desactivar alguna sección, déjela vacía, ¡no realice ningún cambio allí!'}}
                             </p>
                         </div>
                     </div>
                     <div class="item">
                         <div class="max-349 mx-auto mb-20 text-center">
                             <img src="{{asset('assets/admin/img/notice-2.png')}}" alt="" class="mb-20">
-                            <h5 class="modal-title">{{translate('If You Want to Change Language')}}</h5>
+                            <h5 class="modal-title">{{'Si desea cambiar el idioma'}}</h5>
                             <p>
-                                {{translate("Change the language on tab bar and input your data again!")}}
+                                {{'¡Cambie el idioma en la barra de pestañas e ingrese sus datos nuevamente!'}}
                             </p>
                         </div>
                     </div>
                     <div class="item">
                         <div class="max-349 mx-auto mb-20 text-center">
                             <img src="{{asset('assets/admin/img/notice-2.png')}}" alt="" class="mb-20">
-                            <h5 class="modal-title">{{translate('If You Want to Change Text Color To Primary Color')}}</h5>
+                            <h5 class="modal-title">{{'Si desea cambiar el color del texto al color primario'}}</h5>
                             <p>
-                                {{translate("Replace the text with ($ text $) format")}}
+                                {{'Reemplazar el texto con formato ($texto$)'}}
                             </p>
                         </div>
                     </div>
                     <div class="item">
                         <div class="max-349 mx-auto mb-20 text-center">
                             <img src="{{asset('assets/admin/img/notice-3.png')}}" alt="" class="mb-20">
-                            <h5 class="modal-title">{{translate('Let’s See The Changes!')}}</h5>
+                            <h5 class="modal-title">{{'¡Veamos los cambios!'}}</h5>
                             <p>
-                                {{translate('Visit landing page to see the changes you made in the settings option!')}}
+                                {{'¡Visite la página de inicio para ver los cambios que realizó en la opción de configuración!'}}
                             </p>
                             @php($react = \App\CentralLogics\Helpers::get_business_settings('react_setup'))
                             @if ($react)
 
                             <div class="btn-wrap">
-                                <a href="https://{{ $react['react_domain'] }}" class="btn btn--primary w-100" target="_blank">{{ translate('Visit_Now') }}</a>
+                                <a href="https://{{ $react['react_domain'] }}" class="btn btn--primary w-100" target="_blank">{{ 'Visita ahora' }}</a>
                             </div>
                             @endif
                         </div>

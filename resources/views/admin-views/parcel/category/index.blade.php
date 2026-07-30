@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.parcel_category'))
+@section('title', 'categoría de paquete')
 
 
 @section('content')
@@ -12,7 +12,7 @@
                 <img src="{{asset('assets/admin/img/parcel.png')}}" class="w--26" alt="">
             </span>
             <span>
-                {{translate('messages.parcel_category')}}
+                {{'categoría de paquete'}}
             </span>
         </h1>
     </div>
@@ -31,7 +31,7 @@
                             <ul class="nav nav-tabs mb-3 border-0">
                                 <li class="nav-item">
                                     <a class="nav-link lang_link active" href="#"
-                                        id="default-link">{{translate('messages.default')}}</a>
+                                        id="default-link">{{'por defecto'}}</a>
                                 </li>
                                 @foreach (json_decode($language) as $lang)
                                     <li class="nav-item">
@@ -46,29 +46,29 @@
                         @if ($language)
                             <div class="lang_form" id="default-form">
                                 <div class="form-group">
-                                    <label class="input-label" for="default_name">{{translate('messages.name')}}
-                                        ({{ translate('messages.default') }})</label>
+                                    <label class="input-label" for="default_name">{{'nombre'}}
+                                        ({{ 'por defecto' }})</label>
                                     <input type="text" name="name[]" id="default_name" class="form-control"
-                                        placeholder="{{translate('messages.new_item')}}">
+                                        placeholder="{{'nuevo artículo'}}">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 <div class="form-group">
-                                    <label class="input-label" for="description">{{translate('messages.short_description')}}
-                                        ({{ translate('messages.default') }})</label>
+                                    <label class="input-label" for="description">{{'breve descripción'}}
+                                        ({{ 'por defecto' }})</label>
                                     <textarea type="text" name="description[]" class="form-control ckeditor"></textarea>
                                 </div>
                             </div>
                             @foreach(json_decode($language) as $lang)
                                 <div class="d-none lang_form" id="{{$lang}}-form">
                                     <div class="form-group">
-                                        <label class="input-label" for="{{$lang}}_name">{{translate('messages.name')}}
+                                        <label class="input-label" for="{{$lang}}_name">{{'nombre'}}
                                             ({{strtoupper($lang)}})</label>
                                         <input type="text" name="name[]" id="{{$lang}}_name" class="form-control"
-                                            placeholder="{{translate('messages.new_item')}}">
+                                            placeholder="{{'nuevo artículo'}}">
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
                                     <div class="form-group">
-                                        <label class="input-label" for="description">{{translate('messages.short_description')}}
+                                        <label class="input-label" for="description">{{'breve descripción'}}
                                             ({{strtoupper($lang)}})</label>
                                         <textarea type="text" name="description[]" class="form-control ckeditor"></textarea>
                                     </div>
@@ -77,24 +77,24 @@
                         @else
                             <div id="default-form">
                                 <div class="form-group">
-                                    <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}}
-                                        ({{ translate('messages.default') }})</label>
+                                    <label class="input-label" for="exampleFormControlInput1">{{'nombre'}}
+                                        ({{ 'por defecto' }})</label>
                                     <input type="text" name="name[]" class="form-control"
-                                        placeholder="{{translate('messages.new_item')}}" required>
+                                        placeholder="{{'nuevo artículo'}}" required>
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 <div class="form-group">
                                     <label class="input-label"
-                                        for="exampleFormControlInput1">{{translate('messages.short_description')}}</label>
+                                        for="exampleFormControlInput1">{{'breve descripción'}}</label>
                                     <textarea type="text" name="description[]" class="form-control ckeditor"></textarea>
                                 </div>
                             </div>
                         @endif
                         {{-- <div class="form-group mb-0">
-                            <label class="input-label">{{translate('messages.module')}}</label>
+                            <label class="input-label">{{'módulo'}}</label>
                             <select name="module_id" id="module_id" required class="form-control js-select2-custom"
-                                data-placeholder="{{translate('messages.select_module')}}">
-                                <option value="" selected disabled>{{translate('messages.select_module')}}</option>
+                                data-placeholder="{{'seleccionar módulo'}}">
+                                <option value="" selected disabled>{{'seleccionar módulo'}}</option>
                                 @foreach(\App\Models\Module::parcel()->get() as $module)
                                 <option value="{{$module->id}}">{{$module->module_name}}</option>
                                 @endforeach
@@ -105,8 +105,8 @@
                     <div class="col-md-6">
                         <div class="h-100 d-flex flex-column">
                             <label class="text-center d-block mt-auto">
-                                {{translate('messages.image')}}
-                                <small class="text-danger">* ( {{translate('messages.ratio')}} 200x200)</small>
+                                {{'imagen'}}
+                                <small class="text-danger">* ( {{'relación'}} 200x200)</small>
                             </label>
                             <div class="text-center py-3 my-auto">
                                 <img class="img--120" id="viewer" src="{{asset('assets/admin/img/900x400/img1.jpg')}}"
@@ -116,25 +116,25 @@
                                 <input type="file" name="image" id="customFileEg1" class="custom-file-input"
                                     accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
                                 <label class="custom-file-label"
-                                    for="customFileEg1">{{translate('messages.choose_file')}}</label>
+                                    for="customFileEg1">{{'elegir archivo'}}</label>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label
-                                class="input-label text-capitalize">{{translate('messages.per_km_shipping_charge')}}</label>
+                                class="input-label text-capitalize">{{'costo de envío por km'}}</label>
                             <input type="number" step=".01" min="0"
-                                placeholder="{{translate('messages.per_km_shipping_charge')}}" class="form-control"
+                                placeholder="{{'costo de envío por km'}}" class="form-control"
                                 name="parcel_per_km_shipping_charge">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label
-                                class="input-label text-capitalize">{{translate('messages.minimum_shipping_charge')}}</label>
+                                class="input-label text-capitalize">{{'cargo mínimo de envío'}}</label>
                             <input type="number" step=".01" min="0"
-                                placeholder="{{translate('messages.minimum_shipping_charge')}}" class="form-control"
+                                placeholder="{{'cargo mínimo de envío'}}" class="form-control"
                                 name="parcel_minimum_shipping_charge">
                         </div>
                     </div>
@@ -147,19 +147,19 @@
                                     <span class="toggle-switch-indicator"></span>
                                 </span>
                                 <span class="toggle-switch-content">
-                                    {{ translate('messages.buy_and_deliver') }}
+                                    {{ 'comprar y entregar' }}
                                     <small class="text-danger"> * (
-                                        {{ translate('messages.activate_if_you_want_to_buy_and_deliver') }} )</small>
+                                        {{ 'actívalo si quieres comprar y entregar' }} )</small>
                                 </span>
                             </label>
                         </div>
                     </div>
 
                     {{-- ── Seguro del paquete (Rappi Favor-style) ── --}}
-                    <div class="col-12"><hr><h6 class="mb-3 text-primary"><i class="tio-verified mr-1"></i>{{ translate('messages.parcel_insurance') ?? 'Seguro del Paquete' }}</h6></div>
+                    <div class="col-12"><hr><h6 class="mb-3 text-primary"><i class="tio-verified mr-1"></i>{{ 'seguro de paquetería' ?? 'Seguro del Paquete' }}</h6></div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="input-label text-capitalize">{{ translate('messages.insurance_rate_percentage') ?? 'Tasa de Seguro (%)' }}</label>
+                            <label class="input-label text-capitalize">{{ 'porcentaje de tasa de seguro' ?? 'Tasa de Seguro (%)' }}</label>
                             <input type="number" step="0.01" min="0" max="100"
                                 placeholder="Ej: 2 (significa 2% del valor declarado)"
                                 class="form-control"
@@ -170,7 +170,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="input-label text-capitalize">{{ translate('messages.min_insurance_fee') ?? 'Tarifa Mínima de Seguro' }}</label>
+                            <label class="input-label text-capitalize">{{ 'tarifa mínima de seguro' ?? 'Tarifa Mínima de Seguro' }}</label>
                             <input type="number" step="0.01" min="0"
                                 placeholder="Ej: 10 (tarifa mínima en pesos)"
                                 class="form-control"
@@ -183,7 +183,7 @@
                     @if ($categoryWiseTax)
                         <div class="col-md-6">
 
-                            <span class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rate') }}</span>
+                            <span class="mb-2 d-block title-clr fw-normal">{{ 'Seleccionar tasa impositiva' }}</span>
                             <select name="tax_ids[]" id="tax__rate" class="form-control js-select2-custom"
                                 multiple="multiple" required placeholder="Type & Select Tax Rate">
                                 @foreach ($taxVats as $taxVat)
@@ -197,9 +197,9 @@
                     <div class="col-12">
                         <div class="btn--container justify-content-end">
                             <button type="reset" id="reset_btn"
-                                class="btn btn--reset">{{translate('messages.reset')}}</button>
+                                class="btn btn--reset">{{'reiniciar'}}</button>
                             <button type="submit"
-                                class="btn btn--primary">{{translate('messages.Add Parcel Category')}}</button>
+                                class="btn btn--primary">{{'Agregar categoría de parcela'}}</button>
                         </div>
                     </div>
                 </div>
@@ -211,7 +211,7 @@
         <div class="card-header py-2 border-0">
             <div class="search--button-wrapper">
                 <h5 class="card-title">
-                    {{translate('messages.parcel_category_list')}}
+                    {{'lista de categorías de parcelas'}}
                     <span class="badge badge-soft-dark ml-2" id="itemCount">{{$parcel_categories->total()}}</span>
                 </h5>
 
@@ -227,19 +227,19 @@
                         }'>
                     <thead class="thead-light">
                         <tr>
-                            <th class="border-0">{{ translate('messages.SL') }}</th>
-                            <th class="border-0">{{translate('messages.id')}}</th>
-                            <th class="border-0">{{translate('messages.name')}}</th>
-                            <th class="border-0">{{ translate('messages.parcel_service_type') }}</th>
-                            <th class="border-0">{{translate('messages.module')}}</th>
-                            <th class="border-0">{{translate('messages.status')}}</th>
-                            <th class="border-0 text-center">{{translate('messages.orders_count')}}</th>
-                            <th class="border-0 text-center">{{translate('messages.per_km_shipping_charge')}}</th>
-                            <th class="border-0 text-center">{{translate('messages.minimum_shipping_charge')}}</th>
+                            <th class="border-0">{{ 'SL' }}</th>
+                            <th class="border-0">{{'identificación'}}</th>
+                            <th class="border-0">{{'nombre'}}</th>
+                            <th class="border-0">{{ 'tipo de servicio de paquetería' }}</th>
+                            <th class="border-0">{{'módulo'}}</th>
+                            <th class="border-0">{{'estado'}}</th>
+                            <th class="border-0 text-center">{{'recuento de pedidos'}}</th>
+                            <th class="border-0 text-center">{{'costo de envío por km'}}</th>
+                            <th class="border-0 text-center">{{'cargo mínimo de envío'}}</th>
                             @if ($categoryWiseTax)
-                                <th class="border-0 ">{{ translate('messages.Vat/Tax') }}</th>
+                                <th class="border-0 ">{{ 'IVA/Impuesto' }}</th>
                             @endif
-                            <th class="border-0 text-center">{{translate('messages.action')}}</th>
+                            <th class="border-0 text-center">{{'acción'}}</th>
                         </tr>
                     </thead>
 
@@ -255,9 +255,9 @@
                                 </td>
                                 <td>
                                     @if($category->buy_and_deliver)
-                                        <span class="badge badge-soft-info">{{ translate('messages.parcel_type_buy_and_deliver') }}</span>
+                                        <span class="badge badge-soft-info">{{ 'tipo de paquete comprar y entregar' }}</span>
                                     @else
-                                        <span class="badge badge-soft-primary">{{ translate('messages.parcel_type_pickup_and_deliver') }}</span>
+                                        <span class="badge badge-soft-primary">{{ 'recogida y entrega del tipo de paquete' }}</span>
                                     @endif
                                 </td>
                                 <td>
@@ -300,7 +300,7 @@
                                                     </span> </span>
                                                 <br>
                                             @empty
-                                                <span> {{ translate('messages.no_tax') }} </span>
+                                                <span> {{ 'sin impuestos' }} </span>
                                             @endforelse
                                         </span>
                                     </td>
@@ -309,12 +309,12 @@
                                     <div class="btn--container justify-content-center">
                                         <a class="btn action-btn btn--primary btn-outline-primary"
                                             href="{{route('admin.parcel.category.edit', [$category['id']])}}"
-                                            title="{{translate('messages.edit_category')}}"><i class="tio-edit"></i>
+                                            title="{{'editar categoría'}}"><i class="tio-edit"></i>
                                         </a>
                                         <a class="btn action-btn btn--danger btn-outline-danger form-alert"
                                             href="javascript:" data-id="category-{{$category['id']}}"
-                                            data-message="{{ translate('Want to delete this category') }}"
-                                            title="{{translate('messages.delete_category')}}"><i
+                                            data-message="{{ 'Quiere eliminar esta categoría' }}"
+                                            title="{{'eliminar categoría'}}"><i
                                                 class="tio-delete-outlined"></i>
                                         </a>
                                         <form action="{{route('admin.parcel.category.destroy', [$category['id']])}}"
@@ -339,7 +339,7 @@
             <div class="empty--data">
                 <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                 <h5>
-                    {{translate('no_data_found')}}
+                    {{'no se encontraron datos'}}
                 </h5>
             </div>
         @endif

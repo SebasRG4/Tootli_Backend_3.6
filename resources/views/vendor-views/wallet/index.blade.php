@@ -4,7 +4,7 @@
 @endphp
 
 @extends('layouts.vendor.app')
-@section('title', translate('messages.' . $title . '_wallet'))
+@section('title', '\'. $título. \' billetera')
 
 @section('content')
     <div class="content container-fluid">
@@ -17,7 +17,7 @@
                             <img src="{{asset('assets/admin/img/image_90.png')}}" alt="public">
                         </div>
                         <span>
-                            {{translate('messages.' . $title . '_wallet')}}
+                            {{'\'. $título. \' billetera'}}
                         </span>
                     </h2>
                 </div>
@@ -48,14 +48,14 @@
                                 }' >
                     <thead class="thead-light">
                     <tr>
-                        <th>{{ translate('messages.sl') }}</th>
-                        <th>{{translate('messages.amount')}}</th>
-                        <th>{{translate('messages.request_time')}}</th>
-                        <th>{{translate('messages.disbursement_method')}}</th>
-                        <th>{{translate('messages.Transaction_Type')}}</th>
-                        <th>{{translate('messages.status')}}</th>
-                        <th >{{translate('messages.note')}}</th>
-                        <th class="w-5px">{{ translate('messages.Action') }}</th>
+                        <th>{{ 'SL' }}</th>
+                        <th>{{'cantidad'}}</th>
+                        <th>{{'tiempo de solicitud'}}</th>
+                        <th>{{'método de desembolso'}}</th>
+                        <th>{{'Tipo de transacción'}}</th>
+                        <th>{{'estado'}}</th>
+                        <th >{{'nota'}}</th>
+                        <th class="w-5px">{{ 'Acción' }}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -78,7 +78,7 @@
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">{{translate('messages.disbursement_method_details')}}  </h5>
+                                                    <h5 class="modal-title" id="exampleModalLabel">{{'detalles del método de desembolso'}}  </h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
@@ -93,35 +93,35 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button id="reset_btn" type="reset" data-dismiss="modal" class="btn btn-secondary" >{{ translate('Close') }} </button>
+                                                    <button id="reset_btn" type="reset" data-dismiss="modal" class="btn btn-secondary" >{{ 'Cerca' }} </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
                                 @else
-                                    {{ translate('Default_method') }}
+                                    {{ 'Método predeterminado' }}
                                 @endif
 
                             </td>
                             <td>
                                 @if ($wr->type ==  'adjustment' )
-                                    {{ translate('Wallet_Adjustment') }}
+                                    {{ 'Ajuste de billetera' }}
                                 @elseif ($wr->type == 'manual' )
-                                    {{ translate('Withdraw_Request') }}
+                                    {{ 'Solicitud de retiro' }}
                                 @elseif ($wr->type == 'disbursement' )
-                                    {{ translate('disbursement') }}
+                                    {{ 'desembolso' }}
                                 @else
                                     {{ translate($wr->type) }}
                                 @endif
                             </td>
                             <td>
                                 @if($wr->approved==0)
-                                    <label class="badge badge-soft-info">{{translate('messages.pending')}}</label>
+                                    <label class="badge badge-soft-info">{{'Pendiente'}}</label>
                                 @elseif($wr->approved==1)
-                                    <label class="badge badge-soft-success">{{translate('messages.approved')}}</label>
+                                    <label class="badge badge-soft-success">{{'aprobado'}}</label>
                                 @else
-                                    <label class="badge badge-soft-danger">{{translate('messages.denied')}}</label>
+                                    <label class="badge badge-soft-danger">{{'denegado'}}</label>
                                 @endif
                             </td>
 
@@ -129,9 +129,9 @@
                             <td >
                                 @if($wr->transaction_note )
                                     @if($wr->transaction_note == 'Store_wallet_adjustment_partial' )
-                                   {{ translate('Adjusted_Amount_Partially') }}
+                                   {{ 'Monto ajustado parcialmente' }}
                                     @elseif($wr->transaction_note == 'Store_wallet_adjustment_full' )
-                                        {{ translate('Adjusted_Amount') }}
+                                        {{ 'Monto ajustado' }}
                                     @else
                                         {!!
                                    Str::limit(translate($wr->transaction_note), 20,
@@ -140,14 +140,14 @@
                                     @endif
 
                                 @else
-                                    {{ translate('messages.N/A') }}
+                                    {{ 'N / A' }}
                                 @endif
                             </td>
 
                             <td>
 
                                 @if($wr->approved==0)
-                                    <a class="btn btn-outline-danger btn--danger action-btn form-alert" href="javascript:" data-id="withdraw-{{$wr['id']}}" data-message="{{ translate('Want to delete this  ?') }}" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
+                                    <a class="btn btn-outline-danger btn--danger action-btn form-alert" href="javascript:" data-id="withdraw-{{$wr['id']}}" data-message="{{ '¿Quieres eliminar esto?' }}" title="{{'borrar'}}"><i class="tio-delete-outlined"></i>
                                     </a>
 
                                     <form action="{{route('vendor.wallet.close-request',[$wr['id']])}}"
@@ -155,7 +155,7 @@
                                         @csrf @method('delete')
                                     </form>
                                 @else
-                                    <label>{{translate('messages.complete')}}</label>
+                                    <label>{{'completo'}}</label>
                                 @endif
                             </td>
                         </tr>
@@ -166,7 +166,7 @@
                     <div class="empty--data">
                         <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
-                            {{translate('no_data_found')}}
+                            {{'no se encontraron datos'}}
                         </h5>
                     </div>
                 @endif
@@ -181,7 +181,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">{{translate('messages.Pay_Via_Online')}}  </h5>
+                    <h5 class="modal-title" id="exampleModalLabel">{{'Pagar en línea'}}  </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -192,7 +192,7 @@
                         @csrf
                         <input type="hidden" value="{{ \App\CentralLogics\Helpers::get_store_id() }}" name="store_id"/>
                         <input type="hidden" value="{{ abs($wallet->collected_cash) }}" name="amount"/>
-                        <h5 class="mb-5 ">{{ translate('Pay_Via_Online') }} &nbsp; <small>({{ translate('Faster_&_secure_way_to_pay_bill') }})</small></h5>
+                        <h5 class="mb-5 ">{{ 'Pagar en línea' }} &nbsp; <small>({{ 'Forma más rápida y segura de pagar la factura' }})</small></h5>
                         <div class="row g-3">
                             @forelse ($data as $item)
                                 <div class="col-sm-6">
@@ -205,14 +205,14 @@
                                     </div>
                                 </div>
                             @empty
-                                <h1>{{ translate('no_payment_gateway_found') }}</h1>
+                                <h1>{{ 'no se encontró ninguna pasarela de pago' }}</h1>
                             @endforelse
                         </div>
                     </div>
 
                     <div class="modal-footer">
-                        <button id="reset_btn" type="reset" data-dismiss="modal" class="btn btn-secondary" >{{ translate('Close') }} </button>
-                        <button type="submit" class="btn btn-primary">{{ translate('Proceed') }}</button>
+                        <button id="reset_btn" type="reset" data-dismiss="modal" class="btn btn-secondary" >{{ 'Cerca' }} </button>
+                        <button type="submit" class="btn btn-primary">{{ 'Proceder' }}</button>
                     </div>
                 </form>
             </div>
@@ -225,7 +225,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">{{translate('messages.Adjust_Wallet')}}  </h5>
+                    <h5 class="modal-title" id="exampleModalLabel">{{'Ajustar billetera'}}  </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -234,12 +234,12 @@
                 <form action="{{ route('vendor.wallet.make_wallet_adjustment') }}" method="POST" class="needs-validation">
                     <div class="modal-body">
                         @csrf
-                        <h5 class="mb-5 ">{{ translate('This_will_adjust_the_collected_cash_on_your_earning') }} </h5>
+                        <h5 class="mb-5 ">{{ 'Esto ajustará el efectivo recaudado en función de sus ganancias.' }} </h5>
                     </div>
 
                     <div class="modal-footer">
-                        <button id="reset_btn" type="reset" data-dismiss="modal" class="btn btn-secondary" >{{ translate('Close') }} </button>
-                        <button type="submit" class="btn btn-primary">{{ translate('Proceed') }}</button>
+                        <button id="reset_btn" type="reset" data-dismiss="modal" class="btn btn-secondary" >{{ 'Cerca' }} </button>
+                        <button type="submit" class="btn btn-primary">{{ 'Proceder' }}</button>
                     </div>
                 </form>
             </div>
@@ -290,7 +290,7 @@ $('#withdraw_method').on('change', function () {
 $('.payment-warning').on('click',function (event ){
             event.preventDefault();
             toastr.info(
-                "{{ translate('messages.Currently,_there_are_no_payment_options_available._Please_contact_admin_regarding_any_payment_process_or_queries.') }}", {
+                "{{ 'Actualmente, no hay opciones de pago disponibles. Comuníquese con el administrador con respecto a cualquier proceso de pago o consulta.' }}", {
                     CloseButton: true,
                     ProgressBar: true
                 });

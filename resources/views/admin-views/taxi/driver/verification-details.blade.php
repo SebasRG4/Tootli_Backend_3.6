@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Driver Verification Details'))
+@section('title', 'Detalles de verificación del conductor')
 
 @push('css_or_js')
 
@@ -12,11 +12,11 @@
     <div class="page-header">
         <div class="row align-items-center">
             <div class="col-sm mb-2 mb-sm-0">
-                <h1 class="page-header-title">{{ translate('Verification Details') }}</h1>
+                <h1 class="page-header-title">{{ 'Detalles de verificación' }}</h1>
             </div>
             <div class="col-sm-auto">
                 <a class="btn btn-icon btn-sm btn-ghost-secondary rounded-circle mr-1"
-                    href="{{ route('admin.taxi.drivers.verification.index') }}" title="{{ translate('Back') }}">
+                    href="{{ route('admin.taxi.drivers.verification.index') }}" title="{{ 'Atrás' }}">
                     <i class="tio-arrow-backward"></i>
                 </a>
             </div>
@@ -29,7 +29,7 @@
         <div class="col-lg-4 mb-3 mb-lg-0">
             <div class="card h-100">
                 <div class="card-header">
-                    <h5 class="card-title">{{ translate('Driver Information') }}</h5>
+                    <h5 class="card-title">{{ 'Información del conductor' }}</h5>
                 </div>
                 <div class="card-body text-center">
                     <img class="avatar avatar-xl mb-3 onerror-image"
@@ -40,11 +40,11 @@
                     <p class="text-muted">{{ $driver->phone }}</p>
                     <hr>
                     <div class="d-flex justify-content-between">
-                        <strong>{{ translate('Status') }}:</strong>
+                        <strong>{{ 'Estado' }}:</strong>
                         @if ($driver->taxi_is_verified)
-                            <span class="badge badge-success">{{ translate('Verified') }}</span>
+                            <span class="badge badge-success">{{ 'Verificado' }}</span>
                         @else
-                            <span class="badge badge-warning">{{ translate('Pending') }}</span>
+                            <span class="badge badge-warning">{{ 'Pendiente' }}</span>
                         @endif
                     </div>
                     <div class="mt-4">
@@ -53,14 +53,14 @@
                                 @csrf
                                 <input type="hidden" name="status" value="1">
                                 <button type="submit"
-                                    class="btn btn-success btn-block">{{ translate('Verify Driver') }}</button>
+                                    class="btn btn-success btn-block">{{ 'Verificar conductor' }}</button>
                             </form>
                         @else
                             <form action="{{ route('admin.taxi.drivers.verification.update', $driver->id) }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="status" value="0">
                                 <button type="submit"
-                                    class="btn btn-danger btn-block">{{ translate('Revoke Verification') }}</button>
+                                    class="btn btn-danger btn-block">{{ 'Revocar verificación' }}</button>
                             </form>
                         @endif
                     </div>
@@ -72,14 +72,14 @@
         <div class="col-lg-8">
             <div class="card h-100">
                 <div class="card-header">
-                    <h5 class="card-title">{{ translate('Submitted Documents') }}</h5>
+                    <h5 class="card-title">{{ 'Documentos enviados' }}</h5>
                 </div>
                 <div class="card-body">
                     @php($docs = $driver->taxi_documents ?? [])
                     <div class="row">
                         <!-- Selfie -->
                         <div class="col-md-6 mb-4">
-                            <h6>{{ translate('Selfie with ID') }}</h6>
+                            <h6>{{ 'Selfie con identificación' }}</h6>
                             <div class="card p-2 custom-file-upload-section">
                                 @if(isset($docs['selfie_image']))
                                     <a href="{{ \App\CentralLogics\Helpers::get_full_url('delivery-man', $docs['selfie_image'], $driver->storage->first()?->value ?? 'public', 'taxi') }}"
@@ -91,7 +91,7 @@
                                     </a>
                                 @else
                                     <div class="text-center p-4 text-muted border rounded border-dashed">
-                                        {{ translate('Not Uploaded') }}
+                                        {{ 'No subido' }}
                                     </div>
                                 @endif
                             </div>
@@ -99,13 +99,13 @@
 
                         <!-- Identity Cards -->
                         <div class="col-md-12 mb-2">
-                            <h6 class="border-bottom pb-2">{{ translate('Official Identification') }}</h6>
+                            <h6 class="border-bottom pb-2">{{ 'Identificación Oficial' }}</h6>
                         </div>
                         <!-- Existing Identity Images from DeliveryMan Model -->
                         @php($identity_images = $driver->identity_image ?? [])
                         @foreach($identity_images as $index => $img)
                             <div class="col-md-6 mb-4">
-                                <h6>{{ translate('Identity Side') }} {{ $index + 1 }}</h6>
+                                <h6>{{ 'Lado de la identidad' }} {{ $index + 1 }}</h6>
                                 <div class="card p-2">
                                     <a href="{{ \App\CentralLogics\Helpers::get_full_url('delivery-man', $img, $driver->storage->first()?->value ?? 'public', 'identity') }}"
                                         data-lightbox="docs">
@@ -119,10 +119,10 @@
                         @endforeach
 
                         <div class="col-md-12 mb-2 mt-2">
-                            <h6 class="border-bottom pb-2">{{ translate('Circulation Card') }}</h6>
+                            <h6 class="border-bottom pb-2">{{ 'Tarjeta de Circulación' }}</h6>
                         </div>
                         <div class="col-md-6 mb-4">
-                            <h6>{{ translate('Front') }}</h6>
+                            <h6>{{ 'Frente' }}</h6>
                             <div class="card p-2">
                                 @if(isset($docs['circulation_card_front']))
                                     <a href="{{ \App\CentralLogics\Helpers::get_full_url('delivery-man', $docs['circulation_card_front'], $driver->storage->first()?->value ?? 'public', 'taxi') }}"
@@ -134,13 +134,13 @@
                                     </a>
                                 @else
                                     <div class="text-center p-4 text-muted border rounded border-dashed">
-                                        {{ translate('Not Uploaded') }}
+                                        {{ 'No subido' }}
                                     </div>
                                 @endif
                             </div>
                         </div>
                         <div class="col-md-6 mb-4">
-                            <h6>{{ translate('Back') }}</h6>
+                            <h6>{{ 'Atrás' }}</h6>
                             <div class="card p-2">
                                 @if(isset($docs['circulation_card_back']))
                                     <a href="{{ \App\CentralLogics\Helpers::get_full_url('delivery-man', $docs['circulation_card_back'], $driver->storage->first()?->value ?? 'public', 'taxi') }}"
@@ -152,17 +152,17 @@
                                     </a>
                                 @else
                                     <div class="text-center p-4 text-muted border rounded border-dashed">
-                                        {{ translate('Not Uploaded') }}
+                                        {{ 'No subido' }}
                                     </div>
                                 @endif
                             </div>
                         </div>
 
                         <div class="col-md-12 mb-2 mt-2">
-                            <h6 class="border-bottom pb-2">{{ translate('License Plates') }}</h6>
+                            <h6 class="border-bottom pb-2">{{ 'Placas de matrícula' }}</h6>
                         </div>
                         <div class="col-md-6 mb-4">
-                            <h6>{{ translate('Front') }}</h6>
+                            <h6>{{ 'Frente' }}</h6>
                             <div class="card p-2">
                                 @if(isset($docs['plate_image_front']))
                                     <a href="{{ \App\CentralLogics\Helpers::get_full_url('delivery-man', $docs['plate_image_front'], $driver->storage->first()?->value ?? 'public', 'taxi') }}"
@@ -174,13 +174,13 @@
                                     </a>
                                 @else
                                     <div class="text-center p-4 text-muted border rounded border-dashed">
-                                        {{ translate('Not Uploaded') }}
+                                        {{ 'No subido' }}
                                     </div>
                                 @endif
                             </div>
                         </div>
                         <div class="col-md-6 mb-4">
-                            <h6>{{ translate('Back') }}</h6>
+                            <h6>{{ 'Atrás' }}</h6>
                             <div class="card p-2">
                                 @if(isset($docs['plate_image_back']))
                                     <a href="{{ \App\CentralLogics\Helpers::get_full_url('delivery-man', $docs['plate_image_back'], $driver->storage->first()?->value ?? 'public', 'taxi') }}"
@@ -192,7 +192,7 @@
                                     </a>
                                 @else
                                     <div class="text-center p-4 text-muted border rounded border-dashed">
-                                        {{ translate('Not Uploaded') }}
+                                        {{ 'No subido' }}
                                     </div>
                                 @endif
                             </div>

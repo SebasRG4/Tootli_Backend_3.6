@@ -21,7 +21,7 @@
     @if ($textPosition == 'top')
         <p class="mb-2 fs-12 gray-dark">
             {{ translate(($imageFormat) . '. Less Than ' . $maxSize . 'MB')}} <span
-                class="font-medium text-title">{{ translate('(' . $size . ')')}}</span>
+                class="font-medium text-title">{{ '(\' . $tamaño .'')}}</span>
         </p>
     @endif
     <div class="upload-file_custom {{ $aspectRatio }} h-100px">
@@ -32,9 +32,9 @@
             <div class="upload-file-textbox text-center">
                 <img width="22" class="svg" src="{{ asset('assets/admin/img/document-upload.svg') }}" alt="img">
                 <h6 class="mt-1 color-656566 fw-medium fs-10 lh-base text-center">
-                    <span class="theme-clr">{{ translate('Click to upload') }}</span>
+                    <span class="theme-clr">{{ 'Haga clic para cargar' }}</span>
                     <br>
-                    {{ translate('Or drag and drop') }}
+                    {{ 'O arrastrar y soltar' }}
                 </h6>
             </div>
             <img class="upload-file-img" loading="lazy" src="{{ $existingImage }}" data-default-src="" alt=""
@@ -59,7 +59,7 @@
     @if ($textPosition == 'bottom')
         <p class="mb-2 fs-12 gray-dark">
             {{ translate($imageFormat . '. Less Than ' . $maxSize . 'MB')}} <span
-                class="font-medium text-title">{{ translate('(' . $size . ')')}}</span>
+                class="font-medium text-title">{{ '(\' . $tamaño .'')}}</span>
         </p>
     @endif
 </div>

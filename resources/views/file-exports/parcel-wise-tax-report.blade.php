@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-lg-12 text-center ">
-        <h1>{{ translate('Parcel_Tax_Reports') }}</h1>
+        <h1>{{ 'Informes de impuestos sobre parcelas' }}</h1>
     </div>
     <div class="col-lg-12">
 
@@ -9,27 +9,27 @@
         <table>
             <thead>
                 <tr>
-                    <th>{{ translate('Search_Criteria') }}</th>
+                    <th>{{ 'Criterios de búsqueda' }}</th>
                     <th></th>
                     <th></th>
                     <th>
 
                         @if (isset($data['summary']))
                             <br>
-                            {{ translate('total_orders') }} - {{ $data['summary']['total_orders'] ??0 }}
+                            {{ 'pedidos totales' }} - {{ $data['summary']['total_orders'] ??0 }}
                             <br>
-                            {{ translate('total_order_amount') }} - {{ $data['summary']['total_order_amount'] ??0 }}
+                            {{ 'monto total del pedido' }} - {{ $data['summary']['total_order_amount'] ??0 }}
                             <br>
-                            {{ translate('total_tax') }} - {{ $data['summary']['total_tax'] ??0 }}
+                            {{ 'impuesto total' }} - {{ $data['summary']['total_tax'] ??0 }}
                         @endif
                         @if ($data['from'])
                             <br>
-                            {{ translate('from') }} -
+                            {{ 'de' }} -
                             {{ $data['from'] ? Carbon\Carbon::parse($data['from'])->format('d M Y') : '' }}
                         @endif
                         @if ($data['to'])
                             <br>
-                            {{ translate('to') }} -
+                            {{ 'a' }} -
                             {{ $data['to'] ? Carbon\Carbon::parse($data['to'])->format('d M Y') : '' }}
                         @endif
                         <br>
@@ -41,10 +41,10 @@
                     <th></th>
                 </tr>
                 <tr>
-                    <th class="border-0">{{ translate('sl') }}</th>
-                    <th class="border-0">{{ translate('Order ID') }}</th>
-                    <th class="border-0">{{ translate('Total Order Amount') }}</th>
-                    <th class="border-0">{{ translate('Tax Amount') }}</th>
+                    <th class="border-0">{{ 'SL' }}</th>
+                    <th class="border-0">{{ 'ID de pedido' }}</th>
+                    <th class="border-0">{{ 'Monto total del pedido' }}</th>
+                    <th class="border-0">{{ 'Monto del impuesto' }}</th>
             </thead>
             <tbody>
                 @foreach ($data['orders'] as $key => $order)
@@ -61,7 +61,7 @@
                         <td>
                             <div class="d-flex flex-column gap-1">
                                 <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    {{ translate('Total:') }} <span>
+                                    {{ 'Total:' }} <span>
                                         {{ \App\CentralLogics\Helpers::format_currency($order->total_tax_amount) }}</span>
                                 </div>, <br>
                                 @foreach ($order->orderTaxes as $tax)

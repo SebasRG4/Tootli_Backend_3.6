@@ -1,7 +1,7 @@
 @extends('layouts.landing.app')
 
 @php($business_name = \App\CentralLogics\Helpers::get_business_settings('business_name'))
-@section('title', translate('messages.home') . ' | ' . ($business_name ?? 'Tootli'))
+@section('title', 'hogar' . ' | ' . ($business_name ?? 'Tootli'))
 
 @section('content')
 

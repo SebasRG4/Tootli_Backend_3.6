@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',\App\Models\BusinessSetting::where(['key'=>'business_name'])->first()->value??translate('messages.dashboard'))
+@section('title',\App\Models\BusinessSetting::where(['key'=>'business_name'])->first()->value??'Panel de Control')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -18,15 +18,15 @@
                         <img class="onerror-image" data-onerror-image="{{asset('assets/admin/img/eshop.svg')}}" src="{{ $mod->icon_full_url }}"
                         width="38" alt="img">
                         <div class="w-0 flex-grow pl-2">
-                            <h1 class="page-header-title mb-0">{{translate($mod->module_name)}} {{translate('messages.Dashboard')}}.</h1>
-                            <p class="page-header-text m-0">{{translate('Hello, Here You Can Manage Your')}} {{translate($mod->module_name)}} {{translate('orders by Zone.')}}</p>
+                            <h1 class="page-header-title mb-0">{{translate($mod->module_name)}} {{'Panel de Control'}}.</h1>
+                            <p class="page-header-text m-0">{{'Hola, aquí puedes gestionar tu'}} {{translate($mod->module_name)}} {{'pedidos por Zona.'}}</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-sm-auto min--280">
                     <select name="zone_id" class="form-control js-select2-custom fetch_data_zone_wise">
-                        <option value="all">{{ translate('messages.All_Zones') }}</option>
+                        <option value="all">{{ 'Todas las Zonas' }}</option>
                         @foreach(\App\Models\Zone::orderBy('name')->get() as $zone)
                             <option
                                 value="{{$zone['id']}}" {{$params['zone_id'] == $zone['id']?'selected':''}}>
@@ -47,15 +47,15 @@
                         <div class="statistics-btn-grp">
                             <label>
                                 <input type="radio" name="statistics" class="order_stats_update" value="this_year" {{$params['statistics_type'] == 'this_year'?'checked':''}} hidden>
-                                <span>{{ translate('This_Year') }}</span>
+                                <span>{{ 'Este Año' }}</span>
                             </label>
                             <label>
                                 <input type="radio" name="statistics" class="order_stats_update" value="this_month" {{$params['statistics_type'] == 'this_month'?'checked':''}} hidden>
-                                <span>{{ translate('This_Month') }}</span>
+                                <span>{{ 'Este Mes' }}</span>
                             </label>
                             <label>
                                 <input type="radio" name="statistics" class="order_stats_update" value="this_week" {{$params['statistics_type'] == 'this_week'?'checked':''}} hidden>
-                                <span>{{ translate('This_Week') }}</span>
+                                <span>{{ 'Esta Semana' }}</span>
                             </label>
                         </div>
                     </div>
@@ -64,33 +64,33 @@
                     <div class="col-sm-6 col-lg-3">
                         <div class="__dashboard-card-2">
                             <img src="{{asset('assets/admin/img/dashboard/stats/products.svg')}}" alt="dashboard/stats">
-                            <h6 class="name">{{ translate('messages.products') }}</h6>
+                            <h6 class="name">{{ 'productos' }}</h6>
                             <h3 class="count">{{ $data['total_items'] }}</h3>
-                                    <div class="subtxt">{{ $data['new_items'] }} {{ translate('newly added') }}</div>
+                                    <div class="subtxt">{{ $data['new_items'] }} {{ 'recién agregado' }}</div>
                         </div>
                     </div>
                     <div class="col-sm-6 col-lg-3">
                         <div class="__dashboard-card-2">
                             <img src="{{asset('assets/admin/img/dashboard/stats/orders.svg')}}" alt="dashboard/stats">
-                            <h6 class="name">{{ translate('messages.orders') }}</h6>
+                            <h6 class="name">{{ 'Pedidos' }}</h6>
                             <h3 class="count">{{ $data['total_orders'] }}</h3>
-                                    <div class="subtxt">{{ $data['new_orders'] }} {{ translate('newly added') }}</div>
+                                    <div class="subtxt">{{ $data['new_orders'] }} {{ 'recién agregado' }}</div>
                         </div>
                     </div>
                     <div class="col-sm-6 col-lg-3">
                         <div class="__dashboard-card-2">
                             <img src="{{asset('assets/admin/img/dashboard/stats/stores.svg')}}" alt="dashboard/stats">
-                            <h6 class="name">{{ translate('messages.stores') }}</h6>
+                            <h6 class="name">{{ 'Negocios' }}</h6>
                             <h3 class="count">{{ $data['total_stores'] }}</h3>
-                                    <div class="subtxt">{{ $data['new_stores'] }} {{ translate('newly added') }}</div>
+                                    <div class="subtxt">{{ $data['new_stores'] }} {{ 'recién agregado' }}</div>
                         </div>
                     </div>
                     <div class="col-sm-6 col-lg-3">
                         <div class="__dashboard-card-2">
                             <img src="{{asset('assets/admin/img/dashboard/stats/customers.svg')}}" alt="dashboard/stats">
-                            <h6 class="name">{{ translate('messages.customers') }}</h6>
+                            <h6 class="name">{{ 'Clientes' }}</h6>
                             <h3 class="count">{{ $data['total_customers'] }}</h3>
-                                    <div class="subtxt">{{ $data['new_customers'] }} {{ translate('newly added') }}</div>
+                                    <div class="subtxt">{{ $data['new_customers'] }} {{ 'recién agregado' }}</div>
                         </div>
                     </div>
                     <div class="col-12">
@@ -100,7 +100,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                             <img src="{{asset('assets/admin/img/dashboard/grocery/unassigned.svg')}}" alt="dashboard" class="oder--card-icon">
-                                            <span>{{translate('messages.unassigned_orders')}}</span>
+                                            <span>{{'Pedidos Sin Asignar'}}</span>
                                         </h6>
                                         <span class="card-title text-3F8CE8">
                                             {{$data['searching_for_dm']}}
@@ -114,7 +114,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                             <img src="{{asset('assets/admin/img/dashboard/grocery/accepted.svg')}}" alt="dashboard" class="oder--card-icon">
-                                            <span>{{translate('Accepted by Delivery Man')}}</span>
+                                            <span>{{'Aceptado por el repartidor'}}</span>
                                         </h6>
                                         <span class="card-title text-success">
                                             {{$data['accepted_by_dm']}}
@@ -127,7 +127,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                             <img src="{{asset('assets/admin/img/dashboard/grocery/packaging.svg')}}" alt="dashboard" class="oder--card-icon">
-                                            <span>{{translate('Packaging')}}</span>
+                                            <span>{{'Embalaje'}}</span>
                                         </h6>
                                         <span class="card-title text-FFA800">
                                             {{$data['preparing_in_rs']}}
@@ -141,7 +141,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                             <img src="{{asset('assets/admin/img/dashboard/grocery/out-for.svg')}}" alt="dashboard" class="oder--card-icon">
-                                            <span>{{translate('Out for Delivery')}}</span>
+                                            <span>{{'Fuera de entrega'}}</span>
                                         </h6>
                                         <span class="card-title text-success">
                                             {{$data['picked_up']}}
@@ -155,7 +155,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                             <img src="{{asset('assets/admin/img/dashboard/grocery/delivered.svg')}}" alt="dashboard" class="oder--card-icon">
-                                            <span>{{translate('messages.delivered')}}</span>
+                                            <span>{{'Entregado'}}</span>
                                         </h6>
                                         <span class="card-title text-success">
                                             {{$data['delivered']}}
@@ -169,7 +169,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                             <img src="{{asset('assets/admin/img/order-status/canceled.svg')}}" alt="dashboard" class="oder--card-icon">
-                                            <span>{{translate('messages.canceled')}}</span>
+                                            <span>{{'Cancelado'}}</span>
                                         </h6>
                                         <span class="card-title text-danger">
                                             {{$data['canceled']}}
@@ -183,7 +183,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                             <img src="{{asset('assets/admin/img/order-status/refunded.svg')}}" alt="dashboard" class="oder--card-icon">
-                                            <span>{{translate('messages.refunded')}}</span>
+                                            <span>{{'Reembolsado'}}</span>
                                         </h6>
                                         <span class="card-title text-danger">
                                             {{$data['refunded']}}
@@ -197,7 +197,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                             <img src="{{asset('assets/admin/img/order-status/payment-failed.svg')}}" alt="dashboard" class="oder--card-icon">
-                                            <span>{{translate('messages.payment_failed')}}</span>
+                                            <span>{{'pago fallido'}}</span>
                                         </h6>
                                         <span class="card-title text-danger">
                                             {{$data['refund_requested']}}
@@ -220,26 +220,26 @@
                         <div class="d-flex flex-wrap justify-content-between align-items-center __gap-12px">
                             <div class="__gross-amount" id="gross_sale">
                                 <h6>{{\App\CentralLogics\Helpers::format_currency(array_sum($total_sell))}}</h6>
-                                <span>{{ translate('messages.Gross Sale') }}</span>
+                                <span>{{ 'Venta bruta' }}</span>
                             </div>
                             <div class="chart--label __chart-label p-0 move-left-100 ml-auto">
                                 <span class="indicator chart-bg-2"></span>
                                 <span class="info">
-                                    {{ translate('sale') }} ({{ date("Y") }})
+                                    {{ 'venta' }} ({{ date("Y") }})
                                 </span>
                             </div>
                             <select class="custom-select border-0 text-center w-auto ml-auto commission_overview_stats_update" name="commission_overview">
                                     <option
                                     value="this_year" {{$params['commission_overview'] == 'this_year'?'selected':''}}>
-                                    {{translate('This year')}}
+                                    {{'este año'}}
                                 </option>
                                 <option
                                     value="this_month" {{$params['commission_overview'] == 'this_month'?'selected':''}}>
-                                    {{translate('This month')}}
+                                    {{'este mes'}}
                                 </option>
                                 <option
                                     value="this_week" {{$params['commission_overview'] == 'this_week'?'selected':''}}>
-                                    {{translate('This week')}}
+                                    {{'Esta semana'}}
                                 </option>
                             </select>
                         </div>
@@ -256,7 +256,7 @@
                     <!-- Header -->
                     <div class="card-header border-0">
                         <h5 class="card-header-title">
-                            {{translate('User Statistics')}}
+                            {{'Estadísticas de usuario'}}
                         </h5>
                         <div id="stat_zone">
 
@@ -267,19 +267,19 @@
                         <select class="custom-select border-0 text-center w-auto user_overview_stats_update" name="user_overview">
                                 <option
                                 value="this_year" {{$params['user_overview'] == 'this_year'?'selected':''}}>
-                                {{translate('This year')}}
+                                {{'este año'}}
                             </option>
                             <option
                                 value="this_month" {{$params['user_overview'] == 'this_month'?'selected':''}}>
-                                {{translate('This month')}}
+                                {{'este mes'}}
                             </option>
                             <option
                                 value="this_week" {{$params['user_overview'] == 'this_week'?'selected':''}}>
-                                {{translate('This week')}}
+                                {{'Esta semana'}}
                             </option>
                             <option
                                 value="overall" {{$params['user_overview'] == 'overall'?'selected':''}}>
-                                {{translate('messages.Overall')}}
+                                {{'En general'}}
                             </option>
                         </select>
                     </div>
@@ -292,7 +292,7 @@
                             <!-- Total Orders -->
                             <div class="total--orders">
                                 <h3 class="text-uppercase mb-xxl-2">{{ $data['customer'] + $data['stores'] + $data['delivery_man'] }}</h3>
-                                <span class="text-capitalize">{{translate('messages.total_users')}}</span>
+                                <span class="text-capitalize">{{'usuarios totales'}}</span>
                             </div>
                             <!-- Total Orders -->
                         </div>
@@ -300,19 +300,19 @@
                             <div class="chart--label">
                                 <span class="indicator chart-bg-1"></span>
                                 <span class="info">
-                                    {{translate('messages.customer')}} {{$data['customer']}}
+                                    {{'Cliente'}} {{$data['customer']}}
                                 </span>
                             </div>
                             <div class="chart--label">
                                 <span class="indicator chart-bg-2"></span>
                                 <span class="info">
-                                    {{translate('messages.store')}} {{$data['stores']}}
+                                    {{'Negocio'}} {{$data['stores']}}
                                 </span>
                             </div>
                             <div class="chart--label">
                                 <span class="indicator chart-bg-3"></span>
                                 <span class="info">
-                                    {{translate('messages.delivery_man')}} {{$data['delivery_man']}}
+                                    {{'Repartidor'}} {{$data['delivery_man']}}
                                 </span>
                             </div>
                         </div>
@@ -376,8 +376,8 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-sm mb-2 mb-sm-0">
-                    <h1 class="page-header-title">{{translate('messages.welcome')}}, {{auth('admin')->user()->f_name}}.</h1>
-                    <p class="page-header-text">{{translate('messages.employee_welcome_message')}}</p>
+                    <h1 class="page-header-title">{{'Bienvenido'}}, {{auth('admin')->user()->f_name}}.</h1>
+                    <p class="page-header-text">{{'mensaje de bienvenida al empleado'}}</p>
                 </div>
             </div>
         </div>
@@ -411,7 +411,7 @@
                 width: 320,
                 type: 'donut',
             },
-            labels: ['{{ translate('Customer') }}', '{{ translate('Store') }}', '{{ translate('Delivery man') }}'],
+            labels: ['{{ 'Cliente' }}', '{{ 'Almacenar' }}', '{{ 'repartidor' }}'],
             dataLabels: {
                 enabled: false,
                 style: {
@@ -441,13 +441,13 @@
 
         options = {
             series: [{
-                name: '{{ translate('Gross Sale') }}',
+                name: '{{ 'Venta bruta' }}',
                 data: [{{ implode(",",$total_sell) }}]
             },{
-                name: '{{ translate('Admin Comission') }}',
+                name: '{{ 'Comisión de administración' }}',
                 data: [{{ implode(",",$commission) }}]
             },{
-                name: '{{ translate('Delivery Comission') }}',
+                name: '{{ 'Comisión de entrega' }}',
                 data: [{{ implode(",",$delivery_commission) }}]
             }],
             chart: {

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Admin Tax Report'))
+@section('title', 'Informe de impuestos administrativo')
 
 @section('tax_report')
     active
@@ -11,35 +11,35 @@
 
 
         <!--- Admin Tax Report -->
-        <h2 class="mb-20">{{ translate('messages.Admin Tax Report') }}</h3>
+        <h2 class="mb-20">{{ 'Informe de impuestos administrativo' }}</h3>
             <!--- Tax Details Page -->
-            <h2 class="mb-20 mt-5">{{ translate('messages.Tax Details') }}</h2>
+            <h2 class="mb-20 mt-5">{{ 'Detalles de impuestos' }}</h2>
             <div class="bg--secondary rounded p-20">
                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-15">
                     <div>
-                        <h5 class="mb-1">{{ translate($taxSource) }} {{ translate('Taxes') }}</h5>
-                        <p class="fz-12px mb-0">{{ translate('Date:') }} {{ $startDate }} - {{ $endDate }}</p>
+                        <h5 class="mb-1">{{ translate($taxSource) }} {{ 'Impuestos' }}</h5>
+                        <p class="fz-12px mb-0">{{ 'Fecha:' }} {{ $startDate }} - {{ $endDate }}</p>
                     </div>
                     <div class="hs-unfold mr-2 hungar-export">
                         <a class="js-hs-unfold-invoker btn btn-sm btn-primary dropdown-toggle h--40px" href="javascript:;"
                             data-hs-unfold-options='{
                         "target": "#usersExportDropdown4", "type": "css-animation" }'>
-                            <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                            <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                         </a>
                         <div id="usersExportDropdown4"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                            <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                            <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                             <a id="export-excel" class="dropdown-item" href="{{ route('admin.transactions.report.getTaxDetailsExport',['source'=> $taxSource ,'export_type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
-                                {{ translate('messages.excel') }}
+                                {{ 'sobresalir' }}
                             </a>
                             <a id="export-csv" class="dropdown-item" href="{{ route('admin.transactions.report.getTaxDetailsExport',['source'=> $taxSource ,'export_type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
-                                .{{ translate('messages.csv') }}
+                                .{{ 'csv' }}
                             </a>
                         </div>
                     </div>
@@ -47,25 +47,25 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="bg-white p-12 w-100 rounded d-flex align-items-center justify-content-between">
-                            {{ translate('Total_Transactions') }} <h4 class="theme-clr fw-bold mb-0">{{ $total_count }}
+                            {{ 'Transacciones totales' }} <h4 class="theme-clr fw-bold mb-0">{{ $total_count }}
                             </h4>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="bg-white p-12 w-100 rounded d-flex align-items-center justify-content-between">
-                            {{ translate('Total_Amount') }} <h4 class="theme-clr fw-bold mb-0">
+                            {{ 'Monto total' }} <h4 class="theme-clr fw-bold mb-0">
                                 {{ \App\CentralLogics\Helpers::format_currency($total_amount) }}</h4>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="bg-white p-12 w-100 rounded d-flex align-items-center justify-content-between">
-                            {{ translate('Total Tax Percentage') }} <h4 class="cus-warning-light-clr fw-bold mb-0">
+                            {{ 'Porcentaje total de impuestos' }} <h4 class="cus-warning-light-clr fw-bold mb-0">
                                 {{ $total_tax_rate }} %</h4>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="bg-white p-12 w-100 rounded d-flex align-items-center justify-content-between">
-                            {{ translate('Total Tax Amount') }} <h4 class="cus-warning-clr fw-bold mb-0">
+                            {{ 'Monto total del impuesto' }} <h4 class="cus-warning-clr fw-bold mb-0">
                                 {{ \App\CentralLogics\Helpers::format_currency($total_tax_amount) }}</h4>
                         </div>
                     </div>
@@ -77,10 +77,10 @@
                         class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table fz--14px">
                         <thead class="thead-light">
                             <tr>
-                                <th class="border-0">{{ translate('sl') }}</th>
-                                <th class="border-0">{{ translate('Transaction ID') }}</th>
-                                <th class="border-0">{{ translate('Amount') }}</th>
-                                <th class="border-0">{{ translate('Tax Amount') }}</th>
+                                <th class="border-0">{{ 'SL' }}</th>
+                                <th class="border-0">{{ 'ID de transacción' }}</th>
+                                <th class="border-0">{{ 'Cantidad' }}</th>
+                                <th class="border-0">{{ 'Monto del impuesto' }}</th>
                             </tr>
                         </thead>
 
@@ -107,7 +107,7 @@
 
                                         <div class="d-flex flex-column gap-1">
                                             <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                                {{ translate('Total') }} ({{ $totalTaxRate }}%):
+                                                {{ 'Total' }} ({{ $totalTaxRate }}%):
                                                 <span>
                                                     {{ \App\CentralLogics\Helpers::format_currency($totalTaxAmount) }}</span>
                                             </div>
@@ -138,7 +138,7 @@
                     <div class="empty--data">
                         <img src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
                         <h5>
-                            {{ translate('no_data_found') }}
+                            {{ 'no se encontraron datos' }}
                         </h5>
                     </div>
                 @endif

@@ -20,33 +20,33 @@
                                     </div>
                                     <div class="text-dark mb-3">
                                         <h3 class="lh-base">
-                                            {{ translate('how_to_get_the_x_(twitter)_pixel_id') }}
+                                            {{ 'cómo obtener la identificación del píxel x (twitter)' }}
                                         </h3>
                                         <p class="opacity-75">
-                                            {{ translate('to_get_your_x_(twitter)_pixel_id,_log_in_to_your_twitter_ads_account.') }}
-                                            {{ translate('from_the_top_navigation,_click_on_tools_and_select_events_manager.') }}
-                                            {{ translate('once_in_the_events_manager,_create_your_pixel_id_by_clicking_on_add_event_source.') }}
-                                            {{ translate('choose_the_install_with_pixel_code_option_and_press_save.') }}
-                                            {{ translate('your_pixel_id_will_then_be_generated,_and_you_can_copy_it_from_the_interface.') }}
+                                            {{ 'Para obtener su ID de píxel x (twitter), inicie sesión en su cuenta de anuncios de Twitter.' }}
+                                            {{ 'Desde la navegación superior, haga clic en herramientas y seleccione administrador de eventos.' }}
+                                            {{ 'Una vez en el administrador de eventos, cree su ID de píxel haciendo clic en Agregar fuente de evento.' }}
+                                            {{ 'elija la opción instalar con código de píxel y presione guardar.' }}
+                                            {{ 'Luego se generará su identificación de píxel y podrá copiarla desde la interfaz.' }}
                                         </p>
                                     </div>
 
                                     <div class="text-dark mb-3">
                                         <h3 class="lh-base">
-                                            {{ translate('where_to_use_the_x_(twitter)_pixel_id') }}
+                                            {{ 'dónde usar la identificación del píxel x (twitter)' }}
                                         </h3>
                                         <p class="opacity-75">
-                                            {{ translate('go_to_the_marketing_tools_section_in_your_admin_panel_and_complete_the_steps:') }}
+                                            {{ 'vaya a la sección de herramientas de marketing en su panel de administración y complete los pasos:' }}
                                         </p>
                                         <ol class="d-flex flex-column gap-2 opacity-75">
                                             <li>
-                                                {{ translate('navigate_to_the_x_(twitter)_pixel_id_section_under_marketing_tools.') }}
+                                                {{ 'navegue hasta la sección de identificación de píxel x (twitter) en herramientas de marketing.' }}
                                             </li>
                                             <li>
-                                                {{ translate('turn_on_the_toggle_button.') }}
+                                                {{ 'encienda el botón de alternancia.' }}
                                             </li>
                                             <li>
-                                                {{ translate('paste_your_x_(twitter)_pixel_id_into_the_input_box_and_click_submit.') }}
+                                                {{ 'pegue su identificación de píxel x (twitter) en el cuadro de entrada y haga clic en enviar.' }}
                                             </li>
                                         </ol>
                                     </div>

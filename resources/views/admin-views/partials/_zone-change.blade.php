@@ -3,6 +3,6 @@
     @if ($params['zone_id'] != 'all')
         @php($zone_name = \App\Models\Zone::where('id', $params['zone_id'])->first()->name)
     @else
-        @php($zone_name = translate('messages.all'))
+        @php($zone_name = 'todo')
     @endif
 </h4>

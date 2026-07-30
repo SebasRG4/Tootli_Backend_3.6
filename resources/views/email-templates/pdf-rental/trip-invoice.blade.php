@@ -9,7 +9,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ translate('Email_Template') }}</title>
+    <title>{{ 'Plantilla de correo electrónico' }}</title>
 
     <link rel="stylesheet" href="{{asset('Modules/Rental/assets/css/admin/google-font.css')}}">
     <link rel="stylesheet" href="{{asset('Modules/Rental/assets/css/admin/trip-invoice.css')}}">
@@ -30,7 +30,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                     <img class="mb-2 mail-img-2"
                                         src="{{ \App\CentralLogics\Helpers::get_full_url('business', $logo?->value ?? '', $logo?->storage[0]?->value ?? 'public', 'favicon') }}"
                                         alt="">
-                                    <h3 class="mb-3 mt-0">{{ translate('Trip_Info') }}</h3>
+                                    <h3 class="mb-3 mt-0">{{ 'Información de viaje' }}</h3>
                                 </td>
                             </tr>
                             <tr>
@@ -39,22 +39,22 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                         <tbody>
                                             <tr>
                                                 <td style="width:150px">
-                                                    <h3 class="subtitle">{{ translate('Trip_Summary') }}</h3>
-                                                    <div class="d-block">{{ translate('Trip') }}# {{ $trip->id }}
+                                                    <h3 class="subtitle">{{ 'Resumen del viaje' }}</h3>
+                                                    <div class="d-block">{{ 'Viaje' }}# {{ $trip->id }}
                                                     </div>
-                                                    <div class="d-block">{{ \App\CentralLogics\Helpers::time_date_format($trip->schedule_at)	 }} {{ $trip->scheduled ? '('. translate('messages.scheduled') .')' : '' }} </div>
+                                                    <div class="d-block">{{ \App\CentralLogics\Helpers::time_date_format($trip->schedule_at)	 }} {{ $trip->scheduled ? '('. 'programado' .')' : '' }} </div>
                                                     <div class="text-break mb-1">
-                                                        <span class="opacity-70">{{ translate('messages.pickup_location') }}</span> <span>:</span>
+                                                        <span class="opacity-70">{{ 'lugar de recogida' }}</span> <span>:</span>
                                                         <span>{{ $trip?->pickup_location['location_name'] }}</span>
                                                     </div>
                                                     <div class="text-break mb-1">
-                                                        <span class="opacity-70">{{ translate('messages.destination_location') }}</span> <span>:</span>
+                                                        <span class="opacity-70">{{ 'ubicación de destino' }}</span> <span>:</span>
                                                         <span>{{ $trip?->destination_location['location_name'] }}</span>
                                                     </div>
                                                 </td>
 
                                                 <td class="px-3" style="width:100px">
-                                                    <h3 class="subtitle">{{ translate('User Info') }}</h3>
+                                                    <h3 class="subtitle">{{ 'Información de usuario' }}</h3>
                                                     @php($address = $trip->user_info)
                                                     <div class="d-block">
                                                         {{ $address['contact_person_name'] ?? $trip?->customer?->f_name . ' ' . $trip?->customer?->l_name }}
@@ -84,15 +84,15 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                     <table class="w-100">
                                                         <thead class="bg-section-2">
                                                             <tr>
-                                                                <th class="text-left p-1 px-3">{{ translate('#') }}
+                                                                <th class="text-left p-1 px-3">{{ '#' }}
                                                                 </th>
                                                                 <th class="text-left p-1 px-3">
-                                                                    {{ translate('Vehicle') }}
+                                                                    {{ 'Vehículo' }}
                                                                 </th>
                                                                 <th class="text-left p-1 px-3">
-                                                                    {{ translate('Hour/Km/Day') }}
+                                                                    {{ 'Hora/Km/Día' }}
                                                                 </th>
-                                                                <th class="text-right p-1 px-3">{{ translate('Fare') }}
+                                                                <th class="text-right p-1 px-3">{{ 'Tarifa' }}
                                                                 </th>
                                                             </tr>
                                                         </thead>
@@ -122,13 +122,13 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                         <?php
                                                                             if($details->rental_type == 'hourly'){
                                                                                 $getPrice=$details->vehicle_details['hourly_price'];
-                                                                                $getType=$trip->estimated_hours.' '.translate('Hrs');
+                                                                                $getType=$trip->estimated_hours.' '.'Horas';
                                                                             }elseif ($details->rental_type == 'day_wise') {
                                                                                 $getPrice=$details->vehicle_details['day_wise_price'];
-                                                                                $getType=( (int) round($details->estimated_hours/ 24) ).' '.translate('Days');
+                                                                                $getType=( (int) round($details->estimated_hours/ 24) ).' '.'Días';
                                                                             } else{
                                                                                 $getPrice=$details->vehicle_details['distance_price'];
-                                                                                $getType= $trip->distance .' '.translate('KM');
+                                                                                $getType= $trip->distance .' '.'km';
                                                                             }
                                                                         ?>
 
@@ -150,7 +150,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                         <tr>
                                                                             <td style="width: 40%"></td>
                                                                             <td class="p-1 px-3">
-                                                                                {{ translate('messages.price') }}
+                                                                                {{ 'precio' }}
                                                                             </td>
                                                                             <td class="text-right p-1 px-3">
                                                                                 {{ \App\CentralLogics\Helpers::format_currency($subtotal) }}
@@ -160,9 +160,9 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                         <tr>
                                                                             <td style="width: 40%"></td>
                                                                             <td class="p-1 px-3">
-                                                                                {{ translate('messages.subtotal') }}
+                                                                                {{ 'total parcial' }}
                                                                                 @if ($trip->tax_status == 'included')
-                                                                                    ({{ translate('messages.TAX_Included') }})
+                                                                                    ({{ 'IVA incluido' }})
                                                                                 @endif
                                                                             </td>
                                                                             <td class="text-right p-1 px-3">
@@ -172,7 +172,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                         <tr>
                                                                             <td style="width: 40%"></td>
                                                                             <td class="p-1 px-3">
-                                                                                {{ translate('messages.discount') }}
+                                                                                {{ 'descuento' }}
                                                                             </td>
                                                                             <td class="text-right p-1 px-3">
                                                                                 {{ \App\CentralLogics\Helpers::format_currency($trip->discount_on_trip) }}
@@ -181,7 +181,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                         <tr>
                                                                             <td style="width: 40%"></td>
                                                                             <td class="p-1 px-3">
-                                                                                {{ translate('messages.coupon_discount') }}
+                                                                                {{ 'cupón de descuento' }}
                                                                             </td>
                                                                             <td class="text-right p-1 px-3">
                                                                                 {{ \App\CentralLogics\Helpers::format_currency($trip->coupon_discount_amount) }}
@@ -191,7 +191,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                             <tr>
                                                                                 <td style="width: 40%"></td>
                                                                                 <td class="p-1 px-3">
-                                                                                    {{ translate('messages.Referral_Discount') }}
+                                                                                    {{ 'Descuento por recomendación' }}
                                                                                 </td>
                                                                                 <td class="text-right p-1 px-3">
                                                                                     {{ \App\CentralLogics\Helpers::format_currency($trip->ref_bonus_amount) }}
@@ -205,7 +205,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                             <tr>
                                                                                 <td style="width: 40%"></td>
                                                                                 <td class="p-1 px-3">
-                                                                                    {{ translate('messages.tax') }}
+                                                                                    {{ 'impuesto' }}
                                                                                 </td>
                                                                                 <td class="text-right p-1 px-3">
                                                                                     {{ \App\CentralLogics\Helpers::format_currency($trip->tax_amount) }}
@@ -218,7 +218,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                         <tr>
                                                                             <td style="width: 40%"></td>
                                                                             <td class="p-1 px-3">
-                                                                                {{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??\App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge') }}
+                                                                                {{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??\App\CentralLogics\Helpers::get_business_data('additional_charge_name')??'cargo adicional' }}
                                                                             </td>
                                                                             <td class="text-right p-1 px-3">
                                                                                 {{ \App\CentralLogics\Helpers::format_currency($trip->additional_charge) }}
@@ -227,7 +227,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                         <tr>
                                                                             <td style="width: 40%"></td>
                                                                             <td class="p-1 px-3">
-                                                                                <h4>{{ translate('messages.total') }}
+                                                                                <h4>{{ 'total' }}
                                                                                 </h4>
                                                                             </td>
                                                                             <td class="text-right p-1 px-3">
@@ -256,13 +256,13 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                 <td style="text-align:center">
 
                     <div class="copyright" style="text-align:center" id="">
-                        {{ translate('Please') }}
+                        {{ 'Por favor' }}
                         <a class="text-base"
-                            href="mailto:{{ $BusinessData['email_address'] }}">{{ translate('contact us') }}</a>
-                        {{ translate('for any queries, we’re always happy to help.') }}
+                            href="mailto:{{ $BusinessData['email_address'] }}">{{ 'contáctanos' }}</a>
+                        {{ 'Para cualquier consulta, siempre estaremos encantados de ayudarle.' }}
                     </div>
                     <div class="copyright" style="text-align:center" id="mail-copyright">
-                        {{ $BusinessData['footer_text'] ?? translate('Copyright 2023 6ammart. All right reserved') }}
+                        {{ $BusinessData['footer_text'] ?? 'Copyright 2023 6ammart. Todos los derechos reservados' }}
                     </div>
                 </td>
             </tr>

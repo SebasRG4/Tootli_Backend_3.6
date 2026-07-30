@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title',translate('messages.Review List'))
+@section('title','Lista de revisión')
 
 @push('css_or_js')
 
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/star.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.customers_reviews')}}
+                    {{'opiniones de clientes'}}
                 </span>
             </h1>
         </div>
@@ -25,14 +25,14 @@
             @php($store_review_reply = App\Models\BusinessSetting::where('key' , 'store_review_reply')->first()->value ?? 0)
             <div class="card-header flex-wrap py-2 border-0">
                 <div class="d-flex align-items-center gap-2 mb-2">
-                    <h4 class="mb-0">{{ translate('reviews') }}</h4>
+                    <h4 class="mb-0">{{ 'opiniones' }}</h4>
                     <span class="badge badge-soft-dark rounded-circle">{{ $reviews->total() }}</span>
                 </div>
                 <div class="search--button-wrapper justify-content-end">
 
                     <form class="search-form">
                         <div class="input-group input--group">
-                            <input name="search" type="search" value="{{ request()?->search }}" class="form-control h--40px" placeholder="{{ translate('Ex : Search by item name') }}" aria-label="Search here">
+                            <input name="search" type="search" value="{{ request()?->search }}" class="form-control h--40px" placeholder="{{ 'Ej: buscar por nombre de artículo' }}" aria-label="Search here">
                             <button type="submit" class="btn btn--secondary h--40px"><i class="tio-search"></i></button>
                         </div>
                     </form>
@@ -45,26 +45,26 @@
                                 &quot;type&quot;: &quot;css-animation&quot;
                             }"
                             data-hs-unfold-target="#usersExportDropdown" data-hs-unfold-invoker="">
-                            <i class="tio-download-to mr-1"></i> {{ translate('export') }}
+                            <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                         </a>
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right hs-unfold-content-initialized hs-unfold-css-animation animated hs-unfold-reverse-y hs-unfold-hidden">
 
-                            <span class="dropdown-header">{{ translate('download_options') }}</span>
+                            <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                             <a id="export-excel" class="dropdown-item"
                                 href="{{ route('vendor.reviewsExport', ['export_type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin/svg/components/excel.svg') }}"
                                     alt="Image Description">
-                                {{ translate('messages.excel') }}
+                                {{ 'sobresalir' }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
                                 href="{{ route('vendor.reviewsExport', ['export_type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin/svg/components/placeholder-csv-format.svg') }}"
                                     alt="Image Description">
-                                .{{ translate('messages.csv') }}
+                                .{{ 'csv' }}
                             </a>
 
                         </div>
@@ -84,15 +84,15 @@
                         }'>
                     <thead class="thead-light">
                     <tr>
-                        <th class="border-0">{{translate('messages.#')}}</th>
-                        <th class="border-0">{{translate('messages.Review_Id')}}</th>
-                        <th class="border-0">{{translate('messages.item')}}</th>
-                        <th class="border-0">{{translate('messages.reviewer')}}</th>
-                        <th class="border-0">{{translate('messages.review')}}</th>
-                        <th class="border-0">{{translate('messages.date')}}</th>
-                        <th class="border-0">{{translate('messages.Reply_date')}}</th>
+                        <th class="border-0">{{'#'}}</th>
+                        <th class="border-0">{{'ID de revisión'}}</th>
+                        <th class="border-0">{{'Producto'}}</th>
+                        <th class="border-0">{{'crítico'}}</th>
+                        <th class="border-0">{{'revisar'}}</th>
+                        <th class="border-0">{{'fecha'}}</th>
+                        <th class="border-0">{{'fecha de respuesta'}}</th>
                         @if($store_review_reply == '1')
-                            <th class="text-center">{{translate('messages.action')}}</th>
+                            <th class="text-center">{{'acción'}}</th>
                         @endif
                     </tr>
                     </thead>
@@ -112,12 +112,12 @@
                                         <div class="media-body">
                                             <h5 class="text-hover-primary important--link mb-0">{{Str::limit($review->item['name'],10)}}</h5>
                                             <!-- Static -->
-                                            <a href="{{route('vendor.order.details',['id'=>$review->order_id])}}"  class="fz--12 text-body important--link">{{ translate('Order ID') }} #{{$review->order_id}}</a>
+                                            <a href="{{route('vendor.order.details',['id'=>$review->order_id])}}"  class="fz--12 text-body important--link">{{ 'ID de pedido' }} #{{$review->order_id}}</a>
                                             <!-- Static -->
                                         </div>
                                     </div>
                                 @else
-                                    {{translate('messages.Food_deleted!')}}
+                                    {{'¡Comida eliminada!'}}
                                 @endif
                             </td>
                             <td>
@@ -129,7 +129,7 @@
                                         <span class="d-block font-size-sm text-body">{{Str::limit($review->customer->phone)}}</span>
                                     </div>
                                 @else
-                                    {{translate('messages.customer_not_found')}}
+                                    {{'cliente no encontrado'}}
                                 @endif
                             </td>
                             <td>
@@ -165,7 +165,7 @@
                                 <td>
                                     <div class="btn--container justify-content-center">
                                         <a  class="btn btn-sm btn--primary {{ $review->reply ? 'btn-outline-primary' : ''}}" data-toggle="modal" data-target="#reply-{{$review->id}}" title="View Details">
-                                            {{ $review->reply ? translate('view_reply') : translate('give_reply')}}
+                                            {{ $review->reply ? 'ver respuesta' : 'dar respuesta'}}
                                         </a>
                                     </div>
                                 </td>
@@ -295,15 +295,15 @@
                                                         <span class="d-block font-size-sm text-body">{{$review->comment}}</span>
                                                     </div>
                                                 @else
-                                                    {{translate('messages.customer_not_found')}}
+                                                    {{'cliente no encontrado'}}
                                                 @endif
                                             </div>
                                             <div class="mt-3">
                                                 <form action="{{route('vendor.review-reply',[$review['id']])}}" method="POST">
                                                     @csrf
-                                                    <textarea id="reply" name="reply" required class="form-control" cols="30" rows="3" placeholder="{{ translate('Write_your_reply_here') }}">{{ $review->reply ?? '' }}</textarea>
+                                                    <textarea id="reply" name="reply" required class="form-control" cols="30" rows="3" placeholder="{{ 'Escribe tu respuesta aquí' }}">{{ $review->reply ?? '' }}</textarea>
                                                     <div class="mt-3 btn--container justify-content-end">
-                                                        <button class="btn btn-primary">{{ $review->reply ? translate('update_reply') : translate('send_reply')}}</button>
+                                                        <button class="btn btn-primary">{{ $review->reply ? 'actualizar respuesta' : 'enviar respuesta'}}</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -327,7 +327,7 @@
                 <div class="empty--data">
                     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
-                        {{translate('no_data_found')}}
+                        {{'no se encontraron datos'}}
                     </h5>
                 </div>
                 @endif

@@ -13,9 +13,9 @@
                     <h5 class="text-hover-primary mb-0">{{Str::limit($review->item['name'],20,'...')}}</h5>
                 </div>
             </a>
-            <span class="ml-10"><a href="{{route('admin.order.details',['id'=>$review->order_id])}}">{{ translate('messages.order_id') }}: {{$review->order_id}}</a></span>
+            <span class="ml-10"><a href="{{route('admin.order.details',['id'=>$review->order_id])}}">{{ 'identificación del pedido' }}: {{$review->order_id}}</a></span>
         @else
-            {{translate('messages.Item deleted!')}}
+            {{'¡Artículo eliminado!'}}
         @endif
 
     </td>
@@ -35,7 +35,7 @@
     <td>
         <label class="toggle-switch toggle-switch-sm" for="reviewCheckbox{{$review->id}}">
             <input type="checkbox"
-                   data-id="status-{{ $review['id'] }}" data-message="{{ $review->status ? translate('messages.you_want_to_hide_this_review_for_customer') : translate('messages.you_want_to_show_this_review_for_customer') }}"
+                   data-id="status-{{ $review['id'] }}" data-message="{{ $review->status ? 'Quieres ocultar esta reseña para el cliente.' : 'Quieres mostrar esta reseña al cliente.' }}"
                    class="toggle-switch-input status_form_alert" id="reviewCheckbox{{ $review->id }}"
                 {{ $review->status ? 'checked' : '' }}>
             <span class="toggle-switch-label">

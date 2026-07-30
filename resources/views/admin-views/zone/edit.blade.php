@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('Update Zone'))
+@section('title','Zona de actualización')
 
 @push('css_or_js')
 
@@ -16,7 +16,7 @@
                     <img src="{{asset('assets/admin/img/edit.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                   {{ translate('edit_zone')}}
+                   {{ 'editar zona'}}
                 </span>
             </h1>
         </div>
@@ -27,9 +27,9 @@
                 <div class="col-md-5">
                     <div class="zone-setup-instructions">
                         <div class="zone-setup-top">
-                            <h6 class="subtitle">{{ translate('Instructions') }}</h6>
+                            <h6 class="subtitle">{{ 'Instrucciones' }}</h6>
                             <p>
-                                {{ translate('Create_&_connect_dots_in_a_specific_area_on_the_map_to_add_a_new_business_zone.') }}
+                                {{ 'Cree y conecte puntos en un área específica del mapa para agregar una nueva zona comercial.' }}
                             </p>
                         </div>
                         <div class="zone-setup-item">
@@ -37,7 +37,7 @@
                                 <i class="tio-hand-draw"></i>
                             </div>
                             <div class="info">
-                                {{ translate('Use_this_‘Hand_Tool’_to_find_your_target_zone.') }}
+                                {{ 'Utilice esta "herramienta manual" para encontrar su zona objetivo.' }}
                             </div>
                         </div>
                         <div class="zone-setup-item">
@@ -45,7 +45,7 @@
                                 <i class="tio-free-transform"></i>
                             </div>
                             <div class="info">
-                                {{ translate('Use_this_‘Shape_Tool’_to_point_out_the_areas_and_connect_the_dots._Minimum_3_points/dots_are_required.') }}
+                                {{ 'Utilice esta \'Herramienta de forma\' para señalar las áreas y conectar los puntos. Se requieren un mínimo de 3 puntos/puntos.' }}
                             </div>
                         </div>
                         <div class="instructions-image mt-4">
@@ -60,7 +60,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link lang_link active"
                                     href="#"
-                                    id="default-link">{{translate('messages.default')}}</a>
+                                    id="default-link">{{'por defecto'}}</a>
                                 </li>
                                 @foreach ($language as $lang)
                                     <li class="nav-item">
@@ -77,24 +77,24 @@
                         @if($language)
                             <div class="row lang_form" id="default-form">
                                 <div class="form-group col-6">
-                                    <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{ translate('messages.default') }})</label>
-                                    <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_zone')}}" maxlength="191" value="{{$zone?->getRawOriginal('name')}}"  >
+                                    <label class="input-label" for="exampleFormControlInput1">{{'nombre'}} ({{ 'por defecto' }})</label>
+                                    <input type="text" name="name[]" class="form-control" placeholder="{{'nueva zona'}}" maxlength="191" value="{{$zone?->getRawOriginal('name')}}"  >
                                 </div>
                                 <div class="form-group col-6">
-                                    <label class="input-label" for="exampleFormControlInput1">{{translate('messages.display_name')}} ({{ translate('messages.default') }})</label>
-                                    <input type="text" name="display_name[]" class="form-control" placeholder="{{translate('messages.display_name')}}" maxlength="191" value="{{$zone?->getRawOriginal('display_name')}}"  >
+                                    <label class="input-label" for="exampleFormControlInput1">{{'nombre para mostrar'}} ({{ 'por defecto' }})</label>
+                                    <input type="text" name="display_name[]" class="form-control" placeholder="{{'nombre para mostrar'}}" maxlength="191" value="{{$zone?->getRawOriginal('display_name')}}"  >
                                 </div>
                                 <div class="form-group col-6">
                                     <label class="input-label" for="max_delivery_radius">
-                                        {{translate('messages.max_delivery_radius')}} (km) *
+                                        {{'radio máximo de entrega'}} (km) *
                                         <span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                            data-original-title="{{translate('messages.maximum_distance_for_restaurant_visibility')}}">
+                                            data-original-title="{{'Distancia máxima para la visibilidad del restaurante.'}}">
                                             <i class="tio-info-outined"></i>
                                         </span>
                                     </label>
                                     <input type="number" step="0.1" min="0.1" name="max_delivery_radius"
                                         class="form-control" required
-                                        placeholder="{{translate('messages.enter_radius_in_km')}}"
+                                        placeholder="{{'introduzca el radio en km'}}"
                                         value="{{$zone->max_delivery_radius ?? 5}}">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
@@ -116,21 +116,21 @@
                                     ?>
                                 <div class="row lang_form d-none" id="{{$lang}}-form">
                                     <div class="form-group col-6">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
-                                        <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_zone')}}" maxlength="191" value="{{$translate[$lang]['name']??''}}"  >
+                                        <label class="input-label" for="exampleFormControlInput1">{{'nombre'}} ({{strtoupper($lang)}})</label>
+                                        <input type="text" name="name[]" class="form-control" placeholder="{{'nueva zona'}}" maxlength="191" value="{{$translate[$lang]['name']??''}}"  >
                                     </div>
                                     <div class="form-group col-6">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.display_name')}} ({{strtoupper($lang)}})</label>
-                                        <input type="text" name="display_name[]" class="form-control" placeholder="{{translate('messages.display_name')}}" maxlength="191" value="{{$translate[$lang]['display_name']??''}}"  >
+                                        <label class="input-label" for="exampleFormControlInput1">{{'nombre para mostrar'}} ({{strtoupper($lang)}})</label>
+                                        <input type="text" name="display_name[]" class="form-control" placeholder="{{'nombre para mostrar'}}" maxlength="191" value="{{$translate[$lang]['display_name']??''}}"  >
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
                                 </div>
                                 @endforeach
                             @endif
                         <div class="form-group d-none">
-                            <label class="input-label" for="exampleFormControlInput1">{{ translate('messages.Coordinates') }}
-                                <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('messages.draw_your_zone_on_the_map')}}">
-                                    {{translate('messages.draw_your_zone_on_the_map')}}
+                            <label class="input-label" for="exampleFormControlInput1">{{ 'Coordenadas' }}
+                                <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{'dibuja tu zona en el mapa'}}">
+                                    {{'dibuja tu zona en el mapa'}}
                                 </span>
                             </label>
                                 <textarea type="text" rows="8" name="coordinates" id="coordinates" class="form-control" readonly>@foreach($zone->coordinates[0]->toArray()['coordinates'] as $key=>$coords)<?php if(count($zone->coordinates[0]->toArray()['coordinates']) != $key+1) {if($key != 0) echo(','); ?>({{$coords[1]}}, {{$coords[0]}})<?php } ?>@endforeach</textarea>
@@ -138,15 +138,15 @@
 
 
                         <div class="map-warper rounded mt-0">
-                            <input id="pac-input" class="controls rounded initial--33" title="{{translate('messages.search_your_location_here')}}" type="text" placeholder="{{translate('messages.search_here')}}"/>
+                            <input id="pac-input" class="controls rounded initial--33" title="{{'busca tu ubicación aquí'}}" type="text" placeholder="{{'buscar aquí'}}"/>
                             <div id="map-canvas" class="initial--34"></div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="btn--container mt-3 justify-content-end">
-                <button id="reset_btn" type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                <button type="submit" class="btn btn--primary">{{translate('messages.Save_changes')}}</button>
+                <button id="reset_btn" type="reset" class="btn btn--reset">{{'reiniciar'}}</button>
+                <button type="submit" class="btn btn--primary">{{'Guardar cambios'}}</button>
             </div>
         </form>
     </div>

@@ -1,18 +1,18 @@
 <div class="row">
-    <div class="col-lg-12 text-center "><h1 > {{ Config::get('module.current_module_type')== 'food' ?  translate('Food_Campaign_List') : translate('Item_Campaign_List') }}
+    <div class="col-lg-12 text-center "><h1 > {{ Config::get('module.current_module_type')== 'food' ?  'Lista de campañas alimentarias' : 'Lista de campañas de artículos' }}
     </h1></div>
     <div class="col-lg-12">
 
     <table>
         <thead>
             <tr>
-                <th>{{ translate('Filter_Criteria') }}</th>
+                <th>{{ 'Criterios de filtrado' }}</th>
                 <th></th>
                 <th></th>
                 <th>
-                    {{ translate('Module')  }}: {{ $module_name }}
+                    {{ 'Módulo'  }}: {{ $module_name }}
                     <br>
-                    {{ translate('Search_Bar_Content')  }}: {{ $search ??translate('N/A') }}
+                    {{ 'Contenido de la barra de búsqueda'  }}: {{ $search ??'N / A' }}
                 </th>
                 <th> </th>
                 <th></th>
@@ -22,26 +22,26 @@
 
 
         <tr>
-            <th>{{ translate('sl') }}</th>
-            <th>{{ translate('Item_Name') }}</th>
-            <th>{{ translate('Description') }}</th>
-            <th>{{ translate('Category_Name') }}</th>
-            <th>{{ translate('Sub_Category_Name') }}</th>
-            <th>{{ translate('Item_Unit') }}</th>
-            <th>{{ translate('Price') }}</th>
-            <th>{{ translate('Available_Variations') }} </th>
-            <th>{{ translate('Discount') }} </th>
-            <th>{{ translate('Discount_Type') }} </th>
+            <th>{{ 'SL' }}</th>
+            <th>{{ 'Nombre del artículo' }}</th>
+            <th>{{ 'Descripción' }}</th>
+            <th>{{ 'Nombre de categoría' }}</th>
+            <th>{{ 'Nombre de subcategoría' }}</th>
+            <th>{{ 'Unidad de artículo' }}</th>
+            <th>{{ 'Precio' }}</th>
+            <th>{{ 'Variaciones disponibles' }} </th>
+            <th>{{ 'Descuento' }} </th>
+            <th>{{ 'Tipo de descuento' }} </th>
             @if (Config::get('module.current_module_type') != 'food')
-            <th>{{ translate('Available_Stock') }} </th>
+            <th>{{ 'Existencias disponibles' }} </th>
             @endif
 
 
-            <th>{{ translate('Start_Date') }} </th>
-            <th>{{ translate('End_Date') }} </th>
-            <th>{{ translate('Daily_Start_Time') }} </th>
-            <th>{{ translate('Daily_End_Time') }} </th>
-            <th>{{ translate('Store_Name') }} </th>
+            <th>{{ 'Fecha de inicio' }} </th>
+            <th>{{ 'Fecha de finalización' }} </th>
+            <th>{{ 'Hora de inicio diaria' }} </th>
+            <th>{{ 'Hora de finalización diaria' }} </th>
+            <th>{{ 'Nombre de la tienda' }} </th>
         </thead>
         <tbody>
         @foreach($data as $key => $campaign)
@@ -53,18 +53,18 @@
             {{ \App\CentralLogics\Helpers::get_category_name($campaign->category_ids) }}
         </td>
         <td>
-        {{ \App\CentralLogics\Helpers::get_sub_category_name($campaign->category_ids) ?? translate('N/A')  }}
+        {{ \App\CentralLogics\Helpers::get_sub_category_name($campaign->category_ids) ?? 'N / A'  }}
         </td>
 
-        <td>{{ $campaign?->unit?->unit ?? translate('N/A') }}</td>
+        <td>{{ $campaign?->unit?->unit ?? 'N / A' }}</td>
         <td>
             {{ \App\CentralLogics\Helpers::format_currency($campaign->price) }}
         </td>
         <td>
             @if (Config::get('module.current_module_type') == 'food')
-            {{ \App\CentralLogics\Helpers::get_food_variations($campaign->food_variations) == "  "  ? translate('N/A'): \App\CentralLogics\Helpers::get_food_variations($campaign->food_variations) }}
+            {{ \App\CentralLogics\Helpers::get_food_variations($campaign->food_variations) == "  "  ? 'N / A': \App\CentralLogics\Helpers::get_food_variations($campaign->food_variations) }}
             @else
-            {{ \App\CentralLogics\Helpers::get_attributes($campaign->choice_options) == "  "  ? translate('N/A'): \App\CentralLogics\Helpers::get_attributes($campaign->choice_options) }}
+            {{ \App\CentralLogics\Helpers::get_attributes($campaign->choice_options) == "  "  ? 'N / A': \App\CentralLogics\Helpers::get_attributes($campaign->choice_options) }}
             @endif
         </td>
         <td>{{ $campaign->discount }}</td>

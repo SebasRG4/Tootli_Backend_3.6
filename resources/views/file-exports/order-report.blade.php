@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-lg-12 text-center "><h1 >{{ translate('messages.order_report') }}</h1></div>
+    <div class="col-lg-12 text-center "><h1 >{{ 'informe de pedido' }}</h1></div>
     <div class="col-lg-12">
 
 
@@ -7,29 +7,29 @@
     <table>
         <thead>
             <tr>
-                <th>{{ translate('filter_criteria') }} -</th>
+                <th>{{ 'criterios de filtrado' }} -</th>
                 <th></th>
                 <th></th>
                 <th>
-                    {{ translate('module' )}} - {{ $data['module']?translate($data['module']):translate('all') }}
+                    {{ 'módulo'}} - {{ $data['module']?translate($data['module']):'todo' }}
                     <br>
-                    {{ translate('zone' )}} - {{ $data['zone']??translate('all') }}
+                    {{ 'zona'}} - {{ $data['zone']??'todo' }}
                     <br>
-                    {{ translate('store' )}} - {{ $data['store']??translate('all') }}
+                    {{ 'Negocio'}} - {{ $data['store']??'todo' }}
                     <br>
-                    {{ translate('customer' )}} - {{ $data['customer']??translate('all') }}
+                    {{ 'Cliente'}} - {{ $data['customer']??'todo' }}
                     @if ($data['from'])
                     <br>
-                    {{ translate('from' )}} - {{ $data['from']?Carbon\Carbon::parse($data['from'])->format('d M Y'):'' }}
+                    {{ 'de'}} - {{ $data['from']?Carbon\Carbon::parse($data['from'])->format('d M Y'):'' }}
                     @endif
                     @if ($data['to'])
                     <br>
-                    {{ translate('to' )}} - {{ $data['to']?Carbon\Carbon::parse($data['to'])->format('d M Y'):'' }}
+                    {{ 'a'}} - {{ $data['to']?Carbon\Carbon::parse($data['to'])->format('d M Y'):'' }}
                     @endif
                     <br>
-                    {{ translate('filter')  }}- {{  translate($data['filter']) }}
+                    {{ 'filtrar'  }}- {{  translate($data['filter']) }}
                     <br>
-                    {{ translate('Search_Bar_Content')  }}- {{ $data['search'] ??translate('N/A') }}
+                    {{ 'Contenido de la barra de búsqueda'  }}- {{ $data['search'] ??'N / A' }}
 
                 </th>
                 <th></th>
@@ -38,21 +38,21 @@
                 <th></th>
             </tr>
             <tr>
-                <th>{{ translate('messages.sl') }}</th>
-                <th>{{ translate('messages.order_id') }}</th>
-                <th>{{ translate('messages.customer_name') }}</th>
-                <th>{{ translate('messages.store_name') }}</th>
-                <th>{{ translate('messages.item_price') }}</th>
-                <th>{{ translate('messages.item_discount') }}</th>
-                <th>{{ translate('messages.coupon_discount') }}</th>
-                <th>{{ translate('messages.referral_discount') }}</th>
-                <th>{{ translate('messages.discounted_amount') }}</th>
-                <th>{{  \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge')  }}</th>
-                <th>{{ translate('messages.extra_packaging_amount') }}</th>
-                <th>{{ translate('messages.tax') }}</th>
-                <th>{{ translate('messages.total_amount') }}</th>
-                <th>{{ translate('messages.payment_status') }}</th>
-                <th>{{ translate('messages.order_type') }}</th>
+                <th>{{ 'SL' }}</th>
+                <th>{{ 'identificación del pedido' }}</th>
+                <th>{{ 'nombre del cliente' }}</th>
+                <th>{{ 'nombre de la tienda' }}</th>
+                <th>{{ 'precio del artículo' }}</th>
+                <th>{{ 'descuento del artículo' }}</th>
+                <th>{{ 'cupón de descuento' }}</th>
+                <th>{{ 'descuento por referencia' }}</th>
+                <th>{{ 'cantidad descontada' }}</th>
+                <th>{{  \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??'cargo adicional'  }}</th>
+                <th>{{ 'cantidad de embalaje adicional' }}</th>
+                <th>{{ 'impuesto' }}</th>
+                <th>{{ 'cantidad total' }}</th>
+                <th>{{ 'estado de pago' }}</th>
+                <th>{{ 'tipo de orden' }}</th>
             </tr>
         </thead>
         <tbody>
@@ -64,14 +64,14 @@
                     @if ($order->customer)
                         {{ $order->customer['f_name'] . ' ' . $order->customer['l_name'] }}
                     @else
-                        {{ translate('not_found') }}
+                        {{ 'extraviado' }}
                     @endif
                 </td>
                 <td>
                     @if($order->store)
                         {{$order->store->name}}
                     @else
-                        {{ translate('messages.not_found') }}
+                        {{ 'extraviado' }}
                     @endif
                 </td>
                 <td>{{ \App\CentralLogics\Helpers::number_format_short($order['order_amount'] - $order->additional_charge -$order['dm_tips']-$order['total_tax_amount']-$order['delivery_charge']+$order['coupon_discount_amount'] + $order['store_discount_amount'] + $order['ref_bonus_amount'] - $order['extra_packaging_amount'] +$order['flash_admin_discount_amount'] +$order['flash_store_discount_amount'] ) }}</td>

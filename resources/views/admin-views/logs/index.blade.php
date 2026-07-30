@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Monitoreo de Logs'))
+@section('title', 'Monitoreo de registros')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -54,7 +54,7 @@
                     <span class="page-header-icon">
                         <i class="tio-receipt text-primary"></i>
                     </span>
-                    <span>{{ translate('messages.System Logs') }}</span>
+                    <span>{{ 'Registros del sistema' }}</span>
                 </h1>
                 
                 <!-- Clear Logs Action -->
@@ -63,7 +63,7 @@
                         <form action="{{ route('admin.logs.clear') }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas limpiar el historial de registros? Esta acción no se puede deshacer.');">
                             @csrf
                             <button type="submit" class="btn btn-danger">
-                                <i class="tio-delete-outlined mr-1"></i> {{ translate('Limpiar Logs') }}
+                                <i class="tio-delete-outlined mr-1"></i> {{ 'Limpiar troncos' }}
                             </button>
                         </form>
                     @endif
@@ -78,14 +78,14 @@
                 <form action="{{ route('admin.logs.index') }}" method="GET">
                     <div class="row g-3 align-items-end">
                         <div class="col-md-5">
-                            <label class="form-label">{{ translate('messages.Search') }}</label>
+                            <label class="form-label">{{ 'Buscar' }}</label>
                             <div class="input-group">
                                 <input type="text" name="search" class="form-control" 
-                                       placeholder="{{ translate('Buscar por palabra clave (ej. Gemini, Exception, error)...') }}" 
+                                       placeholder="{{ 'Buscar por palabra clave (ej. Géminis, Excepción, error)...' }}" 
                                        value="{{ $search }}">
                                 @if(!empty($search))
                                     <div class="input-group-append">
-                                        <a href="{{ route('admin.logs.index', ['limit' => $limit]) }}" class="btn btn-outline-secondary" title="{{ translate('Limpiar búsqueda') }}">
+                                        <a href="{{ route('admin.logs.index', ['limit' => $limit]) }}" class="btn btn-outline-secondary" title="{{ 'Limpiar búsqueda' }}">
                                             <i class="tio-clear"></i>
                                         </a>
                                     </div>
@@ -94,7 +94,7 @@
                         </div>
                         
                         <div class="col-md-3">
-                            <label class="form-label">{{ translate('Límite de líneas') }}</label>
+                            <label class="form-label">{{ 'Límite de líneas' }}</label>
                             <select name="limit" class="form-control">
                                 <option value="100" {{ $limit == 100 ? 'selected' : '' }}>Últimas 100 líneas</option>
                                 <option value="500" {{ $limit == 500 ? 'selected' : '' }}>Últimas 500 líneas</option>
@@ -105,7 +105,7 @@
 
                         <div class="col-md-4 d-flex flex-wrap gap-2">
                             <button type="submit" class="btn btn-primary mr-2">
-                                <i class="tio-filter-list mr-1"></i> {{ translate('messages.Filter') }}
+                                <i class="tio-filter-list mr-1"></i> {{ 'Filtrar' }}
                             </button>
                             
                             <!-- Quick Filter Gemini Button -->
@@ -123,16 +123,16 @@
         <div class="card">
             <div class="card-header border-0 py-3 d-flex flex-wrap justify-content-between align-items-center">
                 <h4 class="card-title">
-                    {{ translate('Registros de Logs Recientes') }}
+                    {{ 'Registros de Registros Recientes' }}
                     <span class="badge badge-soft-dark ml-2" id="log-count-badge">{{ count($parsedLogs) }} encontrados</span>
                 </h4>
                 <div class="d-flex align-items-center flex-wrap" style="gap: 12px;">
                     <div class="custom-control custom-switch mr-3">
                         <input type="checkbox" class="custom-control-input" id="autoRefreshSwitch">
-                        <label class="custom-control-label cursor-pointer mb-0" for="autoRefreshSwitch">{{ translate('Auto-refrescar (5s)') }}</label>
+                        <label class="custom-control-label cursor-pointer mb-0" for="autoRefreshSwitch">{{ 'Auto-refrescar (5s)' }}</label>
                     </div>
                     <button type="button" id="refreshBtn" class="btn btn-outline-secondary btn-sm">
-                        <i class="tio-sync mr-1" id="refreshIcon"></i> {{ translate('Refrescar') }}
+                        <i class="tio-sync mr-1" id="refreshIcon"></i> {{ 'Refrescar' }}
                     </button>
                 </div>
             </div>
@@ -142,9 +142,9 @@
                     <table class="table table-hover table-thead-bordered table-align-middle card-table">
                         <thead class="thead-light">
                             <tr>
-                                <th style="width: 180px;">{{ translate('messages.Time') }}</th>
-                                <th style="width: 120px;">{{ translate('Nivel') }}</th>
-                                <th>{{ translate('messages.message') }}</th>
+                                <th style="width: 180px;">{{ 'Tiempo' }}</th>
+                                <th style="width: 120px;">{{ 'Nivel' }}</th>
+                                <th>{{ 'mensaje' }}</th>
                             </tr>
                         </thead>
                         <tbody id="log-table-body">
@@ -178,7 +178,7 @@
                                             <div class="mt-2">
                                                 <details class="log-stacktrace-details">
                                                     <summary class="text-primary cursor-pointer font-size-sm">
-                                                        <i class="tio-chevron-right mr-1"></i>{{ translate('Ver detalles / Traza completa') }}
+                                                        <i class="tio-chevron-right mr-1"></i>{{ 'Ver detalles / Traza completa' }}
                                                     </summary>
                                                     <pre class="log-stacktrace-pre p-3 rounded mt-2">{{ $log['stacktrace'] }}</pre>
                                                 </details>
@@ -191,7 +191,7 @@
                                     <td colspan="3" class="text-center py-5">
                                         <div class="empty-state">
                                             <img src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}" alt="No logs found" class="mb-3" style="width: 150px;">
-                                            <h5 class="text-muted">{{ translate('No se encontraron registros de logs.') }}</h5>
+                                            <h5 class="text-muted">{{ 'No se encontraron registros de registros.' }}</h5>
                                             @if(!empty($search))
                                                 <p class="text-muted font-size-sm">Prueba buscando otra palabra clave o limpiando los filtros.</p>
                                             @endif

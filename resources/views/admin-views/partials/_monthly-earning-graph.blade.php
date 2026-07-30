@@ -5,21 +5,21 @@
             @if($params['zone_id']!='all')
                 @php($zone_name=\App\Models\Zone::where('id',$params['zone_id'])->first()->name)
             @else
-                @php($zone_name = translate('messages.all'))
+                @php($zone_name = 'todo')
             @endif
 
             <div class="d-flex flex-wrap justify-content-center align-items-center">
                 <span class="h5 m-0 mr-3 fz--11 d-flex align-items-center mb-2 mb-md-0">
                     <span class="legend-indicator chart-bg-2"></span>
-                    {{translate('messages.total_sell')}} : {{\App\CentralLogics\Helpers::format_currency(array_sum($total_sell))}}
+                    {{'venta total'}} : {{\App\CentralLogics\Helpers::format_currency(array_sum($total_sell))}}
                 </span>
                 <span class="h5 m-0 mr-3 fz--11 d-flex align-items-center mb-2 mb-md-0">
                     <span class="legend-indicator chart-bg-3"></span>
-                    {{translate('messages.admin_commission')}} : {{\App\CentralLogics\Helpers::format_currency(array_sum($commission))}}
+                    {{'comisión administrativa'}} : {{\App\CentralLogics\Helpers::format_currency(array_sum($commission))}}
                 </span>
                 <span class="h5 m-0 fz--11 d-flex align-items-center mb-2 mb-md-0">
                     <span class="legend-indicator chart-bg-1"></span>
-                    {{translate('messages.delivery_commission')}} : {{\App\CentralLogics\Helpers::format_currency(array_sum($delivery_commission))}}
+                    {{'comisión de entrega'}} : {{\App\CentralLogics\Helpers::format_currency(array_sum($delivery_commission))}}
                 </span>
             </div>
         </div>
@@ -29,7 +29,7 @@
     <!-- Bar Chart -->
     <div class="d-flex align-items-center">
       <div class="chart--extension">
-        {{ \App\CentralLogics\Helpers::currency_symbol() }}({{translate('messages.currency')}})
+        {{ \App\CentralLogics\Helpers::currency_symbol() }}({{'divisa'}})
       </div>
       <div class="chartjs-custom w-75 flex-grow-1">
           <canvas id="updatingData" class="initial--26"

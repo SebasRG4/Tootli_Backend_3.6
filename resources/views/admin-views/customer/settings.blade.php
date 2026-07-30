@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.customer_settings'))
+@section('title', 'configuración del cliente')
 
 @push('css_or_js')
 @endpush
@@ -14,7 +14,7 @@
                     <img src="{{asset('assets/admin/img/user-edit.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('customer_settings')}}
+                    {{'configuración del cliente'}}
                 </span>
             </h1>
         </div>
@@ -34,7 +34,7 @@
                                         <label
                                             class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control"
                                             for="customer_wallet">
-                                            <span class="pr-2">{{ translate('messages.customer_wallet') }} :</span>
+                                            <span class="pr-2">{{ 'billetera del cliente' }} :</span>
                                             <input type="checkbox" class="toggle-switch-input section_visibility"
                                                 data-id="customer_wallet" name="customer_wallet"
                                                 id="customer_wallet" value="1" data-section="wallet-section"
@@ -51,7 +51,7 @@
                                         <label
                                             class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control"
                                             for="customer_loyalty_point">
-                                            <span class="pr-2">{{ translate('messages.customer_loyalty_point') }} :</span>
+                                            <span class="pr-2">{{ 'punto de fidelización del cliente' }} :</span>
                                             <input type="checkbox" class="toggle-switch-input section_visibility"
                                                 data-id="customer_loyalty_point" name="customer_loyalty_point"
                                                 id="customer_loyalty_point" data-section="loyalty-point-section" value="1"
@@ -67,7 +67,7 @@
                                         <label
                                             class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control">
                                             <span
-                                                class="pr-2">{{ translate('messages.customer_referrer_earning') }} :</span>
+                                                class="pr-2">{{ 'ganancias por referencias de clientes' }} :</span>
                                             <input type="checkbox" class="toggle-switch-input section_visibility"
                                                 data-id="ref_earning_status"
                                                 name="ref_earning_status" id="ref_earning_status"
@@ -91,7 +91,7 @@
                                     <i class="tio-settings-outlined"></i>
                                 </span>
                                 <span>
-                                    {{translate('wallet_settings')}}
+                                    {{'configuración de billetera'}}
                                 </span>
                             </h5>
                         </div>
@@ -102,11 +102,11 @@
                                         <label
                                             class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control"
                                             for="refund_to_wallet">
-                                            <span class="pr-2">{{ translate('messages.refund_to_wallet') }}<span
+                                            <span class="pr-2">{{ 'reembolso a la billetera' }}<span
                                                     class="input-label-secondary"
-                                                    data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.refund_to_wallet_hint') }}"><img
+                                                    data-toggle="tooltip" data-placement="right" data-original-title="{{ 'sugerencia de reembolso a la billetera' }}"><img
                                                         src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                        alt="{{ translate('messages.show_hide_food_menu') }}"></span> :</span>
+                                                        alt="{{ 'mostrar ocultar menú de comida' }}"></span> :</span>
                                             <input type="checkbox" class="toggle-switch-input" name="refund_to_wallet"
                                                 id="refund_to_wallet" value="1"
                                                 {{ isset($data['wallet_add_refund']) && $data['wallet_add_refund'] == 1 ? 'checked' : '' }}>
@@ -128,7 +128,7 @@
                                     <i class="tio-settings-outlined"></i>
                                 </span>
                                 <span>
-                                    {{ translate('messages.customer_loyalty_point_settings') }}
+                                    {{ 'configuración de puntos de fidelidad del cliente' }}
                                 </span>
                             </h5>
                         </div>
@@ -145,11 +145,11 @@
                                 <div class="col-md-4 col-sm-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                            for="intem_purchase_point">{{ translate('messages.item_purchase_point') }}
+                                            for="intem_purchase_point">{{ 'punto de compra del artículo' }}
                                             <small class="text-danger"><span class="input-label-secondary"
-                                                    data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.item_purchase_point_hint') }}"><img
+                                                    data-toggle="tooltip" data-placement="right" data-original-title="{{ 'sugerencia de punto de compra del artículo' }}"><img
                                                         src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                        alt="{{ translate('messages.item_purchase_point_hint') }}"></span> *</small>
+                                                        alt="{{ 'sugerencia de punto de compra del artículo' }}"></span> *</small>
                                         </label>
                                         <input type="number" class="form-control" name="item_purchase_point" step=".01"
                                             value="{{ $data['loyalty_point_item_purchase_point'] ?? '0' }}">
@@ -158,7 +158,7 @@
                                 <div class="col-md-4 col-sm-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                            for="intem_purchase_point">{{ translate('messages.minimum_point_to_transfer') }}</label>
+                                            for="intem_purchase_point">{{ 'punto mínimo para transferir' }}</label>
                                         <input type="number" class="form-control" name="minimun_transfer_point" min="0"
                                             value="{{ $data['loyalty_point_minimum_point'] ?? '0' }}">
                                     </div>
@@ -175,7 +175,7 @@
                                     <i class="tio-settings-outlined"></i>
                                 </span>
                                 <span>
-                                    {{ translate('customer_referrer_settings') }}
+                                    {{ 'configuración de referencia del cliente' }}
                                 </span>
                             </h5>
                         </div>
@@ -195,8 +195,8 @@
                 </div>
                 <div class="col-lg-12">
                     <div class="btn--container justify-content-end">
-                        <button type="reset" id="reset_btn" class="btn btn--reset">{{ translate('messages.reset') }}</button>
-                        <button type="submit" id="submit" class="btn btn--primary">{{ translate('messages.submit') }}</button>
+                        <button type="reset" id="reset_btn" class="btn btn--reset">{{ 'reiniciar' }}</button>
+                        <button type="submit" id="submit" class="btn btn--primary">{{ 'entregar' }}</button>
                     </div>
                 </div>
             </div>
@@ -243,16 +243,16 @@
             let formData = new FormData(this);
 
             Swal.fire({
-                title: '{{ translate('messages.are_you_sure') }}',
-                text: '{{ translate('messages.you_want_to_add_fund') }}' + $('#amount').val() +
-                    ' {{ \App\CentralLogics\Helpers::currency_code() . ' ' . translate('messages.to') }} ' + $(
-                        '#customer option:selected').text() + '{{ translate('messages.to_wallet') }}',
+                title: '{{ '¿está seguro?' }}',
+                text: '{{ 'quieres agregar fondos' }}' + $('#amount').val() +
+                    ' {{ \App\CentralLogics\Helpers::currency_code() . ' ' . 'a' }} ' + $(
+                        '#customer option:selected').text() + '{{ 'a la billetera' }}',
                 type: 'info',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: 'primary',
-                cancelButtonText: '{{ translate('messages.no') }}',
-                confirmButtonText: '{{ translate('messages.send') }}',
+                cancelButtonText: '{{ 'No' }}',
+                confirmButtonText: '{{ 'enviar' }}',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
@@ -277,7 +277,7 @@
                                 }
                             } else {
                                 toastr.success(
-                                    '{{ translate('messages.fund_added_successfully') }}', {
+                                    '{{ 'fondo agregado exitosamente' }}', {
                                         CloseButton: true,
                                         ProgressBar: true
                                     });

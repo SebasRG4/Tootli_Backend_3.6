@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('Item Bulk Import'))
+@section('title','Importación masiva de artículos')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/items.png')}}" class="w--22" alt="">
                 </span>
                 <span>
-                    {{translate('messages.items_bulk_import')}}
+                    {{'artículos de importación masiva'}}
                 </span>
             </h1>
         </div>
@@ -28,23 +28,23 @@
                             <div class="export-steps-item-2 h-100">
                                 <div class="top">
                                     <div>
-                                        <h3 class="fs-20">{{translate('Step 1')}}</h3>
+                                        <h3 class="fs-20">{{'Paso 1'}}</h3>
                                         <div>
-                                            {{translate('Download_Excel_File')}}
+                                            {{'Descargar archivo Excel'}}
                                         </div>
                                     </div>
                                     <img src="{{asset('assets/admin/img/bulk-import-1.png')}}" alt="">
                                 </div>
-                                <h4>{{ translate('Instruction') }}</h4>
+                                <h4>{{ 'Instrucción' }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                        {{ translate('Download_the_format_file_and_fill_it_with_proper_data.') }}
+                                        {{ 'Descargue el archivo de formato y rellénelo con los datos adecuados.' }}
                                     </li>
                                     <li>
-                                        {{ translate('You_can_download_the_example_file_to_understand_how_the_data_must_be_filled.') }}
+                                        {{ 'Puede descargar el archivo de ejemplo para comprender cómo se deben completar los datos.' }}
                                     </li>
                                     <li>
-                                        {{ translate('Have_to_upload_excel_file.') }}
+                                        {{ 'Tienes que subir el archivo de Excel.' }}
                                     </li>
                                 </ul>
                             </div>
@@ -53,29 +53,29 @@
                             <div class="export-steps-item-2 h-100">
                                 <div class="top">
                                     <div>
-                                        <h3 class="fs-20">{{translate('Step 2')}}</h3>
+                                        <h3 class="fs-20">{{'Paso 2'}}</h3>
                                         <div>
-                                            {{translate('Match_Spread_sheet_data_according_to_instruction')}}
+                                            {{'Haga coincidir los datos de la hoja de cálculo según las instrucciones'}}
                                         </div>
                                     </div>
                                     <img src="{{asset('assets/admin/img/bulk-import-2.png')}}" alt="">
                                 </div>
-                                  <h4>{{ translate('Instruction') }}</h4>
+                                  <h4>{{ 'Instrucción' }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                        {{ translate('Fill_up_the_data_according_to_the_format_and_validations.') }}
+                                        {{ 'Complete los datos según el formato y validaciones.' }}
                                     </li>
                                     <li>
-                                        {{ translate('You_can_get_store_id_module_id_and_unit_id_from_their_list_please_input_the_right_ids.') }}
+                                        {{ 'Puede obtener la identificación del módulo de identificación de la tienda y la identificación de la unidad de su lista; ingrese las identificaciones correctas.' }}
                                     </li>
                                     <li>
-                                        {{ translate('For_ecommerce_item_avaliable_time_start_and_end_will_be_00:00:00_and_23:59:59') }}
+                                        {{ 'Para el artículo de comercio electrónico, la hora de inicio y finalización será 00:00:00 y 23:59:59' }}
                                     </li>
                                     <li>
-                                        {{ translate('If_you_want_to_create_a_product_with_variation,_just_create_variations_from_the_generate_variation_section_below_and_click_generate_value.') }}
+                                        {{ 'Si desea crear un producto con variación, simplemente cree variaciones desde la sección generar variación a continuación y haga clic en generar valor.' }}
                                     </li>
                                     <li>
-                                        {{ translate('Copy_the_value_and_paste_the_the_spread_sheet_file_column_name_variation_in_the_selected_product_row.') }}
+                                        {{ 'Copie el valor y pegue la variación del nombre de la columna del archivo de la hoja de cálculo en la fila del producto seleccionado.' }}
                                     </li>
                                 </ul>
                             </div>
@@ -84,29 +84,29 @@
                             <div class="export-steps-item-2 h-100">
                                 <div class="top">
                                     <div>
-                                        <h3 class="fs-20">{{translate('Step 3')}}</h3>
+                                        <h3 class="fs-20">{{'Paso 3'}}</h3>
                                         <div>
-                                            {{translate('Validate data and complete import')}}
+                                            {{'Validar datos y completar la importación.'}}
                                         </div>
                                     </div>
                                     <img src="{{asset('assets/admin/img/bulk-import-3.png')}}" alt="">
                                 </div>
-                                  <h4>{{ translate('Instruction') }}</h4>
+                                  <h4>{{ 'Instrucción' }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                       {{ translate('In_the_Excel_file_upload_section,_first_select_the_upload_option.') }}
+                                       {{ 'En la sección de carga de archivos de Excel, primero seleccione la opción de carga.' }}
                                     </li>
                                     <li>
-                                       {{ translate('Upload_your_file_in_.xls,_.xlsx_format.') }}
+                                       {{ 'Sube tu archivo en formato .xls, .xlsx.' }}
                                     </li>
                                     <li>
-                                       {{ translate('Finally_click_the_upload_button.') }}
+                                       {{ 'Finalmente haga clic en el botón cargar.' }}
                                     </li>
                                     <li>
-                                       {{ translate('You_can_upload_your_product_images_in_product_folder_from_gallery_and_copy_image`s_path.') }}
+                                       {{ 'Puede cargar las imágenes de su producto en la carpeta del producto desde la galería y copiar la ruta de la imagen.' }}
                                     </li>
                                     <li>
-                                       {{ translate('Image_file_name_must_be_in_30_character.') }}
+                                       {{ 'El nombre del archivo de imagen debe tener 30 caracteres.' }}
                                     </li>
 
 
@@ -116,14 +116,14 @@
                     </div>
                 </div>
                 <div class="text-center pb-4">
-                    <h3 class="mb-3 export--template-title font-regular">{{translate('download_spreadsheet_template')}}</h3>
+                    <h3 class="mb-3 export--template-title font-regular">{{'descargar plantilla de hoja de cálculo'}}</h3>
                     <div class="btn--container justify-content-center export--template-btns">
                         @if($module_type== 'food')
-                        <a href="{{asset('assets/foods_bulk_format.xlsx')}}" download="" class="btn btn--primary btn-outline-primary">{{translate('With Current Data')}}</a>
+                        <a href="{{asset('assets/foods_bulk_format.xlsx')}}" download="" class="btn btn--primary btn-outline-primary">{{'Con datos actuales'}}</a>
                         @else
-                        <a href="{{asset('assets/items_bulk_format.xlsx')}}" download="" class="btn btn--primary btn-outline-primary">{{translate('With Current Data')}}</a>
+                        <a href="{{asset('assets/items_bulk_format.xlsx')}}" download="" class="btn btn--primary btn-outline-primary">{{'Con datos actuales'}}</a>
                             @endif
-                        <a href="{{asset('assets/items_bulk_format_nodata.xlsx')}}" download="" class="btn btn--primary">{{translate('Without Any Data')}}</a>
+                        <a href="{{asset('assets/items_bulk_format_nodata.xlsx')}}" download="" class="btn btn--primary">{{'Sin ningún dato'}}</a>
                     </div>
                 </div>
             </div>
@@ -137,31 +137,31 @@
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-sm-6">
-                            <h5 class="text-capitalize mb-3">{{ translate('Select_Data_Upload_type') }}</h5>
+                            <h5 class="text-capitalize mb-3">{{ 'Seleccione el tipo de carga de datos' }}</h5>
                             <div class="module-radio-group border rounded">
                                 <label class="form-check form--check">
                                     <input class="form-check-input "   value="import" type="radio" name="upload_type" checked>
                                     <span class="form-check-label py-20">
-                                        {{ translate('Upload_New_Data') }}
+                                        {{ 'Cargar nuevos datos' }}
                                     </span>
                                 </label>
                                 <label class="form-check form--check">
                                     <input class="form-check-input " value="update" type="radio" name="upload_type">
                                     <span class="form-check-label py-20">
-                                        {{ translate('Update_Existing_Data') }}
+                                        {{ 'Actualizar datos existentes' }}
                                     </span>
                                 </label>
                             </div>
                         </div>
                         <div class="col-sm-6">
-                            <h5 class="text-capitalize mb-3">{{ translate('Import_items_file') }}</h5>
+                            <h5 class="text-capitalize mb-3">{{ 'Importar archivo de elementos' }}</h5>
                             <label class="uploadDnD d-block">
                                 <div class="form-group inputDnD input_image input_image_edit position-relative">
                                     <div class="upload-text">
                                         <div>
                                             <img src="{{asset('assets/admin/img/bulk-import-3.png')}}" alt="">
                                         </div>
-                                        <div class="filename">{{translate('Must_be_Excel_files_using_our_Excel_template_above')}}</div>
+                                        <div class="filename">{{'Deben ser archivos de Excel usando nuestra plantilla de Excel anterior'}}</div>
                                     </div>
                                     <input type="file" name="products_file" class="form-control-file text--primary font-weight-bold action-upload-section-dot-area" id="products_file">
                                 </div>
@@ -170,8 +170,8 @@
                         </div>
                     </div>
                     <div class="btn--container justify-content-end mt-20">
-                        <button id="reset_btn" type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                        <button type="button" class="btn btn--primary update_or_import">{{translate('messages.Upload')}}</button>
+                        <button id="reset_btn" type="reset" class="btn btn--reset">{{'reiniciar'}}</button>
+                        <button type="button" class="btn btn--primary update_or_import">{{'Subir'}}</button>
                     </div>
                 </div>
             </div>
@@ -181,7 +181,7 @@
                 <div class="card mt-2 rest-part">
                     <div class="card-header">
                         <h5 class="card-title">
-                            <span>{{ translate('messages.food_variations_generator') }}</span>
+                            <span>{{ 'generador de variaciones de alimentos' }}</span>
                         </h5>
                     </div>
                     <div class="card-body">
@@ -192,16 +192,16 @@
                                 <br>
                                 <div class="mt-2 text-center">
                                     <a class="btn btn--primary"
-                                        id="add_new_option_button">{{ translate('add_new_variation') }}</a>
+                                        id="add_new_option_button">{{ 'agregar nueva variación' }}</a>
                                 </div> <br><br>
                             </div>
                         </div>
                         <div class="btn--container justify-content-end mb-3">
-                            <button type="submit" class="btn btn--warning">{{translate('Generate Value')}}</button>
+                            <button type="submit" class="btn btn--warning">{{'Generar valor'}}</button>
                         </div>
                         <textarea name="" id="food_variation_outpot" class="form-control" rows="5" readonly></textarea>
                         <div class="btn--container justify-content-end mt-2 mb-2">
-                            <button type="reset" class="btn btn--reset">{{translate('Reset')}}</button>
+                            <button type="reset" class="btn btn--reset">{{'Reiniciar'}}</button>
                         </div>
                     </div>
                 </div>
@@ -210,7 +210,7 @@
         <br>
         <form action="javascript:" method="post" id="item_form_2" enctype="multipart/form-data">
             <div id="attribute_section" style="display: none">
-                <h4 class="mb-3">{{translate('Generate Variation')}}</h4>
+                <h4 class="mb-3">{{'Generar variación'}}</h4>
                 <div class="card card mt-2 rest-part">
                     <div class="card-header border-0 p-0">
                         <div class="alert w-100 alert-soft-primary alert-dismissible fade show d-flex m-0" role="alert">
@@ -218,8 +218,8 @@
                                 <img src="{{asset('assets/admin/img/icons/intel.png')}}" width="22" alt="">
                             </div>
                             <div class="w-0 flex-grow-1 pl-3">
-                                <strong>{{ translate('Attention!') }}</strong>
-                              {{ translate('You_must_generate_variations_from_this_generator_if_you_want_to_add_variations_to_your_products.You_must_copy_from_the_specific_filed_and_past_it_to_the_specific_column_at_your_excel_sheet.Otherwise_you_might_get_500_error_if_you_swap_or_entered_invalid_data.And_if_you_want_to_make_it_empty_then_you_have_to_enter_an_empty_array_[_]_.') }}
+                                <strong>{{ '¡Atención!' }}</strong>
+                              {{ 'Debe generar variaciones desde este generador si desea agregar variaciones a sus productos. Debe copiar desde el archivo específico y pegarlo en la columna específica en su hoja de Excel. De lo contrario, podría obtener un error 500 si intercambia o ingresa datos no válidos. Y si desea dejarlo vacío, debe ingresar una matriz vacía [ ].' }}
                             </div>
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">×</span>
@@ -228,8 +228,8 @@
                     </div>
                     <div class="card-body">
                         <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
-                            <label class="input-label m-0">{{ translate('messages.attribute') }}<span class="input-label-secondary"></span></label>
-                            <button type="submit" class="btn btn--primary">{{translate('generate value')}}</button>
+                            <label class="input-label m-0">{{ 'atributo' }}<span class="input-label-secondary"></span></label>
+                            <button type="submit" class="btn btn--primary">{{'generar valor'}}</button>
                         </div>
                         <div class="row g-2">
                             <div class="col-lg-6">
@@ -249,21 +249,21 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="">{{ translate('messages.Generated_varient') }} <span class="form-label-secondary text-danger " data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.This_field_is_for_geenrated_variation._copy_them_&_paste_into_excel_sheet') }} "><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="Veg non veg"> * </span></label>
+                                <label for="">{{ 'variante generada' }} <span class="form-label-secondary text-danger " data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Este campo es para variación generada. cópielos y péguelos en una hoja de Excel' }} "><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="Veg non veg"> * </span></label>
                                 <textarea name="" id="variation_output" class="form-control" rows="5" readonly></textarea>
                             </div>
                             <div class="col-md-4">
-                                <label for="">{{ translate('messages.Generated_choice_option') }} <span class="form-label-secondary text-danger " data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.Choice_option_is_required_if_you_are_using_product_variation') }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="Veg non veg"> * </span></label>
+                                <label for="">{{ 'Opción de elección generada' }} <span class="form-label-secondary text-danger " data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Se requiere la opción de elección si está utilizando una variación del producto.' }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="Veg non veg"> * </span></label>
                                 <textarea name="" id="choice_output" class="form-control" rows="5" readonly></textarea>
                             </div>
                             <div class="col-md-4">
-                                <label for="">{{ translate('messages.Generated_attributes_field') }} <span class="form-label-secondary text-danger " data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.Attributes_is_required_if_you_are_using_product_variation') }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="Veg non veg"> * </span></label>
+                                <label for="">{{ 'Campo de atributos generados' }} <span class="form-label-secondary text-danger " data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Los atributos son obligatorios si utiliza una variación del producto.' }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="Veg non veg"> * </span></label>
                                 <textarea name="" id="attributes" class="form-control" rows="5" readonly></textarea>
                             </div>
                         </div>
 
                         <div class="btn--container justify-content-end mt-2 mb-2">
-                            <button type="reset" class="btn btn--reset">{{translate('Reset')}}</button>
+                            <button type="reset" class="btn btn--reset">{{'Reiniciar'}}</button>
                         </div>
 
 
@@ -285,7 +285,7 @@
 });
 $('#reset_btn').click(function(){
     $('#products_file').val('');
-    $('.filename').text('{{translate('Must_be_Excel_files_using_our_Excel_template_above')}}');
+    $('.filename').text('{{'Deben ser archivos de Excel usando nuestra plantilla de Excel anterior'}}');
 })
     $(".action-upload-section-dot-area").on("change", function () {
         if (this.files && this.files[0]) {
@@ -311,12 +311,12 @@ $('#reset_btn').click(function(){
             let add_option_view = `
                 <div class="card view_new_option mb-2" >
                     <div class="card-header">
-                        <label for="" id=new_option_name_` + count + `> {{ translate('add_new') }}</label>
+                        <label for="" id=new_option_name_` + count + `> {{ 'agregar nuevo' }}</label>
                     </div>
                     <div class="card-body">
                         <div class="row g-2">
                             <div class="col-lg-3 col-md-6">
-                                <label for="">{{ translate('name') }}</label>
+                                <label for="">{{ 'nombre' }}</label>
                                  <input required name=options[` + count +
                 `][name] class="form-control new_option_name" type="text" data-count="`+
                 count +`">
@@ -324,7 +324,7 @@ $('#reset_btn').click(function(){
 
                             <div class="col-lg-3 col-md-6">
                                 <div class="form-group">
-                                    <label class="input-label text-capitalize d-flex alig-items-center"><span class="line--limit-1">{{ translate('messages.selcetion_type') }} </span>
+                                    <label class="input-label text-capitalize d-flex alig-items-center"><span class="line--limit-1">{{ 'tipo de selección' }} </span>
                                     </label>
                                     <div class="resturant-type-group border">
                                         <label class="form-check form--check mr-2 mr-md-4">
@@ -333,7 +333,7 @@ $('#reset_btn').click(function(){
                 `" checked
                                                 >
                                                 <span class="form-check-label">
-                                                    {{ translate('Multiple Selection') }}
+                                                    {{ 'Selección múltiple' }}
                 </span>
             </label>
 
@@ -343,7 +343,7 @@ $('#reset_btn').click(function(){
                 `"
                                                 >
                                                 <span class="form-check-label">
-                                                    {{ translate('Single Selection') }}
+                                                    {{ 'Selección única' }}
                 </span>
             </label>
             </div>
@@ -352,11 +352,11 @@ $('#reset_btn').click(function(){
         <div class="col-12 col-lg-6">
         <div class="row g-2">
             <div class="col-sm-6 col-md-4">
-                <label for="">{{ translate('Min') }}</label>
+                <label for="">{{ 'mín.' }}</label>
                                                 <input id="min_max1_` + count + `" required  name="options[` + count + `][min]" class="form-control" type="number" min="1">
                                     </div>
                                     <div class="col-sm-6 col-md-4">
-                                        <label for="">{{ translate('Max') }}</label>
+                                        <label for="">{{ 'máx.' }}</label>
                                         <input id="min_max2_` + count + `"   required name="options[` + count + `][max]" class="form-control" type="number" min="1">
                                     </div>
 
@@ -366,11 +366,11 @@ $('#reset_btn').click(function(){
                                             <div class="form-check form--check">
                                                 <input class="form-check-input" id="options[` + count + `][required]" name="options[` +
                 count + `][required]" type="checkbox">
-                                                <label for="options[` + count + `][required]" class="m-0">{{ translate('Required') }}</label>
+                                                <label for="options[` + count + `][required]" class="m-0">{{ 'Requerido' }}</label>
                                             </div>
                                             <div>
                                                 <button type="button" class="btn btn-outline-danger btn-sm delete_input_button"
-                                                    title="{{ translate('Delete') }}">
+                                                    title="{{ 'Borrar' }}">
                                                     <i class="tio-add-to-trash"></i>
                                                 </button>
                                             </div>
@@ -385,13 +385,13 @@ $('#reset_btn').click(function(){
                                 <div  id="option_price_view_` + count + `">
                                     <div class="row g-3 add_new_view_row_class mb-3">
                                         <div class="col-md-4 col-sm-6">
-                                            <label for="">{{ translate('Option_name') }}</label>
+                                            <label for="">{{ 'Nombre de la opción' }}</label>
                                             <input class="form-control" required type="text" name="options[` +
                 count +
                 `][values][0][label]" id="">
                                         </div>
                                         <div class="col-md-4 col-sm-6">
-                                            <label for="">{{ translate('Additional_price') }}</label>
+                                            <label for="">{{ 'Precio adicional' }}</label>
                                             <input class="form-control" required type="number" min="0" step="0.01" name="options[` +
                 count + `][values][0][optionPrice]" id="">
                                         </div>
@@ -400,7 +400,7 @@ $('#reset_btn').click(function(){
                                 <div id="add_new_button_` + count +
                 `">
                                    <button type="button" class="text-success bg-transparent border-0 p-0 add_new_row_button" data-count="`+
-                count +`" > <i class="tio-add-square"></i> {{ translate('Add_New_Option') }}</button>
+                count +`" > <i class="tio-add-square"></i> {{ 'Agregar nueva opción' }}</button>
                                 </div>
                             </div>
                         </div>
@@ -427,12 +427,12 @@ $('#reset_btn').click(function(){
         let add_new_row_view = `
         <div class="row add_new_view_row_class mb-3 position-relative pt-3 pt-sm-0">
             <div class="col-md-4 col-sm-5">
-                    <label for="">{{ translate('Option_name') }}</label>
+                    <label for="">{{ 'Nombre de la opción' }}</label>
                     <input class="form-control" required type="text" name="options[` + data + `][values][` +
             countRow + `][label]" id="">
                 </div>
                 <div class="col-md-4 col-sm-5">
-                    <label for="">{{ translate('Additional_price') }}</label>
+                    <label for="">{{ 'Precio adicional' }}</label>
                     <input class="form-control"  required type="number" min="0" step="0.01" name="options[` +
             data +
             `][values][` + countRow + `][optionPrice]" id="">
@@ -441,7 +441,7 @@ $('#reset_btn').click(function(){
                     <label class="d-none d-sm-block">&nbsp;</label>
                     <div class="mt-1">
                         <button type="button" class="btn btn-danger btn-sm deleteRow"
-                            title="{{ translate('Delete') }}">
+                            title="{{ 'Borrar' }}">
                             <i class="tio-add-to-trash"></i>
                         </button>
                     </div>
@@ -457,7 +457,7 @@ $('#reset_btn').click(function(){
         $.each($("#choice_attributes option:selected"), function() {
             if ($(this).val().length > 50) {
                 toastr.error(
-                    '{{ translate('validation.max.string', ['attribute' => translate('messages.variation'), 'max' => '50']) }}', {
+                    '{{ 'validation.max.string\', [\'atributo\' => traducir(\'variación', 'max' => '50']) }}', {
                         CloseButton: true,
                         ProgressBar: true
                     });
@@ -472,9 +472,9 @@ $('#reset_btn').click(function(){
         $('#customer_choice_options').append(
             '<div class="row gy-1"><div class="col-sm-3"><input type="hidden" name="choice_no[]" value="' + i +
             '"><input type="text" class="form-control" name="choice[]" value="' + n +
-            '" placeholder="{{ translate('messages.choice_title') }}" readonly></div><div class="col-sm-9"><input type="text" class="form-control combination_update" name="choice_options_' +
+            '" placeholder="{{ 'título de elección' }}" readonly></div><div class="col-sm-9"><input type="text" class="form-control combination_update" name="choice_options_' +
             i +
-            '[]" placeholder="{{ translate('messages.enter_choice_values') }}" data-role="tagsinput"></div></div>'
+            '[]" placeholder="{{ 'ingrese los valores de elección' }}" data-role="tagsinput"></div></div>'
         );
         $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
     }
@@ -579,14 +579,14 @@ $('#reset_btn').click(function(){
 
     function myFunction(data) {
         Swal.fire({
-        title: '{{ translate('Are you sure?') }}' ,
-        text: "{{ translate('You_want_to_') }}" +data + " {{ translate('Data.') }}",
+        title: '{{ '¿Está seguro?' }}' ,
+        text: "{{ 'Tú quieres' }}" +data + " {{ 'Datos.' }}",
         type: 'warning',
         showCancelButton: true,
         cancelButtonColor: 'default',
         confirmButtonColor: '#FC6A57',
-        cancelButtonText: '{{translate('messages.no')}}',
-        confirmButtonText: '{{translate('messages.yes')}}',
+        cancelButtonText: '{{'No'}}',
+        confirmButtonText: '{{'Sí'}}',
         reverseButtons: true
         }).then((result) => {
             if (result.value) {

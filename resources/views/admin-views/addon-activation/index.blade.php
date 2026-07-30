@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.add_on_activation'))
+@section('title','agregar en activación')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -11,7 +11,7 @@
 
         <!-- Add On Activation Process -->
         <div class="d-content-between flex-wrap mb-20">
-            <h2 class="title-clr">{{ translate('messages.add_on_activation') }}</h2>
+            <h2 class="title-clr">{{ 'agregar en activación' }}</h2>
             {{-- <button class="d-flex d-align-center gap-2 rounded-20 title-clr border py-2 px-3 fz--14px btn bg-opacity-primary-10 offcanvas-trigger" data-target="#offcanvas__customBtn">
                 <i class="tio-help-outlined"></i> How It Work
             </button> --}}
@@ -27,15 +27,15 @@
                     <div class="card-body p-20">
                         <div class="row align-items-center">
                             <div class="col-xxl-8 col-md-6 mb-md-0 mb-2">
-                                <h4 class="black-color mb-1 d-block">{{ translate('messages.vendor_app') }}</h4>
-                                <p class="fz-12 text-c mb-1">{{ translate('With_this_app_your_vendor_will_mange_their_business_through_mobile_app') }}</p>
+                                <h4 class="black-color mb-1 d-block">{{ 'aplicación de proveedor' }}</h4>
+                                <p class="fz-12 text-c mb-1">{{ 'Con esta aplicación tu proveedor gestionará su negocio a través de la aplicación móvil' }}</p>
                             </div>
                             @php($addon_activation_vendor_app = \App\Models\BusinessSetting::where('key', 'addon_activation_vendor_app')->first())
                             @php($addon_activation_vendor_app = $addon_activation_vendor_app?->value ? json_decode($addon_activation_vendor_app->value, true) : ['activation_status' => 0, 'username' => '', 'purchase_key' => ''])
                             <div class="col-xxl-4 col-md-6">
                                 <div class="d-flex flex-sm-nowrap flex-wrap justify-content-end justify-content-end align-items-center gap-sm-3 gap-2">
                                     <div class="view-btn order-sm-0 order-3 fz--14px text-primary cursor-pointer text-decoration-underline font-semibold d-flex align-items-center gap-1">
-                                        {{ translate('messages.view') }}
+                                        {{ 'vista' }}
                                         <i class="tio-arrow-downward"></i>
                                     </div>
                                     <div class="mb-0">
@@ -45,8 +45,8 @@
                                                    data-type="toggle"
                                                    data-image-on="{{ asset('assets/admin/img/modal/free-delivery-on.png') }}"
                                                    data-image-off="{{ asset('assets/admin/img/modal/free-delivery-off.png') }}"
-                                                   data-title-on="<strong>{{ translate('messages.want_to_Turn_ON_the_Vendor_App_addon?') }}</strong>"
-                                                   data-title-off="<strong>{{ translate('messages.want_to_Turn_OFF_the_Vendor_App_addon?') }}</strong>"
+                                                   data-title-on="<strong>{{ '¿Quieres activar el complemento de la aplicación Vendor?' }}</strong>"
+                                                   data-title-off="<strong>{{ '¿Quieres desactivar el complemento de la aplicación Vendor?' }}</strong>"
 
                                                    class="status toggle-switch-input dynamic-checkbox-toggle"
 
@@ -69,30 +69,30 @@
                                     <div class="col-md-6 col-lg-6">
                                         <div class="">
                                             <label class="mb-2 d-flex align-items-center gap-1 fz--14px">
-                                                {{ translate('messages.codcanyon_user_name') }} <span class="text-danger">*</span>
-                                                <i class="tio-info fz--14px secondary-clr" data-toggle="tooltip" data-bs-placement="top" title="{{ translate('messages.codcanyon_user_name') }} ...."></i>
+                                                {{ 'nombre de usuario de codcanyon' }} <span class="text-danger">*</span>
+                                                <i class="tio-info fz--14px secondary-clr" data-toggle="tooltip" data-bs-placement="top" title="{{ 'nombre de usuario de codcanyon' }} ...."></i>
                                             </label>
                                             <input type="text" value="{{ showDemoModeInputValue(value: $addon_activation_vendor_app['username']) }}"
-                                                   placeholder="{{ translate('ex') }}: {{ 'Miler' }}"
+                                                   placeholder="{{ 'ex' }}: {{ 'Miler' }}"
                                                    name="username" class="form-control" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6">
                                         <div class="">
                                             <label class="mb-2 d-flex align-items-center gap-1 fz--14px">
-                                                {{ translate('messages.codcanyon_purchase_code') }} <span class="text-danger">*</span>
-                                                <i class="tio-info fz--14px secondary-clr" data-toggle="tooltip" data-bs-placement="top" title="{{ translate('messages.codcanyon_purchase_code') }} ...."></i>
+                                                {{ 'código de compra codcanyon' }} <span class="text-danger">*</span>
+                                                <i class="tio-info fz--14px secondary-clr" data-toggle="tooltip" data-bs-placement="top" title="{{ 'código de compra codcanyon' }} ...."></i>
                                             </label>
                                             <input type="text" value="{{ showDemoModeInputValue(value: $addon_activation_vendor_app['purchase_key']) }}"
-                                                   placeholder="{{ translate('ex') }}: {{ 'CAWFRWRAAWRCAWRA' }}"
+                                                   placeholder="{{ 'ex' }}: {{ 'CAWFRWRAAWRCAWRA' }}"
                                                    name="purchase_key" class="form-control" required>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center justify-content-end gap-2">
-                                <button type="button" class="btn bg--secondary h--42px title-clr px-4">{{ translate('messages.reset') }}</button>
-                                <button type="{{ getDemoModeFormButton(type: 'button') }}" class="btn btn--primary {{ getDemoModeFormButton(type: 'class') }}">{{ translate('messages.submit') }}</button>
+                                <button type="button" class="btn bg--secondary h--42px title-clr px-4">{{ 'reiniciar' }}</button>
+                                <button type="{{ getDemoModeFormButton(type: 'button') }}" class="btn btn--primary {{ getDemoModeFormButton(type: 'class') }}">{{ 'entregar' }}</button>
                             </div>
                         </div>
                     </div>
@@ -108,15 +108,15 @@
                     <div class="card-body p-20">
                         <div class="row align-items-center">
                             <div class="col-xxl-8 col-md-6 mb-md-0 mb-2">
-                                <h4 class="black-color mb-1 d-block">{{ translate('messages.deliveryman_app') }}</h4>
-                                <p class="fz-12 text-c mb-1">{{ translate('with_this_app_your_all_your_deliveryman_will_mange_their_orders_through_mobile_app') }}</p>
+                                <h4 class="black-color mb-1 d-block">{{ 'aplicación de repartidor' }}</h4>
+                                <p class="fz-12 text-c mb-1">{{ 'Con esta aplicación, todos tus repartidos gestionarán sus pedidos a través de la aplicación móvil.' }}</p>
                             </div>
                             @php($addon_activation_delivery_man_app = \App\Models\BusinessSetting::where('key', 'addon_activation_delivery_man_app')->first())
                             @php($addon_activation_delivery_man_app = $addon_activation_delivery_man_app?->value ? json_decode($addon_activation_delivery_man_app->value, true) : ['activation_status' => 0, 'username' => '', 'purchase_key' => ''])
                             <div class="col-xxl-4 col-md-6">
                                 <div class="d-flex flex-sm-nowrap flex-wrap justify-content-end justify-content-end align-items-center gap-sm-3 gap-2">
                                     <div class="view-btn order-sm-0 order-3 fz--14px text-primary cursor-pointer text-decoration-underline font-semibold d-flex align-items-center gap-1">
-                                        {{ translate('messages.view') }}
+                                        {{ 'vista' }}
                                         <i class="tio-arrow-downward"></i>
                                     </div>
                                     <div class="mb-0">
@@ -126,8 +126,8 @@
                                                    data-type="toggle"
                                                    data-image-on="{{ asset('assets/admin/img/modal/free-delivery-on.png') }}"
                                                    data-image-off="{{ asset('assets/admin/img/modal/free-delivery-off.png') }}"
-                                                   data-title-on="<strong>{{ translate('messages.want_to_Turn_ON_the_Deliveryman_App_addon?') }}</strong>"
-                                                   data-title-off="<strong>{{ translate('messages.want_to_Turn_OFF_the_Deliveryman_App_addon?') }}</strong>"
+                                                   data-title-on="<strong>{{ '¿Quieres activar el complemento de la aplicación Deliveryman?' }}</strong>"
+                                                   data-title-off="<strong>{{ '¿Quieres desactivar el complemento de la aplicación Deliveryman?' }}</strong>"
 
                                                    class="status toggle-switch-input dynamic-checkbox-toggle"
 
@@ -150,30 +150,30 @@
                                     <div class="col-md-6 col-lg-6">
                                         <div class="">
                                             <label class="mb-2 d-flex align-items-center gap-1 fz--14px">
-                                                {{ translate('messages.codcanyon_user_name') }} <span class="text-danger">*</span>
-                                                <i class="tio-info fz--14px secondary-clr" data-toggle="tooltip" data-bs-placement="top" title="{{ translate('messages.codcanyon_user_name') }} ...."></i>
+                                                {{ 'nombre de usuario de codcanyon' }} <span class="text-danger">*</span>
+                                                <i class="tio-info fz--14px secondary-clr" data-toggle="tooltip" data-bs-placement="top" title="{{ 'nombre de usuario de codcanyon' }} ...."></i>
                                             </label>
                                             <input type="text" value="{{ showDemoModeInputValue(value: $addon_activation_delivery_man_app['username']) }}"
-                                                   placeholder="{{ translate('ex') }}: {{ 'Miler' }}"
+                                                   placeholder="{{ 'ex' }}: {{ 'Miler' }}"
                                                    name="username" class="form-control" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6">
                                         <div class="">
                                             <label class="mb-2 d-flex align-items-center gap-1 fz--14px">
-                                                {{ translate('messages.codcanyon_purchase_code') }} <span class="text-danger">*</span>
-                                                <i class="tio-info fz--14px secondary-clr" data-toggle="tooltip" data-bs-placement="top" title="{{ translate('messages.codcanyon_purchase_code') }} ...."></i>
+                                                {{ 'código de compra codcanyon' }} <span class="text-danger">*</span>
+                                                <i class="tio-info fz--14px secondary-clr" data-toggle="tooltip" data-bs-placement="top" title="{{ 'código de compra codcanyon' }} ...."></i>
                                             </label>
                                             <input type="text" value="{{ showDemoModeInputValue(value: $addon_activation_delivery_man_app['purchase_key']) }}"
-                                                   placeholder="{{ translate('ex') }}: {{ 'CAWFRWRAAWRCAWRA' }}"
+                                                   placeholder="{{ 'ex' }}: {{ 'CAWFRWRAAWRCAWRA' }}"
                                                    name="purchase_key" class="form-control" required>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center justify-content-end gap-2">
-                                <button type="button" class="btn bg--secondary h--42px title-clr px-4">{{ translate('messages.reset') }}</button>
-                                <button type="{{ getDemoModeFormButton(type: 'button') }}" class="btn btn--primary {{ getDemoModeFormButton(type: 'class') }}">{{ translate('messages.submit') }}</button>
+                                <button type="button" class="btn bg--secondary h--42px title-clr px-4">{{ 'reiniciar' }}</button>
+                                <button type="{{ getDemoModeFormButton(type: 'button') }}" class="btn btn--primary {{ getDemoModeFormButton(type: 'class') }}">{{ 'entregar' }}</button>
                             </div>
                         </div>
                     </div>
@@ -189,15 +189,15 @@
                     <div class="card-body p-20">
                         <div class="row align-items-center">
                             <div class="col-xxl-8 col-md-6 mb-md-0 mb-2">
-                                <h4 class="black-color mb-1 d-block">{{ translate('messages.react_user_website') }}</h4>
-                                <p class="fz-12 text-c mb-1">{{ translate('with_this_react_website_your_customers_will_experience_your_system_in_a_more_attractive_and_seamless_way') }}</p>
+                                <h4 class="black-color mb-1 d-block">{{ 'reaccionar usuario sitio web' }}</h4>
+                                <p class="fz-12 text-c mb-1">{{ 'Con este sitio web de reacción, sus clientes experimentarán su sistema de una manera más atractiva y fluida.' }}</p>
                             </div>
                             @php($addon_activation_react = \App\Models\BusinessSetting::where('key', 'addon_activation_react')->first())
                             @php($addon_activation_react = $addon_activation_react?->value ? json_decode($addon_activation_react->value, true) : ['activation_status' => 0, 'username' => '', 'purchase_key' => ''])
                             <div class="col-xxl-4 col-md-6">
                                 <div class="d-flex flex-sm-nowrap flex-wrap justify-content-end justify-content-end align-items-center gap-sm-3 gap-2">
                                     <div class="view-btn order-sm-0 order-3 fz--14px text-primary cursor-pointer text-decoration-underline font-semibold d-flex align-items-center gap-1">
-                                        {{ translate('messages.view') }}
+                                        {{ 'vista' }}
                                         <i class="tio-arrow-downward"></i>
                                     </div>
                                     <div class="mb-0">
@@ -207,8 +207,8 @@
                                                    data-type="toggle"
                                                    data-image-on="{{ asset('assets/admin/img/modal/free-delivery-on.png') }}"
                                                    data-image-off="{{ asset('assets/admin/img/modal/free-delivery-off.png') }}"
-                                                   data-title-on="<strong>{{ translate('messages.want_to_Turn_ON_the_React_Website_addon?') }}</strong>"
-                                                   data-title-off="<strong>{{ translate('messages.want_to_Turn_OFF_the_React_Website_addon?') }}</strong>"
+                                                   data-title-on="<strong>{{ '¿Quieres activar el complemento del sitio web React?' }}</strong>"
+                                                   data-title-off="<strong>{{ '¿Quieres desactivar el complemento del sitio web React?' }}</strong>"
 
                                                    class="status toggle-switch-input dynamic-checkbox-toggle"
 
@@ -231,30 +231,30 @@
                                     <div class="col-md-6 col-lg-6">
                                         <div class="">
                                             <label class="mb-2 d-flex align-items-center gap-1 fz--14px">
-                                                {{ translate('messages.codcanyon_user_name') }} <span class="text-danger">*</span>
-                                                <i class="tio-info fz--14px secondary-clr" data-toggle="tooltip" data-bs-placement="top" title="{{ translate('messages.codcanyon_user_name') }} ...."></i>
+                                                {{ 'nombre de usuario de codcanyon' }} <span class="text-danger">*</span>
+                                                <i class="tio-info fz--14px secondary-clr" data-toggle="tooltip" data-bs-placement="top" title="{{ 'nombre de usuario de codcanyon' }} ...."></i>
                                             </label>
                                             <input type="text" value="{{ showDemoModeInputValue(value: $addon_activation_react['username']) }}"
-                                                   placeholder="{{ translate('ex') }}: {{ 'Miler' }}"
+                                                   placeholder="{{ 'ex' }}: {{ 'Miler' }}"
                                                    name="username" class="form-control" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6">
                                         <div class="">
                                             <label class="mb-2 d-flex align-items-center gap-1 fz--14px">
-                                                {{ translate('messages.codcanyon_purchase_code') }} <span class="text-danger">*</span>
-                                                <i class="tio-info fz--14px secondary-clr" data-toggle="tooltip" data-bs-placement="top" title="{{ translate('messages.codcanyon_purchase_code') }} ...."></i>
+                                                {{ 'código de compra codcanyon' }} <span class="text-danger">*</span>
+                                                <i class="tio-info fz--14px secondary-clr" data-toggle="tooltip" data-bs-placement="top" title="{{ 'código de compra codcanyon' }} ...."></i>
                                             </label>
                                             <input type="text" value="{{ showDemoModeInputValue(value: $addon_activation_react['purchase_key']) }}"
-                                                   placeholder="{{ translate('ex') }}: {{ 'CAWFRWRAAWRCAWRA' }}"
+                                                   placeholder="{{ 'ex' }}: {{ 'CAWFRWRAAWRCAWRA' }}"
                                                    name="purchase_key" class="form-control" required>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center justify-content-end gap-2">
-                                <button type="button" class="btn bg--secondary h--42px title-clr px-4">{{ translate('messages.reset') }}</button>
-                                <button type="{{ getDemoModeFormButton(type: 'button') }}" class="btn btn--primary {{ getDemoModeFormButton(type: 'class') }}">{{ translate('messages.submit') }}</button>
+                                <button type="button" class="btn bg--secondary h--42px title-clr px-4">{{ 'reiniciar' }}</button>
+                                <button type="{{ getDemoModeFormButton(type: 'button') }}" class="btn btn--primary {{ getDemoModeFormButton(type: 'class') }}">{{ 'entregar' }}</button>
                             </div>
                         </div>
                     </div>

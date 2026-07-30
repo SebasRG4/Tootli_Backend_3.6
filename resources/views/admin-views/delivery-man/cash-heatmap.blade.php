@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Mapa de Calor de Efectivo'))
+@section('title', 'Mapa de Calor de Efectivo')
 
 @section('content')
     <div class="content container-fluid">
@@ -10,7 +10,7 @@
                     <img src="{{asset('assets/admin/img/map.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('Mapa de Calor de Efectivo (Riesgo en Calle)')}}
+                    {{'Mapa de Calor de Efectivo (Riesgo en Calle)'}}
                 </span>
             </h1>
             <p class="text-muted">Visualiza la concentración de dinero en tiempo real sobre el mapa.</p>
@@ -26,8 +26,8 @@
             <div class="col-md-4">
                 <div class="card bg-soft-danger border-danger">
                     <div class="card-body">
-                        <h5 class="text-danger">{{translate('Riesgo Crítico')}}</h5>
-                        <p class="mb-0">{{translate('Repartidores con > $1000 en mano')}}</p>
+                        <h5 class="text-danger">{{'Riesgo Crítico'}}</h5>
+                        <p class="mb-0">{{'Repartidores con > $1000 en mano'}}</p>
                     </div>
                 </div>
             </div>

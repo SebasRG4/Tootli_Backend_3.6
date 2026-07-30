@@ -10,7 +10,7 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
 
 
             id="iconViewer" alt="">
-            <h3  class="mt-2 email-template-table-td-title-style" id="mail-title">{{ $data['title']?? translate('Main_Title_or_Subject_of_the_Mail') }}</h3>
+            <h3  class="mt-2 email-template-table-td-title-style" id="mail-title">{{ $data['title']?? 'Título principal o asunto del correo' }}</h3>
 
         </td>
     </tr>
@@ -20,14 +20,14 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
 
             @if (strpos(Request::url(), '/suspend') == false)
             <span class="email-template-table-td-span-2">
-                <a href="#" class="email-template-table-td-span-h-ref">{{ translate('generated_link') }}</a>
+                <a href="#" class="email-template-table-td-span-h-ref">{{ 'enlace generado' }}</a>
             </span>
 
 
             @endif
             <span class="border-top"></span>
-            <span class="d-block" id="mail-footer" class="email-template-table-td-span-3  mail-footer">{{ $data['footer_text'] ?? translate('Please_contact_us_for_any_queries,_we’re_always_happy_to_help.') }}</span>
-            <span class="d-block">{{ translate('Thanks_&_Regards') }},</span>
+            <span class="d-block" id="mail-footer" class="email-template-table-td-span-3  mail-footer">{{ $data['footer_text'] ?? 'Comuníquese con nosotros para cualquier consulta, siempre estaremos encantados de ayudarle.' }}</span>
+            <span class="d-block">{{ 'Gracias y saludos' }},</span>
             <span class="d-block" class="email-template-table-td-span-4">{{ $company_name }}</span>
             @php($store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first())
             <img class="email-template-img onerror-image"
@@ -37,10 +37,10 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
             alt="public/img">
 
             <span class="privacy">
-                <a href="#" id="privacy-check" style="{{ (isset($data['privacy']) && $data['privacy'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Privacy_Policy')}}</a>
-                <a href="#" id="refund-check" style="{{ (isset($data['refund']) && $data['refund'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Refund_Policy') }}</a>
-                <a href="#" id="cancelation-check" style="{{ (isset($data['cancelation']) && $data['cancelation'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Cancelation_Policy') }}</a>
-                <a href="#" id="contact-check" style="{{ (isset($data['contact']) && $data['contact'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Contact_us') }}</a>
+                <a href="#" id="privacy-check" style="{{ (isset($data['privacy']) && $data['privacy'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ 'política de privacidad'}}</a>
+                <a href="#" id="refund-check" style="{{ (isset($data['refund']) && $data['refund'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ 'Política de reembolso' }}</a>
+                <a href="#" id="cancelation-check" style="{{ (isset($data['cancelation']) && $data['cancelation'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ 'Política de Cancelación' }}</a>
+                <a href="#" id="contact-check" style="{{ (isset($data['contact']) && $data['contact'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ 'Contáctenos' }}</a>
             </span>
 
             <span class="social email-template-social-span">
@@ -61,7 +61,7 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                 </a>
             </span>
             <span class="copyright" id="mail-copyright">
-                {{ $data['copyright_text']?? translate('Copyright 2023 6ammart. All right reserved') }}
+                {{ $data['copyright_text']?? 'Copyright 2023 6ammart. Todos los derechos reservados' }}
             </span>
         </td>
     </tr>

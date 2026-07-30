@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.Recommended_stores'))
+@section('title','Tiendas recomendadas')
 
 @push('css_or_js')
 
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/condition.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.Recommended_stores')}}
+                    {{'Tiendas recomendadas'}}
                 </span>
             </h1>
         </div>
@@ -34,11 +34,11 @@
                                     <div class="col-md-12">
                                         <input type="hidden" id="store_ids" name="selected_store_ids" value="">
 
-                                        <h3 for="name" >{{ translate('Stores')}}</h3>
+                                        <h3 for="name" >{{ 'Víveres'}}</h3>
                                         <div class="w-100 px-2">
                                             <div class="search-form mb-3">
                                                 <button type="button" class="btn"></button>
-                                                <input type="text" class="js-form-search form-control search-bar-input"  placeholder="{{translate('Search Stores')}}...">
+                                                <input type="text" class="js-form-search form-control search-bar-input"  placeholder="{{'Buscar tiendas'}}...">
                                             </div>
                                             <div class="d-flex flex-wrap column-gap-4 row-gap-2 max-h-40vh overflow-y-auto overflow-x-hidden search-result-box" id='hide_class'> </div>
 
@@ -46,8 +46,8 @@
                                     </div>
 
                             <div class="btn--container justify-content-end mt-4">
-                                <button type="reset" class="btn btn--reset remove_all_data">{{translate('messages.reset')}}</button>
-                                <button type="submit" class="btn btn--primary">{{translate('messages.submit')}}</button>
+                                <button type="reset" class="btn btn--reset remove_all_data">{{'reiniciar'}}</button>
+                                <button type="submit" class="btn btn--primary">{{'entregar'}}</button>
                             </div>
                         </form>
                     </div>
@@ -59,7 +59,7 @@
                     <div class="card-header py-2 border-0">
                         <div class="search--button-wrapper">
                             <h5 class="card-title">
-                                {{translate('messages.Recommended_Stores_List')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$stores->total()}}</span>
+                                {{'Lista de tiendas recomendadas'}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$stores->total()}}</span>
                             </h5>
                             <div class="form-check text-start mb-3">
                                     <input class="form-check-input dynamic-checkbox"
@@ -67,22 +67,22 @@
                                            data-type="status"
                                            data-image-on='{{asset('assets/admin/img/modal')}}/counter-on.png'
                                            data-image-off="{{asset('assets/admin/img/modal')}}/counter-off.png"
-                                           data-title-on="{{translate('Want_to_shuffle_the_store_list?')}}"
-                                           data-title-off="{{translate('Want_to_disable_shuffle_store_list?')}}"
-                                           data-text-on="<p>{{translate('If_enabled,_store_recommended_section_will_be_shuffled.’')}}</p>"
-                                           data-text-off="<p>{{translate('If_disabled,_store_recommended_section_will_not_be_shuffled.')}}</p>"
+                                           data-title-on="{{'¿Quieres barajar la lista de tiendas?'}}"
+                                           data-title-off="{{'¿Quieres desactivar la lista de tiendas aleatoria?'}}"
+                                           data-text-on="<p>{{'Si está habilitado, la sección recomendada de la tienda se reproducirá aleatoriamente.'}}</p>"
+                                           data-text-off="<p>{{'Si está deshabilitada, la sección recomendada de la tienda no se reproducirá aleatoriamente.'}}</p>"
                                            type="checkbox" value="1" name="shuffle_store" id="flexCheckDefault" {{ $shuffle_recommended_store == 1 ? 'checked' : '' }} >
                                     <label
                                        data-id="store_shffle"
                                        data-type="status"
                                        data-image-on='{{asset('assets/admin/img/modal')}}/counter-on.png'
                                        data-image-off="{{asset('assets/admin/img/modal')}}/counter-off.png"
-                                       data-title-on="{{translate('Want_to_shuffle_the_store_list?')}}"
-                                       data-title-off="{{translate('Want_to_disable_shuffle_store_list?')}}"
-                                       data-text-on="<p>{{translate('If_enabled,_store_recommended_section_will_be_shuffled.’')}}</p>"
-                                       data-text-off="<p>{{translate('If_disabled,_store_recommended_section_will_not_be_shuffled.')}}</p>" id="store_shffle"
+                                       data-title-on="{{'¿Quieres barajar la lista de tiendas?'}}"
+                                       data-title-off="{{'¿Quieres desactivar la lista de tiendas aleatoria?'}}"
+                                       data-text-on="<p>{{'Si está habilitado, la sección recomendada de la tienda se reproducirá aleatoriamente.'}}</p>"
+                                       data-text-off="<p>{{'Si está deshabilitada, la sección recomendada de la tienda no se reproducirá aleatoriamente.'}}</p>" id="store_shffle"
                                     class="form-check-label dynamic-checkbox" for="flexCheckDefault">
-                                        {{translate('Shuffle_store_when_page_reload?')}}
+                                        {{'¿Almacenar aleatoriamente cuando se recarga la página?'}}
                                     </label>
                             </div>
                             <form  action="{{ route('admin.store.shuffle_recommended_store',['status' => $shuffle_recommended_store ?? 0]) }}" method="get" id="store_shffle_form">
@@ -92,7 +92,7 @@
                                 <!-- Search -->
                                 <div class="input-group input--group">
                                     <input id="datatableSearch_" value="{{ request()?->search ?? null }}" type="search" name="search" class="form-control"
-                                            placeholder="{{translate('ex_:_Store_name')}}" aria-label="Search" >
+                                            placeholder="{{'ej: nombre de la tienda'}}" aria-label="Search" >
                                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                                 </div>
                                 <!-- End Search -->
@@ -110,13 +110,13 @@
                                }'>
                             <thead class="thead-light">
                             <tr >
-                                <th class="border-0">{{translate('sl')}}</th>
-                                <th class="border-0">{{translate('messages.Store_Name')}}</th>
-                                <th class="border-0">{{translate('messages.Ratings')}}</th>
-                                <th class="border-0">{{translate('messages.Total_Products')}}</th>
-                                <th class="border-0">{{translate('messages.Total_Orders')}}</th>
-                                <th class="text-center">{{translate('messages.status')}}</th>
-                                <th class="text-center">{{translate('messages.action')}}</th>
+                                <th class="border-0">{{'SL'}}</th>
+                                <th class="border-0">{{'Nombre de la tienda'}}</th>
+                                <th class="border-0">{{'Calificaciones'}}</th>
+                                <th class="border-0">{{'Productos totales'}}</th>
+                                <th class="border-0">{{'Órdenes totales'}}</th>
+                                <th class="text-center">{{'estado'}}</th>
+                                <th class="text-center">{{'acción'}}</th>
                             </tr>
 
                             </thead>
@@ -138,7 +138,7 @@
                                                     {{Str::limit($store->name,20,'...')}}
                                                     </div>
                                                     <div class="font-light">
-                                                        {{translate('messages.id')}}:{{$store->id}}
+                                                        {{'identificación'}}:{{$store->id}}
                                                     </div>
                                                 </div>
                                             </a>
@@ -171,7 +171,7 @@
                                     </td>
                                     <td >
                                         <div class="btn--container justify-content-center">
-                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="item-{{$store['id']}}" data-message="{{ translate('Want_to_remove_the_store_from_the_list?') }}" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
+                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="item-{{$store['id']}}" data-message="{{ '¿Quieres eliminar la tienda de la lista?' }}" title="{{'borrar'}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{route('admin.store.recommended_store_remove',[$store['id']])}}"
                                                     method="post" id="item-{{$store['id']}}">
@@ -194,7 +194,7 @@
                     <div class="empty--data">
                         <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
-                            {{translate('no_data_found')}}
+                            {{'no se encontraron datos'}}
                         </h5>
                     </div>
                     @endif

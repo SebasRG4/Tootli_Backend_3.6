@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title',translate('messages.Campaign List'))
+@section('title','Lista de campañas')
 
 @push('css_or_js')
 
@@ -12,7 +12,7 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-sm mb-2 mb-sm-0">
-                    <h1 class="page-header-title"><i class="tio-notice"></i> {{translate('messages.item_campaign')}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$campaigns->total()}}</span></h1>
+                    <h1 class="page-header-title"><i class="tio-notice"></i> {{'campaña de artículos'}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$campaigns->total()}}</span></h1>
                 </div>
             </div>
         </div>
@@ -27,7 +27,7 @@
                             @csrf
                             <!-- Search -->
                             <div class="input--group input-group input-group-merge input-group-flush">
-                                <input id="datatableSearch" type="search" name="search" class="form-control" placeholder=" {{translate('messages.Search by title')}}" aria-label="{{translate('messages.search_here')}}">
+                                <input id="datatableSearch" type="search" name="search" class="form-control" placeholder=" {{'Buscar por título'}}" aria-label="{{'buscar aquí'}}">
                                 <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                             </div>
                             <!-- End Search -->
@@ -44,11 +44,11 @@
                                }'>
                                <thead class="thead-light">
                             <tr>
-                                <th>{{ translate('messages.sl') }}</th>
-                                <th >{{translate('messages.title')}}</th>
-                                <th >{{translate('messages.date')}}</th>
-                                <th >{{translate('messages.time')}}</th>
-                                <th >{{translate('messages.price')}}</th>
+                                <th>{{ 'SL' }}</th>
+                                <th >{{'título'}}</th>
+                                <th >{{'fecha'}}</th>
+                                <th >{{'tiempo'}}</th>
+                                <th >{{'precio'}}</th>
                             </tr>
 
                             </thead>

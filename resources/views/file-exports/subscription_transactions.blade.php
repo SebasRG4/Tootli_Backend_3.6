@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-lg-12 text-center "><h1 >{{ translate('messages.Subscription_Transactions') }}</h1></div>
+    <div class="col-lg-12 text-center "><h1 >{{ 'Transacciones de suscripción' }}</h1></div>
     <div class="col-lg-12">
 
 
@@ -7,34 +7,34 @@
     <table>
         <thead>
             <tr>
-                <th>{{ translate('filter_criteria') }} -</th>
+                <th>{{ 'criterios de filtrado' }} -</th>
                 <th></th>
                 <th></th>
                 <th>
                     @if (isset($data['package_name']))
-                    {{ translate('Package_name' )}} - {{ $data['package_name'] }}
+                    {{ 'Nombre del paquete'}} - {{ $data['package_name'] }}
 
                     @elseif (isset($data['store']))
-                    {{ translate('Store_Name' )}} - {{ $data['store'] }}
+                    {{ 'Nombre de la tienda'}} - {{ $data['store'] }}
                     @else
-                    {{ translate('All_transactions' )}}
+                    {{ 'Todas las transacciones'}}
 
                     @endif
 
                     @if ($data['start_date'])
                     <br>
-                    {{ translate('start_date' )}} - {{ $data['start_date']?Carbon\Carbon::parse($data['start_date'])->format('d M Y'):'' }}
+                    {{ 'fecha de inicio'}} - {{ $data['start_date']?Carbon\Carbon::parse($data['start_date'])->format('d M Y'):'' }}
                     @endif
                     @if ($data['end_date'])
                     <br>
-                    {{ translate('end_date' )}} - {{ $data['end_date']?Carbon\Carbon::parse($data['end_date'])->format('d M Y'):'' }}
+                    {{ 'fecha de finalización'}} - {{ $data['end_date']?Carbon\Carbon::parse($data['end_date'])->format('d M Y'):'' }}
                     @endif
                     <br>
-                    {{ translate('filter')  }}- {{  translate($data['filter']) }}
+                    {{ 'filtrar'  }}- {{  translate($data['filter']) }}
                     <br>
-                    {{ translate('plan_type')  }}- {{  translate($data['plan_type']) }}
+                    {{ 'tipo de plan'  }}- {{  translate($data['plan_type']) }}
                     <br>
-                    {{ translate('Search_Bar_Content')  }}- {{ $data['search'] ??translate('N/A') }}
+                    {{ 'Contenido de la barra de búsqueda'  }}- {{ $data['search'] ??'N / A' }}
 
                 </th>
                 <th></th>
@@ -43,13 +43,13 @@
                 <th></th>
             </tr>
             <tr>
-                <th class="border-top px-4 border-bottom text-center">{{ translate('sl') }}</th>
-                <th class="border-top px-4 border-bottom">{{ translate('Transaction_ID') }}</th>
-                <th class="border-top px-4 border-bottom"><div class="text-title">{{ translate('Transaction_Date') }}</div></th>
-                <th class="border-top px-4 border-bottom">{{ translate('Store') }}</th>
-                <th class="border-top px-4 border-bottom">{{ translate('Pricing') }}</th>
-                <th class="border-top px-4 border-bottom">{{ translate('Payment_Type') }}</th>
-                <th class="border-top px-4 border-bottom">{{ translate('Status') }}</th>
+                <th class="border-top px-4 border-bottom text-center">{{ 'SL' }}</th>
+                <th class="border-top px-4 border-bottom">{{ 'ID de transacción' }}</th>
+                <th class="border-top px-4 border-bottom"><div class="text-title">{{ 'Fecha de transacción' }}</div></th>
+                <th class="border-top px-4 border-bottom">{{ 'Almacenar' }}</th>
+                <th class="border-top px-4 border-bottom">{{ 'Precios' }}</th>
+                <th class="border-top px-4 border-bottom">{{ 'Tipo de pago' }}</th>
+                <th class="border-top px-4 border-bottom">{{ 'Estado' }}</th>
             </tr>
         </thead>
         <tbody>
@@ -64,7 +64,7 @@
                     <div class="pl-4">{{ \App\CentralLogics\Helpers::date_format($transaction->created_at) }}</div>
                 </td>
                 <td class="px-4">
-                    <div class="text-title">{{ $transaction?->store?->name ?? translate('messages.store deleted!') }}
+                    <div class="text-title">{{ $transaction?->store?->name ?? 'tienda eliminada!' }}
 
                     </div>
                 </td>
@@ -74,16 +74,16 @@
                 <td class="px-4">
                     <div>
                         @if ( $transaction->plan_type == 'renew'  )
-                        <div class="text-title">{{ translate('Renewal') }}</div>
+                        <div class="text-title">{{ 'Renovación' }}</div>
                         @elseif ($transaction->plan_type == 'new_plan'  )
-                        <div class="text-title">{{ translate('Migrate_to_New_Plan') }}</div>
+                        <div class="text-title">{{ 'Migrar al nuevo plan' }}</div>
                         @elseif ($transaction->plan_type == 'first_purchased'  )
-                        <div class="text-title">{{ translate('Purchased') }}</div>
+                        <div class="text-title">{{ 'Comprado' }}</div>
                         @else
                         <div class="text-title">{{ translate($transaction->plan_type) }}</div>
                         @endif
                         &nbsp;
-                        <div class="text-success font-medium">{{ translate('Paid_by') }}  {{ translate($transaction->payment_method) }}</div>
+                        <div class="text-success font-medium">{{ 'Pagado por' }}  {{ translate($transaction->payment_method) }}</div>
                     </div>
                 </td>
                 <td class="px-4">

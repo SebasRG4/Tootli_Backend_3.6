@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.update_notification'))
+@section('title','notificación de actualización')
 
 @push('css_or_js')
 
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/notification.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.notification_update')}}
+                    {{'actualización de notificación'}}
                 </span>
             </h1>
         </div>
@@ -29,15 +29,15 @@
                             <div class="row g-2">
                                 <div class="col-12">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.title')}}</label>
-                                        <input type="text" value="{{$notification['title']}}" name="notification_title" class="form-control" placeholder="{{translate('messages.new_notification')}}" required maxlength="191">
+                                        <label class="input-label" for="exampleFormControlInput1">{{'título'}}</label>
+                                        <input type="text" value="{{$notification['title']}}" name="notification_title" class="form-control" placeholder="{{'nueva notificación'}}" required maxlength="191">
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.zone')}}</label>
+                                        <label class="input-label" for="exampleFormControlInput1">{{'zona'}}</label>
                                         <select name="zone" id="zone" class="form-control js-select2-custom" >
-                                            <option value="all" {{isset($notification->zone_id)?'':'selected'}}>{{translate('messages.all_zone')}}</option>
+                                            <option value="all" {{isset($notification->zone_id)?'':'selected'}}>{{'toda la zona'}}</option>
                                             @foreach($zones as $zone)
                                                 <option value="{{$zone['id']}}"  {{$notification->zone_id==$zone['id']?'selected':''}}>{{$zone['name']}}</option>
                                             @endforeach
@@ -46,18 +46,18 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="tergat">{{translate('messages.send_to')}}</label>
+                                        <label class="input-label" for="tergat">{{'enviar a'}}</label>
 
-                                        <select name="tergat" class="form-control" id="tergat" data-placeholder="{{translate('messages.select_tergat')}}" required>
-                                            <option value="customer" {{$notification->tergat=='customer'?'selected':''}}>{{translate('messages.customer')}}</option>
-                                            <option value="deliveryman" {{$notification->tergat=='deliveryman'?'selected':''}}>{{translate('messages.deliveryman')}}</option>
-                                            <option value="store" {{$notification->tergat=='store'?'selected':''}}>{{translate('messages.store')}}</option>
+                                        <select name="tergat" class="form-control" id="tergat" data-placeholder="{{'seleccionar terga'}}" required>
+                                            <option value="customer" {{$notification->tergat=='customer'?'selected':''}}>{{'Cliente'}}</option>
+                                            <option value="deliveryman" {{$notification->tergat=='deliveryman'?'selected':''}}>{{'Repartidor'}}</option>
+                                            <option value="store" {{$notification->tergat=='store'?'selected':''}}>{{'Negocio'}}</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.description')}}</label>
+                                        <label class="input-label" for="exampleFormControlInput1">{{'descripción'}}</label>
                                         <textarea name="description" class="form-control" maxlength="1000" required>{{$notification['description']}}</textarea>
                                     </div>
                                 </div>
@@ -66,8 +66,8 @@
                         <div class="col-lg-6">
                             <div class="h-100 d-flex flex-column">
                                 <label class="d-block text-center mt-auto mb-0">
-                                    {{translate('messages.image')}}
-                                    <small class="text-danger">* ( {{translate('messages.ratio')}} 900x300 )</small>
+                                    {{'imagen'}}
+                                    <small class="text-danger">* ( {{'relación'}} 900x300 )</small>
                                 </label>
                                 <div class="text-center py-3 my-auto">
                                     <img class="img--vertical onerror-image" id="viewer"
@@ -77,14 +77,14 @@
                                 <div class="custom-file">
                                     <input type="file" name="image" id="customFileEg1" class="custom-file-input"
                                         accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                    <label class="custom-file-label" for="customFileEg1">{{translate('messages.choose_file')}}</label>
+                                    <label class="custom-file-label" for="customFileEg1">{{'elegir archivo'}}</label>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="btn--container mt-4 justify-content-end">
-                        <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                        <button type="submit" class="btn btn--primary">{{translate('messages.send_again')}}</button>
+                        <button type="reset" id="reset_btn" class="btn btn--reset">{{'reiniciar'}}</button>
+                        <button type="submit" class="btn btn--primary">{{'enviar de nuevo'}}</button>
                     </div>
                 </form>
             </div>

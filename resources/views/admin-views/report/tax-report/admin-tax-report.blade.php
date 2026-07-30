@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Admin Tax Report'))
+@section('title', 'Informe de impuestos administrativo')
 
 @section('tax_report')
     active
@@ -9,13 +9,13 @@
 @section('content')
     <div class="content container-fluid">
         <!--- Admin Tax Report -->
-        <h2 class="mb-20">{{ translate('messages.Generate Tax Report') }}</h3>
+        <h2 class="mb-20">{{ 'Generar informe fiscal' }}</h3>
             <div class="card p-20 mb-20">
                 <div class="mb-20">
-                    <h3 class="mb-1">{{ translate('messages.Admin Tax Report') }}</h3>
+                    <h3 class="mb-1">{{ 'Informe de impuestos administrativo' }}</h3>
 
                     <p class="mb-1 fz-12">
-                        {{ translate('To generate you tax report please select & input following field and submit for the result') }}.
+                        {{ 'Para generar su informe de impuestos, seleccione e ingrese el siguiente campo y envíelo para obtener el resultado.' }}.
                     </p>
                 @if (addon_published_status('Rental'))
                 <div id="" class="info-notes-bg px-2 py-2 rounded fz-11  gap-2 align-items-center d-flex ">
@@ -58,10 +58,10 @@
                 </svg>
 
                 <span id="info_for_item">
-                    {{ translate('You will get combine tax report in combine. You can view') }}
+                    {{ 'Obtendrá un informe de impuestos combinado en combinación. puedes ver' }}
                     <a href="{{  route('admin.transactions.rental.report.getTaxReport') }}"
-                        class="font-semibold theme-clr text-decoration-underline">{{ translate('Tax Report for Rental Module') }}.</a>
-                    {{ translate('Separately from here.') }}
+                        class="font-semibold theme-clr text-decoration-underline">{{ 'Informe de Impuestos para el Módulo de Alquiler' }}.</a>
+                    {{ 'Por separado de aquí.' }}
                 </span>
                 </div>
 
@@ -74,43 +74,43 @@
                                 <div class="d-flex flex-column gap-lg-4 gap-3">
                                     <div>
                                         <span
-                                            class="mb-2 d-block title-clr fw-normal">{{ translate('messages.Date Range Type') }}</span>
+                                            class="mb-2 d-block title-clr fw-normal">{{ 'Tipo de rango de fechas' }}</span>
                                         <select name="date_range_type" id="date_range_type"
                                             class="custom-select custom-select-color border rounded w-100">
-                                            <option value="">{{ translate('Select Date Range') }}</option>
+                                            <option value="">{{ 'Seleccionar rango de fechas' }}</option>
                                             <option value="this_fiscal_year"
                                                 {{ $date_range_type == 'this_fiscal_year' ? 'selected' : '' }}>
-                                                {{ translate('This Fiscal Year') }}
+                                                {{ 'Este año fiscal' }}
                                             </option>
                                             <option value="custom" {{ $date_range_type == 'custom' ? 'selected' : '' }}>
-                                                {{ translate('Custom') }}
+                                                {{ 'Costumbre' }}
                                             </option>
 
                                         </select>
                                     </div>
                                     <div class="{{ $date_range_type == 'custom' ? '' : 'd-none' }}" id="date_range">
-                                        <label class="form-label">{{ translate('Date Range') }}</label>
+                                        <label class="form-label">{{ 'Rango de fechas' }}</label>
                                         <div class="position-relative">
                                             <i class="tio-calendar-month icon-absolute-on-right"></i>
                                             <input type="text" class="form-control h-45 position-relative bg-transparent"
-                                                name="dates" placeholder="{{ translate('messages.Select_Date') }}">
+                                                name="dates" placeholder="{{ 'Seleccionar fecha' }}">
                                         </div>
                                     </div>
 
                                     <div>
                                         <span
-                                            class="mb-2 d-block title-clr fw-normal">{{ translate('Select How to calculate tax') }}</span>
+                                            class="mb-2 d-block title-clr fw-normal">{{ 'Seleccione Cómo calcular el impuesto' }}</span>
                                         <select name="calculate_tax_on" id="calculate_tax_on" required
                                             class="custom-select custom-select-color border rounded w-100">
                                             <option disabled selected value="">
-                                                {{ translate('Select Calculate Tax') }}</option>
+                                                {{ 'Seleccione Calcular impuesto' }}</option>
                                             <option {{ $calculate_tax_on == 'all_source' ? 'selected' : '' }}
                                                 value="all_source">
-                                                {{ translate('messages.Same Tax for All Income Source') }}
+                                                {{ 'Mismo impuesto para todas las fuentes de ingresos' }}
                                             </option>
                                             <option {{ $calculate_tax_on == 'individual_source' ? 'selected' : '' }}
                                                 value="individual_source">
-                                                {{ translate('Different Tax for Different Income Source') }}
+                                                {{ 'Impuestos diferentes para diferentes fuentes de ingresos' }}
                                             </option>
 
                                         </select>
@@ -118,7 +118,7 @@
                                     <div class="{{ $calculate_tax_on == 'individual_source' ? '' : 'd-none' }}"
                                         id="calculate_commission_tax">
                                         <span
-                                            class="mb-2 d-block title-clr fw-normal">{{ translate('Tax on Order Commission') }}</span>
+                                            class="mb-2 d-block title-clr fw-normal">{{ 'Impuesto sobre la Comisión de Pedido' }}</span>
                                         <div class="select-class-closest">
                                             <select name="tax_on_order_commission[]" id="select_customer_fiscal1"
                                                 class="form-control js-select2-custom" multiple="multiple"
@@ -130,7 +130,7 @@
                                     <div class="{{ $calculate_tax_on == 'individual_source' ? '' : 'd-none' }}"
                                         id="calculate_delivery_charge_tax">
                                         <span
-                                            class="mb-2 d-block title-clr fw-normal">{{ translate('Tax on Delivery Charge Commission') }}</span>
+                                            class="mb-2 d-block title-clr fw-normal">{{ 'Comisión de cargo de impuesto sobre la entrega' }}</span>
                                         <div class="select-class-closest">
                                             <select name="tax_on_delivery_charge_commission[]" id="select_customer_fiscal2"
                                                 class="form-control js-select2-custom" multiple="multiple"
@@ -146,7 +146,7 @@
                                     <div class="{{ $calculate_tax_on == 'individual_source' ? '' : 'd-none' }}"
                                         id="calculate_service_charge_tax">
                                         <span
-                                            class="mb-2 d-block title-clr fw-normal">{{ translate('Tax on Service charge') }}</span>
+                                            class="mb-2 d-block title-clr fw-normal">{{ 'Impuesto sobre el cargo por servicio' }}</span>
                                         <div class="select-class-closest">
                                             <select name="tax_on_service_charge[]" id="select_customer_fiscal-3"
                                                 class="form-control js-select2-custom" multiple="multiple"
@@ -161,7 +161,7 @@
                                     <div class="{{ $calculate_tax_on == 'individual_source' ? '' : 'd-none' }}"
                                         id="calculate_subscription_tax">
                                         <span
-                                            class="mb-2 d-block title-clr fw-normal">{{ translate('Tax on Subscription') }}</span>
+                                            class="mb-2 d-block title-clr fw-normal">{{ 'Impuesto de suscripción' }}</span>
                                         <div class="select-class-closest">
                                             <select name="tax_on_subscription[]" id="select_customer_fiscal-6"
                                                 class="form-control js-select2-custom" multiple="multiple"
@@ -175,7 +175,7 @@
                                     <div class="{{ $calculate_tax_on == 'individual_source' ? 'd-none' : '' }}"
                                         id="calculate_tax_rate">
                                         <span
-                                            class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rates') }}</span>
+                                            class="mb-2 d-block title-clr fw-normal">{{ 'Seleccionar tasas impositivas' }}</span>
                                         <div class="select-class-closest">
                                             <select {{ $calculate_tax_on == 'individual_source' ? '' : 'required' }}
                                                 name="tax_rate[]" id="select_customer_fiscal-5"
@@ -191,8 +191,8 @@
                 </div>
                 <div class="d-flex align-items-center justify-content-end gap-2">
                     <button type="reset" id="reset_button_id"
-                        class="btn bg--secondary h--42px title-clr px-4">{{ translate('Reset') }}</button>
-                    <button type="submit" class="btn btn--primary">{{ translate('Submit') }}</button>
+                        class="btn bg--secondary h--42px title-clr px-4">{{ 'Reiniciar' }}</button>
+                    <button type="submit" class="btn btn--primary">{{ 'Entregar' }}</button>
                 </div>
                 </form>
             </div>
@@ -202,7 +202,7 @@
                         <div class="bg-opacity-primary-10 rounded p-20 d-flex align-items-center gap-2 flex-wrap">
                             <div class="d-flex align-items-center gap-3 title-clr">
                                 <img src="{{ asset('assets/admin/img/t-toal-amount.png') }}" alt="img">
-                                {{ translate('Total Income') }}
+                                {{ 'Ingresos totales' }}
                             </div>
                             <h3 class="theme-clr fw-bold mb-0">
                                 {{ \App\CentralLogics\Helpers::format_currency($totalBase) }} </h3>
@@ -212,7 +212,7 @@
                         <div class="bg-opacity-warning-10 rounded p-20 d-flex align-items-center gap-2 flex-wrap">
                             <div class="d-flex align-items-center gap-3 title-clr">
                                 <img src="{{ asset('assets/admin/img/t-tax-amount.png') }}" alt="img">
-                                {{ translate('Total Tax') }}
+                                {{ 'Impuesto total' }}
                             </div>
                             <h3 class="text-danger fw-bold mb-0">
                                 {{ \App\CentralLogics\Helpers::format_currency($totalTax) }}</h3>
@@ -223,7 +223,7 @@
             <!--- Vendor Tax Report Here -->
             <div class="card p-20 mb-20">
                 <div class="d-flex align-items-center justify-content-between gap-2 flex-wrap mb-20">
-                    <h4 class="mb-0">{{ translate('Tax Report List') }}</h4>
+                    <h4 class="mb-0">{{ 'Lista de informes de impuestos' }}</h4>
                     <div class="search--button-wrapper justify-content-end">
 
 
@@ -232,7 +232,7 @@
                             <div class="d-flex align-items-center">
                                 <span class="font-size-sm mr-3">
                                     <span id="datatableCounter">0</span>
-                                    {{ translate('messages.selected') }}
+                                    {{ 'seleccionado' }}
                                 </span>
                             </div>
                         </div>
@@ -241,24 +241,24 @@
                                 href="javascript:;"
                                 data-hs-unfold-options='{
                             "target": "#usersExportDropdown__admin", "type": "css-animation" }'>
-                                <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                                <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                             </a>
                             <div id="usersExportDropdown__admin"
                                 class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                                <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                                <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                                 <a id="export-excel" class="dropdown-item"
                                     href="{{ route('admin.transactions.report.adminTaxReportExport', ['export_type' => 'excel', request()->getQueryString()]) }}">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
                                         src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                         alt="Image Description">
-                                    {{ translate('messages.excel') }}
+                                    {{ 'sobresalir' }}
                                 </a>
                                 <a id="export-csv" class="dropdown-item"
                                     href="{{ route('admin.transactions.report.adminTaxReportExport', ['export_type' => 'csv', request()->getQueryString()]) }}">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
                                         src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                         alt="Image Description">
-                                    .{{ translate('messages.csv') }}
+                                    .{{ 'csv' }}
                                 </a>
                             </div>
                         </div>
@@ -270,11 +270,11 @@
                         class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table fz--14px">
                         <thead class="thead-light">
                             <tr>
-                                <th class="border-0">{{ translate('messages.sl') }}</th>
-                                <th class="border-0">{{ translate('Income Source') }}</th>
-                                <th class="border-0">{{ translate('Total Income') }}</th>
-                                <th class="border-0">{{ translate('Total Tax') }}</th>
-                                <th class="border-0 text-center">{{ translate('Action') }}</th>
+                                <th class="border-0">{{ 'SL' }}</th>
+                                <th class="border-0">{{ 'Fuente de ingresos' }}</th>
+                                <th class="border-0">{{ 'Ingresos totales' }}</th>
+                                <th class="border-0">{{ 'Impuesto total' }}</th>
+                                <th class="border-0 text-center">{{ 'Acción' }}</th>
                             </tr>
                         </thead>
 
@@ -306,7 +306,7 @@
                                         @endphp
                                         <div class="d-flex flex-column gap-1">
                                             <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                                {{ translate('Total') }} ({{ $totalTax }}%): <span>
+                                                {{ 'Total' }} ({{ $totalTax }}%): <span>
                                                     {{ \App\CentralLogics\Helpers::format_currency($totalTaxAmount) }}</span>
                                             </div>
 
@@ -337,9 +337,9 @@
                                         <div class="text-center max-w-700 mx-auto py-5">
                                             <img src="{{ asset('assets/admin/img/tax-error.png') }}"
                                                 alt="img" class="mb-20">
-                                            <h4 class="mb-2">{{ translate('No Tax Report Generated') }}</h4>
+                                            <h4 class="mb-2">{{ 'No se generó ningún informe fiscal' }}</h4>
                                             <p class="mb-0 fz-12px">
-                                                {{ translate('To generate your tax report please select & input above field and submit for the result') }}
+                                                {{ 'Para generar su informe de impuestos, seleccione e ingrese el campo anterior y envíelo para obtener el resultado.' }}
                                             </p>
                                         </div>
                                     </td>

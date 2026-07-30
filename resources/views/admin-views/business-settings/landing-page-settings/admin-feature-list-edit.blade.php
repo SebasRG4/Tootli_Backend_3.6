@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.admin_landing_page'))
+@section('title','página de inicio del administrador')
 
 @section('content')
 <div class="content container-fluid">
@@ -11,11 +11,11 @@
                     <img src="{{asset('assets/admin/img/landing.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.admin_landing_pages') }}
+                    {{ 'páginas de inicio de administración' }}
                 </span>
             </h1>
             <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#how-it-works">
-                <strong class="mr-2">{{translate('How the Setting Works')}}</strong>
+                <strong class="mr-2">{{'Cómo funciona el entorno'}}</strong>
                 <div>
                     <i class="tio-info-outined"></i>
                 </div>
@@ -39,7 +39,7 @@
             <li class="nav-item">
                 <a class="nav-link lang_link active"
                 href="#"
-                id="default-link">{{translate('messages.default')}}</a>
+                id="default-link">{{'por defecto'}}</a>
             </li>
             @foreach (json_decode($language) as $lang)
                 <li class="nav-item">
@@ -61,32 +61,32 @@
                             <div class="col-md-6 lang_form default-form">
                                 <div class="row g-3">
                                     <div class="col-12">
-                                        <label for="title" class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})<span
+                                        <label for="title" class="form-label">{{'Título'}} ({{ 'por defecto' }})<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
+                                                        data-original-title="{{ 'Escribe el título dentro de 20 caracteres.' }}">
                                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span>
                                             <span class="form-label-secondary text-danger"
                                                   data-toggle="tooltip" data-placement="right"
-                                                  data-original-title="{{ translate('messages.Required.')}}"> *
+                                                  data-original-title="{{ 'Requerido.'}}"> *
                                                 </span></label>
-                                                <input required id="title" type="text" maxlength="20" name="title[]" value="{{ $feature['title'] }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                                <input required id="title" type="text" maxlength="20" name="title[]" value="{{ $feature['title'] }}" class="form-control" placeholder="{{'título aquí...'}}">
                                     </div>
                                     <div class="col-12">
-                                        <label for="sub_title" class="form-label">{{translate('Sub Title')}} ({{ translate('messages.default') }})<span
+                                        <label for="sub_title" class="form-label">{{'Subtítulo'}} ({{ 'por defecto' }})<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
+                                                        data-original-title="{{ 'Escribe el título dentro de 80 caracteres.' }}">
                                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span>
                                             <span class="form-label-secondary text-danger"
                                                   data-toggle="tooltip" data-placement="right"
-                                                  data-original-title="{{ translate('messages.Required.')}}"> *
+                                                  data-original-title="{{ 'Requerido.'}}"> *
                                                 </span></label>
-                                                <input required id="sub_title" type="text" maxlength="80" name="sub_title[]" value="{{ $feature['sub_title'] }}" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                                <input required id="sub_title" type="text" maxlength="80" name="sub_title[]" value="{{ $feature['sub_title'] }}" class="form-control" placeholder="{{'subtítulo aquí...'}}">
                                     </div>
                                 </div>
                             </div>
@@ -109,24 +109,24 @@
                                 <div class="col-md-6 d-none lang_form" id="{{$lang}}-form1">
                                     <div class="row g-3">
                                         <div class="col-12">
-                                            <label for="title" class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})<span
+                                            <label for="title" class="form-label">{{'Título'}} ({{strtoupper($lang)}})<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
+                                                        data-original-title="{{ 'Escribe el título dentro de 20 caracteres.' }}">
                                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input id="title" type="text" maxlength="20" name="title[]" value="{{ $translate[$lang]['title']??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                                <input id="title" type="text" maxlength="20" name="title[]" value="{{ $translate[$lang]['title']??'' }}" class="form-control" placeholder="{{'título aquí...'}}">
                                         </div>
                                         <div class="col-12">
-                                            <label for="sub_title" class="form-label">{{translate('Sub Title')}} ({{strtoupper($lang)}})<span
+                                            <label for="sub_title" class="form-label">{{'Subtítulo'}} ({{strtoupper($lang)}})<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
+                                                        data-original-title="{{ 'Escribe el título dentro de 80 caracteres.' }}">
                                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input id="sub_title" type="text" maxlength="80" name="sub_title[]" value="{{ $translate[$lang]['sub_title']??'' }}" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                                <input id="sub_title" type="text" maxlength="80" name="sub_title[]" value="{{ $translate[$lang]['sub_title']??'' }}" class="form-control" placeholder="{{'subtítulo aquí...'}}">
                                         </div>
                                     </div>
                                 </div>
@@ -136,12 +136,12 @@
                             <div class="col-md-6">
                                 <div class="row g-3">
                                     <div class="col-12">
-                                        <label for="title" class="form-label">{{translate('Title')}}</label>
-                                        <input id="title" type="text" name="title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                        <label for="title" class="form-label">{{'Título'}}</label>
+                                        <input id="title" type="text" name="title[]" class="form-control" placeholder="{{'título aquí...'}}">
                                     </div>
                                     <div class="col-12">
-                                        <label for="sub_title"   class="form-label">{{translate('Sub Title')}}</label>
-                                        <input  id="sub_title" type="text" name="sub_title[]" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                        <label for="sub_title"   class="form-label">{{'Subtítulo'}}</label>
+                                        <input  id="sub_title" type="text" name="sub_title[]" class="form-control" placeholder="{{'subtítulo aquí...'}}">
                                     </div>
                                 </div>
                             </div>
@@ -150,10 +150,10 @@
 
                             <div class="col-md-6">
                                 <label class="form-label d-block mb-3">
-                                    {{ translate('messages.Image') }}  <span class="text--primary">{{translate('(size:_1:1)')}}</span>
+                                    {{ 'Imagen' }}  <span class="text--primary">{{'(tamaño: 1:1)'}}</span>
                                     <span class="form-label-secondary text-danger"
                                           data-toggle="tooltip" data-placement="right"
-                                          data-original-title="{{ translate('messages.Required.')}}"> *
+                                          data-original-title="{{ 'Requerido.'}}"> *
                                                 </span>
                                     <div class="fs-12 opacity-70">
                                         {{ translate(IMAGE_FORMAT.' ' . 'Less Than 2MB') }}
@@ -172,8 +172,8 @@
                                             <span id="feature_image" class="remove_image_button remove-image dynamic-checkbox"
                                                   data-id="feature_image"
                                                   data-image-off="{{ asset('assets/admin/img/delete-confirmation.png') }}"
-                                                  data-title="{{translate('Warning!')}}"
-                                                  data-text="<p>{{translate('Are_you_sure_you_want_to_remove_this_image_?')}}</p>"
+                                                  data-title="{{'¡Advertencia!'}}"
+                                                  data-text="<p>{{'¿Estás seguro de que deseas eliminar esta imagen?'}}</p>"
                                                 > <i class="tio-clear"></i></span>
                                             @endif
                                         </div>
@@ -181,8 +181,8 @@
                             </div>
                         </div>
                         <div class="btn--container justify-content-end mt-20">
-                            <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
-                            <button type="submit" class="btn btn--primary mb-2">{{translate('messages.Update')}}</button>
+                            <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
+                            <button type="submit" class="btn btn--primary mb-2">{{'Actualizar'}}</button>
                         </div>
                     </div>
                 </div>

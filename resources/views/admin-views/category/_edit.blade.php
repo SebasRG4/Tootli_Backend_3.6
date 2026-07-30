@@ -5,7 +5,7 @@
     <input type="hidden" name="parent_id" value="{{ $category->parent_id }}">
     <div>
         <div class="custom-offcanvas-header bg--secondary d-flex justify-content-between align-items-center px-3 py-3">
-            <h3 class="mb-0">{{ $category->position == 0 ? translate('Edit_Category') : translate('Edit_Sub_Category') }}</h2>
+            <h3 class="mb-0">{{ $category->position == 0 ? 'Editar categoría' : 'Editar subcategoría' }}</h2>
                 <button type="button"
                         class="btn-close w-25px h-25px border rounded-circle d-center bg--secondary text-dark offcanvas-close fz-15px p-0"
                         aria-label="Close">&times;
@@ -14,13 +14,13 @@
         <div class="custom-offcanvas-body p-20">
             <div class="bg--secondary rounded p-20 mb-20">
                 <div class="mb-15">
-                    <h4 class="mb-0">{{ translate('Availability') }}</h4>
+                    <h4 class="mb-0">{{ 'Disponibilidad' }}</h4>
                     <p class="fz-12px">
-                        {{ translate('If_you_turn_off_this_status_this_category_will_not_be_available') }}
+                        {{ 'Si desactivas este estado esta categoría no estará disponible' }}
                     </p>
                 </div>
                 <label class="border d-flex align-items-center bg-white-n justify-content-between rounded p-10px px-3">
-                    {{ translate('Status') }}
+                    {{ 'Estado' }}
                     <div class="toggle-switch ml-auto justify-content-end toggle-switch-sm" for="status">
                         <input type="checkbox" name="status" value="1" {{ $category['status'] ? 'checked' : '' }}
                         class="toggle-switch-input" id="status">
@@ -38,7 +38,7 @@
                     <ul class="nav nav-tabs mb-4 border-0">
                         <li class="nav-item">
                             <a class="nav-link lang_link1 active" href="#"
-                               id="default-link">{{ translate('messages.default') }}</a>
+                               id="default-link">{{ 'por defecto' }}</a>
                         </li>
                         @foreach ($language as $lang)
                             <li class="nav-item">
@@ -53,16 +53,16 @@
                         @if ($language)
                             <div class="form-group lang_form1" id="default-form1">
                                 <label class="input-label"
-                                       for="exampleFormControlInput1">{{ $category->position == 0 ? translate('Category_Name') : translate('Sub_Category_Name') }}
-                                    ({{ translate('messages.default') }})
+                                       for="exampleFormControlInput1">{{ $category->position == 0 ? 'Nombre de categoría' : 'Nombre de subcategoría' }}
+                                    ({{ 'por defecto' }})
                                     <span class="form-label-secondary text-danger" data-toggle="tooltip"
                                           data-placement="right"
-                                          data-original-title="{{ translate('messages.Required.') }}"> *
+                                          data-original-title="{{ 'Requerido.' }}"> *
                                     </span>
 
                                 </label>
                                 <input type="text" name="name[]" value="{{ $category?->getRawOriginal('name') }}"
-                                       class="form-control" placeholder="{{ translate('messages.new_category') }}"
+                                       class="form-control" placeholder="{{ 'nueva categoría' }}"
                                        maxleng="255">
                             </div>
                             <input type="hidden" name="lang[]" value="default">
@@ -80,21 +80,21 @@
 
                                 <div class="form-group d-none lang_form1" id="{{ $lang }}-form1">
                                     <label class="input-label"
-                                           for="exampleFormControlInput1">{{ $category->position == 0 ? translate('Category_Name') : translate('Sub_Category_Name') }}
+                                           for="exampleFormControlInput1">{{ $category->position == 0 ? 'Nombre de categoría' : 'Nombre de subcategoría' }}
                                         ({{ strtoupper($lang) }})
                                     </label>
                                     <input type="text" name="name[]" value="{{ $translate[$lang]['name'] ?? '' }}"
                                            class="form-control"
-                                           placeholder="{{ translate('messages.Type_Category_Name') }}" maxlength="191">
+                                           placeholder="{{ 'Tipo Nombre de categoría' }}" maxlength="191">
                                 </div>
                                 <input type="hidden" name="lang[]" value="{{ $lang }}">
                             @endforeach
                         @else
                             <div class="form-group">
                                 <label class="input-label"
-                                       for="exampleFormControlInput1">{{ $category->position == 0 ? translate('Category_Name') : translate('Sub_Category_Name') }}</label>
+                                       for="exampleFormControlInput1">{{ $category->position == 0 ? 'Nombre de categoría' : 'Nombre de subcategoría' }}</label>
                                 <input type="text" name="name" class="form-control"
-                                       placeholder="{{ translate('messages.new_category') }}"
+                                       placeholder="{{ 'nueva categoría' }}"
                                        value="{{ $category?->getRawOriginal('name') }}" maxlength="191">
                             </div>
                             <input type="hidden" name="lang[]" value="default">
@@ -105,9 +105,9 @@
 
                 @if ($category->position == 1)
                     <div class="form-group mb-3">
-                        <label class="input-label" for="parent_id_select">{{ translate('messages.main_category') }} <span class="text-danger">*</span></label>
+                        <label class="input-label" for="parent_id_select">{{ 'categoría principal' }} <span class="text-danger">*</span></label>
                         <select name="parent_id" id="parent_id_select" class="form-control" required>
-                            <option value="" disabled {{ $category->parent_id == 0 ? 'selected' : '' }}>{{ translate('Select Main Category') }}</option>
+                            <option value="" disabled {{ $category->parent_id == 0 ? 'selected' : '' }}>{{ 'Seleccionar categoría principal' }}</option>
                             @foreach($mainCategories as $mainCat)
                                 <option value="{{ $mainCat->id }}" {{ $category->parent_id == $mainCat->id ? 'selected' : '' }}>
                                     {{ $mainCat->name }}
@@ -121,22 +121,22 @@
 
                 <div class="form-group mb-3">
                     <label class="input-label" for="">
-                        {{ translate('messages.Priority') }}
+                        {{ 'Prioridad' }}
                     </label>
-                    <select required name="priority" data-original-title="{{ translate('messages.Select_Priority') }}"
+                    <select required name="priority" data-original-title="{{ 'Seleccionar prioridad' }}"
                             class="custom-select">
                         <option {{ $category['priority'] == 0 ? 'selected' : '' }} value="0">
-                            {{ translate('messages.Normal') }}</option>
+                            {{ 'Normal' }}</option>
                         <option {{ $category['priority'] == 1 ? 'selected' : '' }} value="1">
-                            {{ translate('messages.Medium') }}</option>
+                            {{ 'Medio' }}</option>
                         <option {{ $category['priority'] == 2 ? 'selected' : '' }} value="2">
-                            {{ translate('messages.High') }}</option>
+                            {{ 'Alto' }}</option>
                     </select>
                 </div>
 
                 <div class="form-group mb-3">
                     <label class="toggle-switch toggle-switch-sm d-flex justify-content-between align-items-center" for="is_abastos_edit">
-                        <span class="input-label mb-0 text-capitalize">{{ translate('Tootli Abastos') }}</span>
+                        <span class="input-label mb-0 text-capitalize">{{ 'Tootli Abastos' }}</span>
                         <input type="checkbox" name="is_abastos" value="1" {{ $category['is_abastos'] ? 'checked' : '' }}
                         class="toggle-switch-input" id="is_abastos_edit">
                         <span class="toggle-switch-label mx-auto">
@@ -149,7 +149,7 @@
                     <div class="row">
 
                         <div class="col-12">
-                            <span class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rate') }}</span>
+                            <span class="mb-2 d-block title-clr fw-normal">{{ 'Seleccionar tasa impositiva' }}</span>
                             <select name="tax_ids[]" required id="" class="form-control js-select2-custom1"
                                     multiple="multiple" placeholder="Type & Select Tax Rate">
                                 @foreach ($taxVats as $taxVat)
@@ -167,9 +167,9 @@
 
                             <div class="h-100 d-flex align-items-center flex-column">
                                 <label class="mb-4 text-center text-title">
-                                    {{ translate('messages.image') }}
+                                    {{ 'imagen' }}
                                     <small
-                                        class="color-656566 d-block"> {{ translate('messages.Upload image') }}</small>
+                                        class="color-656566 d-block"> {{ 'Subir imagen' }}</small>
                                 </label>
                                 <label class="text-center my-auto position-relative d-inline-block">
                                     <img class="img--176 border--dashed rounded viewer_img" id=""
@@ -196,7 +196,7 @@
     <div
         class="align-items-center bg-white bottom-0 d-flex gap-3 justify-content-center mt-auto offcanvas-footer p-3 position-sticky">
         <button type="button"
-                class="btn w-100 btn--secondary offcanvas-close h--40px">{{ translate('Cancel') }}</button>
-        <button type="submit" class="btn w-100 btn--primary h--40px">{{ translate('Update') }}</button>
+                class="btn w-100 btn--secondary offcanvas-close h--40px">{{ 'Cancelar' }}</button>
+        <button type="submit" class="btn w-100 btn--primary h--40px">{{ 'Actualizar' }}</button>
     </div>
 </form>

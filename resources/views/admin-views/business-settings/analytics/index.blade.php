@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Analytics_Script'))
+@section('title', 'Guión de análisis')
 
 @push('css_or_js')
 @endpush
@@ -16,7 +16,7 @@
     <div class="content container-fluid">
         <div class="mb-3 mb-sm-20">
             <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
-                {{ translate('Marketing_Tool') }}
+                {{ 'Herramienta de marketing' }}
             </h2>
         </div>
 
@@ -59,7 +59,7 @@
             </svg>
 
             <span id="">
-                {{ translate('in_this_page_you_can_add_credentials_to_show_your_analytics_on_the_platform_make_sure_fill_with_proper_data_other_wise_you_can_not_see_the_analytics_properly') }}
+                {{ 'en esta página puede agregar credenciales para mostrar sus análisis en la plataforma. Asegúrese de completar con los datos adecuados, de lo contrario no podrá ver los análisis correctamente.' }}
             </span>
         </div>
 
@@ -77,17 +77,17 @@
                                         <div>
                                             <h2 class="mb-1">{{ translate($tool['title']) }}</h2>
                                             <p class="mb-0 fs-12">
-                                                {{ translate('to_know_more_click') }}
+                                                {{ 'para saber más haga clic' }}
                                                 <a data-toggle="modal" href="#{{ $tool['modal'] }}"
                                                     class="fw-semibold text-info-dark text-underline text-decoration-underline text-nowrap">
-                                                    {{ translate('How it works') }}.
+                                                    {{ 'como funciona' }}.
                                                 </a>
                                             </p>
                                         </div>
                                         <div class="d-flex gap-2">
                                             <div
                                                 class="view-btn order-sm-0 order-3 fz--14px text-primary cursor-pointer text-decoration-underline font-semibold d-flex align-items-center gap-1">
-                                                {{ translate('messages.view') }}
+                                                {{ 'vista' }}
                                                 <i class="tio-arrow-downward"></i>
                                             </div>
                                             <label class="toggle-switch toggle-switch-sm mb-0">
@@ -97,8 +97,8 @@
                                                     data-image-off="{{ asset('assets/admin/img/svg/' . $tool['icon']) }}"
                                                     data-title-on="<strong>{{ translate('turn_on_' . $tool['key']) }}?</strong>"
                                                     data-title-off="<strong>{{ translate('turn_off_' . $tool['key']) }}?</strong>"
-                                                    data-text-on="<p>{{ translate('are_you_sure_to_turn_on_the_' . $tool['key']) }}? {{ translate('enable_this_option_to_make_the_marketing_tool_available_for_website_utilization.') }}</p>"
-                                                    data-text-off="<p>{{ translate('are_you_sure_to_turn_off_the_' . $tool['key']) }}? {{ translate('disable_this_option_to_make_the_marketing_tool_unavailable_for_website_utilization.') }}</p>"
+                                                    data-text-on="<p>{{ '¿Estás seguro de activar el \' . $herramienta[\'clave\']) }}? {{ traducir(\'habilite esta opción para que la herramienta de marketing esté disponible para el uso del sitio web.' }}</p>"
+                                                    data-text-off="<p>{{ '¿Estás seguro de apagar el \' . $herramienta[\'clave\']) }}? {{ traducir(\'deshabilite esta opción para que la herramienta de marketing no esté disponible para el uso del sitio web.' }}</p>"
                                                     class="status toggle-switch-input dynamic-checkbox" name="status"
                                                     id="{{ $tool['key'] }}-status" value="1"
                                                     {{ $data?->is_active == 1 ? 'checked' : '' }}>
@@ -116,9 +116,9 @@
                                                 <label for="" class="fs-14 mb-10px text-title">{{ translate($tool['title'] . '_ID') }}</label>
                                                   <input type="hidden" name="type" value="{{ $tool['key'] }}">
                                                 <div class="flex-xs-wrap d-flex align-items-center gap-3">
-                                                    <textarea  name="script_id" rows="1" class="form-control" placeholder="{{ translate('Enter the ID') }}">{!! $data?->script_id ?? '' !!}</textarea>
+                                                    <textarea  name="script_id" rows="1" class="form-control" placeholder="{{ 'Ingrese la identificación' }}">{!! $data?->script_id ?? '' !!}</textarea>
                                                     <button type="{{ env('APP_MODE') != 'demo' ? 'submit' : 'button' }}"
-                                                        class="btn py-1 min-w-100px h-40px btn--primary {{ env('APP_MODE') != 'demo' ? '' : 'call-demo-alert' }}"> {{ translate('save') }}</button>
+                                                        class="btn py-1 min-w-100px h-40px btn--primary {{ env('APP_MODE') != 'demo' ? '' : 'call-demo-alert' }}"> {{ 'ahorrar' }}</button>
                                                 </div>
                                             </div>
                                         </div>

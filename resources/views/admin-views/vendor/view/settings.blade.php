@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',$store->name."'s ".translate('messages.settings'))
+@section('title',$store->name."'s ".'Configuración')
 
 @push('css_or_js')
     <!-- Custom styles for this page -->
@@ -20,7 +20,7 @@
                         <span class="card-header-icon">
                             <img class="w--22" src="{{asset('assets/admin/img/store.png')}}" alt="">
                         </span>
-                        <span class="p-md-1"> {{translate('messages.store_settings')}}</span>
+                        <span class="p-md-1"> {{'configuración de la tienda'}}</span>
                     </h5>
                 </div>
                 <div class="card-body">
@@ -28,16 +28,16 @@
                         <div class="col-sm-6 col-lg-4">
                             <div class="form-group mb-0">
                                 <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="item_section">
-                                <span class="pr-2">{{translate('messages.manage_item_setup')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('When_disabled,_item_management_feature_will_be_hidden_from_vendor_panel_&_store_app')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.show_hide_food_menu')}}"></span></span>
+                                <span class="pr-2">{{'gestionar la configuración del artículo'}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{'Cuando está deshabilitada, la función de administración de artículos se ocultará del panel de proveedores y de la aplicación de la tienda.'}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{'mostrar ocultar menú de comida'}}"></span></span>
                                     <input type="checkbox"
                                             data-id="item_section"
                                            data-type="status"
                                            data-image-on="{{ asset('assets/admin/img/status-ons.png') }}"
                                            data-image-off="{{ asset('assets/admin/img/off-danger.png') }}"
-                                           data-title-on="{{ translate('Are you want to turn on ?') }}"
-                                           data-title-off="{{ translate('Are you want to turn off ?') }}"
-                                           data-text-on="<p>{{ translate('This will enable the feature for the vendor.') }}"
-                                           data-text-off="<p>{{ translate('This will disable the feature for the vendor.') }}</p>"
+                                           data-title-on="{{ '¿Quieres encender?' }}"
+                                           data-title-off="{{ '¿Quieres apagar?' }}"
+                                           data-text-on="<p>{{ 'Esto habilitará la función para el proveedor.' }}"
+                                           data-text-off="<p>{{ 'Esto deshabilitará la función para el proveedor.' }}</p>"
                                            class="toggle-switch-input dynamic-checkbox"
                                            id="item_section"
 
@@ -55,16 +55,16 @@
                         <div class="col-sm-6 col-lg-4">
                             <div class="form-group mb-0">
                                 <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="reviews_section">
-                                <span class="pr-2">{{translate('messages.Show_Reviews_In_Vendor_Panel')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('When_enabled,_store_owners_can_see_customer_feedback_in_the_Vendor_panel_&_store_app.')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.show_hide_food_menu')}}"></span> </span>
+                                <span class="pr-2">{{'Mostrar reseñas en el panel de proveedores'}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{'Cuando está habilitado, los propietarios de tiendas pueden ver los comentarios de los clientes en el panel de proveedores y en la aplicación de la tienda.'}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{'mostrar ocultar menú de comida'}}"></span> </span>
                                     <input type="checkbox"
                                          data-id="reviews_section"
                                            data-type="status"
                                            data-image-on="{{ asset('assets/admin/img/status-ons.png') }}"
                                            data-image-off="{{ asset('assets/admin/img/off-danger.png') }}"
-                                           data-title-on="{{ translate('Are you want to turn on ?') }}"
-                                           data-title-off="{{ translate('Are you want to turn off ?') }}"
-                                           data-text-on="<p>{{ translate('This will enable the feature for the vendor.') }}"
-                                           data-text-off="<p>{{ translate('This will disable the feature for the vendor.') }}</p>"
+                                           data-title-on="{{ '¿Quieres encender?' }}"
+                                           data-title-off="{{ '¿Quieres apagar?' }}"
+                                           data-text-on="<p>{{ 'Esto habilitará la función para el proveedor.' }}"
+                                           data-text-off="<p>{{ 'Esto deshabilitará la función para el proveedor.' }}</p>"
                                            class="toggle-switch-input dynamic-checkbox"
                                            id="reviews_section"
 
@@ -80,16 +80,16 @@
                         <div class="col-sm-6 col-lg-4">
                             <div class="form-group mb-0">
                                 <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="pos_system">
-                                <span class="pr-2 text-capitalize">{{translate('messages.include_POS_in_vendor_panel')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Enable_or_Disable_Point_of_Sale_(POS)_in_the_store_panel.')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.pos_system_hint')}}"></span></span>
+                                <span class="pr-2 text-capitalize">{{'incluir POS en el panel de proveedores'}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{'Activar o Desactivar Punto de Venta (POS) en el panel de la tienda.'}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{'sugerencia del sistema pos'}}"></span></span>
                                     <input type="checkbox"
                                             data-id="pos_system"
                                            data-type="status"
                                            data-image-on="{{ asset('assets/admin/img/status-ons.png') }}"
                                            data-image-off="{{ asset('assets/admin/img/off-danger.png') }}"
-                                           data-title-on="{{ translate('Are you want to turn on ?') }}"
-                                           data-title-off="{{ translate('Are you want to turn off ?') }}"
-                                           data-text-on="<p>{{ translate('This will enable the feature for the vendor.') }}"
-                                           data-text-off="<p>{{ translate('This will disable the feature for the vendor.') }}</p>"
+                                           data-title-on="{{ '¿Quieres encender?' }}"
+                                           data-title-off="{{ '¿Quieres apagar?' }}"
+                                           data-text-on="<p>{{ 'Esto habilitará la función para el proveedor.' }}"
+                                           data-text-off="<p>{{ 'Esto deshabilitará la función para el proveedor.' }}</p>"
                                            class="toggle-switch-input dynamic-checkbox"
                                            id="pos_system"
 
@@ -109,16 +109,16 @@
                         <div class="col-sm-6 col-lg-4">
                             <div class="form-group mb-0">
                                 <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="schedule_order">
-                                <span class="pr-2">{{translate('messages.scheduled_order')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('When_enabled,_store_owner_can_take_scheduled_orders_from_customers.')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.scheduled_order_hint')}}"></span></span>
+                                <span class="pr-2">{{'orden programada'}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{'Cuando está habilitado, el propietario de la tienda puede recibir pedidos programados de los clientes.'}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{'sugerencia de orden programada'}}"></span></span>
                                     <input type="checkbox"
                                       data-id="schedule_order"
                                            data-type="status"
                                            data-image-on="{{ asset('assets/admin/img/status-ons.png') }}"
                                            data-image-off="{{ asset('assets/admin/img/off-danger.png') }}"
-                                           data-title-on="{{ translate('Are you want to turn on ?') }}"
-                                           data-title-off="{{ translate('Are you want to turn off ?') }}"
-                                           data-text-on="<p>{{ translate('This will enable the feature for the vendor.') }}"
-                                           data-text-off="<p>{{ translate('This will disable the feature for the vendor.') }}</p>"
+                                           data-title-on="{{ '¿Quieres encender?' }}"
+                                           data-title-off="{{ '¿Quieres apagar?' }}"
+                                           data-text-on="<p>{{ 'Esto habilitará la función para el proveedor.' }}"
+                                           data-text-off="<p>{{ 'Esto deshabilitará la función para el proveedor.' }}</p>"
                                            class="toggle-switch-input dynamic-checkbox"
                                            id="schedule_order"
                                     {{$store->schedule_order?'checked':''}}>
@@ -135,16 +135,16 @@
                         <div class="col-sm-6 col-lg-4">
                             <div class="form-group mb-0">
                                 <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="self_delivery_system">
-                                <span class="pr-2 text-capitalize">{{translate('Store-managed_Delivery')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('When_this_option_is_enabled,_stores_must_deliver_orders_using_their_own_deliverymen._Plus,_stores_will_get_the_option_to_add_their_own_deliverymen_from_the_store_panel.')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.self_delivery_hint')}}"></span></span>
+                                <span class="pr-2 text-capitalize">{{'Entrega gestionada por la tienda'}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{'Cuando esta opción está habilitada, las tiendas deberán entregar los pedidos utilizando sus propios repartidores. Además, las tiendas tendrán la opción de agregar sus propios repartidores desde el panel de la tienda.'}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{'pista de autoentrega'}}"></span></span>
                                     <input type="checkbox"
                                             data-id="self_delivery_system"
                                            data-type="status"
                                            data-image-on="{{ asset('assets/admin/img/status-ons.png') }}"
                                            data-image-off="{{ asset('assets/admin/img/off-danger.png') }}"
-                                           data-title-on="{{ translate('Are you want to turn on ?') }}"
-                                           data-title-off="{{ translate('Are you want to turn off ?') }}"
-                                           data-text-on="<p>{{ translate('This will enable the feature for the vendor.') }}"
-                                           data-text-off="<p>{{ translate('This will disable the feature for the vendor.') }}</p>"
+                                           data-title-on="{{ '¿Quieres encender?' }}"
+                                           data-title-off="{{ '¿Quieres apagar?' }}"
+                                           data-text-on="<p>{{ 'Esto habilitará la función para el proveedor.' }}"
+                                           data-text-off="<p>{{ 'Esto deshabilitará la función para el proveedor.' }}</p>"
                                            class="toggle-switch-input dynamic-checkbox"
                                            id="self_delivery_system"
 
@@ -161,17 +161,17 @@
                         <div class="col-sm-6 col-lg-4">
                             <div class="form-group mb-0">
                                 <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="delivery">
-                                    <span class="pr-2">{{translate('messages.home_delivery')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('When_enabled,_customers_can_make_home_delivery_orders_from_this_store.')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.home_delivery_hint')}}"></span></span>
+                                    <span class="pr-2">{{'entrega a domicilio'}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{'Cuando está habilitado, los clientes pueden realizar pedidos de entrega a domicilio desde esta tienda.'}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{'sugerencia de entrega a domicilio'}}"></span></span>
                                     <input type="checkbox"
 
                                             data-id="delivery"
                                            data-type="status"
                                            data-image-on="{{ asset('assets/admin/img/status-ons.png') }}"
                                            data-image-off="{{ asset('assets/admin/img/off-danger.png') }}"
-                                           data-title-on="{{ translate('Are you want to turn on ?') }}"
-                                           data-title-off="{{ translate('Are you want to turn off ?') }}"
-                                           data-text-on="<p>{{ translate('This will enable the feature for the vendor.') }}"
-                                           data-text-off="<p>{{ translate('This will disable the feature for the vendor.') }}</p>"
+                                           data-title-on="{{ '¿Quieres encender?' }}"
+                                           data-title-off="{{ '¿Quieres apagar?' }}"
+                                           data-text-on="<p>{{ 'Esto habilitará la función para el proveedor.' }}"
+                                           data-text-off="<p>{{ 'Esto deshabilitará la función para el proveedor.' }}</p>"
                                            class="toggle-switch-input dynamic-checkbox"
                                            id="delivery"
                                    {{$store->delivery?'checked':''}}>
@@ -187,17 +187,17 @@
                         <div class="col-sm-6 col-lg-4">
                             <div class="form-group mb-0">
                                 <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="take_away">
-                                <span class="pr-2 text-capitalize">{{translate('messages.takeaway')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('When_enabled,_customers_can_place_takeaway_orders_from_this_store.')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.take_away_hint')}}"></span></span>
+                                <span class="pr-2 text-capitalize">{{'llevar'}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{'Cuando está habilitado, los clientes pueden realizar pedidos para llevar en esta tienda.'}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{'quitar pista'}}"></span></span>
                                     <input type="checkbox"
 
                                          data-id="take_away"
                                            data-type="status"
                                            data-image-on="{{ asset('assets/admin/img/status-ons.png') }}"
                                            data-image-off="{{ asset('assets/admin/img/off-danger.png') }}"
-                                           data-title-on="{{ translate('Are you want to turn on ?') }}"
-                                           data-title-off="{{ translate('Are you want to turn off ?') }}"
-                                           data-text-on="<p>{{ translate('This will enable the feature for the vendor.') }}"
-                                           data-text-off="<p>{{ translate('This will disable the feature for the vendor.') }}</p>"
+                                           data-title-on="{{ '¿Quieres encender?' }}"
+                                           data-title-off="{{ '¿Quieres apagar?' }}"
+                                           data-text-on="<p>{{ 'Esto habilitará la función para el proveedor.' }}"
+                                           data-text-off="<p>{{ 'Esto deshabilitará la función para el proveedor.' }}</p>"
                                            class="toggle-switch-input dynamic-checkbox"
                                            id="take_away" {{$store->take_away?'checked':''}}>
                                     <span class="toggle-switch-label">
@@ -216,10 +216,10 @@
                                     for="halal_tag_status">
                                 <span class="pr-2 d-flex">
                                     <span class="line--limit-1">
-                                        {{translate('messages.halal_tag_status')}}
+                                        {{'estado de la etiqueta halal'}}
                                     </span>
                                     <span data-toggle="tooltip" data-placement="right"
-                                          data-original-title='{{translate("If_enabled,_customers_can_see_halal_tag_on_product")}}'
+                                          data-original-title='{{'Si está habilitado, los clientes pueden ver la etiqueta halal en el producto.'}}'
                                           class="input-label-secondary">
                                         <img src="{{asset('assets/admin/img/info-circle.svg')}}">
                                     </span>
@@ -229,10 +229,10 @@
                                            data-type="status"
                                            data-image-on="{{ asset('assets/admin/img/status-ons.png') }}"
                                            data-image-off="{{ asset('assets/admin/img/off-danger.png') }}"
-                                           data-title-on="{{ translate('Are you want to turn on ?') }}"
-                                           data-title-off="{{ translate('Are you want to turn off ?') }}"
-                                           data-text-on="<p>{{ translate('This will enable the feature for the vendor.') }}"
-                                           data-text-off="<p>{{ translate('This will disable the feature for the vendor.') }}</p>"
+                                           data-title-on="{{ '¿Quieres encender?' }}"
+                                           data-title-off="{{ '¿Quieres apagar?' }}"
+                                           data-text-on="<p>{{ 'Esto habilitará la función para el proveedor.' }}"
+                                           data-text-off="<p>{{ 'Esto deshabilitará la función para el proveedor.' }}</p>"
                                            class="toggle-switch-input dynamic-checkbox"
                                            id="halal_tag_status" {{$store->storeConfig?->halal_tag_status == 1?'checked':''}}>
                                     <span class="toggle-switch-label">
@@ -253,16 +253,16 @@
                                 <div class="col-sm-6 col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="prescription_order">
-                                        <span class="pr-2 text-capitalize">{{translate('messages.prescription_order')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('messages.prescription_order_hint')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.prescription_order_hint')}}"></span></span>
+                                        <span class="pr-2 text-capitalize">{{'orden de prescripción'}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{'sugerencia de orden de prescripción'}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{'sugerencia de orden de prescripción'}}"></span></span>
                                             <input type="checkbox"
                                             data-id="prescription_order"
                                            data-type="status"
                                            data-image-on="{{ asset('assets/admin/img/status-ons.png') }}"
                                            data-image-off="{{ asset('assets/admin/img/off-danger.png') }}"
-                                           data-title-on="{{ translate('Are you want to turn on ?') }}"
-                                           data-title-off="{{ translate('Are you want to turn off ?') }}"
-                                           data-text-on="<p>{{ translate('This will enable the feature for the vendor.') }}"
-                                           data-text-off="<p>{{ translate('This will disable the feature for the vendor.') }}</p>"
+                                           data-title-on="{{ '¿Quieres encender?' }}"
+                                           data-title-off="{{ '¿Quieres apagar?' }}"
+                                           data-text-on="<p>{{ 'Esto habilitará la función para el proveedor.' }}"
+                                           data-text-off="<p>{{ 'Esto deshabilitará la función para el proveedor.' }}</p>"
                                            class="toggle-switch-input dynamic-checkbox"
 
                                             id="prescription_order"
@@ -288,24 +288,24 @@
                                 @if ($toggle_veg_non_veg && config('module.'.$store->module->module_type)['veg_non_veg'])
                                     <div class="col-sm-6 col-lg-4">
                                         <div class="form-group">
-                                            <label class="form-label">{{translate('store_type')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Define_the_food_type_this_store_can_sell.')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.scheduled_order_hint')}}"></span></label>
+                                            <label class="form-label">{{'tipo de tienda'}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{'Define el tipo de comida que esta tienda puede vender.'}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{'sugerencia de orden programada'}}"></span></label>
                                             <div class="resturant-type-group border rounded px-3 d-flex flex-wrap min--h-45px">
                                                 <label class="form-check form--check mr-2 mr-md-4">
                                                     <input class="form-check-input" type="radio" name="veg_non_veg" value="veg" {{$store->veg && !$store->non_veg?'checked':''}}>
                                                     <span class="form-check-label">
-                                                        {{translate('messages.veg')}}
+                                                        {{'verduras'}}
                                                     </span>
                                                 </label>
                                                 <label class="form-check form--check mr-2 mr-md-4">
                                                     <input class="form-check-input" type="radio" name="veg_non_veg" value="non_veg" {{!$store->veg && $store->non_veg?'checked':''}}>
                                                     <span class="form-check-label">
-                                                        {{translate('messages.non_veg')}}
+                                                        {{'no vegetariano'}}
                                                     </span>
                                                 </label>
                                                 <label class="form-check form--check">
                                                     <input class="form-check-input" type="radio" name="veg_non_veg" value="both" {{$store->veg && $store->non_veg?'checked':''}}>
                                                     <span class="form-check-label">
-                                                        {{translate('messages.both')}}
+                                                        {{'ambos'}}
                                                     </span>
                                                 </label>
                                             </div>
@@ -314,24 +314,24 @@
                                 @endif
 
                                 <div class="form-group col-sm-6 col-lg-4">
-                                    <label class="input-label text-capitalize">{{translate('messages.minimum_order_amount')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Specify_the_minimum_order_amount_required_for_customers_when_ordering_from_this_store.')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.self_delivery_hint')}}"></span></label>
+                                    <label class="input-label text-capitalize">{{'cantidad mínima de pedido'}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{'Especifique el monto mínimo de pedido requerido para los clientes al realizar pedidos en esta tienda.'}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{'pista de autoentrega'}}"></span></label>
                                     <input type="number" name="minimum_order" step="0.01" min="0" max="999999999" class="form-control" placeholder="100" value="{{$store->minimum_order>0?$store->minimum_order:''}}">
                                 </div>
                                 @if (config('module.'.$store->module->module_type)['order_place_to_schedule_interval'])
                                 <div class="form-group col-sm-6 col-lg-4">
-                                    <label class="input-label text-capitalize" for="maximum_delivery_time">{{translate('messages.minimum_processing_time')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Set_the_total_time_to_process_the_order_after_order_confirmation.')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{translate('Set_the_total_time_to_process_the_order_after_order_confirmation.')}}"></span></label>
+                                    <label class="input-label text-capitalize" for="maximum_delivery_time">{{'tiempo mínimo de procesamiento'}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{'Establezca el tiempo total para procesar el pedido después de la confirmación del mismo.'}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{'Establezca el tiempo total para procesar el pedido después de la confirmación del mismo.'}}"></span></label>
                                     <input type="text" name="order_place_to_schedule_interval" class="form-control" value="{{$store->order_place_to_schedule_interval}}">
                                 </div>
                                 @endif
                                 <div class="form-group col-sm-6 col-lg-4">
-                                    <label class="input-label text-capitalize" for="maximum_delivery_time">{{translate('messages.approx_delivery_time')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Set_the_total_time_to_deliver_products.')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{translate('Set_the_total_time_to_deliver_products.')}}"></span></label>
+                                    <label class="input-label text-capitalize" for="maximum_delivery_time">{{'tiempo de entrega aproximado'}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{'Establecer el tiempo total para entregar los productos.'}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{'Establecer el tiempo total para entregar los productos.'}}"></span></label>
                                     <div class="input-group">
-                                        <input type="number" name="minimum_delivery_time" class="form-control" placeholder="Min: 10" value="{{explode('-',$store->delivery_time)[0]}}" data-toggle="tooltip" data-placement="top" data-original-title="{{translate('messages.minimum_delivery_time')}}">
-                                        <input type="number" name="maximum_delivery_time" class="form-control" placeholder="Max: 20" value="{{explode(' ',explode('-',$store->delivery_time)[1])[0]}}" data-toggle="tooltip" data-placement="top" data-original-title="{{translate('messages.maximum_delivery_time')}}">
+                                        <input type="number" name="minimum_delivery_time" class="form-control" placeholder="Min: 10" value="{{explode('-',$store->delivery_time)[0]}}" data-toggle="tooltip" data-placement="top" data-original-title="{{'tiempo mínimo de entrega'}}">
+                                        <input type="number" name="maximum_delivery_time" class="form-control" placeholder="Max: 20" value="{{explode(' ',explode('-',$store->delivery_time)[1])[0]}}" data-toggle="tooltip" data-placement="top" data-original-title="{{'tiempo máximo de entrega'}}">
                                         <select name="delivery_time_type" class="form-control text-capitalize" id="" required>
-                                            <option value="min" {{explode(' ',explode('-',$store->delivery_time)[1])[1]=='min'?'selected':''}}>{{translate('messages.minutes')}}</option>
-                                            <option value="hours" {{explode(' ',explode('-',$store->delivery_time)[1])[1]=='hours'?'selected':''}}>{{translate('messages.hours')}}</option>
-                                            <option value="days" {{explode(' ',explode('-',$store->delivery_time)[1])[1]=='days'?'selected':''}}>{{translate('messages.days')}}</option>
+                                            <option value="min" {{explode(' ',explode('-',$store->delivery_time)[1])[1]=='min'?'selected':''}}>{{'minutos'}}</option>
+                                            <option value="hours" {{explode(' ',explode('-',$store->delivery_time)[1])[1]=='hours'?'selected':''}}>{{'horas'}}</option>
+                                            <option value="days" {{explode(' ',explode('-',$store->delivery_time)[1])[1]=='days'?'selected':''}}>{{'días'}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -340,8 +340,8 @@
 
                                 <div class="col-12">
                                     <div class="justify-content-end btn--container">
-                                        <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                                        <button type="submit" class="btn btn--primary">{{translate('save_changes')}}</button>
+                                        <button type="reset" class="btn btn--reset">{{'reiniciar'}}</button>
+                                        <button type="submit" class="btn btn--primary">{{'guardar cambios'}}</button>
                                     </div>
                                 </div>
                             </div>
@@ -354,7 +354,7 @@
                 <div class="card-header">
                     <h5 class="card-title">
                         <span class="card-header-icon"><i class="tio-clock"></i></span>
-                        <span class="p-md-1">{{translate('messages.Daily time schedule')}}</span>
+                        <span class="p-md-1">{{'horario diario'}}</span>
                     </h5>
                 </div>
                 <div class="card-body" id="schedule">
@@ -372,7 +372,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">{{translate('messages.Create Schedule')}}</h5>
+                <h5 class="modal-title" id="exampleModalLabel">{{'Crear horario'}}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
@@ -383,14 +383,14 @@
                     <input type="hidden" name="day" id="day_id_input">
                     <input type="hidden" name="store_id" value="{{$store->id}}">
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">{{translate('messages.Start time')}}:</label>
+                        <label for="recipient-name" class="col-form-label">{{'Hora de inicio'}}:</label>
                         <input type="time" class="form-control" name="start_time" required>
                     </div>
                     <div class="form-group">
-                        <label for="message-text" class="col-form-label">{{translate('messages.End time')}}:</label>
+                        <label for="message-text" class="col-form-label">{{'Hora de finalización'}}:</label>
                         <input type="time" class="form-control" name="end_time" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">{{translate('messages.Submit')}}</button>
+                    <button type="submit" class="btn btn-primary">{{'Entregar'}}</button>
                 </form>
             </div>
         </div>
@@ -412,7 +412,7 @@
                 let day_name = button.data('day');
                 let day_id = button.data('dayid');
                 let modal = $(this);
-                modal.find('.modal-title').text('{{translate('messages.Create Schedule For ')}} ' + day_name);
+                modal.find('.modal-title').text('{{'Crear horario para'}} ' + day_name);
                 modal.find('.modal-body input[name=day]').val(day_id);
             })
 
@@ -462,14 +462,14 @@
         $(document).on('click', '.delete-schedule', function () {
             let route = $(this).data('url');
             Swal.fire({
-                title: '<?php echo e(translate('Want_to_delete_this_schedule?')); ?>',
-                text: '<?php echo e(translate('If_you_select_Yes,_the_time_schedule_will_be_deleted')); ?>',
+                title: '<?php echo e('¿Quieres eliminar este horario?'); ?>',
+                text: '<?php echo e('Si selecciona Sí, se eliminará el horario.'); ?>',
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#00868F',
-                cancelButtonText: '<?php echo e(translate('messages.no')); ?>',
-                confirmButtonText: '<?php echo e(translate('messages.yes')); ?>',
+                cancelButtonText: '<?php echo e('No'); ?>',
+                confirmButtonText: '<?php echo e('Sí'); ?>',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
@@ -488,14 +488,14 @@
                                 }
                             } else {
                                 $('#schedule').empty().html(data.view);
-                                toastr.success('<?php echo e(translate('messages.Schedule removed successfully')); ?>', {
+                                toastr.success('<?php echo e('Programación eliminada exitosamente'); ?>', {
                                     CloseButton: true,
                                     ProgressBar: true
                                 });
                             }
                         },
                         error: function(XMLHttpRequest, textStatus, errorThrown) {
-                            toastr.error('<?php echo e(translate('messages.Schedule not found')); ?>', {
+                            toastr.error('<?php echo e('Horario no encontrado'); ?>', {
                                 CloseButton: true,
                                 ProgressBar: true
                             });
@@ -536,7 +536,7 @@
                     } else {
                         $('#schedule').empty().html(data.view);
                         $('#exampleModal').modal('hide');
-                        toastr.success('{{translate('messages.Schedule added successfully')}}', {
+                        toastr.success('{{'Programa agregado exitosamente'}}', {
                             CloseButton: true,
                             ProgressBar: true
                         });

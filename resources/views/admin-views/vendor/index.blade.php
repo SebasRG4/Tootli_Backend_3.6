@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.add_store_name'))
+@section('title', 'agregar nombre de la tienda')
 
 
 
@@ -13,7 +13,7 @@
                     <img src="{{ asset('assets/admin/img/store.png') }}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.add_new_store') }}
+                    {{ 'agregar nueva tienda' }}
                 </span>
             </h1>
         </div>
@@ -25,10 +25,10 @@
                 <div class="card-header">
                     <div class="mb-0">
                         <h3 class="mb-1">
-                            {{ translate('Basic Information') }}
+                            {{ 'Información básica' }}
                         </h3>
                         <p class="mb-0 fs-12">
-                            {{ translate('Here you setup your all business information.') }}
+                            {{ 'Aquí configura toda la información comercial.' }}
                         </p>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
                                         <ul class="nav nav-tabs mb-4">
                                             <li class="nav-item">
                                                 <a class="nav-link lang_link active" href="#"
-                                                    id="default-link">{{ translate('Default') }}</a>
+                                                    id="default-link">{{ 'Por defecto' }}</a>
                                             </li>
                                             @foreach ($language as $lang)
                                                 <li class="nav-item">
@@ -54,24 +54,24 @@
                                     @if ($language)
                                         <div class="lang_form" id="default-form">
                                             <div class="form-group error-wrapper">
-                                                <label class="input-label" for="default_name">{{ translate('messages.Business name') }}
-                                                    ({{ translate('messages.Default') }}) <span
+                                                <label class="input-label" for="default_name">{{ 'Nombre comercial' }}
+                                                    ({{ 'Por defecto' }}) <span
                                                         class="form-label-secondary text-danger" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('messages.Required.') }}"> *
+                                                        data-original-title="{{ 'Requerido.' }}"> *
                                                     </span>
                                                 </label>
                                                 <input type="text" name="name[]" id="default_name" class="form-control"
-                                                    placeholder="{{ translate('Business name') }}" required>
+                                                    placeholder="{{ 'Nombre comercial' }}" required>
                                             </div>
                                             <input type="hidden" name="lang[]" value="default">
                                             <div class="form-group mb-0 error-wrapper">
                                                 <label class="input-label"
-                                                    for="exampleFormControlInput1">{{ translate('messages.Business address') }}
-                                                    ({{ translate('messages.default') }})<span
+                                                    for="exampleFormControlInput1">{{ 'Dirección comercial' }}
+                                                    ({{ 'por defecto' }})<span
                                                         class="form-label-secondary text-danger" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('Add your store’s official address for accurate location and delivery.') }}"> *
+                                                        data-original-title="{{ 'Agregue la dirección oficial de su tienda para conocer la ubicación y la entrega precisas.' }}"> *
                                                         <i class="tio-info text-muted"></i>
                                                     </span>
 
@@ -79,7 +79,7 @@
 
 
                                                 </label>
-                                                <textarea required type="text" id="address" name="address[]" placeholder="{{ translate('messages.Business address') }}"
+                                                <textarea required type="text" id="address" name="address[]" placeholder="{{ 'Dirección comercial' }}"
                                                     class="form-control min-h-90px"></textarea>
 
                                             </div>
@@ -88,23 +88,23 @@
                                             <div class="d-none lang_form" id="{{ $lang }}-form">
                                                 <div class="form-group error-wrapper">
                                                     <label class="input-label"
-                                                        for="{{ $lang }}_name">{{ translate('messages.Business name') }}
+                                                        for="{{ $lang }}_name">{{ 'Nombre comercial' }}
                                                         ({{ strtoupper($lang) }})
                                                     </label>
                                                     <input type="text" name="name[]" id="{{ $lang }}_name"
-                                                        class="form-control" placeholder="{{ translate('Business name') }}">
+                                                        class="form-control" placeholder="{{ 'Nombre comercial' }}">
                                                 </div>
                                                 <input type="hidden" name="lang[]" value="{{ $lang }}">
                                                 <div class="form-group mb-0 error-wrapper">
                                                     <label class="input-label"
-                                                        for="exampleFormControlInput1">{{ translate('messages.Business address') }}
+                                                        for="exampleFormControlInput1">{{ 'Dirección comercial' }}
                                                         ({{ strtoupper($lang) }}) <span
                                                         class="form-label-secondary text-danger" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('Add your store’s official address for accurate location and delivery.') }}">
+                                                        data-original-title="{{ 'Agregue la dirección oficial de su tienda para conocer la ubicación y la entrega precisas.' }}">
                                                         <i class="tio-info text-muted"></i>
                                                     </span></label>
-                                                    <textarea type="text" name="address[]" placeholder="{{ translate('messages.Business address') }}"
+                                                    <textarea type="text" name="address[]" placeholder="{{ 'Dirección comercial' }}"
                                                         class="form-control min-h-90px"></textarea>
                                                 </div>
                                             </div>
@@ -114,19 +114,19 @@
                                 </div>
                                 <div class="form-group error-wrapper">
                                     <label class="input-label"
-                                        for="choice_zones">{{ translate('messages.Business zone') }}<span
+                                        for="choice_zones">{{ 'Zona de negocios' }}<span
                                             class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                            data-original-title="{{ translate('messages.select_zone_for_map') }}"></span>
+                                            data-original-title="{{ 'seleccionar zona para mapa' }}"></span>
                                         <span class="form-label-secondary text-danger" data-toggle="tooltip"
                                             data-placement="right"
-                                            data-original-title="{{ translate('messages.Required.') }}"> *
+                                            data-original-title="{{ 'Requerido.' }}"> *
                                         </span>
                                     </label>
                                     <select name="zone_id" id="choice_zones" required
                                         class="form-control js-select2-custom"
-                                        data-placeholder="{{ translate('messages.select_zone') }}">
+                                        data-placeholder="{{ 'seleccionar zona' }}">
                                         <option value="" selected disabled>
-                                            {{ translate('messages.select_zone') }}</option>
+                                            {{ 'seleccionar zona' }}</option>
                                         @foreach (\App\Models\Zone::active()->get(['id', 'name']) as $zone)
                                             @if (isset(auth('admin')->user()->zone_id))
                                                 @if (auth('admin')->user()->zone_id == $zone->id)
@@ -139,8 +139,8 @@
                                     </select>
                                 </div>
                                 <div class="form-group error-wrapper">
-                                    <label class="input-label" for="tags">{{ translate('messages.tags') }}</label>
-                                    <select name="tags[]" id="tags" class="form-control js-select2-custom" multiple="multiple" data-placeholder="{{ translate('messages.select_tags') }}">
+                                    <label class="input-label" for="tags">{{ 'etiquetas' }}</label>
+                                    <select name="tags[]" id="tags" class="form-control js-select2-custom" multiple="multiple" data-placeholder="{{ 'seleccionar etiquetas' }}">
                                         @foreach (\App\Models\Tag::all() as $tag)
                                             <option value="{{ $tag->tag }}">{{ $tag->tag }}</option>
                                         @endforeach
@@ -148,35 +148,35 @@
                                 </div>
                                 <div class="position-relative">
                                     <label class="input-label"
-                                        for="tax">{{ translate('Estimated Delivery Time ( Min & Maximum Time)') }}
+                                        for="tax">{{ 'Tiempo de entrega estimado (tiempo mínimo y máximo)' }}
                                         <span class="form-label-secondary text-danger" data-toggle="tooltip"
                                             data-placement="right"
-                                            data-original-title="{{ translate('messages.Required.') }}"> *
+                                            data-original-title="{{ 'Requerido.' }}"> *
                                         </span></label>
 
                                     <div class="floating--date-inner time-delivery-vendor bg-white rounded border d-flex align-items-center">
                                         <div class="item error-wrapper w-100">
                                             <input id="minimum_delivery_time" type="number"
                                                 name="minimum_delivery_time" class="form-control w-100 h--45px border-0 outline-0"
-                                                placeholder="{{ translate('messages.Ex :') }} 30"
+                                                placeholder="{{ 'Ex :' }} 30"
                                                 pattern="^[0-9]{2}$" required
                                                 value="{{ old('minimum_delivery_time') }}">
                                         </div>
                                         <div class="item error-wrapper border-left w-100">
                                             <input id="maximum_delivery_time" type="number"
                                                 name="maximum_delivery_time" class="form-control w-100 h--45px border-0 outline-0"
-                                                placeholder="{{ translate('messages.Ex :') }} 60"
+                                                placeholder="{{ 'Ex :' }} 60"
                                                 pattern="[0-9]{2}" required
                                                 value="{{ old('maximum_delivery_time') }}">
                                         </div>
                                         <div class="item smaller">
                                             <select name="delivery_time_type" id="delivery_time_type"
                                                 class="custom-select min-w-90 bg-light2 h--45px border-0 outline-0">
-                                                <option value="min">{{ translate('messages.minutes') }}
+                                                <option value="min">{{ 'minutos' }}
                                                 </option>
-                                                <option value="hours">{{ translate('messages.hours') }}
+                                                <option value="hours">{{ 'horas' }}
                                                 </option>
-                                                <option value="days">{{ translate('messages.days') }}
+                                                <option value="days">{{ 'días' }}
                                                 </option>
                                             </select>
                                         </div>
@@ -188,25 +188,25 @@
                             <div class="bg-light2 rounded p-xxl-20 p-3">
                                 <div class="mb-15">
                                     <h4 class="mb-1">
-                                        {{ translate('Set Business Location on Map') }}
+                                        {{ 'Establecer ubicación comercial en el mapa' }}
                                     </h4>
                                     <p class="mb-0 fs-12">
-                                        {{ translate('Please mark the exact business location to help customers find it easily.') }}
+                                        {{ 'Marque la ubicación exacta de la empresa para ayudar a los clientes a encontrarla fácilmente.' }}
                                     </p>
                                 </div>
                                 <div class="map-for-vndor map_custom-controls position-relative">
-                                    <input id="pac-input" class="controls rounded initial-8" title="{{translate('messages.search_your_location_here')}}" type="text" placeholder="{{translate('messages.search_here')}}"/>
+                                    <input id="pac-input" class="controls rounded initial-8" title="{{'busca tu ubicación aquí'}}" type="text" placeholder="{{'buscar aquí'}}"/>
                                    <div id="map"></div>
 
 
                                     <div class="d-flex bg-white align-items-center gap-1 laglng-controller">
                                                 <div id="latlng" class="d-flex">
                                                     <input type="text" id="latitude" name="latitude" class="border-0 p-0 m-0 text-center outline-0"
-                                                placeholder="{{ translate('messages.Ex:') }} -94.22213"
+                                                placeholder="{{ 'Ex:' }} -94.22213"
                                                 value="{{ old('latitude') }}" readonly>
                                                     <span class="text-gray1">|</span>
                                                     <input type="text" name="longitude" class="border-0 p-0 m-0 text-center outline-0"
-                                                placeholder="{{ translate('messages.Ex:') }} 103.344322" id="longitude"
+                                                placeholder="{{ 'Ex:' }} 103.344322" id="longitude"
                                                 value="{{ old('longitude') }}" readonly>
                                                 </div>
                                     </div>
@@ -219,7 +219,7 @@
                                                         <span class="toggle-switch-indicator"></span>
                                                     </span>
                                                 </label>
-                                                <span class="fs-12">{{ translate('Minutes') }}</span>
+                                                <span class="fs-12">{{ 'Minutos' }}</span>
                                             </div>
                                             <div class="d-flex align-items-center gap-2">
                                                 <label class="toggle-switch toggle-switch-sm mb-0">
@@ -228,7 +228,7 @@
                                                         <span class="toggle-switch-indicator"></span>
                                                     </span>
                                                 </label>
-                                                <span class="fs-12">{{ translate('Normal') }}</span>
+                                                <span class="fs-12">{{ 'Normal' }}</span>
                                             </div>
                                             <div class="d-flex align-items-center gap-2">
                                                 <label class="toggle-switch toggle-switch-sm mb-0">
@@ -237,12 +237,12 @@
                                                         <span class="toggle-switch-indicator"></span>
                                                     </span>
                                                 </label>
-                                                <span class="fs-12">{{ translate('Next Day') }}</span>
+                                                <span class="fs-12">{{ 'día siguiente' }}</span>
                                             </div>
                                         </div>
                                     </div>
                                    <div id="outOfZone" class="map-alert bg-dark d-flex align-items-center rounded-8 py-2 px-2 fs-12 text-white mb-2">
-                                        <img class="" src="{{asset('assets/admin/img/icons/warning-cus.png')}}" alt="img"> {{ translate('Please place the marker inside the available zones.') }}
+                                        <img class="" src="{{asset('assets/admin/img/icons/warning-cus.png')}}" alt="img"> {{ 'Por favor coloque el marcador dentro de las zonas disponibles.' }}
                                    </div>
                                 </div>
                             </div>
@@ -254,10 +254,10 @@
                 <div class="card-header">
                     <div class="mb-0">
                         <h3 class="mb-1">
-                            {{ translate("Store Locations (Multi-location)") }}
+                            {{ 'Ubicaciones de tiendas (varias ubicaciones)' }}
                         </h3>
                         <p class="mb-0 fs-12">
-                            {{ translate("Add multiple physical locations for this store.") }}
+                            {{ 'Agregue varias ubicaciones físicas para esta tienda.' }}
                         </p>
                     </div>
                 </div>
@@ -266,13 +266,13 @@
                         <table class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
                             <thead class="thead-light">
                                 <tr>
-                                    <th>{{ translate("messages.address") }}</th>
-                                    <th>{{ translate("messages.latitude") }}</th>
-                                    <th>{{ translate("messages.longitude") }}</th>
-                                    <th class="text-center">{{ translate("Minutes") }}</th>
-                                    <th class="text-center">{{ translate("Normal") }}</th>
-                                    <th class="text-center">{{ translate("Next Day") }}</th>
-                                    <th class="text-center">{{ translate("messages.action") }}</th>
+                                    <th>{{ 'DIRECCIÓN' }}</th>
+                                    <th>{{ 'latitud' }}</th>
+                                    <th>{{ 'longitud' }}</th>
+                                    <th class="text-center">{{ 'Minutos' }}</th>
+                                    <th class="text-center">{{ 'Normal' }}</th>
+                                    <th class="text-center">{{ 'día siguiente' }}</th>
+                                    <th class="text-center">{{ 'acción' }}</th>
                                 </tr>
                             </thead>
                             <tbody id="location_table_body">
@@ -281,7 +281,7 @@
                     </div>
                     <div class="mt-3">
                         <button type="button" class="btn btn--primary" onclick="add_location_row()">
-                            <i class="tio-add"></i> {{ translate("Add New Location") }}
+                            <i class="tio-add"></i> {{ 'Agregar nueva ubicación' }}
                         </button>
                     </div>
                 </div>
@@ -291,7 +291,7 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="locationMapModalLabel">{{ translate("Pick Location") }}</h5>
+                            <h5 class="modal-title" id="locationMapModalLabel">{{ 'Elegir ubicación' }}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -299,7 +299,7 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-12 mb-3">
-                                    <input id="location-pac-input" class="form-control" type="text" placeholder="{{translate("messages.search_here")}}"/>
+                                    <input id="location-pac-input" class="form-control" type="text" placeholder="{{'buscar aquí'}}"/>
                                 </div>
                                 <div class="col-12">
                                     <div id="location_map_canvas" style="height: 400px; width: 100%;"></div>
@@ -307,8 +307,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ translate("Close") }}</button>
-                            <button type="button" class="btn btn-primary" onclick="confirm_location_selection()">{{ translate("Confirm Location") }}</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'Cerca' }}</button>
+                            <button type="button" class="btn btn-primary" onclick="confirm_location_selection()">{{ 'Confirmar ubicación' }}</button>
                         </div>
                     </div>
                 </div>
@@ -317,10 +317,10 @@
                 <div class="card-header">
                     <div class="mb-0">
                         <h3 class="mb-1">
-                            {{ translate('General Setup') }}
+                            {{ 'Configuración general' }}
                         </h3>
                         <p class="mb-0 fs-12">
-                            {{ translate('Setup your all business general settings') }}
+                            {{ 'Configure la configuración general de todos sus negocios' }}
                         </p>
                     </div>
                 </div>
@@ -328,17 +328,17 @@
                     <div class="shadow-sm p-xxl-20 p-sm-3 p-0 mb-20">
                         <div class="mb-15">
                             <h4 class="mb-1">
-                                {{ translate('Business Logo & Covers') }}
+                                {{ 'Logotipo y portadas comerciales' }}
                             </h4>
                             <p class="mb-0 fs-12">
-                                {{ translate('Format : Jpg, jpeg, png, gif, webp. Less Than 2MB') }}
+                                {{ 'Formato: Jpg, jpeg, png, gif, webp. Menos de 2 MB' }}
                             </p>
                         </div>
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="bg-light2 rounded p-20">
                                     <div class="mb-15 text-center">
-                                        <h4 class="mb-0">{{ translate('Business Cover') }} <span class="text-danger">*</span></h4>
+                                        <h4 class="mb-0">{{ 'Cobertura empresarial' }} <span class="text-danger">*</span></h4>
                                     </div>
                                     <div class="mx-auto text-center error-wrapper">
                                         <div class="upload-file_custom ratio-2-1 h-100px">
@@ -352,9 +352,9 @@
                                                             alt="img">
                                                     <h6
                                                         class="mt-1 color-656566 fw-medium fs-10 lh-base text-center">
-                                                        <span class="theme-clr">{{ translate('Add Image') }}</span>
+                                                        <span class="theme-clr">{{ 'Agregar imagen' }}</span>
                                                         <br class="mb-1">
-                                                         {{ translate('Ratio (2:1)') }}
+                                                         {{ 'Relación (2:1)' }}
                                                     </h6>
                                                 </div>
                                                 <img class="upload-file-img" loading="lazy" src=""
@@ -380,7 +380,7 @@
                             <div class="col-md-6">
                                 <div class="bg-light2 rounded p-20">
                                     <div class="mb-15 text-center">
-                                        <h4 class="mb-0">{{ translate('Business Logo') }} <span class="text-danger">*</span></h4>
+                                        <h4 class="mb-0">{{ 'Logotipo de empresa' }} <span class="text-danger">*</span></h4>
                                     </div>
                                     <div class="mx-auto text-center error-wrapper">
                                         <div class="upload-file_custom ratio-1 h-100px">
@@ -394,9 +394,9 @@
                                                             alt="img">
                                                     <h6
                                                         class="mt-1 color-656566 fw-medium fs-10 lh-base text-center">
-                                                        <span class="theme-clr">{{ translate('Add Image') }}</span>
+                                                        <span class="theme-clr">{{ 'Agregar imagen' }}</span>
                                                         <br class="mb-1">
-                                                       {{ translate('Ratio (1:1)') }}
+                                                       {{ 'Relación (1:1)' }}
                                                     </h6>
                                                 </div>
                                                 <img class="upload-file-img" loading="lazy" src=""
@@ -424,23 +424,23 @@
                     <div class="shadow-sm p-xxl-20 p-sm-3 p-0 mb-20">
                         <div class="mb-20">
                             <h4 class="mb-1">
-                                {{ translate('Business Owner Info') }}
+                                {{ 'Información del propietario del negocio' }}
                             </h4>
                             <p class="mb-0 fs-12">
-                                {{ translate('Setup your business information') }}
+                                {{ 'Configura la información de tu negocio' }}
                             </p>
                         </div>
                         <div class="bg-light2 rounded p-xxl-20 p-3">
                             <div class="row g-3">
                                 <div class="col-md-4 col-sm-6">
                                     <div class="form-group mb-0 error-wrapper">
-                                        <label class="input-label" for="f_name">{{ translate('messages.first_name') }}
+                                        <label class="input-label" for="f_name">{{ 'nombre de pila' }}
                                             <span class="form-label-secondary text-danger" data-toggle="tooltip"
                                                 data-placement="right"
-                                                data-original-title="{{ translate('messages.Required.') }}"> *
+                                                data-original-title="{{ 'Requerido.' }}"> *
                                             </span></label>
                                         <input type="text" name="f_name" class="form-control"
-                                            placeholder="{{ translate('messages.first_name') }}"
+                                            placeholder="{{ 'nombre de pila' }}"
                                             value="{{ old('f_name') }}" required>
 
                                     </div>
@@ -448,13 +448,13 @@
                                 <div class="col-md-4 col-sm-6">
                                     <div class="form-group mb-0 error-wrapper">
                                         <label class="input-label"
-                                            for="l_name">{{ translate('messages.last_name') }}<span
+                                            for="l_name">{{ 'apellido' }}<span
                                                 class="form-label-secondary text-danger" data-toggle="tooltip"
                                                 data-placement="right"
-                                                data-original-title="{{ translate('messages.Required.') }}"> *
+                                                data-original-title="{{ 'Requerido.' }}"> *
                                             </span></label>
                                         <input type="text" name="l_name" class="form-control"
-                                            placeholder="{{ translate('messages.last_name') }}"
+                                            placeholder="{{ 'apellido' }}"
                                             value="{{ old('l_name') }}" required>
 
                                     </div>
@@ -462,13 +462,13 @@
                                 </div>
                                 <div class="col-md-4 col-sm-6">
                                     <div class="form-group mb-0 error-wrapper">
-                                        <label class="input-label" for="phone">{{ translate('messages.phone') }}<span
+                                        <label class="input-label" for="phone">{{ 'teléfono' }}<span
                                                 class="form-label-secondary text-danger" data-toggle="tooltip"
                                                 data-placement="right"
-                                                data-original-title="{{ translate('messages.Required.') }}"> *
+                                                data-original-title="{{ 'Requerido.' }}"> *
                                             </span></label>
                                         <input type="tel" id="phone" name="phone" class="form-control"
-                                            placeholder="{{ translate('messages.Ex:') }} 017********" required>
+                                            placeholder="{{ 'Ex:' }} 017********" required>
                                     </div>
                                 </div>
                             </div>
@@ -477,44 +477,44 @@
                     <div class="shadow-sm p-xxl-20 p-sm-3 p-0 mb-20">
                         <div class="mb-20">
                             <h4 class="mb-1">
-                                {{ translate('Account Information') }}
+                                {{ 'Información de la cuenta' }}
                             </h4>
                             <p class="mb-0 fs-12">
-                                {{ translate('Setup your account credentials') }}
+                                {{ 'Configure las credenciales de su cuenta' }}
                             </p>
                         </div>
                         <div class="bg-light2 rounded p-xxl-20 p-3">
                             <div class="row g-3">
                                 <div class="col-md-4 col-12">
                                     <div class="form-group mb-0 error-wrapper">
-                                        <label class="input-label" for="email">{{ translate('messages.email') }}<span
+                                        <label class="input-label" for="email">{{ 'correo electrónico' }}<span
                                                 class="form-label-secondary text-danger" data-toggle="tooltip"
                                                 data-placement="right"
-                                                data-original-title="{{ translate('messages.Required.') }}"> *
+                                                data-original-title="{{ 'Requerido.' }}"> *
                                             </span></label>
                                         <input type="email" name="email" class="form-control"
-                                            placeholder="{{ translate('messages.Ex:') }} ex@example.com"
+                                            placeholder="{{ 'Ex:' }} ex@example.com"
                                             value="{{ old('email') }}" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <div class="form-group error-wrapper mb-0">
                                         <label class="input-label"
-                                            for="signupSrPassword">{{ translate('messages.password') }}<span
+                                            for="signupSrPassword">{{ 'Contraseña' }}<span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><img
+                                                data-original-title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"><img
                                                     src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                    alt="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"></span>
+                                                    alt="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"></span>
                                             <span class="form-label-secondary text-danger" data-toggle="tooltip"
                                                 data-placement="right"
-                                                data-original-title="{{ translate('messages.Required.') }}"> *
+                                                data-original-title="{{ 'Requerido.' }}"> *
                                             </span></label>
 
                                         <div class="input-group input-group-merge">
                                             <input type="password" class="js-toggle-password form-control"
                                                 name="password" id="signupSrPassword"
                                                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                                                title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"
+                                                title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"
                                                 placeholder="{{ translate('messages.password_length_placeholder', ['length' => '8+']) }}"
                                                 aria-label="8+ characters required" required
                                                 data-msg="Your password is invalid. Please try again."
@@ -536,16 +536,16 @@
                                 <div class="col-md-4 col-12">
                                     <div class="form-group error-wrapper mb-0">
                                         <label class="input-label"
-                                            for="signupSrConfirmPassword">{{ translate('messages.confirm_password') }}<span
+                                            for="signupSrConfirmPassword">{{ 'confirmar Contraseña' }}<span
                                                 class="form-label-secondary text-danger" data-toggle="tooltip"
                                                 data-placement="right"
-                                                data-original-title="{{ translate('messages.Required.') }}"> *
+                                                data-original-title="{{ 'Requerido.' }}"> *
                                             </span></label>
                                         <div class="input-group input-group-merge">
                                             <input type="password" class="js-toggle-password form-control"
                                                 name="confirmPassword" id="signupSrConfirmPassword"
                                                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                                                title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"
+                                                title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"
                                                 placeholder="{{ translate('messages.password_length_placeholder', ['length' => '8+']) }}"
                                                 aria-label="8+ characters required" required
                                                 data-msg="Password does not match the confirm password."
@@ -570,10 +570,10 @@
                     <div class="shadow-sm p-xxl-20 p-sm-3 p-0">
                         <div class="mb-20">
                             <h4 class="mb-1">
-                                {{ translate('Business TIN') }}
+                                {{ 'NIF empresarial' }}
                             </h4>
                             <p class="mb-0 fs-12">
-                                {{ translate('Setup your Business TIN') }}
+                                {{ 'Configure su TIN comercial' }}
                             </p>
                         </div>
                         <div class="row g-3">
@@ -581,15 +581,15 @@
                                 <div class="bg-light2 rounded p-xxl-20 p-3 h-100">
                                     <div class="form-group  error-wrapper">
                                         <label class="input-label mb-2 d-block title-clr fw-normal"
-                                            for="exampleFormControlInput1">{{ translate('Taxpayer Identification Number(TIN)') }}
+                                            for="exampleFormControlInput1">{{ 'Número de Identificación del Contribuyente (TIN)' }}
                                         </label>
                                         <input type="text" name="tin"
-                                            placeholder="{{ translate('Type Your Taxpayer Identification Number(TIN)') }}"
+                                            placeholder="{{ 'Escriba su número de identificación del contribuyente (TIN)' }}"
                                             class="form-control">
                                     </div>
                                     <div class="form-group mb-0  error-wrapper">
                                         <label class="input-label mb-2 d-block title-clr fw-normal"
-                                            for="exampleFormControlInput1">{{ translate('Expire Date') }} </label>
+                                            for="exampleFormControlInput1">{{ 'Fecha de vencimiento' }} </label>
                                         <input type="date"  name="tin_expire_date" class="form-control">
                                     </div>
                                 </div>
@@ -598,9 +598,9 @@
                                 <div class="bg-light2 rounded p-xxl-20 p-3 h-100 single-document-uploaderwrap">
                                     <div class="d-flex align-items-center gap-1 justify-content-center text-center mb-20">
                                         <div>
-                                            <h4 class="mb-1 fz--14px">{{ translate('TIN Certificate') }}</h4>
+                                            <h4 class="mb-1 fz--14px">{{ 'Certificado TIN' }}</h4>
                                             <p class="fz-12px mb-0">
-                                                {{ translate('pdf, doc, jpg. File size : max 2 MB') }}</p>
+                                                {{ 'pdf, documento, jpg. Tamaño del archivo: máximo 2 MB' }}</p>
                                         </div>
                                         <!-- <div class="d-flex gap-3 align-items-center">
                                             <button type="button" id="doc_edit_btn"
@@ -632,9 +632,9 @@
                                                         src="{{ asset('assets/admin/img/doc-uploaded.png') }}"
                                                         alt="">
                                                     <p class="fs-12 mb-0 px-1 text-center">
-                                                        {{ translate('messages.Select_a_file_or') }} <span
-                                                            class="font-semibold">{{ translate('messages.Drag & Drop') }}</span>
-                                                        {{ translate('messages.here') }}</p>
+                                                        {{ 'Seleccione un archivo o' }} <span
+                                                            class="font-semibold">{{ 'Arrastrar y soltar' }}</span>
+                                                        {{ 'aquí' }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -647,9 +647,9 @@
             </div>
             <div class="btn--container justify-content-end mt-4">
                 <button type="reset" id="reset_btn"
-                    class="btn btn--reset">{{ translate('messages.reset') }}</button>
+                    class="btn btn--reset">{{ 'reiniciar' }}</button>
                 <button type="submit" id="submitButton"
-                    class="btn btn--primary"><i class="tio-save"></i> {{ translate('messages.Save Information') }}</button>
+                    class="btn btn--primary"><i class="tio-save"></i> {{ 'Guardar información' }}</button>
             </div>
         </form>
     </div>
@@ -664,9 +664,9 @@
          const getModuleType ="{{ route('restaurant.get-module-type') }}";
          const checkModuleTypeUrl ="{{ route('restaurant.check-module-type') }}";
         const estimatedPickupText =
-        "{{ translate('messages.Estimated_pickup_time') }} <span class='text-danger'>*</span>";
+        "{{ 'Tiempo estimado de recogida' }} <span class='text-danger'>*</span>";
         const approxDeliveryText =
-        "{{ translate('messages.approx_delivery_time') }} <span class='text-danger'>*</span>";
+        "{{ 'tiempo de entrega aproximado' }} <span class='text-danger'>*</span>";
 
         window.mapConfig = {
             mapApiKey: "{{ \App\CentralLogics\Helpers::get_business_settings('map_api_key') }}",
@@ -676,11 +676,11 @@
             oldZoneId: "{{ old('zone_id') }}",
             oldAddress: @json(old('address.0')),
             translations: {
-                selectedLocation: "{{ translate('Selected Location') }}",
-                clickMap: "{{ translate('Click_the_map_inside_the_red_marked_area_to_get_Lat/Lng!!!') }}",
-                selectZone: "{{ translate('Select_Zone_From_The_Dropdown') }}",
-                geolocationError: "{{ translate('Error:_Your_browser_doesnot_support_geolocation.') }}",
-                outOfZone: "{{ translate('messages.out_of_coverage') }}",
+                selectedLocation: "{{ 'Ubicación seleccionada' }}",
+                clickMap: "{{ '¡Haga clic en el mapa dentro del área marcada en rojo para obtener Lat/Lng!' }}",
+                selectZone: "{{ 'Seleccione zona en el menú desplegable' }}",
+                geolocationError: "{{ 'Error: Su navegador no admite geolocalización.' }}",
+                outOfZone: "{{ 'fuera de cobertura' }}",
             },
             urls: {
                 zoneCoordinates: "{{ route('admin.zone.get-coordinates', ['id' => ':coordinatesZoneId']) }}",
@@ -727,13 +727,13 @@
             let html = `
                 <tr>
                     <td>
-                        <input type="text" name="locations[${location_row_count}][address]" id="location_address_${location_row_count}" class="form-control" placeholder="{{ translate('messages.address') }}" required>
+                        <input type="text" name="locations[${location_row_count}][address]" id="location_address_${location_row_count}" class="form-control" placeholder="{{ 'DIRECCIÓN' }}" required>
                     </td>
                     <td>
-                        <input type="number" step="any" name="locations[${location_row_count}][latitude]" id="location_lat_${location_row_count}" class="form-control" placeholder="{{ translate('messages.latitude') }}" required>
+                        <input type="number" step="any" name="locations[${location_row_count}][latitude]" id="location_lat_${location_row_count}" class="form-control" placeholder="{{ 'latitud' }}" required>
                     </td>
                     <td>
-                        <input type="number" step="any" name="locations[${location_row_count}][longitude]" id="location_lng_${location_row_count}" class="form-control" placeholder="{{ translate('messages.longitude') }}" required>
+                        <input type="number" step="any" name="locations[${location_row_count}][longitude]" id="location_lng_${location_row_count}" class="form-control" placeholder="{{ 'longitud' }}" required>
                     </td>
                     <td class="text-center">
                         <label class="toggle-switch toggle-switch-sm">

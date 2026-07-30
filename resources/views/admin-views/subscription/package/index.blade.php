@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.Subscription'))
+@section('title','Suscripción')
 
 @section('subscription_index')
 active
@@ -21,7 +21,7 @@ active
                         <div class="d-flex align-items-center">
                             <img src="{{asset('assets/admin/img/store.png')}}" width="24" alt="img">
                             <div class="w-0 flex-grow pl-2">
-                                <h1 class="page-header-title mb-0">{{translate('Subscription Package List')}} <span class="badge badge-soft-dark ml-2">{{ $packages->total() > 0 ? $packages->total() : ''  }}</span></h1>
+                                <h1 class="page-header-title mb-0">{{'Lista de paquetes de suscripción'}} <span class="badge badge-soft-dark ml-2">{{ $packages->total() > 0 ? $packages->total() : ''  }}</span></h1>
                             </div>
                         </div>
                     </div>
@@ -32,11 +32,11 @@ active
             <!-- Nav Menus -->
             <ul class="nav nav-tabs border-0 nav--tabs nav--pills mb-4">
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->module != 1 ? 'active' : '' }}   " href="{{ route('admin.business-settings.subscriptionackage.index')  }}">{{ translate('All_Module') }}</a>
+                    <a class="nav-link {{ request()->module != 1 ? 'active' : '' }}   " href="{{ route('admin.business-settings.subscriptionackage.index')  }}">{{ 'Todo el módulo' }}</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->module == 1 ?'active' : '' }} " href="{{ route('admin.business-settings.subscriptionackage.index',['module'=> true])  }}">{{ translate('Rental_Module') }}</a>
+                    <a class="nav-link {{ request()->module == 1 ?'active' : '' }} " href="{{ route('admin.business-settings.subscriptionackage.index',['module'=> true])  }}">{{ 'Módulo de Alquiler' }}</a>
                 </li>
             </ul>
             @endif
@@ -47,8 +47,8 @@ active
                     <div class="card-header border-0">
                         <div class="w-100 d-flex flex-wrap align-items-center justify-content-between gap-2">
                             <div>
-                                <h3 class="text--title card-title">{{ translate('Overview') }}</h3>
-                                <div>{{ translate('See overview of all the packages earnings') }}</div>
+                                <h3 class="text--title card-title">{{ 'Descripción general' }}</h3>
+                                <div>{{ 'Ver resumen de todas las ganancias de los paquetes' }}</div>
                             </div>
                             <div class="status-filter-wrap m-0">
                                 <div class="statistics-btn-grp">
@@ -56,25 +56,25 @@ active
                                         <input type="radio" name="statistics" value="all" {{ !request()?->statistics || request()?->statistics == 'all'  ? 'checked' : '' }}  class="order_stats_update  set-filter"
                         data-filter="statistics"
                                 data-url="{{ url()->full() }}"  hidden="" >
-                                        <span>{{ translate('All') }}</span>
+                                        <span>{{ 'Todo' }}</span>
                                     </label>
                                     <label>
                                         <input type="radio" name="statistics" value="this_year"  {{ request()?->statistics == 'this_year'  ? 'checked' : '' }} class="order_stats_update  set-filter"
                         data-filter="statistics"
                                 data-url="{{ url()->full() }}"  hidden="" >
-                                        <span>{{ translate('This Year') }}</span>
+                                        <span>{{ 'este año' }}</span>
                                     </label>
                                     <label>
                                         <input type="radio" name="statistics" value="this_month" {{ request()?->statistics == 'this_month'  ? 'checked' : '' }} class="order_stats_update  set-filter"
                         data-filter="statistics"
                                 data-url="{{ url()->full() }}"  hidden="">
-                                        <span>{{ translate('This Month') }}</span>
+                                        <span>{{ 'este mes' }}</span>
                                     </label>
                                     <label>
                                         <input type="radio" name="statistics" value="this_week" {{ request()?->statistics == 'this_week'  ? 'checked' : '' }} class="order_stats_update  set-filter"
                         data-filter="statistics"
                                 data-url="{{ url()->full() }}"  hidden="">
-                                        <span>{{ translate('This Week') }}</span>
+                                        <span>{{ 'Esta semana' }}</span>
                                     </label>
                                 </div>
                             </div>
@@ -116,7 +116,7 @@ active
                                 <!-- Search -->
                                 <div class="input--group input-group input-group-merge input-group-flush">
                                     <input type="hidden" value="{{ request()->module }}"  name="module"  >
-                                    <input class="form-control" value="{{ request()?->search }}" type="search" placeholder="{{ translate('Search by name') }}" name="search">
+                                    <input class="form-control" value="{{ request()?->search }}" type="search" placeholder="{{ 'Buscar por nombre' }}" name="search">
                                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                                 </div>
                                 <!-- End Search -->
@@ -130,31 +130,31 @@ active
                                         &quot;type&quot;: &quot;css-animation&quot;
                                     }"
                                     data-hs-unfold-target="#usersExportDropdown" data-hs-unfold-invoker="">
-                                    <i class="tio-download-to mr-1"></i> {{ translate('export') }}
+                                    <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                                 </a>
 
                                 <div id="usersExportDropdown"
                                     class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right hs-unfold-content-initialized hs-unfold-css-animation animated hs-unfold-reverse-y hs-unfold-hidden">
 
-                                    <span class="dropdown-header">{{ translate('download_options') }}</span>
+                                    <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                                     <a id="export-excel" class="dropdown-item"
                                         href="{{ route('admin.business-settings.subscriptionackage.packageExport', ['export_type' => 'excel', request()->getQueryString()]) }}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                             src="{{ asset('assets/admin/svg/components/excel.svg') }}"
                                             alt="Image Description">
-                                        {{ translate('messages.excel') }}
+                                        {{ 'sobresalir' }}
                                     </a>
                                     <a id="export-csv" class="dropdown-item"
                                         href="{{ route('admin.business-settings.subscriptionackage.packageExport', ['export_type' => 'csv', request()->getQueryString()]) }}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                             src="{{ asset('assets/admin/svg/components/placeholder-csv-format.svg') }}"
                                             alt="Image Description">
-                                        .{{ translate('messages.csv') }}
+                                        .{{ 'csv' }}
                                     </a>
 
                                 </div>
                             </div>
-                            <a href="{{ route('admin.business-settings.subscriptionackage.create',[ 'module' => request()->module == 1 ? 'rental' : 'all' ]) }}" class="btn btn--primary border-0"><i class="tio-add"></i> {{translate('Add Subcription Package')}}</a>
+                            <a href="{{ route('admin.business-settings.subscriptionackage.create',[ 'module' => request()->module == 1 ? 'rental' : 'all' ]) }}" class="btn btn--primary border-0"><i class="tio-add"></i> {{'Agregar paquete de suscripción'}}</a>
                             <!-- Static Export Button -->
                         </div>
                     </div>
@@ -162,13 +162,13 @@ active
                         <div class="table-responsive">
                             <table class="table table-borderless middle-align __txt-14px">
                                 <thead class="thead-light white--space-false">
-                                    <th class="border-top border-bottom text-center"> {{ translate('messages.sl') }}</th>
-                                    <th class="border-top border-bottom">{{translate('Package_Name')}}</th>
-                                    <th class="border-top border-bottom"><div class="text-title">{{translate('messages.Pricing')}}</div> </th>
-                                    <th class="border-top border-bottom">{{translate('messages.duration') }}</th>
-                                    <th class="border-top border-bottom text-center">{{translate('Current_Subscriber')}} </th>
-                                    <th class="border-top border-bottom">{{translate('messages.status')}}</th>
-                                    <th class="border-top border-bottom text-center">{{translate('messages.actions')}}</th>
+                                    <th class="border-top border-bottom text-center"> {{ 'SL' }}</th>
+                                    <th class="border-top border-bottom">{{'Nombre del paquete'}}</th>
+                                    <th class="border-top border-bottom"><div class="text-title">{{'Precios'}}</div> </th>
+                                    <th class="border-top border-bottom">{{'duración' }}</th>
+                                    <th class="border-top border-bottom text-center">{{'Suscriptor actual'}} </th>
+                                    <th class="border-top border-bottom">{{'estado'}}</th>
+                                    <th class="border-top border-bottom text-center">{{'comportamiento'}}</th>
                                 </thead>
                                 <tbody>
 
@@ -182,14 +182,14 @@ active
                                             <div class="w--120px text-title text-right pr-5">{{ \App\CentralLogics\Helpers::format_currency($package->price) }}</div>
                                         </td>
                                         <td>
-                                            <div class="text-title">{{$package->validity}} {{ translate('days') }}</div>
+                                            <div class="text-title">{{$package->validity}} {{ 'días' }}</div>
                                         </td>
                                         <td>
                                             <div class="text-title text-center">{{$package->current_subscribers_count ?? 0}}</div>
                                         </td>
                                         <td>
                                                 <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$package->id}}">
-                                                    <input type="checkbox" data-url="{{route('admin.business-settings.subscriptionackage.status',[$package->id,$package->status?0:1])}}" data-message="{{translate('Do_you_want_to_Active_This_Package')}}"
+                                                    <input type="checkbox" data-url="{{route('admin.business-settings.subscriptionackage.status',[$package->id,$package->status?0:1])}}" data-message="{{'¿Quieres activar este paquete?'}}"
                                                     class="toggle-switch-input {{$package->status?'status_change_alert':'status_change_alert_reenable'}}  " data-package_id="{{$package->id}}" data-package_name="{{$package->package_name}}" id="stocksCheckbox{{$package->id}}" {{$package->status?'checked':''}}>
                                                     <span class="toggle-switch-label">
                                                         <span class="toggle-switch-indicator"></span>
@@ -221,7 +221,7 @@ active
                         <div class="empty--data">
                             <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                             <h5>
-                                {{translate('no_data_found')}}
+                                {{'no se encontraron datos'}}
                             </h5>
                         </div>
                         @endif
@@ -234,17 +234,17 @@ active
                     <div class="card-body text-center py-5">
                         <div class="max-w-542 mx-auto py-sm-5 py-4">
                             <img class="mb-4" src="{{asset('assets/admin/img/empty-subscription.svg')}}" alt="img">
-                            <h4 class="mb-3">{{translate('Create Subscription Plan')}}</h4>
+                            <h4 class="mb-3">{{'Crear plan de suscripción'}}</h4>
                             @if ( request()->module == 1)
                                 <p class="mb-4">
-                                    {{translate('Add new subscription packages to the list. So that Providers get more options to join the business for the growth and success.')}}<br>
+                                    {{'Agregue nuevos paquetes de suscripción a la lista. Para que los Proveedores tengan más opciones de unirse al negocio para lograr crecimiento y éxito.'}}<br>
                                 </p>
-                                <a href="{{ route('admin.business-settings.subscriptionackage.create',[ 'module' => 'rental']) }}" class="btn btn--primary border-0"><i class="tio-add"></i> {{translate('Add Subcription Package')}}</a>
+                                <a href="{{ route('admin.business-settings.subscriptionackage.create',[ 'module' => 'rental']) }}" class="btn btn--primary border-0"><i class="tio-add"></i> {{'Agregar paquete de suscripción'}}</a>
                             @else
                                 <p class="mb-4">
-                                    {{translate('Add new subscription packages to the list. So that Stores get more options to join the business for the growth and success.')}}<br>
+                                    {{'Agregue nuevos paquetes de suscripción a la lista. Para que las Tiendas tengan más opciones de unirse al negocio para lograr crecimiento y éxito.'}}<br>
                                 </p>
-                                <a href="{{ route('admin.business-settings.subscriptionackage.create',[ 'module' => 'all' ]) }}" class="btn btn--primary border-0"><i class="tio-add"></i> {{translate('Add Subcription Package')}}</a>
+                                <a href="{{ route('admin.business-settings.subscriptionackage.create',[ 'module' => 'all' ]) }}" class="btn btn--primary border-0"><i class="tio-add"></i> {{'Agregar paquete de suscripción'}}</a>
                             @endif
                         </div>
                     </div>
@@ -271,25 +271,25 @@ active
                             <h5 class="modal-title" id="toggle-title"></h5>
                         </div>
                         <div class="text-center" id="toggle-message">
-                            <h3>{{ translate('Are_You_Sure_You_want_To_Off_The_Status?') }}</h3>
+                            <h3>{{ '¿Estás seguro de que quieres salir del estado?' }}</h3>
                             @if ( request()->module == 1)
-                            <p>{{ translate('You_are_about_to_deactivate_a_subscription_package._You_have_the_option_to_either_switch_all_Providers_plans_or_allow_Providers_to_make_changes._Please_choose_an_option_below_to_proceed.') }}</p>
+                            <p>{{ 'Estás a punto de desactivar un paquete de suscripción. Tiene la opción de cambiar todos los planes de proveedores o permitir que los proveedores realicen cambios. Elija una de las siguientes opciones para continuar.' }}</p>
                         </div>
                     </div>
                     <div class="btn--container justify-content-center">
-                        <a href="#" data-toggle="tooltip" data-placement="bottom" title="{{ translate('Providers_will_be_subscribed_untill_their_package_expires') }}"  id="status_change_now" class="btn btn-outline-primary min-w-120" >
-                            {{translate("Allow Provider to Change")}}
+                        <a href="#" data-toggle="tooltip" data-placement="bottom" title="{{ 'Los proveedores estarán suscritos hasta que caduque su paquete.' }}"  id="status_change_now" class="btn btn-outline-primary min-w-120" >
+                            {{'Permitir que el proveedor cambie'}}
                         </a>
 
 
                             @else
 
-                            <p>{{ translate('You_are_about_to_deactivate_a_subscription_package._You_have_the_option_to_either_switch_all_stores_plans_or_allow_stores_to_make_changes._Please_choose_an_option_below_to_proceed.') }}</p>
+                            <p>{{ 'Estás a punto de desactivar un paquete de suscripción. Tiene la opción de cambiar los planes de todas las tiendas o permitir que las tiendas realicen cambios. Elija una de las siguientes opciones para continuar.' }}</p>
                         </div>
                     </div>
                     <div class="btn--container justify-content-center">
-                        <a href="#" data-toggle="tooltip" data-placement="bottom" title="{{ translate('Stores_will_be_subscribed_untill_their_package_expires') }}"  id="status_change_now" class="btn btn-outline-primary min-w-120" >
-                            {{translate("Allow Store to Change")}}
+                        <a href="#" data-toggle="tooltip" data-placement="bottom" title="{{ 'Las tiendas estarán suscritas hasta que caduque su paquete.' }}"  id="status_change_now" class="btn btn-outline-primary min-w-120" >
+                            {{'Permitir que la tienda cambie'}}
                         </a>
 
                             @endif
@@ -298,7 +298,7 @@ active
 
 
 
-                        <button type="button"  class="btn btn--primary min-w-120  shift_package"  data-dismiss="modal" >{{translate('Switch_Plan')}}</button>
+                        <button type="button"  class="btn btn--primary min-w-120  shift_package"  data-dismiss="modal" >{{'Cambiar plan'}}</button>
                     </div>
                 </div>
             </div>
@@ -322,20 +322,20 @@ active
                             <h5 class="modal-title" id="toggle-title"></h5>
                         </div>
                         <div class="text-center" id="toggle-message">
-                            <h3>{{ translate('Are_You_Sure_You_want_To_ON_The_Status?') }}</h3>
+                            <h3>{{ '¿Está seguro de que desea activar el estado?' }}</h3>
                             @if ( request()->module == 1)
-                            <p>{{ translate('This_package_will_be_available_for_the_providers.') }}</p>
+                            <p>{{ 'Este paquete estará disponible para los proveedores.' }}</p>
 
                             @else
 
-                            <p>{{ translate('This_package_will_be_available_for_the_stores.') }}</p>
+                            <p>{{ 'Este paquete estará disponible para las tiendas.' }}</p>
                             @endif
                         </div>
                     </div>
                     <div class="btn--container justify-content-center">
-                        <button type="button"  class="btn btn--cancel min-w-120 "  data-dismiss="modal" >{{translate('Close')}}</button>
+                        <button type="button"  class="btn btn--cancel min-w-120 "  data-dismiss="modal" >{{'Cerca'}}</button>
                         <a href="#"  id="status_change_now2" class="btn btn--primary  min-w-120" >
-                            {{translate("Active_now")}}
+                            {{'Activo ahora'}}
                         </a>
                     </div>
                 </div>
@@ -363,13 +363,13 @@ active
                             <h5 class="modal-title" id="toggle-title"></h5>
                         </div>
                         <div class="text-center" id="toggle-message">
-                            <h3>{{ translate('Switch_existing_business_plan.') }}</h3>
+                            <h3>{{ 'Cambiar el plan de negocios existente.' }}</h3>
                             <div class="form-group">
                                 <label class="input-label text-capitalize"> <span  id="package_name"  class="badge badge-secondary"></span> </label>
-                                <label class="input-label text-capitalize mt-2 mb-2">{{ translate('Select_Business_Plan') }} </label>
+                                <label class="input-label text-capitalize mt-2 mb-2">{{ 'Seleccionar plan de negocios' }} </label>
                                     <select class="form-control js-select2-custom  " name="package_id">
-                                        <option value="" selected > {{translate('select_a_package') }}</option>
-                                        <option value="commission"  > {{translate('Commission_base') }}</option>
+                                        <option value="" selected > {{'seleccione un paquete' }}</option>
+                                        <option value="commission"  > {{'Base de comisiones' }}</option>
                                         @foreach ($packages as $key => $package)
                                         @if ($package->status == 1)
                                             <option class="show_all" id="package_{{ $package->id }}" value="{{ $package->id }}"> {{$package->package_name }}</option>
@@ -381,7 +381,7 @@ active
                     </div>
                     <div class="btn--container justify-content-center">
 
-                        <button type="submit"  class="btn btn--primary min-w-120 ">{{translate('Switch & Turn Of The Status')}}</button>
+                        <button type="submit"  class="btn btn--primary min-w-120 ">{{'Cambiar y girar el estado'}}</button>
                     </div>
                 </div>
             </div>

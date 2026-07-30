@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title',translate('messages.Delivery Man Preview'))
+@section('title','Vista previa del repartidor')
 
 
 @section('content')
@@ -18,10 +18,10 @@
             <div class="js-nav-scroller hs-nav-scroller-horizontal">
                 <ul class="nav nav-tabs mb-3 border-0 nav--tabs">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{route('vendor.delivery-man.preview', ['id'=>$dm->id, 'tab'=> 'info'])}}"  aria-disabled="true">{{translate('messages.info')}}</a>
+                        <a class="nav-link" href="{{route('vendor.delivery-man.preview', ['id'=>$dm->id, 'tab'=> 'info'])}}"  aria-disabled="true">{{'información'}}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{route('vendor.delivery-man.preview', ['id'=>$dm->id, 'tab'=> 'transaction'])}}"  aria-disabled="true">{{translate('messages.transaction')}}</a>
+                        <a class="nav-link active" href="{{route('vendor.delivery-man.preview', ['id'=>$dm->id, 'tab'=> 'transaction'])}}"  aria-disabled="true">{{'transacción'}}</a>
                     </li>
                 </ul>
             </div>
@@ -32,13 +32,13 @@
         <div class="card mb-3 mb-lg-5 mt-2">
             <div class="card-header py-2 border-0">
                 <div class="search--button-wrapper">
-                    <h4 class="card-title">{{ translate('messages.order_transactions')}}</h4>
+                    <h4 class="card-title">{{ 'ordenar transacciones'}}</h4>
                     <form action="javascript:" id="search-form" class="search-form">
                         @csrf
                         <input type="hidden" name="dm_id" value="{{ $dm->id }}">
                         <!-- Search -->
                         <div class="input-group input--group">
-                            <input value="{{request()?->search ?? ''}}"  required type="search" name="search" class="form-control" placeholder="{{translate('messages.ex_search_order_id ')}}" aria-label="Search">
+                            <input value="{{request()?->search ?? ''}}"  required type="search" name="search" class="form-control" placeholder="{{'ID de orden de búsqueda ex'}}" aria-label="Search">
                             <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                         </div>
                         <!-- End Search -->
@@ -53,10 +53,10 @@
                         class="table table-borderless table-thead-bordered table-nowrap justify-content-between table-align-middle card-table">
                         <thead class="thead-light">
                             <tr>
-                                <th class="border-0">{{translate('messages.sl#')}}</th>
-                                <th class="border-0">{{translate('messages.order_id')}}</th>
-                                <th class="border-0">{{translate('messages.deliveryman_earned')}}</th>
-                                <th class="border-0">{{translate('messages.date')}}</th>
+                                <th class="border-0">{{'sl#'}}</th>
+                                <th class="border-0">{{'identificación del pedido'}}</th>
+                                <th class="border-0">{{'repartidor ganado'}}</th>
+                                <th class="border-0">{{'fecha'}}</th>
                             </tr>
                         </thead>
                         <tbody id="set-rows">

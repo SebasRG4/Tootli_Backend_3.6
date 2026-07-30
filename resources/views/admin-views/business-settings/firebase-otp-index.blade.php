@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Firebase OTP Verification'))
+@section('title', 'Verificación OTP de Firebase')
 
 
 @section('content')
@@ -12,13 +12,13 @@
                     <img src="{{asset('assets/admin/img/firebase_auth.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('Firebase OTP Verification')}}
+                    {{'Verificación OTP de Firebase'}}
                 </span>
             </h1>
             @include('admin-views.business-settings.partials.third-party-links')
                 <div class="">
                     <div class="text--primary-2  mx-4 d-flex flex-wrap justify-content-end align-items-center" type="button" data-toggle="modal" data-target="#instructionsModal">
-                        <strong class="mr-2">{{translate('How it Works')}}</strong>
+                        <strong class="mr-2">{{'Cómo funciona'}}</strong>
                         <div class="blinkings">
                             <i class="tio-info-outined"></i>
                         </div>
@@ -47,13 +47,13 @@
                                             class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
                                             <span class="pr-1 d-flex align-items-center switch--label">
                                                 <span class="line--limit-1">
-                                                    {{ translate('Firebase_OTP_Verification_Status') }}
+                                                    {{ 'Estado de verificación de Firebase OTP' }}
                                                 </span>
                                                 <span class="form-label-secondary text-danger d-flex"
                                                       data-toggle="tooltip" data-placement="right"
-                                                      data-original-title="{{ translate('If_this_field_is_active_customers_get_the_OTP_through_Firebase.') }}"><img
+                                                      data-original-title="{{ 'Si este campo está activo, los clientes obtienen la OTP a través de Firebase.' }}"><img
                                                         src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                        alt="{{ translate('messages.firebase_otp_verification') }}"> *
+                                                        alt="{{ 'verificación de base de fuego otp' }}"> *
                                                 </span>
                                             </span>
                                             <input type="checkbox"
@@ -61,11 +61,11 @@
                                                    data-type="toggle"
                                                    data-image-on="{{ asset('assets/admin/img/modal/order-delivery-verification-on.png') }}"
                                                    data-image-off="{{ asset('assets/admin/img/modal/order-delivery-verification-off.png') }}"
-                                                   data-title-on="<strong>{{translate('Want to enable Firebase OTP Verification?')}}</strong>"
-                                                   data-title-off="<strong>{{translate('Want to disable Firebase OTP Verification?')}}</strong> "
-                                                   data-text-on="<p>{{ translate('With Firebase OTP enabled, verification codes will be sent through Firebase.') .' </p>' .'  <p>   <strong>
-                                            Note: ' . translate('Enable Firebase OTP means users will not receive verification codes through Email or SMS Although those methods are activated.') .'</strong>'}}</p>"
-                                                   data-text-off="<p>{{ translate('If you disable Firebase OTP, users will no longer receive verification codes via Firebase. You must activate Email or SMS verification as an alternative') }}</p>"
+                                                   data-title-on="<strong>{{'¿Quieres habilitar la verificación OTP de Firebase?'}}</strong>"
+                                                   data-title-off="<strong>{{'¿Quiere desactivar la verificación OTP de Firebase?'}}</strong> "
+                                                   data-text-on="<p>{{ 'Con Firebase OTP habilitado, los códigos de verificación se enviarán a través de Firebase.' .' </p>' .'  <p>   <strong>
+                                            Note: ' . 'Habilitar Firebase OTP significa que los usuarios no recibirán códigos de verificación por correo electrónico o SMS aunque esos métodos estén activados.' .'</strong>'}}</p>"
+                                                   data-text-off="<p>{{ 'Si desactiva Firebase OTP, los usuarios ya no recibirán códigos de verificación a través de Firebase. Debes activar la verificación por correo electrónico o SMS como alternativa.' }}</p>"
                                                    class="status toggle-switch-input dynamic-checkbox-toggle"
                                                    value="1"
                                                    name="firebase_otp_verification" id="firebase_otp_verification"
@@ -82,14 +82,14 @@
                                         <label class=" input-label text-capitalize"
                                                for="firebase_web_api_key">
                                             <span>
-                                                {{ translate('Web_API_key') }}
+                                                {{ 'Clave API web' }}
                                             </span>
 
                                             {{-- <span class="form-label-secondary"
                                                   data-toggle="tooltip" data-placement="right"
-                                                  data-original-title="{{ translate('Enter_the_maximum_cash_amount_stores_can_hold._If_this_number_exceeds,_stores_will_be_suspended_and_not_receive_any_orders.') }}"><img
+                                                  data-original-title="{{ 'Ingrese la cantidad máxima de efectivo que pueden retener las tiendas. Si este número excede, las tiendas serán suspendidas y no recibirán ningún pedido.' }}"><img
                                                     src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                    alt="{{ translate('messages.dm_cancel_order_hint') }}"></span> --}}
+                                                    alt="{{ 'dm cancelar sugerencia de pedido' }}"></span> --}}
                                         </label>
                                         <input type="text" name="firebase_web_api_key" class="form-control"
                                                id="firebase_web_api_key"
@@ -98,9 +98,9 @@
                                 </div>
                             </div>
                             <div class="btn--container justify-content-end mt-20">
-                                <button type="reset" class="btn btn--reset">{{ translate('messages.reset') }}</button>
+                                <button type="reset" class="btn btn--reset">{{ 'reiniciar' }}</button>
                                 <button type="{{ env('APP_MODE') != 'demo' ? 'submit' : 'button' }}"
-                                        class="btn btn--primary call-demo">{{ translate('save_information') }}</button>
+                                        class="btn btn--primary call-demo">{{ 'guardar información' }}</button>
                             </div>
                         </div>
                     </div>
@@ -125,16 +125,16 @@
                         <img src="{{ asset('assets/admin/img/modal/bell.png') }}">
                     </div>
 
-                    <h5 class="modal-title my-3" id="instructionsModalLabel">{{translate('Instructions')}}</h5>
-                    <p>{{ translate('For configuring OTP in the Firebase, you must create a Firebase project first.If you haven’t created any project for your application yet, please create a project first.') }}
+                    <h5 class="modal-title my-3" id="instructionsModalLabel">{{'Instrucciones'}}</h5>
+                    <p>{{ 'Para configurar OTP en Firebase, primero debe crear un proyecto de Firebase. Si aún no ha creado ningún proyecto para su aplicación, cree un proyecto primero.' }}
                     </p>
-                    <p>{{ translate('Now go the') }} <a href="https://console.firebase.google.com/" target="_blank">Firebase console </a>{{ translate('and follow the instructions below') }} -</p>
+                    <p>{{ 'Ahora ve al' }} <a href="https://console.firebase.google.com/" target="_blank">Firebase console </a>{{ 'y sigue las instrucciones a continuación' }} -</p>
                     <ol class="d-flex flex-column __gap-5px __instructions">
-                        <li>{{ translate('Go to your Firebase project.') }}</li>
-                        <li>{{ translate('Navigate to the Build menu from the left sidebar and select Authentication.') }}</li>
-                        <li>{{ translate('Get started the project and go to the Sign-in method tab.') }}</li>
-                        <li>{{ translate('From the Sign-in providers section, select the Phone option.') }}</li>
-                        <li>{{ translate('Ensure to enable the method Phone and press save.') }}</li>
+                        <li>{{ 'Vaya a su proyecto de Firebase.' }}</li>
+                        <li>{{ 'Navegue hasta el menú Construir en la barra lateral izquierda y seleccione Autenticación.' }}</li>
+                        <li>{{ 'Inicie el proyecto y vaya a la pestaña Método de inicio de sesión.' }}</li>
+                        <li>{{ 'En la sección Proveedores de inicio de sesión, seleccione la opción Teléfono.' }}</li>
+                        <li>{{ 'Asegúrese de habilitar el método Teléfono y presione guardar.' }}</li>
                     </ol>
                 </div>
             </div>

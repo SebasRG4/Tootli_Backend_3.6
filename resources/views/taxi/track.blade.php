@@ -1,6 +1,6 @@
 @extends('layouts.blank')
 
-@section('title', translate('Trip Tracking'))
+@section('title', 'Seguimiento de viaje')
 
 @push('css_or_js')
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -210,14 +210,14 @@
         @if($expired)
             <div class="expired-container">
                 <div class="expired-icon">🔒</div>
-                <h2>{{ translate('Link Expired') }}</h2>
-                <p>{{ translate('This tracking link is no longer available. The ride may have ended.') }}</p>
+                <h2>{{ 'Enlace caducado' }}</h2>
+                <p>{{ 'Este enlace de seguimiento ya no está disponible. Es posible que el viaje haya terminado.' }}</p>
             </div>
         @else
             <!-- Header -->
             <div class="header">
-                <h1>🚗 {{ translate('Live Trip Tracking') }}</h1>
-                <p>{{ translate('Shared by a Tootli user') }}</p>
+                <h1>🚗 {{ 'Seguimiento de viajes en vivo' }}</h1>
+                <p>{{ 'Compartido por un usuario de Tootli' }}</p>
             </div>
 
             <!-- Map -->
@@ -241,18 +241,18 @@
                 <div class="status-text">
                     <h3>
                         @if($ride->status == 'completed')
-                            {{ translate('Trip Completed') }}
+                            {{ 'Viaje completado' }}
                         @elseif($ride->status == 'in_progress')
-                            {{ translate('Trip in Progress') }}
+                            {{ 'Viaje en progreso' }}
                         @elseif($ride->status == 'arrived')
-                            {{ translate('Driver Arrived') }}
+                            {{ 'El conductor llegó' }}
                         @else
-                            {{ translate('Driver on the way') }}
+                            {{ 'Conductor en camino' }}
                         @endif
                     </h3>
                     <p>
                         @if($ride->eta_minutes)
-                            {{ translate('ETA') }}: {{ $ride->eta_minutes }} {{ translate('min') }}
+                            {{ 'ETA' }}: {{ $ride->eta_minutes }} {{ 'mín.' }}
                         @else
                             {{ $ride->status }}
                         @endif
@@ -264,13 +264,13 @@
             <div class="info-section">
                 <!-- Route -->
                 <div class="info-card">
-                    <h4>📍 {{ translate('Route') }}</h4>
+                    <h4>📍 {{ 'Ruta' }}</h4>
                     <div class="info-row">
-                        <span class="label">{{ translate('Pickup') }}</span>
+                        <span class="label">{{ 'Levantar' }}</span>
                         <span class="value">{{ Str::limit($ride->pickup_address, 40) }}</span>
                     </div>
                     <div class="info-row">
-                        <span class="label">{{ translate('Destination') }}</span>
+                        <span class="label">{{ 'Destino' }}</span>
                         <span class="value">{{ Str::limit($ride->dropoff_address, 40) }}</span>
                     </div>
                 </div>
@@ -278,30 +278,30 @@
                 <!-- Driver Info -->
                 @if($ride->driver)
                     <div class="info-card">
-                        <h4>👤 {{ translate('Driver') }}</h4>
+                        <h4>👤 {{ 'Conductor' }}</h4>
                         <div class="info-row">
-                            <span class="label">{{ translate('Name') }}</span>
+                            <span class="label">{{ 'Nombre' }}</span>
                             <span class="value">{{ $ride->driver->f_name }} {{ $ride->driver->l_name }}</span>
                         </div>
                         <div class="info-row">
-                            <span class="label">{{ translate('Phone') }}</span>
+                            <span class="label">{{ 'Teléfono' }}</span>
                             <span class="value">{{ $ride->driver->phone }}</span>
                         </div>
                         @if($ride->driver->vehicle)
                             <div class="info-row">
-                                <span class="label">{{ translate('Vehicle') }}</span>
+                                <span class="label">{{ 'Vehículo' }}</span>
                                 <span class="value">{{ $ride->driver->vehicle->plate ?? 'N/A' }}</span>
                             </div>
                         @endif
                         <a href="tel:{{ $ride->driver->phone }}" class="call-btn">
-                            📞 {{ translate('Call Driver') }}
+                            📞 {{ 'Llamar al conductor' }}
                         </a>
                     </div>
                 @endif
             </div>
 
             <div class="last-update">
-                🔄 {{ translate('Last update') }}: <span id="last-update-time">{{ now()->format('H:i:s') }}</span>
+                🔄 {{ 'Última actualización' }}: <span id="last-update-time">{{ now()->format('H:i:s') }}</span>
             </div>
         @endif
     </div>
@@ -323,7 +323,7 @@
 
             // Add marker for current location
             var marker = L.marker([lat, lng]).addTo(map);
-            marker.bindPopup('📍 {{ translate("Current Location") }}').openPopup();
+            marker.bindPopup('📍 {{ 'Ubicación actual' }}').openPopup();
 
             // Auto-refresh every 10 seconds
             setInterval(function () {

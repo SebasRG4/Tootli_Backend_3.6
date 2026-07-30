@@ -23,7 +23,7 @@
         @if($dm->zone)
         <label class="text--title font-medium mb-0">{{$dm->zone->name}}</label>
         @else
-        <label class="text--title font-medium mb-0">{{translate('messages.zone_deleted')}}</label>
+        <label class="text--title font-medium mb-0">{{'zona eliminada'}}</label>
         @endif
     </td>
     <td>
@@ -31,28 +31,28 @@
     </td>
     <td>
         <div>
-            {{translate('messages.currently_assigned_orders')}} : {{$dm->current_orders}}
+            {{'órdenes actualmente asignadas'}} : {{$dm->current_orders}}
         </div>
         <div>
-            {{translate('messages.active_status')}} :
+            {{'estado activo'}} :
             @if($dm->application_status == 'approved')
                 @if($dm->active)
-                <strong class="text-capitalize text-primary">{{translate('messages.online')}}</strong>
+                <strong class="text-capitalize text-primary">{{'en línea'}}</strong>
                 @else
-                <strong class="text-capitalize text-secondary">{{translate('messages.offline')}}</strong>
+                <strong class="text-capitalize text-secondary">{{'desconectado'}}</strong>
                 @endif
             @elseif ($dm->application_status == 'denied')
-                <strong class="text-capitalize text-danger">{{translate('messages.denied')}}</strong>
+                <strong class="text-capitalize text-danger">{{'denegado'}}</strong>
             @else
-                <strong class="text-capitalize text-info">{{translate('messages.pending')}}</strong>
+                <strong class="text-capitalize text-info">{{'Pendiente'}}</strong>
             @endif
         </div>
     </td>
     <td>
         <div class="btn--container justify-content-center">
-            <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.users.delivery-man.edit',[$dm['id']])}}" title="{{translate('messages.edit')}}"><i class="tio-edit"></i>
+            <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.users.delivery-man.edit',[$dm['id']])}}" title="{{'editar'}}"><i class="tio-edit"></i>
                 </a>
-            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="delivery-man-{{$dm['id']}}" data-message="{{ translate('Want to remove this deliveryman ?') }}" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
+            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="delivery-man-{{$dm['id']}}" data-message="{{ '¿Quieres eliminar a este repartidor?' }}" title="{{'borrar'}}"><i class="tio-delete-outlined"></i>
             </a>
             <form action="{{route('admin.users.delivery-man.delete',[$dm['id']])}}" method="post" id="delivery-man-{{$dm['id']}}">
                 @csrf @method('delete')

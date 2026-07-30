@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.Edit Surge Price'))
+@section('title','Editar aumento de precio')
 
 @push('css_or_js')
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -12,19 +12,19 @@
 @section('content')
 <div class="content container-fluid">
 
-    <h3 class="mb-20">{{translate('Edit Surge Price') }}</h3>
+    <h3 class="mb-20">{{'Editar aumento de precio' }}</h3>
       <form action="{{ route('admin.business-settings.zone.surge-price.update', $surge->id) }}" method="post" id="surge_form">
         @csrf
         <div class="card mb-20">
             <div class="card-header">
-                <h4 class="mb-0">{{translate('Basic Setup')}}</h4>
+                <h4 class="mb-0">{{'Configuración básica'}}</h4>
             </div>
             <div class="card-body">
                 @if ($language)
                     <ul class="nav nav-tabs mb-3">
                         <li class="nav-item">
                             <a class="nav-link lang_link active" href="#"
-                                id="default-link">{{ translate('messages.default') }}</a>
+                                id="default-link">{{ 'por defecto' }}</a>
                         </li>
                         @foreach ($language as $lang)
                             <li class="nav-item">
@@ -36,14 +36,14 @@
                 @endif
                 <div class="lang_form" id="default-form">
                     <div class="form-group">
-                        <label class="input-label" for="surgePrice_default">{{translate('messages.Surge Price name')}} ( {{ translate('messages.Default') }})
+                        <label class="input-label" for="surgePrice_default">{{'Nombre del precio de aumento'}} ( {{ 'Por defecto' }})
                             <span class="text-danger">*</span>
                         </label>
                         <input autocomplete="off" type="text" name="surge_price_name[]" placeholder="Type surge price name" class="form-control" value="{{$surge?->getRawOriginal('surge_price_name')}}">
                     </div>
                     <div class="form-group mb-0">
                         <div class="d-flex align-items-center gap-1 flex-wrap justify-content-between mb-2">
-                            <label class="input-label mb-0" for="surgePrice_default">{{translate('messages.Note for Customer')}} ( {{ translate('messages.Default') }})
+                            <label class="input-label mb-0" for="surgePrice_default">{{'Nota para el cliente'}} ( {{ 'Por defecto' }})
                             </label>
                             <label class="toggle-switch toggle-switch-sm" for="customerDefault">
                                 <input autocomplete="off" type="checkbox" name="customer_note_status" class="toggle-switch-input" id="customerDefault" value="1" {{ $surge?->customer_note_status ? 'checked' : '' }}>
@@ -53,7 +53,7 @@
                             </label>
                         </div>
                         <input autocomplete="off" type="text" name="customer_note[]" placeholder="Type note for customer" class="form-control" value="{{$surge?->getRawOriginal('customer_note')}}">
-                        <span class="text-right d-block mt-1">{{ translate('Character count')}} 0/50</span>
+                        <span class="text-right d-block mt-1">{{ 'Recuento de caracteres'}} 0/50</span>
                     </div>
                     <input autocomplete="off" type="hidden" name="lang[]" value="default">
                 </div>
@@ -74,18 +74,18 @@
                     ?>
                     <div class="d-none lang_form" id="{{ $lang }}-form">
                         <div class="form-group">
-                            <label class="input-label" for="surgePrice_default">{{translate('messages.Surge Price name')}} ({{ strtoupper($lang) }})
+                            <label class="input-label" for="surgePrice_default">{{'Nombre del precio de aumento'}} ({{ strtoupper($lang) }})
                                 <span class="text-danger">*</span>
                             </label>
                             <input autocomplete="off" type="text" name="surge_price_name[]" placeholder="Type surge price name" class="form-control" value="{{$translate[$lang]['surge_price_name']??''}}">
                         </div>
                         <div class="form-group mb-0">
                             <div class="d-flex align-items-center gap-1 flex-wrap justify-content-between mb-2">
-                                <label class="input-label mb-0" for="surgePrice_default">{{translate('messages.Note for Customer')}} ({{ strtoupper($lang) }})
+                                <label class="input-label mb-0" for="surgePrice_default">{{'Nota para el cliente'}} ({{ strtoupper($lang) }})
                                 </label>
                             </div>
                             <input autocomplete="off" type="text" name="customer_note[]" placeholder="Type note for customer" class="form-control" value="{{$translate[$lang]['customer_note']??''}}">
-                            <span class="text-right d-block mt-1">{{ translate('Character count')}} 0/50</span>
+                            <span class="text-right d-block mt-1">{{ 'Recuento de caracteres'}} 0/50</span>
                         </div>
                         <input autocomplete="off" type="hidden" name="lang[]" value="{{ $lang }}">
                     </div>
@@ -94,13 +94,13 @@
         </div>
         <div class="card mb-20">
             <div class="card-header">
-                <h4 class="mb-0">{{translate('Module & Surge Price Setup')}}</h4>
+                <h4 class="mb-0">{{'Configuración de módulo y precio de aumento'}}</h4>
             </div>
             <div class="card-body">
                 <div class="row g-4">
                     <div class="col-md-6">
                         <div>
-                            <label class="mb-2 d-block title-clr fw-normal">{{ translate('Module') }} <span class="text-danger">*</span></label>
+                            <label class="mb-2 d-block title-clr fw-normal">{{ 'Módulo' }} <span class="text-danger">*</span></label>
                             @php($modules = \App\Models\Module::
                                     whereHas('zones', function ($query) use ($surge) {
                                 $query->where('zone_id', $surge->zone_id);
@@ -116,7 +116,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group mb-0">
-                            <label class="mb-2 d-block title-clr fw-normal">{{ translate('Price Increase Rate') }} <span class="text-danger">*</span></label>
+                            <label class="mb-2 d-block title-clr fw-normal">{{ 'Tasa de aumento de precio' }} <span class="text-danger">*</span></label>
                             <div class="custom-group-btn border">
                                 <div class="flex-sm-grow-1 w-100">
                                     <input autocomplete="off" id="price" type="number" name="price" class="form-control border-0 pl-unset"
@@ -138,23 +138,23 @@
         </div>
         <div class="card mb-20 shedule-checkbox_wrapper">
             <div class="card-header">
-                <h4 class="mb-0">{{ translate('Duration Setup')}}</h4>
+                <h4 class="mb-0">{{ 'Configuración de duración'}}</h4>
             </div>
             <div class="card-body">
                 <div class="form-group w-100 mb-20">
-                    <label class="input-label" for="">{{ translate('Surge Price Schedule Type') }} <span class="text-danger">*</span></label>
+                    <label class="input-label" for="">{{ 'Tipo de programa de precio de aumento' }} <span class="text-danger">*</span></label>
                     <div class="resturant-type-group shedule-checkbox-inner flex-md-nowrap border">
                         <label class="form-check w-100 form--check mr-2 mr-md-4">
                             <input autocomplete="off" class="form-check-input" type="radio" value="daily" name="duration_type" {{ $surge->duration_type == 'daily' ? 'checked' : '' }}>
-                            <span class="form-check-label">{{ translate('Daily Schedule') }}</span>
+                            <span class="form-check-label">{{ 'Horario diario' }}</span>
                         </label>
                         <label class="form-check w-100 form--check mr-2 mr-md-4">
                             <input autocomplete="off" class="form-check-input" type="radio" value="weekly" name="duration_type" {{ $surge->duration_type == 'weekly' ? 'checked' : '' }}>
-                            <span class="form-check-label">{{ translate('Weekly Schedule') }}</span>
+                            <span class="form-check-label">{{ 'Horario semanal' }}</span>
                         </label>
                         <label class="form-check w-100 form--check mr-2 mr-md-4">
                             <input autocomplete="off" class="form-check-input" type="radio" value="custom" name="duration_type" {{ $surge->duration_type == 'custom' ? 'checked' : '' }}>
-                            <span class="form-check-label">{{ translate('Custom Schedule') }}</span>
+                            <span class="form-check-label">{{ 'Horario personalizado' }}</span>
                         </label>
                     </div>
                 </div>
@@ -162,12 +162,12 @@
                     <div class="row g-4">
                         <div class="col-md-6">
                             <div>
-                                <h5 class="mb-1">{{ translate('Duration Setup') }}</h5>
-                                <p class="fs-12 m-0">{{ translate('Select your suitable time within a time range you want add surge price') }}</p>
+                                <h5 class="mb-1">{{ 'Configuración de duración' }}</h5>
+                                <p class="fs-12 m-0">{{ 'Seleccione el momento adecuado dentro del rango de tiempo en el que desea agregar el precio de aumento' }}</p>
                             </div>
                             {{-- <div class="bg--3 rounded px-3 py-2 d-inline-flex align-items-start gap-2 flex-wrap mt-20">
                                 <i class="tio-warning text-danger"></i>
-                                <p class="m-0 max-w-353px">{{ translate('This surge price overlaps with another. Please change the module or reschedule to fix it.') }}</p>
+                                <p class="m-0 max-w-353px">{{ 'Este aumento de precio se superpone con otro. Cambie el módulo o reprográmelo para solucionarlo.' }}</p>
                             </div> --}}
                         </div>
                         <div class="col-md-6">
@@ -177,18 +177,18 @@
                                     <div class="bg-white p-sm-3 d-flex flex-column gap-3">
                                         @php($dateRange = Carbon\Carbon::parse($surge->start_date)->format('m/d/Y') . ' - ' . Carbon\Carbon::parse($surge->end_date)->format('m/d/Y'))
                                         <div>
-                                            <label class="form-label">{{ translate('Date Range') }} <span class="text-danger">*</span></label>
+                                            <label class="form-label">{{ 'Rango de fechas' }} <span class="text-danger">*</span></label>
                                             <div class="position-relative date-range__custom">
                                                 <i class="tio-calendar-month icon-absolute-on-right"></i>
-                                                <input autocomplete="off" type="text" class="form-control h-45 position-relative bg-transparent no-type"  name="daily_date_range" placeholder="{{ translate('messages.Select_Date') }}" value="{{ $surge->duration_type == 'daily' ? $dateRange : '' }}">
+                                                <input autocomplete="off" type="text" class="form-control h-45 position-relative bg-transparent no-type"  name="daily_date_range" placeholder="{{ 'Seleccionar fecha' }}" value="{{ $surge->duration_type == 'daily' ? $dateRange : '' }}">
                                             </div>
                                         </div>
                                         @php($timeRange = \Carbon\Carbon::parse($surge->start_time)->format('g:i A') . ' - ' . \Carbon\Carbon::parse($surge->end_time)->format('g:i A'))
                                         <div class="time-range-wrapper">
-                                            <label class="form-label">{{ translate('Time Range') }} <span class="text-danger">*</span></label>
+                                            <label class="form-label">{{ 'Rango de tiempo' }} <span class="text-danger">*</span></label>
                                             <div class="position-relative cursor-pointer">
                                                 <i class="tio-time icon-absolute-on-right"></i>
-                                                <input autocomplete="off" type="text" class="form-control h-45 position-relative bg-transparent time-range-picker no-type" name="daily_time_range" placeholder="{{ translate('messages.Select_Time') }}" value="{{ $surge->duration_type == 'daily' ? $timeRange : '' }}">
+                                                <input autocomplete="off" type="text" class="form-control h-45 position-relative bg-transparent time-range-picker no-type" name="daily_time_range" placeholder="{{ 'Seleccionar hora' }}" value="{{ $surge->duration_type == 'daily' ? $timeRange : '' }}">
                                             </div>
                                         </div>
                                     </div>
@@ -198,11 +198,11 @@
                                      <div class="bg-white p-sm-3 d-flex flex-column gap-3">
                                         @php($weeklyDateRange = Carbon\Carbon::parse($surge->start_date)->format('m/d/Y') . ' - ' . Carbon\Carbon::parse($surge->end_date)->format('m/d/Y'))
                                          <div class="cursor-pointer" data-toggle="modal" data-target="#weeklySelectDays_btn">
-                                             <label class="form-label">{{ translate('Date Range') }} <span class="text-danger">*</span></label>
+                                             <label class="form-label">{{ 'Rango de fechas' }} <span class="text-danger">*</span></label>
                                              <div class="position-relative date-range__custom">
                                                  <i class="tio-calendar-month icon-absolute-on-right"></i>
                                                  <input autocomplete="off" type="text" class="form-control h-45 position-relative bg-transparent date-range-input-demo no-type"
-                                                     name="weekly_date_range" placeholder="{{ translate('messages.Select_Date') }}" value="{{ $surge->duration_type == 'weekly' && !$surge->is_permanent ? $weeklyDateRange : '' }}">
+                                                     name="weekly_date_range" placeholder="{{ 'Seleccionar fecha' }}" value="{{ $surge->duration_type == 'weekly' && !$surge->is_permanent ? $weeklyDateRange : '' }}">
                                              </div>
                                          </div>
                                         <?php
@@ -220,19 +220,19 @@
                                         ?>
                                         @if($days)
                                             <p class="fs-12 m-0 weekly-summary">
-                                                {{ translate('Every week from') }} <span class="font-semibold" id="selected-weekdays-text">{{ $days }}</span>
+                                                {{ 'Cada semana desde' }} <span class="font-semibold" id="selected-weekdays-text">{{ $days }}</span>
                                             </p>
                                         @else
                                             <p class="fs-12 m-0 weekly-summary d-none">
-                                                {{ translate('Every week from') }} <span class="font-semibold" id="selected-weekdays-text"></span>
+                                                {{ 'Cada semana desde' }} <span class="font-semibold" id="selected-weekdays-text"></span>
                                             </p>
                                         @endif
                                         @php($weeklyTimeRange = \Carbon\Carbon::parse($surge->start_time)->format('g:i A') . ' - ' . \Carbon\Carbon::parse($surge->end_time)->format('g:i A'))
                                          <div class="time-range-wrapper">
-                                             <label class="form-label">{{ translate('Time Range') }} <span class="text-danger">*</span></label>
+                                             <label class="form-label">{{ 'Rango de tiempo' }} <span class="text-danger">*</span></label>
                                              <div class="position-relative cursor-pointer">
                                                  <i class="tio-time icon-absolute-on-right"></i>
-                                                  <input autocomplete="off" type="text" class="form-control h-45 position-relative bg-transparent time-range-picker no-type" name="weekly_time_range" placeholder="{{ translate('messages.Select_Time') }}" value="{{ $surge->duration_type == 'weekly' ? $weeklyTimeRange : '' }}">
+                                                  <input autocomplete="off" type="text" class="form-control h-45 position-relative bg-transparent time-range-picker no-type" name="weekly_time_range" placeholder="{{ 'Seleccionar hora' }}" value="{{ $surge->duration_type == 'weekly' ? $weeklyTimeRange : '' }}">
                                              </div>
                                          </div>
                                          <input autocomplete="off" type="hidden" name="weekly_days" id="weekly_days" value="{{implode(',', $surge->weekly_days??[]) }}">
@@ -243,13 +243,13 @@
                                  <div class="shedule_item">
                                      <div class="bg-white p-sm-3 d-flex flex-column gap-3">
                                          <div class="cursor-pointer" data-toggle="modal" data-target="#surgeCustom_sheduleBtn">
-                                             <label class="form-label">{{ translate('Date & Time Select') }} <span class="text-danger">*</span></label>
+                                             <label class="form-label">{{ 'Seleccionar fecha y hora' }} <span class="text-danger">*</span></label>
                                              <div class="position-relative">
                                                 <?php
                                                     $selectedCount = isset($surge->custom_days) ? count($surge->custom_days) : 0;
                                                     $placeholderText = $surge->duration_type == 'custom'
                                                             ? $selectedCount . ' day' . ($selectedCount > 1 ? 's' : '') . ' selected'
-                                                            : translate('messages.Select Date & Time');
+                                                            : 'Seleccionar fecha y hora';
                                                             $minDate = null;
                                                             $maxDate = null;
 
@@ -279,11 +279,11 @@
                                          <input autocomplete="off" type="hidden" name="custom_times" id="custom_times" value="{{ implode(',', array_map('trim', $surge->custom_times?? [])) }}">
                                         @if($surge->duration_type == 'custom' && $surge->details->count() > 0)
                                             <p class="fs-12 m-20" id="custom-date-range-text">
-                                                {{ translate('messages.Date_range') }} <span class="font-semibold" id="custom-date-min">{{ $minDate->format('M d, Y') }}</span> - <span class="font-semibold" id="custom-date-max">{{ $maxDate->format('M d, Y') }}</span>
+                                                {{ 'Rango de fechas' }} <span class="font-semibold" id="custom-date-min">{{ $minDate->format('M d, Y') }}</span> - <span class="font-semibold" id="custom-date-max">{{ $maxDate->format('M d, Y') }}</span>
                                             </p>
                                         @else
                                            <p class="fs-12 m-20 d-none" id="custom-date-range-text">
-                                                {{ translate('messages.Date_range') }} <span class="font-semibold" id="custom-date-min"></span> - <span class="font-semibold" id="custom-date-max"></span>
+                                                {{ 'Rango de fechas' }} <span class="font-semibold" id="custom-date-min"></span> - <span class="font-semibold" id="custom-date-max"></span>
                                             </p>
                                         @endif
                                         @if($surge->duration_type == 'custom' && $surge->details->count() > 0)
@@ -291,9 +291,9 @@
                                                 <table id="columnSearchDatatable" class="table m-0 table-borderless table-thead-bordered table-align-middle">
                                                     <thead class="thead-light border-0">
                                                         <tr>
-                                                            <th class="border-0 fs-14">{{ translate('messages.SL') }}</th>
-                                                            <th class="border-0 fs-14">{{ translate('messages.Title') }}</th>
-                                                            <th class="border-0 fs-14 text-center">{{ translate('messages.Action') }}</th>
+                                                            <th class="border-0 fs-14">{{ 'SL' }}</th>
+                                                            <th class="border-0 fs-14">{{ 'Título' }}</th>
+                                                            <th class="border-0 fs-14 text-center">{{ 'Acción' }}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="customScheduleTableBody">
@@ -327,9 +327,9 @@
                                                 <table id="columnSearchDatatable" class="table m-0 table-borderless table-thead-bordered table-align-middle">
                                                     <thead class="thead-light border-0">
                                                         <tr>
-                                                            <th class="border-0 fs-14">{{ translate('messages.SL') }}</th>
-                                                            <th class="border-0 fs-14">{{ translate('messages.Title') }}</th>
-                                                            <th class="border-0 fs-14 text-center">{{ translate('messages.Action') }}</th>
+                                                            <th class="border-0 fs-14">{{ 'SL' }}</th>
+                                                            <th class="border-0 fs-14">{{ 'Título' }}</th>
+                                                            <th class="border-0 fs-14 text-center">{{ 'Acción' }}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="customScheduleTableBody">
@@ -346,8 +346,8 @@
             </div>
         </div>
         <div class="btn--container justify-content-end mt-20">
-            <button type="reset" id="reset_btn" class="btn btn--reset min-w-120px">{{ translate('messages.Reset') }}</button>
-            <button type="submit" class="btn btn--primary min-w-120px">{{ translate('messages.Submit') }}</button>
+            <button type="reset" id="reset_btn" class="btn btn--reset min-w-120px">{{ 'Reiniciar' }}</button>
+            <button type="submit" class="btn btn--primary min-w-120px">{{ 'Entregar' }}</button>
         </div>
 
        
@@ -364,8 +364,8 @@
     <div class="modal-content pb-1">
       <div class="modal-header">
         <div>
-            <h3 class="title-clr mb-0">{{ translate('messages.Select_Days') }}</h3>
-            <p class="fz-12 m-0">{{ translate('messages.Your_Surge_price_active_date') }}</p>
+            <h3 class="title-clr mb-0">{{ 'Seleccionar días' }}</h3>
+            <p class="fz-12 m-0">{{ 'Su fecha activa de precio de aumento' }}</p>
         </div>
         <button type="button" class="close bg-light w-30px h-30 rounded-circle" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -376,55 +376,55 @@
             <div class="resturant-type-group bg-light rounded p-3 mb-3 gap-4">
                 <label class="form-check form--check mr-2 mr-md-4">
                     <input autocomplete="off" class="form-check-input rounded" type="checkbox" value="1" name="days" {{ in_array('Saturday', $surge->weekly_days??[]) ? 'checked' : '' }}>
-                    <span class="form-check-label">{{ translate('messages.Saturday') }}</span>
+                    <span class="form-check-label">{{ 'Sábado' }}</span>
                 </label>
                 <label class="form-check form--check mr-2 mr-md-4">
                     <input autocomplete="off" class="form-check-input rounded" type="checkbox" value="0" name="days" {{ in_array('Sunday', $surge->weekly_days??[]) ? 'checked' : '' }}>
-                    <span class="form-check-label">{{ translate('messages.Sunday') }}</span>
+                    <span class="form-check-label">{{ 'Domingo' }}</span>
                 </label>
                 <label class="form-check form--check mr-2 mr-md-4">
                     <input autocomplete="off" class="form-check-input rounded" type="checkbox" value="0" name="days" {{ in_array('Monday', $surge->weekly_days??[]) ? 'checked' : '' }}>
-                    <span class="form-check-label">{{ translate('messages.Monday') }}</span>
+                    <span class="form-check-label">{{ 'Lunes' }}</span>
                 </label>
                 <label class="form-check form--check mr-2 mr-md-4">
                     <input autocomplete="off" class="form-check-input rounded" type="checkbox" value="0" name="days" {{ in_array('Tuesday', $surge->weekly_days??[]) ? 'checked' : '' }}>
-                    <span class="form-check-label">{{ translate('messages.Tuesday') }}</span>
+                    <span class="form-check-label">{{ 'Martes' }}</span>
                 </label>
                 <label class="form-check form--check mr-2 mr-md-4">
                     <input autocomplete="off" class="form-check-input rounded" type="checkbox" value="0" name="days" {{ in_array('Wednesday', $surge->weekly_days??[]) ? 'checked' : '' }}>
-                    <span class="form-check-label">{{ translate('messages.Wednesday') }}</span>
+                    <span class="form-check-label">{{ 'Miércoles' }}</span>
                 </label>
                 <label class="form-check form--check mr-2 mr-md-4">
                     <input autocomplete="off" class="form-check-input rounded" type="checkbox" value="0" name="days" {{ in_array('Thursday', $surge->weekly_days??[]) ? 'checked' : '' }}>
-                    <span class="form-check-label">{{ translate('messages.Thursday') }}</span>
+                    <span class="form-check-label">{{ 'Jueves' }}</span>
                 </label>
                 <label class="form-check form--check mr-2 mr-md-4">
                     <input autocomplete="off" class="form-check-input rounded" type="checkbox" value="0" name="days" {{ in_array('Friday', $surge->weekly_days??[]) ? 'checked' : '' }}>
-                    <span class="form-check-label">{{ translate('messages.Friday') }}</span>
+                    <span class="form-check-label">{{ 'Viernes' }}</span>
                 </label>
             </div>
             <div class="bg-light rounded p-3">
                 <div class="mb-20">
-                    <h5 class="title-clr mb-0">{{ translate('messages.Date_Range') }}</h5>
-                    <p class="fz-12">{{ translate('messages.Select_the_date_range_you_want_to_repeat_this_cycle_every_week') }}</p>
+                    <h5 class="title-clr mb-0">{{ 'Rango de fechas' }}</h5>
+                    <p class="fz-12">{{ 'Seleccione el rango de fechas en el que desea repetir este ciclo cada semana' }}</p>
                 </div>
                 <div class="mb-20">
-                    <label class="form-label">{{ translate('messages.Date_Range') }} <span class="text-danger">*</span></label>
+                    <label class="form-label">{{ 'Rango de fechas' }} <span class="text-danger">*</span></label>
                     <div class="position-relative date-range__custom">
                         <i class="tio-calendar-month icon-absolute-on-right"></i>
-                        <input autocomplete="off" type="text" class="form-control h-45 position-relative {{ $surge->is_permanent ? 'bg-transparent' : '' }} no-type"  name="dates" placeholder="{{ translate('messages.Select_Date') }}" value="{{ $surge->duration_type && !$surge->is_permanent == 'weekly' ? $weeklyDateRange : '' }}" id="weekly_modal_date" {{ $surge->is_permanent ? 'disabled' : '' }}>
+                        <input autocomplete="off" type="text" class="form-control h-45 position-relative {{ $surge->is_permanent ? 'bg-transparent' : '' }} no-type"  name="dates" placeholder="{{ 'Seleccionar fecha' }}" value="{{ $surge->duration_type && !$surge->is_permanent == 'weekly' ? $weeklyDateRange : '' }}" id="weekly_modal_date" {{ $surge->is_permanent ? 'disabled' : '' }}>
                     </div>
                 </div>
                 <label class="form-check form--check mr-2 mr-md-4">
                     <input autocomplete="off" class="form-check-input rounded" type="checkbox" value="1" name="assign" {{ $surge->is_permanent ? 'checked' : '' }} id="weekly_is_permanent">
-                    <span class="form-check-label">{{ translate('messages.Assign_this_surge_price_permanently') }}</span>
+                    <span class="form-check-label">{{ 'Asignar este precio de aumento permanentemente' }}</span>
                 </label>
             </div>
         </div>
       </div>
       <div class="modal-footer justify-content-end border-0 pt-0 gap-2">
-        <button type="button" class="btn min-w-120px btn--reset" data-dismiss="modal">{{ translate('messages.No') }}</button>
-        <button type="button" class="btn min-w-120px btn--primary yes_date">{{ translate('messages.Yes') }}</button>
+        <button type="button" class="btn min-w-120px btn--reset" data-dismiss="modal">{{ 'No' }}</button>
+        <button type="button" class="btn min-w-120px btn--primary yes_date">{{ 'Sí' }}</button>
       </div>
     </div>
   </div>
@@ -436,8 +436,8 @@
     <div class="modal-content">
       <div class="modal-header px-4 pt-4">
         <div>
-            <h3 class="title-clr mb-0">{{ translate('messages.Select_Date') }}</h3>
-            <p class="fz-12 m-0">{{ translate('messages.Your_Surge_price_active_date') }}</p>
+            <h3 class="title-clr mb-0">{{ 'Seleccionar fecha' }}</h3>
+            <p class="fz-12 m-0">{{ 'Su fecha activa de precio de aumento' }}</p>
         </div>
         <button type="button" class="close bg-light w-30px h-30 rounded-circle" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -469,10 +469,10 @@
             </div>
             <div class="col-md-6">
                 <div class="selected-listall">
-                    <h5 class="mb-20">{{ translate('messages.Selected_Days_List') }}</h5>
+                    <h5 class="mb-20">{{ 'Lista de días seleccionados' }}</h5>
                     <div class="d-flex align-items-center justify-content-md-start justify-content-between gap-1 mb-2">
-                        <span class="fs-12 text-title opacity-50 text-uppercase min-w-110px">{{ translate('messages.Date') }}</span>
-                        <span class="fs-12 text-title opacity-50 text-uppercase pe-30 me-3">{{ translate('messages.Time') }}</span>
+                        <span class="fs-12 text-title opacity-50 text-uppercase min-w-110px">{{ 'Fecha' }}</span>
+                        <span class="fs-12 text-title opacity-50 text-uppercase pe-30 me-3">{{ 'Tiempo' }}</span>
                     </div>
                     <div class="selected-list-inner d-flex flex-column gap-3">
                         {{-- @foreach($surge->details->unique('applicable_date')->values() as $key => $schedule)
@@ -499,8 +499,8 @@
         </div>
       </div>
       <div class="modal-footer justify-content-end border-0 pt-0 pb-4 gap-2">
-        <button type="button" class="btn min-w-120px btn--reset" data-dismiss="modal">{{ translate('messages.Cancel') }}</button>
-        <button type="button" class="btn min-w-120px btn--primary">{{ translate('messages.Submit') }}</button>
+        <button type="button" class="btn min-w-120px btn--reset" data-dismiss="modal">{{ 'Cancelar' }}</button>
+        <button type="button" class="btn min-w-120px btn--primary">{{ 'Entregar' }}</button>
       </div>
     </div>
   </div>
@@ -512,7 +512,7 @@
     <div class="modal-content pb-1">
       <div class="modal-header">
         <div>
-            <h3 class="title-clr mb-0" id="edit-time-date-label">{{ translate('messages.Selected_Date') }}</h3>
+            <h3 class="title-clr mb-0" id="edit-time-date-label">{{ 'Fecha seleccionada' }}</h3>
         </div>
         <button type="button" class="close bg-light w-30px h-30 rounded-circle" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -521,17 +521,17 @@
       <div class="modal-body">          
         <div class="bg-light rounded p-3">
             <div class="time-range-wrapper">
-                <label class="form-label">{{ translate('Change Time') }}</label>
+                <label class="form-label">{{ 'Cambiar hora' }}</label>
                 <div class="position-relative cursor-pointer">
                     <i class="tio-time icon-absolute-on-right"></i>  
-                    <input autocomplete="off" type="text" class="form-control h-45 position-relative bg-transparent time-range-picker no-type" id="edit-time-range-input" placeholder="{{ translate('messages.Select_Time') }}">
+                    <input autocomplete="off" type="text" class="form-control h-45 position-relative bg-transparent time-range-picker no-type" id="edit-time-range-input" placeholder="{{ 'Seleccionar hora' }}">
                 </div>
             </div>
         </div>
       </div>
       <div class="modal-footer justify-content-end border-0 pt-0 gap-2">
-        <button type="button" class="btn min-w-120px btn--reset" data-dismiss="modal">{{ translate('messages.Cancel') }}</button>
-        <button type="button" class="btn min-w-120px btn--primary" id="update-time-btn">{{ translate('messages.Update') }}</button>
+        <button type="button" class="btn min-w-120px btn--reset" data-dismiss="modal">{{ 'Cancelar' }}</button>
+        <button type="button" class="btn min-w-120px btn--primary" id="update-time-btn">{{ 'Actualizar' }}</button>
       </div>
     </div>
   </div>
@@ -551,14 +551,14 @@
                     <div>
                         <div class="text-center">
                             <img id="toggle-image" alt="" src="{{ asset('assets/admin/img/modal-error.png') }}" class="mb-20">
-                            <h5 class="modal-title" id="toggle-title">{{ translate('Surge Price setup Overlap!') }}</h5>
+                            <h5 class="modal-title" id="toggle-title">{{ 'Configuración de aumento de precios ¡Superposición!' }}</h5>
                         </div>
                         <div class="text-center" id="toggle-message">
-                            <p>{{ translate('This surge price overlaps with another. Please change the module or reschedule to fix it.') }}</p>
+                            <p>{{ 'Este aumento de precio se superpone con otro. Cambie el módulo o reprográmelo para solucionarlo.' }}</p>
                         </div>
                     </div>
                     <div class="btn--container justify-content-center">
-                        <button type="button" id="toggle-ok-button" class="btn btn--primary min-w-120" data-dismiss="modal" >{{translate('Okay')}}</button>
+                        <button type="button" id="toggle-ok-button" class="btn btn--primary min-w-120" data-dismiss="modal" >{{'Bueno'}}</button>
                     </div>
                 </div>
             </div>
@@ -1082,7 +1082,7 @@
                 const selectedCount = updatedDates.length;
                 const placeholderText = selectedCount > 0
                     ? selectedCount + ' day' + (selectedCount > 1 ? 's' : '') + ' selected'
-                    : '{!! translate("messages.Select Date & Time") !!}';
+                    : '{!! 'Seleccionar fecha y hora' !!}';
 
                 $('#custom_schedule_input').attr('placeholder', placeholderText);
                 
@@ -1221,7 +1221,7 @@
                     const selectedCount = updatedDates.length;
                     const placeholderText = selectedCount > 0
                         ? selectedCount + ' day' + (selectedCount > 1 ? 's' : '') + ' selected'
-                        : '{{ translate("messages.Select Date & Time") }}';
+                        : '{{ 'Seleccionar fecha y hora' }}';
                     $('#custom_schedule_input').attr('placeholder', placeholderText);
 
                     // Update date range

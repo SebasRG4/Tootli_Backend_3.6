@@ -19,7 +19,7 @@
                                 <h4 class="mb-0 ml-4">{{ $item?->getRawOriginal('name') }} </h4>
                                 <div>
                                     <a target="_blank" href="{{ route('admin.item.edit',['id' => $item->id , 'product_gellary' => true ]) }}" class="btn btn--sm btn-outline-primary">
-                                            {{ translate('messages.use_this_product_info') }}
+                                            {{ 'utilizar la información de este producto' }}
                                     </a>
                                 </div>
                             </div>
@@ -27,13 +27,13 @@
                                 <tbody>
                                     <tr>
                                         <td class="px-4 max-w--220px product-gallery-info">
-                                            <h6 class="m-0 text-capitalize">{{ translate('General_Information') }}</h6>
+                                            <h6 class="m-0 text-capitalize">{{ 'Información general' }}</h6>
                                         </td>
                                         <td class="px-4 product-gallery-info">
-                                            <h6 class="m-0 text-capitalize">{{ translate('Available_Variations') }}</h6>
+                                            <h6 class="m-0 text-capitalize">{{ 'Variaciones disponibles' }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="m-0 text-capitalize">{{ translate('tags') }}</h6>
+                                            <h6 class="m-0 text-capitalize">{{ 'etiquetas' }}</h6>
                                         </td>
                                         <td></td>
                                         <td></td>
@@ -43,34 +43,34 @@
                                     <tr>
                                         <td class="px-4 max-w--220px product-gallery-info">
                                             <span class="d-block mb-1">
-                                                <span>{{ translate('messages.Category') }}</span>
+                                                <span>{{ 'Categoría' }}</span>
                                                 <span>:</span>
-                                                <strong>{{ Str::limit(($item?->category?->parent ? $item?->category?->parent?->name : $item?->category?->name )  ?? translate('messages.uncategorize')
+                                                <strong>{{ Str::limit(($item?->category?->parent ? $item?->category?->parent?->name : $item?->category?->name )  ?? 'descategorizar'
                                                     , 20, '...') }}</strong>
                                             </span>
                                             <span class="d-block mb-1">
-                                                <span>{{ translate('messages.Sub_Category') }}</span>
+                                                <span>{{ 'Subcategoría' }}</span>
                                                 <span>:</span>
-                                                <strong>{{ Str::limit(($item?->category?->name )  ?? translate('messages.uncategorize')
+                                                <strong>{{ Str::limit(($item?->category?->name )  ?? 'descategorizar'
                                                     , 20, '...') }}</strong>
                                             </span>
                                             @if ($item->module->module_type == 'grocery')
                                             <span class="d-block mb-1">
-                                                <span>{{ translate('messages.Is_Organic') }}</span>
+                                                <span>{{ 'es organico' }}</span>
                                                 <span>:</span>
-                                                <strong> {{  $item->organic == 1 ?  translate('messages.yes') : translate('messages.no') }}</strong>
+                                                <strong> {{  $item->organic == 1 ?  'Sí' : 'No' }}</strong>
                                             </span>
                                             @endif
                                             @if ($item->module->module_type == 'food')
                                             <span class="d-block mb-1">
-                                                <span>{{ translate('messages.Item_type') }} : </span>
+                                                <span>{{ 'tipo de artículo' }} : </span>
                                                 <span>:</span>
-                                                <strong> {{  $item->veg == 1 ?  translate('messages.veg') : translate('messages.non_veg') }}</strong>
+                                                <strong> {{  $item->veg == 1 ?  'verduras' : 'no vegetariano' }}</strong>
                                             </span>
                                             @else
                                                 @if ($item?->unit)
                                                 <span class="d-block mb-1">
-                                                    <span>{{ translate('messages.Unit') }} : </span>
+                                                    <span>{{ 'Unidad' }} : </span>
                                                     <span>:</span>
                                                     <strong> {{ $item?->unit?->unit  }}</strong>
                                                 </span>
@@ -84,7 +84,7 @@
                                                         @if (isset($variation['price']))
                                                             <span class="d-block mb-1 text-capitalize">
                                                                 <strong>
-                                                                    {{ translate('please_update_the_food_variations.') }}
+                                                                    {{ 'actualice las variaciones de alimentos.' }}
                                                                 </strong>
                                                             </span>
                                                         @break
@@ -95,18 +95,18 @@
                                                                 {{ $variation['name'] }} -
                                                             </strong>
                                                             @if ($variation['type'] == 'multi')
-                                                                {{ translate('messages.multiple_select') }}
+                                                                {{ 'selección múltiple' }}
                                                             @elseif($variation['type'] == 'single')
-                                                                {{ translate('messages.single_select') }}
+                                                                {{ 'selección única' }}
                                                             @endif
                                                             @if ($variation['required'] == 'on')
-                                                                - ({{ translate('messages.required') }})
+                                                                - ({{ 'requerido' }})
                                                             @endif
                                                         </span>
 
                                                         @if ($variation['min'] != 0 && $variation['max'] != 0)
-                                                            ({{ translate('messages.Min_select') }}: {{ $variation['min'] }} -
-                                                            {{ translate('messages.Max_select') }}: {{ $variation['max'] }})
+                                                            ({{ 'Selección mínima' }}: {{ $variation['min'] }} -
+                                                            {{ 'selección máxima' }}: {{ $variation['max'] }})
                                                         @endif
 
                                                         @if (isset($variation['values']))
@@ -147,7 +147,7 @@
                         </div>
                         </div>
                         <div>
-                            <h6> {{ translate('description') }}:</h6>
+                            <h6> {{ 'descripción' }}:</h6>
                             <P class="m-0"> {{ $item?->getRawOriginal('description') }}</P>
                         </div>
                     </div>

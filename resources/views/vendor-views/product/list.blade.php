@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title',translate('messages.item_list'))
+@section('title','lista de artículos')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -13,7 +13,7 @@
         <div class="page-header">
             <div class="btn--container align-items-center mb-0">
                 <div class="mr-auto">
-                    <h1 class="page-header-title"><i class="tio-filter-list"></i> {{translate('messages.item_list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$items->total()}}</span></h1>
+                    <h1 class="page-header-title"><i class="tio-filter-list"></i> {{'lista de artículos'}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$items->total()}}</span></h1>
                 </div>
 
 
@@ -26,27 +26,27 @@
         <div class="card mb-3">
             <!-- Header -->
             <div class="card-header py-2 border-0">
-                <h1>{{ translate('search_data') }}</h1>
+                <h1>{{ 'datos de búsqueda' }}</h1>
             </div>
                 <div class="row mr-1 ml-2 mb-5">
 
                     <div class="col-sm-6 col-md-4">
                         <div class="select-item">
-                            <select name="category_id" id="category" data-placeholder="{{ translate('messages.select_category') }}"
+                            <select name="category_id" id="category" data-placeholder="{{ 'seleccionar categoría' }}"
                                 class="js-data-example-ajax form-control set-filter" id="category_id"
                                 data-url="{{url()->full()}}" data-filter="category_id">
                                 @if($category)
                                 <option value="{{$category->id}}" selected>{{$category->name}}</option>
                                 @else
-                                <option value="all" selected>{{translate('messages.all_category')}}</option>
+                                <option value="all" selected>{{'toda la categoria'}}</option>
                                 @endif
                             </select>
                         </div>
                     </div>
                     <div class="col-sm-6 col-md-4">
                         <div class="select-item">
-                            <select name="sub_category_id" class="form-control js-select2-custom set-filter" data-placeholder="{{ translate('messages.select_sub_category') }}" id="sub-categories" data-url="{{url()->full()}}" data-filter="sub_category_id">
-                                <option value="all" selected>{{translate('messages.all_sub_category')}}</option>
+                            <select name="sub_category_id" class="form-control js-select2-custom set-filter" data-placeholder="{{ 'seleccionar subcategoría' }}" id="sub-categories" data-url="{{url()->full()}}" data-filter="sub_category_id">
+                                <option value="all" selected>{{'todas las subcategorías'}}</option>
                                 @foreach($sub_categories as $z)
                                 <option
                                     value="{{$z['id']}}" {{ request()?->sub_category_id == $z['id']?'selected':''}}>
@@ -63,10 +63,10 @@
 
                 <div class="col-sm-6 col-md-4">
                     <div class="select-item">
-                        <select name="category_id" data-url="{{url()->full()}}" data-filter="type" data-placeholder="{{translate('messages.all')}}" class="form-control max-lg-h-40px set-filter">
-                            <option value="all" {{$type=='all'?'selected':''}}>{{translate('messages.all')}}</option>
-                            <option value="veg" {{$type=='veg'?'selected':''}}>{{translate('messages.veg')}}</option>
-                            <option value="non_veg" {{$type=='non_veg'?'selected':''}}>{{translate('messages.non_veg')}}</option>
+                        <select name="category_id" data-url="{{url()->full()}}" data-filter="type" data-placeholder="{{'todo'}}" class="form-control max-lg-h-40px set-filter">
+                            <option value="all" {{$type=='all'?'selected':''}}>{{'todo'}}</option>
+                            <option value="veg" {{$type=='veg'?'selected':''}}>{{'verduras'}}</option>
+                            <option value="non_veg" {{$type=='non_veg'?'selected':''}}>{{'no vegetariano'}}</option>
                         </select>
                     </div>
                 </div>
@@ -85,7 +85,7 @@
                     @csrf
                         <!-- Search -->
                         <div class="input-group input--group">
-                            <input id="" type="search" name="search" value="{{ request()?->search ?? null }}" class="form-control" placeholder="{{translate('messages.ex_search_name')}}" aria-label="{{translate('messages.search_here')}}">
+                            <input id="" type="search" name="search" value="{{ request()?->search ?? null }}" class="form-control" placeholder="{{'ex nombre de búsqueda'}}" aria-label="{{'buscar aquí'}}">
                             <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                         </div>
                         <!-- End Search -->
@@ -93,7 +93,7 @@
                     <!-- End Unfold -->
                     <div>
                         <a href="{{route('vendor.item.add-new')}}" class="btn btn--primary m-0 pull-right"><i
-                                    class="tio-add-circle"></i> {{translate('messages.add_new_item')}}</a>
+                                    class="tio-add-circle"></i> {{'agregar nuevo elemento'}}</a>
                     </div>
                 </div>
             </div>
@@ -121,19 +121,19 @@
                     }'>
                     <thead class="thead-light">
                         <tr>
-                            <th class="border-0">{{translate('messages.#')}}</th>
-                            <th class="border-0 w-20p">{{translate('messages.name')}}</th>
-                            <th class="border-0 w-20p">{{translate('messages.category')}}</th>
+                            <th class="border-0">{{'#'}}</th>
+                            <th class="border-0 w-20p">{{'nombre'}}</th>
+                            <th class="border-0 w-20p">{{'categoría'}}</th>
                             @if ($store_data->module->module_type != 'food')
-                            <th class="border-0 w-20p">{{translate('messages.quantity')}}</th>
+                            <th class="border-0 w-20p">{{'cantidad'}}</th>
                             @endif
-                            <th class="border-0">{{translate('messages.price')}}</th>
-                            <th class="border-0 text-center">{{translate('messages.Recommended')}}</th>
+                            <th class="border-0">{{'precio'}}</th>
+                            <th class="border-0 text-center">{{'Recomendado'}}</th>
                              @if ($productWiseTax)
-                            <th  class="border-0 ">{{ translate('messages.Vat/Tax') }}</th>
+                            <th  class="border-0 ">{{ 'IVA/Impuesto' }}</th>
                             @endif
-                            <th class="border-0 text-center">{{translate('messages.status')}}</th>
-                            <th class="border-0 text-center">{{translate('messages.action')}}</th>
+                            <th class="border-0 text-center">{{'estado'}}</th>
+                            <th class="border-0 text-center">{{'acción'}}</th>
                         </tr>
                     </thead>
 
@@ -151,7 +151,7 @@
                                 </a>
                             </td>
                             <td>
-                            {{Str::limit($item->category?$item->category->name:translate('messages.category_deleted'),20,'...')}}
+                            {{Str::limit($item->category?$item->category->name:'categoría eliminada',20,'...')}}
                             </td>
                             @if ($store_data->module->module_type != 'food')
                             <td>
@@ -169,7 +169,7 @@
                             <td>
                                 <div class="d-flex">
                                     <div class="mx-auto">
-                                        <label class="toggle-switch toggle-switch-sm mr-2"  data-toggle="tooltip" data-placement="top" title="{{ translate('messages.Recommend_to_customers') }}" for="recCheckbox{{$item->id}}">
+                                        <label class="toggle-switch toggle-switch-sm mr-2"  data-toggle="tooltip" data-placement="top" title="{{ 'Recomendar a los clientes' }}" for="recCheckbox{{$item->id}}">
                                             <input type="checkbox" data-url="{{route('vendor.item.recommended',[$item['id'],$item->recommended?0:1])}}" class="toggle-switch-input redirect-url" id="recCheckbox{{$item->id}}" {{$item->recommended?'checked':''}}>
                                             <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
@@ -188,7 +188,7 @@
                                                 </span> </span>
                                             <br>
                                         @empty
-                                            <span> {{ translate('messages.no_tax') }} </span>
+                                            <span> {{ 'sin impuestos' }} </span>
                                         @endforelse
                                     </span>
                                 </td>
@@ -207,10 +207,10 @@
                             <td>
                                 <div class="btn--container justify-content-center">
                                     <a class="btn btn-sm btn--primary btn-outline-primary action-btn"
-                                        href="{{route('vendor.item.edit',[$item['id']])}}" title="{{translate('messages.edit_item')}}"><i class="tio-edit"></i>
+                                        href="{{route('vendor.item.edit',[$item['id']])}}" title="{{'editar elemento'}}"><i class="tio-edit"></i>
                                     </a>
                                     <a class="btn btn-sm btn--danger btn-outline-danger action-btn form-alert" href="javascript:"
-                                        data-id="food-{{$item['id']}}" data-message="{{ translate('Want to delete this item ?') }}" title="{{translate('messages.delete_item')}}"><i class="tio-delete-outlined"></i>
+                                        data-id="food-{{$item['id']}}" data-message="{{ '¿Quieres eliminar este elemento?' }}" title="{{'eliminar elemento'}}"><i class="tio-delete-outlined"></i>
                                     </a>
                                 </div>
                                 <form action="{{route('vendor.item.delete',[$item['id']])}}"
@@ -234,7 +234,7 @@
                 <div class="empty--data">
                     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
-                        {{translate('no_data_found')}}
+                        {{'no se encontraron datos'}}
                     </h5>
                 </div>
                 @endif
@@ -261,8 +261,8 @@
                         @csrf
                         <div class="mt-2 rest-part w-100"></div>
                         <div class="btn--container justify-content-end">
-                            <button type="reset" data-dismiss="modal" aria-label="Close" class="btn btn--reset">{{translate('cancel')}}</button>
-                            <button type="submit" id="submit_new_customer" class="btn btn--primary">{{translate('update_stock')}}</button>
+                            <button type="reset" data-dismiss="modal" aria-label="Close" class="btn btn--reset">{{'Cancelar'}}</button>
+                            <button type="submit" id="submit_new_customer" class="btn btn--primary">{{'actualizar existencias'}}</button>
                         </div>
                     </form>
                 </div>

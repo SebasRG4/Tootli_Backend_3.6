@@ -9,7 +9,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Title -->
-    <title>{{translate('messages.login')}}</title>
+    <title>{{'acceso'}}</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{asset('favicon.ico')}}">
@@ -36,12 +36,12 @@
                 @php($store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first())
                 <img class="onerror-image"  data-onerror-image="{{asset('assets/admin/img/favicon.png')}}"
                 src="{{\App\CentralLogics\Helpers::get_full_url('business', $store_logo?->value?? '', $store_logo?->storage[0]?->value ?? 'public','favicon')}}"  alt="public/img">
-                <h2 class="title">{{translate('Your')}} <span class="d-block">{{translate('All Service')}}</span> <strong class="text--039D55">{{translate('in one field')}}....</strong></h2>
+                <h2 class="title">{{'Su'}} <span class="d-block">{{'Todo el servicio'}}</span> <strong class="text--039D55">{{'en un campo'}}....</strong></h2>
             </div>
         </div>
         <div class="auth-wrapper-right">
             <label class="badge badge-soft-success __login-badge">
-                {{translate('messages.software_version')}} : {{env('SOFTWARE_VERSION')}}
+                {{'Versión del sistema'}} : {{env('SOFTWARE_VERSION')}}
             </label>
 
             <!-- OTP Card -->
@@ -56,15 +56,15 @@
                         <!-- Form Group -->
                         <div class="js-form-message form-group mb-4">
                             <label class="input-label">
-                                {{translate('New Password')}}
+                                {{'Nueva contraseña'}}
                                 <span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"></span>
+                                data-original-title="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="{{ 'Debe contener al menos un número y una letra y símbolo mayúscula y minúscula, y al menos 8 o más caracteres' }}"></span>
                             </label>
                             <div class="input-group input-group-merge">
                                 <input type="password" class="js-toggle-password form-control form-control-lg"
                                         name="password" id="signupSrPassword" placeholder="{{translate('messages.password_length_placeholder',['length'=>'6+'])}}"
                                         aria-label="{{translate('messages.password_length_placeholder',['length'=>'6+'])}}" required
-                                        data-msg="{{translate('messages.invalid_password_warning')}}"
+                                        data-msg="{{'advertencia de contraseña no válida'}}"
                                         data-hs-toggle-password-options='{
                                                     "target": "#new-pass",
                                         "defaultClass": "tio-hidden-outlined",
@@ -83,14 +83,14 @@
                         <div class="js-form-message form-group mb-4">
                             <label class="input-label">
                                 <span class="d-flex justify-content-between align-items-center">
-                                    {{translate('Confirm Password')}}
+                                    {{'confirmar Contraseña'}}
                                 </span>
                             </label>
                             <div class="input-group input-group-merge">
                                 <input type="password" class="js-toggle-password form-control form-control-lg"
                                         name="confirm_password" id="signupSrPassword" placeholder="{{translate('messages.password_length_placeholder',['length'=>'6+'])}}"
                                         aria-label="{{translate('messages.password_length_placeholder',['length'=>'6+'])}}" required
-                                        data-msg="{{translate('messages.invalid_password_warning')}}"
+                                        data-msg="{{'advertencia de contraseña no válida'}}"
                                         data-hs-toggle-password-options='{
                                                     "target": "#conf-pass",
                                         "defaultClass": "tio-hidden-outlined",
@@ -105,7 +105,7 @@
                             </div>
                         </div>
                         <!-- End Form Group -->
-                        <button type="submit" class="btn btn-block btn--primary">{{translate('Change Password')}}</button>
+                        <button type="submit" class="btn btn-block btn--primary">{{'Cambiar la contraseña'}}</button>
                     </form>
                 </div>
             </div>
@@ -172,7 +172,7 @@
 
             if (response.length === 0) {
                 e.preventDefault();
-                toastr.error("{{translate('messages.Please check the recaptcha')}}");
+                toastr.error("{{'Por favor revisa el recaptcha'}}");
             }
         });
     </script>

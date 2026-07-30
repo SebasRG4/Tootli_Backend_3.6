@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', request()->query('is_abastos') == 1 ? 'Insumos de Tootli Abastos' : translate('Item List'))
+@section('title', request()->query('is_abastos') == 1 ? 'Insumos de Tootli Abastos' : 'Lista de artículos')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -17,13 +17,13 @@
                             <img src="{{asset('assets/admin/img/items.png')}}" class="w--22" alt="">
                         </span>
                         <span>
-                            {{ request()->query('is_abastos') == 1 ? 'Insumos de Tootli Abastos' : translate('messages.item_list') }} <span class="badge badge-soft-dark ml-2" id="foodCount">{{$items->total()}}</span>
+                            {{ request()->query('is_abastos') == 1 ? 'Insumos de Tootli Abastos' : 'lista de artículos' }} <span class="badge badge-soft-dark ml-2" id="foodCount">{{$items->total()}}</span>
                         </span>
                     </h1>
                 </div>
                 <div class="col-md-3 col-12 text-right">
                     <a href="{{ route('admin.item.reorder') }}" class="btn btn-info">
-                        <i class="tio-format-bullets"></i> {{ translate('Ordenar Productos') }}
+                        <i class="tio-format-bullets"></i> {{ 'Ordenar Productos' }}
                     </a>
                 </div>
             </div>
@@ -43,18 +43,18 @@
                 <div class="card-body">
                     <!-- Header -->
                     <div class="card-header border-0 px-0 pt-0 pb-xxl-3">
-                        <h1 class="m-0">{{ translate('search_data') }}</h1>
+                        <h1 class="m-0">{{ 'datos de búsqueda' }}</h1>
                     </div>
                     <div class="row g-lg-3 g-2">
                         <div class="col-sm-6 col-md-3">
                             <div class="select-item">
                             <select name="store_id" id="store"
                             data-url="{{route("admin.store.get-stores")}}"
-                            data-placeholder="{{translate('messages.select_store')}}" class="js-data-example-ajax form-control" required title="Select Store" >
+                            data-placeholder="{{'seleccionar tienda'}}" class="js-data-example-ajax form-control" required title="Select Store" >
                                 @if($store)
                                 <option value="{{$store->id}}" selected>{{$store->name}}</option>
                                 @else
-                                <option value="all" selected>{{translate('messages.all_stores')}}</option>
+                                <option value="all" selected>{{'todas las tiendas'}}</option>
                                 @endif
                                 </select>
                             </div>
@@ -63,7 +63,7 @@
                             @if(!isset(auth('admin')->user()->zone_id))
                             <div class="select-item">
                                 <select name="zone_id" class="form-control js-select2-custom">
-                                    <option value="" {{!request('zone_id')?'selected':''}}>{{ translate('messages.All_Zones') }}</option>
+                                    <option value="" {{!request('zone_id')?'selected':''}}>{{ 'Todas las Zonas' }}</option>
                                     @foreach(\App\Models\Zone::orderBy('name')->get(['id','name']) as $z)
                                         <option
                                             value="{{$z['id']}}" {{request()?->zone_id == $z['id']?'selected':''}}>
@@ -77,11 +77,11 @@
                         <div class="col-sm-6 col-md-{{ $pharmacy == 1 ? '2':'3' }}">
                             <div class="select-item">
 
-                                <select name="category_id" id="category_id" data-placeholder="{{ translate('messages.select_category') }}" data-url="{{route("admin.category.get-all")}}" class="js-data-example-ajax form-control"  >
+                                <select name="category_id" id="category_id" data-placeholder="{{ 'seleccionar categoría' }}" data-url="{{route("admin.category.get-all")}}" class="js-data-example-ajax form-control"  >
                                     @if($category)
                                     <option value="{{$category->id}}" selected>{{$category->name}}</option>
                                     @else
-                                    <option value="all" selected>{{translate('messages.all_category')}}</option>
+                                    <option value="all" selected>{{'toda la categoria'}}</option>
                                     @endif
                                 </select>
                             </div>
@@ -90,11 +90,11 @@
                             <div class="select-item">
                                 <select name="sub_category_id" class="form-control js-data-example-ajax "
                                 data-url="{{ route('admin.item.get-categories') }}"
-                                data-placeholder="{{ translate('messages.select_sub_category') }}" id="sub-categories">
+                                data-placeholder="{{ 'seleccionar subcategoría' }}" id="sub-categories">
                                     @if($sub_category)
                                     <option value="{{$sub_category->id}}" selected>{{$sub_category->name}}</option>
                                     @else
-                                    <option value="all" selected>{{translate('messages.all_sub_category')}}</option>
+                                    <option value="all" selected>{{'todas las subcategorías'}}</option>
                                     @endif
 
                                 </select>
@@ -105,11 +105,11 @@
                                 <div class="select-item">
                                 <select name="condition_id" id="condition_id" class="form-control"
                                     data-url="{{ route('admin.common-condition.get-all') }}"
-                                    data-placeholder="{{ translate('messages.Select_Condition') }}">
+                                    data-placeholder="{{ 'Seleccionar condición' }}">
                                     @if($condition)
                                     <option value="{{$condition->id}}" selected>{{$condition->name}}</option>
                                     @else
-                                    <option value="all" selected>{{translate('messages.all_conditions')}}</option>
+                                    <option value="all" selected>{{'todas las condiciones'}}</option>
                                     @endif
                                 </select>
                                 </div>
@@ -117,8 +117,8 @@
                         @endif
                     </div>
                     <div class="btn--container justify-content-end mt-xl-4 mt-3">
-                        <button type="reset" data-url="{{ url()->current() }}" class="btn btn--reset redirect-url">{{ translate('messages.reset') }}</button>
-                        <button type="submit" class="btn btn--primary">{{ translate('messages.Filter') }}</button>
+                        <button type="reset" data-url="{{ url()->current() }}" class="btn btn--reset redirect-url">{{ 'reiniciar' }}</button>
+                        <button type="submit" class="btn btn--primary">{{ 'Filtrar' }}</button>
                     </div>
                 </div>
                 </form>
@@ -132,13 +132,13 @@
 
                         <!-- Search -->
                         <div class="input-group input--group">
-                            <input id="datatableSearch" name="search" value="{{ request()?->search ?? null }}" type="search" class="form-control h--40px" placeholder="{{translate('ex_:_search_item_by_name')}}" aria-label="{{translate('messages.search_here')}}">
+                            <input id="datatableSearch" name="search" value="{{ request()?->search ?? null }}" type="search" class="form-control h--40px" placeholder="{{'ej: buscar elemento por nombre'}}" aria-label="{{'buscar aquí'}}">
                             <button type="submit" class="btn btn--primary h--40px"><i class="tio-search"></i></button>
                         </div>
                         <!-- End Search -->
                     </form>
                     @if(request()->get('search'))
-                    <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                    <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{'reiniciar'}}</button>
                     @endif
 
 
@@ -148,24 +148,24 @@
                                     "target": "#usersExportDropdown",
                                     "type": "css-animation"
                                 }'>
-                            <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                            <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                         </a>
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
 
-                            <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                            <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                             <a id="export-excel" class="dropdown-item" href="{{ route('admin.item.export', ['type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
-                                {{ translate('messages.excel') }}
+                                {{ 'sobresalir' }}
                             </a>
                             <a id="export-csv" class="dropdown-item" href="{{ route('admin.item.export', ['type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
-                                .{{ translate('messages.csv') }}
+                                .{{ 'csv' }}
                             </a>
 
                         </div>
@@ -173,17 +173,17 @@
                     <!-- End Unfold -->
                     @if (Config::get('module.current_module_type') != 'food')
                     <div>
-                        <a href="{{ route('admin.report.stock-report') }}" class="btn btn--primary font-regular">{{translate('messages.Low_Stock_List')}}</a>
+                        <a href="{{ route('admin.report.stock-report') }}" class="btn btn--primary font-regular">{{'Lista de existencias bajas'}}</a>
                     </div>
                     @endif
                     @if (\App\CentralLogics\Helpers::get_mail_status('product_approval'))
                     <div>
-                        <a href="{{ route('admin.item.approval_list') }}" class="btn btn--primary font-regular">{{translate('messages.New_Product_Request')}}</a>
+                        <a href="{{ route('admin.item.approval_list') }}" class="btn btn--primary font-regular">{{'Solicitud de nuevo producto'}}</a>
                     </div>
                     @endif
                     <div>
                         <a href="{{ route('admin.item.quick-price-update') }}" class="btn btn--warning font-regular">
-                            <i class="tio-publish"></i> {{translate('Actualización de Precios')}}
+                            <i class="tio-publish"></i> {{'Actualización de Precios'}}
                         </a>
                     </div>
                     <div>
@@ -218,21 +218,21 @@
                     }'>
                     <thead class="bg-table-head">
                     <tr>
-                        <th class="text-title border-0">{{translate('sl')}}</th>
-                        <th class="text-title border-0">{{translate('messages.name')}}</th>
-                        <th class="text-title border-0">{{translate('messages.category')}}</th>
+                        <th class="text-title border-0">{{'SL'}}</th>
+                        <th class="text-title border-0">{{'nombre'}}</th>
+                        <th class="text-title border-0">{{'categoría'}}</th>
                         @if (Config::get('module.current_module_type') != 'food')
-                        <th class="text-title border-0">{{translate('messages.quantity')}}</th>
+                        <th class="text-title border-0">{{'cantidad'}}</th>
                         @endif
-                        <th class="text-title border-0">{{translate('messages.store')}}</th>
-                        <th class="text-title border-0 text-center">{{translate('messages.price')}}</th>
+                        <th class="text-title border-0">{{'Negocio'}}</th>
+                        <th class="text-title border-0 text-center">{{'precio'}}</th>
 
                         @if ($productWiseTax)
-                        <th class="text-title border-0 ">{{ translate('messages.Vat/Tax') }}</th>
+                        <th class="text-title border-0 ">{{ 'IVA/Impuesto' }}</th>
                         @endif
 
-                        <th class="text-title border-0 text-center">{{translate('messages.status')}}</th>
-                        <th class="text-title border-0 text-center">{{translate('messages.action')}}</th>
+                        <th class="text-title border-0 text-center">{{'estado'}}</th>
+                        <th class="text-title border-0 text-center">{{'acción'}}</th>
                     </tr>
                     </thead>
 
@@ -253,7 +253,7 @@
                                 </a>
                             </td>
                             <td title="{{ $item?->category?->name }}">
-                            {{Str::limit($item->category?$item->category->name:translate('messages.category_deleted'),20,'...')}}
+                            {{Str::limit($item->category?$item->category->name:'categoría eliminada',20,'...')}}
                             </td>
                             @if (Config::get('module.current_module_type') != 'food')
                             <td>
@@ -267,7 +267,7 @@
                                 @if ($item->store)
                                 <a title="{{ $item?->store?->name }}" href="{{route('admin.store.view', $item->store->id)}}" class="table-rest-info" alt="view store"> {{  Str::limit($item->store->name, 20, '...') }}</a>
                                 @else
-                                {{  translate('messages.store deleted!') }}
+                                {{  'tienda eliminada!' }}
                                 @endif
 
                             </td>
@@ -286,7 +286,7 @@
                                                 </span> </span>
                                             <br>
                                         @empty
-                                            <span> {{ translate('messages.no_tax') }} </span>
+                                            <span> {{ 'sin impuestos' }} </span>
                                         @endforelse
                                     </span>
                                 </td>
@@ -304,10 +304,10 @@
                             <td>
                                 <div class="btn--container justify-content-center">
                                     <a class="btn action-btn btn--primary btn-outline-primary"
-                                        href="{{route('admin.item.edit',[$item['id']])}}" title="{{translate('messages.edit_item')}}"><i class="tio-edit"></i>
+                                        href="{{route('admin.item.edit',[$item['id']])}}" title="{{'editar elemento'}}"><i class="tio-edit"></i>
                                     </a>
                                     <a class="btn  action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
-                                        data-id="food-{{$item['id']}}" data-message="{{translate('messages.Want_to_delete_this_item')}}" title="{{translate('messages.delete_item')}}"><i class="tio-delete-outlined"></i>
+                                        data-id="food-{{$item['id']}}" data-message="{{'Quiere eliminar este elemento'}}" title="{{'eliminar elemento'}}"><i class="tio-delete-outlined"></i>
                                     </a>
                                     <form action="{{route('admin.item.delete',[$item['id']])}}"
                                             method="post" id="food-{{$item['id']}}">
@@ -331,7 +331,7 @@
                 <div class="empty--data">
                     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
-                        {{translate('no_data_found')}}
+                        {{'no se encontraron datos'}}
                     </h5>
                 </div>
             @endif
@@ -355,8 +355,8 @@
                         @csrf
                         <div class="mt-2 rest-part w-100"></div>
                         <div class="btn--container justify-content-end">
-                            <button type="reset" data-dismiss="modal" aria-label="Close" class="btn btn--reset">{{translate('cancel')}}</button>
-                            <button type="submit" id="submit_new_customer" class="btn btn--primary">{{translate('update_stock')}}</button>
+                            <button type="reset" data-dismiss="modal" aria-label="Close" class="btn btn--reset">{{'Cancelar'}}</button>
+                            <button type="submit" id="submit_new_customer" class="btn btn--primary">{{'actualizar existencias'}}</button>
                         </div>
                     </form>
                 </div>

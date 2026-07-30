@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title -->
-    <title>{{translate('messages.error')}} 404 | {{\App\Models\BusinessSetting::where(['key'=>'business_name'])->first()->value??'Stack Food'}}</title>
+    <title>{{'error'}} 404 | {{\App\Models\BusinessSetting::where(['key'=>'business_name'])->first()->value??'Stack Food'}}</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="favicon.ico">
@@ -40,11 +40,11 @@
 
             <div class="col-sm-6 col-md-4 text-center text-sm-left">
                 <h1 class="display-1 mb-0">404</h1>
-                <p class="lead">{{translate('messages.404_warning_message')}}.</p>
+                <p class="lead">{{'mensaje de advertencia 404'}}.</p>
                 @if(auth('vendor')->check())
-                    <a class="btn btn-primary" href="{{route('vendor.dashboard')}}">{{translate('messages.dashboard')}}</a>
+                    <a class="btn btn-primary" href="{{route('vendor.dashboard')}}">{{'Panel de Control'}}</a>
                 @else
-                    <a class="btn btn-primary" href="{{route('admin.dashboard')}}">{{translate('messages.dashboard')}}</a>
+                    <a class="btn btn-primary" href="{{route('admin.dashboard')}}">{{'Panel de Control'}}</a>
                 @endif
             </div>
         </div>
@@ -57,7 +57,7 @@
 <div class="footer text-center">
     <ul class="list-inline list-separator">
         <li class="list-inline-item">
-            <a class="list-separator-link" target="_blank" href="{{route('contact-us')}}">{{\App\Models\BusinessSetting::where(['key'=>'business_name'])->first()->value??'Stack Food'}} {{translate('messages.support')}}</a>
+            <a class="list-separator-link" target="_blank" href="{{route('contact-us')}}">{{\App\Models\BusinessSetting::where(['key'=>'business_name'])->first()->value??'Stack Food'}} {{'apoyo'}}</a>
         </li>
     </ul>
 </div>

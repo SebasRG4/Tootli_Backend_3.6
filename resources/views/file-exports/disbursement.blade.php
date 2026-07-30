@@ -6,7 +6,7 @@
             <tr>
 
                 <th>
-                    {{ translate('Disbursement_Invoice') }}
+                    {{ 'Factura de Desembolso' }}
                 </th>
                 <th></th>
                 <th></th>
@@ -27,34 +27,34 @@
             </tr>
             <tr>
                 <th>
-                    {{ translate('Disbursement_ID')  }}:{{ $data['disbursement']['id']}}
+                    {{ 'ID de desembolso'  }}:{{ $data['disbursement']['id']}}
                     <br>
 
                 </th>
                 <th></th>
                 <th>
-                    {{ translate('created_at')  }}
+                    {{ 'creado en'  }}
                     <br>
                     {{ \App\CentralLogics\Helpers::time_date_format($data['disbursement']['created_at']) }}
                 </th>
                 <th>
-                    {{ translate('total_amount')  }}
+                    {{ 'cantidad total'  }}
                     <br>
                     {{\App\CentralLogics\Helpers::format_currency($data['disbursement']['total_amount'])}}
 
                 </th>
             </tr>
         <tr>
-            <th>{{ translate('sl') }}</th>
+            <th>{{ 'SL' }}</th>
             @if($data['type'] == 'store')
 
-            <th>{{ translate('Store_Info') }}</th>
+            <th>{{ 'Información de la tienda' }}</th>
             @else
-            <th>{{ translate('Delivery_Man_Info') }}</th>
+            <th>{{ 'Información del repartidor' }}</th>
             @endif
-            <th>{{ translate('Payment_method') }}</th>
-            <th>{{ translate('amount') }}</th>
-            <th>{{ translate('status') }}</th>
+            <th>{{ 'Método de pago' }}</th>
+            <th>{{ 'cantidad' }}</th>
+            <th>{{ 'estado' }}</th>
 
         </thead>
         <tbody>
@@ -68,7 +68,7 @@
             <th>{{$disb->delivery_man->f_name.' '.$disb->delivery_man->l_name}}</th>
         @endif
         <td>
-            <div class="name">{{translate('payment_method')}} : {{$disb->withdraw_method->method_name}}</div>
+            <div class="name">{{'método de pago'}} : {{$disb->withdraw_method->method_name}}</div>
             @forelse(json_decode($disb->withdraw_method->method_fields, true) as $key=> $item)
             <br>
                 <div>
@@ -86,11 +86,11 @@
         </td>
         <td>
             @if($disb->status=='pending')
-            <label class="badge badge-soft-primary">{{ translate('pending') }}</label>
+            <label class="badge badge-soft-primary">{{ 'Pendiente' }}</label>
         @elseif($disb->status=='completed')
-            <label class="badge badge-soft-success">{{ translate('Completed') }}</label>
+            <label class="badge badge-soft-success">{{ 'Terminado' }}</label>
         @else
-            <label class="badge badge-soft-danger">{{ translate('canceled') }}</label>
+            <label class="badge badge-soft-danger">{{ 'Cancelado' }}</label>
         @endif
         </td>
             </tr>

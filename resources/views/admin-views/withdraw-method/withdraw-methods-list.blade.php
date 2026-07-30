@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.withdraw_method'))
+@section('title', 'método de retiro')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -13,7 +13,7 @@
             <div class="page-title-wrap d-flex justify-content-between flex-wrap align-items-center gap-3 mb-3">
                 <h2 class="h1 mb-0 text-capitalize d-flex align-items-center gap-2">
                     <img width="20" src="{{asset('assets/admin/img/withdraw-icon.png')}}" alt="">
-                    {{ translate('messages.withdraw_method_list')}}
+                    {{ 'lista de métodos de retiro'}}
                 </h2>
             </div>
         </div>
@@ -24,26 +24,26 @@
                 <div class="card">
                     <div class="search--button-wrapper px-4 py-3 d-flex flex-wrap align-items-center justify-content-between">
                         <span class="fs-16 font-semibold text-title">
-                            {{translate('Methods')}} <span class="badge badge-soft-dark rounded-circle ml-1">{{ $withdrawal_methods->total() }}</span>
+                            {{'Métodos'}} <span class="badge badge-soft-dark rounded-circle ml-1">{{ $withdrawal_methods->total() }}</span>
                         </span>
                         <div class="d-flex align-items-center gap-2 flex-wrap">
 
                             <form class="search-form theme-style">
                             <div class="input-group input--group">
-                                <input id="datatableSearch" name="search" type="search" class="form-control h--40px" placeholder="{{translate('Ex:_reference,_Name')}}" value="{{ request()?->search ?? null}}" aria-label="{{translate('messages.search_here')}}">
+                                <input id="datatableSearch" name="search" type="search" class="form-control h--40px" placeholder="{{'Ej: referencia, nombre'}}" value="{{ request()?->search ?? null}}" aria-label="{{'buscar aquí'}}">
                                 <button type="submit" class="btn bbtn btn--primary h--40px"><i class="tio-search"></i></button>
                             </div>
                         </form>
 
                         @if(request()->get('search'))
-                            <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                            <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{'reiniciar'}}</button>
                         @endif
 
 
                             <div class="">
                                 <a href="{{route('admin.transactions.withdraw-method.create')}}" class="btn btn--primary fs-12 h--40px">
                                     <i class="tio-add"></i>
-                                    {{ translate('messages.add_new_method')}}
+                                    {{ 'agregar nuevo método'}}
                                 </a>
                             </div>
                         </div>
@@ -53,12 +53,12 @@
                         <table id="datatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
                             <thead class="bg-table-head thead-50 text-capitalize">
                                 <tr>
-                                    <th class="fs-14 text-title font-semibold">{{ translate('messages.SL')}}</th>
-                                    <th class="fs-14 text-title font-semibold">{{ translate('messages.method_name')}}</th>
-                                    <th class="fs-14 text-title font-semibold">{{  translate('messages.method_fields') }}</th>
-                                    <th class="fs-14 text-title font-semibold text-center">{{ translate('messages.active_status')}}</th>
-                                    <th class="fs-14 text-title font-semibold text-center" >{{ translate('messages.default_method')}}</th>
-                                    <th class="text-center fs-14 text-title font-semibold">{{ translate('messages.action')}}</th>
+                                    <th class="fs-14 text-title font-semibold">{{ 'SL'}}</th>
+                                    <th class="fs-14 text-title font-semibold">{{ 'nombre del método'}}</th>
+                                    <th class="fs-14 text-title font-semibold">{{  'campos de método' }}</th>
+                                    <th class="fs-14 text-title font-semibold text-center">{{ 'estado activo'}}</th>
+                                    <th class="fs-14 text-title font-semibold text-center" >{{ 'método predeterminado'}}</th>
+                                    <th class="text-center fs-14 text-title font-semibold">{{ 'acción'}}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -69,16 +69,16 @@
                                     {{--<td>
                                         <div class="max-text-2-line" style="--line-count: 4">
                                             @foreach($withdrawal_method['method_fields'] as $key=>$method_field)
-                                                <b>{{ translate('messages.Name')}}:</b> {{ translate($method_field['input_name'])}} <br/>
-                                                <b>{{ translate('messages.Type')}}:</b> {{ translate($method_field['input_type']) }} <br/>
-                                                <b>{{ translate('messages.Placeholder')}}:</b> {{ $method_field['placeholder'] }} <br/>
-                                                {{ $method_field['is_required'] ? translate('messages.Required') :  translate('messages.Optional') }}
+                                                <b>{{ 'Nombre'}}:</b> {{ translate($method_field['input_name'])}} <br/>
+                                                <b>{{ 'Tipo'}}:</b> {{ translate($method_field['input_type']) }} <br/>
+                                                <b>{{ 'Marcador de posición'}}:</b> {{ $method_field['placeholder'] }} <br/>
+                                                {{ $method_field['is_required'] ? 'Requerido' :  'Opcional' }}
                                                 <br/>
                                                 @break
                                             @endforeach
                                         </div>
                                         <a href="#" data-id="{{ $withdrawal_method->id }}" class="font-semibold d-flex gap-2 align-items-center text-capitalize mt-1 withdraw-info-show fs-12" >
-                                            {{ translate('messages.see_all')}}
+                                            {{ 'ver todo'}}
                                             <i class="tio-arrow-forward"></i>
                                         </a>
                                     </td>--}}
@@ -87,19 +87,19 @@
                                             @foreach($withdrawal_method['method_fields'] as $key=>$method_field)
                                             <div class="d-flex flex-wrap align-items-center __bg-FAFAFA py-1 px-2 rounded fs-12 gap-1">
                                                     <div class="d-flex align-items-center gap-1 text-title">
-                                                        <b class="color-334257B2 font-regular">{{ translate('messages.Name')}}: </b> <span class="text--semititle">{{ translate($method_field['input_name'])}}</span>
+                                                        <b class="color-334257B2 font-regular">{{ 'Nombre'}}: </b> <span class="text--semititle">{{ translate($method_field['input_name'])}}</span>
                                                     </div>
                                                     <div class="line" style="width: 1px; height: 10px; background-color: #2223241A;"></div>
                                                     <div class="d-flex align-items-center gap-1 text-title">
-                                                        <b class="color-334257B2 font-regular">{{ translate('messages.Type')}}:</b> <span class="text--semititle">{{ translate($method_field['input_type']) }}</span>
+                                                        <b class="color-334257B2 font-regular">{{ 'Tipo'}}:</b> <span class="text--semititle">{{ translate($method_field['input_type']) }}</span>
                                                     </div>
                                                     <div class="line" style="width: 1px; height: 10px; background-color: #2223241A;"></div>
                                                     <div class="d-flex align-items-center gap-1 text-title">
-                                                        <b class="color-334257B2 font-regular">{{ translate('messages.Placeholder')}}:</b> <span class="text--semititle">{{ $method_field['placeholder'] }}</span>
+                                                        <b class="color-334257B2 font-regular">{{ 'Marcador de posición'}}:</b> <span class="text--semititle">{{ $method_field['placeholder'] }}</span>
                                                     </div>
                                                      <div class="line" style="width: 1px; height: 10px; background-color: #2223241A;"></div>
                                                     <div class="d-flex align-items-center gap-1 text-title">
-                                                        <b class="color-334257B2 font-regular">{{ translate('Is_Required')}}:</b> <span class="text--semititle">{{ $method_field['is_required'] ? translate('Yes') :  translate('No') }}</span>
+                                                        <b class="color-334257B2 font-regular">{{ 'Se requiere'}}:</b> <span class="text--semititle">{{ $method_field['is_required'] ? 'Sí' :  'No' }}</span>
                                                     </div>
 
                                                     <br/>
@@ -107,7 +107,7 @@
                                                 </div>
                                                 @endforeach
                                             {{-- <a href="#" data-id="{{ $withdrawal_method->id }}" class="font-semibold d-flex gap-2 align-items-center text-capitalize mt-1 withdraw-info-show fs-12" >
-                                                {{ translate('messages.see_all')}}
+                                                {{ 'ver todo'}}
                                                 <i class="tio-arrow-forward"></i>
                                             </a> --}}
                                         </div>
@@ -140,7 +140,7 @@
 
                                             @if(!$withdrawal_method->is_default)
                                                 <a class="btn btn-sm btn--danger btn-outline-danger action-btn form-alert" href="javascript:"
-                                                   title="{{ translate('messages.Delete')}}" data-id="delete-{{$withdrawal_method->id}}" data-message="{{ translate('Want to delete this item ?') }}">
+                                                   title="{{ 'Borrar'}}" data-id="delete-{{$withdrawal_method->id}}" data-message="{{ '¿Quieres eliminar este elemento?' }}">
                                                     <i class="tio-delete-outlined"></i>
                                                 </a>
                                                 <form action="{{route('admin.transactions.withdraw-method.delete',[$withdrawal_method->id])}}"
@@ -158,7 +158,7 @@
                             <div class="empty--data">
                                 <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
-                            {{translate('no_data_found')}}
+                            {{'no se encontraron datos'}}
                         </h5>
                             </div>
                        @endif
@@ -217,13 +217,13 @@
               },
               success: function (data) {
                   if(data.success == true) {
-                      toastr.success('{{ translate('messages.Default_Method_updated_successfully')}}');
+                      toastr.success('{{ 'Método predeterminado actualizado correctamente'}}');
                       setTimeout(function(){
                           location.reload();
                       }, 1000);
                   }
                   else if(data.success == false) {
-                      toastr.error('{{ translate('messages.Default_Method_updated_failed.')}}');
+                      toastr.error('{{ 'Error en la actualización del método predeterminado.'}}');
                       setTimeout(function(){
                           location.reload();
                       }, 1000);
@@ -246,7 +246,7 @@
                   id: id
               },
               success: function (data) {
-                  toastr.success('{{ translate('messages.status_updated_successfully')}}');
+                  toastr.success('{{ 'estado actualizado exitosamente'}}');
               }
           });
       })

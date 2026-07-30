@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', $store->name . "'s " . translate('messages.settings'))
+@section('title', $store->name . "'s " . 'Configuración')
 
 @push('css_or_js')
     <!-- Custom styles for this page -->
@@ -19,7 +19,7 @@
                             <span class="card-header-icon">
                                 <img class="w--22" src="{{ asset('assets/admin/img/store.png') }}" alt="">
                             </span>
-                            <span class="p-md-1"> {{ translate('messages.store_meta_data') }}</span>
+                            <span class="p-md-1"> {{ 'almacenar metadatos' }}</span>
                         </h5>
                     </div>
                     @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
@@ -37,7 +37,7 @@
                                                 <ul class="nav nav-tabs mb-4">
                                                     <li class="nav-item">
                                                         <a class="nav-link lang_link active" href="#"
-                                                            id="default-link">{{ translate('Default') }}</a>
+                                                            id="default-link">{{ 'Por defecto' }}</a>
                                                     </li>
                                                     @foreach (json_decode($language) as $lang)
                                                         <li class="nav-item">
@@ -51,33 +51,33 @@
                                                 <div class="lang_form" id="default-form">
                                                     <div class="form-group">
                                                         <label class="input-label"
-                                                            for="default_title">{{ translate('messages.meta_title') }}
-                                                            ({{ translate('messages.Default') }})
+                                                            for="default_title">{{ 'metatítulo' }}
+                                                            ({{ 'Por defecto' }})
                                                             <span class="form-label-secondary" data-toggle="tooltip"
                                                                 data-placement="right"
-                                                                data-original-title="{{ translate('This title appears in browser tabs, search results, and link previews.Use a short, clear, and keyword-focused title (recommended: 50–60 characters)') }}">
+                                                                data-original-title="{{ 'Este título aparece en las pestañas del navegador, en los resultados de búsqueda y en las vistas previas de enlaces. Utilice un título breve, claro y centrado en palabras clave (recomendado: entre 50 y 60 caracteres).' }}">
                                                                 <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                                     alt="">
                                                             </span>
                                                         </label>
                                                         <input type="text" name="meta_title[]" id="default_title"
                                                             maxlength="60" class="form-control"
-                                                            placeholder="{{ translate('messages.meta_title') }}"
+                                                            placeholder="{{ 'metatítulo' }}"
                                                             value="{{ $store->getRawOriginal('meta_title') }}">
                                                     </div>
                                                     <input type="hidden" name="lang[]" value="default">
                                                     <div class="form-group mb-0">
                                                         <label class="input-label"
-                                                            for="exampleFormControlInput1">{{ translate('messages.meta_description') }}
-                                                            ({{ translate('messages.default') }})
+                                                            for="exampleFormControlInput1">{{ 'meta descripción' }}
+                                                            ({{ 'por defecto' }})
                                                             <span class="form-label-secondary" data-toggle="tooltip"
                                                                 data-placement="right"
-                                                                data-original-title="{{ translate('A brief summary that appears under your page title in search results.Keep it compelling and relevant (recommended: 120–160 characters)') }}">
+                                                                data-original-title="{{ 'Un breve resumen que aparece debajo del título de su página en los resultados de búsqueda. Manténgalo atractivo y relevante (recomendado: 120 a 160 caracteres).' }}">
                                                                 <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                                     alt="">
                                                             </span></label>
                                                         <textarea type="text" maxlength="160" name="meta_description[]"
-                                                            placeholder="{{ translate('messages.meta_description') }}" class="form-control min-h-90px ckeditor">{{ $store->getRawOriginal('meta_description') }}</textarea>
+                                                            placeholder="{{ 'meta descripción' }}" class="form-control min-h-90px ckeditor">{{ $store->getRawOriginal('meta_description') }}</textarea>
                                                     </div>
                                                 </div>
                                                 @foreach (json_decode($language) as $lang)
@@ -97,11 +97,11 @@
                                                     <div class="d-none lang_form" id="{{ $lang }}-form">
                                                         <div class="form-group">
                                                             <label class="input-label"
-                                                                for="{{ $lang }}_title">{{ translate('messages.meta_title') }}
+                                                                for="{{ $lang }}_title">{{ 'metatítulo' }}
                                                                 ({{ strtoupper($lang) }})
                                                                 <span class="form-label-secondary" data-toggle="tooltip"
                                                                     data-placement="right"
-                                                                    data-original-title="{{ translate('This title appears in browser tabs, search results, and link previews.Use a short, clear, and keyword-focused title (recommended: 50–60 characters)') }}">
+                                                                    data-original-title="{{ 'Este título aparece en las pestañas del navegador, en los resultados de búsqueda y en las vistas previas de enlaces. Utilice un título breve, claro y centrado en palabras clave (recomendado: entre 50 y 60 caracteres).' }}">
                                                                     <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                                         alt="">
                                                                 </span>
@@ -110,21 +110,21 @@
                                                                 id="{{ $lang }}_title" maxlength="60"
                                                                 class="form-control"
                                                                 value="{{ $translate[$lang]['meta_title'] ?? '' }}"
-                                                                placeholder="{{ translate('messages.meta_title') }}">
+                                                                placeholder="{{ 'metatítulo' }}">
                                                         </div>
                                                         <input type="hidden" name="lang[]" value="{{ $lang }}">
                                                         <div class="form-group mb-0">
                                                             <label class="input-label"
-                                                                for="exampleFormControlInput1">{{ translate('messages.meta_description') }}
+                                                                for="exampleFormControlInput1">{{ 'meta descripción' }}
                                                                 ({{ strtoupper($lang) }})
                                                                 <span class="form-label-secondary" data-toggle="tooltip"
                                                                     data-placement="right"
-                                                                    data-original-title="{{ translate('A brief summary that appears under your page title in search results.Keep it compelling and relevant (recommended: 120–160 characters)') }}">
+                                                                    data-original-title="{{ 'Un breve resumen que aparece debajo del título de su página en los resultados de búsqueda. Manténgalo atractivo y relevante (recomendado: 120 a 160 caracteres).' }}">
                                                                     <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                                         alt="">
                                                                 </span></label>
                                                             <textarea type="text" maxlength="160" name="meta_description[]"
-                                                                placeholder="{{ translate('messages.meta_description') }}" class="form-control min-h-90px ckeditor">{{ $translate[$lang]['meta_description'] ?? '' }}</textarea>
+                                                                placeholder="{{ 'meta descripción' }}" class="form-control min-h-90px ckeditor">{{ $translate[$lang]['meta_description'] ?? '' }}</textarea>
                                                         </div>
                                                     </div>
                                                 @endforeach
@@ -132,17 +132,17 @@
                                                 <div id="default-form">
                                                     <div class="form-group">
                                                         <label class="input-label"
-                                                            for="exampleFormControlInput1">{{ translate('messages.meta_title') }}
-                                                            ({{ translate('messages.default') }})</label>
+                                                            for="exampleFormControlInput1">{{ 'metatítulo' }}
+                                                            ({{ 'por defecto' }})</label>
                                                         <input type="text" name="meta_title[]" class="form-control"
-                                                            placeholder="{{ translate('messages.meta_title') }}">
+                                                            placeholder="{{ 'metatítulo' }}">
                                                     </div>
                                                     <input type="hidden" name="lang[]" value="default">
                                                     <div class="form-group mb-0">
                                                         <label class="input-label"
-                                                            for="exampleFormControlInput1">{{ translate('messages.meta_description') }}
+                                                            for="exampleFormControlInput1">{{ 'meta descripción' }}
                                                         </label>
-                                                        <textarea type="text" name="meta_description[]" placeholder="{{ translate('messages.meta_description') }}"
+                                                        <textarea type="text" name="meta_description[]" placeholder="{{ 'meta descripción' }}"
                                                             class="form-control min-h-90px ckeditor"></textarea>
                                                     </div>
                                                 </div>
@@ -155,7 +155,7 @@
                                         <div class="card-header">
                                             <h5 class="card-title">
                                                 <span class="card-header-icon mr-1"><i class="tio-dashboard"></i></span>
-                                                <span>{{ translate('store_meta_image') }}</span>
+                                                <span>{{ 'almacenar metaimagen' }}</span>
                                             </h5>
                                         </div>
                                         <div class="card-body">
@@ -163,11 +163,11 @@
                                                 <label class="__custom-upload-img mr-lg-5">
                                                     <div class="position-relative">
                                                         <label class="form-label">
-                                                            {{ translate('meta_image') }} <span
-                                                                class="text--primary">({{ translate('2:1') }})</span>
+                                                            {{ 'metaimagen' }} <span
+                                                                class="text--primary">({{ '2:1' }})</span>
                                                             <span class="form-label-secondary" data-toggle="tooltip"
                                                                 data-placement="right"
-                                                                data-original-title="{{ translate('This image is used as a preview thumbnail when the page link is shared on social media or messaging platforms.') }}">
+                                                                data-original-title="{{ 'Esta imagen se utiliza como miniatura de vista previa cuando el enlace de la página se comparte en redes sociales o plataformas de mensajería.' }}">
                                                                 <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                                     alt="">
                                                             </span></label>
@@ -177,7 +177,7 @@
                                                                 id="viewer"
                                                                 data-onerror-image="{{ asset('assets/admin/img/upload.png') }}"
                                                                 src="{{ $store->meta_image_full_url ?? asset('assets/admin/img/upload.png') }}"
-                                                                alt="{{ translate('meta_image') }}" />
+                                                                alt="{{ 'metaimagen' }}" />
                                                         </div>
                                                         <input type="file" name="meta_image" id="customFileEg1"
                                                             class="custom-file-input"
@@ -189,10 +189,10 @@
                                                                 data-id="earning_delivery_img" data-type="status"
                                                                 data-image-on='{{ asset('assets/admin/img/modal') }}/mail-success.png'
                                                                 data-image-off="{{ asset('assets/admin/img/modal') }}/mail-warning.png"
-                                                                data-title-on="{{ translate('Important!') }}"
-                                                                data-title-off="{{ translate('Warning!') }}"
-                                                                data-text-on="<p>{{ translate('Are_you_sure_you_want_to_remove_this_image') }}</p>"
-                                                                data-text-off="<p>{{ translate('Are_you_sure_you_want_to_remove_this_image.') }}</p>">
+                                                                data-title-on="{{ '¡Importante!' }}"
+                                                                data-title-off="{{ '¡Advertencia!' }}"
+                                                                data-text-on="<p>{{ '¿Estás seguro de que quieres eliminar esta imagen?' }}</p>"
+                                                                data-text-off="<p>{{ '¿Está seguro de que desea eliminar esta imagen?' }}</p>">
                                                                 <i class="tio-clear"></i></span>
                                                         @endif
                                                     </div>
@@ -200,7 +200,7 @@
                                             </div>
                                              <div class="d-flex justify-content-center">
                             <div class="text-center">
-                                <small>{{ translate('Upload a rectangular image (recommended size: 800×400 px, format: JPG or PNG)') }}</small>
+                                <small>{{ 'Sube una imagen rectangular (tamaño recomendado: 800×400 px, formato: JPG o PNG)' }}</small>
                             </div>
                         </div>
                                         </div>
@@ -209,7 +209,7 @@
                                 <div class="col-12">
                                     <div class="justify-content-end btn--container">
                                         <button type="submit"
-                                            class="btn btn--primary">{{ translate('save_changes') }}</button>
+                                            class="btn btn--primary">{{ 'guardar cambios' }}</button>
                                     </div>
                                 </div>
                             </div>

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.admin_landing_page'))
+@section('title', 'página de inicio del administrador')
 
 @section('content')
     <div class="content container-fluid">
@@ -11,12 +11,12 @@
                         <img src="{{asset('assets/admin/img/landing.png')}}" class="w--20" alt="">
                     </span>
                     <span>
-                        {{ translate('messages.admin_landing_pages') }}
+                        {{ 'páginas de inicio de administración' }}
                     </span>
                 </h1>
                 <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal"
                     data-target="#how-it-works">
-                    <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
+                    <strong class="mr-2">{{'¡Mira cómo funciona!'}}</strong>
                     <div>
                         <i class="tio-info-outined"></i>
                     </div>
@@ -35,7 +35,7 @@
                     @csrf
                     <h5 class="card-title mb-3 mt-3">
                         <span class="card-header-icon mr-2"><i class="tio-settings-outlined"></i></span>
-                        <span>{{translate('Testimonial List Section')}}</span>
+                        <span>{{'Sección de lista de testimonios'}}</span>
                     </h5>
                     <div class="card mb-3">
                         <div class="card-body">
@@ -43,39 +43,39 @@
                                 <div class="col-md-6">
                                     <div class="row g-3">
                                         <div class="col-md-6">
-                                            <label for="name" class="form-label">{{translate('Reviewer Name')}}
+                                            <label for="name" class="form-label">{{'Nombre del revisor'}}
                                                 <span class="form-label-secondary text-danger" data-toggle="tooltip"
                                                     data-placement="right"
-                                                    data-original-title="{{ translate('messages.Required.')}}"> *
+                                                    data-original-title="{{ 'Requerido.'}}"> *
                                                 </span>
                                             </label>
                                             <input required id="name" type="text" name="name" value="{{ $review->name }}"
-                                                class="form-control" placeholder="{{translate('Ex:  John Doe')}}">
+                                                class="form-control" placeholder="{{'Ej: John Doe'}}">
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="designation" class="form-label">{{translate('Designation')}}
+                                            <label for="designation" class="form-label">{{'Designación'}}
                                                 <span class="form-label-secondary text-danger" data-toggle="tooltip"
                                                     data-placement="right"
-                                                    data-original-title="{{ translate('messages.Required.')}}"> *
+                                                    data-original-title="{{ 'Requerido.'}}"> *
                                                 </span>
                                             </label>
                                             <input required id="designation" type="text" name="designation"
                                                 value="{{ $review->designation }}" class="form-control"
-                                                placeholder="{{translate('Ex:  CTO')}}">
+                                                placeholder="{{'Ej: CTO'}}">
                                         </div>
                                         <div class="col-md-12">
-                                            <label for="review" class="form-label">{{translate('messages.review')}}<span
+                                            <label for="review" class="form-label">{{'revisar'}}<span
                                                     class="form-label-secondary" data-toggle="tooltip"
                                                     data-placement="right"
-                                                    data-original-title="{{ translate('Write_the_title_within_250_characters') }}">
+                                                    data-original-title="{{ 'Escribe el título dentro de 250 caracteres.' }}">
                                                     <img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="">
                                                 </span><span class="form-label-secondary text-danger" data-toggle="tooltip"
                                                     data-placement="right"
-                                                    data-original-title="{{ translate('messages.Required.')}}"> *
+                                                    data-original-title="{{ 'Requerido.'}}"> *
                                                 </span>
                                             </label>
                                             <textarea required id="review" name="review" maxlength="250"
-                                                placeholder="{{translate('Very Good Company')}}"
+                                                placeholder="{{'Muy buena empresa'}}"
                                                 class="form-control h92px">{{ $review->review }}</textarea>
                                         </div>
                                     </div>
@@ -84,11 +84,11 @@
                                     <div class="d-flex gap-40px">
                                         <div>
                                             <label class="form-label d-block mb-2">
-                                                {{translate('Reviewer Image')}} <span
-                                                    class="text--primary">{{translate('(1:1)')}}</span>
+                                                {{'Imagen del revisor'}} <span
+                                                    class="text--primary">{{'(1:1)'}}</span>
                                                 <span class="form-label-secondary text-danger" data-toggle="tooltip"
                                                     data-placement="right"
-                                                    data-original-title="{{ translate('messages.Required.')}}"> *
+                                                    data-original-title="{{ 'Requerido.'}}"> *
                                                 </span>
                                                 <div class="fs-12 opacity-70">
                                                     {{ translate(IMAGE_FORMAT . ' ' . 'Less Than 2MB') }}
@@ -110,8 +110,8 @@
                                                             class="remove_image_button remove-image dynamic-checkbox"
                                                             data-id="reviewer_image"
                                                             data-image-off="{{ asset('assets/admin/img/delete-confirmation.png') }}"
-                                                            data-title="{{translate('Warning!')}}"
-                                                            data-text="<p>{{translate('Are_you_sure_you_want_to_remove_this_image_?')}}</p>">
+                                                            data-title="{{'¡Advertencia!'}}"
+                                                            data-text="<p>{{'¿Estás seguro de que deseas eliminar esta imagen?'}}</p>">
                                                             <i class="tio-clear"></i></span>
                                                     @endif
                                                 </div>
@@ -119,11 +119,11 @@
                                         </div>
                                         <div class="d-flex flex-column">
                                             <label class="form-label d-block mb-2">
-                                                {{translate('Company Logo')}} <span
-                                                    class="text--primary">{{translate('(3:1)')}}</span>
+                                                {{'Logotipo de la empresa'}} <span
+                                                    class="text--primary">{{'(3:1)'}}</span>
                                                 <span class="form-label-secondary text-danger" data-toggle="tooltip"
                                                     data-placement="right"
-                                                    data-original-title="{{ translate('messages.Required.')}}"> *
+                                                    data-original-title="{{ 'Requerido.'}}"> *
                                                 </span>
                                                 <div class="fs-12 opacity-70">
                                                     {{ translate(IMAGE_FORMAT . ' ' . 'Less Than 2MB') }}
@@ -144,8 +144,8 @@
                                                             class="remove_image_button remove-image dynamic-checkbox"
                                                             data-id="company_image"
                                                             data-image-off="{{ asset('assets/admin/img/delete-confirmation.png') }}"
-                                                            data-title="{{translate('Warning!')}}"
-                                                            data-text="<p>{{translate('Are_you_sure_you_want_to_remove_this_image_?')}}</p>">
+                                                            data-title="{{'¡Advertencia!'}}"
+                                                            data-text="<p>{{'¿Estás seguro de que deseas eliminar esta imagen?'}}</p>">
                                                             <i class="tio-clear"></i></span>
                                                     @endif
                                                 </div>
@@ -155,9 +155,9 @@
                                 </div>
                             </div>
                             <div class="btn--container justify-content-end mt-20">
-                                <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
+                                <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
                                 <button type="submit"
-                                    class="btn btn--primary mb-2">{{translate('messages.Update')}}</button>
+                                    class="btn btn--primary mb-2">{{'Actualizar'}}</button>
                             </div>
 
                         </div>
@@ -187,7 +187,7 @@
                         <div class="modal-content">
                             <div class="modal-body">
                                 <div class="mb-3">
-                                    <h3 class="modal-title mb-3">{{translate(' Special review')}}</h3>
+                                    <h3 class="modal-title mb-3">{{'Revisión especial'}}</h3>
                                 </div>
                                 <img src="{{asset('assets/admin/img/zone-instruction.png')}}" alt="admin/img" class="w-100">
                             </div>
@@ -210,32 +210,32 @@
                                         <div class="text-center">
                                             <img src="{{asset('assets/admin/img/modal/this-review-off.png')}}" alt=""
                                                 class="mb-20">
-                                            <h5 class="modal-title">{{translate('By Turning OFF ')}}
-                                                <strong>{{translate('This review')}}</strong></h5>
+                                            <h5 class="modal-title">{{'Al apagar'}}
+                                                <strong>{{'Esta reseña'}}</strong></h5>
                                         </div>
                                         <div class="text-center">
                                             <p>
-                                                {{translate('This section  will be disabled. You can enable it in the settings')}}
+                                                {{'Esta sección quedará deshabilitada. Puedes habilitarlo en la configuración.'}}
                                             </p>
                                         </div>
                                     </div>
                                     <!-- <div>
                                         <div class="text-center">
                                             <img src="{{asset('assets/admin/img/modal/this-review-on.png')}}" alt="" class="mb-20">
-                                            <h5 class="modal-title">{{translate('By Turning ON ')}} <strong>{{translate('This review')}}</strong></h5>
+                                            <h5 class="modal-title">{{'Al encender'}} <strong>{{'Esta reseña'}}</strong></h5>
                                         </div>
                                         <div class="text-center">
                                             <p>
-                                                {{translate('This section will be enabled. You can see this section on your landing page.')}}
+                                                {{'Esta sección quedará habilitada. Puede ver esta sección en su página de destino.'}}
                                             </p>
                                         </div>
                                     </div> -->
                                     <div class="btn--container justify-content-center">
                                         <button type="submit" class="btn btn--primary min-w-120"
-                                            data-dismiss="modal">{{translate('Ok')}}</button>
+                                            data-dismiss="modal">{{'De acuerdo'}}</button>
                                         <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120"
                                             data-dismiss="modal">
-                                            {{translate("Cancel")}}
+                                            {{'Cancelar'}}
                                         </button>
                                     </div>
                                 </div>

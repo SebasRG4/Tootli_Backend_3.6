@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title',translate('messages.store_wallet'))
+@section('title','billetera de la tienda')
 
 @push('css_or_js')
 
@@ -17,7 +17,7 @@
                             <img src="{{asset('assets/admin/img/image_90.png')}}" alt="public">
                         </div>
                         <span>
-                            {{translate('messages.store_wallet')}}
+                            {{'billetera de la tienda'}}
                         </span>
                     </h2>
                 </div>
@@ -43,12 +43,12 @@
         <div class="card-header border-0 py-2">
             <div class="search--button-wrapper">
                 <h2 class="card-title">
-                    {{ translate('Total_Disbursements') }} <span class="badge badge-soft-secondary ml-2" id="countItems">{{ $disbursements->total() }}</span>
+                    {{ 'Desembolsos totales' }} <span class="badge badge-soft-secondary ml-2" id="countItems">{{ $disbursements->total() }}</span>
                 </h2>
                 <form class="search-form">
                     <!-- Search -->
                     <div class="input--group input-group input-group-merge input-group-flush">
-                        <input class="form-control" value="{{ request()?->search  ?? null }}" placeholder="{{ translate('search_by_ID') }}" name="search">
+                        <input class="form-control" value="{{ request()?->search  ?? null }}" placeholder="{{ 'buscar por identificación' }}" name="search">
                         <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                     </div>
                     <!-- End Search -->
@@ -60,18 +60,18 @@
                                     "target": "#usersExportDropdown",
                                     "type": "css-animation"
                                 }'>
-                        <i class="tio-download-to mr-1"></i> {{translate('messages.export')}}
+                        <i class="tio-download-to mr-1"></i> {{'exportar'}}
                     </a>
                     <div id="usersExportDropdown"
                          class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                        <span class="dropdown-header">{{translate('messages.download_options')}}</span>
+                        <span class="dropdown-header">{{'opciones de descarga'}}</span>
                         <a id="export-excel" class="dropdown-item" href="{{route('vendor.wallet.export', ['type'=>'excel',request()->getQueryString()])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2" src="{{asset('assets/admin')}}/svg/components/excel.svg" alt="Image Description">
-                            {{translate('messages.excel')}}
+                            {{'sobresalir'}}
                         </a>
                         <a id="export-csv" class="dropdown-item" href="{{route('vendor.wallet.export', ['type'=>'csv',request()->getQueryString()])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2" src="{{asset('assets/admin')}}/svg/components/placeholder-csv-format.svg" alt="Image Description">
-                            {{translate('messages.csv')}}
+                            {{'csv'}}
                         </a>
 
                     </div>
@@ -80,8 +80,8 @@
 
                 <!-- Action button after check table row -->
                 <div id="action-section" class="d--none">
-                    <button class="btn btn-danger btn-outline-danger" id="cancel">{{ translate('cancel') }}</button>
-                    <button class="btn btn-success" id="complete">{{ translate('complete') }}</button>
+                    <button class="btn btn-danger btn-outline-danger" id="cancel">{{ 'Cancelar' }}</button>
+                    <button class="btn btn-success" id="complete">{{ 'completo' }}</button>
                 </div>
                 <!-- Action button after check table row -->
 
@@ -93,16 +93,16 @@
                 <table class="table table-thead-bordered table-align-middle card-table">
                     <thead>
                     <tr>
-                        <th>{{ translate('sl') }}</th>
-                        <th>{{ translate('ID') }}</th>
-                        <th>{{ translate('Created_at') }}</th>
-                        <th>{{ translate('Disburse_Amount') }}</th>
-                        <th>{{ translate('Payment_method') }}</th>
-                        <th>{{ translate('Payout_Date') }}</th>
-                        <th>{{ translate('status') }}</th>
+                        <th>{{ 'SL' }}</th>
+                        <th>{{ 'IDENTIFICACIÓN' }}</th>
+                        <th>{{ 'Creado en' }}</th>
+                        <th>{{ 'Monto desembolsado' }}</th>
+                        <th>{{ 'Método de pago' }}</th>
+                        <th>{{ 'Fecha de pago' }}</th>
+                        <th>{{ 'estado' }}</th>
                         <th>
                             <div class="text-center">
-                                {{ translate('action') }}
+                                {{ 'acción' }}
                             </div>
                         </th>
                     </tr>
@@ -135,24 +135,24 @@
                                 <div>
                                     {{ $store->created_at->addDays($store_disbursement_waiting_time)->format('d-M-y')  }}
                                     <small>
-                                        {{  translate('Estimated') }}
+                                        {{  'Estimado' }}
                                     </small>
                                 </div>
                             </td>
                             <td>
                                 @if($store->status=='pending')
-                                    <label class="badge badge-soft-primary">{{ translate('pending') }}</label>
+                                    <label class="badge badge-soft-primary">{{ 'Pendiente' }}</label>
                                 @elseif($store->status=='completed')
-                                    <label class="badge badge-soft-success">{{ translate('Completed') }}</label>
+                                    <label class="badge badge-soft-success">{{ 'Terminado' }}</label>
                                 @else
-                                    <label class="badge badge-soft-danger">{{ translate('canceled') }}</label>
+                                    <label class="badge badge-soft-danger">{{ 'Cancelado' }}</label>
                                 @endif
                             </td>
 
 
                             <td>
                                 <div class="btn--container justify-content-center">
-                                    <a class="btn btn-sm btn--primary btn-outline-primary action-btn" data-toggle="modal" data-target="#payment-info-{{$store->id}}" title="{{ translate('View_Details') }}">
+                                    <a class="btn btn-sm btn--primary btn-outline-primary action-btn" data-toggle="modal" data-target="#payment-info-{{$store->id}}" title="{{ 'Ver detalles' }}">
                                         <i class="tio-visible"></i>
                                     </a>
 
@@ -166,19 +166,19 @@
                                                 <i class="tio-clear"></i>
                                             </button>
                                             <div class="w-100 text-center">
-                                                <h2 class="mb-2">{{ translate('Payment_Information') }}</h2>
+                                                <h2 class="mb-2">{{ 'Información de pago' }}</h2>
                                                 <div>
-                                                    <span class="mr-2">{{ translate('Disbursement_ID') }}</span>
+                                                    <span class="mr-2">{{ 'ID de desembolso' }}</span>
                                                     <strong>#{{$store->disbursement_id}}</strong>
                                                 </div>
                                                 <div class="mt-2">
-                                                    <span class="mr-2">{{ translate('status') }}</span>
+                                                    <span class="mr-2">{{ 'estado' }}</span>
                                                     @if($store->status=='pending')
-                                                        <label class="badge badge-soft-primary">{{ translate('pending') }}</label>
+                                                        <label class="badge badge-soft-primary">{{ 'Pendiente' }}</label>
                                                     @elseif($store->status=='completed')
-                                                        <label class="badge badge-soft-success">{{ translate('Completed') }}</label>
+                                                        <label class="badge badge-soft-success">{{ 'Terminado' }}</label>
                                                     @else
-                                                        <label class="badge badge-soft-danger">{{ translate('canceled') }}</label>
+                                                        <label class="badge badge-soft-danger">{{ 'Cancelado' }}</label>
                                                     @endif
                                                 </div>
                                             </div>
@@ -188,45 +188,45 @@
                                                 <div class="card-body">
                                                     <div class="d-flex flex-wrap payment-info-modal-info p-xl-4">
                                                         <div class="item">
-                                                            <h5>{{ translate('Store_Information') }}</h5>
+                                                            <h5>{{ 'Información de la tienda' }}</h5>
                                                             <ul class="item-list">
                                                                 <li class="d-flex flex-wrap">
-                                                                    <span class="name">{{ translate('name') }}</span>
+                                                                    <span class="name">{{ 'nombre' }}</span>
                                                                     <span>:</span>
                                                                     <strong>{{$store?->store?->name}}</strong>
                                                                 </li>
                                                                 <li class="d-flex flex-wrap">
-                                                                    <span class="name">{{ translate('contact') }}</span>
+                                                                    <span class="name">{{ 'contacto' }}</span>
                                                                     <span>:</span>
                                                                     <strong>{{$store?->store?->phone}}</strong>
                                                                 </li>
                                                             </ul>
                                                         </div>
                                                         <div class="item">
-                                                            <h5>{{ translate('Owner_Information') }}</h5>
+                                                            <h5>{{ 'Información del propietario' }}</h5>
                                                             <ul class="item-list">
                                                                 <li class="d-flex flex-wrap">
-                                                                    <span class="name">{{ translate('name') }}</span>
+                                                                    <span class="name">{{ 'nombre' }}</span>
                                                                     <span>:</span>
                                                                     <strong>{{$store->store->vendor->f_name}} {{$store->store->vendor->l_name}}</strong>
                                                                 </li>
                                                                 <li class="d-flex flex-wrap">
-                                                                    <span class="name">{{ translate('email') }}</span>
+                                                                    <span class="name">{{ 'correo electrónico' }}</span>
                                                                     <span>:</span>
                                                                     <strong>{{$store->store->vendor->email}}</strong>
                                                                 </li>
                                                             </ul>
                                                         </div>
                                                         <div class="item w-100">
-                                                            <h5>{{ translate('Account_Information') }}</h5>
+                                                            <h5>{{ 'Información de la cuenta' }}</h5>
                                                             <ul class="item-list">
                                                                 <li class="d-flex flex-wrap">
-                                                                    <span class="name">{{ translate('payment_method') }}</span>
+                                                                    <span class="name">{{ 'método de pago' }}</span>
                                                                     <span>:</span>
                                                                     <strong>{{$store->withdraw_method->method_name}}</strong>
                                                                 </li>
                                                                 <li class="d-flex flex-wrap">
-                                                                    <span class="name">{{ translate('amount') }}</span>
+                                                                    <span class="name">{{ 'cantidad' }}</span>
                                                                     <span>:</span>
                                                                     <strong>{{\App\CentralLogics\Helpers::format_currency($store['disbursement_amount'])}}</strong>
                                                                 </li>
@@ -258,7 +258,7 @@
                     <div class="empty--data">
                         <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
-                            {{translate('no_data_found')}}
+                            {{'no se encontraron datos'}}
                         </h5>
                     </div>
                 @endif
@@ -273,7 +273,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">{{translate('messages.Pay_Via_Online')}}  </h5>
+                    <h5 class="modal-title" id="exampleModalLabel">{{'Pagar en línea'}}  </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -284,7 +284,7 @@
                         @csrf
                         <input type="hidden" value="{{ \App\CentralLogics\Helpers::get_store_id() }}" name="store_id"/>
                         <input type="hidden" value="{{ abs($wallet->collected_cash) }}" name="amount"/>
-                        <h5 class="mb-5 ">{{ translate('Pay_Via_Online') }} &nbsp; <small>({{ translate('Faster_&_secure_way_to_pay_bill') }})</small></h5>
+                        <h5 class="mb-5 ">{{ 'Pagar en línea' }} &nbsp; <small>({{ 'Forma más rápida y segura de pagar la factura' }})</small></h5>
                         <div class="row g-3">
                             @forelse ($data as $item)
                                 <div class="col-sm-6">
@@ -297,14 +297,14 @@
                                     </div>
                                 </div>
                             @empty
-                                <h1>{{ translate('no_payment_gateway_found') }}</h1>
+                                <h1>{{ 'no se encontró ninguna pasarela de pago' }}</h1>
                             @endforelse
                         </div>
                     </div>
 
                     <div class="modal-footer">
-                        <button id="reset_btn" type="reset" data-dismiss="modal" class="btn btn-secondary" >{{ translate('Close') }} </button>
-                        <button type="submit" class="btn btn-primary">{{ translate('Proceed') }}</button>
+                        <button id="reset_btn" type="reset" data-dismiss="modal" class="btn btn-secondary" >{{ 'Cerca' }} </button>
+                        <button type="submit" class="btn btn-primary">{{ 'Proceder' }}</button>
                     </div>
                 </form>
             </div>
@@ -317,7 +317,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">{{translate('messages.Adjust_Wallet')}}  </h5>
+                    <h5 class="modal-title" id="exampleModalLabel">{{'Ajustar billetera'}}  </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -326,12 +326,12 @@
                 <form action="{{ route('vendor.wallet.make_wallet_adjustment') }}" method="POST" class="needs-validation">
                     <div class="modal-body">
                         @csrf
-                        <h5 class="mb-5 ">{{ translate('This_will_adjust_the_collected_cash_on_your_earning') }} </h5>
+                        <h5 class="mb-5 ">{{ 'Esto ajustará el efectivo recaudado en función de sus ganancias.' }} </h5>
                     </div>
 
                     <div class="modal-footer">
-                        <button id="reset_btn" type="reset" data-dismiss="modal" class="btn btn-secondary" >{{ translate('Close') }} </button>
-                        <button type="submit" class="btn btn-primary">{{ translate('Proceed') }}</button>
+                        <button id="reset_btn" type="reset" data-dismiss="modal" class="btn btn-secondary" >{{ 'Cerca' }} </button>
+                        <button type="submit" class="btn btn-primary">{{ 'Proceder' }}</button>
                     </div>
                 </form>
             </div>
@@ -383,7 +383,7 @@
 $('.payment-warning').on('click',function (event ){
             event.preventDefault();
             toastr.info(
-                "{{ translate('messages.Currently,_there_are_no_payment_options_available._Please_contact_admin_regarding_any_payment_process_or_queries.') }}", {
+                "{{ 'Actualmente, no hay opciones de pago disponibles. Comuníquese con el administrador con respecto a cualquier proceso de pago o consulta.' }}", {
                     CloseButton: true,
                     ProgressBar: true
                 });

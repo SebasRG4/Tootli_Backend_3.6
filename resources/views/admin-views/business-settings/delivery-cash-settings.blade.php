@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Configuración de Efectivo'))
+@section('title', 'Configuración efectiva')
 
 @section('content')
     <div class="content container-fluid">

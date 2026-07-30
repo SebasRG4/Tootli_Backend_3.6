@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('Update_Business_Module'))
+@section('title','Actualizar módulo empresarial')
 
 @push('css_or_js')
 <link rel="stylesheet" href="{{asset('assets/admin/css/radio-image.css')}}">
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/module.png')}}" alt="">
                 </span>
                 <span>
-                    {{translate('Edit_Business_Module')}}
+                    {{'Editar módulo empresarial'}}
                 </span>
             </h1>
         </div>
@@ -30,7 +30,7 @@
                             <li class="nav-item">
                                 <a class="nav-link lang_link active"
                                 href="#"
-                                id="default-link">{{translate('messages.default')}}</a>
+                                id="default-link">{{'por defecto'}}</a>
                             </li>
                             @foreach ($language as $lang)
                                 <li class="nav-item">
@@ -42,15 +42,15 @@
                         </ul>
                         <div class="lang_form" id="default-form">
                             <div class="form-group" >
-                                <label class="input-label" for="exampleFormControlInput1">{{ translate('messages.Business_Module_name')}} ({{ translate('messages.default') }})</label>
+                                <label class="input-label" for="exampleFormControlInput1">{{ 'Nombre del módulo empresarial'}} ({{ 'por defecto' }})</label>
                                 <input type="text" name="module_name[]" class="form-control" maxlength="191" value="{{$module?->getRawOriginal('module_name')}}">
                             </div>
                             <div class="form-group">
-                                <label class="input-label d-flex" for="module_type">{{translate('messages.description')}} ({{ translate('messages.default') }})<span class="form-label-secondary text-danger d-flex"
+                                <label class="input-label d-flex" for="module_type">{{'descripción'}} ({{ 'por defecto' }})<span class="form-label-secondary text-danger d-flex"
                                     data-toggle="tooltip" data-placement="right"
-                                    data-original-title="{{ translate('messages.Write_a_short_description_of_your_new_business_module_within_100_words_(550_characters)')}}"><img
+                                    data-original-title="{{ 'Escriba una breve descripción de su nuevo módulo comercial en 100 palabras (550 caracteres)'}}"><img
                                         src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                        alt="{{ translate('messages.veg_non_veg') }}"></span></label>
+                                        alt="{{ 'vegetales no vegetales' }}"></span></label>
                                 <textarea  data-value="{!! $module->description ?? '' !!}" id="description"  class="ckeditor form-control" name="description[]">{!! $module?->getRawOriginal('description') ?? '' !!}</textarea>
                             </div>
                         </div>
@@ -74,15 +74,15 @@
                             ?>
                             <div class="d-none lang_form" id="{{$lang}}-form">
                                 <div class="form-group" >
-                                    <label class="input-label" for="exampleFormControlInput1">{{ translate('messages.Business_Module_name')}} ({{strtoupper($lang)}})</label>
+                                    <label class="input-label" for="exampleFormControlInput1">{{ 'Nombre del módulo empresarial'}} ({{strtoupper($lang)}})</label>
                                     <input type="text" name="module_name[]" class="form-control" maxlength="191" value="{{$translate[$lang]['module_name']??''}}">
                                 </div>
                                 <div class="form-group">
-                                    <label class="input-label d-flex" for="module_type">{{translate('messages.description')}} ({{strtoupper($lang)}})<span class="form-label-secondary text-danger d-flex"
+                                    <label class="input-label d-flex" for="module_type">{{'descripción'}} ({{strtoupper($lang)}})<span class="form-label-secondary text-danger d-flex"
                                         data-toggle="tooltip" data-placement="right"
-                                        data-original-title="{{ translate('messages.Write_a_short_description_of_your_new_business_module_within_100_words_(550_characters)')}}"><img
+                                        data-original-title="{{ 'Escriba una breve descripción de su nuevo módulo comercial en 100 palabras (550 caracteres)'}}"><img
                                             src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                            alt="{{ translate('messages.veg_non_veg') }}"></span></label>
+                                            alt="{{ 'vegetales no vegetales' }}"></span></label>
                                     <textarea  data-value="{!! $translate[$lang]['description']??'' !!}" id="description{{ $lang }}" class="ckeditor form-control" name="description[]">{!! $translate[$lang]['description']??'' !!}</textarea>
                                 </div>
                             </div>
@@ -91,11 +91,11 @@
                         @endforeach
                     @else
                         <div class="form-group">
-                            <label class="input-label" for="exampleFormControlInput1">{{ translate('messages.Business_Module_name')}}</label>
-                            <input type="text" name="module_name" class="form-control" placeholder="{{translate('messages.new_category')}}" value="{{old('name')}}" maxlength="191">
+                            <label class="input-label" for="exampleFormControlInput1">{{ 'Nombre del módulo empresarial'}}</label>
+                            <input type="text" name="module_name" class="form-control" placeholder="{{'nueva categoría'}}" value="{{old('name')}}" maxlength="191">
                         </div>
                         <div class="form-group">
-                            <label class="input-label" for="module_type">{{translate('messages.description')}}</label>
+                            <label class="input-label" for="module_type">{{'descripción'}}</label>
                             <textarea  data-value="{!! $module->description !!}" id="description" class="ckeditor form-control" name="description">{!! $module->description !!}</textarea>
                         </div>
                         <input type="hidden" name="lang[]" value="default">
@@ -103,14 +103,14 @@
                 </div>
             </div>
                 <br>
-                <h5 class="mb-3">{{translate('module_setup')}}</h5>
+                <h5 class="mb-3">{{'configuración del módulo'}}</h5>
 
                 <div class="card">
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <h6 class="mb-3">{{translate('business_module_type')}} <span class="badge badge-danger">{{ translate('not_editable') }}</span></h6>
+                                    <h6 class="mb-3">{{'tipo de módulo empresarial'}} <span class="badge badge-danger">{{ 'no editable' }}</span></h6>
                                     <div class="card">
                                         <div class="card-body p-0">
                                             <div class="module-radio-group">
@@ -140,15 +140,15 @@
                                 </div>
                             </div>
                         <div class="col-lg-6">
-                            <h6 class="mb-3">{{translate('Chose related images')}}</h6>
+                            <h6 class="mb-3">{{'Elija imágenes relacionadas'}}</h6>
                             <div class="card module-logo-card mb-3">
                                 <div class="card-body">
                                     <div class="row h-100">
                                         <div class="col-sm-6">
                                             <div class="form-group m-0 h-100 d-flex flex-column justify-content-center align-items-center">
                                                 <label>
-                                                    {{translate('messages.icon')}}
-                                                    <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1)</small>
+                                                    {{'icono'}}
+                                                    <small class="text-danger">* ( {{'relación'}} 1:1)</small>
                                                 </label>
                                                 <label class="text-center my-auto position-relative">
                                                     <img class="img--176 h-unset aspect-ratio-1 image--border" id="viewer" data-onerror-image="{{asset('assets/admin/img/upload-img.png')}}" src="{{ $module['icon_full_url'] }}"
@@ -165,8 +165,8 @@
                                         <div class="col-sm-6">
                                             <div class="form-group m-0 h-100 d-flex flex-column justify-content-center align-items-center">
                                                 <label>
-                                                    {{translate('messages.thumbnail')}}
-                                                    <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1)</small>
+                                                    {{'uña del pulgar'}}
+                                                    <small class="text-danger">* ( {{'relación'}} 1:1)</small>
                                                 </label>
                                                 <label class="text-center my-auto position-relative">
                                                     <img class="img--176 h-unset aspect-ratio-1 image--border" id="viewer2" data-onerror-image="{{asset('assets/admin/img/upload-img.png')}}" src="{{ $module['thumbnail_full_url'] }}"
@@ -188,8 +188,8 @@
                 </div>
             </div>
             <div class="btn--container justify-content-end mt-20">
-                <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                <button type="submit" class="btn btn--primary">{{translate('messages.Save_changes')}}</button>
+                <button type="reset" id="reset_btn" class="btn btn--reset">{{'reiniciar'}}</button>
+                <button type="submit" class="btn btn--primary">{{'Guardar cambios'}}</button>
             </div>
         </form>
             <!-- End Table -->

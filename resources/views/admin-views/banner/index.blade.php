@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.banner'))
+@section('title', 'bandera')
 
 @push('css_or_js')
 
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/banner.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.add_new_banner')}}
+                    {{'agregar nuevo banner'}}
                 </span>
             </h1>
         </div>
@@ -32,7 +32,7 @@
                                         <ul class="nav nav-tabs mb-3 border-0">
                                             <li class="nav-item">
                                                 <a class="nav-link lang_link active" href="#"
-                                                    id="default-link">{{translate('messages.default')}}</a>
+                                                    id="default-link">{{'por defecto'}}</a>
                                             </li>
                                             @foreach ($language as $lang)
                                                 <li class="nav-item">
@@ -43,11 +43,11 @@
                                         </ul>
                                         <div class="lang_form" id="default-form">
                                             <div class="form-group error-wrapper">
-                                                <label class="input-label" for="default_title">{{ translate('messages.title') }}
+                                                <label class="input-label" for="default_title">{{ 'título' }}
                                                     (Default)
                                                 </label>
                                                 <input type="text" name="title[]" id="default_title" class="form-control"
-                                                    placeholder="{{ translate('messages.new_banner') }}" required>
+                                                    placeholder="{{ 'nueva pancarta' }}" required>
                                             </div>
                                             <input type="hidden" name="lang[]" value="default">
                                         </div>
@@ -55,11 +55,11 @@
                                             <div class="d-none lang_form" id="{{ $lang }}-form">
                                                 <div class="form-group error-wrapper">
                                                     <label class="input-label"
-                                                        for="{{ $lang }}_title">{{ translate('messages.title') }}
+                                                        for="{{ $lang }}_title">{{ 'título' }}
                                                         ({{ strtoupper($lang) }})
                                                     </label>
                                                     <input type="text" name="title[]" id="{{ $lang }}_title" class="form-control"
-                                                        placeholder="{{ translate('messages.new_banner') }}">
+                                                        placeholder="{{ 'nueva pancarta' }}">
                                                 </div>
                                                 <input type="hidden" name="lang[]" value="{{ $lang }}">
                                             </div>
@@ -68,18 +68,18 @@
                                         <div id="default-form">
                                             <div class="form-group error-wrapper">
                                                 <label class="input-label"
-                                                    for="exampleFormControlInput1">{{ translate('messages.title') }}
-                                                    ({{ translate('messages.default') }})</label>
+                                                    for="exampleFormControlInput1">{{ 'título' }}
+                                                    ({{ 'por defecto' }})</label>
                                                 <input type="text" name="title[]" class="form-control"
-                                                    placeholder="{{ translate('messages.new_banner') }}" required>
+                                                    placeholder="{{ 'nueva pancarta' }}" required>
                                             </div>
                                             <input type="hidden" name="lang[]" value="default">
                                         </div>
                                     @endif
                                     <div class="form-group error-wrapper">
-                                        <label class="input-label" for="title">{{translate('messages.zone')}}</label>
+                                        <label class="input-label" for="title">{{'zona'}}</label>
                                         <select name="zone_id" id="zone" class="form-control js-select2-custom" required>
-                                            <option disabled selected>---{{translate('messages.select')}}---</option>
+                                            <option disabled selected>---{{'seleccionar'}}---</option>
                                             @foreach($zones as $zone)
                                                 @if(isset(auth('admin')->user()->zone_id))
                                                     @if(auth('admin')->user()->zone_id == $zone->id)
@@ -93,11 +93,11 @@
                                     </div>
                                     <div class="form-group error-wrapper">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{translate('messages.banner_type')}}</label>
+                                            for="exampleFormControlInput1">{{'tipo de banner'}}</label>
                                         <select name="banner_type" id="banner_type" class="form-control">
-                                            <option value="store_wise">{{translate('messages.store_wise')}}</option>
-                                            <option value="item_wise">{{translate('messages.item_wise')}}</option>
-                                            <option value="default">{{translate('messages.default')}}</option>
+                                            <option value="store_wise">{{'tienda sabia'}}</option>
+                                            <option value="item_wise">{{'artículo sabio'}}</option>
+                                            <option value="default">{{'por defecto'}}</option>
                                         </select>
                                     </div>
                                     <div class="form-group error-wrapper">
@@ -111,34 +111,34 @@
                                     </div>
                                     <div class="form-group mb-0 error-wrapper" id="store_wise">
                                         <label class="input-label"
-                                            for="exampleFormControlSelect1">{{translate('messages.store')}}<span
+                                            for="exampleFormControlSelect1">{{'Negocio'}}<span
                                                 class="input-label-secondary"></span></label>
                                         <select name="store_id" id="store_id" class="js-data-example-ajax form-control"
-                                            title="{{translate('messages.select_store')}}">
-                                            <option disabled selected>---{{translate('messages.select_store')}}---</option>
+                                            title="{{'seleccionar tienda'}}">
+                                            <option disabled selected>---{{'seleccionar tienda'}}---</option>
                                         </select>
                                     </div>
                                     <div class="form-group mb-0 error-wrapper" id="item_wise">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{translate('messages.select_item')}}</label>
+                                            for="exampleFormControlInput1">{{'seleccionar elemento'}}</label>
                                         <select name="item_id" id="choice_item" class="form-control js-select2-custom"
-                                            placeholder="{{translate('messages.select_item')}}">
+                                            placeholder="{{'seleccionar elemento'}}">
 
                                         </select>
                                     </div>
                                     <div class="form-group mb-0 error-wrapper" id="default">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{translate('messages.default_link')}}({{ translate('messages.optional') }})</label>
+                                            for="exampleFormControlInput1">{{'enlace predeterminado'}}({{ 'opcional' }})</label>
                                         <input type="text" name="default_link" class="form-control"
-                                            placeholder="{{translate('messages.default_link')}}">
+                                            placeholder="{{'enlace predeterminado'}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="error-wrapper">
                                         <div class="h-100 d-flex flex-column">
                                             <label
-                                                class="mt-auto mb-0 d-block text-center">{{translate('messages.banner_image')}}
-                                                <small class="text-danger">* ( {{translate('messages.ratio')}} 3:1
+                                                class="mt-auto mb-0 d-block text-center">{{'imagen de banner'}}
+                                                <small class="text-danger">* ( {{'relación'}} 3:1
                                                     )</small></label>
                                             <div class="text-center py-3 my-auto">
                                                 <img class="img--vertical" id="viewer"
@@ -150,7 +150,7 @@
                                                     accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
                                                     required>
                                                 <label class="custom-file-label"
-                                                    for="customFileEg1">{{translate('messages.choose_file')}}</label>
+                                                    for="customFileEg1">{{'elegir archivo'}}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -158,9 +158,9 @@
                                 <div class="col-12 mt-4">
                                     <div class="btn--container justify-content-end">
                                         <button type="reset" id="reset_btn"
-                                            class="btn btn--reset">{{translate('messages.reset')}}</button>
+                                            class="btn btn--reset">{{'reiniciar'}}</button>
                                         <button type="submit"
-                                            class="btn btn--primary">{{translate('messages.submit')}}</button>
+                                            class="btn btn--primary">{{'entregar'}}</button>
                                     </div>
                                 </div>
                             </div>
@@ -175,7 +175,7 @@
                     <div class="card-header py-2 border-0">
                         <div class="search--button-wrapper">
                             <h5 class="card-title">
-                                {{translate('messages.banner_list')}}<span class="badge badge-soft-dark ml-2"
+                                {{'lista de pancartas'}}<span class="badge badge-soft-dark ml-2"
                                     id="itemCount">{{$banners->count()}}</span>
                             </h5>
                             <form class="search-form">
@@ -183,15 +183,15 @@
                                 <div class="input-group input--group">
                                     <input id="datatableSearch" type="search" value="{{ request()->get('search') ?? '' }}"
                                         name="search" class="form-control"
-                                        placeholder="{{translate('messages.search_by_title')}}"
-                                        aria-label="{{translate('messages.search_here')}}">
+                                        placeholder="{{'buscar por título'}}"
+                                        aria-label="{{'buscar aquí'}}">
                                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                                 </div>
                                 <!-- End Search -->
                             </form>
                             @if(request()->get('search'))
                                 <button type="reset" class="btn btn--primary ml-2 location-reload-to-base"
-                                    data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                                    data-url="{{url()->full()}}">{{'reiniciar'}}</button>
                             @endif
 
                         </div>
@@ -211,16 +211,16 @@
                                     }'>
                             <thead class="thead-light">
                                 <tr>
-                                    <th class="border-0">{{ translate('messages.SL') }}</th>
-                                    <th class="border-0">{{translate('messages.title')}}</th>
-                                    <th class="border-0">{{translate('messages.type')}}</th>
-                                    <th class="border-0 text-center">{{translate('messages.featured')}} <span
+                                    <th class="border-0">{{ 'SL' }}</th>
+                                    <th class="border-0">{{'título'}}</th>
+                                    <th class="border-0">{{'tipo'}}</th>
+                                    <th class="border-0 text-center">{{'presentado'}} <span
                                             class="input-label-secondary" data-toggle="tooltip" data-placement="right"
-                                            data-original-title="{{translate('if_you_turn/off_on_this_featured,_it_will_effect_on_website_&_user_app')}}"><img
+                                            data-original-title="{{'Si activa/desactiva esta función, afectará al sitio web y a la aplicación del usuario.'}}"><img
                                                 src="{{asset('assets/admin/img/info-circle.svg')}}" alt="public/img"></span>
                                     </th>
-                                    <th class="border-0 text-center">{{translate('messages.status')}}</th>
-                                    <th class="border-0 text-center">{{translate('messages.action')}}</th>
+                                    <th class="border-0 text-center">{{'estado'}}</th>
+                                    <th class="border-0 text-center">{{'acción'}}</th>
                                 </tr>
                             </thead>
 
@@ -253,10 +253,10 @@
                                                         data-type="status"
                                                         data-image-on="{{ asset('assets/admin/img/modal/basic_campaign_on.png') }}"
                                                         data-image-off="{{ asset('assets/admin/img/modal/basic_campaign_off.png') }}"
-                                                        data-title-on="{{ translate('By_Turning_ON_As_Featured!') }}"
-                                                        data-title-off="{{ translate('By_Turning_OFF_As_Featured!') }}"
-                                                        data-text-on="<p>{{ translate('If_you_turn_on_this_featured,_then_promotional_banner_will_show_on_website_and_user_app_with_store_or_item.') }}</p>"
-                                                        data-text-off="<p>{{ translate('If_you_turn_off_this_featured,_then_promotional_banner_won’t_show_on_website_and_user_app') }}</p>"
+                                                        data-title-on="{{ '¡Activándolo como se muestra!' }}"
+                                                        data-title-off="{{ '¡Apagando como aparece!' }}"
+                                                        data-text-on="<p>{{ 'Si activa esta característica, el banner promocional se mostrará en el sitio web y en la aplicación del usuario con la tienda o el artículo.' }}</p>"
+                                                        data-text-off="<p>{{ 'Si desactiva esta función, el banner promocional no se mostrará en el sitio web ni en la aplicación del usuario.' }}</p>"
                                                         class="toggle-switch-input  dynamic-checkbox"
                                                         id="featuredCheckbox{{$banner->id}}" {{$banner->featured ? 'checked' : ''}}>
                                                     <span class="toggle-switch-label">
@@ -277,10 +277,10 @@
                                                         data-type="status"
                                                         data-image-on="{{ asset('assets/admin/img/modal/basic_campaign_on.png') }}"
                                                         data-image-off="{{ asset('assets/admin/img/modal/basic_campaign_off.png') }}"
-                                                        data-title-on="{{ translate('By_Turning_ON_Banner!') }}"
-                                                        data-title-off="{{ translate('By_Turning_OFF_Banner!') }}"
-                                                        data-text-on="<p>{{ translate('If_you_turn_on_this_status,_it_will_show_on_user_website_and_app.') }}</p>"
-                                                        data-text-off="<p>{{ translate('If_you_turn_off_this_status,_it_won’t_show_on_user_website_and_app') }}</p>"
+                                                        data-title-on="{{ '¡Activando Banner!' }}"
+                                                        data-title-off="{{ '¡Apagando el banner!' }}"
+                                                        data-text-on="<p>{{ 'Si activa este estado, se mostrará en el sitio web y la aplicación del usuario.' }}</p>"
+                                                        data-text-off="<p>{{ 'Si desactiva este estado, no se mostrará en el sitio web ni en la aplicación del usuario.' }}</p>"
                                                         class="toggle-switch-input  dynamic-checkbox"
                                                         id="statusCheckbox{{$banner->id}}" {{$banner->status ? 'checked' : ''}}>
                                                     <span class="toggle-switch-label">
@@ -297,11 +297,11 @@
                                             <div class="btn--container justify-content-center">
                                                 <a class="btn action-btn btn--primary btn-outline-primary"
                                                     href="{{route('admin.banner.edit', [$banner['id']])}}"
-                                                    title="{{translate('messages.edit_banner')}}"><i class="tio-edit"></i>
+                                                    title="{{'editar banner'}}"><i class="tio-edit"></i>
                                                 </a>
                                                 <a class="btn action-btn btn--danger btn-outline-danger form-alert"
                                                     href="javascript:" data-id="banner-{{$banner['id']}}"
-                                                    data-message="{{ translate('Want to delete this banner ?') }}"><i
+                                                    data-message="{{ '¿Quieres eliminar este banner?' }}"><i
                                                         class="tio-delete-outlined"></i>
                                                 </a>
                                                 <form action="{{route('admin.banner.delete', [$banner['id']])}}" method="post"
@@ -326,7 +326,7 @@
                         <div class="empty--data">
                             <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                             <h5>
-                                {{translate('no_data_found')}}
+                                {{'no se encontraron datos'}}
                             </h5>
                         </div>
                     @endif
@@ -423,7 +423,7 @@
                             });
                         }
                     } else {
-                        toastr.success('{{translate("messages.banner_added_successfully")}}', {
+                        toastr.success('{{'banner agregado exitosamente'}}', {
                             CloseButton: true,
                             ProgressBar: true
                         });

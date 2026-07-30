@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.update_parcel_category'))
+@section('title', 'actualizar categoría de paquete')
 
 
 @section('content')
@@ -12,7 +12,7 @@
                     <img src="{{ asset('assets/admin/img/edit.png') }}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.update_parcel_category') }}
+                    {{ 'actualizar categoría de paquete' }}
                 </span>
             </h1>
         </div>
@@ -33,7 +33,7 @@
                                 <ul class="nav nav-tabs mb-4">
                                     <li class="nav-item">
                                         <a class="nav-link lang_link active" href="#"
-                                            id="default-link">{{ translate('messages.default') }}</a>
+                                            id="default-link">{{ 'por defecto' }}</a>
                                     </li>
                                     @foreach (json_decode($language) as $lang)
                                         <li class="nav-item">
@@ -48,17 +48,17 @@
                             @if ($language)
                                 <div class="lang_form" id="default-form">
                                     <div class="form-group">
-                                        <label class="input-label" for="default_name">{{ translate('messages.name') }}
-                                            ({{ translate('messages.default') }})</label>
+                                        <label class="input-label" for="default_name">{{ 'nombre' }}
+                                            ({{ 'por defecto' }})</label>
                                         <input type="text" name="name[]" id="default_name" class="form-control"
-                                            placeholder="{{ translate('messages.new_food') }}"
+                                            placeholder="{{ 'comida nueva' }}"
                                             value="{{ $parcel_category?->getRawOriginal('name') }}">
                                     </div>
                                     <input type="hidden" name="lang[]" value="default">
                                     <div class="form-group">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.short_description') }}
-                                            ({{ translate('messages.default') }})</label>
+                                            for="exampleFormControlInput1">{{ 'breve descripción' }}
+                                            ({{ 'por defecto' }})</label>
                                         <textarea type="text" name="description[]" class="form-control ckeditor">{!! $parcel_category?->getRawOriginal('description') !!}</textarea>
                                     </div>
                                 </div>
@@ -79,16 +79,16 @@
                                     <div class="d-none lang_form" id="{{ $lang }}-form">
                                         <div class="form-group">
                                             <label class="input-label"
-                                                for="{{ $lang }}_name">{{ translate('messages.name') }}
+                                                for="{{ $lang }}_name">{{ 'nombre' }}
                                                 ({{ strtoupper($lang) }})</label>
                                             <input type="text" name="name[]" id="{{ $lang }}_name"
-                                                class="form-control" placeholder="{{ translate('messages.new_food') }}"
+                                                class="form-control" placeholder="{{ 'comida nueva' }}"
                                                 value="{{ $translate[$lang]['name'] ?? '' }}">
                                         </div>
                                         <input type="hidden" name="lang[]" value="{{ $lang }}">
                                         <div class="form-group">
                                             <label class="input-label"
-                                                for="exampleFormControlInput1">{{ translate('messages.short_description') }}
+                                                for="exampleFormControlInput1">{{ 'breve descripción' }}
                                                 ({{ strtoupper($lang) }})</label>
                                             <textarea type="text" name="description[]" class="form-control ckeditor">{!! $translate[$lang]['description'] ?? '' !!}</textarea>
                                         </div>
@@ -98,15 +98,15 @@
                                 <div id="default-form">
                                     <div class="form-group">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.name') }} (EN)</label>
+                                            for="exampleFormControlInput1">{{ 'nombre' }} (EN)</label>
                                         <input type="text" name="name[]" class="form-control"
-                                            placeholder="{{ translate('messages.new_food') }}"
+                                            placeholder="{{ 'comida nueva' }}"
                                             value="{{ $parcel_category['name'] }}" required>
                                     </div>
                                     <input type="hidden" name="lang[]" value="en">
                                     <div class="form-group">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.short_description') }}</label>
+                                            for="exampleFormControlInput1">{{ 'breve descripción' }}</label>
                                         <textarea type="text" name="description[]" class="form-control ckeditor">{!! $parcel_category['description'] !!}</textarea>
                                     </div>
                                 </div>
@@ -117,8 +117,8 @@
                         <div class="col-lg-6">
                             <div class="h-100 d-flex flex-column">
                                 <label class="mb-0 mt-auto d-block text-center">
-                                    {{ translate('messages.image') }}
-                                    <small class="text-danger">* ( {{ translate('messages.ratio') }} 200x200 )</small>
+                                    {{ 'imagen' }}
+                                    <small class="text-danger">* ( {{ 'relación' }} 200x200 )</small>
                                 </label>
                                 <div class="text-center py-3 my-auto">
                                     <img class="img--130 onerror-image" id="viewer"
@@ -129,16 +129,16 @@
                                     <input type="file" name="image" id="customFileEg1" class="custom-file-input"
                                         accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                     <label class="custom-file-label"
-                                        for="customFileEg1">{{ translate('messages.choose_file') }}</label>
+                                        for="customFileEg1">{{ 'elegir archivo' }}</label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label
-                                    class="input-label text-capitalize">{{ translate('messages.per_km_shipping_charge') }}</label>
+                                    class="input-label text-capitalize">{{ 'costo de envío por km' }}</label>
                                 <input type="number" step=".01" min="0"
-                                    placeholder="{{ translate('messages.per_km_shipping_charge') }}" class="form-control"
+                                    placeholder="{{ 'costo de envío por km' }}" class="form-control"
                                     name="parcel_per_km_shipping_charge"
                                     value="{{ $parcel_category->parcel_per_km_shipping_charge }}">
                             </div>
@@ -146,9 +146,9 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label
-                                    class="input-label text-capitalize">{{ translate('messages.minimum_shipping_charge') }}</label>
+                                    class="input-label text-capitalize">{{ 'cargo mínimo de envío' }}</label>
                                 <input type="number" step=".01" min="0"
-                                    placeholder="{{ translate('messages.minimum_shipping_charge') }}"
+                                    placeholder="{{ 'cargo mínimo de envío' }}"
                                     class="form-control" name="parcel_minimum_shipping_charge"
                                     value="{{ $parcel_category->parcel_minimum_shipping_charge }}">
                             </div>
@@ -161,17 +161,17 @@
                                         <span class="toggle-switch-indicator"></span>
                                     </span>
                                     <span class="toggle-switch-content">
-                                        {{ translate('messages.buy_and_deliver') }}
-                                        <small class="text-danger"> * ( {{ translate('messages.activate_if_you_want_to_buy_and_deliver') }} )</small>
+                                        {{ 'comprar y entregar' }}
+                                        <small class="text-danger"> * ( {{ 'actívalo si quieres comprar y entregar' }} )</small>
                                     </span>
                                 </label>
                             </div>
                         </div>
                         {{-- ── Seguro del paquete (Rappi Favor-style) ── --}}
-                        <div class="col-12"><hr><h6 class="mb-3 text-primary"><i class="tio-verified mr-1"></i>{{ translate('messages.parcel_insurance') ?? 'Seguro del Paquete' }}</h6></div>
+                        <div class="col-12"><hr><h6 class="mb-3 text-primary"><i class="tio-verified mr-1"></i>{{ 'seguro de paquetería' ?? 'Seguro del Paquete' }}</h6></div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="input-label text-capitalize">{{ translate('messages.insurance_rate_percentage') ?? 'Tasa de Seguro (%)' }}</label>
+                                <label class="input-label text-capitalize">{{ 'porcentaje de tasa de seguro' ?? 'Tasa de Seguro (%)' }}</label>
                                 <input type="number" step="0.01" min="0" max="100"
                                     placeholder="Ej: 2 (significa 2% del valor declarado)"
                                     class="form-control"
@@ -182,7 +182,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="input-label text-capitalize">{{ translate('messages.min_insurance_fee') ?? 'Tarifa Mínima de Seguro' }}</label>
+                                <label class="input-label text-capitalize">{{ 'tarifa mínima de seguro' ?? 'Tarifa Mínima de Seguro' }}</label>
                                 <input type="number" step="0.01" min="0"
                                     placeholder="Ej: 10 (tarifa mínima en pesos)"
                                     class="form-control"
@@ -196,7 +196,7 @@
                         @if ($categoryWiseTax)
                                 <div class="col-6">
                                     <span
-                                        class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rate') }}</span>
+                                        class="mb-2 d-block title-clr fw-normal">{{ 'Seleccionar tasa impositiva' }}</span>
                                     <select name="tax_ids[]" required id=""
                                         class="form-control js-select2-custom" multiple="multiple"
                                         placeholder="Type & Select Tax Rate">
@@ -212,13 +212,13 @@
                         @endif
                         <div class="col-12">
                             <hr>
-                            <h5 class="mb-3">{{ translate('messages.service_options') }}</h5>
+                            <h5 class="mb-3">{{ 'opciones de servicio' }}</h5>
                             <div id="options-container">
                                 @if($parcel_category->options)
                                     @foreach($parcel_category->options as $key => $option)
                                         <div class="card mb-3 option-row" id="option-row-{{$key}}">
                                             <div class="card-header d-flex justify-content-between">
-                                                <h6>{{ translate('Option') }} #{{$key+1}}</h6>
+                                                <h6>{{ 'Opción' }} #{{$key+1}}</h6>
                                                 <button type="button" class="btn btn-danger btn-sm remove-option" data-id="{{$key}}"><i class="tio-delete"></i></button>
                                             </div>
                                             <div class="card-body">
@@ -228,12 +228,12 @@
                                                         @if ($language)
                                                             <div class="lang_form" id="default-form-{{$key}}">
                                                                 <div class="form-group">
-                                                                    <label class="input-label">{{ translate('messages.title') }} ({{ translate('messages.default') }})</label>
-                                                                    <input type="text" name="options[{{$key}}][title][]" class="form-control" value="{{$option->getRawOriginal('title')}}" placeholder="{{ translate('messages.title') }}">
+                                                                    <label class="input-label">{{ 'título' }} ({{ 'por defecto' }})</label>
+                                                                    <input type="text" name="options[{{$key}}][title][]" class="form-control" value="{{$option->getRawOriginal('title')}}" placeholder="{{ 'título' }}">
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label class="input-label">{{ translate('messages.description') }} ({{ translate('messages.default') }})</label>
-                                                                    <input type="text" name="options[{{$key}}][description][]" class="form-control" value="{{$option->getRawOriginal('description')}}" placeholder="{{ translate('messages.description') }}">
+                                                                    <label class="input-label">{{ 'descripción' }} ({{ 'por defecto' }})</label>
+                                                                    <input type="text" name="options[{{$key}}][description][]" class="form-control" value="{{$option->getRawOriginal('description')}}" placeholder="{{ 'descripción' }}">
                                                                 </div>
                                                             </div>
                                                             @foreach (json_decode($language) as $lang)
@@ -252,61 +252,61 @@
                                                                 ?>
                                                                 <div class="d-none lang_form" id="{{ $lang }}-form-{{$key}}">
                                                                     <div class="form-group">
-                                                                        <label class="input-label">{{ translate('messages.title') }} ({{ strtoupper($lang) }})</label>
-                                                                        <input type="text" name="options[{{$key}}][title][]" class="form-control" value="{{ $translate[$lang]['title'] ?? '' }}" placeholder="{{ translate('messages.title') }}">
+                                                                        <label class="input-label">{{ 'título' }} ({{ strtoupper($lang) }})</label>
+                                                                        <input type="text" name="options[{{$key}}][title][]" class="form-control" value="{{ $translate[$lang]['title'] ?? '' }}" placeholder="{{ 'título' }}">
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="input-label">{{ translate('messages.description') }} ({{ strtoupper($lang) }})</label>
-                                                                        <input type="text" name="options[{{$key}}][description][]" class="form-control" value="{{ $translate[$lang]['description'] ?? '' }}" placeholder="{{ translate('messages.description') }}">
+                                                                        <label class="input-label">{{ 'descripción' }} ({{ strtoupper($lang) }})</label>
+                                                                        <input type="text" name="options[{{$key}}][description][]" class="form-control" value="{{ $translate[$lang]['description'] ?? '' }}" placeholder="{{ 'descripción' }}">
                                                                     </div>
                                                                 </div>
                                                             @endforeach
                                                         @else
                                                             <div id="default-form-{{$key}}">
                                                                  <div class="form-group">
-                                                                    <label class="input-label">{{ translate('messages.title') }} (EN)</label>
-                                                                    <input type="text" name="options[{{$key}}][title][]" class="form-control" value="{{$option->title}}" placeholder="{{ translate('messages.title') }}">
+                                                                    <label class="input-label">{{ 'título' }} (EN)</label>
+                                                                    <input type="text" name="options[{{$key}}][title][]" class="form-control" value="{{$option->title}}" placeholder="{{ 'título' }}">
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label class="input-label">{{ translate('messages.description') }} (EN)</label>
-                                                                    <input type="text" name="options[{{$key}}][description][]" class="form-control" value="{{$option->description}}" placeholder="{{ translate('messages.description') }}">
+                                                                    <label class="input-label">{{ 'descripción' }} (EN)</label>
+                                                                    <input type="text" name="options[{{$key}}][description][]" class="form-control" value="{{$option->description}}" placeholder="{{ 'descripción' }}">
                                                                 </div>
                                                             </div>
                                                         @endif
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label class="input-label">{{ translate('messages.charge_multiplier') }}</label>
+                                                            <label class="input-label">{{ 'multiplicador de carga' }}</label>
                                                             <input type="number" step="0.1" name="options[{{$key}}][charge_multiplier]" class="form-control" value="{{$option->charge_multiplier}}">
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="input-label">{{ translate('messages.base_price') }} <small class="text-muted">(Hybrid Pricing)</small></label>
+                                                            <label class="input-label">{{ 'precio base' }} <small class="text-muted">(Hybrid Pricing)</small></label>
                                                             <input type="number" step="0.01" name="options[{{$key}}][base_price]" class="form-control" value="{{$option->base_price ?? 0}}" placeholder="0.00">
                                                             <small class="text-info">Base price + (Distance × Per Km Rate). Leave 0 for distance-only pricing.</small>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="input-label">{{ translate('messages.service_type') }}</label>
+                                                            <label class="input-label">{{ 'tipo de servicio' }}</label>
                                                             <select name="options[{{$key}}][service_type]" class="form-control">
-                                                                <option value="custom" {{$option->service_type=='custom'?'selected':''}}>{{ translate('messages.custom') }}</option>
-                                                                <option value="deliver_now" {{$option->service_type=='deliver_now'?'selected':''}}>{{ translate('messages.deliver_now') }}</option>
-                                                                <option value="schedule" {{$option->service_type=='schedule'?'selected':''}}>{{ translate('messages.schedule') }}</option>
-                                                                <option value="truck" {{$option->service_type=='truck'?'selected':''}}>{{ translate('messages.truck') }}</option>
-                                                                <option value="end_of_day" {{$option->service_type=='end_of_day'?'selected':''}}>{{ translate('messages.end_of_day') }}</option>
+                                                                <option value="custom" {{$option->service_type=='custom'?'selected':''}}>{{ 'costumbre' }}</option>
+                                                                <option value="deliver_now" {{$option->service_type=='deliver_now'?'selected':''}}>{{ 'entregar ahora' }}</option>
+                                                                <option value="schedule" {{$option->service_type=='schedule'?'selected':''}}>{{ 'cronograma' }}</option>
+                                                                <option value="truck" {{$option->service_type=='truck'?'selected':''}}>{{ 'camión' }}</option>
+                                                                <option value="end_of_day" {{$option->service_type=='end_of_day'?'selected':''}}>{{ 'final del dia' }}</option>
                                                             </select>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="input-label">{{ translate('messages.tag') }}</label>
+                                                            <label class="input-label">{{ 'etiqueta' }}</label>
                                                             <input type="text" name="options[{{$key}}][tag]" class="form-control" value="{{$option->tag}}" placeholder="e.g. Save 40%">
                                                         </div>
                                                          <div class="form-group">
-                                                            <label class="input-label">{{ translate('messages.icon') }}</label>
+                                                            <label class="input-label">{{ 'icono' }}</label>
                                                             <div class="custom-file">
                                                                 <input type="file" name="options[{{$key}}][icon]" 
                                                                     id="option-icon-{{$key}}"
                                                                     class="custom-file-input option-icon-input" 
                                                                     data-preview="viewer-option-{{$key}}"
                                                                     accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                                                <label class="custom-file-label" for="option-icon-{{$key}}">{{ translate('messages.choose_file') }}</label>
+                                                                <label class="custom-file-label" for="option-icon-{{$key}}">{{ 'elegir archivo' }}</label>
                                                             </div>
                                                             <div class="text-center mt-2">
                                                                 <img class="img--100 onerror-image" id="viewer-option-{{$key}}"
@@ -321,14 +321,14 @@
                                     @endforeach
                                 @endif
                             </div>
-                            <button type="button" class="btn btn-success" id="add-option-btn"><i class="tio-add"></i> {{ translate('messages.add_option') }}</button>
+                            <button type="button" class="btn btn-success" id="add-option-btn"><i class="tio-add"></i> {{ 'agregar opción' }}</button>
                         </div>
                         <div class="col-12">
                             <div class="btn--container justify-content-end">
                                 <button type="reset" id="reset_btn"
-                                    class="btn btn--reset">{{ translate('messages.reset') }}</button>
+                                    class="btn btn--reset">{{ 'reiniciar' }}</button>
                                 <button type="submit"
-                                    class="btn btn--primary">{{ translate('messages.update') }}</button>
+                                    class="btn btn--primary">{{ 'actualizar' }}</button>
                             </div>
                         </div>
                     </div>
@@ -366,7 +366,7 @@
             let html = `
                 <div class="card mb-3 option-row" id="option-row-${optionCount}">
                     <div class="card-header d-flex justify-content-between">
-                        <h6>{{ translate('Option') }} #${optionCount+1}</h6>
+                        <h6>{{ 'Opción' }} #${optionCount+1}</h6>
                         <button type="button" class="btn btn-danger btn-sm remove-option" data-id="${optionCount}"><i class="tio-delete"></i></button>
                     </div>
                     <div class="card-body">
@@ -375,72 +375,72 @@
                                 @if ($language)
                                     <div class="lang_form" id="default-form-${optionCount}">
                                         <div class="form-group">
-                                            <label class="input-label">{{ translate('messages.title') }} ({{ translate('messages.default') }})</label>
-                                            <input type="text" name="options[${optionCount}][title][]" class="form-control" placeholder="{{ translate('messages.title') }}">
+                                            <label class="input-label">{{ 'título' }} ({{ 'por defecto' }})</label>
+                                            <input type="text" name="options[${optionCount}][title][]" class="form-control" placeholder="{{ 'título' }}">
                                         </div>
                                         <div class="form-group">
-                                            <label class="input-label">{{ translate('messages.description') }} ({{ translate('messages.default') }})</label>
-                                            <input type="text" name="options[${optionCount}][description][]" class="form-control" placeholder="{{ translate('messages.description') }}">
+                                            <label class="input-label">{{ 'descripción' }} ({{ 'por defecto' }})</label>
+                                            <input type="text" name="options[${optionCount}][description][]" class="form-control" placeholder="{{ 'descripción' }}">
                                         </div>
                                     </div>
                                     @foreach (json_decode($language) as $lang)
                                         <div class="d-none lang_form" id="{{ $lang }}-form-${optionCount}">
                                             <div class="form-group">
-                                                <label class="input-label">{{ translate('messages.title') }} ({{ strtoupper($lang) }})</label>
-                                                <input type="text" name="options[${optionCount}][title][]" class="form-control" placeholder="{{ translate('messages.title') }}">
+                                                <label class="input-label">{{ 'título' }} ({{ strtoupper($lang) }})</label>
+                                                <input type="text" name="options[${optionCount}][title][]" class="form-control" placeholder="{{ 'título' }}">
                                             </div>
                                             <div class="form-group">
-                                                <label class="input-label">{{ translate('messages.description') }} ({{ strtoupper($lang) }})</label>
-                                                <input type="text" name="options[${optionCount}][description][]" class="form-control" placeholder="{{ translate('messages.description') }}">
+                                                <label class="input-label">{{ 'descripción' }} ({{ strtoupper($lang) }})</label>
+                                                <input type="text" name="options[${optionCount}][description][]" class="form-control" placeholder="{{ 'descripción' }}">
                                             </div>
                                         </div>
                                     @endforeach
                                 @else
                                     <div id="default-form-${optionCount}">
                                         <div class="form-group">
-                                            <label class="input-label">{{ translate('messages.title') }} (EN)</label>
-                                            <input type="text" name="options[${optionCount}][title][]" class="form-control" placeholder="{{ translate('messages.title') }}">
+                                            <label class="input-label">{{ 'título' }} (EN)</label>
+                                            <input type="text" name="options[${optionCount}][title][]" class="form-control" placeholder="{{ 'título' }}">
                                         </div>
                                         <div class="form-group">
-                                            <label class="input-label">{{ translate('messages.description') }} (EN)</label>
-                                            <input type="text" name="options[${optionCount}][description][]" class="form-control" placeholder="{{ translate('messages.description') }}">
+                                            <label class="input-label">{{ 'descripción' }} (EN)</label>
+                                            <input type="text" name="options[${optionCount}][description][]" class="form-control" placeholder="{{ 'descripción' }}">
                                         </div>
                                     </div>
                                 @endif
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="input-label">{{ translate('messages.charge_multiplier') }}</label>
+                                    <label class="input-label">{{ 'multiplicador de carga' }}</label>
                                     <input type="number" step="0.1" name="options[${optionCount}][charge_multiplier]" class="form-control" value="1.0">
                                 </div>
                                 <div class="form-group">
-                                    <label class="input-label">{{ translate('messages.base_price') }} <small class="text-muted">(Hybrid Pricing)</small></label>
+                                    <label class="input-label">{{ 'precio base' }} <small class="text-muted">(Hybrid Pricing)</small></label>
                                     <input type="number" step="0.01" name="options[${optionCount}][base_price]" class="form-control" value="0.00" placeholder="0.00">
                                     <small class="text-info">Base price + (Distance × Per Km Rate). Leave 0 for distance-only pricing.</small>
                                 </div>
                                 <div class="form-group">
-                                    <label class="input-label">{{ translate('messages.service_type') }}</label>
+                                    <label class="input-label">{{ 'tipo de servicio' }}</label>
                                     <select name="options[${optionCount}][service_type]" class="form-control">
-                                        <option value="custom">{{ translate('messages.custom') }}</option>
-                                        <option value="deliver_now">{{ translate('messages.deliver_now') }}</option>
-                                        <option value="schedule">{{ translate('messages.schedule') }}</option>
-                                        <option value="truck">{{ translate('messages.truck') }}</option>
-                                        <option value="end_of_day">{{ translate('messages.end_of_day') }}</option>
+                                        <option value="custom">{{ 'costumbre' }}</option>
+                                        <option value="deliver_now">{{ 'entregar ahora' }}</option>
+                                        <option value="schedule">{{ 'cronograma' }}</option>
+                                        <option value="truck">{{ 'camión' }}</option>
+                                        <option value="end_of_day">{{ 'final del dia' }}</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label class="input-label">{{ translate('messages.tag') }}</label>
+                                    <label class="input-label">{{ 'etiqueta' }}</label>
                                     <input type="text" name="options[${optionCount}][tag]" class="form-control" placeholder="e.g. Save 40%">
                                 </div>
                                 <div class="form-group">
-                                    <label class="input-label">{{ translate('messages.icon') }}</label>
+                                    <label class="input-label">{{ 'icono' }}</label>
                                     <div class="custom-file">
                                         <input type="file" name="options[${optionCount}][icon]" 
                                             id="option-icon-${optionCount}"
                                             class="custom-file-input option-icon-input" 
                                             data-preview="viewer-option-${optionCount}"
                                             accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                        <label class="custom-file-label" for="option-icon-${optionCount}">{{ translate('messages.choose_file') }}</label>
+                                        <label class="custom-file-label" for="option-icon-${optionCount}">{{ 'elegir archivo' }}</label>
                                     </div>
                                     <div class="text-center mt-2">
                                         <img class="img--100 onerror-image" id="viewer-option-${optionCount}"

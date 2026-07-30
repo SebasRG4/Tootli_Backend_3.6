@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', \App\Models\BusinessSetting::where(['key' => 'business_name'])->first()->value ?? translate('messages.dashboard'))
+@section('title', \App\Models\BusinessSetting::where(['key' => 'business_name'])->first()->value ?? 'Panel de Control')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -14,16 +14,16 @@
                 <div class="d-flex align-items-center flex-grow-1">
                     <img src="{{asset('assets/admin/img/new-img/users.svg')}}" alt="img">
                     <div class="w-0 flex-grow pl-3">
-                        <h1 class="page-header-title mb-1">{{translate('Dispatch Overview')}}</h1>
+                        <h1 class="page-header-title mb-1">{{'Descripción general del envío'}}</h1>
                         <p class="page-header-text text-dark m-0">
-                            {{translate('Monitor your')}}
-                            <span class="font-semibold">{{translate('Dispatch Management')}}</span>
-                            {{translate('statistics by zone')}}
+                            {{'Monitorea tu'}}
+                            <span class="font-semibold">{{'Gestión de despacho'}}</span>
+                            {{'estadísticas por zona'}}
                         </p>
                     </div>
                 </div>
                 <div class="alert bg--10 font-bold fs-14" role="alert">
-                    {{ translate('This_section_only_contains_Order_Data') }}
+                    {{ 'Esta sección solo contiene datos del pedido.' }}
                 </div>
             </div>
         </div>
@@ -38,7 +38,7 @@
                                     alt="new-img">
                                 <h4>{{$active_deliveryman}}</h4>
                             </div>
-                            <h4 class="subtitle text-capitalize mt-2">{{translate('messages.active_delivery_man')}}</h4>
+                            <h4 class="subtitle text-capitalize mt-2">{{'repartidor activo'}}</h4>
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -50,11 +50,11 @@
                             <div class="d-flex justify-content-around gap-3 flex-grow-1">
                                 <div>
                                     <h4 class="title">{{ $inactive_deliveryman }}</h4>
-                                    <h4 class="subtitle text-capitalize">{{translate('messages.in_Active')}}</h4>
+                                    <h4 class="subtitle text-capitalize">{{'en activo'}}</h4>
                                 </div>
                                 <div>
                                     <h4 class="title">{{ $suspend_deliveryman }}</h4>
-                                    <h4 class="subtitle text-capitalize">{{ translate('suspended')}}</h4>
+                                    <h4 class="subtitle text-capitalize">{{ 'suspendido'}}</h4>
                                 </div>
                             </div>
                         </div>
@@ -66,7 +66,7 @@
                                     alt="new-img">
                                 <h4>{{ $unavailable_deliveryman }}</h4>
                             </div>
-                            <h4 class="subtitle text-capitalize mt-2">{{ translate('Fully Booked Delivery Man')}}</h4>
+                            <h4 class="subtitle text-capitalize mt-2">{{ 'Repartidor completamente reservado'}}</h4>
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -76,7 +76,7 @@
                                     alt="new-img">
                                 <h4>{{$available_deliveryman}}</h4>
                             </div>
-                            <h4 class="subtitle text-capitalize mt-2">{{translate('Available to assign more order')}}</h4>
+                            <h4 class="subtitle text-capitalize mt-2">{{'Disponible para asignar más orden'}}</h4>
                         </div>
                     </div>
                 </div>
@@ -90,7 +90,7 @@
                                     <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                         <img src="{{asset('assets/admin/img/dashboard/food/unassigned.svg')}}"
                                             alt="dashboard" class="oder--card-icon">
-                                        <span>{{translate('messages.unassigned_orders')}}</span>
+                                        <span>{{'Pedidos Sin Asignar'}}</span>
                                     </h6>
                                     <span class="card-title text-00A3FF">
                                         {{$data['searching_for_dm']}}
@@ -104,7 +104,7 @@
                                     <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                         <img src="{{asset('assets/admin/img/dashboard/food/accepted.svg')}}"
                                             alt="dashboard" class="oder--card-icon">
-                                        <span>{{translate('Accepted by Delivery Man')}}</span>
+                                        <span>{{'Aceptado por el repartidor'}}</span>
                                     </h6>
                                     <span class="card-title text-success">
                                         {{$data['accepted_by_dm']}}
@@ -118,7 +118,7 @@
                                     <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                         <img src="{{asset('assets/admin/img/dashboard/food/out-for.svg')}}"
                                             alt="dashboard" class="oder--card-icon">
-                                        <span>{{translate('Out for Delivery')}}</span>
+                                        <span>{{'Fuera de entrega'}}</span>
                                     </h6>
                                     <span class="card-title text-success">
                                         {{$data['picked_up']}}
@@ -134,14 +134,14 @@
                 <div class="__map-wrapper-2 mt-3">
                     <div class="map-pop-deliveryman">
                         <form action="javascript:" id="search-form" class="map-pop-deliveryman-inner">
-                            <label>{{ translate('Currently Active Delivery Men') }} </label>
+                            <label>{{ 'Repartidores actualmente activos' }} </label>
                             <div class="position-relative mx-auto">
                                 <i class="tio-search"></i>
                                 <input type="text" name="search" class="form-control"
-                                    placeholder="{{translate('Search Delivery Man ...')}}">
+                                    placeholder="{{'Buscar repartidor...'}}">
                             </div>
                             <a href="{{ route('admin.users.delivery-man.list') }}"
-                                class="link font-semibold">{{ translate('View All Delivery Men') }}</a>
+                                class="link font-semibold">{{ 'Ver todos los repartidores' }}</a>
                         </form>
                     </div>
                     <div class="map-warper map-wrapper-2 rounded">

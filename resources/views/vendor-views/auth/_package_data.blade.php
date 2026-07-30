@@ -12,7 +12,7 @@
                         {{ \App\CentralLogics\Helpers::format_currency($package->price) }}
                     </h2>
                     <div class="day-count">{{ $package->validity }}
-                        {{ translate('messages.days') }}</div>
+                        {{ 'días' }}</div>
                 </div>
                 <ul class="info">
 
@@ -22,7 +22,7 @@
                                 alt="">
                             <img src="{{ asset('assets/landing/img/check-2.svg') }}" class="check-white"
                                 alt=""> <span>
-                                {{ translate('messages.POS') }} </span>
+                                {{ 'punto de venta' }} </span>
                         </li>
                     @endif
                     @if ($package->mobile_app)
@@ -31,7 +31,7 @@
                                 alt="">
                             <img src="{{ asset('assets/landing/img/check-2.svg') }}" class="check-white"
                                 alt=""> <span>
-                                {{ translate('messages.mobile_app') }} </span>
+                                {{ 'aplicación móvil' }} </span>
                         </li>
                     @endif
                     @if ($package->chat)
@@ -40,7 +40,7 @@
                                 alt="">
                             <img src="{{ asset('assets/landing/img/check-2.svg') }}" class="check-white"
                                 alt=""> <span>
-                                {{ translate('messages.chatting_options') }} </span>
+                                {{ 'opciones de chat' }} </span>
                         </li>
                     @endif
                     @if ($package->review)
@@ -49,7 +49,7 @@
                                 alt="">
                             <img src="{{ asset('assets/landing/img/check-2.svg') }}" class="check-white"
                                 alt=""> <span>
-                                {{ translate('messages.review_section') }} </span>
+                                {{ 'sección de revisión' }} </span>
                         </li>
                     @endif
                     @if ($package->self_delivery)
@@ -58,7 +58,7 @@
                                 alt="">
                             <img src="{{ asset('assets/landing/img/check-2.svg') }}" class="check-white"
                                 alt=""> <span>
-                                {{ translate('messages.self_delivery') }} </span>
+                                {{ 'autoentrega' }} </span>
                         </li>
                     @endif
                     @if ($package->max_order == 'unlimited')
@@ -67,7 +67,7 @@
                                 alt="">
                             <img src="{{ asset('assets/landing/img/check-2.svg') }}" class="check-white"
                                 alt=""> <span>
-                                {{ isset($module) && $module == 'rental' ?  translate('messages.Unlimited_Trips') : translate('messages.Unlimited_Orders') }} </span>
+                                {{ isset($module) && $module == 'rental' ?  'Viajes ilimitados' : 'Pedidos ilimitados' }} </span>
                         </li>
                     @else
                         <li>
@@ -76,7 +76,7 @@
                             <img src="{{ asset('assets/landing/img/check-2.svg') }}" class="check-white"
                                 alt=""> <span>
                                 {{ $package->max_order }}
-                                {{ isset($module) && $module == 'rental' ?  translate('messages.Trips') : translate('messages.Orders') }} </span>
+                                {{ isset($module) && $module == 'rental' ?  'Viajes' : 'Órdenes' }} </span>
                         </li>
                     @endif
                     @if ($package->max_product == 'unlimited')
@@ -85,7 +85,7 @@
                                 alt="">
                             <img src="{{ asset('assets/landing/img/check-2.svg') }}" class="check-white"
                                 alt=""> <span>
-                                {{ translate('messages.Unlimited_uploads') }} </span>
+                                {{ 'Cargas ilimitadas' }} </span>
                         </li>
                     @else
                         <li>
@@ -94,7 +94,7 @@
                             <img src="{{ asset('assets/landing/img/check-2.svg') }}" class="check-white"
                                 alt=""> <span>
                                 {{ $package->max_product }}
-                                {{ translate('messages.uploads') }} </span>
+                                {{ 'cargas' }} </span>
                         </li>
                     @endif
                 </ul>

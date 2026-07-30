@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title', translate('messages.POS Orders'))
+@section('title', 'Pedidos POS')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -26,26 +26,26 @@
                                 <span class="pos-grill-search-icon" aria-hidden="true"><i class="tio-search"></i></span>
                                 <input id="datatableSearch" type="search" value="{{ $keyword ?? '' }}" name="search"
                                     class="pos-grill-search-input"
-                                    placeholder="{{ translate('messages.pos_shell_search_placeholder') }}"
-                                    aria-label="{{ translate('messages.search_here') }}">
-                                <button type="button" onclick="openBarcodeScanner('datatableSearch')" class="bg-transparent border-0 p-0 mr-1" style="cursor: pointer;" title="{{ translate('Escanear con cámara') }}">
+                                    placeholder="{{ 'marcador de posición de búsqueda pos shell' }}"
+                                    aria-label="{{ 'buscar aquí' }}">
+                                <button type="button" onclick="openBarcodeScanner('datatableSearch')" class="bg-transparent border-0 p-0 mr-1" style="cursor: pointer;" title="{{ 'Escanear con cámara' }}">
                                     <i class="tio-camera text-muted" style="font-size: 1.25rem;"></i>
                                 </button>
-                                <button class="pos-grill-search-submit" type="submit" aria-label="{{ translate('messages.search_here') }}">
+                                <button class="pos-grill-search-submit" type="submit" aria-label="{{ 'buscar aquí' }}">
                                     <i class="tio-filter-list"></i>
                                 </button>
                             </form>
                         </header>
 
                         <div class="pos-grill-section-head">
-                            <h2 class="pos-grill-section-title">{{ translate('messages.pos_shell_find_food') }}</h2>
+                            <h2 class="pos-grill-section-title">{{ 'pos shell encontrar comida' }}</h2>
                         </div>
 
                         <div class="pos-grill-category-scroll">
-                            <div class="pos-grill-pills" role="tablist" aria-label="{{ translate('messages.select_category') }}">
+                            <div class="pos-grill-pills" role="tablist" aria-label="{{ 'seleccionar categoría' }}">
                                 <button type="button" role="tab"
                                     class="pos-grill-pill {{ (int) $category === 0 ? 'active' : '' }}"
-                                    data-category-id="">{{ translate('messages.all_categories') }}</button>
+                                    data-category-id="">{{ 'todas las categorias' }}</button>
                                 @foreach ($categories as $item)
                                     <button type="button" role="tab"
                                         class="pos-grill-pill {{ (int) $category === (int) $item->id ? 'active' : '' }}"
@@ -54,9 +54,9 @@
                             </div>
                         </div>
 
-                        <select name="category" id="category" class="pos-grill-category-native" title="{{ translate('messages.select_category') }}"
+                        <select name="category" id="category" class="pos-grill-category-native" title="{{ 'seleccionar categoría' }}"
                             data-pos-ajax-category="1" tabindex="-1" aria-hidden="true">
-                            <option value="">{{ translate('messages.all_categories') }}</option>
+                            <option value="">{{ 'todas las categorias' }}</option>
                             @foreach ($categories as $item)
                                 <option value="{{ $item->id }}" {{ (int) $category === (int) $item->id ? 'selected' : '' }}>
                                     {{ Str::limit($item->name, 40) }}</option>
@@ -71,16 +71,16 @@
                 <aside class="pos-grill-order-col order--pos-right">
                     <div class="pos-grill-panel pos-grill-order-panel card">
                         <div class="pos-grill-order-header card-header border-0 d-flex flex-wrap align-items-center justify-content-between gap-2">
-                            <h2 class="pos-grill-order-title mb-0">{{ translate('messages.pos_shell_my_order') }}</h2>
-                            <span class="badge badge-soft-dark">{{ translate('messages.tootli_direct_order_badge') }}</span>
+                            <h2 class="pos-grill-order-title mb-0">{{ 'pos shell mi pedido' }}</h2>
+                            <span class="badge badge-soft-dark">{{ 'insignia de pedido directo de tootli' }}</span>
                         </div>
                         <div class="w-100">
                             <div class="d-flex flex-wrap flex-row p-2 add--customer-btn">
                                 <select id='customer' name="customer_id"
-                                    data-placeholder="{{ translate('messages.pos_internal_customer_placeholder') }}"
+                                    data-placeholder="{{ 'marcador de posición del cliente interno pos' }}"
                                     class="js-data-example-ajax form-control"></select>
                                 <button class="btn btn--primary" type="button" data-toggle="modal"
-                                    data-target="#add-internal-customer">{{ translate('messages.add_internal_customer') }}</button>
+                                    data-target="#add-internal-customer">{{ 'agregar cliente interno' }}</button>
                             </div>
                             <div class="pos--delivery-options">
                                 <div class="d-flex justify-content-between">
@@ -88,13 +88,13 @@
                                         <span class="card-title-icon">
                                             <i class="tio-user"></i>
                                         </span>
-                                        <span>{{ translate('messages.pos_delivery_information') }}</span>
+                                        <span>{{ 'información pos entrega' }}</span>
                                     </h5>
                                     <span class="delivery--edit-icon text-primary" id="delivery_address"
                                         data-toggle="modal" data-target="#paymentModal"><i class="tio-edit"></i></span>
                                 </div>
                                 @if ($store_data->sub_self_delivery != 1)
-                                    <p class="small text-muted mb-2">{{ translate('messages.tootli_direct_pos_delivery_hint') }}</p>
+                                    <p class="small text-muted mb-2">{{ 'sugerencia de entrega pos directa de tootli' }}</p>
                                 @endif
                                 <div class="pos--delivery-options-info d-flex flex-wrap" id="del-add">
                                     @include('vendor-views.pos._address')
@@ -116,7 +116,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ translate('messages.add_internal_customer') }}</h5>
+                    <h5 class="modal-title">{{ 'agregar cliente interno' }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -125,20 +125,20 @@
                     <form action="{{ route('vendor.pos.internal-customer-store') }}" method="post">
                         @csrf
                         <div class="form-group">
-                            <label class="input-label">{{ translate('first_name') }} <span class="text-danger">*</span></label>
+                            <label class="input-label">{{ 'nombre de pila' }} <span class="text-danger">*</span></label>
                             <input type="text" name="f_name" class="form-control" required maxlength="100">
                         </div>
                         <div class="form-group">
-                            <label class="input-label">{{ translate('last_name') }}</label>
+                            <label class="input-label">{{ 'apellido' }}</label>
                             <input type="text" name="l_name" class="form-control" maxlength="100">
                         </div>
                         <div class="form-group">
-                            <label class="input-label">{{ translate('phone') }} <span class="text-danger">*</span></label>
+                            <label class="input-label">{{ 'teléfono' }} <span class="text-danger">*</span></label>
                             <input type="text" name="phone" class="form-control" required maxlength="20">
                         </div>
-                        <p class="small text-muted mb-0">{{ translate('messages.internal_customer_help') }}</p>
+                        <p class="small text-muted mb-0">{{ 'ayuda al cliente interno' }}</p>
                         <div class="btn--container justify-content-end mt-3">
-                            <button type="submit" class="btn btn--primary">{{ translate('submit') }}</button>
+                            <button type="submit" class="btn btn--primary">{{ 'entregar' }}</button>
                         </div>
                     </form>
                 </div>
@@ -162,7 +162,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">{{ translate('messages.print_invoice') }}
+                        <h5 class="modal-title">{{ 'imprimir factura' }}
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -173,7 +173,7 @@
                             <div class="text-center">
                                 <input type="button" class="btn btn--primary non-printable text-white print-Div"
                                     value="Proceed, If thermal printer is ready." />
-                                <a href="{{ url()->previous() }}" class="btn btn-danger non-printable">{{translate('messages.back')}}</a>
+                                <a href="{{ url()->previous() }}" class="btn btn-danger non-printable">{{'atrás'}}</a>
                             </div>
                             <hr class="non-printable">
                         </div> --}}
@@ -213,7 +213,7 @@
             const storeLat = parseFloat({{ $store_data ? json_encode((float) $store_data->latitude) : '23.757989' }}, 10) || 23.757989;
             const storeLng = parseFloat({{ $store_data ? json_encode((float) $store_data->longitude) : '90.360587' }}, 10) || 90.360587;
             const storeName = @json($store_data?->name ?? '');
-            const storeLabel = @json(translate('messages.pos_map_store_marker_title'));
+            const storeLabel = @json('título del marcador de la tienda del mapa pos');
 
             let map = new google.maps.Map(document.getElementById("map"), {
                 zoom: 15,
@@ -274,7 +274,7 @@
                             place.geometry.location,
                             zonePolygon
                         )) {
-                        toastr.error('{{ translate('messages.out_of_coverage') }}', {
+                        toastr.error('{{ 'fuera de cobertura' }}', {
                             CloseButton: true,
                             ProgressBar: true
                         });
@@ -463,7 +463,7 @@
                             const latNum = parseFloat(lat);
                             const lngNum = parseFloat(lng);
                             if (!isFinite(latNum) || !isFinite(lngNum)) {
-                                toastr.error('{{ translate('messages.maps_link_no_coordinates') }}', {
+                                toastr.error('{{ 'enlaces de mapas sin coordenadas' }}', {
                                     CloseButton: true,
                                     ProgressBar: true
                                 });
@@ -471,7 +471,7 @@
                             }
                             const pos = new google.maps.LatLng(latNum, lngNum);
                             if (!google.maps.geometry.poly.containsLocation(pos, zonePolygon)) {
-                                toastr.error('{{ translate('messages.out_of_coverage') }}', {
+                                toastr.error('{{ 'fuera de cobertura' }}', {
                                     CloseButton: true,
                                     ProgressBar: true
                                 });
@@ -520,7 +520,7 @@
         $(document).on('click', '#pos_apply_gmaps_link', function () {
             const raw = ($('#gmaps_delivery_link').val() || '').trim();
             if (!raw) {
-                toastr.warning('{{ translate('messages.maps_paste_link_empty') }}', {
+                toastr.warning('{{ 'mapas pegar enlace vacío' }}', {
                     CloseButton: true,
                     ProgressBar: true
                 });
@@ -531,7 +531,7 @@
                 if (typeof window.posApplyDeliveryLatLngFromLink === 'function') {
                     window.posApplyDeliveryLatLngFromLink(local.lat, local.lng);
                 } else {
-                    toastr.error('{{ translate('messages.pos_maps_link_map_not_ready') }}', {
+                    toastr.error('{{ 'mapa de enlaces de mapas pos no está listo' }}', {
                         CloseButton: true,
                         ProgressBar: true
                     });
@@ -539,7 +539,7 @@
                 return;
             }
             if (!/^https?:\/\//i.test(raw)) {
-                toastr.warning('{{ translate('messages.invalid_maps_link') }}', {
+                toastr.warning('{{ 'enlace de mapas no válido' }}', {
                     CloseButton: true,
                     ProgressBar: true
                 });
@@ -553,14 +553,14 @@
                     if (res.lat != null && res.lng != null && typeof window.posApplyDeliveryLatLngFromLink === 'function') {
                         window.posApplyDeliveryLatLngFromLink(parseFloat(res.lat), parseFloat(res.lng));
                     } else {
-                        toastr.error('{{ translate('messages.pos_maps_link_map_not_ready') }}', {
+                        toastr.error('{{ 'mapa de enlaces de mapas pos no está listo' }}', {
                             CloseButton: true,
                             ProgressBar: true
                         });
                     }
                 },
                 error: function (xhr) {
-                    let msg = '{{ translate('messages.maps_link_no_coordinates') }}';
+                    let msg = '{{ 'enlaces de mapas sin coordenadas' }}';
                     const err0 = xhr.responseJSON && xhr.responseJSON.errors && xhr.responseJSON.errors[0];
                     if (err0 && err0.message) {
                         msg = err0.message;
@@ -797,7 +797,7 @@
                             Swal.fire({
                                 icon: 'info',
                                 title: 'Cart',
-                                text: "{{ translate('messages.product_already_added_in_cart') }}"
+                                text: "{{ 'producto ya agregado en el carrito' }}"
                             });
                             return false;
                         } else if (data.data === 2) {
@@ -805,7 +805,7 @@
                             Swal.fire({
                                 icon: 'info',
                                 title: 'Cart',
-                                text: "{{ translate('messages.product_has_been_updated_in_cart') }}"
+                                text: "{{ 'El producto ha sido actualizado en el carrito.' }}"
                             });
 
                             return false;
@@ -813,7 +813,7 @@
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Cart',
-                                text: '{{ translate('messages.Sorry, product out of stock') }}'
+                                text: '{{ 'Lo sentimos, producto agotado' }}'
                             });
                             return false;
                         } else if (data.data === 'letiation_error') {
@@ -826,7 +826,7 @@
                         }
                         $('.call-when-done').click();
 
-                        toastr.success('{{ translate('messages.product_has_been_added_in_cart') }}', {
+                        toastr.success('{{ 'El producto ha sido añadido al carrito.' }}', {
                             CloseButton: true,
                             ProgressBar: true
                         });
@@ -840,8 +840,8 @@
             } else {
                 Swal.fire({
                     type: 'info',
-                    title: '{{translate('Cart')}}',
-                    text: '{{ translate('Please choose all the options') }}'
+                    title: '{{'Carro'}}',
+                    text: '{{ 'Por favor elige todas las opciones' }}'
                 });
             }
 
@@ -862,7 +862,7 @@
                     }
                 } else {
                     updateCart();
-                    toastr.info('{{ translate('messages.item_has_been_removed_from_cart') }}', {
+                    toastr.info('{{ 'El artículo ha sido eliminado del carrito.' }}', {
                         CloseButton: true,
                         ProgressBar: true
                     });
@@ -877,7 +877,7 @@
             }, function() {
                 $('#del-add').empty();
                 updateCart();
-                toastr.info('{{ translate('messages.item_has_been_removed_from_cart') }}', {
+                toastr.info('{{ 'El artículo ha sido eliminado del carrito.' }}', {
                     CloseButton: true,
                     ProgressBar: true
                 });
@@ -1069,7 +1069,7 @@
            let form_id = 'payable_store_amount';
 
                 if($('#paid').val() < 0){
-                    toastr.error('{{ translate('Amount_must_be_grater_then_0') }}', {
+                    toastr.error('{{ 'La cantidad debe ser mayor que 0' }}', {
                             CloseButton: true,
                             ProgressBar: true
                         });
@@ -1077,7 +1077,7 @@
                         return;
                 }
                 if($('#paid').val() < $('#total_order_amount').val() ){
-                    toastr.error('{{ translate('This_amount_must_grater_then_order_amount') }}', {
+                    toastr.error('{{ 'Esta cantidad debe ser mayor que la cantidad del pedido.' }}', {
                             CloseButton: true,
                             ProgressBar: true
                         });
@@ -1143,7 +1143,7 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Cart',
-                    text: '{{ translate('Sorry, the minimum value was reached') }}'
+                    text: '{{ 'Lo sentimos, se alcanzó el valor mínimo.' }}'
                 });
                 element.val(element.data('oldValue'));
             }
@@ -1195,7 +1195,7 @@
         @if (!empty($posPreselectInternal) && is_array($posPreselectInternal))
         (function () {
             var pre = @json($posPreselectInternal);
-            var internalLabel = @json(translate('messages.store_internal_customer'));
+            var internalLabel = @json('tienda cliente interno');
             if (!pre || !pre.id) return;
             var optId = 'internal:' + pre.id;
             var name = (pre.f_name || '') + ' ' + (pre.l_name || '');

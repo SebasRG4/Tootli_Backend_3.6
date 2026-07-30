@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.deliverymen_earning_provide'))
+@section('title','repartidores ganando proporcionar')
 
 @push('css_or_js')
 
@@ -15,7 +15,7 @@
                 <img src="{{asset('assets/admin/img/report.png')}}" class="w--22" alt="">
             </span>
             <span>
-                {{translate('messages.provide_deliverymen_earning')}}
+                {{'proporcionar a los repartidores ganancias'}}
             </span>
         </h1>
     </div>
@@ -27,34 +27,34 @@
                 <div class="row g-3">
                     <div class="col-sm-6">
                         <div class="form-group mb-0">
-                            <label class="form-label" for="deliveryman">{{translate('messages.deliveryman')}}<span class="input-label-secondary"></span></label>
-                            <select id="deliveryman" name="deliveryman_id" data-placeholder="{{translate('messages.select_deliveryman')}}" data-url="{{url('/')}}/admin/users/delivery-man/get-account-data/" data-type="deliveryman" class="form-control account-data" title="Select deliveryman">
+                            <label class="form-label" for="deliveryman">{{'Repartidor'}}<span class="input-label-secondary"></span></label>
+                            <select id="deliveryman" name="deliveryman_id" data-placeholder="{{'seleccionar repartidor'}}" data-url="{{url('/')}}/admin/users/delivery-man/get-account-data/" data-type="deliveryman" class="form-control account-data" title="Select deliveryman">
 
                             </select>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group mb-0">
-                            <label class="form-label" for="amount">{{translate('messages.amount')}}<span class="input-label-secondary" id="account_info"></span></label>
-                            <input class="form-control" type="number" min="1" step="0.01" name="amount" id="amount" max="999999999999.99" placeholder="{{translate('ex_100')}}">
+                            <label class="form-label" for="amount">{{'cantidad'}}<span class="input-label-secondary" id="account_info"></span></label>
+                            <input class="form-control" type="number" min="1" step="0.01" name="amount" id="amount" max="999999999999.99" placeholder="{{'ex 100'}}">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group mb-0">
-                            <label class="form-label" for="method">{{translate('messages.method')}}<span class="input-label-secondary"></span></label>
-                            <input class="form-control" type="text" name="method" id="method" required maxlength="191" placeholder="{{translate('ex_cash')}}">
+                            <label class="form-label" for="method">{{'método'}}<span class="input-label-secondary"></span></label>
+                            <input class="form-control" type="text" name="method" id="method" required maxlength="191" placeholder="{{'ex efectivo'}}">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group mb-0">
-                            <label class="form-label" for="ref">{{translate('messages.reference')}}<span class="input-label-secondary"></span></label>
-                            <input  class="form-control" type="text" name="ref" id="ref" maxlength="191" placeholder="{{translate('ex_collect_cash')}}">
+                            <label class="form-label" for="ref">{{'referencia'}}<span class="input-label-secondary"></span></label>
+                            <input  class="form-control" type="text" name="ref" id="ref" maxlength="191" placeholder="{{'ex cobrar efectivo'}}">
                         </div>
                     </div>
                     <div class="col-sm-12">
                         <div class="btn--container justify-content-end">
-                            <button class="btn btn--reset" type="reset" id="reset_btn">{{translate('messages.reset')}}</button>
-                            <button class="btn btn--primary" type="submit">{{translate('messages.save')}}</button>
+                            <button class="btn btn--reset" type="reset" id="reset_btn">{{'reiniciar'}}</button>
+                            <button class="btn btn--primary" type="submit">{{'ahorrar'}}</button>
                         </div>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                                 <i class="tio-user"></i>
                             </span>
                             <span>
-                                {{ translate('messages.deliverymen_earning_provide_table')}}
+                                {{ 'repartidores que ganan proporcionan tabla'}}
                             </span>
                             <span class="badge badge-soft-secondary" id="itemCount">
                                 ({{ $provide_dm_earning->total() }})
@@ -82,7 +82,7 @@
                         {{-- @csrf --}}
                             <!-- Search -->
                             <div class="input-group input--group">
-                                <input id="datatableSearch" name="search" type="search" class="form-control h--40px" placeholder="{{translate('ex_:_search_delivery_man')}}" value="{{ request()?->search ?? null}}" aria-label="{{translate('messages.search_here')}}">
+                                <input id="datatableSearch" name="search" type="search" class="form-control h--40px" placeholder="{{'Ej: buscar repartidor'}}" value="{{ request()?->search ?? null}}" aria-label="{{'buscar aquí'}}">
                                 <button type="submit" class="btn btn--secondary h--40px"><i class="tio-search"></i></button>
                             </div>
                             <!-- End Search -->
@@ -95,23 +95,23 @@
                                         "target": "#usersExportDropdown",
                                         "type": "css-animation"
                                     }'>
-                                <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                                <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                             </a>
 
                             <div id="usersExportDropdown"
                                 class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                                <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                                <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                                 <a id="export-excel" class="dropdown-item" href="{{route('admin.transactions.export-deliveryman-earning', ['type'=>'excel',request()->getQueryString()])}}">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
                                         src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                         alt="Image Description">
-                                    {{ translate('messages.excel') }}
+                                    {{ 'sobresalir' }}
                                 </a>
                                 <a id="export-csv" class="dropdown-item" href="{{route('admin.transactions.export-deliveryman-earning', ['type'=>'csv',request()->getQueryString()])}}">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
                                         src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                         alt="Image Description">
-                                    .{{ translate('messages.csv') }}
+                                    .{{ 'csv' }}
                                 </a>
                             </div>
                         </div>
@@ -124,26 +124,26 @@
                             class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
                             <thead class="thead-light">
                                 <tr>
-                                    <th class="border-0">{{translate('sl')}}</th>
-                                    <th class="border-0">{{translate('messages.name')}}</th>
-                                    <th class="border-0">{{translate('messages.received_at')}}</th>
-                                    <th class="border-0">{{translate('messages.amount')}}</th>
-                                    <th class="border-0">{{translate('messages.method')}}</th>
-                                    <th class="border-0">{{translate('messages.reference')}}</th>
+                                    <th class="border-0">{{'SL'}}</th>
+                                    <th class="border-0">{{'nombre'}}</th>
+                                    <th class="border-0">{{'recibido en'}}</th>
+                                    <th class="border-0">{{'cantidad'}}</th>
+                                    <th class="border-0">{{'método'}}</th>
+                                    <th class="border-0">{{'referencia'}}</th>
                                 </tr>
                             </thead>
                             <tbody id="set-rows">
                             @foreach($provide_dm_earning as $k=>$at)
                                 <tr>
                                     <td>{{$k+$provide_dm_earning->firstItem()}}</td>
-                                    <td>@if($at->delivery_man)<a href="{{route('admin.users.delivery-man.preview', $at->delivery_man_id)}}">{{$at->delivery_man->f_name.' '.$at->delivery_man->l_name}}</a> @else <label class="text-capitalize text-danger">{{translate('messages.deliveryman_deleted')}}</label> @endif </td>
+                                    <td>@if($at->delivery_man)<a href="{{route('admin.users.delivery-man.preview', $at->delivery_man_id)}}">{{$at->delivery_man->f_name.' '.$at->delivery_man->l_name}}</a> @else <label class="text-capitalize text-danger">{{'repartidor eliminado'}}</label> @endif </td>
                                     <td>{{\App\CentralLogics\Helpers::time_date_format($at->created_at)}}</td>
                                     <td>{{\App\CentralLogics\Helpers::format_currency($at['amount'])}}</td>
                                     <td>{{$at['method']}}</td>
                                     @if(  $at['ref'] == 'delivery_man_wallet_adjustment_full')
-                                        <td>{{ translate('wallet_adjusted') }}</td>
+                                        <td>{{ 'billetera ajustada' }}</td>
                                     @elseif( $at['ref'] == 'delivery_man_wallet_adjustment_partial')
-                                        <td>{{ translate('wallet_adjusted_partially') }}</td>
+                                        <td>{{ 'cartera ajustada parcialmente' }}</td>
                                     @else
                                         <td>{{$at['ref']}}</td>
                                     @endif
@@ -163,7 +163,7 @@
                 <div class="empty--data">
                     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
-                        {{translate('no_data_found')}}
+                        {{'no se encontraron datos'}}
                     </h5>
                 </div>
                 @endif
@@ -227,7 +227,7 @@
                         });
                     }
                 } else {
-                    toastr.success('{{translate('messages.transaction_saved')}}', {
+                    toastr.success('{{'transacción guardada'}}', {
                         CloseButton: true,
                         ProgressBar: true
                     });
@@ -245,7 +245,7 @@
                 url: route+data_id,
                 dataType: 'json',
                 success: function (data) {
-                    $('#account_info').html('({{translate('messages.cash_in_hand')}}: '+data.cash_in_hand+' {{translate('messages.earning_balance')}}: '+data.earning_balance+')');
+                    $('#account_info').html('({{'efectivo en mano'}}: '+data.cash_in_hand+' {{'saldo de ganancias'}}: '+data.earning_balance+')');
                 },
             });
     }

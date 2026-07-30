@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-lg-12 text-center ">
-        <h1> {{ translate('Category_List') }}
+        <h1> {{ 'Lista de categorías' }}
         </h1>
     </div>
     <div class="col-lg-12">
@@ -8,10 +8,10 @@
         <table>
             <thead>
                 <tr>
-                    <th>{{ translate('Filter_Criteria') }}</th>
+                    <th>{{ 'Criterios de filtrado' }}</th>
                     <th></th>
                     <th>
-                        {{ translate('Search_Bar_Content') }}: {{ $data['search'] ?? translate('N/A') }}
+                        {{ 'Contenido de la barra de búsqueda' }}: {{ $data['search'] ?? 'N / A' }}
 
                     </th>
                     <th> </th>
@@ -19,14 +19,14 @@
 
 
                 <tr>
-                    <th class="border-0">{{ translate('sl') }}</th>
-                    <th class="border-0">{{ translate('messages.id') }}</th>
-                    <th class="">{{ translate('messages.Category_Name') }}</th>
+                    <th class="border-0">{{ 'SL' }}</th>
+                    <th class="border-0">{{ 'identificación' }}</th>
+                    <th class="">{{ 'Nombre de categoría' }}</th>
                     @if ($data['categoryWiseTax'])
 
-                    <th class="border-0 w--1">{{ translate('messages.Vat/Tax') }}</th>
+                    <th class="border-0 w--1">{{ 'IVA/Impuesto' }}</th>
                     @endif
-                    <th class="border-0 text-center">{{ translate('messages.status') }}</th>
+                    <th class="border-0 text-center">{{ 'estado' }}</th>
 
             </thead>
 
@@ -51,13 +51,13 @@
                                         </span> </span>
                                     <br>
                                 @empty
-                                    <span> {{ translate('messages.no_tax') }} </span>
+                                    <span> {{ 'sin impuestos' }} </span>
                                 @endforelse
                             </span>
                         </td>
                         @endif
 
-                        <td>{{ $category->status == 1 ? translate('messages.Active') : translate('messages.Inactive') }}
+                        <td>{{ $category->status == 1 ? 'Activo' : 'Inactivo' }}
                         </td>
                     </tr>
                 @endforeach

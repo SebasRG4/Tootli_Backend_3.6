@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-lg-12 text-center "><h1 >{{ translate('messages.collect_cash_transactions') }}</h1></div>
+    <div class="col-lg-12 text-center "><h1 >{{ 'cobrar transacciones en efectivo' }}</h1></div>
     <div class="col-lg-12">
 
 
@@ -7,12 +7,12 @@
     <table>
         <thead>
             <tr>
-                <th>{{ translate('filter_criteria') }} -</th>
+                <th>{{ 'criterios de filtrado' }} -</th>
                 <th></th>
                 <th></th>
                 <th> 
 
-                    {{ translate('Search_Bar_Content')  }}- {{ $data['search'] ??translate('N/A') }}
+                    {{ 'Contenido de la barra de búsqueda'  }}- {{ $data['search'] ??'N / A' }}
 
                 </th>
                 <th></th>
@@ -21,16 +21,16 @@
                 <th></th>
             </tr>
             <tr>
-                <th>{{ translate('messages.sl') }}</th>
-                <th>{{ translate('messages.transaction_id') }}</th>
-                <th>{{ translate('messages.transaction_time') }}</th>
-                <th>{{ translate('messages.collected_amount') }}</th>
-                <th>{{ translate('messages.collected_from') }}</th>
-                <th>{{ translate('messages.user_type') }}</th>
-                <th>{{ translate('messages.phone') }}</th>
-                <th>{{ translate('messages.email') }}</th>
-                <th>{{ translate('messages.payment_method') }}</th>
-                <th>{{ translate('messages.references') }}</th>
+                <th>{{ 'SL' }}</th>
+                <th>{{ 'identificación de transacción' }}</th>
+                <th>{{ 'tiempo de transacción' }}</th>
+                <th>{{ 'cantidad cobrada' }}</th>
+                <th>{{ 'recogido de' }}</th>
+                <th>{{ 'tipo de usuario' }}</th>
+                <th>{{ 'teléfono' }}</th>
+                <th>{{ 'correo electrónico' }}</th>
+                <th>{{ 'método de pago' }}</th>
+                <th>{{ 'referencias' }}</th>
             </tr>
         </thead>
         <tbody>
@@ -46,7 +46,7 @@
                     @elseif($at->deliveryman)
                     {{ $at->deliveryman->f_name }} {{ $at->deliveryman->l_name }}
                     @else
-                        {{translate('messages.not_found')}}
+                        {{'extraviado'}}
                     @endif
                 </td>
                 <td>{{translate($at['from_type'])}}</td>
@@ -56,7 +56,7 @@
                     @elseif($at->deliveryman)
                     {{ $at->deliveryman->phone }}
                     @else
-                        {{translate('messages.not_found')}}
+                        {{'extraviado'}}
                     @endif
                 </td>
                 <td>
@@ -65,7 +65,7 @@
                     @elseif($at->deliveryman)
                     {{ $at->deliveryman->email }}
                     @else
-                        {{translate('messages.not_found')}}
+                        {{'extraviado'}}
                     @endif
                 </td>
                 <td>{{translate($at->method)}}</td>

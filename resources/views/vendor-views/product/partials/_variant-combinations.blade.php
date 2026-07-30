@@ -3,14 +3,14 @@
         <thead class="thead-light table-nowrap">
             <tr>
                 <th class="text-center border-0">
-                    <span class="control-label">{{translate('messages.Variant')}}</span>
+                    <span class="control-label">{{'Variante'}}</span>
                 </th>
                 <th class="text-center border-0">
-                    <span class="control-label">{{translate('messages.Variant Price')}}</span>
+                    <span class="control-label">{{'Precio variante'}}</span>
                 </th>
                 @if($stock)
                 <th class="text-center border-0">
-                    <span class="control-label text-capitalize">{{translate('messages.stock')}}</span>
+                    <span class="control-label text-capitalize">{{'existencias'}}</span>
                 </th>
                 @endif
             </tr>

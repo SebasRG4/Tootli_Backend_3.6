@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{translate('Delivery Man Loyalty Earning Report Invoice')}}</title>
+    <title>{{'Factura del informe de ganancias de lealtad del repartidor'}}</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap');
 
@@ -243,10 +243,10 @@
         <table class=" table w-100">
             <tr>
                 <td>
-                    <h3 class="fs-20 mb-0">{{translate('Earning Statement')}}</h3>
+                    <h3 class="fs-20 mb-0">{{'Declaración de ganancias'}}</h3>
                 </td>
                 <td class="text-right">
-                    <img height="30px" src="{{\App\CentralLogics\Helpers::get_full_url('business', $logo?->value?? '', $logo?->storage[0]?->value ?? 'public','favicon')}}" alt="{{translate('logo')}}" class="logo">
+                    <img height="30px" src="{{\App\CentralLogics\Helpers::get_full_url('business', $logo?->value?? '', $logo?->storage[0]?->value ?? 'public','favicon')}}" alt="{{'logo'}}" class="logo">
                 </td>
             </tr>
         </table>
@@ -256,7 +256,7 @@
                     <table class="fs-10">
                         <tr>
                             <td>
-                                <span class="name"><strong>{{translate('Name')}}</strong></span>
+                                <span class="name"><strong>{{'Nombre'}}</strong></span>
                             </td>
                             <td>:</td>
                             <td>
@@ -265,7 +265,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <span class="name"><strong>{{translate('Phone Number')}}</strong></span>
+                                <span class="name"><strong>{{'Número de teléfono'}}</strong></span>
                             </td>
                             <td>:</td>
                             <td>
@@ -274,16 +274,16 @@
                         </tr>
                         <tr>
                             <td>
-                                <span class="name"><strong>{{translate('Deliveryman Type')}}</strong></span>
+                                <span class="name"><strong>{{'Tipo de repartidor'}}</strong></span>
                             </td>
                             <td>:</td>
                             <td>
-                                <span class="datas">@if($dm->earning) {{translate('Freelance')}} @else {{ translate('Salary Based') }} @endif</span>
+                                <span class="datas">@if($dm->earning) {{'Independiente'}} @else {{ 'Basado en salario' }} @endif</span>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <span class="name"><strong>{{translate('Download Date')}}</strong></span>
+                                <span class="name"><strong>{{'Fecha de descarga'}}</strong></span>
                             </td>
                             <td>:</td>
                             <td>
@@ -292,19 +292,19 @@
                         </tr>
                         <tr>
                             <td>
-                                <span class="name"><strong>{{translate('Statement Period')}}</strong></span>
+                                <span class="name"><strong>{{'Período de declaración'}}</strong></span>
                             </td>
                             <td>:</td>
                             <td>
                                 <span class="datas">
                                 @if ($startDate && $endDate)
-                                    {{ $startDate }} {{ translate('to') }} {{ $endDate }}
+                                    {{ $startDate }} {{ 'a' }} {{ $endDate }}
                                 @elseif ($startDate)
                                     {{ $startDate }}
                                 @elseif ($endDate)
                                     {{ $endDate }}
                                 @else
-                                    {{ translate('All Time') }}
+                                    {{ 'Todo el tiempo' }}
                                 @endif
                             </span>
                             </td>
@@ -313,11 +313,11 @@
                 </td>
                 <td>
                     <div class="text-left header-info-right header-info-inner">
-                        <h3 class="header-info-item">{{translate('Summery')}}</h3>
+                        <h3 class="header-info-item">{{'Veraniego'}}</h3>
                         <table class="fs-10">
                             <tr>
                                 <td>
-                                    <span class="name"><strong>{{translate('Total Earning')}}</strong></span>
+                                    <span class="name"><strong>{{'Ganancia total'}}</strong></span>
                                 </td>
                                 <td>:</td>
                                 <td>
@@ -332,10 +332,10 @@
         <table dir="{{ $site_direction }}" class="table w-100 main-table">
             <thead>
             <tr>
-                <th class="fs-10 text-left">{{translate('Date')}}</th>
-                <th class="fs-10 text-left">{{translate('Transection')}}</th>
-                <th class="fs-10 text-center">{{translate('Converted_Points')}}</th>
-                <th class="fs-10 text-right">{{translate('Converted_Amount')}}</th>
+                <th class="fs-10 text-left">{{'Fecha'}}</th>
+                <th class="fs-10 text-left">{{'Transección'}}</th>
+                <th class="fs-10 text-center">{{'Puntos convertidos'}}</th>
+                <th class="fs-10 text-right">{{'Monto convertido'}}</th>
             </tr>
             </thead>
             <tbody>
@@ -347,7 +347,7 @@
 
                 <td class="text-left">
                     <span class="secondary-clr">
-                        {{translate('TrxID :')}} <span class="text-clr">{{ $earning->transaction_id }}</span>
+                        {{'TrxID:'}} <span class="text-clr">{{ $earning->transaction_id }}</span>
                     </span>
                 </td>
                 <td class="text-center">
@@ -361,7 +361,7 @@
             @endforeach
             </tbody>
         </table>
-        <p class="thanks-service text-center fs-10 mt-0 mb-0 py-6 text-clr">{{translate('Thanks for using our service.')}}</p>
+        <p class="thanks-service text-center fs-10 mt-0 mb-0 py-6 text-clr">{{'Gracias por utilizar nuestro servicio.'}}</p>
     </div>
     <table class="table w-100 invoice-footer">
         <tr>

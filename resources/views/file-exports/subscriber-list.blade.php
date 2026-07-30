@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-lg-12 text-center "><h1 >{{ translate('subscriber_list') }}</h1></div>
+    <div class="col-lg-12 text-center "><h1 >{{ 'lista de suscriptores' }}</h1></div>
     <div class="col-lg-12">
 
 
@@ -7,9 +7,9 @@
     <table>
         <thead>
         <tr>
-            <th>{{ translate('sl') }}</th>
-            <th>{{ translate('email') }}</th>
-            <th>{{ translate('subscribed_at') }}</th>
+            <th>{{ 'SL' }}</th>
+            <th>{{ 'correo electrónico' }}</th>
+            <th>{{ 'suscrito en' }}</th>
         </thead>
         <tbody>
         @foreach($data['customers'] as $key => $customer)

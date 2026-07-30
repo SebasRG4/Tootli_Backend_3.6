@@ -15,11 +15,11 @@
                 </div>
                 <div class="fs-10 text-muted" >{{ $store->address }}</div>
                 <div class="d-flex gap-3 flex-wrap align-items-center text-primary "  >
-                    <div class="fs-10  " >{{ $store->items_count }} {{ translate('messages.items') }}+</div>
+                    <div class="fs-10  " >{{ $store->items_count }} {{ 'Productos' }}+</div>
                     <div class=" bg-primary" style="width: 1px;height: 10px;">
 
                     </div>
-                    <div class="fs-10 " >{{ $store->orders_count }} {{ translate('messages.Orders') }}</div>
+                    <div class="fs-10 " >{{ $store->orders_count }} {{ 'Órdenes' }}</div>
                 </div>
 
             </a>
@@ -27,6 +27,6 @@
         </div>
     </div>
     @empty
-    <p class="text-center">{{ translate('messages.No Data found') }}</p>
+    <p class="text-center">{{ 'No se encontraron datos' }}</p>
 @endforelse
 <script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>

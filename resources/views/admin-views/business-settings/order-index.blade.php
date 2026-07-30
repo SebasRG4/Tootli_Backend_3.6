@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('business_setup'))
+@section('title', 'configuración de negocios')
 
 
 @section('content')
@@ -12,7 +12,7 @@
                     <img src="{{ asset('assets/admin/img/business.png') }}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.business_settings') }}
+                    {{ 'entornos empresariales' }}
                 </span>
             </h1>
             @include('admin-views.business-settings.partials.nav-menu')
@@ -39,13 +39,13 @@
                                                 class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
                                                 <span class="pr-1 d-flex align-items-center switch--label">
                                                     <span class="line--limit-1">
-                                                        {{ translate('messages.order_delivery_verification') }}
+                                                        {{ 'verificación de entrega del pedido' }}
                                                     </span>
                                                     <span class="form-label-secondary text-danger d-flex"
                                                         data-toggle="tooltip" data-placement="right"
-                                                        data-original-title="{{ translate('messages.When_a_deliveryman_arrives_for_delivery,_Customers_will_get_a_4-digit_verification_code_on_the_order_details_section_in_the_Customer_App_and_needs_to_provide_the_code_to_the_delivery_man_to_verify_the_order.') }}"><img
+                                                        data-original-title="{{ 'Cuando un repartidor llega para la entrega, los Clientes recibirán un código de verificación de 4 dígitos en la sección de detalles del pedido en la Aplicación del Cliente y deberán proporcionar el código al repartidor para verificar el pedido.' }}"><img
                                                             src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                            alt="{{ translate('messages.order_varification_toggle') }}">
+                                                            alt="{{ 'alternar variación de orden' }}">
                                                     </span>
                                                 </span>
                                                 <input type="checkbox"
@@ -53,10 +53,10 @@
                                                        data-type="toggle"
                                                        data-image-on="{{ asset('assets/admin/img/modal/order-delivery-verification-on.png') }}"
                                                        data-image-off="{{ asset('assets/admin/img/modal/order-delivery-verification-off.png') }}"
-                                                       data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Delivery_Verification?') }}</strong>"
-                                                       data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Delivery_Verification?') }}</strong>"
-                                                       data-text-on="<p>{{ translate('messages.If you enable this, the Deliveryman has to verify the order during delivery through a 4-digit verification code.') }}</p>"
-                                                       data-text-off="<p>{{ translate('messages.If you disable this, the Deliveryman will deliver the order and update the status. He doesn’t need to verify the order with any code.') }}</p>"
+                                                       data-title-on="{{ 'Quiere habilitar' }} <strong>{{ '¿Verificación de entrega?' }}</strong>"
+                                                       data-title-off="{{ 'Quiere deshabilitar' }} <strong>{{ '¿Verificación de entrega?' }}</strong>"
+                                                       data-text-on="<p>{{ 'Si habilita esto, el repartidor debe verificar el pedido durante la entrega mediante un código de verificación de 4 dígitos.' }}</p>"
+                                                       data-text-off="<p>{{ 'Si desactivas esto, el repartidor entregará el pedido y actualizará el estado. No necesita verificar el pedido con ningún código.' }}</p>"
                                                        class="status toggle-switch-input dynamic-checkbox-toggle"
 
                                                        value="1"
@@ -77,23 +77,23 @@
                                                 class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
                                                 <span class="pr-1 d-flex align-items-center switch--label">
                                                     <span class="line--limit-1">
-                                                        {{ translate('messages.Place_Order_by_Prescription') }}
+                                                        {{ 'Realizar pedido con receta' }}
                                                     </span>
                                                     <span class="form-label-secondary text-danger d-flex"
                                                         data-toggle="tooltip" data-placement="right"
-                                                        data-original-title="{{ translate('messages.With_this_feature,_customers_can_place_an_order_by_uploading_prescription._Stores_can_enable/disable_this_feature_from_the_store_settings_if_needed.') }}"><img
+                                                        data-original-title="{{ 'Con esta función, los clientes pueden realizar un pedido cargando una receta. Las tiendas pueden habilitar/deshabilitar esta función desde la configuración de la tienda si es necesario.' }}"><img
                                                             src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                            alt="{{ translate('messages.prescription_order_status') }}"> </span>
+                                                            alt="{{ 'estado del pedido de prescripción' }}"> </span>
                                                 </span>
                                                 <input type="checkbox"
                                                        data-id="prescription_order_status"
                                                        data-type="toggle"
                                                        data-image-on="{{ asset('assets/admin/img/modal/prescription-on.png') }}"
                                                        data-image-off="{{ asset('assets/admin/img/modal/prescription-off.png') }}"
-                                                       data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Place_Order_by_Prescription?') }}</strong>"
-                                                       data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Place_Order_by_Prescription?') }}</strong>"
-                                                       data-text-on="<p>{{ translate('messages.If you enable this, customers can place an order by simply uploading their prescriptions in the Pharmacy module from the Customer App or Website. Stores can enable/disable this feature from store settings if needed.') }}</p>"
-                                                       data-text-off="<p>{{ translate('messages.If disabled, this feature will be hidden from the Customer App, Website, and Store App & Panel.') }}</p>"
+                                                       data-title-on="{{ 'Quiere habilitar' }} <strong>{{ '¿Realizar pedido con receta?' }}</strong>"
+                                                       data-title-off="{{ 'Quiere deshabilitar' }} <strong>{{ '¿Realizar pedido con receta?' }}</strong>"
+                                                       data-text-on="<p>{{ 'Si habilita esto, los clientes pueden realizar un pedido simplemente cargando sus recetas en el módulo de Farmacia desde la aplicación del cliente o el sitio web. Las tiendas pueden habilitar/deshabilitar esta función desde la configuración de la tienda si es necesario.' }}</p>"
+                                                       data-text-off="<p>{{ 'Si está deshabilitada, esta función estará oculta en la aplicación del cliente, el sitio web y la aplicación y el panel de la tienda.' }}</p>"
                                                        class="status toggle-switch-input dynamic-checkbox-toggle"
                                                        value="1"
                                                     name="prescription_order_status" id="prescription_order_status"
@@ -113,23 +113,23 @@
                                                 class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
                                                 <span class="pr-1 d-flex align-items-center switch--label">
                                                     <span class="line--limit-1">
-                                                        {{ translate('Home Delivery') }}
+                                                        {{ 'Entrega a domicilio' }}
                                                     </span>
                                                     <span class="form-label-secondary text-danger d-flex"
                                                         data-toggle="tooltip" data-placement="right"
-                                                        data-original-title="{{ translate('messages.If_you_enable_this_feature,_customers_can_choose_‘Home_Delivery’_and_get_the_product_delivered_to_their_preferred_location.') }}"><img
+                                                        data-original-title="{{ 'Si habilita esta función, los clientes pueden elegir "Entrega a domicilio" y recibir el producto en su ubicación preferida.' }}"><img
                                                             src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                            alt="{{ translate('Home Delivery') }}"></span>
+                                                            alt="{{ 'Entrega a domicilio' }}"></span>
                                                 </span>
                                                 <input type="checkbox"
                                                        data-id="home_delivery"
                                                        data-type="toggle"
                                                        data-image-on="{{ asset('assets/admin/img/modal/home-delivery-on.png') }}"
                                                        data-image-off="{{ asset('assets/admin/img/modal/home-delivery-off.png') }}"
-                                                       data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Home_Delivery?') }}</strong>"
-                                                       data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Home_Delivery?') }}</strong>"
-                                                       data-text-on="<p>{{ translate('messages.If you enable this, customers can use the Home Delivery Option during checkout from the Customer App or Website.') }}</p>"
-                                                       data-text-off="<p>{{ translate('messages.If you disable this, the Home Delivery feature will be hidden from the customer app and website.') }}</p>"
+                                                       data-title-on="{{ 'Quiere habilitar' }} <strong>{{ '¿Entrega a domicilio?' }}</strong>"
+                                                       data-title-off="{{ 'Quiere deshabilitar' }} <strong>{{ '¿Entrega a domicilio?' }}</strong>"
+                                                       data-text-on="<p>{{ 'Si habilita esto, los clientes pueden usar la opción de entrega a domicilio durante el pago desde la aplicación del cliente o el sitio web.' }}</p>"
+                                                       data-text-off="<p>{{ 'Si desactiva esto, la función de entrega a domicilio se ocultará de la aplicación y el sitio web del cliente.' }}</p>"
                                                        class="status toggle-switch-input dynamic-checkbox-toggle"
                                                        name ="home_delivery_status" id="home_delivery" value="1"
                                                {{ $home_delivery_status == 1 ? 'checked' : '' }}>
@@ -148,23 +148,23 @@
                                                 class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
                                                 <span class="pr-1 d-flex align-items-center switch--label">
                                                     <span class="line--limit-1">
-                                                        {{ translate('Takeaway') }}
+                                                        {{ 'Llevar' }}
                                                     </span>
                                                     <span class="form-label-secondary text-danger d-flex"
                                                         data-toggle="tooltip" data-placement="right"
-                                                        data-original-title="{{ translate('messages.If_you_enable_this_feature,_customers_can_place_an_order_and_request_‘Takeaways’_or_‘self-pick-up’_from_stores.') }}"><img
+                                                        data-original-title="{{ 'Si habilita esta función, los clientes pueden realizar un pedido y solicitar "comida para llevar" o "recogida automática" en las tiendas.' }}"><img
                                                             src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                            alt="{{ translate('Home Delivery') }}"></span>
+                                                            alt="{{ 'Entrega a domicilio' }}"></span>
                                                 </span>
                                                 <input type="checkbox"
                                                        data-id="take_away"
                                                        data-type="toggle"
                                                        data-image-on="{{ asset('assets/admin/img/modal/takeaway-on.png') }}"
                                                        data-image-off="{{ asset('assets/admin/img/modal/takeaway-off.png') }}"
-                                                       data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.the_Takeaway_feature?') }}</strong>"
-                                                       data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.the_Takeaway_feature?') }}</strong>"
-                                                       data-text-on="<p>{{ translate('messages.If you enable this, customers can use the Takeaway feature during checkout from the Customer App or Website.') }}</p>"
-                                                       data-text-off="<p>{{ translate('messages.If you disable this, the Takeaway feature will be hidden from the Customer App or Website.') }}</p>"
+                                                       data-title-on="{{ 'Quiere habilitar' }} <strong>{{ '¿La función para llevar?' }}</strong>"
+                                                       data-title-off="{{ 'Quiere deshabilitar' }} <strong>{{ '¿La función para llevar?' }}</strong>"
+                                                       data-text-on="<p>{{ 'Si habilita esto, los clientes pueden usar la función Para llevar durante el pago desde la aplicación del cliente o el sitio web.' }}</p>"
+                                                       data-text-off="<p>{{ 'Si desactiva esto, la función Comida para llevar se ocultará de la aplicación del cliente o del sitio web.' }}</p>"
                                                        class="status toggle-switch-input dynamic-checkbox-toggle"
                                                        name="takeaway_status" value="1" id="take_away" {{ $takeaway_status == 1 ? 'checked' : '' }}>
                                                 <span class="toggle-switch-label text">
@@ -182,13 +182,13 @@
                                                 class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
                                                 <span class="pr-1 d-flex align-items-center switch--label">
                                                     <span class="line--limit-1">
-                                                        {{ translate('messages.Schedule_Order') }}
+                                                        {{ 'Orden de programación' }}
                                                     </span>
                                                     <span class="form-label-secondary text-danger d-flex"
                                                         data-toggle="tooltip" data-placement="right"
-                                                        data-original-title="{{ translate('messages.With_this_feature,_customers_can_choose_their_preferred_delivery_slot._Customers_can_select_a_delivery_slot_for_ASAP_or_a_specific_date_(within_2_days_from_the_order).')}}"><img
+                                                        data-original-title="{{ 'Con esta función, los clientes pueden elegir su horario de entrega preferido. Los clientes pueden seleccionar un horario de entrega lo antes posible o una fecha específica (dentro de los 2 días posteriores al pedido).'}}"><img
                                                             src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                            alt="{{ translate('messages.customer_varification_toggle') }}">
+                                                            alt="{{ 'alternancia de variación del cliente' }}">
                                                     </span>
                                                 </span>
                                                 <input type="checkbox"
@@ -196,10 +196,10 @@
                                                        data-type="toggle"
                                                        data-image-on="{{ asset('assets/admin/img/modal/schedule-on.png') }}"
                                                        data-image-off="{{ asset('assets/admin/img/modal/schedule-off.png') }}"
-                                                       data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Scheduled Order?') }}</strong>"
-                                                       data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Scheduled Order?') }}</strong>"
-                                                       data-text-on="<p>{{ translate('messages.If you enable this, customers can choose a suitable delivery schedule during checkout.') }}</p>"
-                                                       data-text-off="<p>{{ translate('messages.If you disable this, the Scheduled Order feature will be hidden.') }}</p>"
+                                                       data-title-on="{{ 'Quiere habilitar' }} <strong>{{ '¿Orden programada?' }}</strong>"
+                                                       data-title-off="{{ 'Quiere deshabilitar' }} <strong>{{ '¿Orden programada?' }}</strong>"
+                                                       data-text-on="<p>{{ 'Si habilita esto, los clientes pueden elegir un cronograma de entrega adecuado durante el proceso de pago.' }}</p>"
+                                                       data-text-off="<p>{{ 'Si desactiva esto, la función Pedido programado estará oculta.' }}</p>"
                                                        class="status toggle-switch-input dynamic-checkbox-toggle"
                                                        value="1"
                                                     name="schedule_order" id="schedule_order"
@@ -221,13 +221,13 @@
 
                                                 <span class="pr-1 d-flex align-items-center switch--label">
                                                     <span class="line--limit-1">
-                                                        {{ translate('messages.Time_Interval_for_Scheduled_Delivery') }}
+                                                        {{ 'Intervalo de tiempo para la entrega programada' }}
                                                     </span>
                                                     <span class="form-label-secondary text-danger"
                                                     data-toggle="tooltip" data-placement="right"
-                                                    data-original-title="{{ translate('messages.By_activating_this_feature,_customers_can_choose_their_suitable_delivery_slot_according_to_a_30-minute_or_1-hour_interval_set_by_the_Admin.') }}"><img
+                                                    data-original-title="{{ 'Al activar esta función, los clientes pueden elegir el horario de entrega adecuado según un intervalo de 30 minutos o 1 hora establecido por el administrador.' }}"><img
                                                         src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                        alt="{{ translate('Home Delivery') }}"></span>
+                                                        alt="{{ 'Entrega a domicilio' }}"></span>
                                                 </span>
                                             </label>
                                             <div class="d-flex">
@@ -236,8 +236,8 @@
                                                 value="{{ $schedule_order_slot_duration?->value ? $schedule_order_slot_duration_time_format?->value == 'hour' ? $schedule_order_slot_duration?->value /60 : $schedule_order_slot_duration?->value: 0 }}"
                                                 min="0" required>
                                                 <select   name="schedule_order_slot_duration_time_format" class="custom-select form-control w-90px">
-                                                    <option  value="min" {{ $schedule_order_slot_duration_time_format?->value == 'min'? 'selected' : '' }}>{{ translate('Min') }}</option>
-                                                    <option  value="hour" {{ $schedule_order_slot_duration_time_format?->value == 'hour'? 'selected' : ''}}>{{ translate('Hour') }}</option>
+                                                    <option  value="min" {{ $schedule_order_slot_duration_time_format?->value == 'min'? 'selected' : '' }}>{{ 'mín.' }}</option>
+                                                    <option  value="hour" {{ $schedule_order_slot_duration_time_format?->value == 'hour'? 'selected' : ''}}>{{ 'Hora' }}</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -248,10 +248,10 @@
                                         @php($order_confirmation_model = $order_confirmation_model ? $order_confirmation_model->value : 'deliveryman')
                                         <div class="form-group mb-0">
                                             <label class="input-label text-capitalize d-flex alig-items-center">
-                                                <span class="line--limit-1">{{ translate('messages.Who_Will_Confirm_Order?') }}
+                                                <span class="line--limit-1">{{ '¿Quién confirmará el pedido?' }}
                                                     <span class="form-label-secondary" data-toggle="tooltip"
                                                           data-placement="right"
-                                                          data-original-title="{{ translate('messages.After_a_customer_order_placement,_Admin_can_define_who_will_confirm_the_order_first-_Deliveryman_or_Store?_For_example,_if_you_choose_‘Delivery_man’,_the_deliveryman_nearby_will_confirm_the_order_and_forward_it_to_the_related_store_to_process_the_order._It_works_vice-versa_if_you_choose_‘Store’.') }}">
+                                                          data-original-title="{{ 'Después de realizar un pedido de un cliente, el administrador puede definir quién confirmará el pedido primero: ¿el repartidor o la tienda? Por ejemplo, si elige "Repartidor", el repartidor cercano confirmará el pedido y lo reenviará a la tienda relacionada para procesarlo. Funciona al revés si eliges "Tienda".' }}">
                                                         <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                                     </span>
                                                 </span>
@@ -261,14 +261,14 @@
                                                     <input class="form-check-input" type="radio" value="store"
                                                            name="order_confirmation_model" id="order_confirmation_model" {{ $order_confirmation_model == 'store' ? 'checked' : '' }}>
                                                     <span class="form-check-label">
-                                                        {{ translate('messages.store') }}
+                                                        {{ 'Negocio' }}
                                                     </span>
                                                 </label>
                                                 <label class="form-check form--check mr-2 mr-md-4">
                                                     <input class="form-check-input" type="radio" value="deliveryman"
                                                            name="order_confirmation_model" id="order_confirmation_model2" {{ $order_confirmation_model == 'deliveryman' ? 'checked' : '' }}>
                                                     <span class="form-check-label">
-                                                        {{ translate('messages.deliveryman') }}
+                                                        {{ 'Repartidor' }}
                                                     </span>
                                                 </label>
                                             </div>
@@ -284,22 +284,22 @@
                                                 class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
                                         <span class="pr-1 d-flex align-items-center switch--label">
                                             <span class="line--limit-1">
-                                                {{ translate('messages.Order_Notification_for_Admin') }}
+                                                {{ 'Notificación de pedido para administrador' }}
                                             </span>
                                             <span class="form-label-secondary text-danger d-flex" data-toggle="tooltip"
                                                   data-placement="right"
-                                                  data-original-title="{{ translate('messages.Admin_will_get_a_pop-up_notification_with_sounds_for_any_order_placed_by_customers.') }}"><img
+                                                  data-original-title="{{ 'El administrador recibirá una notificación emergente con sonidos para cualquier pedido realizado por los clientes.' }}"><img
                                                     src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                    alt="{{ translate('messages.customer_varification_toggle') }}"> *
+                                                    alt="{{ 'alternancia de variación del cliente' }}"> *
                                             </span>
                                         </span>
                                                 <input type="checkbox" data-id="aon1" data-type="toggle"
                                                        data-image-on="{{ asset('assets/admin/img/modal/order-notification-on.png') }}"
                                                        data-image-off="{{ asset('assets/admin/img/modal/order-notification-off.png') }}"
-                                                       data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Order_Notification_for_Admin?') }}</strong>"
-                                                       data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Order_Notification_for_Admin?') }}</strong>"
-                                                       data-text-on="<p>{{ translate('messages.If_you_enable_this,_the_Admin_will_receive_a_Notification_for_every_order_placed.') }}</p>"
-                                                       data-text-off="<p>{{ translate('messages.If_you_disable_this,_the_Admin_will_NOT_receive_a_Notification_for_every_order_placed.') }}</p>"
+                                                       data-title-on="{{ 'Quiere habilitar' }} <strong>{{ '¿Notificación de pedido para el administrador?' }}</strong>"
+                                                       data-title-off="{{ 'Quiere deshabilitar' }} <strong>{{ '¿Notificación de pedido para el administrador?' }}</strong>"
+                                                       data-text-on="<p>{{ 'Si habilita esto, el administrador recibirá una notificación por cada pedido realizado.' }}</p>"
+                                                       data-text-off="<p>{{ 'Si desactiva esto, el administrador NO recibirá una notificación por cada pedido realizado.' }}</p>"
                                                        class="status toggle-switch-input dynamic-checkbox-toggle" value="1"
                                                        name="admin_order_notification" id="aon1" {{ $admin_order_notification == 1 ? 'checked' : '' }}>
                                                 <span class="toggle-switch-label text">
@@ -312,10 +312,10 @@
                                         @php($order_notification_type = \App\Models\BusinessSetting::where('key', 'order_notification_type')->first())
                                         <div class="form-group mb-0">
                                             <label class="input-label text-capitalize d-flex alig-items-center"><span
-                                                    class="line--limit-1">{{ translate('Order_Notification_Type') }}
+                                                    class="line--limit-1">{{ 'Tipo de notificación de pedido' }}
                                             <span class="form-label-secondary" data-toggle="tooltip"
                                                   data-placement="right"
-                                                  data-original-title="{{ translate('For_Firebase,_a_single_real-time_notification_will_be_sent_upon_order_placement,_with_no_repetition._For_the_Manual_option,_notifications_will_appear_at_10-second_intervals_until_the_order_is_viewed.') }}">
+                                                  data-original-title="{{ 'Para Firebase, se enviará una única notificación en tiempo real al realizar el pedido, sin repetición. Para la opción Manual, las notificaciones aparecerán en intervalos de 10 segundos hasta que se vea el pedido.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span>
                                         </span>
@@ -325,14 +325,14 @@
                                                     <input class="form-check-input" type="radio" value="firebase"
                                                            name="order_notification_type" {{ $order_notification_type ? ($order_notification_type->value == 'firebase' ? 'checked' : '') : '' }}>
                                                     <span class="form-check-label">
-                                                {{translate('firebase')}}
+                                                {{'base de fuego'}}
                                             </span>
                                                 </label>
                                                 <label class="form-check form--check mr-2 mr-md-4">
                                                     <input class="form-check-input" type="radio" value="manual"
                                                            name="order_notification_type" {{ $order_notification_type ? ($order_notification_type->value == 'manual' ? 'checked' : '') : '' }}>
                                                     <span class="form-check-label">
-                                                {{translate('manual')}}
+                                                {{'manual'}}
                                             </span>
                                                 </label>
                                             </div>
@@ -344,13 +344,13 @@
                                     <div class="mb-3 access_product_approval">
 
                                         <label class="mb-2 input-label text-capitalize d-flex alig-items-center" for=""> <img src="{{ asset('assets/admin/img/icon-park_ad-product.png') }}" alt=""
-                                            class="card-header-icon align-self-center mr-1">{{ translate('Enable Extra Packaging Charge') }}
+                                            class="card-header-icon align-self-center mr-1">{{ 'Habilitar cargo de embalaje adicional' }}
 
                                             <span class="form-label-secondary text-danger"
                                             data-toggle="tooltip" data-placement="right"
-                                            data-original-title="{{ translate('messages.After_saving_information,_sellers_will_get_the_option_to_offer_extra_packaging_charge_to_the_customer') }}"><img
+                                            data-original-title="{{ 'Después de guardar la información, los vendedores tendrán la opción de ofrecer un cargo de embalaje adicional al cliente.' }}"><img
                                                 src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                alt="{{ translate('Extra_Packaging_Charge') }}"></span>
+                                                alt="{{ 'Cargo adicional por embalaje' }}"></span>
 
                                         </label>
                                         <div class="justify-content-between border form-control">
@@ -371,7 +371,7 @@
                                     @php($admin_free_delivery_status = \App\Models\BusinessSetting::where('key', 'admin_free_delivery_status')->first())
 
                                     <div class="border-bottom d-flex justify-content-between p-3">
-                                        <h4 class="card-title m-0 text--title">{{translate('Free Delivery Option')}}</h4>
+                                        <h4 class="card-title m-0 text--title">{{'Opción de entrega gratuita'}}</h4>
                                         <label class="form-label d-flex justify-content-between text-capitalize mb-1"
                                                for="admin_free_delivery_status">
 
@@ -379,8 +379,8 @@
                                         <input type="checkbox" data-id="admin_free_delivery_status" data-type="toggle"
                                                data-image-on="{{ asset('assets/admin/img/modal/free-delivery-on.png') }}"
                                                data-image-off="{{ asset('assets/admin/img/modal/free-delivery-off.png') }}"
-                                               data-title-on="<strong>{{ translate('messages.Want_to_enable_Free_Delivery_Option?') }}</strong>"
-                                               data-title-off="<strong>{{ translate('messages.Want_to_disable_Free_Delivery_Option?') }}</strong>"
+                                               data-title-on="<strong>{{ '¿Quieres habilitar la opción de entrega gratuita?' }}</strong>"
+                                               data-title-off="<strong>{{ '¿Quiere desactivar la opción de envío gratuito?' }}</strong>"
                                                class="status toggle-switch-input dynamic-checkbox-toggle"
                                                name="admin_free_delivery_status" id="admin_free_delivery_status" value="1"
                                             {{ $admin_free_delivery_status?->value ? 'checked' : '' }}>
@@ -403,7 +403,7 @@
                                                 <div class="form-group mb-0">
                                                     <label
                                                         class="input-label text-capitalize d-flex alig-items-center add_text_mute {{ $admin_free_delivery_status?->value ? '' : 'text-muted' }} "><span
-                                                            class="line--limit-1">{{ translate('Choose Free Delivery Option') }}
+                                                            class="line--limit-1">{{ 'Elija la opción de entrega gratuita' }}
                                                 </span>
                                                     </label>
                                                     <div class="resturant-type-group border bg-white">
@@ -412,7 +412,7 @@
                                                             value="free_delivery_to_all_store"
                                                                    name="admin_free_delivery_option" {{ $admin_free_delivery_option?->value == 'free_delivery_to_all_store' ? 'checked' : '' }}>
                                                             <span class="form-check-label">
-                                                        {{translate('Set free delivery for all store')}}
+                                                        {{'Establecer entrega gratuita para todas las tiendas.'}}
                                                     </span>
                                                         </label>
                                                         <label class="form-check form--check">
@@ -421,7 +421,7 @@
                                                                 type="radio" {{ $admin_free_delivery_status?->value ? '' : 'disabled' }} value="free_delivery_by_order_amount"
                                                                 name="admin_free_delivery_option" {{ $admin_free_delivery_option?->value == 'free_delivery_by_order_amount' || $admin_free_delivery_option?->value == null ? 'checked' : '' }}>
                                                             <span class="form-check-label">
-                                                        {{translate('Set Specific Criteria')}}
+                                                        {{'Establecer criterios específicos'}}
                                                     </span>
                                                         </label>
                                                     </div>
@@ -437,19 +437,19 @@
                                                         class="form-label d-flex justify-content-between text-capitalize mb-1 add_text_mute {{ $admin_free_delivery_status?->value ? '' : 'text-muted' }} "
                                                         for="">
                                                 <span
-                                                    class="line--limit-1">{{ translate('messages.free_delivery_over') }}
+                                                    class="line--limit-1">{{ 'entrega gratuita sobre' }}
                                                     ({{ \App\CentralLogics\Helpers::currency_symbol() }}) <small
                                                         class="text-danger"><span class="form-label-secondary"
                                                                                   data-toggle="tooltip" data-placement="right"
-                                                                                  data-original-title="{{ translate('messages.Set_a_minimum_order_value_for_automated_free_delivery._If_the_minimum_amount_is_exceeded,_the_Delivery_Fee_is_deducted_from_Admin’s_commission_and_added_to_Admin’s_expense.') }}"><img
+                                                                                  data-original-title="{{ 'Establezca un valor mínimo de pedido para la entrega gratuita automatizada. Si se excede el monto mínimo, la tarifa de envío se deduce de la comisión del administrador y se agrega a los gastos del administrador.' }}"><img
                                                                 src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                                                alt="{{ translate('messages.free_over_delivery_message') }}"></span>
+                                                                alt="{{ 'mensaje de sobreentrega gratis' }}"></span>
                                                         *</small></span>
 
                                                     </label>
 
                                                     <input type="number" name="free_delivery_over" class="form-control"
-                                                           id="free_delivery_over" placeholder="{{ translate('messages.Ex:_10') }}"
+                                                           id="free_delivery_over" placeholder="{{ 'Ej: 10' }}"
                                                            value="{{ $free_delivery_over ? $free_delivery_over->value : 0 }}"
                                                            min="1" step=".01" {{ $admin_free_delivery_option?->value == 'free_delivery_by_order_amount' ? 'required' : '' }} {{ $admin_free_delivery_status?->value ? '' : 'readonly' }}>
                                                 </div>
@@ -459,8 +459,8 @@
                                                 <div class="alert fs-13 alert-primary-light text-dark mb-0  mt-md-0 add_text_mute text-muted"
                                                      role="alert">
                                                     <img src="{{ asset('assets/admin/img/lnfo_light.png') }}" alt="">
-                                                    {{translate('Free delivery is active for all stores. Cost bearer for the free delivery is')}}
-                                                    <strong>{{ translate('Admin') }}</strong>
+                                                    {{'El envío gratuito está activo para todas las tiendas. El coste del envío gratuito es'}}
+                                                    <strong>{{ 'Administración' }}</strong>
                                                 </div>
                                             </div>
                                         </div>
@@ -469,9 +469,9 @@
 
 
                                 <div class="btn--container justify-content-end mt-20 footer-sticky-insider">
-                                    <button type="reset" class="btn btn--reset">{{ translate('messages.reset') }}</button>
+                                    <button type="reset" class="btn btn--reset">{{ 'reiniciar' }}</button>
                                     <button type="{{ env('APP_MODE') != 'demo' ? 'submit' : 'button' }}"
-                                        class="btn btn--primary call-demo">{{ translate('save_information') }}</button>
+                                        class="btn btn--primary call-demo">{{ 'guardar información' }}</button>
                                 </div>
                             </div>
                         </div>
@@ -483,7 +483,7 @@
             <div class="mt-4">
                 <h4 class="card-title mb-3">
                     <i class="tio-document-text-outlined mr-1"></i>
-                    {{translate('Order Cancellation Messages')}}
+                    {{'Mensajes de cancelación de pedidos'}}
                 </h4>
                 <div class="card">
                     <div class="card-body">
@@ -497,7 +497,7 @@
                             <ul class="nav nav-tabs tabs-inner nav--tabs mb-4 border-0">
                                 <li class="nav-item">
                                     <a class="nav-link lang_link1 active" href="#"
-                                        id="default-link1">{{ translate('Default') }}</a>
+                                        id="default-link1">{{ 'Por defecto' }}</a>
                                 </li>
                                 @foreach (json_decode($language) as $lang)
                                     <li class="nav-item">
@@ -524,57 +524,57 @@
                         @endif
                         <div class="row g-3">
                             <div class="col-sm-6 lang_form1 default-form1">
-                                <label for="order_cancellation" class="form-label">{{ translate('Order Cancellation Reason') }}
-                                    ({{ translate('messages.default') }})</label>
+                                <label for="order_cancellation" class="form-label">{{ 'Motivo de cancelación del pedido' }}
+                                    ({{ 'por defecto' }})</label>
                                 <input type="text" class="form-control h--45px" name="reason[]"
-                                    id="order_cancellation" placeholder="{{ translate('Ex:_Item_is_Broken') }}">
+                                    id="order_cancellation" placeholder="{{ 'Ej: el artículo está roto' }}">
                                 <input type="hidden" name="lang[]" value="default">
                             </div>
                             @if ($language)
                                 @foreach (json_decode($language) as $lang)
                                     <div class="col-sm-6 d-none lang_form1" id="{{ $lang }}-form1">
-                                        <label for="order_cancellation{{$lang}}" class="form-label">{{ translate('Order Cancellation Reason') }}
+                                        <label for="order_cancellation{{$lang}}" class="form-label">{{ 'Motivo de cancelación del pedido' }}
                                             ({{ strtoupper($lang) }})</label>
                                         <input type="text" class="form-control h--45px" name="reason[]"
-                                            id="order_cancellation{{$lang}}" placeholder="{{ translate('Ex:_Item_is_Broken') }}">
+                                            id="order_cancellation{{$lang}}" placeholder="{{ 'Ej: el artículo está roto' }}">
                                         <input type="hidden" name="lang[]" value="{{ $lang }}">
                                     </div>
                                 @endforeach
                             @endif
                             <div class="col-sm-6">
                                 <label for="user_type" class="form-label d-flex">
-                                    <span class="line--limit-1">{{ translate('User Type') }} </span>
+                                    <span class="line--limit-1">{{ 'Tipo de usuario' }} </span>
                                     <span class="form-label-secondary text-danger d-flex" data-toggle="tooltip"
                                         data-placement="right"
-                                        data-original-title="{{ translate('When this field is active, user can cancel an order with proper reason.') }}"><img
+                                        data-original-title="{{ 'Cuando este campo está activo, el usuario puede cancelar un pedido con el motivo adecuado.' }}"><img
                                             src="{{ asset('assets/admin/img/info-circle.svg') }}"
-                                            alt="{{ translate('messages.prescription_order_status') }}"></span>
+                                            alt="{{ 'estado del pedido de prescripción' }}"></span>
                                 </label>
                                 <select id="user_type" name="user_type" class="form-control h--45px" required>
-                                    <option value="">{{ translate('messages.select_user_type') }}</option>
-                                    <option value="admin">{{ translate('messages.admin') }}</option>
-                                    <option value="store">{{ translate('messages.store') }}</option>
-                                    <option value="customer">{{ translate('messages.customer') }}</option>
-                                    <option value="deliveryman">{{ translate('messages.deliveryman') }}</option>
+                                    <option value="">{{ 'seleccione el tipo de usuario' }}</option>
+                                    <option value="admin">{{ 'administración' }}</option>
+                                    <option value="store">{{ 'Negocio' }}</option>
+                                    <option value="customer">{{ 'Cliente' }}</option>
+                                    <option value="deliveryman">{{ 'Repartidor' }}</option>
                                 </select>
                             </div>
                             <div class="col-sm-12">
                                 <div class="form-check mt-2">
                                     <input class="form-check-input" type="checkbox" name="exempt_strike_review" id="exempt_strike_review_new" value="1">
                                     <label class="form-check-label" for="exempt_strike_review_new">
-                                        {{ translate('messages.order_cancel_reason_exempt_strike_review') }}
-                                        <span class="text-muted d-block small">{{ translate('messages.order_cancel_reason_exempt_strike_review_help') }}</span>
+                                        {{ 'motivo de cancelación de pedido revisión de huelga exenta' }}
+                                        <span class="text-muted d-block small">{{ 'pedido cancelar motivo exento huelga revisión ayuda' }}</span>
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="mt-2">
-                            {{ translate('messages.*Users_cannot_cancel_an_order_if_the_Admin_does_not_specify_a_cause_for_cancellation,_even_though_they_see_the_‘Cancel_Order‘_option._So_Admin_MUST_provide_a_proper_Order_Cancellation_Reason_and_select_the_related_user.')}}
+                            {{ '*Los usuarios no pueden cancelar un pedido si el administrador no especifica una causa de cancelación, aunque vean la opción "Cancelar pedido". Por lo tanto, el administrador DEBE proporcionar un motivo de cancelación de pedido adecuado y seleccionar el usuario relacionado.'}}
                        </div>
                         <div class="btn--container justify-content-end mt-3 mb-4">
-                            <button type="reset" class="btn btn--reset">{{ translate('messages.reset') }}</button>
+                            <button type="reset" class="btn btn--reset">{{ 'reiniciar' }}</button>
                             <button type="{{ env('APP_MODE') != 'demo' ? 'submit' : 'button' }}"
-                                class="btn btn--primary call-demo">{{ translate('Submit') }}</button>
+                                class="btn btn--primary call-demo">{{ 'Entregar' }}</button>
                         </div>
                     </form>
                         <div class="card">
@@ -582,16 +582,16 @@
                                 <div class="d-flex flex-wrap justify-content-between align-items-center mb-md-0 mb-3">
                                     <div class="mx-1">
                                         <h5 class="form-label mb-4">
-                                            {{ translate('messages.order_cancellation_reason_list') }}
+                                            {{ 'lista de motivos de cancelación de pedido' }}
                                         </h5>
                                     </div>
                                     <div class="my-2">
                                         <select id="type" name="type" class="form-control h--45px set-filter" data-url="{{ url()->full() }}" data-filter="type">
-                                            <option value="all" {{ request('type') == 'all' ? 'selected' : '' }}>{{ translate('messages.all_user') }}</option>
-                                            <option value="admin" {{ request('type') == 'admin' ? 'selected' : '' }}>{{ translate('messages.admin') }}</option>
-                                            <option value="store" {{ request('type') == 'store' ? 'selected' : '' }}>{{ translate('messages.store') }}</option>
-                                            <option value="customer" {{ request('type') == 'customer' ? 'selected' : '' }}>{{ translate('messages.customer') }}</option>
-                                            <option value="deliveryman" {{ request('type') == 'deliveryman' ? 'selected' : '' }}>{{ translate('messages.deliveryman') }}</option>
+                                            <option value="all" {{ request('type') == 'all' ? 'selected' : '' }}>{{ 'todo usuario' }}</option>
+                                            <option value="admin" {{ request('type') == 'admin' ? 'selected' : '' }}>{{ 'administración' }}</option>
+                                            <option value="store" {{ request('type') == 'store' ? 'selected' : '' }}>{{ 'Negocio' }}</option>
+                                            <option value="customer" {{ request('type') == 'customer' ? 'selected' : '' }}>{{ 'Cliente' }}</option>
+                                            <option value="deliveryman" {{ request('type') == 'deliveryman' ? 'selected' : '' }}>{{ 'Repartidor' }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -607,12 +607,12 @@
                                     }'>
                                             <thead class="thead-light">
                                                 <tr>
-                                                    <th class="border-0">{{ translate('messages.SL') }}</th>
-                                                    <th class="border-0">{{ translate('messages.Reason') }}</th>
-                                                    <th class="border-0">{{ translate('messages.type') }}</th>
-                                                    <th class="border-0">{{ translate('messages.order_cancel_reason_strike_review_column') }}</th>
-                                                    <th class="border-0">{{ translate('messages.status') }}</th>
-                                                    <th class="border-0 text-center">{{ translate('messages.action') }}</th>
+                                                    <th class="border-0">{{ 'SL' }}</th>
+                                                    <th class="border-0">{{ 'Razón' }}</th>
+                                                    <th class="border-0">{{ 'tipo' }}</th>
+                                                    <th class="border-0">{{ 'columna de revisión de huelga de motivo de cancelación de pedido' }}</th>
+                                                    <th class="border-0">{{ 'estado' }}</th>
+                                                    <th class="border-0 text-center">{{ 'acción' }}</th>
                                                 </tr>
                                             </thead>
 
@@ -629,7 +629,7 @@
                                                         <td>{{ Str::title($reason->user_type) }}</td>
                                                         <td>
                                                             @if(($reason->exempt_strike_review ?? false) && $reason->user_type === 'deliveryman')
-                                                                <span class="badge badge-soft-secondary">{{ translate('messages.order_cancel_reason_exempt_strike_review') }}</span>
+                                                                <span class="badge badge-soft-secondary">{{ 'motivo de cancelación de pedido revisión de huelga exenta' }}</span>
                                                             @else
                                                                 <span class="text-muted">—</span>
                                                             @endif
@@ -652,7 +652,7 @@
                                                             <div class="btn--container justify-content-center">
 
                                                                 <a class="btn btn-sm btn--primary btn-outline-primary action-btn edit-reason"
-                                                    title="{{ translate('messages.edit') }}"
+                                                    title="{{ 'editar' }}"
                                                     data-toggle="modal"
                                                     data-target="#add_update_reason_{{ $reason->id }}"><i
                                                         class="tio-edit"></i>
@@ -662,8 +662,8 @@
                                                                 <a class="btn btn-sm btn--danger btn-outline-danger action-btn form-alert"
                                                                     href="javascript:"
                                                                    data-id="order-cancellation-reason-{{ $reason['id'] }}"
-                                                                   data-message="{{ translate('messages.If_you_want_to_delete_this_reason,_please_confirm_your_decision.') }}"
-                                                                    title="{{ translate('messages.delete') }}">
+                                                                   data-message="{{ 'Si desea eliminar este motivo, confirme su decisión.' }}"
+                                                                    title="{{ 'borrar' }}">
                                                                     <i class="tio-delete-outlined"></i>
                                                                 </a>
                                                                 <form
@@ -680,8 +680,8 @@
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <h5 class="modal-title" id="exampleModalLabel">{{ translate('messages.order_cancellation_reason') }}
-                                                                        {{ translate('messages.Update') }}</label></h5>
+                                                                    <h5 class="modal-title" id="exampleModalLabel">{{ 'motivo de cancelación del pedido' }}
+                                                                        {{ 'Actualizar' }}</label></h5>
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                         <span aria-hidden="true">&times;</span>
                                                                     </button>
@@ -699,7 +699,7 @@
                                                                         <li class="nav-item">
                                                                             <a class="nav-link update-lang_link add_active active"
                                                                             href="#"
-                                                                            id="default-link">{{ translate('Default') }}</a>
+                                                                            id="default-link">{{ 'Por defecto' }}</a>
                                                                         </li>
                                                                         @if($language)
                                                                         @foreach (json_decode($language) as $lang)
@@ -715,7 +715,7 @@
                                                                         <input type="hidden" name="reason_id"  value="{{$reason->id}}" />
 
                                                                         <div class="form-group mb-3 add_active_2  update-lang_form" id="default-form_{{$reason->id}}">
-                                                                            <label for="reason" class="form-label">{{translate('Order Cancellation Reason')}} ({{translate('messages.default')}}) </label>
+                                                                            <label for="reason" class="form-label">{{'Motivo de cancelación del pedido'}} ({{'por defecto'}}) </label>
                                                                             <input id="reason" class="form-control" name='reason[]' value="{{$reason?->getRawOriginal('reason')}}" type="text">
                                                                             <input type="hidden" name="lang1[]" value="default">
                                                                         </div>
@@ -734,8 +734,8 @@
 
                                                                                                 ?>
                                                                                                 <div class="form-group mb-3 d-none update-lang_form" id="{{$lang}}-langform_{{$reason->id}}">
-                                                                                                    <label for="reason{{$lang}}" class="form-label">{{translate('Order Cancellation Reason')}} ({{strtoupper($lang)}})</label>
-                                                                                                    <input id="reason{{$lang}}" class="form-control" name='reason[]' placeholder="{{ translate('Ex:_Item_is_Broken') }}" value="{{ $translate[$lang]['reason'] ?? null }}"  type="text">
+                                                                                                    <label for="reason{{$lang}}" class="form-label">{{'Motivo de cancelación del pedido'}} ({{strtoupper($lang)}})</label>
+                                                                                                    <input id="reason{{$lang}}" class="form-control" name='reason[]' placeholder="{{ 'Ej: el artículo está roto' }}" value="{{ $translate[$lang]['reason'] ?? null }}"  type="text">
                                                                                                     <input type="hidden" name="lang1[]" value="{{$lang}}">
                                                                                                 </div>
                                                                                                 @empty
@@ -744,23 +744,23 @@
 
                                                                         <select name="user_type"  class="form-control h--45px"
                                                                             required>
-                                                                            <option value="">{{ translate('messages.select_user_type') }}</option>
-                                                                            <option {{ $reason->user_type == 'admin' ? 'selected': '' }} value="admin">{{ translate('messages.admin') }}</option>
-                                                                            <option {{ $reason->user_type == 'store' ? 'selected': '' }} value="store">{{ translate('messages.store') }}</option>
-                                                                            <option {{ $reason->user_type == 'customer' ? 'selected': '' }} value="customer">{{ translate('messages.customer') }}</option>
-                                                                            <option {{ $reason->user_type == 'deliveryman' ? 'selected': '' }} value="deliveryman">{{ translate('messages.deliveryman') }}</option>
+                                                                            <option value="">{{ 'seleccione el tipo de usuario' }}</option>
+                                                                            <option {{ $reason->user_type == 'admin' ? 'selected': '' }} value="admin">{{ 'administración' }}</option>
+                                                                            <option {{ $reason->user_type == 'store' ? 'selected': '' }} value="store">{{ 'Negocio' }}</option>
+                                                                            <option {{ $reason->user_type == 'customer' ? 'selected': '' }} value="customer">{{ 'Cliente' }}</option>
+                                                                            <option {{ $reason->user_type == 'deliveryman' ? 'selected': '' }} value="deliveryman">{{ 'Repartidor' }}</option>
                                                                         </select>
                                                                         <div class="form-check mt-3">
                                                                             <input class="form-check-input" type="checkbox" name="exempt_strike_review" id="exempt_strike_review_{{ $reason->id }}" value="1" {{ ($reason->exempt_strike_review ?? false) && $reason->user_type === 'deliveryman' ? 'checked' : '' }}>
                                                                             <label class="form-check-label" for="exempt_strike_review_{{ $reason->id }}">
-                                                                                {{ translate('messages.order_cancel_reason_exempt_strike_review') }}
-                                                                                <span class="text-muted d-block small">{{ translate('messages.order_cancel_reason_exempt_strike_review_help') }}</span>
+                                                                                {{ 'motivo de cancelación de pedido revisión de huelga exenta' }}
+                                                                                <span class="text-muted d-block small">{{ 'pedido cancelar motivo exento huelga revisión ayuda' }}</span>
                                                                             </label>
                                                                         </div>
                                                                 </div>
                                                                 <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ translate('Close') }}</button>
-                                                                    <button type="submit" class="btn btn-primary">{{ translate('Save_changes') }}</button>
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'Cerca' }}</button>
+                                                                    <button type="submit" class="btn btn-primary">{{ 'Guardar cambios' }}</button>
                                                                 </div>
                                                                     </form>
                                                             </div>
@@ -781,7 +781,7 @@
             <div class="mt-4">
                 <h4 class="card-title mb-3">
                     <i class="tio-time mr-1"></i>
-                    {{translate('messages.delivery_time_windows')}}
+                    {{'ventanas de tiempo de entrega'}}
                 </h4>
                 <div class="card">
                     <div class="card-body">
@@ -789,21 +789,21 @@
                             @csrf
                             <div class="row g-3">
                                 <div class="col-sm-4">
-                                    <label class="form-label">{{ translate('messages.name') }}</label>
-                                    <input type="text" class="form-control h--45px" name="name" required placeholder="{{ translate('Ex:_Mañana,_Tarde,_Noche') }}">
+                                    <label class="form-label">{{ 'nombre' }}</label>
+                                    <input type="text" class="form-control h--45px" name="name" required placeholder="{{ 'Ej: mañana, tarde, noche' }}">
                                 </div>
                                 <div class="col-sm-4">
-                                    <label class="form-label">{{ translate('messages.start_time') }}</label>
+                                    <label class="form-label">{{ 'hora de inicio' }}</label>
                                     <input type="time" class="form-control h--45px" name="start_time" required>
                                 </div>
                                 <div class="col-sm-4">
-                                    <label class="form-label">{{ translate('messages.end_time') }}</label>
+                                    <label class="form-label">{{ 'tiempo final' }}</label>
                                     <input type="time" class="form-control h--45px" name="end_time" required>
                                 </div>
                             </div>
                             <div class="btn--container justify-content-end mt-3 mb-4">
-                                <button type="reset" class="btn btn--reset">{{ translate('messages.reset') }}</button>
-                                <button type="{{ env('APP_MODE') != 'demo' ? 'submit' : 'button' }}" class="btn btn--primary call-demo">{{ translate('Submit') }}</button>
+                                <button type="reset" class="btn btn--reset">{{ 'reiniciar' }}</button>
+                                <button type="{{ env('APP_MODE') != 'demo' ? 'submit' : 'button' }}" class="btn btn--primary call-demo">{{ 'Entregar' }}</button>
                             </div>
                         </form>
 
@@ -811,19 +811,19 @@
                         <div class="card mt-4">
                             <div class="card-body mb-3">
                                 <h5 class="form-label mb-4">
-                                    {{ translate('messages.delivery_time_window_list') }}
+                                    {{ 'lista de ventanas de tiempo de entrega' }}
                                 </h5>
                                 <div class="card-body p-0">
                                     <div class="table-responsive datatable-custom">
                                         <table class="table table-borderless table-thead-bordered table-align-middle">
                                             <thead class="thead-light">
                                                 <tr>
-                                                    <th class="border-0">{{ translate('messages.SL') }}</th>
-                                                    <th class="border-0">{{ translate('messages.name') }}</th>
-                                                    <th class="border-0">{{ translate('messages.start_time') }}</th>
-                                                    <th class="border-0">{{ translate('messages.end_time') }}</th>
-                                                    <th class="border-0">{{ translate('messages.status') }}</th>
-                                                    <th class="border-0 text-center">{{ translate('messages.action') }}</th>
+                                                    <th class="border-0">{{ 'SL' }}</th>
+                                                    <th class="border-0">{{ 'nombre' }}</th>
+                                                    <th class="border-0">{{ 'hora de inicio' }}</th>
+                                                    <th class="border-0">{{ 'tiempo final' }}</th>
+                                                    <th class="border-0">{{ 'estado' }}</th>
+                                                    <th class="border-0 text-center">{{ 'acción' }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -850,7 +850,7 @@
                                                         <td>
                                                             <div class="btn--container justify-content-center">
                                                                 <a class="btn btn-sm btn--primary btn-outline-primary action-btn"
-                                                                   title="{{ translate('messages.edit') }}"
+                                                                   title="{{ 'editar' }}"
                                                                    data-toggle="modal"
                                                                    data-target="#edit_window_{{ $window['id'] }}">
                                                                     <i class="tio-edit"></i>
@@ -858,8 +858,8 @@
                                                                 <a class="btn btn-sm btn--danger btn-outline-danger action-btn form-alert"
                                                                    href="javascript:"
                                                                    data-id="delivery-time-window-{{ $window['id'] }}"
-                                                                   data-message="{{ translate('messages.If_you_want_to_delete_this_time_window,_please_confirm_your_decision.') }}"
-                                                                   title="{{ translate('messages.delete') }}">
+                                                                   data-message="{{ 'Si desea eliminar esta ventana de tiempo, confirme su decisión.' }}"
+                                                                   title="{{ 'borrar' }}">
                                                                     <i class="tio-delete-outlined"></i>
                                                                 </a>
                                                                 <form action="{{ route('admin.business-settings.delivery-time-window.destroy', $window['id']) }}"
@@ -875,7 +875,7 @@
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <h5 class="modal-title" id="editWindowModalLabel{{ $window['id'] }}">{{ translate('messages.edit_delivery_time_window') }}</h5>
+                                                                    <h5 class="modal-title" id="editWindowModalLabel{{ $window['id'] }}">{{ 'editar ventana de tiempo de entrega' }}</h5>
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                         <span aria-hidden="true">&times;</span>
                                                                     </button>
@@ -885,21 +885,21 @@
                                                                     <div class="modal-body">
                                                                         <input type="hidden" name="id" value="{{ $window['id'] }}">
                                                                         <div class="form-group mb-3">
-                                                                            <label class="form-label">{{ translate('messages.name') }}</label>
+                                                                            <label class="form-label">{{ 'nombre' }}</label>
                                                                             <input type="text" class="form-control" name="name" value="{{ $window['name'] }}" required>
                                                                         </div>
                                                                         <div class="form-group mb-3">
-                                                                            <label class="form-label">{{ translate('messages.start_time') }}</label>
+                                                                            <label class="form-label">{{ 'hora de inicio' }}</label>
                                                                             <input type="time" class="form-control" name="start_time" value="{{ date('H:i', strtotime($window['start_time'])) }}" required>
                                                                         </div>
                                                                         <div class="form-group mb-3">
-                                                                            <label class="form-label">{{ translate('messages.end_time') }}</label>
+                                                                            <label class="form-label">{{ 'tiempo final' }}</label>
                                                                             <input type="time" class="form-control" name="end_time" value="{{ date('H:i', strtotime($window['end_time'])) }}" required>
                                                                         </div>
                                                                     </div>
                                                                     <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ translate('messages.Close') }}</button>
-                                                                        <button type="submit" class="btn btn-primary">{{ translate('messages.Save_changes') }}</button>
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'Cerca' }}</button>
+                                                                        <button type="submit" class="btn btn-primary">{{ 'Guardar cambios' }}</button>
                                                                     </div>
                                                                 </form>
                                                             </div>
@@ -939,9 +939,9 @@
                                 <h5 class="modal-title"></h5>
                             </div>
                             <div class="text-center">
-                                <h3> {{ translate('Do You Want Active “Set Specific Criteria”?') }}</h3>
+                                <h3> {{ '¿Quiere “establecer criterios específicos” activos?' }}</h3>
                                 <div>
-                                    <p>{{ translate('Are you sure to active “Set Specific Criteria”? If you active this delivery charge will not added to order when customer order more then your “Free Delivery Over” amount.') }}
+                                    <p>{{ '¿Está seguro de activar "Establecer criterios específicos"? Si activa este cargo de envío no se agregará al pedido cuando el cliente realice un pedido superior al monto de “Entrega gratuita superior”.' }}
                                     </p>
                                 </div>
                             </div>
@@ -950,9 +950,9 @@
 
                             <div class="btn--container justify-content-center">
                                 <button data-dismiss="modal"
-                                        class="btn btn-soft-secondary min-w-120">{{translate("Cancel")}}</button>
+                                        class="btn btn-soft-secondary min-w-120">{{'Cancelar'}}</button>
                                 <button data-dismiss="modal" type="button" id="confirmBtn_free_delivery_by_order_amount"
-                                        class="btn btn--primary min-w-120">{{translate('Yes')}}</button>
+                                        class="btn btn--primary min-w-120">{{'Sí'}}</button>
                             </div>
                         </div>
                     </div>
@@ -981,17 +981,17 @@
                                 <h5 class="modal-title"></h5>
                             </div>
                             <div class="text-center">
-                                <h3> {{ translate('Do You Want Active “Free Delivery for All Stores”?') }}</h3>
+                                <h3> {{ '¿Quiere una “entrega gratuita para todas las tiendas” activa?' }}</h3>
                                 <div>
-                                    <p>{{ translate('Are you sure to active “Free delivery order for all Stores”? If you active this no delivery charge will added to order and the cost will be added to you.') }}
+                                    <p>{{ '¿Estás seguro de activar “Pedido con entrega gratuita para todas las tiendas”? Si activa esto, no se agregará ningún cargo de envío al pedido y se le agregará el costo.' }}
                                     </p>
                                 </div>
                             </div>
                             <div class="btn--container justify-content-center">
                                 <button data-dismiss="modal"
-                                        class="btn btn-soft-secondary min-w-120">{{translate("Cancel")}}</button>
+                                        class="btn btn-soft-secondary min-w-120">{{'Cancelar'}}</button>
                                 <button data-dismiss="modal" type="button" id="confirmBtn_free_delivery_to_all_store"
-                                        class="btn btn--primary min-w-120">{{translate('Yes')}}</button>
+                                        class="btn btn--primary min-w-120">{{'Sí'}}</button>
                             </div>
                         </div>
                     </div>

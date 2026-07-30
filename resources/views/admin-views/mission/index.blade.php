@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.driver_missions'))
+@section('title', 'misiones de conductor')
 
 @section('content')
     <div class="content container-fluid">
@@ -11,7 +11,7 @@
                     <img src="{{asset('assets/admin/img/condition.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.driver_missions')}}
+                    {{'misiones de conductor'}}
                 </span>
             </h1>
         </div>
@@ -23,18 +23,18 @@
                     <div class="card-header py-2 border-0">
                         <div class="search--button-wrapper">
                             <h5 class="card-title">
-                                {{translate('messages.mission_list')}}<span class="badge badge-soft-dark ml-2"
+                                {{'lista de misiones'}}<span class="badge badge-soft-dark ml-2"
                                     id="itemCount">{{$missions->total()}}</span>
                             </h5>
                             <form action="javascript:" id="search-form" class="search-form">
                                 <div class="input-group input--group">
                                     <input id="datatableSearch_" type="search" name="search" class="form-control"
-                                        placeholder="{{translate('ex_:_mission_title')}}" aria-label="Search">
+                                        placeholder="{{'ej: título de la misión'}}" aria-label="Search">
                                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                                 </div>
                             </form>
                             <a href="{{route('admin.mission.add')}}" class="btn btn--primary ml-2"><i class="tio-add"></i>
-                                {{translate('messages.add_new_mission')}}</a>
+                                {{'agregar nueva misión'}}</a>
                         </div>
                     </div>
                     <!-- Table -->
@@ -43,14 +43,14 @@
                             class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
                             <thead class="thead-light">
                                 <tr class="text-center">
-                                    <th class="border-0">{{translate('sl')}}</th>
-                                    <th class="border-0">{{translate('messages.title')}}</th>
-                                    <th class="border-0">{{translate('messages.target_orders')}}</th>
-                                    <th class="border-0">{{translate('messages.reward')}}</th>
-                                    <th class="border-0">{{translate('messages.duration')}}</th>
-                                    <th class="border-0">{{translate('messages.zone')}}</th>
-                                    <th class="border-0">{{translate('messages.status')}}</th>
-                                    <th class="border-0">{{translate('messages.action')}}</th>
+                                    <th class="border-0">{{'SL'}}</th>
+                                    <th class="border-0">{{'título'}}</th>
+                                    <th class="border-0">{{'órdenes objetivo'}}</th>
+                                    <th class="border-0">{{'premio'}}</th>
+                                    <th class="border-0">{{'duración'}}</th>
+                                    <th class="border-0">{{'zona'}}</th>
+                                    <th class="border-0">{{'estado'}}</th>
+                                    <th class="border-0">{{'acción'}}</th>
                                 </tr>
                             </thead>
 
@@ -70,14 +70,14 @@
                                             {{$mission->start_date->format('d/M/Y')}} - {{$mission->end_date->format('d/M/Y')}}
                                         </td>
                                         <td class="text-center">
-                                            {{$mission->zone ? $mission->zone->name : translate('messages.all_zones')}}
+                                            {{$mission->zone ? $mission->zone->name : 'todas las zonas'}}
                                         </td>
                                         <td class="text-center">
                                             <label class="toggle-switch toggle-switch-sm" for="status-{{$mission['id']}}">
                                                 <input type="checkbox" class="toggle-switch-input status-change-alert"
                                                     id="status-{{$mission['id']}}"
                                                     data-url="{{route('admin.mission.status', [$mission['id'], $mission->status ? 0 : 1])}}"
-                                                    data-message="{{$mission->status ? translate('messages.Want_to_disable_this_mission?') : translate('messages.Want_to_enable_this_mission?')}}"
+                                                    data-message="{{$mission->status ? '¿Quieres desactivar esta misión?' : '¿Quieres habilitar esta misión?'}}"
                                                     {{$mission->status ? 'checked' : ''}}>
                                                 <span class="toggle-switch-label mx-auto">
                                                     <span class="toggle-switch-indicator"></span>
@@ -88,12 +88,12 @@
                                             <div class="btn--container justify-content-center">
                                                 <a class="btn action-btn btn--primary btn-outline-primary"
                                                     href="{{route('admin.mission.edit', [$mission['id']])}}"
-                                                    title="{{translate('messages.edit')}}"><i class="tio-edit"></i>
+                                                    title="{{'editar'}}"><i class="tio-edit"></i>
                                                 </a>
                                                 <a class="btn action-btn btn--danger btn-outline-danger form-alert"
                                                     href="javascript:" data-id="mission-{{$mission['id']}}"
-                                                    data-message="{{ translate('Want to delete this mission ?') }}"
-                                                    title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
+                                                    data-message="{{ '¿Quieres eliminar esta misión?' }}"
+                                                    title="{{'borrar'}}"><i class="tio-delete-outlined"></i>
                                                 </a>
                                                 <form action="{{route('admin.mission.delete', [$mission['id']])}}" method="post"
                                                     id="mission-{{$mission['id']}}">
@@ -160,14 +160,14 @@
 
         function confirm_alert(url, message) {
             Swal.fire({
-                title: '{{translate('messages.Are you sure?')}}',
+                title: '{{'¿Está seguro?'}}',
                 text: message,
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{translate('messages.no')}}',
-                confirmButtonText: '{{translate('messages.yes')}}',
+                cancelButtonText: '{{'No'}}',
+                confirmButtonText: '{{'Sí'}}',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {

@@ -21,31 +21,31 @@
                                     </div>
                                     <div class="text-dark mb-3">
                                         <h3 class="lh-base">
-                                            {{ translate('how_to_get_the_pinterest_tag_id') }}
+                                            {{ 'cómo obtener la identificación de la etiqueta de pinterest' }}
                                         </h3>
                                         <p class="opacity-75">
-                                            {{ translate('to_get_your_pinterest_tag_id,_log_in_to_your_pinterest_ads_manager.') }}
-                                            {{ translate('go_to_conversions_management_interface_and_then_click_tag_manager_from_the_left_navigation_bar,_where_you_will_find_your_tag_id.') }}
-                                            {{ translate('copy_it_from_there.') }}
+                                            {{ 'Para obtener la identificación de su etiqueta de Pinterest, inicie sesión en su administrador de anuncios de Pinterest.' }}
+                                            {{ 'Vaya a la interfaz de administración de conversiones y luego haga clic en Administrador de etiquetas en la barra de navegación izquierda, donde encontrará su identificación de etiqueta.' }}
+                                            {{ 'cópialo desde allí.' }}
                                         </p>
                                     </div>
 
                                     <div class="text-dark mb-3">
                                         <h3 class="lh-base">
-                                            {{ translate('where_to_use_the_pinterest_tag_id') }}
+                                            {{ 'dónde usar la identificación de la etiqueta de pinterest' }}
                                         </h3>
                                         <p class="opacity-75">
-                                            {{ translate('open_the_marketing_tools_feature_in_your_admin_panel_and_follow_the_steps:') }}
+                                            {{ 'abra la función de herramientas de marketing en su panel de administración y siga los pasos:' }}
                                         </p>
                                         <ol class="d-flex flex-column gap-2 opacity-75">
                                             <li>
-                                                {{ translate('go_to_the_pinterest_tag_id_section_under_marketing_tools.') }}
+                                                {{ 'Vaya a la sección de identificación de etiqueta de Pinterest en Herramientas de marketing.' }}
                                             </li>
                                             <li>
-                                                {{ translate('turn_on_the_toggle_button.') }}
+                                                {{ 'encienda el botón de alternancia.' }}
                                             </li>
                                             <li>
-                                                {{ translate('paste_your_pinterest_tag_id_into_the_input_box_and_click_submit.') }}
+                                                {{ 'pegue su ID de etiqueta de Pinterest en el cuadro de entrada y haga clic en enviar.' }}
                                             </li>
                                         </ol>
                                     </div>

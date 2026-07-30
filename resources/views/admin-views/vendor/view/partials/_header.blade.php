@@ -13,23 +13,23 @@
 
                 <a href=" {{ !isset($store->vendor->status) || $store->vendor->status == 0 ? route('admin.store.edit', [$store->id, 'pending'=>1]) : route('admin.store.edit', [$store->id]) }}"
                     class="btn btn--primary border-0 bg--soft-priamry-10 text-primary m-0 float-right">
-                    <i class="tio-edit"></i> {{  $store->module_type == 'rental' ? translate('messages.Edit_Provider') :translate('messages.Edit_Store') }}
+                    <i class="tio-edit"></i> {{  $store->module_type == 'rental' ? 'Editar proveedor' :'Editar tienda' }}
                 </a>
                 @if (!isset($store->vendor->status) || $store->vendor->status == 0)
                     @if (!isset($store->vendor->status))
                         <a class="btn btn--danger border-0 bg--soft-danger-10 text-danger m-0 text-capitalize font-weight-bold float-right "
                             href="javascript:" data-toggle="modal" data-target="#confirmation-reason-btn"><i
-                                class="tio-clear font-weight-bold pr-1"></i> {{ translate('messages.Reject') }}</a>
+                                class="tio-clear font-weight-bold pr-1"></i> {{ 'Rechazar' }}</a>
                     @endif
                     <a class="btn btn--primary border-0 m-0 text-capitalize font-weight-bold float-right swal_fire_alert"
                         data-url="{{ route('admin.store.application', [$store['id'], 1]) }}"
-                         data-title="{{translate('messages.are_you_sure_?')}}"
+                         data-title="{{'está seguro ?'}}"
                                        data-image_url="{{ asset('assets/admin/img/off-danger.png') }}"
-                                       data-confirm_button_text="{{ translate('messages.yes') }}"
-                                       data-cancel_button_text="{{ translate('messages.No') }}"
-                                       data-message="{{translate('messages.you_want_to_approve_the_vendor_joining_request.')}}"
+                                       data-confirm_button_text="{{ 'Sí' }}"
+                                       data-cancel_button_text="{{ 'No' }}"
+                                       data-message="{{'desea aprobar la solicitud de incorporación del proveedor.'}}"
                         href="javascript:"><i
-                            class="tio-done font-weight-bold pr-1"></i>{{ translate('messages.approve') }}</a>
+                            class="tio-done font-weight-bold pr-1"></i>{{ 'aprobar' }}</a>
                 @endif
             </div>
         </div>
@@ -52,62 +52,62 @@
                 <ul class="nav nav-tabs page-header-tabs mb-2">
                     <li class="nav-item">
                         <a class="nav-link {{ request('tab') == null ? 'active' : '' }}"
-                            href="{{ route('admin.store.view', $store->id) }}">{{ translate('messages.overview') }}</a>
+                            href="{{ route('admin.store.view', $store->id) }}">{{ 'descripción general' }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request('tab') == 'order' ? 'active' : '' }}"
                             href="{{ route('admin.store.view', ['store' => $store->id, 'tab' => 'order']) }}"
-                            aria-disabled="true">{{ translate('messages.orders') }}</a>
+                            aria-disabled="true">{{ 'Pedidos' }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request('tab') == 'item' ? 'active' : '' }}"
                             href="{{ route('admin.store.view', ['store' => $store->id, 'tab' => 'item']) }}"
-                            aria-disabled="true">{{ translate('messages.items') }}</a>
+                            aria-disabled="true">{{ 'Productos' }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request('tab') == 'reviews' ? 'active' : '' }}"
                             href="{{ route('admin.store.view', ['store' => $store->id, 'tab' => 'reviews']) }}"
-                            aria-disabled="true">{{ translate('messages.reviews') }}</a>
+                            aria-disabled="true">{{ 'opiniones' }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request('tab') == 'discount' ? 'active' : '' }}"
                             href="{{ route('admin.store.view', ['store' => $store->id, 'tab' => 'discount']) }}"
-                            aria-disabled="true">{{ translate('messages.discounts') }}</a>
+                            aria-disabled="true">{{ 'descuentos' }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request('tab') == 'transaction' ? 'active' : '' }}"
                             href="{{ route('admin.store.view', ['store' => $store->id, 'tab' => 'transaction']) }}"
-                            aria-disabled="true">{{ translate('messages.transactions') }}</a>
+                            aria-disabled="true">{{ 'actas' }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request('tab') == 'settings' ? 'active' : '' }}"
                             href="{{ route('admin.store.view', ['store' => $store->id, 'tab' => 'settings']) }}"
-                            aria-disabled="true">{{ translate('messages.settings') }}</a>
+                            aria-disabled="true">{{ 'Configuración' }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request('tab') == 'conversations' ? 'active' : '' }}"
                             href="{{ route('admin.store.view', ['store' => $store->id, 'tab' => 'conversations']) }}"
-                            aria-disabled="true">{{ translate('Conversations') }}</a>
+                            aria-disabled="true">{{ 'Conversaciones' }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request('tab') == 'meta-data' ? 'active' : '' }}"
                             href="{{ route('admin.store.view', ['store' => $store->id, 'tab' => 'meta-data']) }}"
-                            aria-disabled="true">{{ translate('meta_data') }}</a>
+                            aria-disabled="true">{{ 'metadatos' }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link  {{ request('tab') == 'disbursements' ? 'active' : '' }}"
                             href="{{ route('admin.store.view', ['store' => $store->id, 'tab' => 'disbursements']) }}"
-                            aria-disabled="true">{{ translate('messages.disbursements') }}</a>
+                            aria-disabled="true">{{ 'desembolsos' }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link  {{ request('tab') == 'business_plan' ? 'active' : '' }}"
                             href="{{ route('admin.store.view', ['store' => $store->id, 'tab' => 'business_plan']) }}"
-                            aria-disabled="true">{{ translate('messages.business_plan') }}</a>
+                            aria-disabled="true">{{ 'plan de negocios' }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link  {{ request('tab') == 'tootliclick' ? 'active' : '' }}"
                             href="{{ route('admin.store.view', ['store' => $store->id, 'tab' => 'tootliclick']) }}"
-                            aria-disabled="true">{{ translate('TootliClick') }}</a>
+                            aria-disabled="true">{{ 'TootliClic' }}</a>
                     </li>
                 </ul>
                 <!-- End Nav -->
@@ -135,18 +135,18 @@
                     <div class="text-center">
                         <img src="{{ asset('assets/admin/img/delete-confirmation.png') }}" alt="icon"
                             class="mb-3">
-                        <h3 class="mb-2">{{ translate('messages.Are_you_sure_?') }}</h3>
-                        <p class="mb-0">{{ translate('You want to deny this joining application?') }}</p>
+                        <h3 class="mb-2">{{ 'Está seguro ?' }}</h3>
+                        <p class="mb-0">{{ '¿Quiere rechazar esta solicitud de incorporación?' }}</p>
                     </div>
                     <div class="px-3 mt-4">
-                        <h5 class="mb-2">{{ translate('messages.Reason') }}</h5>
+                        <h5 class="mb-2">{{ 'Razón' }}</h5>
                         <textarea name="rejection_note" id="" class="form-control" rows="2" required
-                            placeholder="{{ translate('messages.Type_here_the_denied_reason...') }}"></textarea>
+                            placeholder="{{ 'Escriba aquí el motivo del rechazo...' }}"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-center border-0 pt-0 gap-2">
-                    <button type="button" class="btn min-w-120px btn--reset" data-dismiss="modal">{{ translate('messages.No') }}</button>
-                    <button type="submit" class="btn min-w-120px btn--primary">{{ translate('messages.Yes') }}</button>
+                    <button type="button" class="btn min-w-120px btn--reset" data-dismiss="modal">{{ 'No' }}</button>
+                    <button type="submit" class="btn min-w-120px btn--primary">{{ 'Sí' }}</button>
                 </div>
             </form>
             </div>

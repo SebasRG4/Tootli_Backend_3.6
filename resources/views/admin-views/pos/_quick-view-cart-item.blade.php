@@ -9,10 +9,10 @@
     <div class="d-flex flex-row">
         @if (config('toggle_veg_non_veg'))
             <span
-                class="badge badge-{{ $product->veg ? 'success' : 'danger' }} position-absolute">{{ $product->veg ? translate('messages.veg') : translate('messages.non_veg') }}</span>
+                class="badge badge-{{ $product->veg ? 'success' : 'danger' }} position-absolute">{{ $product->veg ? 'verduras' : 'no vegetariano' }}</span>
         @endif
         @if (isset($stock) && $stock == 0)
-        <span class="badge badge-danger position-absolute">{{ translate('messages.Out_of_Stock') }}</span>
+        <span class="badge badge-danger position-absolute">{{ 'Agotado' }}</span>
         @endif
 
         <!-- Product gallery-->
@@ -55,7 +55,7 @@
 
             @if ($product->discount > 0 || \App\CentralLogics\Helpers::get_store_discount($product->store))
                 <div class="mb-3 text-dark">
-                    <strong>{{ translate('messages.discount') }} : </strong>
+                    <strong>{{ 'descuento' }} : </strong>
                     <strong
                         id="set-discount-amount">{{ \App\CentralLogics\Helpers::get_product_discount($product) }}</strong>
                 </div>
@@ -65,14 +65,14 @@
     </div>
     <div class="row pt-2">
         <div class="col-12">
-            <h2>{{ translate('messages.description') }}</h2>
+            <h2>{{ 'descripción' }}</h2>
             <span class="d-block text-dark text-break">
                 {!! $product->description !!}
             </span>
 
             @if (in_array($product->module->module_type ,['food','grocery']))
                 @if (count($product->nutritions) )
-                    <h4 class="mt-2"> {{ translate('messages.Nutrition_Details') }}</h4>
+                    <h4 class="mt-2"> {{ 'Detalles nutricionales' }}</h4>
                     <span class="d-block text-dark text-break">
                         @foreach($product->nutritions as $nutrition)
                         {{$nutrition->nutrition}}{{ !$loop->last ? ',' : '.'}}
@@ -80,7 +80,7 @@
                     </span>
                 @endif
                 @if (count($product->allergies))
-                    <h4 class="mt-2"> {{ translate('messages.Allergie_Ingredients') }}</h4>
+                    <h4 class="mt-2"> {{ 'Ingredientes alérgicos' }}</h4>
                     <span class="d-block text-dark text-break">
                         @foreach($product->allergies as $allergy)
                         {{$allergy->allergy}}{{ !$loop->last ? ',' : '.'}}
@@ -91,7 +91,7 @@
 
             @if (in_array($product->module->module_type ,['pharmacy']))
                 @if ($product->generic->pluck('generic_name')->first())
-                    <h4 class="mt-2"> {{ translate('generic_name') }}</h4>
+                    <h4 class="mt-2"> {{ 'nombre genérico' }}</h4>
                     <span class="d-block text-dark text-break">
                         {{ $product->generic->pluck('generic_name')->first() }}
                     </span>
@@ -125,14 +125,14 @@
                             @if (isset($choice->name) && isset($choice->values))
                                 <div class="h3 p-0 pt-2">{{ $choice->name }} <small
                                         class="text-muted initial--18">
-                                        ({{ $choice->required == 'on' ? translate('messages.Required') : translate('messages.optional') }})
+                                        ({{ $choice->required == 'on' ? 'Requerido' : 'opcional' }})
                                     </small>
                                 </div>
                                 @if ($choice->min != 0 && $choice->max != 0)
                                     <small class="d-block mb-3">
-                                        {{ translate('You_need_to_select_minimum_ ') }} {{ $choice->min }}
-                                        {{ translate('to_maximum_ ') }} {{ $choice->max }}
-                                        {{ translate('options') }}
+                                        {{ 'Necesitas seleccionar mínimo' }} {{ $choice->min }}
+                                        {{ 'al máximo' }} {{ $choice->max }}
+                                        {{ 'opciones' }}
                                     </small>
                                 @endif
 
@@ -185,7 +185,7 @@
                 @if (isset($stock) && $stock !== 0 || !isset($stock) )
                 <!-- Quantity + Add to cart -->
                 <div class="d-flex justify-content-between">
-                    <div class="product-description-label mt-2 text-dark h3">{{ translate('messages.quantity') }}:
+                    <div class="product-description-label mt-2 text-dark h3">{{ 'cantidad' }}:
                     </div>
                     <div class="product-quantity d-flex align-items-center">
                         <div class="input-group input-group--style-2 pr-3 initial--19">
@@ -209,7 +209,7 @@
                 @php($add_ons = json_decode($product->add_ons))
 
                 @if (count($add_ons) > 0 && $add_ons[0])
-                    <div class="h3 p-0 pt-2">{{ translate('messages.addon') }}
+                    <div class="h3 p-0 pt-2">{{ 'Añadir' }}
                     </div>
                     <div class="d-flex justify-content-left flex-wrap">
                             @php ( $selected_addons= array_combine($cart_item['add_ons'] ,  $cart_item['add_on_qtys']) )
@@ -251,7 +251,7 @@
                 @if (isset($stock) && $stock !== 0 || !isset($stock) )
                 <div class="row no-gutters d-none mt-2 text-dark" id="chosen_price_div">
                     <div class="col-2">
-                        <div class="product-description-label">{{ translate('messages.Total Price') }}:</div>
+                        <div class="product-description-label">{{ 'Precio total' }}:</div>
                     </div>
                     <div class="col-10">
                         <div class="product-price">
@@ -263,14 +263,14 @@
                 <div class="d-flex justify-content-center mt-2">
                     <button class="btn btn--primary h--45px add-To-Cart" type="button">
                         <i class="tio-shopping-cart"></i>
-                        {{ translate('messages.Update_To_Cart') }}
+                        {{ 'Actualizar al carrito' }}
                     </button>
                 </div>
                 @else
                 <div class="d-flex justify-content-center mt-2">
                     <button class="btn btn-secondary h--45px" type="button">
                         <i class="tio-shopping-cart"></i>
-                        {{ translate('messages.Stock_Out') }}
+                        {{ 'Agotado' }}
                     </button>
                 </div>
 

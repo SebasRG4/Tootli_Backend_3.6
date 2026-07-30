@@ -1,5 +1,5 @@
 @extends('errors::minimal')
 
-@section('title', translate('Page Expired'))
+@section('title', 'Página caducada')
 @section('code', '419')
-@section('message', translate('Page Expired'))
+@section('message', 'Página caducada')

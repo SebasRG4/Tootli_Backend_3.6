@@ -17,31 +17,31 @@
 
         <tr>
 
-            <th>{{ translate('Total_'.$isRental) }} - {{ $data['data']->count() ?? translate('N/A') }} </th>
+            <th>{{ 'Total \'.$isRental) }} - {{ $datos[\'datos\']->count() ?? traducir(\'N/A' }} </th>
             <th></th>
             <th></th>
-            <th> {{ translate('Active_'.$isRental) }} - {{ $data['data']->where('status',1)->count() ?? translate('N/A') }} </th>
+            <th> {{ 'Activo \'.$isRental) }} - {{ $data[\'data\']->where(\'status\',1)->count() ?? traducir(\'N/A' }} </th>
             <th></th>
             <th></th>
-            <th> {{ translate('Inactive_'.$isRental) }} - {{ $data['data']->where('status',0)->count() ?? translate('N/A') }} </th>
+            <th> {{ 'Inactivo \'.$isRental) }} - {{ $data[\'data\']->where(\'status\',0)->count() ?? traducir(\'N/A' }} </th>
             <th></th>
             <th></th>
-            <th> {{ translate('Newly_Joined') }} - {{ $data['data']->where('created_at', '>=', now()->subDays(30)->toDateTimeString())->count() ?? translate('N/A') }} </th>
+            <th> {{ 'Recién incorporado' }} - {{ $data['data']->where('created_at', '>=', now()->subDays(30)->toDateTimeString())->count() ?? 'N / A' }} </th>
             <th></th>
 
         </tr>
             <tr>
-                <th>{{ translate('Filter_Criteria') }}</th>
+                <th>{{ 'Criterios de filtrado' }}</th>
                 <th></th>
                 <th></th>
                 <th>
-                    {{ translate('zone' )}} - {{ $data['zone']??translate('all') }}
+                    {{ 'zona'}} - {{ $data['zone']??'todo' }}
 
                     <br>
-                    {{ translate('Module' )}} - {{ $data['module']??translate('all') }}
+                    {{ 'Módulo'}} - {{ $data['module']??'todo' }}
 
                     <br>
-                    {{ translate('Search_Bar_Content')  }}- {{ $data['search'] ??translate('N/A') }}
+                    {{ 'Contenido de la barra de búsqueda'  }}- {{ $data['search'] ??'N / A' }}
                 </th>
                 <th> </th>
                 <th></th>
@@ -49,17 +49,17 @@
                 <th></th>
             </tr>
         <tr>
-            <th>{{ translate('sl') }}</th>
+            <th>{{ 'SL' }}</th>
             <th>{{translate($isRental.'_ID')}}</th>
             <th>{{ translate($isRental.'_Logo') }}</th>
             <th>{{ translate($isRental.'_Name') }}</th>
-            <th>{{ translate('Ratings') }}</th>
-            <th>  {{ translate('Owner_Information') }}</th>
-            <th>   {{ translate('Address') }}</th>
-            <th> {{ translate('Total_'.$isVehicle.'s') }}</th>
-            <th> {{ translate('Total_'.$isTrip.'s') }}</th>
-            <th>{{ translate('Featured_?') }}</th>
-            <th>{{ translate('Status') }}</th>
+            <th>{{ 'Calificaciones' }}</th>
+            <th>  {{ 'Información del propietario' }}</th>
+            <th>   {{ 'DIRECCIÓN' }}</th>
+            <th> {{ 'Total \'.$esVehículo.\'s' }}</th>
+            <th> {{ 'Total \'.$isTrip.\'s' }}</th>
+            <th>{{ 'Presentado ?' }}</th>
+            <th>{{ 'Estado' }}</th>
         </thead>
         <tbody>
         @foreach($data['data'] as $key => $store)
@@ -97,10 +97,10 @@
                 @endif
             </td>
             <td>
-                {{ $store->featured == 1 ? translate('Yes') : translate('No') }}
+                {{ $store->featured == 1 ? 'Sí' : 'No' }}
             </td>
             <td>
-                {{ $store->status == 1 ? translate('Active') : translate('Inactive') }}
+                {{ $store->status == 1 ? 'Activo' : 'Inactivo' }}
             </td>
             </tr>
         @endforeach

@@ -14,7 +14,7 @@
                 <img src="{{asset('assets/admin/img/edit.png')}}" class="w--26" alt="">
             </span>
             <span>
-                {{translate('messages.edit_role')}}
+                {{'editar rol'}}
             </span>
         </h1>
     </div>
@@ -27,7 +27,7 @@
                 <span class="card-header-icon">
                     <i class="tio-document-text-outlined"></i>
                 </span>
-                <span>{{translate('messages.role_form')}}</span>
+                <span>{{'formulario de rol'}}</span>
             </h5>
         </div>
         <div class="card-body">
@@ -41,7 +41,7 @@
                         <li class="nav-item">
                             <a class="nav-link lang_link active"
                             href="#"
-                            id="default-link">{{translate('messages.default')}}</a>
+                            id="default-link">{{'por defecto'}}</a>
                         </li>
                         @foreach (json_decode($language) as $lang)
                             <li class="nav-item">
@@ -53,8 +53,8 @@
                     </ul>
                     <div class="lang_form" id="default-form">
                         <div class="form-group">
-                            <label class="input-label" for="default_title">{{translate('messages.role_name')}} ({{translate('messages.default')}})</label>
-                            <input type="text" name="name[]" id="default_title" class="form-control" placeholder="{{translate('role_name_example')}}" value="{{$role?->getRawOriginal('name')}}"  >
+                            <label class="input-label" for="default_title">{{'nombre del rol'}} ({{'por defecto'}})</label>
+                            <input type="text" name="name[]" id="default_title" class="form-control" placeholder="{{'ejemplo de nombre de rol'}}" value="{{$role?->getRawOriginal('name')}}"  >
                         </div>
                         <input type="hidden" name="lang[]" value="default">
                     </div>
@@ -72,8 +72,8 @@
                         ?>
                         <div class="d-none lang_form" id="{{$lang}}-form">
                             <div class="form-group">
-                                <label class="input-label" for="{{$lang}}_title">{{translate('messages.role_name')}} ({{strtoupper($lang)}})</label>
-                                <input type="text" name="name[]" id="{{$lang}}_title" class="form-control" placeholder="{{translate('role_name_example')}}" value="{{$translate[$lang]['name']??''}}"  >
+                                <label class="input-label" for="{{$lang}}_title">{{'nombre del rol'}} ({{strtoupper($lang)}})</label>
+                                <input type="text" name="name[]" id="{{$lang}}_title" class="form-control" placeholder="{{'ejemplo de nombre de rol'}}" value="{{$translate[$lang]['name']??''}}"  >
                             </div>
                             <input type="hidden" name="lang[]" value="{{$lang}}">
                         </div>
@@ -81,8 +81,8 @@
                 @else
                 <div id="default-form">
                     <div class="form-group">
-                        <label class="input-label" for="name">{{translate('messages.role_name')}} ({{ translate('messages.default') }})</label>
-                        <input type="text" id="name" name="name[]" class="form-control" placeholder="{{translate('role_name_example')}}" value="{{$role['name']}}" maxlength="100" required>
+                        <label class="input-label" for="name">{{'nombre del rol'}} ({{ 'por defecto' }})</label>
+                        <input type="text" id="name" name="name[]" class="form-control" placeholder="{{'ejemplo de nombre de rol'}}" value="{{$role['name']}}" maxlength="100" required>
                     </div>
                     <input type="hidden" name="lang[]" value="default">
                 </div>
@@ -90,9 +90,9 @@
 
                 <div class="bg-light rounded p-3 mb-20">
                     <div class="d-flex align-items-center flex-wrap justify-content-between select--all-checkes">
-                        <h5 class="input-label m-0 text-capitalize">{{translate('messages.Module Wise Permission')}}</h5>
+                        <h5 class="input-label m-0 text-capitalize">{{'Permiso sabio del módulo'}}</h5>
                         <div class="check-item p-2 d-flex align-items-center gap-2 pb-0 w-auto cursor-pointer">
-                            <label for="select-all" class="fs-14 font-semibold text-title m-0">{{ translate('messages.All Module Permission') }}</label>
+                            <label for="select-all" class="fs-14 font-semibold text-title m-0">{{ 'Permiso para todos los módulos' }}</label>
                             <div class="form-group form-check form--check m-0 ml-2">
                                 <input type="checkbox" value="" class="form-check-input rounded position-relative rounded" id="select-all">
                             </div>
@@ -103,9 +103,9 @@
                             <div class="col-md-6">
                                 <div class="bg-white rounded select-subwrapper">
                                     <div class="border-bottom p-3 d-flex align-items-center justify-content-between flex-wrap flex-xxl-nowrap gap-1">
-                                        <h5 class="m-0 font-medium">{{ translate('messages.General Management') }}</h5>
+                                        <h5 class="m-0 font-medium">{{ 'Gerencia General' }}</h5>
                                         <div class="check-item p-2 d-flex align-items-center gap-2 pb-0 w-auto cursor-pointer">
-                                            <label for="select-allsub-1" class="fs-14 text-title m-0">{{ translate('messages.Select All') }}</label>
+                                            <label for="select-allsub-1" class="fs-14 text-title m-0">{{ 'Seleccionar todo' }}</label>
                                             <div class="form-group form-check form--check m-0 ml-2">
                                                 <input type="checkbox" name="" value="" class="form-check-input rounded position-relative rounded check-all" id="select-allsub-1">
                                             </div>
@@ -117,14 +117,14 @@
                                                 <div class="form-group form-check form--check m-0">
                                                     <input type="checkbox" name="modules[]" value="dashboard" class="form-check-input rounded"
                                                         id="dashboard" {{in_array('dashboard',(array)json_decode($role['modules']))?'checked':''}}>
-                                                    <label class="form-check-label qcont text-dark" for="dashboard">{{translate('messages.Dashboard')}}</label>
+                                                    <label class="form-check-label qcont text-dark" for="dashboard">{{'Panel de Control'}}</label>
                                                 </div>
                                             </div>
                                             <div class="check-item p-2">
                                                 <div class="form-group form-check form--check m-0">
                                                     <input type="checkbox" name="modules[]" value="profile" class="form-check-input rounded"
                                                         id="profile" {{in_array('profile',(array)json_decode($role['modules']))?'checked':''}}>
-                                                    <label class="form-check-label qcont text-dark" for="profile">{{translate('messages.Profile')}}</label>
+                                                    <label class="form-check-label qcont text-dark" for="profile">{{'Perfil'}}</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -134,9 +134,9 @@
                             <div class="col-md-6">
                                 <div class="bg-white rounded select-subwrapper">
                                     <div class="border-bottom p-3 d-flex align-items-center justify-content-between flex-wrap flex-xxl-nowrap gap-1">
-                                        <h5 class="m-0 font-medium">{{ translate('messages.Order Management') }}</h5>
+                                        <h5 class="m-0 font-medium">{{ 'Gestión de pedidos' }}</h5>
                                         <div class="check-item p-2 d-flex align-items-center gap-2 pb-0 w-auto cursor-pointer">
-                                            <label for="select-allsub-2" class="fs-14 text-title m-0">{{ translate('messages.Select All') }}</label>
+                                            <label for="select-allsub-2" class="fs-14 text-title m-0">{{ 'Seleccionar todo' }}</label>
                                             <div class="form-group form-check form--check m-0 ml-2">
                                                 <input type="checkbox" name="" value="" class="form-check-input rounded position-relative rounded check-all" id="select-allsub-2">
                                             </div>
@@ -148,7 +148,7 @@
                                                 <div class="form-group form-check form--check m-0">
                                                     <input type="checkbox" name="modules[]" value="order" class="form-check-input rounded"
                                                         id="order" {{in_array('order',(array)json_decode($role['modules']))?'checked':''}}>
-                                                    <label class="form-check-label qcont text-dark" for="order">{{translate('messages.All Orders')}}</label>
+                                                    <label class="form-check-label qcont text-dark" for="order">{{'Todos los pedidos'}}</label>
                                                 </div>
                                             </div>
                                             @if (\App\CentralLogics\Helpers::employee_module_permission_check('pos'))
@@ -156,7 +156,7 @@
                                                 <div class="form-group form-check form--check m-0">
                                                     <input type="checkbox" name="modules[]" value="pos" class="form-check-input rounded"
                                                         id="pos" {{in_array('pos',(array)json_decode($role['modules']))?'checked':''}}>
-                                                    <label class="form-check-label qcont text-dark" for="pos">{{translate('messages.Point of Sale (POS)')}}</label>
+                                                    <label class="form-check-label qcont text-dark" for="pos">{{'Punto de Venta (POS)'}}</label>
                                                 </div>
                                             </div>
                                             @endif
@@ -167,9 +167,9 @@
                             <div class="col-md-6">
                                 <div class="bg-white rounded select-subwrapper">
                                     <div class="border-bottom p-3 d-flex align-items-center justify-content-between flex-wrap flex-xxl-nowrap gap-1">
-                                        <h5 class="m-0 font-medium">{{ translate('messages.Item Management') }}</h5>
+                                        <h5 class="m-0 font-medium">{{ 'Gestión de artículos' }}</h5>
                                         <div class="check-item p-2 d-flex align-items-center gap-2 pb-0 w-auto cursor-pointer">
-                                            <label for="select-allsub-3" class="fs-14 text-title m-0">{{ translate('messages.Select All') }}</label>
+                                            <label for="select-allsub-3" class="fs-14 text-title m-0">{{ 'Seleccionar todo' }}</label>
                                             <div class="form-group form-check form--check m-0 ml-2">
                                                 <input type="checkbox" name="" value="" class="form-check-input rounded position-relative rounded check-all" id="select-allsub-3">
                                             </div>
@@ -181,7 +181,7 @@
                                                 <div class="form-group form-check form--check m-0">
                                                     <input type="checkbox" name="modules[]" value="item" class="form-check-input rounded"
                                                         id="item" {{in_array('item',(array)json_decode($role['modules']))?'checked':''}}>
-                                                    <label class="form-check-label qcont text-dark" for="item">{{translate('messages.Items')}}</label>
+                                                    <label class="form-check-label qcont text-dark" for="item">{{'Elementos'}}</label>
                                                 </div>
                                             </div>
                                             @if (config('module.'.\App\CentralLogics\Helpers::get_store_data()->module->module_type)['add_on'])
@@ -189,7 +189,7 @@
                                                 <div class="form-group form-check form--check m-0">
                                                     <input type="checkbox" name="modules[]" value="addon" class="form-check-input rounded"
                                                         id="addon" {{in_array('addon',(array)json_decode($role['modules']))?'checked':''}}>
-                                                    <label class="form-check-label qcont text-dark" for="addon">{{translate('messages.Addons')}}</label>
+                                                    <label class="form-check-label qcont text-dark" for="addon">{{'Complementos'}}</label>
                                                 </div>
                                             </div>
                                             @endif
@@ -197,7 +197,7 @@
                                                 <div class="form-group form-check form--check m-0">
                                                     <input type="checkbox" name="modules[]" value="category" class="form-check-input rounded"
                                                         id="category" {{in_array('category',(array)json_decode($role['modules']))?'checked':''}}>
-                                                    <label class="form-check-label qcont text-dark" for="category">{{translate('messages.Categories')}}</label>
+                                                    <label class="form-check-label qcont text-dark" for="category">{{'Categorías'}}</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -207,9 +207,9 @@
                             <div class="col-md-6">
                                 <div class="bg-white rounded select-subwrapper">
                                     <div class="border-bottom p-3 d-flex align-items-center justify-content-between flex-wrap flex-xxl-nowrap gap-1">
-                                        <h5 class="m-0 font-medium">{{ translate('messages.Marketing Section') }}</h5>
+                                        <h5 class="m-0 font-medium">{{ 'Sección de Comercialización' }}</h5>
                                         <div class="check-item p-2 d-flex align-items-center gap-2 pb-0 w-auto cursor-pointer">
-                                            <label for="select-allsub-4" class="fs-14 text-title m-0">{{ translate('messages.Select All') }}</label>
+                                            <label for="select-allsub-4" class="fs-14 text-title m-0">{{ 'Seleccionar todo' }}</label>
                                             <div class="form-group form-check form--check m-0 ml-2">
                                                 <input type="checkbox" name="" value="" class="form-check-input rounded position-relative rounded check-all" id="select-allsub-4">
                                             </div>
@@ -221,21 +221,21 @@
                                                 <div class="form-group form-check form--check m-0">
                                                     <input type="checkbox" name="modules[]" value="campaign" class="form-check-input rounded"
                                                         id="campaign" {{in_array('campaign',(array)json_decode($role['modules']))?'checked':''}}>
-                                                    <label class="form-check-label qcont text-dark" for="campaign">{{translate('messages.Campaign')}}</label>
+                                                    <label class="form-check-label qcont text-dark" for="campaign">{{'Campaña'}}</label>
                                                 </div>
                                             </div>
                                             <div class="check-item p-2">
                                                 <div class="form-group form-check form--check m-0">
                                                     <input type="checkbox" name="modules[]" value="coupon" class="form-check-input rounded"
                                                         id="coupon" {{in_array('coupon',(array)json_decode($role['modules']))?'checked':''}}>
-                                                    <label class="form-check-label qcont text-dark" for="coupon">{{translate('messages.Coupon')}}</label>
+                                                    <label class="form-check-label qcont text-dark" for="coupon">{{'Cupón'}}</label>
                                                 </div>
                                             </div>
                                             <div class="check-item p-2">
                                                 <div class="form-group form-check form--check m-0">
                                                     <input type="checkbox" name="modules[]" value="banner" class="form-check-input rounded"
                                                         id="banner" {{in_array('banner',(array)json_decode($role['modules']))?'checked':''}}>
-                                                    <label class="form-check-label qcont text-dark" for="banner">{{translate('messages.Banner')}}</label>
+                                                    <label class="form-check-label qcont text-dark" for="banner">{{'Bandera'}}</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -245,9 +245,9 @@
                             <div class="col-md-6">
                                 <div class="bg-white rounded select-subwrapper">
                                     <div class="border-bottom p-3 d-flex align-items-center justify-content-between flex-wrap flex-xxl-nowrap gap-1">
-                                        <h5 class="m-0 font-medium">{{ translate('messages.Advertisement Management') }}</h5>
+                                        <h5 class="m-0 font-medium">{{ 'Gestión de publicidad' }}</h5>
                                         <div class="check-item p-2 d-flex align-items-center gap-2 pb-0 w-auto cursor-pointer">
-                                            <label for="select-allsub-5" class="fs-14 text-title m-0">{{ translate('messages.Select All') }}</label>
+                                            <label for="select-allsub-5" class="fs-14 text-title m-0">{{ 'Seleccionar todo' }}</label>
                                             <div class="form-group form-check form--check m-0 ml-2">
                                                 <input type="checkbox" name="" value="" class="form-check-input rounded position-relative rounded check-all" id="select-allsub-5">
                                             </div>
@@ -259,14 +259,14 @@
                                                 <div class="form-group form-check form--check m-0">
                                                     <input type="checkbox" name="modules[]" value="advertisement" class="form-check-input rounded"
                                                         id="advertisement" {{in_array('advertisement',(array)json_decode($role['modules']))?'checked':''}}>
-                                                    <label class="form-check-label qcont text-dark" for="advertisement">{{translate('messages.New Advertisement')}}</label>
+                                                    <label class="form-check-label qcont text-dark" for="advertisement">{{'Nuevo anuncio'}}</label>
                                                 </div>
                                             </div>
                                             <div class="check-item p-2">
                                                 <div class="form-group form-check form--check m-0">
                                                     <input type="checkbox" name="modules[]" value="advertisement_list" class="form-check-input rounded"
                                                         id="advertisement_list" {{in_array('advertisement_list',(array)json_decode($role['modules']))?'checked':''}}>
-                                                    <label class="form-check-label qcont text-dark" for="advertisement_list">{{translate('messages.Advertisement List')}}</label>
+                                                    <label class="form-check-label qcont text-dark" for="advertisement_list">{{'Lista de anuncios'}}</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -278,9 +278,9 @@
                             <div class="col-md-6">
                                 <div class="bg-white rounded select-subwrapper">
                                     <div class="border-bottom p-3 d-flex align-items-center justify-content-between flex-wrap flex-xxl-nowrap gap-1">
-                                        <h5 class="m-0 font-medium">{{ translate('messages.Delivery Man Management') }}</h5>
+                                        <h5 class="m-0 font-medium">{{ 'Gestión del repartidor' }}</h5>
                                         <div class="check-item p-2 d-flex align-items-center gap-2 pb-0 w-auto cursor-pointer">
-                                            <label for="select-allsub-10" class="fs-14 text-title m-0">{{ translate('messages.Select All') }}</label>
+                                            <label for="select-allsub-10" class="fs-14 text-title m-0">{{ 'Seleccionar todo' }}</label>
                                             <div class="form-group form-check form--check m-0 ml-2">
                                                 <input type="checkbox" name="" value="" class="form-check-input rounded position-relative rounded check-all" id="select-allsub-10">
                                             </div>
@@ -292,14 +292,14 @@
                                                 <div class="form-group form-check form--check m-0">
                                                     <input type="checkbox" name="modules[]" value="deliveryman" class="form-check-input rounded"
                                                         id="deliveryman" {{in_array('deliveryman',(array)json_decode($role['modules']))?'checked':''}}>
-                                                    <label class="form-check-label qcont text-dark" for="deliveryman">{{translate('messages.New deliveryman')}}</label>
+                                                    <label class="form-check-label qcont text-dark" for="deliveryman">{{'Nuevo repartidor'}}</label>
                                                 </div>
                                             </div>
                                             <div class="check-item p-2">
                                                 <div class="form-group form-check form--check m-0">
                                                     <input type="checkbox" name="modules[]" value="deliveryman_list" class="form-check-input rounded"
                                                         id="deliveryman_list" {{in_array('deliveryman_list',(array)json_decode($role['modules']))?'checked':''}}>
-                                                    <label class="form-check-label qcont text-dark" for="deliveryman_list">{{translate('messages.Deliveryman List')}}</label>
+                                                    <label class="form-check-label qcont text-dark" for="deliveryman_list">{{'Lista de repartidor'}}</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -312,9 +312,9 @@
                             <div class="col-md-6">
                                 <div class="bg-white rounded select-subwrapper">
                                     <div class="border-bottom p-3 d-flex align-items-center justify-content-between flex-wrap flex-xxl-nowrap gap-1">
-                                        <h5 class="m-0 font-medium">{{ translate('messages.Wallet Management') }}</h5>
+                                        <h5 class="m-0 font-medium">{{ 'Gestión de billetera' }}</h5>
                                         <div class="check-item p-2 d-flex align-items-center gap-2 pb-0 w-auto cursor-pointer">
-                                            <label for="select-allsub-6" class="fs-14 text-title m-0">{{ translate('messages.Select All') }}</label>
+                                            <label for="select-allsub-6" class="fs-14 text-title m-0">{{ 'Seleccionar todo' }}</label>
                                             <div class="form-group form-check form--check m-0 ml-2">
                                                 <input type="checkbox" name="" value="" class="form-check-input rounded position-relative rounded check-all" id="select-allsub-6">
                                             </div>
@@ -326,14 +326,14 @@
                                                 <div class="form-group form-check form--check m-0">
                                                     <input type="checkbox" name="modules[]" value="wallet" class="form-check-input rounded"
                                                         id="wallet" {{in_array('wallet',(array)json_decode($role['modules']))?'checked':''}}>
-                                                    <label class="form-check-label qcont text-dark" for="wallet">{{translate('messages.My Wallet')}}</label>
+                                                    <label class="form-check-label qcont text-dark" for="wallet">{{'Mi billetera'}}</label>
                                                 </div>
                                             </div>
                                             <div class="check-item p-2">
                                                 <div class="form-group form-check form--check m-0">
                                                     <input type="checkbox" name="modules[]" value="wallet_method" class="form-check-input rounded"
                                                         id="wallet_method" {{in_array('wallet_method',(array)json_decode($role['modules']))?'checked':''}}>
-                                                    <label class="form-check-label qcont text-dark" for="wallet_method">{{translate('messages.Wallet Method')}}</label>
+                                                    <label class="form-check-label qcont text-dark" for="wallet_method">{{'Método de billetera'}}</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -343,9 +343,9 @@
                             <div class="col-md-6">
                                 <div class="bg-white rounded select-subwrapper">
                                     <div class="border-bottom p-3 d-flex align-items-center justify-content-between flex-wrap flex-xxl-nowrap gap-1">
-                                        <h5 class="m-0 font-medium">{{ translate('messages.Employee Management') }}</h5>
+                                        <h5 class="m-0 font-medium">{{ 'Gestión de empleados' }}</h5>
                                         <div class="check-item p-2 d-flex align-items-center gap-2 pb-0 w-auto cursor-pointer">
-                                            <label for="select-allsub-7" class="fs-14 text-title m-0">{{ translate('messages.Select All') }}</label>
+                                            <label for="select-allsub-7" class="fs-14 text-title m-0">{{ 'Seleccionar todo' }}</label>
                                             <div class="form-group form-check form--check m-0 ml-2">
                                                 <input type="checkbox" name="" value="" class="form-check-input rounded position-relative rounded check-all" id="select-allsub-7">
                                             </div>
@@ -357,14 +357,14 @@
                                                 <div class="form-group form-check form--check m-0">
                                                     <input type="checkbox" name="modules[]" value="role" class="form-check-input rounded"
                                                         id="role" {{in_array('role',(array)json_decode($role['modules']))?'checked':''}}>
-                                                    <label class="form-check-label qcont text-dark" for="role">{{translate('messages.Role Management')}}</label>
+                                                    <label class="form-check-label qcont text-dark" for="role">{{'Gestión de roles'}}</label>
                                                 </div>
                                             </div>
                                             <div class="check-item p-2">
                                                 <div class="form-group form-check form--check m-0">
                                                     <input type="checkbox" name="modules[]" value="employee" class="form-check-input rounded"
                                                         id="employee" {{in_array('employee',(array)json_decode($role['modules']))?'checked':''}}>
-                                                    <label class="form-check-label qcont text-dark" for="employee">{{translate('messages.All Employee')}}</label>
+                                                    <label class="form-check-label qcont text-dark" for="employee">{{'Todos los empleados'}}</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -374,9 +374,9 @@
                             <div class="col-md-6">
                                 <div class="bg-white rounded select-subwrapper">
                                     <div class="border-bottom p-3 d-flex align-items-center justify-content-between flex-wrap flex-xxl-nowrap gap-1">
-                                        <h5 class="m-0 font-medium">{{ translate('messages.Report Section') }}</h5>
+                                        <h5 class="m-0 font-medium">{{ 'Sección de informe' }}</h5>
                                         <div class="check-item p-2 d-flex align-items-center gap-2 pb-0 w-auto cursor-pointer">
-                                            <label for="select-allsub-8" class="fs-14 text-title m-0">{{ translate('messages.Select All') }}</label>
+                                            <label for="select-allsub-8" class="fs-14 text-title m-0">{{ 'Seleccionar todo' }}</label>
                                             <div class="form-group form-check form--check m-0 ml-2">
                                                 <input type="checkbox" name="" value="" class="form-check-input rounded position-relative rounded check-all" id="select-allsub-8">
                                             </div>
@@ -388,21 +388,21 @@
                                                 <div class="form-group form-check form--check m-0">
                                                     <input type="checkbox" name="modules[]" value="expense_report" class="form-check-input rounded"
                                                             id="expense_report" {{in_array('expense_report',(array)json_decode($role['modules']))?'checked':''}}>
-                                                    <label class="form-check-label qcont text-dark" for="expense_report">{{translate('messages.Expense Report')}}</label>
+                                                    <label class="form-check-label qcont text-dark" for="expense_report">{{'Informe de gastos'}}</label>
                                                 </div>
                                             </div>
                                             <div class="check-item p-2">
                                                 <div class="form-group form-check form--check m-0">
                                                     <input type="checkbox" name="modules[]" value="disbursement_report" class="form-check-input rounded"
                                                         id="disbursement_report" {{in_array('disbursement_report',(array)json_decode($role['modules']))?'checked':''}}>
-                                                    <label class="form-check-label qcont text-dark" for="disbursement_report">{{translate('messages.Disbursement Report')}}</label>
+                                                    <label class="form-check-label qcont text-dark" for="disbursement_report">{{'Informe de desembolso'}}</label>
                                                 </div>
                                             </div>
                                             <div class="check-item p-2">
                                                 <div class="form-group form-check form--check m-0">
                                                     <input type="checkbox" name="modules[]" value="vat_report" class="form-check-input rounded"
                                                         id="vat_report" {{in_array('vat_report',(array)json_decode($role['modules']))?'checked':''}}>
-                                                    <label class="form-check-label qcont text-dark" for="vat_report">{{translate('messages.Vat Report')}}</label>
+                                                    <label class="form-check-label qcont text-dark" for="vat_report">{{'Informe de IVA'}}</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -414,9 +414,9 @@
                     <div class="mt-4 check--item-wrapper d-inline">
                         <div class="bg-white rounded select-subwrapper">
                             <div class="border-bottom p-3 d-flex align-items-center justify-content-between flex-wrap flex-xxl-nowrap gap-1">
-                                <h5 class="m-0 font-medium">{{ translate('messages.Business Management') }}</h5>
+                                <h5 class="m-0 font-medium">{{ 'Gestión Empresarial' }}</h5>
                                 <div class="check-item p-2 d-flex align-items-center gap-2 pb-0 w-auto cursor-pointer">
-                                    <label for="select-allsub-9" class="fs-14 text-title m-0">{{ translate('messages.Select All') }}</label>
+                                    <label for="select-allsub-9" class="fs-14 text-title m-0">{{ 'Seleccionar todo' }}</label>
                                     <div class="form-group form-check form--check m-0 ml-2">
                                         <input type="checkbox" name="" value="" class="form-check-input rounded position-relative rounded check-all" id="select-allsub-9">
                                     </div>
@@ -429,7 +429,7 @@
                                             <div class="form-group form-check form--check m-0">
                                                 <input type="checkbox" name="modules[]" value="store_setup" class="form-check-input rounded"
                                                         id="store_setup" {{in_array('store_setup',(array)json_decode($role['modules']))?'checked':''}}>
-                                                <label class="form-check-label text-nowrap qcont text-dark" for="store_setup">{{translate('messages.Store Setup')}}</label>
+                                                <label class="form-check-label text-nowrap qcont text-dark" for="store_setup">{{'Configuración de la tienda'}}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -438,7 +438,7 @@
                                             <div class="form-group form-check form--check m-0">
                                                 <input type="checkbox" name="modules[]" value="notification_setup" class="form-check-input rounded"
                                                     id="notification_setup" {{in_array('notification_setup',(array)json_decode($role['modules']))?'checked':''}}>
-                                                <label class="form-check-label text-nowrap qcont text-dark" for="notification_setup">{{translate('messages.Notification Setup')}}</label>
+                                                <label class="form-check-label text-nowrap qcont text-dark" for="notification_setup">{{'Configuración de notificación'}}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -447,7 +447,7 @@
                                             <div class="form-group form-check form--check m-0">
                                                 <input type="checkbox" name="modules[]" value="my_shop" class="form-check-input rounded"
                                                     id="my_shop" {{in_array('my_shop',(array)json_decode($role['modules']))?'checked':''}}>
-                                                <label class="form-check-label text-nowrap qcont text-dark" for="my_shop">{{translate('messages.MY Shop')}}</label>
+                                                <label class="form-check-label text-nowrap qcont text-dark" for="my_shop">{{'MI tienda'}}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -456,7 +456,7 @@
                                             <div class="form-group form-check form--check m-0">
                                                 <input type="checkbox" name="modules[]" value="business_plan" class="form-check-input rounded"
                                                     id="business_plan" {{in_array('business_plan',(array)json_decode($role['modules']))?'checked':''}}>
-                                                <label class="form-check-label text-nowrap qcont text-dark" for="business_plan">{{translate('messages.Business Plan')}}</label>
+                                                <label class="form-check-label text-nowrap qcont text-dark" for="business_plan">{{'plan de negocios'}}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -466,7 +466,7 @@
                                             <div class="form-group form-check form--check m-0">
                                                 <input type="checkbox" name="modules[]" value="reviews" class="form-check-input rounded"
                                                     id="reviews" {{in_array('reviews',(array)json_decode($role['modules']))?'checked':''}}>
-                                                <label class="form-check-label text-nowrap qcont text-dark" for="reviews">{{translate('messages.Reviews')}}</label>
+                                                <label class="form-check-label text-nowrap qcont text-dark" for="reviews">{{'Reseñas'}}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -476,7 +476,7 @@
                                             <div class="form-group form-check form--check m-0">
                                                 <input type="checkbox" name="modules[]" value="chat" class="form-check-input rounded"
                                                     id="chat" {{in_array('chat',(array)json_decode($role['modules']))?'checked':''}}>
-                                                <label class="form-check-label text-nowrap qcont text-dark" for="chat">{{translate('messages.Chat')}}</label>
+                                                <label class="form-check-label text-nowrap qcont text-dark" for="chat">{{'Charlar'}}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -486,8 +486,8 @@
                     </div>
                 </div>
                 <div class="btn--container justify-content-end mt-4">
-                    <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                    <button type="submit" class="btn btn--primary">{{translate('messages.update')}}</button>
+                    <button type="reset" class="btn btn--reset">{{'reiniciar'}}</button>
+                    <button type="submit" class="btn btn--primary">{{'actualizar'}}</button>
                 </div>
             </form>
         </div>

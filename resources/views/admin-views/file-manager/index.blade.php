@@ -1,5 +1,5 @@
 @extends('layouts.admin.app')
-@section('title',translate('messages.gallery'))
+@section('title','galería')
 @section('content')
 <div class="content container-fluid">
 
@@ -13,7 +13,7 @@
                 <img src="{{asset('assets/admin/img/folder-logo.png')}}" class="w--26" alt="">
             </span>
             <span>
-                {{translate('messages.gallery')}}
+                {{'galería'}}
             </span>
         </h1>
     </div>
@@ -25,12 +25,12 @@
                     <ul class="nav nav-tabs border-0 nav--tabs nav--pills">
                         <li class="nav-item">
                             <a class="nav-link {{ $storage == 'local' ? 'active' : '' }}"
-                               href="{{ route('admin.business-settings.file-manager.index', ['folder_path'=>'cHVibGlj', 'storage'=>'local']) }}">{{translate('local_storage')}}</a>
+                               href="{{ route('admin.business-settings.file-manager.index', ['folder_path'=>'cHVibGlj', 'storage'=>'local']) }}">{{'almacenamiento local'}}</a>
                         </li>
                         @if(\App\CentralLogics\Helpers::getDisk() == 's3')
                         <li class="nav-item">
                             <a class="nav-link {{ $storage == 's3' ? 'active' : '' }}"
-                               href="{{ route('admin.business-settings.file-manager.index', ['folder_path'=>'cHVibGlj', 'storage'=>'s3']) }}">{{translate('S3_bucket')}}</a>
+                               href="{{ route('admin.business-settings.file-manager.index', ['folder_path'=>'cHVibGlj', 'storage'=>'s3']) }}">{{'cubo S3'}}</a>
                         </li>
                         @endif
                     </ul>
@@ -53,9 +53,9 @@
                 <div class="d-flex flex-wrap justify-content-between">
                     <button type="button" class="btn btn--primary {{ getEnvMode()=='demo'?'call-demo':'modalTrigger' }} mr-3" data-toggle="{{ getEnvMode()=='demo'?'':'modal' }}" data-target="#exampleModal">
                         <i class="tio-add-circle"></i>
-                        <span class="text">{{translate('messages.add_new')}}</span>
+                        <span class="text">{{'agregar nuevo'}}</span>
                     </button>
-                    <a class="btn btn-sm badge-soft-primary" href="{{url()->previous()}}"><i class="tio-arrow-long-left mr-2"></i>{{translate('messages.back')}}</a>
+                    <a class="btn btn-sm badge-soft-primary" href="{{url()->previous()}}"><i class="tio-arrow-long-left mr-2"></i>{{'atrás'}}</a>
                 </div>
                 </div>
                 <div class="card-body">
@@ -76,19 +76,19 @@
                                     <small class="overflow-hidden text-title">{{Str::limit($file['name'],10)}}</small>
                                 </button>
                                 <div class="btn-items">
-                                    <a href="#" title="{{translate('View Image')}}" data-toggle="tooltip" data-placement="left">
+                                    <a href="#" title="{{'Ver imagen'}}" data-toggle="tooltip" data-placement="left">
                                         <img src="{{asset('assets/admin/img/download/view.png')}}" data-toggle="modal" data-target="#imagemodal{{$key}}" alt="">
                                     </a>
-                                    <a href="#" title="{{translate('Copy Link')}}" class="copy-test" data-toggle="tooltip" data-placement="left" data-file-path="{{$file['db_path']}}">
+                                    <a href="#" title="{{'Copiar enlace'}}" class="copy-test" data-toggle="tooltip" data-placement="left" data-file-path="{{$file['db_path']}}">
                                         <img src="{{asset('assets/admin/img/download/link.png')}}" alt="">
                                     </a>
-                                    <a title="{{translate('Download')}}" data-toggle="tooltip" data-placement="left" href="{{route('admin.business-settings.file-manager.download', [base64_encode($file['path']),$storage])}}">
+                                    <a title="{{'Descargar'}}" data-toggle="tooltip" data-placement="left" href="{{route('admin.business-settings.file-manager.download', [base64_encode($file['path']),$storage])}}">
                                         <img src="{{asset('assets/admin/img/download/download.png')}}" alt="">
                                     </a>
                                     <form action="{{route('admin.business-settings.file-manager.destroy',base64_encode($file['path']))}}" method="post"  class="form-submit-warning">
                                         @csrf
                                         @method('delete')
-                                        <button type="submit" title="{{translate('Delete')}}" data-toggle="tooltip" data-placement="left"><i class="tio-delete"></i></button>
+                                        <button type="submit" title="{{'Borrar'}}" data-toggle="tooltip" data-placement="left"><i class="tio-delete"></i></button>
                                     </form>
                                 </div>
                             </div>
@@ -100,10 +100,10 @@
                                             <div class="gallery-modal-header w-100">
                                                 <span>{{$file['name']}}</span>
                                                 <a href="#" class="d-block ml-auto copy-test" data-file-path="{{$file['db_path']}}">
-                                                    {{translate('Copy Path')}} <i class="tio-link"></i>
+                                                    {{'Copiar ruta'}} <i class="tio-link"></i>
                                                 </a>
                                                 <a class="d-block" href="{{route('admin.business-settings.file-manager.download', [base64_encode($file['path']),$storage])}}">
-                                                    {{translate('Download')}} <i class="tio-download-to"></i>
+                                                    {{'Descargar'}} <i class="tio-download-to"></i>
                                                 </a>
                                             </div>
                                         </div>
@@ -130,7 +130,7 @@
           <div class="modal-content">
             <div class="indicator"></div>
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">{{translate('messages.upload_file')}} </h5>
+              <h5 class="modal-title" id="exampleModalLabel">{{'subir archivo'}} </h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
               </button>
@@ -142,7 +142,7 @@
                     <input type="text" name="disk" value = "{{$storage}}" hidden>
                     <div class="form-group">
                         <label class="input-label"
-                               for="exampleFormControlInput1">{{ translate('messages.upload_image') }}</label>
+                               for="exampleFormControlInput1">{{ 'subir imagen' }}</label>
                         <div class="custom-file">
                             <input type="file" name="images[]" id="customFileUpload" class="custom-file-input" accept="{{ IMAGE_EXTENSION }}" multiple>
                             <label class="custom-file-label" for="customFileUpload"></label>
@@ -150,7 +150,7 @@
                     </div>
                     <div class="form-group">
                         <label class="input-label"
-                               for="exampleFormControlInput1">{{ translate('messages.upload_zip_file') }}</label>
+                               for="exampleFormControlInput1">{{ 'subir archivo zip' }}</label>
                         <div class="custom-file">
                             <input type="file" name="file" id="customZipFileUpload" class="custom-file-input" accept=".zip">
                             <label class="custom-file-label" id="zipFileLabel" for="customZipFileUpload"></label>
@@ -159,7 +159,7 @@
 
                     <div class="row" id="files"></div>
                     <div class="form-group mb-0">
-                        <input class="btn btn--primary text-white" type="submit" value="{{translate('messages.upload')}}">
+                        <input class="btn btn--primary text-white" type="submit" value="{{'subir'}}">
                     </div>
                 </form>
             </div>
@@ -173,13 +173,13 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="text-center mb-3">
-                        <h3 class="modal-title mb-3">{{translate('Check how the settings works')}}</h3>
+                        <h3 class="modal-title mb-3">{{'Comprueba cómo funciona la configuración.'}}</h3>
                     </div>
                     <img src="{{asset('assets/admin/img/zone-instruction.png')}}" alt="admin/img" class="w-100">
                     <div class="mt-3 d-flex flex-wrap align-items-center justify-content-end">
                         <div class="btn--container justify-content-end">
-                            <button id="reset_btn" type="reset" class="btn btn--reset" data-dismiss="modal">{{translate("Close")}}</button>
-                            <button type="submit" class="btn btn--primary" data-dismiss="modal">{{translate('Got It')}}</button>
+                            <button id="reset_btn" type="reset" class="btn btn--reset" data-dismiss="modal">{{'Cerca'}}</button>
+                            <button type="submit" class="btn btn--primary" data-dismiss="modal">{{'Entiendo'}}</button>
                         </div>
                     </div>
                 </div>
@@ -197,14 +197,14 @@
     function form_submit_warrning(e) {
         e.preventDefault();
         Swal.fire({
-            title: "{{translate('Are you sure?')}}",
-            text: "{{translate('you_want_to_delete')}}",
+            title: "{{'¿Está seguro?'}}",
+            text: "{{'quieres eliminar'}}",
             type: 'warning',
             showCancelButton: true,
             cancelButtonColor: 'default',
             confirmButtonColor: '#FC6A57',
-            cancelButtonText: '{{translate('messages.no')}}',
-            confirmButtonText: '{{translate('messages.yes')}}',
+            cancelButtonText: '{{'No'}}',
+            confirmButtonText: '{{'Sí'}}',
             reverseButtons: true
         }).then((result) => {
             if (result.value) {

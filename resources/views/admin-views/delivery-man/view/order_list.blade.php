@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.Delivery Man Preview'))
+@section('title', 'Vista previa del repartidor')
 
 
 @section('content')
@@ -28,7 +28,7 @@
                         <div class="d-flex flex-column align-items-center">
                             <h2 class="title"> {{$deliveryMan->orders->count()}} </h2>
                             <div class="subtitle">
-                                {{translate('messages.total_order')}}
+                                {{'orden total'}}
                             </div>
                         </div>
                     </div>
@@ -44,7 +44,7 @@
                                 {{\App\CentralLogics\Helpers::format_currency($deliveryMan->total_ongoing_orders->sum('order_amount'))}}
                             </h2>
                             <div class="subtitle">
-                                {{translate('messages.ongoing_order')}}
+                                {{'orden en curso'}}
                             </div>
                         </div>
                     </div>
@@ -61,7 +61,7 @@
 
                             </h2>
                             <div class="subtitle">
-                                {{translate('messages.completed_order')}}
+                                {{'orden completada'}}
                             </div>
                         </div>
                     </div>
@@ -75,7 +75,7 @@
                         <div class="d-flex flex-column align-items-center">
                             <h2 class="title"> {{$deliveryMan->total_canceled_orders->count()}} </h2>
                             <div class="subtitle">
-                                {{translate('messages.cancel_order')}}
+                                {{'cancelar orden'}}
                             </div>
                         </div>
                     </div>
@@ -86,7 +86,7 @@
     <div class="card mb-3 mb-lg-5 mt-2">
         <div class="card-header py-2 border-0 gap-2">
             <div class="search--button-wrapper">
-                <h4 class="card-title">{{ translate('messages.order_list')}}
+                <h4 class="card-title">{{ 'lista de pedidos'}}
                     <span class="badge badge-soft-dark ml-2" id="itemCount">
                         {{$order_lists->total()}}
                     </span>
@@ -100,12 +100,12 @@
                     class="table table-borderless table-thead-bordered table-nowrap justify-content-between table-align-middle card-table">
                     <thead class="thead-light">
                         <tr>
-                            <th class="border-0">{{translate('SL')}}</th>
-                            <th class="border-0">{{translate('messages.order_id')}}</th>
-                            <th class="border-0">{{translate('messages.contact_info')}}</th>
-                            <th class="border-0">{{translate('messages.total_items')}}</th>
-                            <th class="border-0">{{translate('messages.total_amount')}}</th>
-                            <th class="border-0">{{translate('messages.delivery_date')}}</th>
+                            <th class="border-0">{{'SL'}}</th>
+                            <th class="border-0">{{'identificación del pedido'}}</th>
+                            <th class="border-0">{{'información de contacto'}}</th>
+                            <th class="border-0">{{'artículos totales'}}</th>
+                            <th class="border-0">{{'cantidad total'}}</th>
+                            <th class="border-0">{{'fecha de entrega'}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -137,7 +137,7 @@
                                     </a>
                                 @else
                                 <label
-                                    class="badge badge-danger">{{translate('messages.invalid_customer_data')}}</label>
+                                    class="badge badge-danger">{{'datos de cliente no válidos'}}</label>
                                 @endif
                             </td>
                             <td>{{$order?->details()?->count() }}</td>
@@ -167,7 +167,7 @@
                     <div class="empty--data">
                         <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
-                            {{translate('no_data_found')}}
+                            {{'no se encontraron datos'}}
                         </h5>
                     </div>
                 @endif

@@ -9,7 +9,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Title -->
-    <title>{{translate('messages.login')}}</title>
+    <title>{{'acceso'}}</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{asset('favicon.ico')}}">
@@ -36,21 +36,21 @@
                 @php($store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first())
                 <img class="onerror-image"  data-onerror-image="{{asset('assets/admin/img/favicon.png')}}"
                 src="{{\App\CentralLogics\Helpers::get_full_url('business', $store_logo?->value?? '', $store_logo?->storage[0]?->value ?? 'public','favicon')}}"  alt="public/img">
-                <h2 class="title">{{translate('Your')}} <span class="d-block">{{translate('All Service')}}</span> <strong class="text--039D55">{{translate('in one field')}}....</strong></h2>
+                <h2 class="title">{{'Su'}} <span class="d-block">{{'Todo el servicio'}}</span> <strong class="text--039D55">{{'en un campo'}}....</strong></h2>
             </div>
         </div>
         <div class="auth-wrapper-right">
             <label class="badge badge-soft-success __login-badge">
-                {{translate('messages.software_version')}} : {{env('SOFTWARE_VERSION')}}
+                {{'Versión del sistema'}} : {{env('SOFTWARE_VERSION')}}
             </label>
             <!-- OTP Card -->
             <div class="otp-card">
                 <div class="text-center">
                     <img class="mb-4" src="{{asset('assets/admin/img/lock.svg')}}" alt="">
                     <div class="mb-2">
-                        {{ translate('a_5_digit_verification_code_has_been') }} <br> {{ translate('sent_to') }} <strong>{{ substr($admin->phone, 0, 3) . str_repeat('X', strlen($admin->phone) - 5) . substr($admin->phone, -2) }}</strong>
+                        {{ 'se ha recibido un código de verificación de 5 dígitos' }} <br> {{ 'enviado a' }} <strong>{{ substr($admin->phone, 0, 3) . str_repeat('X', strlen($admin->phone) - 5) . substr($admin->phone, -2) }}</strong>
                     </div>
-                    <div>{{ translate('enter_the_verification_code') }}</div>
+                    <div>{{ 'ingresa el código de verificación' }}</div>
                     <div class="mt-4">
                         <form action="{{ route('verify-otp') }}" method="POST" class="otp-form">
                             @csrf
@@ -66,12 +66,12 @@
 
                             <!-- Store OTP Value -->
                             <input class="otp-value" type="hidden" name="opt-value">
-                            <button type="submit" class="btn btn-lg btn-block btn--primary">{{translate('Verify')}}</button>
+                            <button type="submit" class="btn btn-lg btn-block btn--primary">{{'Verificar'}}</button>
                         </form>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span>{{ translate('Didn`t receive the code?') }}</span>
-                        <button class="text--primary resend otp_resend" disabled id="otp-button">{{ translate('Resend_it') }}
+                        <span>{{ '¿No recibiste el código?' }}</span>
+                        <button class="text--primary resend otp_resend" disabled id="otp-button">{{ 'reenviarlo' }}
                         </button>
                     </div>
                 </div>
@@ -116,20 +116,20 @@
             success: function(data) {
 
                 if (data.errors == 'link_expired') {
-                    toastr.error('{{ translate('Link_expired') }}', {
+                    toastr.error('{{ 'Enlace caducado' }}', {
                         CloseButton: true,
                         ProgressBar: true
                     });
                 }
                 if (data.otp_fail == 'otp_fail') {
-                    toastr.error('{{ translate('Failed_to_sent_otp') }}', {
+                    toastr.error('{{ 'No se pudo enviar otp' }}', {
                         CloseButton: true,
                         ProgressBar: true
                     });
                 }
                 if (data.success == 'otp_send') {
                     startCountdown();
-                    toastr.success('{{ translate('Otp_successfull_sent') }}', {
+                    toastr.success('{{ 'OTP enviado exitosamente' }}', {
                         CloseButton: true,
                         ProgressBar: true
                     });

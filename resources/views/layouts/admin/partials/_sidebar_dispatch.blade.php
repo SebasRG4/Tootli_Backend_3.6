@@ -38,24 +38,24 @@
                 <form autocomplete="off" class="sidebar--search-form">
                     <div class="search--form-group">
                         <button type="button" class="btn"><i class="tio-search"></i></button>
-                        <input autocomplete="false" type="text" name="qq" class="form-control form--control" placeholder="{{ translate('Search Menu...') }}" id="search">
+                        <input autocomplete="false" type="text" name="qq" class="form-control form--control" placeholder="{{ 'Menú de búsqueda...' }}" id="search">
                         <div id="search-suggestions" class="flex-wrap mt-1"></div>
                     </div>
                 </form>
                 <ul class="navbar-nav navbar-nav-lg nav-tabs">
                 <!-- Dashboards -->
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/dispatch') ? 'show active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.dispatch.dashboard') }}" title="{{ translate('messages.dashboard') }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.dispatch.dashboard') }}" title="{{ 'Panel de Control' }}">
                         <i class="tio-home-vs-1-outlined nav-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                            {{ translate('messages.dashboard') }}
+                            {{ 'Panel de Control' }}
                         </span>
                     </a>
                 </li>
                 <!-- End Dashboards -->
                 <!-- Business Section-->
                 <li class="nav-item">
-                    <small class="nav-subtitle" title="{{ translate('messages.dispatch_section') }}">{{ translate('messages.dispatch_management') }}</small>
+                    <small class="nav-subtitle" title="{{ 'sección de despacho' }}">{{ 'gestión de despacho' }}</small>
                     <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                 </li>
 
@@ -87,10 +87,10 @@
                         </a>
                         <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="{{ Request::is('admin/dispatch*') ? 'display-block' : 'display-none' }}">
                             <li class="nav-item {{ Request::is("admin/dispatch/list/{$module->id}/searching_for_deliverymen") ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.dispatch.list', [$module->id,'searching_for_deliverymen']) }}" title="{{ translate('messages.unassigned_orders') }}">
+                                <a class="nav-link " href="{{ route('admin.dispatch.list', [$module->id,'searching_for_deliverymen']) }}" title="{{ 'Pedidos Sin Asignar' }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
-                                        {{translate('messages.unassigned_orders')}}
+                                        {{'Pedidos Sin Asignar'}}
                                         <span class="badge badge-soft-info badge-pill ml-1">
                                             {{ $unassigned }}
                                         </span>
@@ -98,10 +98,10 @@
                                 </a>
                             </li>
                             <li class="nav-item {{ Request::is("admin/dispatch/list/{$module->id}/on_going") ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.dispatch.list', [$module->id,'on_going']) }}" title="{{ translate('messages.ongoingOrders') }}">
+                                <a class="nav-link " href="{{ route('admin.dispatch.list', [$module->id,'on_going']) }}" title="{{ 'Pedidos en curso' }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
-                                        {{ translate('messages.ongoingOrders') }}
+                                        {{ 'Pedidos en curso' }}
                                         <span class="badge badge-soft-light badge-pill ml-1">
                                             {{ $ongoing }}
                                         </span>
@@ -128,10 +128,10 @@
                         </a>
                         <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="{{ Request::is('admin/dispatch*') ? 'display-block' : 'display-none' }}">
                             <li class="nav-item {{ Request::is("admin/dispatch/parcel/list/{$module->id}/searching_for_deliverymen") ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.dispatch.parcel.list', [$module->id,'searching_for_deliverymen']) }}" title="{{ translate('messages.unassigned_orders') }}">
+                                <a class="nav-link " href="{{ route('admin.dispatch.parcel.list', [$module->id,'searching_for_deliverymen']) }}" title="{{ 'Pedidos Sin Asignar' }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
-                                        {{translate('messages.unassigned_orders')}}
+                                        {{'Pedidos Sin Asignar'}}
                                         <span class="badge badge-soft-info badge-pill ml-1">
                                             {{ $unassigned }}
                                         </span>
@@ -139,10 +139,10 @@
                                 </a>
                             </li>
                             <li class="nav-item {{ Request::is("admin/dispatch/parcel/list/{$module->id}/on_going") ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.dispatch.parcel.list', [$module->id,'on_going']) }}" title="{{ translate('messages.ongoingOrders') }}">
+                                <a class="nav-link " href="{{ route('admin.dispatch.parcel.list', [$module->id,'on_going']) }}" title="{{ 'Pedidos en curso' }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
-                                        {{ translate('messages.ongoingOrders') }}
+                                        {{ 'Pedidos en curso' }}
                                         <span class="badge badge-soft-light badge-pill ml-1">
                                             {{ $ongoing }}
                                         </span>

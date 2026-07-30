@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Taxi Coupons'))
+@section('title', 'Cupones de taxi')
 
 @section('content')
     <div class="content container-fluid">
@@ -9,13 +9,13 @@
             <div class="row align-items-center">
                 <div class="col-sm mb-2 mb-sm-0">
                     <h1 class="page-header-title">
-                        <i class="tio-ticket"></i> {{ translate('Coupons') }}
+                        <i class="tio-ticket"></i> {{ 'Cupones' }}
                         <span class="badge badge-soft-dark ml-2">{{ $coupons->total() }}</span>
                     </h1>
                 </div>
                 <div class="col-sm-auto">
                     <a href="{{ route('admin.taxi.coupons.create') }}" class="btn btn-primary">
-                        <i class="tio-add"></i> {{ translate('Add Coupon') }}
+                        <i class="tio-add"></i> {{ 'Agregar cupón' }}
                     </a>
                 </div>
             </div>
@@ -28,10 +28,10 @@
                     <div class="row">
                         <div class="col-md-6">
                             <input type="text" name="search" class="form-control"
-                                placeholder="{{ translate('Search by title or code') }}" value="{{ request('search') }}">
+                                placeholder="{{ 'Buscar por título o código' }}" value="{{ request('search') }}">
                         </div>
                         <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary btn-block">{{ translate('Search') }}</button>
+                            <button type="submit" class="btn btn-primary btn-block">{{ 'Buscar' }}</button>
                         </div>
                     </div>
                 </form>
@@ -45,15 +45,15 @@
                     <table class="table table-borderless table-thead-bordered table-align-middle">
                         <thead class="thead-light">
                             <tr>
-                                <th>{{ translate('ID') }}</th>
-                                <th>{{ translate('Title') }}</th>
-                                <th>{{ translate('Code') }}</th>
-                                <th>{{ translate('Discount') }}</th>
-                                <th>{{ translate('Min Purchase') }}</th>
-                                <th>{{ translate('Validity') }}</th>
-                                <th>{{ translate('Limit') }}</th>
-                                <th>{{ translate('Status') }}</th>
-                                <th>{{ translate('Actions') }}</th>
+                                <th>{{ 'IDENTIFICACIÓN' }}</th>
+                                <th>{{ 'Título' }}</th>
+                                <th>{{ 'Código' }}</th>
+                                <th>{{ 'Descuento' }}</th>
+                                <th>{{ 'Compra mínima' }}</th>
+                                <th>{{ 'Validez' }}</th>
+                                <th>{{ 'Límite' }}</th>
+                                <th>{{ 'Estado' }}</th>
+                                <th>{{ 'Comportamiento' }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -77,11 +77,11 @@
                                         <small
                                             class="d-block text-muted">{{ date('M d, Y', strtotime($coupon->expire_date)) }}</small>
                                     </td>
-                                    <td>{{ $coupon->limit ?? translate('Unlimited') }}</td>
+                                    <td>{{ $coupon->limit ?? 'Ilimitado' }}</td>
                                     <td>
                                         <a href="{{ route('admin.taxi.coupons.status', [$coupon->id, $coupon->status ? 0 : 1]) }}"
                                             class="badge badge-{{ $coupon->status ? 'success' : 'danger' }}">
-                                            {{ $coupon->status ? translate('Active') : translate('Inactive') }}
+                                            {{ $coupon->status ? 'Activo' : 'Inactivo' }}
                                         </a>
                                     </td>
                                     <td>
@@ -93,14 +93,14 @@
                                             <div class="dropdown-menu dropdown-menu-right">
                                                 <a class="dropdown-item"
                                                     href="{{ route('admin.taxi.coupons.edit', $coupon->id) }}">
-                                                    <i class="tio-edit"></i> {{ translate('Edit') }}
+                                                    <i class="tio-edit"></i> {{ 'Editar' }}
                                                 </a>
                                                 <form action="{{ route('admin.taxi.coupons.delete', $coupon->id) }}"
-                                                    method="POST" onsubmit="return confirm('{{ translate('Are you sure?') }}')">
+                                                    method="POST" onsubmit="return confirm('{{ '¿Está seguro?' }}')">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="dropdown-item text-danger">
-                                                        <i class="tio-delete"></i> {{ translate('Delete') }}
+                                                        <i class="tio-delete"></i> {{ 'Borrar' }}
                                                     </button>
                                                 </form>
                                             </div>
@@ -109,7 +109,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="9" class="text-center py-4">{{ translate('No coupons found') }}</td>
+                                    <td colspan="9" class="text-center py-4">{{ 'No se encontraron cupones' }}</td>
                                 </tr>
                             @endforelse
                         </tbody>

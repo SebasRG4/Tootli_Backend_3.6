@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title', translate('Item Preview'))
+@section('title', 'Vista previa del artículo')
 
 @push('css_or_js')
 @endpush
@@ -14,7 +14,7 @@
                     <span class="page-header-icon">
                         <img src="{{ asset('assets/admin/img/temp_pro.png') }}" class="w--22" alt="">
                     </span>
-                    <span>{{ translate('Product_Details') }}</span>
+                    <span>{{ 'Detalles del producto' }}</span>
                 </h1>
 
             </div>
@@ -32,9 +32,9 @@
                                  data-onerror-image="{{ asset('assets/admin/img/160x160/img2.jpg') }}"
                                 alt="Image Description">
                                 @if ($product['is_rejected'] == 1 )
-                                <div class="reject-info"> {{ translate('Your_Item_Has_Been_Rejected') }}</div>
+                                <div class="reject-info"> {{ 'Su artículo ha sido rechazado' }}</div>
                                 @else
-                                <div class="pending-info"> {{ translate('This_Item_Is_Under_Review') }}</div>
+                                <div class="pending-info"> {{ 'Este artículo está bajo revisión' }}</div>
                                 @endif
                         </div>
                     </div>
@@ -46,7 +46,7 @@
                             <ul class="nav nav-tabs border-0 mb-3">
                                 <li class="nav-item">
                                     <a class="nav-link lang_link active" href="#"
-                                        id="default-link">{{ translate('messages.default') }}</a>
+                                        id="default-link">{{ 'por defecto' }}</a>
                                 </li>
                                 @foreach (json_decode($language) as $lang)
                                     <li class="nav-item">
@@ -58,10 +58,10 @@
                                 @endif
                                 <div class="d-flex flex-wrap gap-2 align-items-start">
                                     <a class="btn btn--sm btn-outline-danger form-alert" href="javascript:"
-                                    data-id="food-{{$product['id']}}" data-message="{{ translate('Want to delete this item ?') }}" title="{{translate('messages.delete_item')}}">{{ translate('messages.Delete') }} <i class="tio-delete-outlined"></i>
+                                    data-id="food-{{$product['id']}}" data-message="{{ '¿Quieres eliminar este elemento?' }}" title="{{'eliminar elemento'}}">{{ 'Borrar' }} <i class="tio-delete-outlined"></i>
                                     </a>
                                     <a href="{{ route('vendor.item.edit', [$product['id'],'temp_product' => true]) }}" class="btn btn--sm btn-outline-primary">
-                                        <i class="tio-edit"></i>  {{ translate('messages.edit_&_Resubmit') }}
+                                        <i class="tio-edit"></i>  {{ 'editar y volver a enviar' }}
                                     </a>
                                 <form action="{{route('vendor.item.delete',[$product['id']])}}"
                                         method="post" id="food-{{$product['id']}}">
@@ -75,7 +75,7 @@
 
                         <div class="lang_form" id="default-form">
                             <h2 class="mt-3">{{ $product?->getRawOriginal('name') }} </h2>
-                            <h6> {{ translate('description') }}:</h6>
+                            <h6> {{ 'descripción' }}:</h6>
                             <P> {{ $product?->getRawOriginal('description') }}</P>
                         </div>
 
@@ -95,7 +95,7 @@
                                     ?>
                                     <div class="d-none lang_form" id="{{ $lang }}-form">
                                         <h2>{{ $translate[$lang]['name'] ?? '' }} </h2>
-                                        <h6> {{ translate('description') }}:</h6>
+                                        <h6> {{ 'descripción' }}:</h6>
                                         <P> {!! $translate[$lang]['description'] ?? '' !!}</P>
                                     </div>
                         @endforeach
@@ -115,36 +115,36 @@
                     <thead class="thead-light">
                         <tr>
                             <th class="px-4 border-0">
-                                <h4 class="m-0 text-capitalize">{{ translate('General_Information') }}</h4>
+                                <h4 class="m-0 text-capitalize">{{ 'Información general' }}</h4>
                             </th>
                             <th class="px-4 border-0">
-                                <h4 class="m-0 text-capitalize">{{ translate('price_Information') }}</h4>
+                                <h4 class="m-0 text-capitalize">{{ 'información de precios' }}</h4>
                             </th>
 
                             @if (in_array($product->module->module_type ,['food','grocery']))
                             <th class="px-4 border-0">
-                                <h4 class="m-0 text-capitalize">{{ translate('Nutrition') }}</h4>
+                                <h4 class="m-0 text-capitalize">{{ 'Nutrición' }}</h4>
                             </th>
                             <th class="px-4 border-0">
-                                <h4 class="m-0 text-capitalize">{{ translate('Allergy') }}</h4>
+                                <h4 class="m-0 text-capitalize">{{ 'Alergia' }}</h4>
                             </th>
 
                         @endif
                         @if (in_array($product->module->module_type ,['pharmacy']))
                             <th class="px-4 border-0">
-                                <h4 class="m-0 text-capitalize">{{ translate('Generic_Name') }}</h4>
+                                <h4 class="m-0 text-capitalize">{{ 'Nombre genérico' }}</h4>
                             </th>
                         @endif
                             <th class="px-4 border-0">
-                                <h4 class="m-0 text-capitalize">{{ translate('Available_Variations') }}</h4>
+                                <h4 class="m-0 text-capitalize">{{ 'Variaciones disponibles' }}</h4>
                             </th>
                             @if ($product->module->module_type == 'food')
                                 <th class="px-4 border-0">
-                                    <h4 class="m-0 text-capitalize">{{ translate('addons') }}</h4>
+                                    <h4 class="m-0 text-capitalize">{{ 'complementos' }}</h4>
                                 </th>
                             @endif
                             <th class="px-4 border-0">
-                                <h4 class="m-0 text-capitalize">{{ translate('tags') }}</h4>
+                                <h4 class="m-0 text-capitalize">{{ 'etiquetas' }}</h4>
                             </th>
                         </tr>
                     </thead>
@@ -152,67 +152,67 @@
                         <tr>
                             <td class="px-4 max-w--220px">
                                 <span class="d-block mb-1">
-                                    <span>{{ translate('messages.Store') }} : </span>
+                                    <span>{{ 'Almacenar' }} : </span>
                                     <strong>{{ $product?->store?->name }}</strong>
                                 </span>
                                 <span class="d-block mb-1">
-                                    <span>{{ translate('messages.Category') }} : </span>
-                                    <strong>{{ Str::limit(($product?->category?->parent ? $product?->category?->parent?->name : $product?->category?->name )  ?? translate('messages.uncategorize')
+                                    <span>{{ 'Categoría' }} : </span>
+                                    <strong>{{ Str::limit(($product?->category?->parent ? $product?->category?->parent?->name : $product?->category?->name )  ?? 'descategorizar'
                                         , 20, '...') }}</strong>
                                 </span>
 
                                 <span class="d-block mb-1">
-                                    <span>{{ translate('messages.Sub_Category') }} : </span>
+                                    <span>{{ 'Subcategoría' }} : </span>
                                     <strong>{{ Str::limit(( $product?->category?->parent?->name ? $product?->category?->name : '---' )
                                         , 20, '...') }}</strong>
                                 </span>
 
                                 @if ($product->module->module_type == 'grocery')
                                 <span class="d-block mb-1">
-                                    <span>{{ translate('messages.Is_Organic') }} : </span>
-                                    <strong> {{  $product->organic == 1 ?  translate('messages.yes') : translate('messages.no') }}</strong>
+                                    <span>{{ 'es organico' }} : </span>
+                                    <strong> {{  $product->organic == 1 ?  'Sí' : 'No' }}</strong>
                                 </span>
                                 @endif
                                 @if ($product->module->module_type == 'food')
                                 <span class="d-block mb-1">
-                                    <span>{{ translate('messages.Item_type') }} : </span>
-                                    <strong> {{  $product->veg == 1 ?  translate('messages.veg') : translate('messages.non_veg') }}</strong>
+                                    <span>{{ 'tipo de artículo' }} : </span>
+                                    <strong> {{  $product->veg == 1 ?  'verduras' : 'no vegetariano' }}</strong>
                                 </span>
                                 @else
                                 <span class="d-block mb-1">
-                                    <span>{{ translate('messages.Total_stock') }} : </span>
+                                    <span>{{ 'existencias totales' }} : </span>
                                     <strong> {{  $product->stock  }}</strong>
                                 </span>
 
                                     @if ($product?->unit)
                                     <span class="d-block mb-1">
-                                        <span>{{ translate('messages.Unit') }} : </span>
+                                        <span>{{ 'Unidad' }} : </span>
                                         <strong> {{ $product?->unit?->unit  }}</strong>
                                     </span>
                                     @endif
                                 @endif
                                 @if (config('module.' . $product->module->module_type)['item_available_time'])
                                 <span class="d-block mb-1">
-                                    {{ translate('messages.available_time_starts') }} :
+                                    {{ 'comienza el tiempo disponible' }} :
                                     <strong>{{ date(config('timeformat'), strtotime($product['available_time_starts'])) }}</strong>
                                 </span>
                                 <span class="d-block mb-1">
-                                    {{ translate('messages.available_time_ends') }} :
+                                    {{ 'finaliza el tiempo disponible' }} :
                                     <strong>{{ date(config('timeformat'), strtotime($product['available_time_ends'])) }}</strong>
                                 </span>
                             @endif
                             </td>
                             <td class="px-4">
                                 <span class="d-block mb-1">
-                                    <span>{{ translate('messages.Unit_Price') }} : </span>
+                                    <span>{{ 'Precio unitario' }} : </span>
                                     <strong>{{ \App\CentralLogics\Helpers::format_currency($product['price']) }}</strong>
                                 </span>
                                 <span class="d-block mb-1">
-                                    <span>{{ translate('messages.discounted_amount') }} :</span>
+                                    <span>{{ 'cantidad descontada' }} :</span>
                                     <strong>{{ \App\CentralLogics\Helpers::format_currency(\App\CentralLogics\Helpers::discount_calculate($product, $product['price'])) }}</strong>
                                 </span>
                                 <span class="d-block mb-1">
-                                    <span>{{ translate('messages.discount') }} :</span>
+                                    <span>{{ 'descuento' }} :</span>
                                     <strong> {{ $product->discount_type == 'percent' ? $product->discount .'%' :  \App\CentralLogics\Helpers::format_currency($product['discount']) }} </strong>
                                 </span>
 
@@ -254,7 +254,7 @@
                                             @if (isset($variation['price']))
                                                 <span class="d-block mb-1 text-capitalize">
                                                     <strong>
-                                                        {{ translate('please_update_the_food_variations.') }}
+                                                        {{ 'actualice las variaciones de alimentos.' }}
                                                     </strong>
                                                 </span>
                                             @break
@@ -265,18 +265,18 @@
                                                     {{ $variation['name'] }} -
                                                 </strong>
                                                 @if ($variation['type'] == 'multi')
-                                                    {{ translate('messages.multiple_select') }}
+                                                    {{ 'selección múltiple' }}
                                                 @elseif($variation['type'] == 'single')
-                                                    {{ translate('messages.single_select') }}
+                                                    {{ 'selección única' }}
                                                 @endif
                                                 @if ($variation['required'] == 'on')
-                                                    - ({{ translate('messages.required') }})
+                                                    - ({{ 'requerido' }})
                                                 @endif
                                             </span>
 
                                             @if ($variation['min'] != 0 && $variation['max'] != 0)
-                                                ({{ translate('messages.Min_select') }}: {{ $variation['min'] }} -
-                                                {{ translate('messages.Max_select') }}: {{ $variation['max'] }})
+                                                ({{ 'Selección mínima' }}: {{ $variation['min'] }} -
+                                                {{ 'selección máxima' }}: {{ $variation['max'] }})
                                             @endif
 
                                             @if (isset($variation['values']))
@@ -335,14 +335,14 @@
     "use strict";
         function request_alert(url, message) {
             Swal.fire({
-                title: '{{translate('messages.are_you_sure')}}',
+                title: '{{'¿está seguro?'}}',
                 text: message,
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{translate('messages.no')}}',
-                confirmButtonText: '{{translate('messages.yes')}}',
+                cancelButtonText: '{{'No'}}',
+                confirmButtonText: '{{'Sí'}}',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
@@ -354,16 +354,16 @@
     function cancelled_status(route, message, processing = false) {
             Swal.fire({
                     //text: message,
-                    title: '{{ translate('messages.Are you sure ?') }}',
+                    title: '{{ 'Está seguro ?' }}',
                     type: 'warning',
                     showCancelButton: true,
                     cancelButtonColor: 'default',
                     confirmButtonColor: '#FC6A57',
-                    cancelButtonText: '{{ translate('messages.Cancel') }}',
-                    confirmButtonText: '{{ translate('messages.submit') }}',
-                    inputPlaceholder: "{{ translate('Enter_a_reason') }}",
+                    cancelButtonText: '{{ 'Cancelar' }}',
+                    confirmButtonText: '{{ 'entregar' }}',
+                    inputPlaceholder: "{{ 'Introduce un motivo' }}",
                     input: 'text',
-                    html: message + '<br/>'+'<label>{{ translate('Enter_a_reason') }}</label>',
+                    html: message + '<br/>'+'<label>{{ 'Introduce un motivo' }}</label>',
                     inputValue: processing,
                     preConfirm: (note) => {
                         location.href = route + '&note=' + note;

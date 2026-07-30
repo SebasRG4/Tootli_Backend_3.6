@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.react_landing_page'))
+@section('title', 'reaccionar página de inicio')
 
 @section('content')
     <div class="content container-fluid">
@@ -11,12 +11,12 @@
                     <img src="{{asset('assets/admin/img/landing.png')}}" class="w--20" alt="">
                 </span>
                     <span>
-                    {{ translate('messages.react_landing_page') }}
+                    {{ 'reaccionar página de inicio' }}
                 </span>
                 </h1>
                 <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal"
                      data-target="#how-it-works">
-                    <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
+                    <strong class="mr-2">{{'¡Mira cómo funciona!'}}</strong>
                     <div>
                         <i class="tio-info-outined"></i>
                     </div>
@@ -31,15 +31,15 @@
         <div class="card py-3 px-xxl-4 px-3 mb-20">
             <div class="d-flex flex-sm-nowrap flex-wrap gap-3 align-items-center justify-content-between">
                 <div class="">
-                    <h3 class="mb-1">{{ translate('Testimonial Section') }}</h3>
+                    <h3 class="mb-1">{{ 'Sección de Testimonios' }}</h3>
                     <p class="mb-0 gray-dark fs-12">
-                        {{ translate('See how your Testimonial Section will look to customers.') }}
+                        {{ 'Vea cómo se verá su sección de testimonios ante los clientes.' }}
                     </p>
                 </div>
                 <div class="max-w-300px ml-sm-auto">
                     <button type="button" class="btn btn-outline-primary py-2 fs-12 px-3 offcanvas-trigger"
                             data-target="#testimonialAdd_section">
-                        <i class="tio-invisible"></i> {{ translate('Section Preview') }}
+                        <i class="tio-invisible"></i> {{ 'Vista previa de la sección' }}
                     </button>
                 </div>
             </div>
@@ -55,15 +55,15 @@
             <div class="row g-3 align-items-center justify-content-between">
                 <div class="col-xxl-9 col-lg-8 col-md-7 col-sm-6">
                     <div class="">
-                        <h3 class="mb-1">{{ translate('Show Testimonial Section') }}</h3>
+                        <h3 class="mb-1">{{ 'Mostrar sección de testimonios' }}</h3>
                         <p class="mb-0 gray-dark fs-12">
-                            {{ translate('If you turn of the availability status, this section will not show in the website') }}
+                            {{ 'Si desactiva el estado de disponibilidad, esta sección no se mostrará en el sitio web.' }}
                         </p>
                     </div>
                 </div>
                 <div class="col-xxl-3 col-lg-4 col-md-5 col-sm-6">
                     <div class="py-2 px-3 rounded d-flex justify-content-between border align-items-center w-300">
-                        <h5 class="text-capitalize fw-normal mb-0">{{ translate('Status') }}</h5>
+                        <h5 class="text-capitalize fw-normal mb-0">{{ 'Estado' }}</h5>
 
                         <form
                             action="{{ route('admin.business-settings.statusUpdate', ['type' => 'react_landing_page', 'key' => 'testimonial_section_status']) }}"
@@ -73,10 +73,10 @@
                             <input type="checkbox" data-id="CheckboxStatus" data-type="status"
                                    data-image-on="{{ asset('assets/admin/img/status-ons.png') }}"
                                    data-image-off="{{ asset('assets/admin/img/off-danger.png') }}"
-                                   data-title-on="{{ translate('Do you want turn on this section ?') }}"
-                                   data-title-off="{{ translate('Do you want to turn off this section ?') }}"
-                                   data-text-on="<p>{{ translate('If you turn on this section will be show in react landing page.') }}"
-                                   data-text-off="<p>{{ translate('If you turn off this section will not be show in react landing page.') }}</p>"
+                                   data-title-on="{{ '¿Quieres activar esta sección?' }}"
+                                   data-title-off="{{ '¿Quieres desactivar esta sección?' }}"
+                                   data-text-on="<p>{{ 'Si activa esta sección, se mostrará en la página de inicio de reacción.' }}"
+                                   data-text-off="<p>{{ 'Si desactiva esta sección no se mostrará en la página de inicio de reacción.' }}</p>"
                                    class="toggle-switch-input  status dynamic-checkbox" id="CheckboxStatus"
                                 {{ $testimonial_section_status?->value ? 'checked' : '' }}>
                             <span class="toggle-switch-label text">
@@ -95,9 +95,9 @@
                     <div class="card mb-20">
                         <div class="card-body">
                             <div class=" mb-20">
-                                <h3 class="mb-1">{{ translate('Testimonial Content') }}</h3>
+                                <h3 class="mb-1">{{ 'Contenido testimonial' }}</h3>
                                 <p class="mb-0 gray-dark fs-12">
-                                    {{ translate('Manage the main title for the customer reviews section.') }}
+                                    {{ 'Administre el título principal de la sección de reseñas de clientes.' }}
                                 </p>
                             </div>
                             <div class="bg--secondary rounded p-xxl-4 p-3">
@@ -105,7 +105,7 @@
                                     <ul class="nav nav-tabs mb-4 border-bottom">
                                         <li class="nav-item">
                                             <a class="nav-link lang_link active" href="#"
-                                               id="default-link">{{translate('messages.default')}}</a>
+                                               id="default-link">{{'por defecto'}}</a>
                                         </li>
                                         @foreach (json_decode($language) as $lang)
                                             <li class="nav-item">
@@ -118,61 +118,61 @@
                                 @if ($language)
                                     <div class="row g-1 lang_form" id="default-form">
                                         <div class="col-sm-12">
-                                            <label for="testimonial_title" class="form-label">{{translate('Title')}}
-                                                ({{ translate('messages.default') }})<span class="form-label-secondary"
+                                            <label for="testimonial_title" class="form-label">{{'Título'}}
+                                                ({{ 'por defecto' }})<span class="form-label-secondary"
                                                                                            data-toggle="tooltip"
                                                                                            data-placement="right"
-                                                                                           data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                                                                           data-original-title="{{ 'Escribe el título dentro de 50 caracteres.' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span>
                                                 <span class="form-label-secondary text-danger"
                                                       data-toggle="tooltip" data-placement="right"
-                                                      data-original-title="{{ translate('messages.Required.')}}"> *
+                                                      data-original-title="{{ 'Requerido.'}}"> *
                                                     </span></label>
                                             <input id="testimonial_title" type="text" maxlength="50"
                                                    name="testimonial_title[]"
                                                    class="form-control"
                                                    value="{{$testimonial_title?->getRawOriginal('value') ?? ''}}"
-                                                   placeholder="{{translate('messages.title_here...')}}" required>
+                                                   placeholder="{{'título aquí...'}}" required>
                                             <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/50</span>
                                         </div>
                                         <div class="col-sm-12">
                                             <label for="testimonial_sub_title"
-                                                   class="form-label">{{translate('SubTitle')}}
-                                                ({{ translate('messages.default') }})<span class="form-label-secondary"
+                                                   class="form-label">{{'Subtitular'}}
+                                                ({{ 'por defecto' }})<span class="form-label-secondary"
                                                                                            data-toggle="tooltip"
                                                                                            data-placement="right"
-                                                                                           data-original-title="{{ translate('Write_the_subtitle_within_20_characters') }}">
+                                                                                           data-original-title="{{ 'Escribe el subtítulo dentro de los 20 caracteres.' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span>
                                                 <span class="form-label-secondary text-danger"
                                                       data-toggle="tooltip" data-placement="right"
-                                                      data-original-title="{{ translate('messages.Required.')}}"> *
+                                                      data-original-title="{{ 'Requerido.'}}"> *
                                                     </span></label>
                                             <input id="testimonial_sub_title" type="text" maxlength="200"
                                                    name="testimonial_sub_title[]" class="form-control"
                                                    value="{{$testimonial_sub_title?->getRawOriginal('value') ?? ''}}"
-                                                   placeholder="{{translate('messages.title_here...')}}" required>
+                                                   placeholder="{{'título aquí...'}}" required>
                                             <span
                                                 class="text-right text-counting color-A7A7A7 d-block mt-1">0/200</span>
                                         </div>
                                         <div class="col-sm-12">
                                             <label for="testimonial_button_title"
-                                                   class="form-label">{{translate('Button Name')}}
-                                                ({{ translate('messages.default') }})<span class="form-label-secondary"
+                                                   class="form-label">{{'Nombre del botón'}}
+                                                ({{ 'por defecto' }})<span class="form-label-secondary"
                                                                                            data-toggle="tooltip"
                                                                                            data-placement="right"
-                                                                                           data-original-title="{{ translate('Write_the_button_name_within_20_characters') }}">
+                                                                                           data-original-title="{{ 'Escriba el nombre del botón dentro de 20 caracteres' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span>
                                                 <span class="form-label-secondary text-danger"
                                                       data-toggle="tooltip" data-placement="right"
-                                                      data-original-title="{{ translate('messages.Required.')}}"> *
+                                                      data-original-title="{{ 'Requerido.'}}"> *
                                                     </span></label>
                                             <input id="testimonial_button_title" type="text" maxlength="20"
                                                    name="testimonial_button_title[]" class="form-control"
                                                    value="{{$testimonial_button_title?->getRawOriginal('value') ?? ''}}"
-                                                   placeholder="{{translate('messages.Start Selling...')}}" required>
+                                                   placeholder="{{'Empezar a vender...'}}" required>
                                             <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/20</span>
                                         </div>
                                     </div>
@@ -210,49 +210,49 @@
                                         <div class="row g-3 d-none lang_form" id="{{$lang}}-form">
                                             <div class="col-sm-12">
                                                 <label for="testimonial_title{{$lang}}"
-                                                       class="form-label">{{translate('Title')}}
+                                                       class="form-label">{{'Título'}}
                                                     ({{strtoupper($lang)}})<span class="form-label-secondary"
                                                                                  data-toggle="tooltip"
                                                                                  data-placement="right"
-                                                                                 data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                                                                 data-original-title="{{ 'Escribe el título dentro de 50 caracteres.' }}">
                                                                         <i class="tio-info color-A7A7A7"></i>
                                                                     </span></label>
                                                 <input type="text" id="testimonial_title{{$lang}}" maxlength="50"
                                                        name="testimonial_title[]" class="form-control"
                                                        value="{{ $testimonial_title_translate[$lang]['value'] ?? '' }}"
-                                                       placeholder="{{translate('messages.title_here...')}}">
+                                                       placeholder="{{'título aquí...'}}">
                                                 <span
                                                     class="text-right text-counting color-A7A7A7 d-block mt-1">0/50</span>
                                             </div>
                                             <div class="col-sm-12">
                                                 <label for="testimonial_sub_title"
-                                                       class="form-label">{{translate('SubTitle')}}
-                                                    ({{ translate('messages.default') }})<span
+                                                       class="form-label">{{'Subtitular'}}
+                                                    ({{ 'por defecto' }})<span
                                                         class="form-label-secondary"
                                                         data-toggle="tooltip" data-placement="right"
-                                                        data-original-title="{{ translate('Write_the_subtitle_within_20_characters') }}">
+                                                        data-original-title="{{ 'Escribe el subtítulo dentro de los 20 caracteres.' }}">
                                                                         <i class="tio-info color-A7A7A7"></i>
                                                                     </span></label>
                                                 <input id="testimonial_sub_title" type="text" maxlength="200"
                                                        name="testimonial_sub_title[]" class="form-control"
                                                        value="{{ $testimonial_sub_title_translate[$lang]['value'] ?? '' }}"
-                                                       placeholder="{{translate('messages.title_here...')}}">
+                                                       placeholder="{{'título aquí...'}}">
                                                 <span
                                                     class="text-right text-counting color-A7A7A7 d-block mt-1">0/200</span>
                                             </div>
                                             <div class="col-sm-12">
                                                 <label for="testimonial_button_title"
-                                                       class="form-label">{{translate('Button Name')}}
-                                                    ({{ translate('messages.default') }})<span
+                                                       class="form-label">{{'Nombre del botón'}}
+                                                    ({{ 'por defecto' }})<span
                                                         class="form-label-secondary"
                                                         data-toggle="tooltip" data-placement="right"
-                                                        data-original-title="{{ translate('Write_the_button_name_within_20_characters') }}">
+                                                        data-original-title="{{ 'Escriba el nombre del botón dentro de 20 caracteres' }}">
                                                                         <i class="tio-info color-A7A7A7"></i>
                                                                     </span></label>
                                                 <input id="testimonial_button_title" type="text" maxlength="20"
                                                        name="testimonial_button_title[]" class="form-control"
                                                        value="{{ $testimonial_button_title_translate[$lang]['value'] ?? '' }}"
-                                                       placeholder="{{translate('messages.Start Selling...')}}">
+                                                       placeholder="{{'Empezar a vender...'}}">
                                                 <span
                                                     class="text-right text-counting color-A7A7A7 d-block mt-1">0/20</span>
                                             </div>
@@ -263,40 +263,40 @@
                                     <div class="row g-1">
                                         <div class="col-sm-12">
                                             <label for="testimonial_title"
-                                                   class="form-label">{{translate('Title')}}</label>
+                                                   class="form-label">{{'Título'}}</label>
                                             <input id="testimonial_title" type="text" name="testimonial_title[]"
                                                    value="{{ $testimonial_title->getRawOriginal('value') ?? '' }}"
-                                            {{translate('messages.title_here...')}}">
+                                            {{'título aquí...'}}">
                                         </div>
                                         <div class="col-sm-12">
                                             <label for="testimonial_subtitle"
-                                                   class="form-label">{{translate('SubTitle')}}
-                                                ({{ translate('messages.default') }})<span class="form-label-secondary"
+                                                   class="form-label">{{'Subtitular'}}
+                                                ({{ 'por defecto' }})<span class="form-label-secondary"
                                                                                            data-toggle="tooltip"
                                                                                            data-placement="right"
-                                                                                           data-original-title="{{ translate('Write_the_subtitle_within_20_characters') }}">
+                                                                                           data-original-title="{{ 'Escribe el subtítulo dentro de los 20 caracteres.' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span></label>
                                             <input id="testimonial_sub_title" type="text" maxlength="200"
                                                    name="testimonial_sub_title[]" class="form-control"
                                                    value="{{$testimonial_sub_title?->getRawOriginal('value') ?? ''}}"
-                                                   placeholder="{{translate('messages.title_here...')}}">
+                                                   placeholder="{{'título aquí...'}}">
                                             <span
                                                 class="text-right text-counting color-A7A7A7 d-block mt-1">0/200</span>
                                         </div>
                                         <div class="col-sm-12">
                                             <label for="testimonial_button_title"
-                                                   class="form-label">{{translate('Button Name')}}
-                                                ({{ translate('messages.default') }})<span class="form-label-secondary"
+                                                   class="form-label">{{'Nombre del botón'}}
+                                                ({{ 'por defecto' }})<span class="form-label-secondary"
                                                                                            data-toggle="tooltip"
                                                                                            data-placement="right"
-                                                                                           data-original-title="{{ translate('Write_the_button_name_within_20_characters') }}">
+                                                                                           data-original-title="{{ 'Escriba el nombre del botón dentro de 20 caracteres' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span></label>
                                             <input id="testimonial_button_title" type="text" maxlength="20"
                                                    name="testimonial_button_title[]" class="form-control"
                                                    value="{{$testimonial_button_title?->getRawOriginal('value') ?? ''}}"
-                                                   placeholder="{{translate('messages.Start Selling...')}}">
+                                                   placeholder="{{'Empezar a vender...'}}">
                                             <span class="text-right text-counting color-A7A7A7 d-block mt-1">0/20</span>
                                         </div>
                                     </div>
@@ -304,8 +304,8 @@
                                 @endif
                             </div>
                             <div class="btn--container justify-content-end mt-20">
-                                <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
-                                <button type="submit" class="btn btn--primary mb-2">{{translate('Save')}}</button>
+                                <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
+                                <button type="submit" class="btn btn--primary mb-2">{{'Ahorrar'}}</button>
                             </div>
                         </div>
                     </div>
@@ -314,9 +314,9 @@
                 <div class="card mb-20">
                     <div class="card-header">
                         <div class="">
-                            <h3 class="mb-1">{{ translate('Add Testimonial') }}</h3>
+                            <h3 class="mb-1">{{ 'Agregar testimonio' }}</h3>
                             <p class="mb-0 gray-dark fs-12">
-                                {{ translate('Add and manage individual customer testimonials.') }}
+                                {{ 'Agregue y administre testimonios de clientes individuales.' }}
                             </p>
                         </div>
                     </div>
@@ -333,7 +333,7 @@
                                                 <ul class="nav nav-tabs mb-4 border-bottom">
                                                     <li class="nav-item">
                                                         <a class="nav-link lang_link active" href="#"
-                                                           id="testimonial-default-link">{{translate('messages.default')}}</a>
+                                                           id="testimonial-default-link">{{'por defecto'}}</a>
                                                     </li>
                                                     @foreach (json_decode($language) as $lang)
                                                         <li class="nav-item">
@@ -347,53 +347,53 @@
                                                 <div class="row g-3 lang_form" id="testimonial-default-form">
                                                     <div class="col-md-6">
                                                         <label for="name"
-                                                               class="form-label">{{translate('Reviewer Name')}}
-                                                            ({{ translate('messages.default') }})
+                                                               class="form-label">{{'Nombre del revisor'}}
+                                                            ({{ 'por defecto' }})
                                                             <span class="form-label-secondary" data-toggle="tooltip"
                                                                   data-placement="right"
-                                                                  data-original-title="{{ translate('Content...') }}">
+                                                                  data-original-title="{{ 'Contenido...' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span>
                                                             <span class="form-label-secondary text-danger"
                                                                   data-toggle="tooltip" data-placement="right"
-                                                                  data-original-title="{{ translate('messages.Required.')}}"> *
+                                                                  data-original-title="{{ 'Requerido.'}}"> *
                                                     </span>
                                                         </label>
                                                         <input id="name" type="text" name="name[]" class="form-control"
-                                                               placeholder="{{translate('Ex:  John Doe')}}" required>
+                                                               placeholder="{{'Ej: John Doe'}}" required>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="designation"
-                                                               class="form-label">{{translate('Designation')}}
-                                                            ({{ translate('messages.default') }})
+                                                               class="form-label">{{'Designación'}}
+                                                            ({{ 'por defecto' }})
                                                             <span class="form-label-secondary" data-toggle="tooltip"
                                                                   data-placement="right"
-                                                                  data-original-title="{{ translate('Content...') }}">
+                                                                  data-original-title="{{ 'Contenido...' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span>
 
                                                         </label>
                                                         <input id="designation" type="text" name="designation[]"
                                                                class="form-control"
-                                                               placeholder="{{translate('Ex:  CTO')}}">
+                                                               placeholder="{{'Ej: CTO'}}">
                                                     </div>
                                                     <div class="col-md-12">
                                                         <label for="review"
-                                                               class="form-label">{{translate('messages.review')}}
-                                                            ({{ translate('messages.default') }})
+                                                               class="form-label">{{'revisar'}}
+                                                            ({{ 'por defecto' }})
                                                             <span
                                                                 class="form-label-secondary" data-toggle="tooltip"
                                                                 data-placement="right"
-                                                                data-original-title="{{ translate('Write_the_title_within_140_characters') }}">
+                                                                data-original-title="{{ 'Escribe el título dentro de 140 caracteres.' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span>
                                                             <span class="form-label-secondary text-danger"
                                                                   data-toggle="tooltip" data-placement="right"
-                                                                  data-original-title="{{ translate('messages.Required.')}}"> *
+                                                                  data-original-title="{{ 'Requerido.'}}"> *
                                                     </span>
                                                         </label>
                                                         <textarea id="review" name="review[]" maxlength="200"
-                                                                  placeholder="{{translate('Very Good Company')}}"
+                                                                  placeholder="{{'Muy buena empresa'}}"
                                                                   class="form-control h92px" required></textarea>
                                                         <span
                                                             class="text-right text-counting color-A7A7A7 d-block mt-1">0/200</span>
@@ -405,46 +405,46 @@
                                                          id="testimonial-{{$lang}}-form">
                                                         <div class="col-md-6">
                                                             <label for="name{{$lang}}"
-                                                                   class="form-label">{{translate('Reviewer Name')}}
+                                                                   class="form-label">{{'Nombre del revisor'}}
                                                                 ({{strtoupper($lang)}})
                                                                 <span class="form-label-secondary" data-toggle="tooltip"
                                                                       data-placement="right"
-                                                                      data-original-title="{{ translate('Content...') }}">
+                                                                      data-original-title="{{ 'Contenido...' }}">
                                                     <i class="tio-info color-A7A7A7"></i>
                                                 </span>
                                                             </label>
                                                             <input id="name{{$lang}}" type="text" name="name[]"
                                                                    class="form-control"
-                                                                   placeholder="{{translate('Ex:  John Doe')}}">
+                                                                   placeholder="{{'Ej: John Doe'}}">
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label for="designation{{$lang}}"
-                                                                   class="form-label">{{translate('Designation')}}
+                                                                   class="form-label">{{'Designación'}}
                                                                 ({{strtoupper($lang)}})
                                                                 <span class="form-label-secondary" data-toggle="tooltip"
                                                                       data-placement="right"
-                                                                      data-original-title="{{ translate('Content...') }}">
+                                                                      data-original-title="{{ 'Contenido...' }}">
                                                     <i class="tio-info color-A7A7A7"></i>
                                                 </span>
                                                             </label>
                                                             <input id="designation{{$lang}}" type="text"
                                                                    name="designation[]"
                                                                    class="form-control"
-                                                                   placeholder="{{translate('Ex:  CTO')}}">
+                                                                   placeholder="{{'Ej: CTO'}}">
                                                         </div>
                                                         <div class="col-md-12">
                                                             <label for="review{{$lang}}"
-                                                                   class="form-label">{{translate('messages.review')}}
+                                                                   class="form-label">{{'revisar'}}
                                                                 ({{strtoupper($lang)}})
                                                                 <span
                                                                     class="form-label-secondary" data-toggle="tooltip"
                                                                     data-placement="right"
-                                                                    data-original-title="{{ translate('Write_the_title_within_140_characters') }}">
+                                                                    data-original-title="{{ 'Escribe el título dentro de 140 caracteres.' }}">
                                                     <i class="tio-info color-A7A7A7"></i>
                                                 </span></label>
                                                             <textarea id="review{{$lang}}" name="review[]"
                                                                       maxlength="200"
-                                                                      placeholder="{{translate('Very Good Company')}}"
+                                                                      placeholder="{{'Muy buena empresa'}}"
                                                                       class="form-control h92px"></textarea>
                                                             <span
                                                                 class="text-right text-counting color-A7A7A7 d-block mt-1">0/200</span>
@@ -456,39 +456,39 @@
                                                 <div class="row g-3">
                                                     <div class="col-md-6">
                                                         <label for="name"
-                                                               class="form-label">{{translate('Reviewer Name')}}
+                                                               class="form-label">{{'Nombre del revisor'}}
                                                             <span class="form-label-secondary" data-toggle="tooltip"
                                                                   data-placement="right"
-                                                                  data-original-title="{{ translate('Content...') }}">
+                                                                  data-original-title="{{ 'Contenido...' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span>
                                                         </label>
                                                         <input id="name" type="text" name="name[]" class="form-control"
-                                                               placeholder="{{translate('Ex:  John Doe')}}">
+                                                               placeholder="{{'Ej: John Doe'}}">
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="designation"
-                                                               class="form-label">{{translate('Designation')}}
+                                                               class="form-label">{{'Designación'}}
                                                             <span class="form-label-secondary" data-toggle="tooltip"
                                                                   data-placement="right"
-                                                                  data-original-title="{{ translate('Content...') }}">
+                                                                  data-original-title="{{ 'Contenido...' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span>
                                                         </label>
                                                         <input id="designation" type="text" name="designation[]"
                                                                class="form-control"
-                                                               placeholder="{{translate('Ex:  CTO')}}">
+                                                               placeholder="{{'Ej: CTO'}}">
                                                     </div>
                                                     <div class="col-md-12">
                                                         <label for="review"
-                                                               class="form-label">{{translate('messages.review')}}<span
+                                                               class="form-label">{{'revisar'}}<span
                                                                 class="form-label-secondary" data-toggle="tooltip"
                                                                 data-placement="right"
-                                                                data-original-title="{{ translate('Write_the_title_within_140_characters') }}">
+                                                                data-original-title="{{ 'Escribe el título dentro de 140 caracteres.' }}">
                                                 <i class="tio-info color-A7A7A7"></i>
                                             </span></label>
                                                         <textarea id="review" name="review[]" maxlength="200"
-                                                                  placeholder="{{translate('Very Good Company')}}"
+                                                                  placeholder="{{'Muy buena empresa'}}"
                                                                   class="form-control h92px"></textarea>
                                                         <span
                                                             class="text-right text-counting color-A7A7A7 d-block mt-1">0/200</span>
@@ -502,8 +502,8 @@
                                         <div class="bg--secondary h-100 rounded p-md-4 p-3 d-center">
                                             <div class="text-center">
                                                 <div class="mb-30">
-                                                    <h5 class="mb-1">{{ translate('Reviewer Image') }}</h5>
-                                                    <p class="mb-0 fs-12 gray-dark">{{ translate('Upload Reviewer Image') }}
+                                                    <h5 class="mb-1">{{ 'Imagen del revisor' }}</h5>
+                                                    <p class="mb-0 fs-12 gray-dark">{{ 'Cargar imagen del revisor' }}
                                                     </p>
                                                 </div>
                                                 <div class="mx-auto text-center error-wrapper">
@@ -545,16 +545,16 @@
                                                     </div>
                                                 </div>
                                                 <p class="fs-10 text-center mb-0 mt-lg-4 mt-3">
-                                                    {{ translate('JPG, JPEG, PNG size : Max 2 MB')}} <span
-                                                        class="font-medium text-title">{{ translate('(2:1)')}}</span>
+                                                    {{ 'Tamaño JPG, JPEG, PNG: máximo 2 MB'}} <span
+                                                        class="font-medium text-title">{{ '(2:1)'}}</span>
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="btn--container justify-content-end mt-20">
-                                    <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
-                                    <button type="submit" class="btn btn--primary mb-2">{{translate('Add')}}</button>
+                                    <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
+                                    <button type="submit" class="btn btn--primary mb-2">{{'Agregar'}}</button>
                                 </div>
                             </div>
                         </form>
@@ -598,13 +598,13 @@
                                         class="table table-borderless table-thead-borderless table-align-middle table-nowrap card-table m-0">
                                         <thead class="thead-light">
                                         <tr>
-                                            <th class="border-top-0">{{translate('SL')}}</th>
-                                            <th class="border-top-0">{{translate('Image')}}</th>
-                                            <th class="border-top-0">{{translate('Reviewer Name')}}</th>
-                                            <th class="border-top-0">{{translate('Designation')}}</th>
-                                            <th class="border-top-0">{{translate('Reviews')}}</th>
-                                            <th class="text-center border-top-0">{{translate('Status')}}</th>
-                                            <th class="text-center border-top-0">{{translate('Action')}}</th>
+                                            <th class="border-top-0">{{'SL'}}</th>
+                                            <th class="border-top-0">{{'Imagen'}}</th>
+                                            <th class="border-top-0">{{'Nombre del revisor'}}</th>
+                                            <th class="border-top-0">{{'Designación'}}</th>
+                                            <th class="border-top-0">{{'Reseñas'}}</th>
+                                            <th class="text-center border-top-0">{{'Estado'}}</th>
+                                            <th class="text-center border-top-0">{{'Acción'}}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -640,10 +640,10 @@
                                                                data-type="status"
                                                                data-image-on="{{ asset('assets/admin/img/modal/this-criteria-on.png') }}"
                                                                data-image-off="{{ asset('assets/admin/img/modal/this-criteria-off.png') }}"
-                                                               data-title-on="{{ translate('by_turning_on_this_review') }} <strong>{{ translate('this_review') }}</strong>"
-                                                               data-title-off="{{ translate('by_turning_off_this_review') }} <strong>{{ translate('this_review') }}</strong>"
-                                                               data-text-on="<p>{{ translate('this_section_will_be_enabled_you_can_see_this_section_on_your_landing_page') }}</p>"
-                                                               data-text-off="<p>{{ translate('this_section_will_be_disabled_you_can_enable_it_in_the_settings') }}</p>"
+                                                               data-title-on="{{ 'activando esta revisión' }} <strong>{{ 'esta revisión' }}</strong>"
+                                                               data-title-off="{{ 'desactivando esta revisión' }} <strong>{{ 'esta revisión' }}</strong>"
+                                                               data-text-on="<p>{{ 'Esta sección estará habilitada. Puede ver esta sección en su página de inicio.' }}</p>"
+                                                               data-text-off="<p>{{ 'Esta sección estará deshabilitada, puedes habilitarla en la configuración.' }}</p>"
                                                                class="status toggle-switch-input dynamic-checkbox"
                                                                id="status-{{$review->id}}"
                                                             {{$review->status ? 'checked' : ''}}>
@@ -665,8 +665,8 @@
                                                         </a>
                                                         <a class="btn action-btn btn--danger btn-outline-danger form-alert"
                                                            href="javascript:" data-id="review-{{$review['id']}}"
-                                                           data-message="{{ translate('Want to delete this review ?') }}"
-                                                           title="{{translate('messages.delete_review')}}"><i
+                                                           data-message="{{ '¿Quieres eliminar esta reseña?' }}"
+                                                           title="{{'eliminar reseña'}}"><i
                                                                 class="tio-delete-outlined"></i>
                                                         </a>
                                                         <form
@@ -685,7 +685,7 @@
                                             <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}"
                                                  alt="public">
                                             <h5>
-                                                {{translate('no_data_found')}}
+                                                {{'no se encontraron datos'}}
                                             </h5>
                                         </div>
                                     @endif
@@ -716,7 +716,7 @@
                         class="custom-offcanvas-header bg--secondary d-flex justify-content-between align-items-center px-3 py-3">
                         <div class="py-1">
                             <h3 class="mb-0 line--limit-1">
-                                {{ translate('messages.Deliveryman App Download Section Preview') }}</h3>
+                                {{ 'Vista previa de la sección de descarga de la aplicación Deliveryman' }}</h3>
                         </div>
                         <button type="button"
                                 class="btn-close w-25px h-25px border rounded-circle d-center bg--secondary text-dark offcanvas-close fz-15px p-0"
@@ -790,9 +790,9 @@
                                                                          alt=""
                                                                          class="rounded-pill w-42 mx-auto min-w-42 mb-2">
                                                                     <h2 class="mb-1 fs-14">
-                                                                        {{ translate('messages.Alamin Hasan') }}</h2>
+                                                                        {{ 'Alamin Hasan' }}</h2>
                                                                     <p class="mb-0 color-22232466 fs-12">
-                                                                        {{ translate('messages.Food Specialist') }}</p>
+                                                                        {{ 'Especialista en alimentos' }}</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -815,9 +815,9 @@
                                                                          alt=""
                                                                          class="rounded-pill w-42 mx-auto min-w-42 mb-2">
                                                                     <h2 class="mb-1 fs-14">
-                                                                        {{ translate('messages.Alamin Hasan') }}</h2>
+                                                                        {{ 'Alamin Hasan' }}</h2>
                                                                     <p class="mb-0 color-22232466 fs-12">
-                                                                        {{ translate('messages.Food Specialist') }}</p>
+                                                                        {{ 'Especialista en alimentos' }}</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -840,9 +840,9 @@
                                                                          alt=""
                                                                          class="rounded-pill w-42 mx-auto min-w-42 mb-2">
                                                                     <h2 class="mb-1 fs-14">
-                                                                        {{ translate('messages.Alamin Hasan') }}</h2>
+                                                                        {{ 'Alamin Hasan' }}</h2>
                                                                     <p class="mb-0 color-22232466 fs-12">
-                                                                        {{ translate('messages.Food Specialist') }}</p>
+                                                                        {{ 'Especialista en alimentos' }}</p>
                                                                 </div>
                                                             </div>
                                                         </div>

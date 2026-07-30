@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title', translate('Item Preview'))
+@section('title', 'Vista previa del artículo')
 
 @push('css_or_js')
 @endpush
@@ -23,11 +23,11 @@
                     @if ($store_data->module->module_type != 'food')
                         <a data-toggle="modal" data-id="{{ $product->id }}" data-target="#update-quantity"
                             class="btn btn--primary update-quantity">
-                            {{ translate('messages.Update_Stock') }}
+                            {{ 'Actualizar stock' }}
                         </a>
                     @endif
                     <a href="{{ route('vendor.item.edit', [$product['id']]) }}" class="btn btn--primary">
-                        <i class="tio-edit"></i> {{ translate('messages.edit') }}
+                        <i class="tio-edit"></i> {{ 'editar' }}
                     </a>
                 </div>
             </div>
@@ -64,8 +64,8 @@
                                             @endforeach
                                         </div>
                                         <div class="info">
-                                            <span>{{ translate('messages.of') }} {{ $product->reviews->count() }}
-                                                {{ translate('messages.reviews') }}</span>
+                                            <span>{{ 'de' }} {{ $product->reviews->count() }}
+                                                {{ 'opiniones' }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -78,7 +78,7 @@
                                 <!-- Review Ratings -->
                                 <li class="d-flex align-items-center font-size-sm">
                                     @php($five = $product->rating ? json_decode($product->rating, true)[5] : 0)
-                                    <span class="progress-name mr-3">{{ translate('excellent') }}</span>
+                                    <span class="progress-name mr-3">{{ 'excelente' }}</span>
                                     <div class="progress flex-grow-1">
                                         <div class="progress-bar" role="progressbar"
                                             style="width: {{ $total == 0 ? 0 : ($five / $total) * 100 }}%;"
@@ -92,7 +92,7 @@
                                 <!-- Review Ratings -->
                                 <li class="d-flex align-items-center font-size-sm">
                                     @php($four = $product->rating ? json_decode($product->rating, true)[4] : 0)
-                                    <span class="progress-name mr-3">{{ translate('good') }}</span>
+                                    <span class="progress-name mr-3">{{ 'bien' }}</span>
                                     <div class="progress flex-grow-1">
                                         <div class="progress-bar" role="progressbar"
                                             style="width: {{ $total == 0 ? 0 : ($four / $total) * 100 }}%;"
@@ -106,7 +106,7 @@
                                 <!-- Review Ratings -->
                                 <li class="d-flex align-items-center font-size-sm">
                                     @php($three = $product->rating ? json_decode($product->rating, true)[3] : 0)
-                                    <span class="progress-name mr-3">{{ translate('average') }}</span>
+                                    <span class="progress-name mr-3">{{ 'promedio' }}</span>
                                     <div class="progress flex-grow-1">
                                         <div class="progress-bar" role="progressbar"
                                             style="width: {{ $total == 0 ? 0 : ($three / $total) * 100 }}%;"
@@ -120,7 +120,7 @@
                                 <!-- Review Ratings -->
                                 <li class="d-flex align-items-center font-size-sm">
                                     @php($two = $product->rating ? json_decode($product->rating, true)[2] : 0)
-                                    <span class="progress-name mr-3">{{ translate('below_average') }}</span>
+                                    <span class="progress-name mr-3">{{ 'por debajo del promedio' }}</span>
                                     <div class="progress flex-grow-1">
                                         <div class="progress-bar" role="progressbar"
                                             style="width: {{ $total == 0 ? 0 : ($two / $total) * 100 }}%;"
@@ -134,7 +134,7 @@
                                 <!-- Review Ratings -->
                                 <li class="d-flex align-items-center font-size-sm">
                                     @php($one = $product->rating ? json_decode($product->rating, true)[1] : 0)
-                                    <span class="progress-name mr-3">{{ translate('poor') }}</span>
+                                    <span class="progress-name mr-3">{{ 'pobre' }}</span>
                                     <div class="progress flex-grow-1">
                                         <div class="progress-bar" role="progressbar"
                                             style="width: {{ $total == 0 ? 0 : ($one / $total) * 100 }}%;"
@@ -160,45 +160,45 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th class="px-4 border-0">
-                                        <h4 class="m-0 text-capitalize">{{ translate('short_description') }}</h4>
+                                        <h4 class="m-0 text-capitalize">{{ 'breve descripción' }}</h4>
                                     </th>
                                     @if (in_array($product->module->module_type, ['food', 'grocery']))
                                         <th class="px-4 border-0">
-                                            <h4 class="m-0 text-capitalize">{{ translate('Nutrition') }}</h4>
+                                            <h4 class="m-0 text-capitalize">{{ 'Nutrición' }}</h4>
                                         </th>
                                         <th class="px-4 border-0">
-                                            <h4 class="m-0 text-capitalize">{{ translate('Allergy') }}</h4>
+                                            <h4 class="m-0 text-capitalize">{{ 'Alergia' }}</h4>
                                         </th>
                                     @endif
 
 
                                     @if ($store_data->module->module_type != 'food')
                                         <th class="px-4 border-0">
-                                            <h4 class="m-0 text-capitalize">{{ translate('Stock') }}</h4>
+                                            <h4 class="m-0 text-capitalize">{{ 'Existencias' }}</h4>
                                         </th>
                                     @endif
                                     @if (in_array($product->module->module_type, ['pharmacy']))
                                         <th class="px-4 border-0">
-                                            <h4 class="m-0 text-capitalize">{{ translate('Generic_Name') }}</h4>
+                                            <h4 class="m-0 text-capitalize">{{ 'Nombre genérico' }}</h4>
                                         </th>
                                     @endif
                                     <th class="px-4 border-0">
-                                        <h4 class="m-0 text-capitalize">{{ translate('price') }}</h4>
+                                        <h4 class="m-0 text-capitalize">{{ 'precio' }}</h4>
                                     </th>
                                     <th class="px-4 border-0">
-                                        <h4 class="m-0 text-capitalize">{{ translate('variations') }}</h4>
+                                        <h4 class="m-0 text-capitalize">{{ 'variaciones' }}</h4>
                                     </th>
                                     @if (\App\CentralLogics\Helpers::get_store_data()->module->module_type == 'food')
                                         <th class="px-4 border-0">
-                                            <h4 class="m-0 text-capitalize">{{ translate('addons') }}</h4>
+                                            <h4 class="m-0 text-capitalize">{{ 'complementos' }}</h4>
                                         </th>
                                     @endif
                                     <th class="px-4 border-0">
-                                        <h4 class="m-0 text-capitalize">{{ translate('tags') }}</h4>
+                                        <h4 class="m-0 text-capitalize">{{ 'etiquetas' }}</h4>
                                     </th>
                                     @if ($productWiseTax)
                                         <th class="px-4 border-0">
-                                            <h4 class="m-0 text-capitalize">{{ translate('Tax/Vat') }}</h4>
+                                            <h4 class="m-0 text-capitalize">{{ 'Impuesto/IVA' }}</h4>
                                         </th>
                                     @endif
                                 </tr>
@@ -242,21 +242,21 @@
 
                                     <td class="px-4">
                                         <span class="d-block mb-1">
-                                            <span>{{ translate('messages.price') }} : </span>
+                                            <span>{{ 'precio' }} : </span>
                                             <strong>{{ \App\CentralLogics\Helpers::format_currency($product['price']) }}</strong>
                                         </span>
                                         <span class="d-block mb-1">
-                                            <span>{{ translate('messages.discount') }} :</span>
+                                            <span>{{ 'descuento' }} :</span>
                                                          <strong>  {{$product['discount_type'] == 'percent' ? $product['discount'] . ' %' : \App\CentralLogics\Helpers::format_currency($product['discount']) }}   </strong>
                                             
                                         </span>
                                         @if (config('module.' . $product->module->module_type)['item_available_time'])
                                             <span class="d-block mb-1">
-                                                {{ translate('messages.available_time_starts') }} :
+                                                {{ 'comienza el tiempo disponible' }} :
                                                 <strong>{{ date(config('timeformat'), strtotime($product['available_time_starts'])) }}</strong>
                                             </span>
                                             <span class="d-block mb-1">
-                                                {{ translate('messages.available_time_ends') }} :
+                                                {{ 'finaliza el tiempo disponible' }} :
                                                 <strong>{{ date(config('timeformat'), strtotime($product['available_time_ends'])) }}</strong>
                                             </span>
                                         @endif
@@ -268,7 +268,7 @@
                                                     @if (isset($variation['price']))
                                                         <span class="d-block mb-1 text-capitalize">
                                                             <strong>
-                                                                {{ translate('please_update_the_food_variations.') }}
+                                                                {{ 'actualice las variaciones de alimentos.' }}
                                                             </strong>
                                                         </span>
                                                         @break
@@ -279,19 +279,19 @@
                                                                 {{ $variation['name'] }} -
                                                             </strong>
                                                             @if ($variation['type'] == 'multi')
-                                                                {{ translate('messages.multiple_select') }}
+                                                                {{ 'selección múltiple' }}
                                                             @elseif($variation['type'] == 'single')
-                                                                {{ translate('messages.single_select') }}
+                                                                {{ 'selección única' }}
                                                             @endif
                                                             @if ($variation['required'] == 'on')
-                                                                - ({{ translate('messages.required') }})
+                                                                - ({{ 'requerido' }})
                                                             @endif
                                                         </span>
 
                                                         @if ($variation['min'] != 0 && $variation['max'] != 0)
-                                                            ({{ translate('messages.Min_select') }}:
+                                                            ({{ 'Selección mínima' }}:
                                                             {{ $variation['min'] }} -
-                                                            {{ translate('messages.Max_select') }}:
+                                                            {{ 'selección máxima' }}:
                                                             {{ $variation['max'] }})
                                                         @endif
 
@@ -345,7 +345,7 @@
                             </span> </span>
                         <br>
                     @empty
-                        <span> {{ translate('messages.no_tax') }} </span>
+                        <span> {{ 'sin impuestos' }} </span>
                     @endforelse
                 </span>
             </td>
@@ -372,14 +372,14 @@
                         }'>
                 <thead class="thead-light">
                     <tr>
-                        <th class="border-0">{{ translate('messages.#') }}</th>
-                        <th class="border-0">{{ translate('messages.Review_Id') }}</th>
-                        <th class="border-0">{{ translate('messages.item') }}</th>
-                        <th class="border-0">{{ translate('messages.reviewer') }}</th>
-                        <th class="border-0">{{ translate('messages.review') }}</th>
-                        <th class="border-0">{{ translate('messages.date') }}</th>
+                        <th class="border-0">{{ '#' }}</th>
+                        <th class="border-0">{{ 'ID de revisión' }}</th>
+                        <th class="border-0">{{ 'Producto' }}</th>
+                        <th class="border-0">{{ 'crítico' }}</th>
+                        <th class="border-0">{{ 'revisar' }}</th>
+                        <th class="border-0">{{ 'fecha' }}</th>
                         @if ($store_review_reply == '1')
-                            <th class="text-center">{{ translate('messages.action') }}</th>
+                            <th class="text-center">{{ 'acción' }}</th>
                         @endif
                     </tr>
                 </thead>
@@ -404,13 +404,13 @@
                                                 {{ Str::limit($review->item['name'], 10) }}</h5>
                                             <!-- Static -->
                                             <a href="{{ route('vendor.order.details', ['id' => $review->order_id]) }}"
-                                                class="fz--12 text-body important--link">{{ translate('Order ID') }}
+                                                class="fz--12 text-body important--link">{{ 'ID de pedido' }}
                                                 #{{ $review->order_id }}</a>
                                             <!-- Static -->
                                         </div>
                                     </div>
                                 @else
-                                    {{ translate('messages.Food_deleted!') }}
+                                    {{ '¡Comida eliminada!' }}
                                 @endif
                             </td>
                             <td>
@@ -424,7 +424,7 @@
                                             class="d-block font-size-sm text-body">{{ Str::limit($review->customer->phone) }}</span>
                                     </div>
                                 @else
-                                    {{ translate('messages.customer_not_found') }}
+                                    {{ 'cliente no encontrado' }}
                                 @endif
                             </td>
                             <td>
@@ -452,7 +452,7 @@
                                         <a class="btn btn-sm btn--primary {{ $review->reply ? 'btn-outline-primary' : '' }}"
                                             data-toggle="modal" data-target="#reply-{{ $review->id }}"
                                             title="View Details">
-                                            {{ $review->reply ? translate('view_reply') : translate('give_reply') }}
+                                            {{ $review->reply ? 'ver respuesta' : 'dar respuesta' }}
                                         </a>
                                     </div>
                                 </td>
@@ -589,7 +589,7 @@
                                                             class="d-block font-size-sm text-body">{{ Str::limit($review->comment) }}</span>
                                                     </div>
                                                 @else
-                                                    {{ translate('messages.customer_not_found') }}
+                                                    {{ 'cliente no encontrado' }}
                                                 @endif
                                             </div>
                                             <div class="mt-2">
@@ -597,10 +597,10 @@
                                                     method="POST">
                                                     @csrf
                                                     <textarea id="reply" name="reply" required class="form-control" cols="30" rows="3"
-                                                        placeholder="{{ translate('Write_your_reply_here') }}">{{ $review->reply ?? '' }}</textarea>
+                                                        placeholder="{{ 'Escribe tu respuesta aquí' }}">{{ $review->reply ?? '' }}</textarea>
                                                     <div class="mt-3 btn--container justify-content-end">
                                                         <button
-                                                            class="btn btn-primary">{{ $review->reply ? translate('update_reply') : translate('send_reply') }}</button>
+                                                            class="btn btn-primary">{{ $review->reply ? 'actualizar respuesta' : 'enviar respuesta' }}</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -624,7 +624,7 @@
                 <div class="empty--data">
                     <img src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
                     <h5>
-                        {{ translate('no_data_found') }}
+                        {{ 'no se encontraron datos' }}
                     </h5>
                 </div>
             @endif
@@ -650,9 +650,9 @@
                         <div class="mt-2 rest-part w-100"></div>
                         <div class="btn--container justify-content-end">
                             <button type="reset" data-dismiss="modal" aria-label="Close"
-                                class="btn btn--reset">{{ translate('cancel') }}</button>
+                                class="btn btn--reset">{{ 'Cancelar' }}</button>
                             <button type="submit" id="submit_new_customer"
-                                class="btn btn--primary">{{ translate('update_stock') }}</button>
+                                class="btn btn--primary">{{ 'actualizar existencias' }}</button>
                         </div>
                     </form>
                 </div>

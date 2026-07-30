@@ -34,7 +34,7 @@
             </div>
             <div class="chat-user-info-content">
                 <h5 class="mb-0 d-flex justify-content-between">
-                    <span class=" mr-3">{{translate('messages.user_not_found')}}</span>
+                    <span class=" mr-3">{{'usuario no encontrado'}}</span>
                 </h5>
             </div>
         </div>

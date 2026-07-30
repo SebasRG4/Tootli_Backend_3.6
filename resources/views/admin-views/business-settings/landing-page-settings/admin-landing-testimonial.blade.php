@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.admin_landing_page'))
+@section('title','página de inicio del administrador')
 
 @section('content')
 <div class="content container-fluid">
@@ -11,11 +11,11 @@
                     <img src="{{asset('assets/admin/img/landing.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.admin_landing_pages') }}
+                    {{ 'páginas de inicio de administración' }}
                 </span>
             </h1>
             <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#how-it-works">
-                <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
+                <strong class="mr-2">{{'¡Mira cómo funciona!'}}</strong>
                 <div>
                     <i class="tio-info-outined"></i>
                 </div>
@@ -37,7 +37,7 @@
             <li class="nav-item">
                 <a class="nav-link lang_link active"
                 href="#"
-                id="default-link">{{translate('messages.default')}}</a>
+                id="default-link">{{'por defecto'}}</a>
             </li>
             @foreach (json_decode($language) as $lang)
                 <li class="nav-item">
@@ -57,18 +57,18 @@
                         @if ($language)
                             <div class="row g-3 lang_form" id="default-form">
                                 <div class="col-sm-12">
-                                    <label for="testimonial_title" class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})<span
+                                    <label for="testimonial_title" class="form-label">{{'Título'}} ({{ 'por defecto' }})<span
                                         class="form-label-secondary" data-toggle="tooltip"
                                         data-placement="right"
-                                        data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
+                                        data-original-title="{{ 'Escribe el título dentro de 40 caracteres.' }}">
                                         <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                             alt="">
                                     </span>
                                         <span class="form-label-secondary text-danger"
                                               data-toggle="tooltip" data-placement="right"
-                                              data-original-title="{{ translate('messages.Required.')}}"> *
+                                              data-original-title="{{ 'Requerido.'}}"> *
                                                 </span></label>
-                                <input required id="testimonial_title" type="text" maxlength="40" name="testimonial_title[]" class="form-control" value="{{$testimonial_title?->getRawOriginal('value')}}" placeholder="{{translate('messages.title_here...')}}">
+                                <input required id="testimonial_title" type="text" maxlength="40" name="testimonial_title[]" class="form-control" value="{{$testimonial_title?->getRawOriginal('value')}}" placeholder="{{'título aquí...'}}">
                                 </div>
                             </div>
                             <input type="hidden" name="lang[]" value="default">
@@ -87,14 +87,14 @@
                                     ?>
                                     <div class="row g-3 d-none lang_form" id="{{$lang}}-form">
                                         <div class="col-sm-12">
-                                            <label for="testimonial_title{{$lang}}" class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})<span
+                                            <label for="testimonial_title{{$lang}}" class="form-label">{{'Título'}} ({{strtoupper($lang)}})<span
                                                 class="form-label-secondary" data-toggle="tooltip"
                                                 data-placement="right"
-                                                data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
+                                                data-original-title="{{ 'Escribe el título dentro de 40 caracteres.' }}">
                                                 <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                     alt="">
                                             </span></label>
-                                        <input id="testimonial_title{{$lang}}" type="text" maxlength="40" name="testimonial_title[]" class="form-control" value="{{ $testimonial_title_translate[$lang]['value']?? '' }}" placeholder="{{translate('messages.title_here...')}}">
+                                        <input id="testimonial_title{{$lang}}" type="text" maxlength="40" name="testimonial_title[]" class="form-control" value="{{ $testimonial_title_translate[$lang]['value']?? '' }}" placeholder="{{'título aquí...'}}">
                                         </div>
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
@@ -102,21 +102,21 @@
                             @else
                                 <div class="row g-3">
                                     <div class="col-sm-12">
-                                        <label for="testimonial_title" class="form-label">{{translate('Title')}}<span
+                                        <label for="testimonial_title" class="form-label">{{'Título'}}<span
                                             class="form-label-secondary" data-toggle="tooltip"
                                             data-placement="right"
-                                            data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
+                                            data-original-title="{{ 'Escribe el título dentro de 40 caracteres.' }}">
                                             <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                 alt="">
                                         </span></label>
-                                    <input type="text" id="testimonial_title" maxlength="40" name="testimonial_title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                    <input type="text" id="testimonial_title" maxlength="40" name="testimonial_title[]" class="form-control" placeholder="{{'título aquí...'}}">
                                     </div>
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                             @endif
                         <div class="btn--container justify-content-end mt-20">
-                            <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
-                            <button type="submit"   class="btn btn--primary mb-2">{{translate('Save')}}</button>
+                            <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
+                            <button type="submit"   class="btn btn--primary mb-2">{{'Ahorrar'}}</button>
                         </div>
                     </div>
                 </div>
@@ -124,7 +124,7 @@
             <form action="{{ route('admin.business-settings.admin-landing-page-settings', 'testimonial-list') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <h5 class="card-title mb-3 mt-3">
-                    <span class="card-header-icon mr-2"><i class="tio-settings-outlined"></i></span> <span>{{translate('Testimonial List Section')}}</span>
+                    <span class="card-header-icon mr-2"><i class="tio-settings-outlined"></i></span> <span>{{'Sección de lista de testimonios'}}</span>
                 </h5>
                 <div class="card mb-3">
                     <div class="card-body">
@@ -133,37 +133,37 @@
                             <div class="col-md-6">
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <label for="name" class="form-label">{{translate('Reviewer Name')}}
+                                        <label for="name" class="form-label">{{'Nombre del revisor'}}
                                             <span class="form-label-secondary text-danger"
                                                   data-toggle="tooltip" data-placement="right"
-                                                  data-original-title="{{ translate('messages.Required.')}}"> *
+                                                  data-original-title="{{ 'Requerido.'}}"> *
                                                 </span>
                                         </label>
-                                        <input required id="name" type="text" name="name" class="form-control" placeholder="{{translate('Ex:  John Doe')}}">
+                                        <input required id="name" type="text" name="name" class="form-control" placeholder="{{'Ej: John Doe'}}">
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="designation" class="form-label">{{translate('Designation')}}
+                                        <label for="designation" class="form-label">{{'Designación'}}
                                             <span class="form-label-secondary text-danger"
                                                   data-toggle="tooltip" data-placement="right"
-                                                  data-original-title="{{ translate('messages.Required.')}}"> *
+                                                  data-original-title="{{ 'Requerido.'}}"> *
                                                 </span>
                                         </label>
-                                        <input required id="designation" type="text" name="designation" class="form-control" placeholder="{{translate('Ex:  CTO')}}">
+                                        <input required id="designation" type="text" name="designation" class="form-control" placeholder="{{'Ej: CTO'}}">
                                     </div>
                                     <div class="col-md-12">
-                                        <label for="review" class="form-label">{{translate('messages.review')}}<span
+                                        <label for="review" class="form-label">{{'revisar'}}<span
                                             class="form-label-secondary" data-toggle="tooltip"
                                             data-placement="right"
-                                            data-original-title="{{ translate('Write_the_title_within_250_characters') }}">
+                                            data-original-title="{{ 'Escribe el título dentro de 250 caracteres.' }}">
                                             <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                 alt="">
                                         </span>
                                             <span class="form-label-secondary text-danger"
                                                   data-toggle="tooltip" data-placement="right"
-                                                  data-original-title="{{ translate('messages.Required.')}}"> *
+                                                  data-original-title="{{ 'Requerido.'}}"> *
                                                 </span>
                                         </label>
-                                        <textarea required id="review" name="review" maxlength="250" placeholder="{{translate('Very Good Company')}}" class="form-control h92px"></textarea>
+                                        <textarea required id="review" name="review" maxlength="250" placeholder="{{'Muy buena empresa'}}" class="form-control h92px"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -171,10 +171,10 @@
                                 <div class="d-flex gap-40px">
                                     <div>
                                         <label class="form-label d-block mb-3">
-                                            {{translate('Reviewer Image')}}  <span class="text--primary">{{ translate('(1:1)') }}</span>
+                                            {{'Imagen del revisor'}}  <span class="text--primary">{{ '(1:1)' }}</span>
                                             <span class="form-label-secondary text-danger"
                                                   data-toggle="tooltip" data-placement="right"
-                                                  data-original-title="{{ translate('messages.Required.')}}"> *
+                                                  data-original-title="{{ 'Requerido.'}}"> *
                                                 </span>
                                             <div class="fs-12 opacity-70">
                                                 {{ translate(IMAGE_FORMAT.' ' . 'Less Than 2MB') }}
@@ -190,10 +190,10 @@
                                     </div>
                                     <div class="d-flex flex-column">
                                         <label class="form-label d-block mb-3">
-                                            {{translate('Company Logo')}}  <span class="text--primary">(3:1)</span>
+                                            {{'Logotipo de la empresa'}}  <span class="text--primary">(3:1)</span>
                                             <span class="form-label-secondary text-danger"
                                                   data-toggle="tooltip" data-placement="right"
-                                                  data-original-title="{{ translate('messages.Required.')}}"> *
+                                                  data-original-title="{{ 'Requerido.'}}"> *
                                                 </span>
                                             <div class="fs-12 opacity-70">
                                                 {{ translate(IMAGE_FORMAT.' ' . 'Less Than 2MB') }}
@@ -210,8 +210,8 @@
                             </div>
                         </div>
                         <div class="btn--container justify-content-end mt-20">
-                            <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
-                            <button type="submit"   class="btn btn--primary mb-2">{{translate('Add')}}</button>
+                            <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
+                            <button type="submit"   class="btn btn--primary mb-2">{{'Agregar'}}</button>
                         </div>
 
                     </div>
@@ -224,14 +224,14 @@
                             <table class="table table-borderless table-thead-bordered table-align-middle table-nowrap card-table m-0">
                                 <thead class="thead-light">
                                     <tr>
-                                        <th class="border-top-0">{{translate('SL')}}</th>
-                                        <th class="border-top-0">{{translate('Reviewer Name')}}</th>
-                                        <th class="border-top-0">{{translate('Designation')}}</th>
-                                        <th class="border-top-0">{{translate('Reviews')}}</th>
-                                        <th class="text-center border-top-0">{{translate('Reviewer Image')}}</th>
-                                        <th class="text-center border-top-0">{{translate('Company Image')}}</th>
-                                        <th class="text-center border-top-0">{{translate('Status')}}</th>
-                                        <th class="text-center border-top-0">{{translate('Action')}}</th>
+                                        <th class="border-top-0">{{'SL'}}</th>
+                                        <th class="border-top-0">{{'Nombre del revisor'}}</th>
+                                        <th class="border-top-0">{{'Designación'}}</th>
+                                        <th class="border-top-0">{{'Reseñas'}}</th>
+                                        <th class="text-center border-top-0">{{'Imagen del revisor'}}</th>
+                                        <th class="text-center border-top-0">{{'Imagen de la empresa'}}</th>
+                                        <th class="text-center border-top-0">{{'Estado'}}</th>
+                                        <th class="text-center border-top-0">{{'Acción'}}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -271,10 +271,10 @@
                                                        data-type="status"
                                                        data-image-on="{{ asset('assets/admin/img/modal/testimonial-on.png') }}"
                                                        data-image-off="{{ asset('assets/admin/img/modal/testimonial-off.png') }}"
-                                                       data-title-on="{{ translate('By Turning ON ') }} <strong>{{ translate('This review') }}"
-                                                       data-title-off="{{ translate('By Turning OFF ') }} <strong>{{ translate('This review') }}"
-                                                       data-text-on="<p>{{ translate('This section will be enabled. You can see this section on your landing page.') }}</p>"
-                                                       data-text-off="<p>{{ translate('This section will be disabled. You can enable it in the settings.') }}</p>"
+                                                       data-title-on="{{ 'Al encender' }} <strong>{{ 'Esta reseña' }}"
+                                                       data-title-off="{{ 'Al apagar' }} <strong>{{ 'Esta reseña' }}"
+                                                       data-text-on="<p>{{ 'Esta sección quedará habilitada. Puede ver esta sección en su página de destino.' }}</p>"
+                                                       data-text-off="<p>{{ 'Esta sección quedará deshabilitada. Puedes habilitarlo en la configuración.' }}</p>"
                                                        class="status toggle-switch-input dynamic-checkbox"
 
                                                        id="status-{{$review->id}}" {{$review->status?'checked':''}}>
@@ -293,7 +293,7 @@
                                                 </a>
                                                 <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
                                                    data-id="review-{{$review['id']}}"
-                                                   data-message="{{ translate('Want to delete this review ?') }}"><i class="tio-delete-outlined"></i>
+                                                   data-message="{{ '¿Quieres eliminar esta reseña?' }}"><i class="tio-delete-outlined"></i>
                                                 </a>
                                                 <form action="{{route('admin.business-settings.review-delete',[$review['id']])}}" method="post" id="review-{{$review['id']}}">
                                                     @csrf @method('delete')
@@ -312,7 +312,7 @@
                     <div class="empty--data">
                         <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
-                            {{translate('no_data_found')}}
+                            {{'no se encontraron datos'}}
                         </h5>
                     </div>
                     @endif

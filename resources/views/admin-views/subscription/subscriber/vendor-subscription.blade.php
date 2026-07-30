@@ -1,5 +1,5 @@
 @extends('layouts.admin.app')
-@section('title',translate('messages.Store_Subscription'))
+@section('title','Suscripción a la tienda')
 @section('subscriberList')
 active
 @endsection
@@ -16,15 +16,15 @@ active
                     <div class="d-flex align-items-start">
                         <img src="{{asset('assets/admin/img/store.png')}}" width="24" alt="img">
                         <div class="w-0 flex-grow pl-2">
-                            <h1 class="page-header-title">{{ $store->name }} {{translate('Subscription')}} &nbsp; &nbsp;
+                            <h1 class="page-header-title">{{ $store->name }} {{'Suscripción'}} &nbsp; &nbsp;
                                 @if($store?->status == 0 &&  $store?->vendor?->status == 0)
-                                <span class=" badge badge-pill badge-info">  &nbsp; {{ translate('Approval_Pending') }}  &nbsp; </span>
+                                <span class=" badge badge-pill badge-info">  &nbsp; {{ 'Aprobación pendiente' }}  &nbsp; </span>
                                 @elseif($store?->store_sub_update_application?->status == 0)
-                                <span class=" badge badge-pill badge-danger">  &nbsp; {{ translate('Expired') }}  &nbsp; </span>
+                                <span class=" badge badge-pill badge-danger">  &nbsp; {{ 'Venció' }}  &nbsp; </span>
                                 @elseif ($store?->store_sub_update_application?->is_canceled == 1)
-                                <span class=" badge badge-pill badge-warning">  &nbsp; {{ translate('canceled') }}  &nbsp; </span>
+                                <span class=" badge badge-pill badge-warning">  &nbsp; {{ 'Cancelado' }}  &nbsp; </span>
                                 @elseif($store?->store_sub_update_application?->status == 1)
-                                <span class=" badge badge-pill badge-success">  &nbsp; {{ translate('Active') }}  &nbsp; </span>
+                                <span class=" badge badge-pill badge-success">  &nbsp; {{ 'Activo' }}  &nbsp; </span>
                                 @endif
                             </h1>
                         </div>
@@ -35,13 +35,13 @@ active
         <div class="js-nav-scroller hs-nav-scroller-horizontal mb-4">
             <ul class="nav nav-tabs border-0 nav--tabs nav--pills">
                 <li class="nav-item">
-                    <a href="" class="nav-link active">{{ translate('Subscription_Details') }} </a>
+                    <a href="" class="nav-link active">{{ 'Detalles de suscripción' }} </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('admin.business-settings.subscriptionackage.subscriberTransactions',$store->id) }}" class="nav-link">{{ translate('Transactions') }}</a>
+                    <a href="{{ route('admin.business-settings.subscriptionackage.subscriberTransactions',$store->id) }}" class="nav-link">{{ 'Actas' }}</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('admin.business-settings.subscriptionackage.subscriberWalletTransactions',$store->id) }}" class="nav-link">{{ translate('Subscription_Refunds') }}</a>
+                    <a href="{{ route('admin.business-settings.subscriptionackage.subscriberWalletTransactions',$store->id) }}" class="nav-link">{{ 'Reembolsos de suscripción' }}</a>
                 </li>
             </ul>
         </div>
@@ -51,7 +51,7 @@ active
                     <span class="card-header-icon">
                         <img src="{{asset('assets/admin/img/store-3.png')}}" alt="">
                     </span>
-                    <span class="text-title">{{ translate('Store_Info') }}</span>
+                    <span class="text-title">{{ 'Información de la tienda' }}</span>
                 </h4>
             </div>
             <div class="card-body">
@@ -108,7 +108,7 @@ active
                                     <ul class="address-info list-unstyled list-unstyled-py-3 text-dark pl-0">
                                         <li>
                                             <h5 class="name">
-                                                {{ translate('Owner Info') }}
+                                                {{ 'Información del propietario' }}
                                             </h5>
                                         </li>
                                         <li>
@@ -145,7 +145,7 @@ active
                     <span class="card-header-icon">
                         <img src="{{asset('assets/admin/img/billing.png')}}" alt="">
                     </span>
-                    <span class="text-title">{{ translate('Billing') }}</span>
+                    <span class="text-title">{{ 'Facturación' }}</span>
                 </h4>
             </div>
             <div class="card-body">
@@ -154,7 +154,7 @@ active
                         <a class="__card-2 __bg-1 flex-row align-items-center gap-4" href="#">
                             <img src="{{asset('assets/admin/img/expiring.png')}}" alt="report/new" class="w-60px">
                             <div class="w-0 flex-grow-1 py-md-3">
-                                <span class="text-body">{{ translate('Expire Date') }}</span>
+                                <span class="text-body">{{ 'Fecha de vencimiento' }}</span>
                                 <h4 class="title m-0">{{  \App\CentralLogics\Helpers::date_format($store?->store_sub_update_application?->expiry_date_parsed) }}</h4>
                             </div>
                         </a>
@@ -163,7 +163,7 @@ active
                         <a class="__card-2 __bg-8 flex-row align-items-center gap-4" href="#">
                             <img src="{{asset('assets/admin/img/total-bill.png')}}" alt="report/new" class="w-60px">
                             <div class="w-0 flex-grow-1 py-md-3">
-                                <span class="text-body">{{ translate('Total_Bill') }}</span>
+                                <span class="text-body">{{ 'Factura Total' }}</span>
                                 <h4 class="title m-0">{{  \App\CentralLogics\Helpers::format_currency($store?->store_sub_update_application?->package?->price * ($store?->store_sub_update_application?->total_package_renewed + 1) ) }}</h4>
                             </div>
                         </a>
@@ -172,7 +172,7 @@ active
                         <a class="__card-2 __bg-4 flex-row align-items-center gap-4" href="#">
                             <img src="{{asset('assets/admin/img/number.png')}}" alt="report/new" class="w-60px">
                             <div class="w-0 flex-grow-1 py-md-3">
-                                <span class="text-body">{{ translate('Number of Uses') }}</span>
+                                <span class="text-body">{{ 'Número de usos' }}</span>
                                 <h4 class="title m-0">{{ $store?->store_sub_update_application?->total_package_renewed + 1 }}</h4>
                             </div>
                         </a>
@@ -186,7 +186,7 @@ active
                     <span class="card-header-icon">
                         <img width="25" src="{{asset('assets/admin/img/subscription-plan/subscribed-user.png')}}" alt="">
                     </span>
-                    <span>{{ translate('Package Overview') }}</span>
+                    <span>{{ 'Descripción general del paquete' }}</span>
                 </h4>
             </div>
             <div class="card-body pt-0 px-0">
@@ -196,7 +196,7 @@ active
                             <h3 class="name">{{ $store?->store_sub_update_application?->package?->package_name }}</h3>
                             <div class="font-medium text--title">{{ $store?->store_sub_update_application?->package?->text }}</div>
                         </div>
-                        <h3 class="right">{{ \App\CentralLogics\Helpers::format_currency($store?->store_sub_update_application?->last_transcations?->price) }} /<small class="font-medium text--title">{{ $store?->store_sub_update_application?->last_transcations?->validity }} {{ translate('messages.Days') }}</small></h3>
+                        <h3 class="right">{{ \App\CentralLogics\Helpers::format_currency($store?->store_sub_update_application?->last_transcations?->price) }} /<small class="font-medium text--title">{{ $store?->store_sub_update_application?->last_transcations?->validity }} {{ 'Días' }}</small></h3>
                     </div>
 
 
@@ -207,10 +207,10 @@ active
                             <div class="d-flex align-items-center gap-2">
                                 <img src="{{asset('assets/admin/img/subscription-plan/check.png')}}" alt="">
                                 @if ( $store?->store_sub_update_application?->max_order == 'unlimited' )
-                                <span class="form-check-label text-dark">{{ $store?->module->module_type == 'rental' && addon_published_status('Rental') ? translate('messages.unlimited_trips') : translate('messages.unlimited_orders') }}</span>
+                                <span class="form-check-label text-dark">{{ $store?->module->module_type == 'rental' && addon_published_status('Rental') ? 'viajes ilimitados' : 'pedidos ilimitados' }}</span>
                                 @else
                                 <span class="form-check-label text-dark"> {{ $store?->store_sub_update_application?->package?->max_order }} {{
-                                   $store?->module->module_type == 'rental' && addon_published_status('Rental') ? translate('messages.trips') :  translate('messages.Orders') }} <small>({{ $store?->store_sub_update_application?->max_order }} {{ translate('left') }}) </small> </span>
+                                   $store?->module->module_type == 'rental' && addon_published_status('Rental') ? 'viajes' :  'Órdenes' }} <small>({{ $store?->store_sub_update_application?->max_order }} {{ 'izquierda' }}) </small> </span>
                                 @endif
                             </div>
                         </div>
@@ -224,7 +224,7 @@ active
                                 @else
                                 <img src="{{asset('assets/admin/img/subscription-plan/check-1.png')}}" alt="">
                                 @endif
-                                <span class="form-check-label text-dark">{{ translate('messages.POS') }}</span>
+                                <span class="form-check-label text-dark">{{ 'punto de venta' }}</span>
                             </div>
                         </div>
                         @endif
@@ -236,7 +236,7 @@ active
                                 @else
                                 <img src="{{asset('assets/admin/img/subscription-plan/check-1.png')}}" alt="">
                                 @endif
-                                <span class="form-check-label text-dark">{{ translate('messages.Mobile_App') }}</span>
+                                <span class="form-check-label text-dark">{{ 'Aplicación móvil' }}</span>
                             </div>
                         </div>
                         @if ($store?->module->module_type != 'rental')
@@ -248,7 +248,7 @@ active
                                 @else
                                 <img src="{{asset('assets/admin/img/subscription-plan/check-1.png')}}" alt="">
                                 @endif
-                                <span class="form-check-label text-dark">{{ translate('messages.self_delivery') }}</span>
+                                <span class="form-check-label text-dark">{{ 'autoentrega' }}</span>
                             </div>
                         </div>
                         @endif
@@ -257,11 +257,11 @@ active
                             <div class="d-flex align-items-center gap-2">
                                 <img src="{{asset('assets/admin/img/subscription-plan/check.png')}}" alt="">
                                 @if ( $store?->store_sub_update_application?->max_product == 'unlimited' )
-                                <span class="form-check-label text-dark">{{ $store?->module->module_type == 'rental' && addon_published_status('Rental') ? translate('messages.unlimited_Upload') : translate('messages.unlimited_item_Upload')
+                                <span class="form-check-label text-dark">{{ $store?->module->module_type == 'rental' && addon_published_status('Rental') ? 'Subida ilimitada' : 'Carga ilimitada de artículos'
                                     }}</span>
                                 @else
-                                <span class="form-check-label text-dark"> {{ $store?->store_sub_update_application?->max_product }} {{$store?->module->module_type == 'rental' && addon_published_status('Rental') ? translate('messages.Upload') :
-                                    translate('messages.product_Upload') }} <small>({{ $store?->store_sub_update_application?->max_product  - $store->items_count > 0 ? $store?->store_sub_update_application?->max_product  - $store->items_count : 0 }} {{ translate('left') }}) </small></span>
+                                <span class="form-check-label text-dark"> {{ $store?->store_sub_update_application?->max_product }} {{$store?->module->module_type == 'rental' && addon_published_status('Rental') ? 'Subir' :
+                                    'Subir producto' }} <small>({{ $store?->store_sub_update_application?->max_product  - $store->items_count > 0 ? $store?->store_sub_update_application?->max_product  - $store->items_count : 0 }} {{ 'izquierda' }}) </small></span>
                                 @endif
                             </div>
                         </div>
@@ -273,7 +273,7 @@ active
                                 @else
                                 <img src="{{asset('assets/admin/img/subscription-plan/check-1.png')}}" alt="">
                                 @endif
-                                <span class="form-check-label text-dark">{{ translate('messages.review') }}</span>
+                                <span class="form-check-label text-dark">{{ 'revisar' }}</span>
                             </div>
                         </div>
 
@@ -284,7 +284,7 @@ active
                                 @else
                                 <img src="{{asset('assets/admin/img/subscription-plan/check-1.png')}}" alt="">
                                 @endif
-                                <span class="form-check-label text-dark">{{ translate('messages.chat') }}</span>
+                                <span class="form-check-label text-dark">{{ 'charlar' }}</span>
                             </div>
                         </div>
 
@@ -292,11 +292,11 @@ active
                 </div>
                 <div class="btn--container justify-content-end mt-20">
                     @if ( $store?->store_sub_update_application?->is_canceled == 0 && $store?->store_sub_update_application?->status == 1  )
-                        <button type="button"  data-url="{{route('admin.business-settings.subscriptionackage.cancelSubscription',$store?->id)}}" data-message="{{translate('If_you_cancel_the_subscription,_after_')}} {{  Carbon\Carbon::now()->diffInDays($store?->store_sub_update_application?->expiry_date_parsed->format('Y-m-d'), false); }} {{ translate('days_the_vendor_will_no_longer_be_able_to_run_the_business_before_subscribe_a_new_plan.') }}"
-                        class="btn btn--danger text-white status_change_alert">{{ translate('Cancel Subscription') }}</button>
+                        <button type="button"  data-url="{{route('admin.business-settings.subscriptionackage.cancelSubscription',$store?->id)}}" data-message="{{'Si cancelas la suscripción, después'}} {{  Carbon\Carbon::now()->diffInDays($store?->store_sub_update_application?->expiry_date_parsed->format('Y-m-d'), false); }} {{ 'días el proveedor ya no podrá administrar el negocio antes de suscribirse a un nuevo plan.' }}"
+                        class="btn btn--danger text-white status_change_alert">{{ 'Cancelar suscripción' }}</button>
                     @endif
 
-                    <button type="button" data-toggle="modal" data-target="#plan-modal" class="btn btn--primary">{{ translate('Change / Renew Subscription Plan') }}</button>
+                    <button type="button" data-toggle="modal" data-target="#plan-modal" class="btn btn--primary">{{ 'Cambiar / Renovar Plan de Suscripción' }}</button>
 
                 </div>
             </div>
@@ -315,10 +315,10 @@ active
                     <div class="modal-body px-4 pt-0">
                         <div>
                             <div class="text-center">
-                                <h2 class="modal-title">{{ translate('Change Subscription Plan') }}</h2>
+                                <h2 class="modal-title">{{ 'Cambiar plan de suscripción' }}</h2>
                             </div>
                             <div class="text-center text-14 mb-4 pb-3">
-                               {{ translate('Renew or shift your plan to get better experience!') }}
+                               {{ '¡Renueva o cambia tu plan para obtener una mejor experiencia!' }}
                             </div>
                             <div class="plan-slider owl-theme owl-carousel owl-refresh">
                                 @if (\App\CentralLogics\Helpers::commission_check())
@@ -326,24 +326,24 @@ active
                                 <div class="__plan-item hover {{ $store->store_business_model == 'commission'  ? 'active' : ''}} ">
                                     <div class="inner-div">
                                         <div class="text-center">
-                                            <h3 class="title">{{ translate('Commission Base') }}</h3>
+                                            <h3 class="title">{{ 'Base de comisiones' }}</h3>
                                             <h2 class="price">{{  $store->comission > 0 ?  $store->comission :  $admin_commission }}%</h2>
                                         </div>
                                         <div class="py-5 mt-4">
                                             <div class="info-text text-center">
-                                            {{ translate('Store will pay') }} {{  $store->comission > 0 ?  $store->comission :  $admin_commission }}% {{ translate('commission to') }} {{ $business_name }} {{ translate('from each order. You will get access of all the features and options  in store panel , app and interaction with user.') }}
+                                            {{ 'La tienda pagará' }} {{  $store->comission > 0 ?  $store->comission :  $admin_commission }}% {{ 'comisión a' }} {{ $business_name }} {{ 'de cada pedido. Obtendrá acceso a todas las funciones y opciones en el panel de la tienda, la aplicación y la interacción con el usuario.' }}
                                             </div>
                                         </div>
                                         <div class="text-center">
                                             @if ($store->store_business_model == 'commission')
-                                            <button type="button" class="btn btn--secondary">{{ translate('Current_Plan') }}</button>
+                                            <button type="button" class="btn btn--secondary">{{ 'Plan actual' }}</button>
                                             @else
 
                                             @php
                                             $cash_backs= \App\CentralLogics\Helpers::calculateSubscriptionRefundAmount(store:$store ,return_data:true);
                                             @endphp
 
-                                            <button type="button" data-url="{{route('admin.business-settings.subscriptionackage.switchToCommission',$store->id)}}" data-message="{{translate('You_Want_To_Migrate_To_Commission.')}} {{ data_get($cash_backs,'back_amount') > 0  ?  translate('You will get').' '. \App\CentralLogics\Helpers::format_currency(data_get($cash_backs,'back_amount')) .' '.translate('to_your_wallet_for_remaining') .' '.data_get($cash_backs,'days').' '.translate('messages.days_subscription_plan') : '' }}"  class="btn btn--primary shift_to_commission">{{ translate('Shift in this plan') }}</button>
+                                            <button type="button" data-url="{{route('admin.business-settings.subscriptionackage.switchToCommission',$store->id)}}" data-message="{{'Quiere migrar a la comisión.'}} {{ data_get($cash_backs,'back_amount') > 0  ?  'obtendrás'.' '. \App\CentralLogics\Helpers::format_currency(data_get($cash_backs,'back_amount')) .' '.'a tu billetera por permanecer' .' '.data_get($cash_backs,'days').' '.'plan de suscripción de días' : '' }}"  class="btn btn--primary shift_to_commission">{{ 'Cambio en este plan' }}</button>
                                             @endif
 
                                         </div>
@@ -357,51 +357,51 @@ active
                                         <div class="text-center">
                                             <h3 class="title">{{ $package->package_name }}</h3>
                                             <h2 class="price">{{ \App\CentralLogics\Helpers::format_currency($package->price)}}</h2>
-                                            <div class="day-count">{{ $package->validity }} {{ translate('messages.days') }}</div>
+                                            <div class="day-count">{{ $package->validity }} {{ 'días' }}</div>
                                         </div>
                                         <ul class="info">
 
                                             @if ($package->pos)
                                             <li>
-                                                <i class="tio-checkmark-circle"></i> <span>  {{ translate('messages.POS') }} </span>
+                                                <i class="tio-checkmark-circle"></i> <span>  {{ 'punto de venta' }} </span>
                                             </li>
                                             @endif
                                             @if ($package->mobile_app)
                                             <li>
-                                                <i class="tio-checkmark-circle"></i> <span>  {{ translate('messages.mobile_app') }} </span>
+                                                <i class="tio-checkmark-circle"></i> <span>  {{ 'aplicación móvil' }} </span>
                                             </li>
                                             @endif
                                             @if ($package->chat)
                                             <li>
-                                                <i class="tio-checkmark-circle"></i> <span>  {{ translate('messages.chatting_options') }} </span>
+                                                <i class="tio-checkmark-circle"></i> <span>  {{ 'opciones de chat' }} </span>
                                             </li>
                                             @endif
                                             @if ($package->review)
                                             <li>
-                                                <i class="tio-checkmark-circle"></i> <span>  {{ translate('messages.review_section') }} </span>
+                                                <i class="tio-checkmark-circle"></i> <span>  {{ 'sección de revisión' }} </span>
                                             </li>
                                             @endif
                                             @if ($package->self_delivery)
                                             <li>
-                                                <i class="tio-checkmark-circle"></i> <span>  {{ translate('messages.self_delivery') }} </span>
+                                                <i class="tio-checkmark-circle"></i> <span>  {{ 'autoentrega' }} </span>
                                             </li>
                                             @endif
                                             @if ($package->max_order == 'unlimited')
                                             <li>
-                                                <i class="tio-checkmark-circle"></i> <span>  {{ $store?->module->module_type == 'rental' && addon_published_status('Rental') ? translate('messages.unlimited_trips') :  translate('messages.Unlimited_Orders') }} </span>
+                                                <i class="tio-checkmark-circle"></i> <span>  {{ $store?->module->module_type == 'rental' && addon_published_status('Rental') ? 'viajes ilimitados' :  'Pedidos ilimitados' }} </span>
                                             </li>
                                             @else
                                             <li>
-                                                <i class="tio-checkmark-circle"></i> <span>  {{ $package->max_order }} {{ $store?->module->module_type == 'rental' && addon_published_status('Rental') ? translate('messages.trips') :  translate('messages.Orders') }} </span>
+                                                <i class="tio-checkmark-circle"></i> <span>  {{ $package->max_order }} {{ $store?->module->module_type == 'rental' && addon_published_status('Rental') ? 'viajes' :  'Órdenes' }} </span>
                                             </li>
                                             @endif
                                             @if ($package->max_product == 'unlimited')
                                             <li>
-                                                <i class="tio-checkmark-circle"></i> <span>  {{ translate('messages.Unlimited_uploads') }} </span>
+                                                <i class="tio-checkmark-circle"></i> <span>  {{ 'Cargas ilimitadas' }} </span>
                                             </li>
                                             @else
                                             <li>
-                                                <i class="tio-checkmark-circle"></i> <span>  {{ $package->max_product }} {{ translate('messages.uploads') }} </span>
+                                                <i class="tio-checkmark-circle"></i> <span>  {{ $package->max_product }} {{ 'cargas' }} </span>
                                             </li>
                                             @endif
 
@@ -410,10 +410,10 @@ active
                                             {{-- <button type="button" class="btn btn--primary" data-dismiss="modal" data-toggle="modal" data-target="#shift-modal">Shift in this plan</button> --}}
                                             @if ( $store?->store_business_model != 'commission'  && $store?->store_sub_update_application?->package_id == $package->id)
                                             <button data-id="{{ $package->id }}"  data-url="{{route('admin.business-settings.subscriptionackage.packageView',[$package->id,$store->id ])}}"
-                                                data-target="#package_detail" id="package_detail" type="button" class="btn btn--warning text-white renew-btn package_detail">{{ translate('messages.Renew') }}</button>
+                                                data-target="#package_detail" id="package_detail" type="button" class="btn btn--warning text-white renew-btn package_detail">{{ 'Renovar' }}</button>
                                             @else
                                             <button data-id="{{ $package->id }}" data-url="{{route('admin.business-settings.subscriptionackage.packageView',[$package->id,$store->id ])}}"
-                                                data-target="#package_detail" id="package_detail" type="button" class="btn btn--primary shift-btn package_detail">{{ translate('messages.Shift_in_this_plan') }}</button>
+                                                data-target="#package_detail" id="package_detail" type="button" class="btn btn--primary shift-btn package_detail">{{ 'Cambio en este plan' }}</button>
                                             @endif
 
 
@@ -468,15 +468,15 @@ active
                                 <h5 class="modal-title" ></h5>
                             </div>
                             <div class="text-center">
-                                <h3>{{ translate('Are_You_Sure_You_want_To_switch_to_this_plan?') }}</h3>
-                                <p>{{ translate('You_are_about_to_downgrade_your_plan.After_subscribing_to_this_plan_your_oldest_') }} <span id="disable_item_count"></span> {{ translate('Items_will_be_inactivated.') }} </p>
+                                <h3>{{ '¿Está seguro de que desea cambiarse a este plan?' }}</h3>
+                                <p>{{ 'Estás a punto de bajar de categoría tu plan. Después de suscribirte a este plan, tu plan más antiguo' }} <span id="disable_item_count"></span> {{ 'Los artículos se desactivarán.' }} </p>
                             </div>
                         </div>
                         <div class="btn--container justify-content-center">
                             <button  id="continue_btn" class="btn btn-outline-primary min-w-120" data-dismiss="modal" >
-                                {{translate("Continue")}}
+                                {{'Continuar'}}
                             </button>
-                            <button  class="btn btn--primary min-w-120  shift_package"  id="back_to_planes" data-dismiss="modal" >{{translate('Go_Back')}}</button>
+                            <button  class="btn btn--primary min-w-120  shift_package"  id="back_to_planes" data-dismiss="modal" >{{'Volver'}}</button>
                         </div>
                     </div>
                 </div>
@@ -540,14 +540,14 @@ active
         function status_change_alert(url, message, e) {
             e.preventDefault();
             Swal.fire({
-                title: '{{ translate('Are_you_sure?') }}',
+                title: '{{ '¿Está seguro?' }}',
                 text: message,
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{ translate('no') }}',
-                confirmButtonText: '{{ translate('yes') }}',
+                cancelButtonText: '{{ 'No' }}',
+                confirmButtonText: '{{ 'Sí' }}',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
@@ -566,7 +566,7 @@ active
                             $('#loading').show()
                         },
                         success: function (data) {
-                            toastr.success('{{ translate('Successfully_canceled_the_subscription') }}!');
+                            toastr.success('{{ 'Canceló exitosamente la suscripción' }}!');
                         },
                         complete: function () {
                             $('#loading').hide();
@@ -586,14 +586,14 @@ active
         function shift_to_commission(url, message, e) {
             e.preventDefault();
             Swal.fire({
-                title: '{{ translate('Are_you_sure?') }}',
+                title: '{{ '¿Está seguro?' }}',
                 text: message,
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{ translate('no') }}',
-                confirmButtonText: '{{ translate('yes') }}',
+                cancelButtonText: '{{ 'No' }}',
+                confirmButtonText: '{{ 'Sí' }}',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
@@ -611,7 +611,7 @@ active
                             $('#loading').show()
                         },
                         success: function (data) {
-                            toastr.success('{{ translate('Successfully_Switched_To_Commission') }}!');
+                            toastr.success('{{ 'Cambiado exitosamente a comisión' }}!');
                         },
                         complete: function () {
                             $('#loading').hide();

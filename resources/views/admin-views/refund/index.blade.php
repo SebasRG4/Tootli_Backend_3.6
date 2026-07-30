@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Refund Settings'))
+@section('title', 'Configuración de reembolso')
 
 @push('css_or_js')
 @endpush
@@ -14,7 +14,7 @@
                     <img src="{{ asset('assets/admin/img/email.png') }}" alt="public">
                 </div>
                 <span>
-                    {{ translate('messages.refund_settings') }}
+                    {{ 'configuración de reembolso' }}
                 </span>
             </h1>
         </div>
@@ -27,7 +27,7 @@
                     @php($config = $refund_active_status->value ?? null)
                     <h5 class="text-capitalize m-0 text--info text--primary">
                         <i class="tio-settings-outlined"></i>
-                        {{ translate('messages.Refund Request_Mode') }}
+                        {{ 'Modo de solicitud de reembolso' }}
                     </h5>
                     <label class="toggle-switch toggle-switch-sm">
                         <input type="checkbox" class="status toggle-switch-input refund_mode"
@@ -38,7 +38,7 @@
                     </label>
                 </div>
                 <div class="mt-2">
-                    {{ translate('*By Turning ON Refund Mode, Customers Can Sent Refund Requests') }}
+                    {{ '*Al activar el modo de reembolso, los clientes pueden enviar solicitudes de reembolso' }}
                 </div>
             </div>
         </div>
@@ -52,7 +52,7 @@
                     <div class="d-flex flex-wrap justify-content-between align-items-center mb-md-0 mb-3">
                         <div class="mx-1">
                             <h5 class="form-label mb-0">
-                                {{ translate('messages.Add a Refund Reason') }}
+                                {{ 'Agregar un motivo de reembolso' }}
                             </h5>
                         </div>
                     </div>
@@ -67,7 +67,7 @@
 
                         <div class="col-md-auto">
                             <button type="submit"
-                                class="btn btn--primary h--45px btn-block">{{ translate('messages.Add Now') }}</button>
+                                class="btn btn--primary h--45px btn-block">{{ 'Añadir ahora' }}</button>
                         </div>
                     </div>
                 </form>
@@ -79,7 +79,7 @@
                 <div class="d-flex flex-wrap justify-content-between align-items-center mb-md-0 mb-3">
                     <div class="mx-1">
                         <h5 class="form-label mb-0">
-                            {{ translate('Refund Reason List') }}
+                            {{ 'Lista de motivos de reembolso' }}
                         </h5>
                     </div>
                 </div>
@@ -99,10 +99,10 @@
                     }'>
                             <thead class="thead-light">
                                 <tr>
-                                    <th class="border-0">{{ translate('messages.SL') }}</th>
-                                    <th class="border-0">{{ translate('messages.Reason') }}</th>
-                                    <th class="border-0">{{ translate('messages.status') }}</th>
-                                    <th class="border-0 text-center">{{ translate('messages.action') }}</th>
+                                    <th class="border-0">{{ 'SL' }}</th>
+                                    <th class="border-0">{{ 'Razón' }}</th>
+                                    <th class="border-0">{{ 'estado' }}</th>
+                                    <th class="border-0 text-center">{{ 'acción' }}</th>
                                 </tr>
                             </thead>
 
@@ -133,7 +133,7 @@
                                                 <button
                                                     class="btn action-btn btn--primary btn-outline-primary identifyingClass"
                                                     data-id={{ $reason['id'] }}
-                                                    title="{{ translate('messages.edit_category') }}"
+                                                    title="{{ 'editar categoría' }}"
                                                     data-toggle="modal" data-target="#exampleModal{{ $reason['id'] }}">
                                                     <i class="tio-edit"></i>
                                                 </button>
@@ -143,8 +143,8 @@
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class="modal-title" id="exampleModalLabel">{{ translate('messages.Reason') }}
-                                                                    {{ translate('messages.Update') }}</label></h5>
+                                                                <h5 class="modal-title" id="exampleModalLabel">{{ 'Razón' }}
+                                                                    {{ 'Actualizar' }}</label></h5>
                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
@@ -157,8 +157,8 @@
                                                                     <input class="form-control" name='reason' id="reason_title" value="{{ $reason['reason'] }}" required type="text">
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ translate('messages.Close') }}</button>
-                                                                <button type="submit" class="btn btn-primary">{{ translate('messages.save_changes') }}</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'Cerca' }}</button>
+                                                                <button type="submit" class="btn btn-primary">{{ 'guardar cambios' }}</button>
                                                                 </form>
                                                             </div>
                                                         </div>
@@ -167,8 +167,8 @@
                                                 <a class="btn btn-sm btn--danger btn-outline-danger action-btn form-alert"
                                                     href="javascript:"
                                                     data-id="refund_reason-{{ $reason['id'] }}"
-                                                   data-message="{{ translate('Want to delete this refund reason ?') }}"
-                                                    title="{{ translate('messages.delete') }}">
+                                                   data-message="{{ '¿Quieres eliminar este motivo de reembolso?' }}"
+                                                    title="{{ 'borrar' }}">
                                                     <i class="tio-delete-outlined"></i>
                                                 </a>
                                                 <form action="{{ route('admin.refund.reason_delete', [$reason['id']]) }}"
@@ -196,14 +196,14 @@
         "use strict";
         $('.refund_mode').on('click', function (){
             Swal.fire({
-                title: '{{ translate('Are you sure?') }}' ,
+                title: '{{ '¿Está seguro?' }}' ,
                 text: 'Be careful before you turn on/off Refund Request mode',
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#377dff',
-                cancelButtonText: '{{translate('messages.no')}}',
-                confirmButtonText: '{{translate('messages.yes')}}',
+                cancelButtonText: '{{'No'}}',
+                confirmButtonText: '{{'Sí'}}',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {

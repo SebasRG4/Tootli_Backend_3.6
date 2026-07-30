@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.Delivery Man Preview'))
+@section('title', 'Vista previa del repartidor')
 
 @push('css_or_js')
 
@@ -22,14 +22,14 @@
             <div class="card-header border-0 py-2">
                 <div class="search--button-wrapper">
                     <h5 class="card-title">
-                        {{ translate('Total_Disbursements') }} <span class="badge badge-soft-secondary ml-2"
+                        {{ 'Desembolsos totales' }} <span class="badge badge-soft-secondary ml-2"
                             id="countItems">{{ $disbursements->total() }}</span>
                     </h5>
                     <form class="search-form">
                         <!-- Search -->
                         <div class="input--group input-group input-group-merge input-group-flush">
                             <input class="form-control" value="{{ request()?->search ?? null }}"
-                                placeholder="{{ translate('search_by_disbursement_id') }}" name="search">
+                                placeholder="{{ 'buscar por ID de desembolso' }}" name="search">
                             <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                         </div>
                         <!-- End Search -->
@@ -41,23 +41,23 @@
                                 "target": "#usersExportDropdown",
                                 "type": "css-animation"
                             }'>
-                            <i class="tio-download-to mr-1"></i> {{translate('messages.export')}}
+                            <i class="tio-download-to mr-1"></i> {{'exportar'}}
                         </a>
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                            <span class="dropdown-header">{{translate('messages.download_options')}}</span>
+                            <span class="dropdown-header">{{'opciones de descarga'}}</span>
                             <a id="export-excel" class="dropdown-item"
                                 href="{{route('admin.users.delivery-man.disbursement-export', ['id' => $deliveryMan->id, 'type' => 'excel', request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{asset('assets/admin')}}/svg/components/excel.svg" alt="Image Description">
-                                {{translate('messages.excel')}}
+                                {{'sobresalir'}}
                             </a>
                             <a id="export-csv" class="dropdown-item"
                                 href="{{route('admin.users.delivery-man.disbursement-export', ['id' => $deliveryMan->id, 'type' => 'excel', request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{asset('assets/admin')}}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
-                                {{translate('messages.csv')}}
+                                {{'csv'}}
                             </a>
                         </div>
                     </div>
@@ -70,14 +70,14 @@
                     <table class="table table-thead-bordered table-align-middle card-table">
                         <thead>
                             <tr>
-                                <th>{{ translate('sl') }}</th>
-                                <th>{{ translate('id') }}</th>
-                                <th>{{ translate('Disburse_Amount') }}</th>
-                                <th>{{ translate('Payment_method') }}</th>
-                                <th>{{ translate('status') }}</th>
+                                <th>{{ 'SL' }}</th>
+                                <th>{{ 'identificación' }}</th>
+                                <th>{{ 'Monto desembolsado' }}</th>
+                                <th>{{ 'Método de pago' }}</th>
+                                <th>{{ 'estado' }}</th>
                                 <th>
                                     <div class="text-center">
-                                        {{ translate('action') }}
+                                        {{ 'acción' }}
                                     </div>
                                 </th>
                             </tr>
@@ -96,7 +96,7 @@
                                     </td>
                                     <td>
                                         <div>
-                                            {{$disbursement?->withdraw_method?->method_name ?? translate('messages.N/A')}}
+                                            {{$disbursement?->withdraw_method?->method_name ?? 'N / A'}}
                                         </div>
                                     </td>
                                     <td>
@@ -121,13 +121,13 @@
                                                         <i class="tio-clear"></i>
                                                     </button>
                                                     <div class="w-100 text-center">
-                                                        <h2 class="mb-2">{{ translate('Payment_Information') }}</h2>
+                                                        <h2 class="mb-2">{{ 'Información de pago' }}</h2>
                                                         <div>
-                                                            <span class="mr-2">{{ translate('Disbursement_ID') }}</span>
+                                                            <span class="mr-2">{{ 'ID de desembolso' }}</span>
                                                             <strong>#{{$disbursement->disbursement_id}}</strong>
                                                         </div>
                                                         <div class="mt-2">
-                                                            <span class="mr-2">{{ translate('status') }}</span>
+                                                            <span class="mr-2">{{ 'estado' }}</span>
                                                             <span
                                                                 class="badge badge-soft-primary">{{$disbursement->status}}</span>
                                                         </div>
@@ -138,15 +138,15 @@
                                                         <div class="card-body">
                                                             <div class="d-flex flex-wrap payment-info-modal-info p-xl-4">
                                                                 <div class="item">
-                                                                    <h5>{{ translate('Delivery_Man_Information') }}</h5>
+                                                                    <h5>{{ 'Información del repartidor' }}</h5>
                                                                     <ul class="item-list">
                                                                         <li class="d-flex flex-wrap">
-                                                                            <span class="name">{{ translate('name') }}</span>
+                                                                            <span class="name">{{ 'nombre' }}</span>
                                                                             <span>:</span>
                                                                             <strong>{{$disbursement->delivery_man->f_name . ' ' . $disbursement->delivery_man->l_name}}</strong>
                                                                         </li>
                                                                         <li class="d-flex flex-wrap">
-                                                                            <span class="name">{{ translate('contact') }}</span>
+                                                                            <span class="name">{{ 'contacto' }}</span>
                                                                             <span>:</span>
                                                                             <strong>{{$disbursement?->delivery_man?->phone}}</strong>
                                                                         </li>
@@ -156,15 +156,15 @@
 
                                                                 </div>
                                                                 <div class="item w-100">
-                                                                    <h5>{{ translate('Account_Information') }}</h5>
+                                                                    <h5>{{ 'Información de la cuenta' }}</h5>
                                                                     <ul class="item-list">
                                                                         <li class="d-flex flex-wrap">
                                                                             <span
-                                                                                class="name">{{ translate('payment_method') }}</span>
-                                                                            <strong>{{$disbursement?->withdraw_method?->method_name ?? translate('messages.N/A')}}</strong>
+                                                                                class="name">{{ 'método de pago' }}</span>
+                                                                            <strong>{{$disbursement?->withdraw_method?->method_name ?? 'N / A'}}</strong>
                                                                         </li>
                                                                         <li class="d-flex flex-wrap">
-                                                                            <span class="name">{{ translate('amount') }}</span>
+                                                                            <span class="name">{{ 'cantidad' }}</span>
                                                                             <strong>{{\App\CentralLogics\Helpers::format_currency($disbursement['disbursement_amount'])}}</strong>
                                                                         </li>
                                                                         @if ($disbursement?->withdraw_method?->method_fields)
@@ -196,7 +196,7 @@
                         <div class="empty--data">
                             <img src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
                             <h5>
-                                {{translate('no_data_found')}}
+                                {{'no se encontraron datos'}}
                             </h5>
                         </div>
                     @endif

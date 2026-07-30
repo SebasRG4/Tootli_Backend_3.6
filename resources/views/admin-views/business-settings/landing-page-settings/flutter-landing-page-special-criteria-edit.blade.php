@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.flutter_web_landing_page'))
+@section('title','página de inicio web de aleteo')
 
 @section('content')
 
@@ -12,11 +12,11 @@
                     <img src="{{asset('assets/admin/img/flutter.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.flutter_web_landing_page') }}
+                    {{ 'página de inicio web de aleteo' }}
                 </span>
             </h1>
             <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#how-it-works">
-                <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
+                <strong class="mr-2">{{'¡Mira cómo funciona!'}}</strong>
                 <div>
                     <i class="tio-info-outined"></i>
                 </div>
@@ -36,7 +36,7 @@
             <li class="nav-item">
                 <a class="nav-link lang_link active"
                 href="#"
-                id="default-link">{{translate('messages.default')}}</a>
+                id="default-link">{{'por defecto'}}</a>
             </li>
             @foreach (json_decode($language) as $lang)
                 <li class="nav-item">
@@ -57,10 +57,10 @@
                             <div class="row g-3">
                                 @if ($language)
                                 <div class="col-sm-6 lang_form default-form">
-                                    <label for="title" class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_30_characters') }}">
+                                    <label for="title" class="form-label">{{'Título'}} ({{ 'por defecto' }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de los 30 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input type="text" id="title" maxlength="30" name="title[]" value="{{ $criteria?->getRawOriginal('title')??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                    <input type="text" id="title" maxlength="30" name="title[]" value="{{ $criteria?->getRawOriginal('title')??'' }}" class="form-control" placeholder="{{'título aquí...'}}">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                     @foreach(json_decode($language) as $lang)
@@ -76,26 +76,26 @@
                                     }
                                 ?>
                                     <div class="col-sm-6 d-none lang_form" id="{{$lang}}-form1">
-                                        <label for="title{{$lang}}" class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_30_characters') }}">
+                                        <label for="title{{$lang}}" class="form-label">{{'Título'}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de los 30 caracteres.' }}">
                                             <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                         </span></label>
-                                <input type="text" id="title{{$lang}}" maxlength="30" name="title[]" value="{{ $translate[$lang]['title']??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                <input type="text" id="title{{$lang}}" maxlength="30" name="title[]" value="{{ $translate[$lang]['title']??'' }}" class="form-control" placeholder="{{'título aquí...'}}">
                                     </div>
                                         <input type="hidden" name="lang[]" value="{{$lang}}">
                                     @endforeach
                                 @else
                                 <div class="col-sm-6">
-                                    <label for="title" class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_30_characters') }}">
+                                    <label for="title" class="form-label">{{'Título'}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Escribe el título dentro de los 30 caracteres.' }}">
                                                 <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input id="title" type="text"  maxlength="30" name="title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                    <input id="title" type="text"  maxlength="30" name="title[]" class="form-control" placeholder="{{'título aquí...'}}">
                                 </div>
                                     <input type="hidden" name="lang[]" value="default">
                                 @endif
                                 <div class="col-sm-6">
                                     <div>
 
-                                        <label class="form-label">{{translate('Criteria Icon/ Image')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Icon_ratio_(1:1)_and_max_size_2_MB.') }}">
+                                        <label class="form-label">{{'Icono/imagen de criterios'}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ 'Relación de iconos (1:1) y tamaño máximo 2 MB.' }}">
                                             <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                         </span></label>
                                     </div>
@@ -110,8 +110,8 @@
                                             @if (isset($criteria['image']))
                                                 <span id="fixed_header_image" class="remove_image_button remove-image"
                                                       data-id="fixed_header_image"
-                                                      data-title="{{translate('Warning!')}}"
-                                                      data-text="<p>{{translate('Are_you_sure_you_want_to_remove_this_image_?')}}</p>"
+                                                      data-title="{{'¡Advertencia!'}}"
+                                                      data-text="<p>{{'¿Estás seguro de que deseas eliminar esta imagen?'}}</p>"
                                                 > <i class="tio-clear"></i></span>
                                                 @endif
                                             </div>
@@ -119,8 +119,8 @@
                                 </div>
                             </div>
                             <div class="btn--container justify-content-end mt-20">
-                                <button type="reset" class="btn btn--reset mb-2">{{translate('Reset')}}</button>
-                                <button type="submit"   class="btn btn--primary mb-2">{{translate('messages.Update')}}</button>
+                                <button type="reset" class="btn btn--reset mb-2">{{'Reiniciar'}}</button>
+                                <button type="submit"   class="btn btn--primary mb-2">{{'Actualizar'}}</button>
                             </div>
                         </div>
                         </div>

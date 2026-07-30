@@ -11,7 +11,7 @@
         @if($order->store)
             {{Str::limit($order->store->name,25,'...')}}
         @else
-            <label class="badge badge-danger">{{ translate('messages.invalid') }}
+            <label class="badge badge-danger">{{ 'inválido' }}
         @endif
     </td>
     <td>
@@ -26,9 +26,9 @@
             <strong>{{ $order->customer['f_name'] . ' ' . $order->customer['l_name'] }}</strong>
         </a>
         @else
-            <label class="badge badge-danger">{{ translate('messages.invalid') }}
-                {{ translate('messages.customer') }}
-                {{ translate('messages.data') }}</label>
+            <label class="badge badge-danger">{{ 'inválido' }}
+                {{ 'Cliente' }}
+                {{ 'datos' }}</label>
         @endif
     </td>
     <td>
@@ -38,11 +38,11 @@
             </div>
             @if ($order->payment_status == 'paid')
                 <strong class="text-success">
-                    {{ translate('messages.paid') }}
+                    {{ 'pagado' }}
                 </strong>
             @else
                 <strong class="text-danger">
-                    {{ translate('messages.unpaid') }}
+                    {{ 'no pagado' }}
                 </strong>
             @endif
         </div>
@@ -69,17 +69,17 @@
             </div>
             @if ($order->payment_status == 'paid')
                 <strong class="text-success">
-                    {{ translate('messages.paid') }}
+                    {{ 'pagado' }}
                 </strong>
             @else
                 <strong class="text-danger">
-                    {{ translate('messages.unpaid') }}
+                    {{ 'no pagado' }}
                 </strong>
             @endif
         </div>
     </td>
     <td class="text-center mw--85px text-capitalize">
-        {{isset($order->transaction) ? $order->transaction->received_by : translate('messages.not_received_yet')}}
+        {{isset($order->transaction) ? $order->transaction->received_by : 'aún no recibido'}}
     </td>
     <td class="text-center mw--85px text-capitalize">
             {{ translate(str_replace('_', ' ', $order['payment_method'])) }}
@@ -87,39 +87,39 @@
     <td class="text-center mw--85px text-capitalize">
         @if($order['order_status']=='pending')
                 <span class="badge badge-soft-info">
-                  {{translate('messages.pending')}}
+                  {{'Pendiente'}}
                 </span>
             @elseif($order['order_status']=='confirmed')
                 <span class="badge badge-soft-info">
-                  {{translate('messages.confirmed')}}
+                  {{'confirmado'}}
                 </span>
             @elseif($order['order_status']=='processing')
                 <span class="badge badge-soft-warning">
-                  {{translate('messages.processing')}}
+                  {{'tratamiento'}}
                 </span>
             @elseif($order['order_status']=='picked_up')
                 <span class="badge badge-soft-warning">
-                  {{translate('messages.out_for_delivery')}}
+                  {{'En Camino de Entrega'}}
                 </span>
             @elseif($order['order_status']=='delivered')
                 <span class="badge badge-soft-success">
-                  {{translate('messages.delivered')}}
+                  {{'Entregado'}}
                 </span>
             @elseif($order['order_status']=='failed')
                 <span class="badge badge-soft-danger">
-                  {{translate('messages.payment_failed')}}
+                  {{'pago fallido'}}
                 </span>
             @elseif($order['order_status']=='handover')
                 <span class="badge badge-soft-danger">
-                  {{translate('messages.handover')}}
+                  {{'Entregar'}}
                 </span>
             @elseif($order['order_status']=='canceled')
                 <span class="badge badge-soft-danger">
-                  {{translate('messages.canceled')}}
+                  {{'Cancelado'}}
                 </span>
             @elseif($order['order_status']=='accepted')
                 <span class="badge badge-soft-danger">
-                  {{translate('messages.accepted')}}
+                  {{'aceptado'}}
                 </span>
             @else
                 <span class="badge badge-soft-danger">

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.account_transaction'))
+@section('title','transacción de cuenta')
 
 @section('content')
 <div class="content container-fluid">
@@ -10,7 +10,7 @@
                 <img src="{{asset('assets/admin/img/collect-cash.png')}}" class="w--22" alt="">
             </span>
             <span>
-                {{translate('messages.collect_cash_transaction')}}
+                {{'cobrar transacción en efectivo'}}
             </span>
         </h1>
     </div>
@@ -21,52 +21,52 @@
                 <div class="row g-3">
                     <div class="col-lg-4 col-sm-6">
                         <div class="form-group mb-0">
-                        <label class="form-label" for="type">{{translate('messages.collect_from')}}<span class="input-label-secondary"></span></label>
+                        <label class="form-label" for="type">{{'recoger de'}}<span class="input-label-secondary"></span></label>
                             <select name="type" id="type" class="form-control">
-                                <option value="deliveryman">{{translate('messages.deliveryman')}}</option>
-                                <option value="store">{{translate('messages.store')}}</option>
+                                <option value="deliveryman">{{'Repartidor'}}</option>
+                                <option value="store">{{'Negocio'}}</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-lg-4 col-sm-6">
                         <div class="form-group mb-0">
-                            <label class="form-label" for="store">{{translate('messages.store')}}<span class="input-label-secondary"></span></label>
-                            <select id="store" name="store_id" data-placeholder="{{translate('messages.select_store')}}" class="form-control" title="Select Restaurant" disabled>
+                            <label class="form-label" for="store">{{'Negocio'}}<span class="input-label-secondary"></span></label>
+                            <select id="store" name="store_id" data-placeholder="{{'seleccionar tienda'}}" class="form-control" title="Select Restaurant" disabled>
 
                             </select>
                         </div>
                     </div>
                     <div class="col-lg-4 col-sm-6">
                         <div class="form-group mb-0">
-                            <label class="form-label" for="deliveryman">{{translate('messages.deliveryman')}}<span class="input-label-secondary"></span></label>
-                            <select id="deliveryman" name="deliveryman_id" data-placeholder="{{translate('messages.select_deliveryman')}}" class="form-control" title="Select deliveryman">
+                            <label class="form-label" for="deliveryman">{{'Repartidor'}}<span class="input-label-secondary"></span></label>
+                            <select id="deliveryman" name="deliveryman_id" data-placeholder="{{'seleccionar repartidor'}}" class="form-control" title="Select deliveryman">
 
                             </select>
                         </div>
                     </div>
                     <div class="col-lg-4 col-sm-6">
                         <div class="form-group mb-0">
-                            <label class="form-label" for="method">{{translate('messages.payment_method')}}<span class="input-label-secondary"></span></label>
-                            <input class="form-control" type="text" name="method" id="method" required maxlength="191" placeholder="{{translate('messages.Ex_:_Card')}}">
+                            <label class="form-label" for="method">{{'método de pago'}}<span class="input-label-secondary"></span></label>
+                            <input class="form-control" type="text" name="method" id="method" required maxlength="191" placeholder="{{'Ej: tarjeta'}}">
                         </div>
                     </div>
                     <div class="col-lg-4 col-sm-6">
                         <div class="form-group mb-0">
-                            <label class="form-label" for="ref">{{translate('messages.reference')}}<span class="input-label-secondary"></span></label>
+                            <label class="form-label" for="ref">{{'referencia'}}<span class="input-label-secondary"></span></label>
                             <input  class="form-control" type="text" name="ref" id="ref" maxlength="191">
                         </div>
                     </div>
                     <div class="col-lg-4 col-sm-6">
                         <div class="form-group mb-0">
-                            <label class="form-label" for="amount">{{translate('messages.amount')}} {{ \App\CentralLogics\Helpers::currency_symbol() }}<span class="input-label-secondary" id="account_info"></span></label>
-                            <input class="form-control" type="number" min=".01" step="0.01" name="amount" id="amount" max="999999999999.99" placeholder="{{translate('messages.Ex_:_1000')}}">
+                            <label class="form-label" for="amount">{{'cantidad'}} {{ \App\CentralLogics\Helpers::currency_symbol() }}<span class="input-label-secondary" id="account_info"></span></label>
+                            <input class="form-control" type="number" min=".01" step="0.01" name="amount" id="amount" max="999999999999.99" placeholder="{{'Ej: 1000'}}">
                         </div>
                     </div>
                     <div class="col-lg-12">
                         <div class="btn--container justify-content-end">
-                            <button class="btn btn--reset" type="reset" id="reset_btn">{{translate('messages.reset')}}</button>
+                            <button class="btn btn--reset" type="reset" id="reset_btn">{{'reiniciar'}}</button>
 
-                            <button class="btn btn--primary" type="submit">{{translate('messages.collect_cash')}}</button>
+                            <button class="btn btn--primary" type="submit">{{'recoger dinero en efectivo'}}</button>
                         </div>
                     </div>
                 </div>
@@ -80,7 +80,7 @@
                     <div class="search--button-wrapper">
                         <h5 class="card-title d-flex gap-2 align-items-center">
                             <span>
-                                {{ translate('messages.transaction_history')}}
+                                {{ 'historial de transacciones'}}
                             </span>
                             <span class="badge badge-soft-secondary" id="itemCount">
                                 {{ $account_transaction->total() }}
@@ -89,13 +89,13 @@
 
                         <form class="search-form theme-style">
                             <div class="input-group input--group">
-                                <input id="datatableSearch" name="search" type="search" class="form-control h--40px" placeholder="{{translate('Ex:_reference,_Name')}}" value="{{ request()?->search ?? null}}" aria-label="{{translate('messages.search_here')}}">
+                                <input id="datatableSearch" name="search" type="search" class="form-control h--40px" placeholder="{{'Ej: referencia, nombre'}}" value="{{ request()?->search ?? null}}" aria-label="{{'buscar aquí'}}">
                                 <button type="submit" class="btn btn--secondary h--40px"><i class="tio-search"></i></button>
                             </div>
                         </form>
 
                         @if(request()->get('search'))
-                            <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                            <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{'reiniciar'}}</button>
                         @endif
 
 
@@ -105,23 +105,23 @@
                                         "target": "#usersExportDropdown",
                                         "type": "css-animation"
                                     }'>
-                                <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                                <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                             </a>
 
                             <div id="usersExportDropdown"
                                 class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                                <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                                <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                                 <a id="export-excel" class="dropdown-item" href="{{route('admin.transactions.account-transaction.export', ['type'=>'excel',request()->getQueryString()])}}">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
                                         src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                         alt="Image Description">
-                                    {{ translate('messages.excel') }}
+                                    {{ 'sobresalir' }}
                                 </a>
                                 <a id="export-csv" class="dropdown-item" href="{{route('admin.transactions.account-transaction.export', ['type'=>'csv',request()->getQueryString()])}}">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
                                         src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                         alt="Image Description">
-                                    .{{ translate('messages.csv') }}
+                                    .{{ 'csv' }}
                                 </a>
                             </div>
                         </div>
@@ -133,13 +133,13 @@
                             class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
                             <thead class="thead-light">
                                 <tr>
-                                    <th class="border-0">{{translate('SL')}}</th>
-                                    <th class="border-0">{{ translate('messages.collect_from') }}</th>
-                                    <th class="border-0">{{ translate('messages.type') }}</th>
-                                    <th class="border-0">{{translate('messages.received_at')}}</th>
-                                    <th class="border-0">{{translate('messages.amount')}}</th>
-                                    <th class="border-0">{{translate('messages.reference')}}</th>
-                                    <th class="border-0 text-center">{{translate('messages.action')}}</th>
+                                    <th class="border-0">{{'SL'}}</th>
+                                    <th class="border-0">{{ 'recoger de' }}</th>
+                                    <th class="border-0">{{ 'tipo' }}</th>
+                                    <th class="border-0">{{'recibido en'}}</th>
+                                    <th class="border-0">{{'cantidad'}}</th>
+                                    <th class="border-0">{{'referencia'}}</th>
+                                    <th class="border-0 text-center">{{'acción'}}</th>
                                 </tr>
                             </thead>
                             <tbody id="set-rows">
@@ -152,7 +152,7 @@
                                         @elseif($at->deliveryman)
                                         <a href="{{route('admin.users.delivery-man.preview',[$at->deliveryman->id])}}">{{ $at->deliveryman->f_name }} {{ $at->deliveryman->l_name }}</a>
                                         @else
-                                            {{translate('messages.not_found')}}
+                                            {{'extraviado'}}
                                         @endif
                                     </td>
                                     <td><label class="text-uppercase">{{translate($at['from_type'])}}</label></td>
@@ -170,9 +170,9 @@
                                             data-ref="{{translate($at['ref'])}}"
                                             data-amount="{{\App\CentralLogics\Helpers::format_currency($at['amount'])}}"
                                             data-date="{{\App\CentralLogics\Helpers::time_date_format($at->created_at)}}"
-                                            data-type="{{ $at->from_type == 'deliveryman' ?  translate('DeliveryMan_Info') : translate('Store_Info') }}"
+                                            data-type="{{ $at->from_type == 'deliveryman' ?  'Información del repartidor' : 'Información de la tienda' }}"
                                             data-phone="{{ $at->store ?  $at?->store?->phone : $at?->deliveryman?->phone  }}"
-                                            data-address="{{ $at->store ?  $at?->store?->address : $at?->deliveryman?->last_location?->location ?? translate('address_not_found') }}"
+                                            data-address="{{ $at->store ?  $at?->store?->address : $at?->deliveryman?->last_location?->location ?? 'dirección no encontrada' }}"
                                             data-latitude="{{ $at->store ?  $at?->store?->latitude : $at?->deliveryman?->last_location?->location ?? 0 }}"
                                             data-longitude="{{ $at->store ?  $at?->store?->longitude : $at?->deliveryman?->last_location?->location ?? 0 }}"
                                             data-name="{{ $at->store ?  $at?->store?->name : $at?->deliveryman?->f_name.' '.$at?->deliveryman?->l_name }}"
@@ -197,7 +197,7 @@
                 <div class="empty--data">
                     <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
-                        {{translate('no_data_found')}}
+                        {{'no se encontraron datos'}}
                     </h5>
                 </div>
                 @endif
@@ -217,21 +217,21 @@
         </div>
 
         <div class="d-flex flex-column align-items-center gap-1 mb-4">
-            <h3 class="mb-3">{{translate('account_Transaction_Information')}}</h3>
+            <h3 class="mb-3">{{'Información de la transacción de la cuenta'}}</h3>
             <div class="d-flex gap-2 align-items-center fs-12">
-                <span>{{translate('method')}}:</span>
+                <span>{{'método'}}:</span>
                 <span id="payment_method" class="text-dark font-semibold"></span>
             </div>
             <div class="d-flex gap-2 align-items-center fs-12">
-                <span>{{translate('amount')}}:</span>
+                <span>{{'cantidad'}}:</span>
                 <span class="text-dark font-bold" id="amount"> </span>
             </div>
             <div class="d-flex gap-2 align-items-center fs-12">
-                <span>{{translate('request_time')}}:</span>
+                <span>{{'tiempo de solicitud'}}:</span>
                 <span id="date"></span>
             </div>
             <div class="d-flex gap-2 align-items-center fs-12">
-                <span>{{translate('reference')}}:</span>
+                <span>{{'referencia'}}:</span>
                 <span id="ref"></span>
             </div>
         </div>
@@ -243,15 +243,15 @@
             <div class="card-body">
                 <div class="key-val-list d-flex flex-column gap-2" style="--min-width: 60px">
                     <div class="key-val-list-item d-flex gap-3">
-                        <span>{{translate('name')}}:</span>
+                        <span>{{'nombre'}}:</span>
                         <span id="name"></span>
                     </div>
                     <div class="key-val-list-item d-flex gap-3">
-                        <span>{{translate('phone')}}:</span>
+                        <span>{{'teléfono'}}:</span>
                         <a href="tel:" id="phone" class="text-dark"></a>
                     </div>
                     <div class="key-val-list-item d-flex gap-3">
-                        <span>{{translate('address')}}:</span>
+                        <span>{{'DIRECCIÓN'}}:</span>
                         <a id="address" target="_blank"></a>
                     </div>
                 </div>
@@ -345,7 +345,7 @@
             url: '{{url('/')}}/admin/store/get-account-data/'+this.value,
             dataType: 'json',
             success: function (data) {
-                $('#account_info').html('({{translate('messages.cash_in_hand')}}: '+data.cash_in_hand+' {{translate('messages.total_earning')}}: '+data.earning_balance+')');
+                $('#account_info').html('({{'efectivo en mano'}}: '+data.cash_in_hand+' {{'ganancia total'}}: '+data.earning_balance+')');
             },
         });
     })
@@ -355,7 +355,7 @@
             url: '{{url('/')}}/admin/users/delivery-man/get-account-data/'+this.value,
             dataType: 'json',
             success: function (data) {
-                $('#account_info').html('({{translate('messages.cash_in_hand')}}: '+data.cash_in_hand+' {{translate('messages.total_earning')}}: '+data.earning_balance+')');
+                $('#account_info').html('({{'efectivo en mano'}}: '+data.cash_in_hand+' {{'ganancia total'}}: '+data.earning_balance+')');
             },
         });
     })
@@ -383,7 +383,7 @@
                         });
                     }
                 } else {
-                    toastr.success('{{translate('messages.transaction_saved')}}', {
+                    toastr.success('{{'transacción guardada'}}', {
                         CloseButton: true,
                         ProgressBar: true
                     });

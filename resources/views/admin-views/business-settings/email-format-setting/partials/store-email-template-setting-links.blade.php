@@ -5,61 +5,61 @@
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/registration') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','registration']) }}">
-                    {{translate('New Store Registration')}}
+                    {{'Registro de nueva tienda'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/approve') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','approve']) }}">
-                    {{translate('New_Store_Approval')}}
+                    {{'Aprobación de nueva tienda'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/deny') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','deny']) }}">
-                    {{translate('New_Store_Rejection')}}
+                    {{'Rechazo de nueva tienda'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/suspend') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','suspend']) }}">
-                    {{translate('Account_Suspend')}}
+                    {{'Suspensión de cuenta'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/unsuspend') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','unsuspend']) }}">
-                    {{translate('Account_Unsuspend')}}
+                    {{'Cuenta suspendida'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/withdraw-approve') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','withdraw-approve']) }}">
-                    {{translate('Withdraw_Approval')}}
+                    {{'Retirar aprobación'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/withdraw-deny') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','withdraw-deny']) }}">
-                    {{translate('Withdraw_Rejection')}}
+                    {{'Retirar el rechazo'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/campaign-request') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','campaign-request']) }}">
-                    {{translate('Campaign Join Request')}}
+                    {{'Solicitud de unión a la campaña'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/campaign-approve') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','campaign-approve']) }}">
-                    {{translate('Campaign_Join_Approval')}}
+                    {{'Aprobación de unirse a la campaña'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/campaign-deny') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','campaign-deny']) }}">
-                    {{translate('Campaign_Join_Rejection')}}
+                    {{'Rechazo de unirse a la campaña'}}
                 </a>
             </li>
 
@@ -67,13 +67,13 @@
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/product-approved') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','product-approved']) }}">
-                    {{translate('Product_approved')}}
+                    {{'Producto aprobado'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/product-deny') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','product-deny']) }}">
-                    {{translate('Product_Rejection')}}
+                    {{'Rechazo de producto'}}
                 </a>
             </li>
             @endif
@@ -82,37 +82,37 @@
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/subscription-successful') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','subscription-successful']) }}">
-                    {{translate('Subscription_Successful')}}
+                    {{'Suscripción exitosa'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/subscription-renew') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','subscription-renew']) }}">
-                    {{translate('Subscription_Renew')}}
+                    {{'Renovación de suscripción'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/subscription-shift') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','subscription-shift']) }}">
-                    {{translate('Subscription_Shift')}}
+                    {{'Cambio de suscripción'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/subscription-cancel') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','subscription-cancel']) }}">
-                    {{translate('Subscription_Cancel')}}
+                    {{'Cancelar suscripción'}}
                 </a>
             </li>
             {{-- <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/subscription-deadline') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','subscription-deadline']) }}">
-                    {{translate('Subscription_Deadline_Warning')}}
+                    {{'Advertencia de fecha límite de suscripción'}}
                 </a>
             </li> --}}
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/subscription-plan_upadte') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','subscription-plan_upadte']) }}">
-                    {{translate('Subscription_Plan_Upadte')}}
+                    {{'Actualización del plan de suscripción'}}
                 </a>
             </li>
             @endif
@@ -120,31 +120,31 @@
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/advertisement-create') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','advertisement-create']) }}">
-                    {{translate('Advertisement_Create_By_Admin')}}
+                    {{'Anuncio creado por administrador'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/advertisement-approved') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','advertisement-approved']) }}">
-                    {{translate('Advertisement_Approval')}}
+                    {{'Aprobación del anuncio'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/advertisement-deny') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','advertisement-deny']) }}">
-                    {{translate('Advertisement_Deny')}}
+                    {{'Denegar anuncio'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/advertisement-resume') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','advertisement-resume']) }}">
-                    {{translate('Advertisement_Resume')}}
+                    {{'Currículum publicitario'}}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/advertisement-pause') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','advertisement-pause']) }}">
-                    {{translate('Advertisement_Pause')}}
+                    {{'Pausa publicitaria'}}
                 </a>
             </li>
         </ul>

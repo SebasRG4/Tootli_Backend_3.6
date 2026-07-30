@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', request()->query('is_abastos') == 1 ? 'Agregar Insumo de Tootli Abastos' : translate('messages.add_new_item'))
+@section('title', request()->query('is_abastos') == 1 ? 'Agregar Insumo de Tootli Abastos' : 'agregar nuevo elemento')
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -18,7 +18,7 @@
                     <img src="{{ asset('assets/admin/img/items.png') }}" class="w--22" alt="">
                 </span>
                 <span>
-                    {{ request()->query('is_abastos') == 1 ? 'Agregar Insumo de Tootli Abastos' : translate('messages.add_new_item') }}
+                    {{ request()->query('is_abastos') == 1 ? 'Agregar Insumo de Tootli Abastos' : 'agregar nuevo elemento' }}
                 </span>
             </h1>
             <div class=" d-flex flex-sm-nowrap flex-wrap  align-items-end">
@@ -26,7 +26,7 @@
                     <a href="{{ route('admin.item.product_gallery') }}"
                         class="btn btn-outline-primary btn--primary d-flex align-items-center bg-not-hover-primary-ash rounded-8 gap-2 mr-2">
                         <img src="{{ asset('assets/admin/img/product-gallery.png') }}" class="w--22" alt="">
-                        <span>{{ translate('Add Info From Gallery') }}</span>
+                        <span>{{ 'Agregar información desde la galería' }}</span>
                     </a>
                     <a href="{{ route('admin.item.bulk-import-text') }}"
                         class="btn btn-outline-info btn--info d-flex align-items-center bg-not-hover-info-ash rounded-8 gap-2">
@@ -37,7 +37,7 @@
 
                 @if (Config::get('module.current_module_type') == 'food')
                     <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center mb-3 foodModalShow" type="button">
-                        <strong class="mr-2">{{ translate('See_how_it_works!') }}</strong>
+                        <strong class="mr-2">{{ '¡Mira cómo funciona!' }}</strong>
                         <div>
                             <i class="tio-info-outined"></i>
                         </div>
@@ -45,7 +45,7 @@
                 @else
                     <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center mb-3 attributeModalShow"
                         type="button">
-                        <strong class="mr-2">{{ translate('See_how_it_works!') }}</strong>
+                        <strong class="mr-2">{{ '¡Mira cómo funciona!' }}</strong>
                         <div>
                             <i class="tio-info-outined"></i>
                         </div>
@@ -69,19 +69,19 @@
                             <div class="w-100 d-flex gap-3 flex-wrap">
                                 <div class="flex-grow-1 mx-auto overflow-x-auto scrollbar-primary">
                                     <label class="text-dark d-block mb-4 mb-xl-5">
-                                        {{ translate('messages.item_image') }}
-                                        <small class="">( {{ translate('messages.ratio') }} 1:1 )</small>
+                                        {{ 'imagen del artículo' }}
+                                        <small class="">( {{ 'relación' }} 1:1 )</small>
                                     </label>
                                     <div class="d-flex __gap-12px __new-coba overflow-x-auto pb-2" id="coba"></div>
                                 </div>
 
                                 <div class="flex-grow-1 mx-auto pb-2 flex-shrink-0">
                                     <label class="text-dark d-block mb-4 mb-xl-5">
-                                        {{ translate('messages.item_thumbnail') }}
+                                        {{ 'miniatura del elemento' }}
                                         @if (Config::get('module.current_module_type') == 'food')
-                                            <small class="">( {{ translate('messages.ratio') }} 1:1 )</small>
+                                            <small class="">( {{ 'relación' }} 1:1 )</small>
                                         @else
-                                            <small class="text-danger">* ( {{ translate('messages.ratio') }} 1:1 )</small>
+                                            <small class="text-danger">* ( {{ 'relación' }} 1:1 )</small>
                                         @endif
                                     </label>
                                     <label class="d-inline-block m-0 position-relative error-wrapper">
@@ -99,7 +99,7 @@
 
                                 <div class="flex-grow-1 mx-auto pb-2 flex-shrink-0" id="video_input_div">
                                     <label class="text-dark d-block mb-4 mb-xl-5">
-                                        {{ translate('Video (Opcional)') }}
+                                        {{ 'Vídeo (opcional)' }}
                                         <small class="text-danger">* (Máx 10MB)</small>
                                     </label>
                                     <label class="d-inline-block m-0 position-relative error-wrapper">
@@ -135,9 +135,9 @@
                 <div class="col-md-12">
                     <div class="btn--container justify-content-end">
                         <button type="reset" id="reset_btn"
-                            class="btn btn--reset">{{ translate('messages.reset') }}</button>
+                            class="btn btn--reset">{{ 'reiniciar' }}</button>
                         <button type="submit" id="submitButton"
-                            class="btn btn--primary">{{ translate('messages.submit') }}</button>
+                            class="btn btn--primary">{{ 'entregar' }}</button>
                     </div>
                 </div>
             </div>
@@ -179,7 +179,7 @@
             </div>
         </div>
     </div>
-    <span id="message-enter-choice-values" data-text="{{ translate('enter_choice_values') }}"></span>
+    <span id="message-enter-choice-values" data-text="{{ 'ingrese los valores de elección' }}"></span>
 @endsection
 
 
@@ -258,18 +258,18 @@
                                         <div class="d-flex align-items-center justify-content-between mb-3">
                                             <label class="form-check form--check">
                                                 <input id="options[` + count + `][required]" name="options[` + count + `][required]" class="form-check-input" type="checkbox">
-                                                <span class="form-check-label">{{ translate('Required') }}</span>
+                                                <span class="form-check-label">{{ 'Requerido' }}</span>
                                             </label>
                                             <div>
                                                 <button type="button" class="btn btn-danger btn-sm delete_input_button"
-                                                    title="{{ translate('Delete') }}">
+                                                    title="{{ 'Borrar' }}">
                                                     <i class="tio-add-to-trash"></i>
                                                 </button>
                                             </div>
                                         </div>
                                         <div class="row g-2">
                                             <div class="col-xl-4 col-lg-6">
-                                                <label for="">{{ translate('name') }}</label>
+                                                <label for="">{{ 'nombre' }}</label>
                                                 <input required name=options[` + count +
                     `][name] class="form-control new_option_name" type="text" data-count="` +
                     count +
@@ -278,7 +278,7 @@
 
                                             <div class="col-xl-4 col-lg-6">
                                                 <div>
-                                                    <label class="input-label text-capitalize d-flex align-items-center"><span class="line--limit-1">{{ translate('messages.selcetion_type') }} </span>
+                                                    <label class="input-label text-capitalize d-flex align-items-center"><span class="line--limit-1">{{ 'tipo de selección' }} </span>
                                                     </label>
                                                     <div class="resturant-type-group px-0">
                                                         <label class="form-check form--check mr-2 mr-md-4">
@@ -288,7 +288,7 @@
                     `" checked
                                                             >
                                                             <span class="form-check-label">
-                                                                {{ translate('Multiple Selection') }}
+                                                                {{ 'Selección múltiple' }}
                                 </span>
                             </label>
 
@@ -298,7 +298,7 @@
                     `"
                                                             >
                                                             <span class="form-check-label">
-                                                                {{ translate('Single Selection') }}
+                                                                {{ 'Selección única' }}
                                 </span>
                             </label>
                         </div>
@@ -307,12 +307,12 @@
                 <div class="col-xl-4 col-lg-6">
                     <div class="row g-2">
                         <div class="col-6">
-                            <label for="">{{ translate('Min') }}</label>
+                            <label for="">{{ 'mín.' }}</label>
                                                         <input id="min_max1_` + count + `" required  name="options[` +
                     count + `][min]" class="form-control" type="number" min="1">
                                                     </div>
                                                     <div class="col-6">
-                                                        <label for="">{{ translate('Max') }}</label>
+                                                        <label for="">{{ 'máx.' }}</label>
                                                         <input id="min_max2_` + count + `"   required name="options[` +
                     count + `][max]" class="form-control" type="number" min="1">
                                                     </div>
@@ -326,13 +326,13 @@
                     `">
                                                     <div class="row g-3 add_new_view_row_class mb-3">
                                                         <div class="col-md-4 col-sm-6">
-                                                            <label for="">{{ translate('Option_name') }}</label>
+                                                            <label for="">{{ 'Nombre de la opción' }}</label>
                                                             <input class="form-control" required type="text" name="options[` +
                     count +
                     `][values][0][label]" id="">
                                                         </div>
                                                         <div class="col-md-4 col-sm-6">
-                                                            <label for="">{{ translate('Additional_price') }}</label>
+                                                            <label for="">{{ 'Precio adicional' }}</label>
                                                             <input class="form-control" required type="number" min="0" step="0.01" name="options[` +
                     count + `][values][0][optionPrice]" id="">
                                                         </div>
@@ -341,7 +341,7 @@
                                                 <div class="row mt-3 p-3 mr-1 d-flex "  id="add_new_button_` + count +
                     `">
                                                     <button type="button" class="btn btn--primary btn-outline-primary add_new_row_button" data-count="` +
-                    count + `">{{ translate('Add_New_Option') }}</button>
+                    count + `">{{ 'Agregar nueva opción' }}</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -369,12 +369,12 @@
             let add_new_row_view = `
             <div class="row add_new_view_row_class mb-3 position-relative pt-3 pt-sm-0">
                 <div class="col-md-4 col-sm-5">
-                        <label for="">{{ translate('Option_name') }}</label>
+                        <label for="">{{ 'Nombre de la opción' }}</label>
                         <input class="form-control" required type="text" name="options[` + data + `][values][` +
                 countRow + `][label]" id="">
                     </div>
                     <div class="col-md-4 col-sm-5">
-                        <label for="">{{ translate('Additional_price') }}</label>
+                        <label for="">{{ 'Precio adicional' }}</label>
                         <input class="form-control"  required type="number" min="0" step="0.01" name="options[` +
                 data +
                 `][values][` + countRow + `][optionPrice]" id="">
@@ -383,7 +383,7 @@
                         <label class="d-none d-sm-block">&nbsp;</label>
                         <div class="mt-1">
                             <button type="button" class="btn btn-danger btn-sm deleteRow"
-                                title="{{ translate('Delete') }}">
+                                title="{{ 'Borrar' }}">
                                 <i class="tio-add-to-trash"></i>
                             </button>
                         </div>
@@ -621,7 +621,7 @@
 
         $('#choice_attributes').on('change', function() {
             if (module_id == 0) {
-                toastr.error('{{ translate('messages.select_a_module') }}', {
+                toastr.error('{{ 'seleccione un módulo' }}', {
                     CloseButton: true,
                     ProgressBar: true
                 });
@@ -633,7 +633,7 @@
             $.each($("#choice_attributes option:selected"), function() {
                 if ($(this).val().length > 50) {
                     toastr.error(
-                        '{{ translate('validation.max.string', ['attribute' => translate('messages.variation'), 'max' => '50']) }}', {
+                        '{{ 'validation.max.string\', [\'atributo\' => traducir(\'variación', 'max' => '50']) }}', {
                             CloseButton: true,
                             ProgressBar: true
                         });
@@ -647,7 +647,7 @@
             let n = name;
 
             $('#customer_choice_options').append(
-                `<div class="__choos-item"><div><input type="hidden" name="choice_no[]" value="${i}"><input type="text" class="form-control d-none" name="choice[]" value="${n}" placeholder="{{ translate('messages.choice_title') }}" readonly> <label class="form-label">${n}</label> </div><div><input type="text" class="form-control combination_update" name="choice_options_${i}[]" placeholder="{{ translate('messages.enter_choice_values') }}" data-role="tagsinput"></div></div>`
+                `<div class="__choos-item"><div><input type="hidden" name="choice_no[]" value="${i}"><input type="text" class="form-control d-none" name="choice[]" value="${n}" placeholder="{{ 'título de elección' }}" readonly> <label class="form-label">${n}</label> </div><div><input type="text" class="form-control combination_update" name="choice_options_${i}[]" placeholder="{{ 'ingrese los valores de elección' }}" data-role="tagsinput"></div></div>`
             );
             $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
         }
@@ -733,7 +733,7 @@
                             });
                         }
                     } else {
-                        toastr.success("{{ translate('messages.product_added_successfully') }}", {
+                        toastr.success("{{ 'producto agregado exitosamente' }}", {
                             CloseButton: true,
                             ProgressBar: true
                         });
@@ -771,13 +771,13 @@
                     }, 50);
                 },
                 onExtensionErr: function(index, file) {
-                    toastr.error("{{ translate('messages.please_only_input_png_or_jpg_type_file') }}", {
+                    toastr.error("{{ 'Por favor ingrese solo archivos tipo png o jpg' }}", {
                         CloseButton: true,
                         ProgressBar: true
                     });
                 },
                 onSizeErr: function(index, file) {
-                    toastr.error("{{ translate('messages.file_size_too_big') }}", {
+                    toastr.error("{{ 'tamaño de archivo demasiado grande' }}", {
                         CloseButton: true,
                         ProgressBar: true
                     });

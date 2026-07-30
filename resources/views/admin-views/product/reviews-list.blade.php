@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('Review List'))
+@section('title','Lista de revisión')
 
 @push('css_or_js')
 
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/items.png')}}" class="w--22" alt="">
                 </span>
                 <span>
-                    {{translate('messages.item_reviews')}}
+                    {{'reseñas de artículos'}}
                 </span>
             </h1>
         </div>
@@ -25,19 +25,19 @@
             <!-- Header -->
             <div class="card-header border-0 py-2">
                 <h5 class="card-title">
-                    {{translate('messages.Review_list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$reviews->total()}}</span></h5>
+                    {{'Lista de revisión'}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$reviews->total()}}</span></h5>
                 <div class="search--button-wrapper justify-content-end">
                     <form  class="search-form">
                         <!-- Search -->
                         <div class="input-group input--group">
-                            <input id="datatableSearch" name="search" value="{{ request()?->search ?? null }}" type="search" class="form-control min-height-45" placeholder="{{translate('ex_:_search_item_Name,_customer_Name,_Rating')}}" aria-label="{{translate('messages.search_here')}}">
+                            <input id="datatableSearch" name="search" value="{{ request()?->search ?? null }}" type="search" class="form-control min-height-45" placeholder="{{'ej: nombre del elemento de búsqueda, nombre del cliente, calificación'}}" aria-label="{{'buscar aquí'}}">
                             <button type="submit" class="btn btn--secondary min-height-45"><i class="tio-search"></i></button>
                         </div>
                         <!-- End Search -->
                     </form>
 
                     @if(request()->get('search'))
-                    <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                    <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{'reiniciar'}}</button>
                     @endif
 
                     <div class="hs-unfold mr-2">
@@ -46,24 +46,24 @@
                                     "target": "#usersExportDropdown",
                                     "type": "css-animation"
                                 }'>
-                            <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                            <i class="tio-download-to mr-1"></i> {{ 'exportar' }}
                         </a>
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
 
-                            <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                            <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                             <a id="export-excel" class="dropdown-item" href="{{ route('admin.item.reviews_export', ['type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
-                                {{ translate('messages.excel') }}
+                                {{ 'sobresalir' }}
                             </a>
                             <a id="export-csv" class="dropdown-item" href="{{ route('admin.item.reviews_export', ['type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
-                                .{{ translate('messages.csv') }}
+                                .{{ 'csv' }}
                             </a>
 
                         </div>
@@ -84,14 +84,14 @@
                                 }'>
                         <thead class="thead-light">
                         <tr>
-                            <th>{{ translate('messages.sl') }}</th>
-                            <th>{{ translate('messages.Review_Id') }}</th>
-                            <th class="w-10p">{{translate('messages.item')}}</th>
-                            <th class="w-20p">{{translate('messages.customer')}}</th>
-                            <th class="w-30p">{{translate('messages.review')}}</th>
-                            <th>{{translate('messages.date')}}</th>
-                            <th class="w-30p text-center">{{translate('messages.store_reply')}}</th>
-                            <th>{{translate('messages.action')}}</th>
+                            <th>{{ 'SL' }}</th>
+                            <th>{{ 'ID de revisión' }}</th>
+                            <th class="w-10p">{{'Producto'}}</th>
+                            <th class="w-20p">{{'Cliente'}}</th>
+                            <th class="w-30p">{{'revisar'}}</th>
+                            <th>{{'fecha'}}</th>
+                            <th class="w-30p text-center">{{'respuesta de la tienda'}}</th>
+                            <th>{{'acción'}}</th>
                         </tr>
                         </thead>
 
@@ -118,10 +118,10 @@
                                                     <h5 class="text-hover-primary mb-0">{{Str::limit($review->item['name'],20,'...')}}</h5>
                                                 </div>
                                             </a>
-                                            <a class="mr-5 text-body" href="{{route('admin.order.details',['id'=>$review->order_id])}}"> {{ translate('Order_ID') }}: {{$review->order_id}}</a>
+                                            <a class="mr-5 text-body" href="{{route('admin.order.details',['id'=>$review->order_id])}}"> {{ 'ID de pedido' }}: {{$review->order_id}}</a>
                                         </div>
                                     @else
-                                        {{translate('messages.Food_deleted!')}}
+                                        {{'¡Comida eliminada!'}}
                                     @endif
 
                                 </td>
@@ -134,7 +134,7 @@
                                             {{$review->customer?$review->customer->phone:""}}
                                         </p>
                                     @else
-                                        {{translate('messages.customer_not_found')}}
+                                        {{'cliente no encontrado'}}
                                     @endif
                                 </td>
                                 <td>
@@ -155,12 +155,12 @@
                                 </td>
                                 <td>
                                     <p class="text-wrap text-center" data-toggle="tooltip" data-placement="top"
-                                       data-original-title="{{ $review?->reply }}">{!! $review->reply?Str::limit($review->reply, 50, '...'): translate('messages.Not_replied_Yet') !!}</p>
+                                       data-original-title="{{ $review?->reply }}">{!! $review->reply?Str::limit($review->reply, 50, '...'): 'Aún no respondido' !!}</p>
                                 </td>
                                 <td>
                                     <label class="toggle-switch toggle-switch-sm" for="reviewCheckbox{{$review->id}}">
                                         <input type="checkbox"
-                                               data-id="status-{{ $review['id'] }}" data-message="{{ $review->status ? translate('messages.you_want_to_hide_this_review_for_customer') : translate('messages.you_want_to_show_this_review_for_customer') }}"
+                                               data-id="status-{{ $review['id'] }}" data-message="{{ $review->status ? 'Quieres ocultar esta reseña para el cliente.' : 'Quieres mostrar esta reseña al cliente.' }}"
                                                class="toggle-switch-input status_form_alert" id="reviewCheckbox{{ $review->id }}"
                                             {{ $review->status ? 'checked' : '' }}>
                                         <span class="toggle-switch-label">
@@ -178,7 +178,7 @@
                         <div class="empty--data">
                             <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                             <h5>
-                                {{translate('no_data_found')}}
+                                {{'no se encontraron datos'}}
                             </h5>
                         </div>
                     @endif
@@ -213,14 +213,14 @@
             const message = $(this).data('message');
             e.preventDefault();
             Swal.fire({
-                title: '{{ translate('messages.are_you_sure') }}',
+                title: '{{ '¿está seguro?' }}',
                 text: message,
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{translate('messages.no')}}',
-                confirmButtonText: '{{translate('messages.yes')}}',
+                cancelButtonText: '{{'No'}}',
+                confirmButtonText: '{{'Sí'}}',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {

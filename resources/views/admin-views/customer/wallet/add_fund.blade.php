@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.add_fund'))
+@section('title','agregar fondo')
 
 @push('css_or_js')
 
@@ -15,7 +15,7 @@
                     <img src="{{asset('assets/admin/img/money.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                     {{translate("messages.add_fund")}}
+                     {{'agregar fondo'}}
                 </span>
             </h1>
         </div>
@@ -27,39 +27,39 @@
                     <div class="row">
                         <div class="col-sm-6 col-12">
                             <div class="form-group">
-                                <label class="input-label" for="customer">{{translate('messages.customer')}}
+                                <label class="input-label" for="customer">{{'Cliente'}}
                                     <span class="form-label-secondary text-danger"
                                           data-toggle="tooltip" data-placement="right"
-                                          data-original-title="{{ translate('messages.Required.')}}"> *
+                                          data-original-title="{{ 'Requerido.'}}"> *
                             </span>
                                 </label>
-                                <select id='customer' name="customer_id" data-placeholder="{{translate('messages.select_customer_by_name_or_phone')}}" class="js-data-example-ajax form-control" required>
+                                <select id='customer' name="customer_id" data-placeholder="{{'seleccionar cliente por nombre o teléfono'}}" class="js-data-example-ajax form-control" required>
 
                                 </select>
                             </div>
                         </div>
                         <div class="col-sm-6 col-12">
                             <div class="form-group">
-                                <label class="input-label" for="amount">{{translate("messages.amount")}} {{ \App\CentralLogics\Helpers::currency_symbol() }}
+                                <label class="input-label" for="amount">{{'cantidad'}} {{ \App\CentralLogics\Helpers::currency_symbol() }}
                                     <span class="form-label-secondary text-danger"
                                           data-toggle="tooltip" data-placement="right"
-                                          data-original-title="{{ translate('messages.Required.')}}"> *
+                                          data-original-title="{{ 'Requerido.'}}"> *
                             </span>
                                 </label>
-                                <input type="number" placeholder="{{translate('Ex: 50')}}" class="form-control" name="amount" min="0" id="amount" step=".01" required>
+                                <input type="number" placeholder="{{'Ej: 50'}}" class="form-control" name="amount" min="0" id="amount" step=".01" required>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label class="input-label" for="reference">{{translate('messages.reference')}} <small>({{translate('messages.optional')}})</small></label>
+                                <label class="input-label" for="reference">{{'referencia'}} <small>({{'opcional'}})</small></label>
 
-                                <input type="text" placeholder="{{ translate('Ex: 123') }}" class="form-control" name="reference" id="reference">
+                                <input type="text" placeholder="{{ 'Ej: 123' }}" class="form-control" name="reference" id="reference">
                             </div>
                         </div>
                     </div>
                     <div class="btn--container justify-content-end">
-                        <button type="reset" id="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                        <button type="submit" id="submit" class="btn btn--primary">{{translate('messages.submit')}}</button>
+                        <button type="reset" id="reset" class="btn btn--reset">{{'reiniciar'}}</button>
+                        <button type="submit" id="submit" class="btn btn--primary">{{'entregar'}}</button>
                     </div>
                 </form>
             </div>
@@ -108,14 +108,14 @@
             var formData = new FormData(this);
 
             Swal.fire({
-                title: '{{translate('messages.are_you_sure')}}',
-                text: '{{translate('messages.you_want_to_add_fund')}} '+$('#amount').val()+' {{\App\CentralLogics\Helpers::currency_code().' '.translate('messages.to')}} '+$('#customer option:selected').text()+'{{translate('messages.to_wallet')}}',
+                title: '{{'¿está seguro?'}}',
+                text: '{{'quieres agregar fondos'}} '+$('#amount').val()+' {{\App\CentralLogics\Helpers::currency_code().' '.'a'}} '+$('#customer option:selected').text()+'{{'a la billetera'}}',
                 type: 'info',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: 'primary',
-                cancelButtonText: '{{translate('messages.no')}}',
-                confirmButtonText: '{{translate('messages.add_to_fund')}}',
+                cancelButtonText: '{{'No'}}',
+                confirmButtonText: '{{'agregar al fondo'}}',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
@@ -143,7 +143,7 @@
                                 }
                             } else {
                                 $('#loading').hide();
-                                toastr.success('{{translate("messages.fund_added_successfully")}}', {
+                                toastr.success('{{'fondo agregado exitosamente'}}', {
                                     CloseButton: true,
                                     ProgressBar: true
                                 });

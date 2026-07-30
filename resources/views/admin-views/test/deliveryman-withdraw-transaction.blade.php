@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.new_page'))
+@section('title','nueva pagina')
 
 @push('css_or_js')
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -39,22 +39,22 @@
                                 "target": "#usersExportDropdown",
                                 "type": "css-animation"
                             }'>
-                        <i class="tio-download-to mr-1 text-title"></i> {{ translate('messages.export') }}
+                        <i class="tio-download-to mr-1 text-title"></i> {{ 'exportar' }}
                     </a>
                     <div id="usersExportDropdown"
                         class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                        <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                        <span class="dropdown-header">{{ 'opciones de descarga' }}</span>
                         <a id="export-excel" class="dropdown-item" href="{{route('admin.business-settings.module.export', ['type'=>'excel',request()->getQueryString()])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
                                 src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                 alt="Image Description">
-                            {{ translate('messages.excel') }}
+                            {{ 'sobresalir' }}
                         </a>
                         <a id="export-csv" class="dropdown-item" href="{{route('admin.business-settings.module.export', ['type'=>'csv',request()->getQueryString()])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
                                 src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                 alt="Image Description">
-                            .{{ translate('messages.csv') }}
+                            .{{ 'csv' }}
                         </a>
                     </div>
                 </div>
@@ -306,8 +306,8 @@
             </div>
         </div>
     <div class="offcanvas-footer py-3 px-sm-4 px-3 d-flex align-items-center justify-content-center gap-3">
-        <button type="reset" class="btn w-100 bg--soft-danger-10 text-danger fs-14 fw-medium h--40px">{{ translate('messages.Deny') }}</button>
-        <button type="submit" class="btn w-100 btn--primary h--40px">{{ translate('messages.Approve') }}</button>
+        <button type="reset" class="btn w-100 bg--soft-danger-10 text-danger fs-14 fw-medium h--40px">{{ 'Denegar' }}</button>
+        <button type="submit" class="btn w-100 btn--primary h--40px">{{ 'Aprobar' }}</button>
     </div>
     </form>
 </div>
