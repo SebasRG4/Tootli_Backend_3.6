@@ -802,8 +802,62 @@ label {
 .rounded-lg { border-radius: var(--t-radius-md) !important; }
 .rounded-pill { border-radius: var(--t-radius-pill) !important; }
 
-/* ── Dark Green Legacy Classes ──────────────────────────────── */
+/* ── Dark Green Legacy Classes — Force White ────────────────── */
+/* Override bg--005555 from style.css (background-color: #005555) with max specificity */
+aside .bg--005555,
+.navbar-vertical-aside .bg--005555,
+.navbar-vertical-content.bg--005555,
+div.navbar-vertical-content.bg--005555,
+#navbar-vertical-content.bg--005555,
 .bg--005555,
 .bg-tootli-green {
-    background-color: var(--t-white) !important;
+    background-color: #ffffff !important;
 }
+
+/* Also target the navbar-vertical-content wrapper directly */
+.navbar-vertical-content,
+#navbar-vertical-content,
+aside .navbar-vertical-content,
+.navbar-vertical-aside .navbar-vertical-container {
+    background-color: #ffffff !important;
+}
+
+/* Search bar inside sidebar — white bg, green border */
+.navbar-vertical-content .search--form-group,
+.navbar-vertical-content .sidebar--search-form .search--form-group,
+aside .search--form-group,
+.bg--005555 .search--form-group {
+    background-color: #ffffff !important;
+    border: 1.5px solid #006837 !important;
+    border-radius: 50px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0.3rem 0.75rem !important;
+    margin: 0.75rem 1rem !important;
+}
+
+.navbar-vertical-content .search--form-group .btn i,
+.navbar-vertical-content .sidebar--search-form .btn i,
+aside .search--form-group .btn i,
+.bg--005555 .search--form-group .btn i {
+    color: #006837 !important;
+}
+
+.navbar-vertical-content .search--form-group input,
+aside .search--form-group input,
+.bg--005555 .search--form-group input {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #0f172a !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    padding: 0.25rem 0.5rem !important;
+}
+
+.navbar-vertical-content .search--form-group input::placeholder,
+aside .search--form-group input::placeholder,
+.bg--005555 .search--form-group input::placeholder {
+    color: #64748b !important;
+}
+
