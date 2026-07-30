@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <?php
-
     $log_email_succ = session()->get('log_email_succ');
 ?>
 
@@ -15,8 +14,11 @@
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{asset('favicon.ico')}}">
 
-    <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <!-- CSS Implementing Plugins -->
     <link rel="stylesheet" href="{{asset('assets/admin')}}/css/vendor.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" crossorigin="anonymous">
@@ -26,114 +28,350 @@
     <link rel="stylesheet" href="{{asset('assets/admin/css/theme.minc619.css?v=1.0')}}">
     <link rel="stylesheet" href="{{asset('assets/admin/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('assets/admin')}}/css/toastr.css">
+
+    <style>
+        :root {
+            --primary-green: #174c3d;
+            --primary-green-hover: #133f33;
+            --bg-page: #f4f6f5;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-dark);
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .new-admin-login-layout {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            justify-content: space-between;
+        }
+
+        /* Top Header */
+        .admin-login-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem 3rem;
+            background-color: transparent;
+        }
+
+        .admin-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            text-decoration: none !important;
+        }
+
+        .admin-brand img {
+            height: 38px;
+            width: auto;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .admin-brand-text {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--primary-green);
+            letter-spacing: -0.02em;
+        }
+
+        .admin-header-badge {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        /* Main Form Container */
+        .admin-login-body {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+        }
+
+        .admin-login-card {
+            width: 100%;
+            max-width: 440px;
+            margin: 0 auto;
+        }
+
+        .admin-section-tag {
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: #1a5e4b;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .admin-login-title {
+            font-size: 3.25rem;
+            font-weight: 800;
+            line-height: 1.1;
+            color: #0d1727;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.03em;
+        }
+
+        .admin-login-subtitle {
+            font-size: 1.05rem;
+            color: #64748b;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        /* Form Controls */
+        .form-group-custom {
+            margin-bottom: 1.25rem;
+        }
+
+        .custom-input-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 0.4rem;
+            display: block;
+        }
+
+        .custom-input-label .required-star {
+            color: #ef4444;
+            margin-left: 2px;
+        }
+
+        .input-pill-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-pill {
+            width: 100%;
+            height: 52px;
+            border-radius: 50px !important;
+            border: 1.5px solid #e2e8f0;
+            background-color: #ffffff;
+            padding: 0.75rem 3rem 0.75rem 1.35rem;
+            font-size: 0.98rem;
+            color: #0f172a;
+            outline: none;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+        }
+
+        .input-pill:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 4px rgba(23, 76, 61, 0.1);
+            background-color: #ffffff;
+        }
+
+        .input-pill-icon {
+            position: absolute;
+            right: 1.25rem;
+            color: #64748b;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+        }
+
+        /* Checkbox & Forgot Link */
+        .form-options-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1.25rem;
+            margin-bottom: 1.75rem;
+            font-size: 0.9rem;
+        }
+
+        .remember-checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #475569;
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+            margin-bottom: 0;
+        }
+
+        .remember-checkbox-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            border: 1.5px solid #cbd5e1;
+            accent-color: var(--primary-green);
+            cursor: pointer;
+        }
+
+        .forgot-password-link {
+            color: #1a5e4b;
+            font-weight: 600;
+            text-decoration: none !important;
+            transition: color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .forgot-password-link:hover {
+            color: #123e32;
+            text-decoration: underline !important;
+        }
+
+        /* Submit Button */
+        .btn-pill-submit {
+            width: 100%;
+            height: 52px;
+            border-radius: 50px;
+            background-color: #174c3d;
+            color: #ffffff;
+            font-size: 1.05rem;
+            font-weight: 700;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 10px 20px -5px rgba(23, 76, 61, 0.35);
+        }
+
+        .btn-pill-submit:hover {
+            background-color: #133f33;
+            transform: translateY(-1px);
+            box-shadow: 0 12px 24px -5px rgba(23, 76, 61, 0.45);
+            color: #ffffff;
+        }
+
+        .btn-pill-submit:active {
+            transform: translateY(0);
+        }
+
+        /* Footer */
+        .admin-login-footer {
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        @media (max-width: 640px) {
+            .admin-login-header {
+                padding: 1rem 1.5rem;
+            }
+
+            .admin-login-title {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
-<!-- ========== MAIN CONTENT ========== -->
-<main id="content" role="main" class="main">
-    <div class="auth-wrapper">
-        <div class="auth-wrapper-left">
-            <div class="auth-left-cont">
-                @php($store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first())
-                <img class="onerror-image"  data-onerror-image="{{asset('assets/admin/img/favicon.png')}}"
-                src="{{\App\CentralLogics\Helpers::get_full_url('business', $store_logo?->value?? '', $store_logo?->storage[0]?->value ?? 'public','favicon')}}"  alt="public/img">
-                <h2 class="title">{{translate('Your')}} <span class="d-block">{{translate('All Service')}}</span> <strong class="text--039D55">{{translate('in one field')}}....</strong></h2>
-            </div>
-        </div>
-        <div class="auth-wrapper-right">
-            <label class="badge badge-soft-success __login-badge">
-                {{translate('messages.software_version')}} : {{env('SOFTWARE_VERSION')}}
-            </label>
+<div class="new-admin-login-layout">
+    <!-- Top Header -->
+    <header class="admin-login-header">
+        <a href="#" class="admin-brand">
+            @php($store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first())
+            <img class="onerror-image" data-onerror-image="{{asset('assets/admin/img/favicon.png')}}"
+                 src="{{\App\CentralLogics\Helpers::get_full_url('business', $store_logo?->value?? '', $store_logo?->storage[0]?->value ?? 'public','favicon')}}" alt="Tootli">
+            <span class="admin-brand-text">{{ \App\Models\BusinessSetting::where(['key' => 'business_name'])->first()?->value ?? 'Tootli' }}</span>
+        </a>
+        <span class="admin-header-badge">{{ translate(ucfirst($role ?? 'Admin')) }}</span>
+    </header>
 
-            <!-- Card -->
-            <div class="auth-wrapper-form">
-                <!-- Form -->
-                <form class="" action="{{route('login_post')}}" method="post" id="form-id">
-                    @csrf
-                    <input type="hidden" name="role" value="{{  $role ?? null }}">
-                    <div class="auth-header">
-                        <div class="mb-5">
-                            <h2 class="title">{{ translate($role) }} {{translate('messages.login')}}</h2>
-                            <div>{{translate('messages.welcome_back_login_to_your_panel') }}.</div>
-                        </div>
+    <!-- Main Content -->
+    <main class="admin-login-body">
+        <div class="admin-login-card">
+            <span class="admin-section-tag">{{ translate(strtoupper($role ?? 'admin')) }} ACCESS</span>
+            <h1 class="admin-login-title">{{ translate('Log in') }}</h1>
+            <p class="admin-login-subtitle">{{ translate('Use your admin account to access the dashboard.') }}</p>
+
+            <form action="{{route('login_post')}}" method="post" id="form-id" class="js-validate">
+                @csrf
+                <input type="hidden" name="role" value="{{ $role ?? null }}">
+
+                <!-- Email Input -->
+                <div class="form-group-custom js-form-message">
+                    <label class="custom-input-label" for="signinSrEmail">
+                        {{translate('Email')}} <span class="required-star">*</span>
+                    </label>
+                    <div class="input-pill-wrapper">
+                        <input type="email" class="input-pill" name="email" id="signinSrEmail"
+                               tabindex="1" placeholder="admin@demo.com" value="{{ $email ?? '' }}" aria-label="admin@demo.com"
+                               required data-msg="{{ translate('Please_enter_a_valid_email_address.') }}">
+                        <span class="input-pill-icon"><i class="bi bi-key-fill"></i></span>
                     </div>
+                </div>
 
-                    <!-- Form Group -->
-                    <div class="js-form-message form-group">
-                        <label class="input-label text-capitalize" for="signinSrEmail">{{translate('messages.your_email')}}</label>
-
-                        <input type="email" class="form-control form-control-lg" name="email" id="signinSrEmail"
-                                tabindex="1" placeholder="email@address.com" value="{{ $email ?? '' }}" aria-label="email@address.com"
-                                required data-msg="{{ translate('Please_enter_a_valid_email_address.') }}">
+                <!-- Password Input -->
+                <div class="form-group-custom js-form-message">
+                    <label class="custom-input-label" for="signupSrPassword">
+                        {{translate('Password')}} <span class="required-star">*</span>
+                    </label>
+                    <div class="input-pill-wrapper">
+                        <input type="password" class="input-pill js-toggle-password"
+                               name="password" id="signupSrPassword" placeholder="••••••••" value="{{ $password ?? '' }}"
+                               aria-label="••••••••" required
+                               data-msg="{{translate('messages.invalid_password_warning')}}"
+                               data-hs-toggle-password-options='{
+                                   "target": "#changePassTarget",
+                                   "defaultClass": "bi-eye-slash-fill",
+                                   "showClass": "bi-eye-fill",
+                                   "classChangeTarget": "#changePassIcon"
+                               }'>
+                        <button type="button" id="changePassTarget" class="input-pill-icon">
+                            <i id="changePassIcon" class="bi bi-eye-slash-fill"></i>
+                        </button>
                     </div>
-                    <!-- End Form Group -->
+                </div>
 
-                    <!-- Form Group -->
-                    <div class="js-form-message form-group mb-2">
-                        <label class="input-label" for="signupSrPassword" tabindex="0">
-                            <span class="d-flex justify-content-between align-items-center">
-                                {{translate('messages.password')}}
-                            </span>
-                        </label>
+                <!-- Options Row -->
+                <div class="form-options-row">
+                    <label class="remember-checkbox-label" for="termsCheckbox">
+                        <input type="checkbox" id="termsCheckbox" name="remember" {{ $password ? 'checked' : '' }}>
+                        <span>{{translate('Remember me')}}</span>
+                    </label>
 
-                        <div class="input-group input-group-merge">
-                            <input type="password" class="js-toggle-password form-control form-control-lg"
-                                    name="password" id="signupSrPassword" placeholder="{{translate('messages.password_length_placeholder',['length'=>'6+'])}}" value="{{ $password ?? '' }}"
-                                    aria-label="{{translate('messages.password_length_placeholder',['length'=>'6+'])}}" required
-                                    data-msg="{{translate('messages.invalid_password_warning')}}"
-                                    data-hs-toggle-password-options='{
-                                                "target": "#changePassTarget",
-                                    "defaultClass": "tio-hidden-outlined",
-                                    "showClass": "tio-visible-outlined",
-                                    "classChangeTarget": "#changePassIcon"
-                                    }'>
-                            <div id="changePassTarget" class="input-group-append">
-                                <a class="input-group-text" href="javascript:">
-                                    <i id="changePassIcon" class="tio-visible-outlined"></i>
-                                </a>
-                            </div>
-                        </div>
+                    <div id="forget-password" style="display: {{ $role == 'admin' ? '' : 'none' }};">
+                        <span type="button" data-toggle="modal" class="forgot-password-link" data-target="#forgetPassModal">{{ translate('Forgot password?') }}</span>
                     </div>
-                    <!-- End Form Group -->
-
-                    <div class="d-flex justify-content-between mt-5">
-                        <!-- Checkbox -->
-                        <div class="form-group">
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="termsCheckbox" {{ $password ? 'checked' : '' }}
-                                        name="remember">
-                                <label class="custom-control-label text-muted" for="termsCheckbox">
-                                    {{translate('messages.remember_me')}}
-                                </label>
-                            </div>
-                        </div>
-                        <!-- End Checkbox -->
-                        <!-- forget password -->
-                        <div class="form-group" id="forget-password" style="display: {{ $role == 'admin' ? '' : 'none' }};">
-                            <div class="custom-control">
-                                <span type="button" data-toggle="modal" class="text-primary" data-target="#forgetPassModal">{{ translate('Forget Password') }}?</span>
-                            </div>
-                        </div>
-                        <!-- End forget password -->
-                        <div class="form-group" id="forget-password1" style="display: {{ $role == 'vendor' ? '' : 'none' }};">
-                            <div class="custom-control">
-                                <span type="button" data-toggle="modal" class="text-primary" data-target="#forgetPassModal1">{{ translate('messages.Forget Password') }}?</span>
-                            </div>
-                        </div>
-                        <!-- End forget password -->
+                    <div id="forget-password1" style="display: {{ $role == 'vendor' ? '' : 'none' }};">
+                        <span type="button" data-toggle="modal" class="forgot-password-link" data-target="#forgetPassModal1">{{ translate('messages.Forget Password') }}?</span>
                     </div>
+                </div>
 
-                    <!-- Honeypot field - hidden from users, bots will fill it -->
-                    <div style="position: absolute; left: -9999px; opacity: 0; height: 0; width: 0; overflow: hidden;" aria-hidden="true">
-                        <input type="text" name="website" tabindex="-1" autocomplete="off" placeholder="Leave this field empty">
-                    </div>
+                <!-- Honeypot anti-bot field -->
+                <div style="position: absolute; left: -9999px; opacity: 0; height: 0; width: 0; overflow: hidden;" aria-hidden="true">
+                    <input type="text" name="website" tabindex="-1" autocomplete="off" placeholder="Leave this field empty">
+                </div>
 
-                    <button type="submit" class="btn btn-lg btn-block btn--primary mt-xxl-3" id="signInBtn">{{translate('messages.login')}}</button>
-                </form>
-                <!-- End Form -->
-                @if(env('APP_MODE') == 'demo')
+                <!-- Submit Button -->
+                <button type="submit" class="btn-pill-submit" id="signInBtn">
+                    <span>{{translate('Log in')}}</span>
+                    <i class="bi bi-arrow-right"></i>
+                </button>
+            </form>
+
+            @if(env('APP_MODE') == 'demo')
                 @if (isset($role) && $role == 'admin')
-                <div class="auto-fill-data-copy">
+                <div class="auto-fill-data-copy mt-4 p-3 bg-white rounded border">
                     <div class="d-flex flex-wrap align-items-center justify-content-between">
                         <div>
                             <span class="d-block"><strong>Email</strong> : admin@admin.com</span>
@@ -147,7 +385,7 @@
                 </div>
                 @endif
                 @if (isset($role) && $role == 'vendor')
-                <div class="auto-fill-data-copy">
+                <div class="auto-fill-data-copy mt-4 p-3 bg-white rounded border">
                     <div class="d-flex flex-wrap align-items-center justify-content-between">
                         <div>
                             <span class="d-block"><strong>Email</strong> : test.restaurant@gmail.com</span>
@@ -160,14 +398,17 @@
                     </div>
                 </div>
                 @endif
-                @endif
-            </div>
-            <!-- End Card -->
-
+            @endif
         </div>
-    </div>
-</main>
-<!-- ========== END MAIN CONTENT ========== -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="admin-login-footer">
+        © {{ date('Y') }} {{ \App\Models\BusinessSetting::where(['key' => 'business_name'])->first()?->value ?? 'Tootli' }}. {{ translate('All rights reserved.') }}
+    </footer>
+</div>
+
+<!-- Modals -->
 <div class="modal fade" id="forgetPassModal">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -179,7 +420,6 @@
       <div class="modal-body">
         <div class="forget-pass-content">
             <img src="{{asset('assets/admin/img/send-mail.svg')}}" alt="">
-            <!-- After Succeed -->
             <h4>
                 {{ translate('Send_Mail_to_Your_Email') }} ?
             </h4>
@@ -194,6 +434,7 @@
     </div>
   </div>
 </div>
+
 <div class="modal fade" id="forgetPassModal1">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -205,14 +446,11 @@
       <div class="modal-body">
         <div class="forget-pass-content">
             <img src="{{asset('assets/admin/img/send-mail.svg')}}" alt="">
-            <!-- After Succeed -->
-            <!-- <img src="{{asset('assets/admin/img/sent-mail.svg')}}" alt=""> -->
             <h4>
                 {{ translate('messages.Send_Mail_to_Your_Email') }} ?
             </h4>
             <form class="" action="{{ route('vendor-reset-password') }}" method="post">
                 @csrf
-
                 <input type="email" name="email" id="" class="form-control" placeholder="{{ translate('messages.plesae_enter_your_registerd_email') }}" required>
                 <button type="submit" class="btn btn-lg btn-block btn--primary mt-3">{{ translate('messages.Send Mail') }}</button>
             </form>
@@ -221,6 +459,7 @@
     </div>
   </div>
 </div>
+
 <div class="modal fade" id="successMailModal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -231,7 +470,6 @@
         </div>
         <div class="modal-body">
           <div class="forget-pass-content">
-              <!-- After Succeed -->
               <img src="{{asset('assets/admin/img/sent-mail.svg')}}" alt="">
               <h4>
                 {{ translate('A mail has been sent to your registered email') }}!
@@ -246,10 +484,10 @@
         </div>
       </div>
     </div>
-  </div>
+</div>
+
 <!-- JS Implementing Plugins -->
 <script src="{{asset('assets/admin')}}/js/vendor.min.js"></script>
-
 <!-- JS Front -->
 <script src="{{asset('assets/admin')}}/js/theme.min.js"></script>
 <script src="{{asset('assets/admin')}}/js/toastr.js"></script>
@@ -276,56 +514,48 @@
 
 <script>
     "use strict";
-    // $("#forget-password").hide();
-        $("#role-select").change(function() {
-            var selectValue = $(this).val();
-            if (selectValue == "admin") {
+    $("#role-select").change(function() {
+        var selectValue = $(this).val();
+        if (selectValue == "admin") {
             $("#forget-password").show();
             $("#forget-password1").hide();
-            } else if(selectValue == "vendor") {
+        } else if(selectValue == "vendor") {
             $("#forget-password").hide();
             $("#forget-password1").show();
-            }
-            else {
+        } else {
             $("#forget-password").hide();
             $("#forget-password1").hide();
-            }
-        });
+        }
+    });
 
     $(document).on('ready', function () {
-        // INITIALIZATION OF SHOW PASSWORD
-        // =======================================================
         $('.js-toggle-password').each(function () {
             new HSTogglePassword(this).init()
         });
 
-        // INITIALIZATION OF FORM VALIDATION
-        // =======================================================
         $('.js-validate').each(function () {
             $.HSCore.components.HSValidation.init($(this));
         });
     });
 
-
-$(document).on('click','.reloadCaptcha', function(){
-    $.ajax({
-        url: "{{ route('reload-captcha') }}",
-        type: "GET",
-        dataType: 'json',
-        beforeSend: function () {
-            $('#loading').show()
-            $('.capcha-spin').addClass('active')
-        },
-        success: function(data) {
-            $('#reload-captcha').html(data.view);
-        },
-        complete: function () {
-            $('#loading').hide()
-            $('.capcha-spin').removeClass('active')
-        }
+    $(document).on('click','.reloadCaptcha', function(){
+        $.ajax({
+            url: "{{ route('reload-captcha') }}",
+            type: "GET",
+            dataType: 'json',
+            beforeSend: function () {
+                $('#loading').show()
+                $('.capcha-spin').addClass('active')
+            },
+            success: function(data) {
+                $('#reload-captcha').html(data.view);
+            },
+            complete: function () {
+                $('#loading').hide()
+                $('.capcha-spin').removeClass('active')
+            }
+        });
     });
-});
-
 
     $(document).ready(function() {
         $('.onerror-image').on('error', function() {
@@ -334,10 +564,9 @@ $(document).on('click','.reloadCaptcha', function(){
         });
     });
 </script>
+
 @if(isset($recaptcha) && $recaptcha['status'] == 1)
     <script src="https://www.google.com/recaptcha/api.js?render={{$recaptcha['site_key']}}"></script>
-@endif
-@if(isset($recaptcha) && $recaptcha['status'] == 1)
     <script>
         $(document).ready(function() {
             $('#signInBtn').click(function (e) {
@@ -350,7 +579,6 @@ $(document).on('click','.reloadCaptcha', function(){
                     toastr.error('Invalid recaptcha key provided. Please check the recaptcha configuration.');
                     $('#reload-captcha').removeClass('d-none');
                     $('#set_default_captcha_value').val('1');
-
                     return;
                 }
                 grecaptcha.ready(function () {
@@ -375,9 +603,6 @@ $(document).on('click','.reloadCaptcha', function(){
         });
     </script>
 @endif
-{{-- recaptcha scripts end --}}
-
-
 
 @if(env('APP_MODE')=='demo')
     <script>
@@ -401,7 +626,6 @@ $(document).on('click','.reloadCaptcha', function(){
     </script>
 @endif
 
-<!-- IE Support -->
 <script>
     if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) document.write('<script src="{{asset('assets/admin')}}/vendor/babel-polyfill/polyfill.min.js"><\/script>');
 </script>
