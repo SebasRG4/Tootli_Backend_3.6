@@ -38,7 +38,7 @@
                 <form autocomplete="off" class="sidebar--search-form">
                     <div class="search--form-group">
                         <button type="button" class="btn"><i class="tio-search"></i></button>
-                        <input autocomplete="false" type="text" name="qq" class="form-control form--control" placeholder="{{ 'Menú de búsqueda...' }}" id="search">
+                        <input autocomplete="false" type="text" name="qq" class="form-control form--control" placeholder="{{ 'Búsqueda' }}" id="search">
                         <div id="search-suggestions" class="flex-wrap mt-1"></div>
                     </div>
                 </form>

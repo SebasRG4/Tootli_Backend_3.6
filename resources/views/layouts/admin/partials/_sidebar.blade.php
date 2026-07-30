@@ -45,7 +45,7 @@
                     <div class="search--form-group">
                         <button type="button" class="btn"><i class="tio-search"></i></button>
                         <input type="text" class="form-control form--control"
-                            placeholder="{{ 'Menú de búsqueda...' }}" id="search-sidebar-menu">
+                            placeholder="{{ 'Búsqueda' }}" id="search-sidebar-menu">
                     </div>
                 </form>
                 <ul class="navbar-nav navbar-nav-lg nav-tabs">
