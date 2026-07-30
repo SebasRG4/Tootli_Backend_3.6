@@ -440,3 +440,84 @@ header.navbar-fixed {
     background: #cbd5e1;
     border-radius: 10px;
 }
+
+/* High Contrast Sidebar Improvements for Dark & Light Themes */
+aside.navbar-vertical-aside,
+.navbar-vertical-aside {
+    background-color: #004d28 !important; /* Elegant dark green background */
+}
+
+/* Sidebar Section Headers */
+.navbar-vertical-aside .nav-subtitle,
+.navbar-vertical-aside span.nav-subtitle,
+.navbar-vertical-aside .nav-subtitle-span {
+    color: #a7f3d0 !important; /* Bright mint green for uppercase headers */
+    font-size: 0.75rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    opacity: 0.95 !important;
+}
+
+/* Sidebar Menu Links and Texts */
+.navbar-vertical-aside .nav-link,
+.navbar-vertical-aside .nav-link span,
+.navbar-vertical-aside .nav-text,
+.navbar-vertical-aside .text-truncate,
+.navbar-vertical-aside a {
+    color: #ffffff !important; /* Ultra crisp white text */
+    font-weight: 600 !important;
+    font-size: 0.92rem !important;
+}
+
+/* Sidebar Icons */
+.navbar-vertical-aside .nav-icon,
+.navbar-vertical-aside .nav-indicator-icon,
+.navbar-vertical-aside i,
+.navbar-vertical-aside svg {
+    color: #34d399 !important; /* Bright emerald icon */
+    fill: #34d399 !important;
+    font-size: 1.15rem !important;
+    opacity: 1 !important;
+}
+
+/* Sidebar Search Box */
+.navbar-vertical-aside .js-navbar-vertical-aside-menu-search,
+.navbar-vertical-aside .search--form-group input,
+.navbar-vertical-aside input.form-control {
+    background-color: rgba(255, 255, 255, 0.12) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 50px !important;
+}
+
+.navbar-vertical-aside input::placeholder {
+    color: rgba(255, 255, 255, 0.75) !important;
+}
+
+/* Active & Hover Item Pills */
+.navbar-vertical-aside .nav-item.active > .nav-link,
+.navbar-vertical-aside .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.22) !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.navbar-vertical-aside .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.12) !important;
+    color: #ffffff !important;
+}
+
+/* Submenu items */
+.navbar-vertical-aside .nav-sub .nav-link,
+.navbar-vertical-aside .nav-sub-link {
+    color: #e2e8f0 !important;
+}
+
+.navbar-vertical-aside .nav-sub .nav-link:hover,
+.navbar-vertical-aside .nav-sub-link.active {
+    color: #34d399 !important;
+}
