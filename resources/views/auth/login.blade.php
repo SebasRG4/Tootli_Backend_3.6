@@ -31,8 +31,8 @@
 
     <style>
         :root {
-            --primary-green: #174c3d;
-            --primary-green-hover: #133f33;
+            --primary-green: #006837;
+            --primary-green-hover: #00502a;
             --bg-page: #f4f6f5;
             --text-dark: #0f172a;
             --text-muted: #64748b;
@@ -108,7 +108,7 @@
             font-size: 0.8rem;
             font-weight: 700;
             letter-spacing: 0.1em;
-            color: #1a5e4b;
+            color: var(--primary-green);
             text-transform: uppercase;
             margin-bottom: 0.5rem;
             display: block;
@@ -171,7 +171,7 @@
 
         .input-pill:focus {
             border-color: var(--primary-green);
-            box-shadow: 0 0 0 4px rgba(23, 76, 61, 0.1);
+            box-shadow: 0 0 0 4px rgba(0, 104, 55, 0.1);
             background-color: #ffffff;
         }
 
@@ -220,7 +220,7 @@
         }
 
         .forgot-password-link {
-            color: #1a5e4b;
+            color: var(--primary-green);
             font-weight: 600;
             text-decoration: none !important;
             transition: color 0.2s ease;
@@ -228,7 +228,7 @@
         }
 
         .forgot-password-link:hover {
-            color: #123e32;
+            color: var(--primary-green-hover);
             text-decoration: underline !important;
         }
 
@@ -237,7 +237,7 @@
             width: 100%;
             height: 52px;
             border-radius: 50px;
-            background-color: #174c3d;
+            background-color: var(--primary-green);
             color: #ffffff;
             font-size: 1.05rem;
             font-weight: 700;
@@ -248,13 +248,13 @@
             gap: 0.5rem;
             cursor: pointer;
             transition: all 0.2s ease-in-out;
-            box-shadow: 0 10px 20px -5px rgba(23, 76, 61, 0.35);
+            box-shadow: 0 10px 20px -5px rgba(0, 104, 55, 0.35);
         }
 
         .btn-pill-submit:hover {
-            background-color: #133f33;
+            background-color: var(--primary-green-hover);
             transform: translateY(-1px);
-            box-shadow: 0 12px 24px -5px rgba(23, 76, 61, 0.45);
+            box-shadow: 0 12px 24px -5px rgba(0, 104, 55, 0.45);
             color: #ffffff;
         }
 
