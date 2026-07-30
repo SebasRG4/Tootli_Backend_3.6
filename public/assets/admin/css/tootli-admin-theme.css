@@ -295,6 +295,51 @@ header .__nav-link.active {
     opacity: 0.7 !important;
 }
 
+/* Header Search Button (Ctrl+K trigger) */
+#modalOpener,
+button#modalOpener {
+    background-color: var(--t-white) !important;
+    border: 1.5px solid var(--t-green) !important;
+    border-radius: var(--t-radius-pill) !important;
+    color: var(--t-green) !important;
+    padding: 0.45rem 1rem !important;
+    transition: all 0.15s ease !important;
+    cursor: pointer !important;
+}
+
+#modalOpener:hover,
+button#modalOpener:hover {
+    background-color: var(--t-green-light) !important;
+    border-color: var(--t-green-hover) !important;
+}
+
+#modalOpener .text-muted,
+button#modalOpener .text-muted,
+#modalOpener span,
+button#modalOpener span {
+    color: var(--t-green) !important;
+    font-weight: 600 !important;
+    font-size: 0.875rem !important;
+}
+
+#modalOpener .ctrlplusk,
+button#modalOpener .ctrlplusk {
+    background-color: var(--t-green-light) !important;
+    color: var(--t-green) !important;
+    border-color: var(--t-border) !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    padding: 0.1rem 0.4rem !important;
+    border-radius: 5px !important;
+}
+
+#modalOpener img,
+button#modalOpener img {
+    filter: invert(28%) sepia(73%) saturate(1200%) hue-rotate(110deg) brightness(60%) !important;
+    width: 16px !important;
+    height: 16px !important;
+}
+
 /* Header action buttons (icon circles) */
 .btn-ghost-secondary,
 .navbar .btn-icon.btn-ghost-secondary {
