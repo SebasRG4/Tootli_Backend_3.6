@@ -20,8 +20,8 @@
 <div class="mx-auto text-center">
     @if ($textPosition == 'top')
         <p class="mb-2 fs-12 gray-dark">
-            {{ translate(($imageFormat) . '. Less Than ' . $maxSize . 'MB')}} <span
-                class="font-medium text-title">{{ '(\' . $tamaño .'')}}</span>
+            {{ $imageFormat }}. Menos de {{ $maxSize }}MB <span
+                class="font-medium text-title">({{ $size }})</span>
         </p>
     @endif
     <div class="upload-file_custom {{ $aspectRatio }} h-100px">
