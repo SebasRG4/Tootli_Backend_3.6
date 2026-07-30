@@ -36,8 +36,8 @@
                     <div class="business-notes">
                         <h6><img src="{{asset('assets/admin/img/notes.png')}}" alt=""> {{'Nota'}}</h6>
                         <div>
-                            {{translate('Without configuring this section map functionality will not work properly. Thus the whole
-                                 system will not work as it planned')}}
+                            {{'Sin configurar esta sección, la funcionalidad del mapa no funcionará correctamente. Así el conjunto
+                                 El sistema no funcionará como estaba planeado.'}}
                         </div>
                     </div>
                 </div>
