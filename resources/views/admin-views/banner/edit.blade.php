@@ -285,7 +285,12 @@
                     }
                 },
                 error: function (xhr) {
-                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    if (xhr.status === 413) {
+                        toastr.error('La imagen es demasiado pesada. Por favor, sube una imagen más ligera (máx. 2MB).', {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
+                    } else if (xhr.responseJSON && xhr.responseJSON.errors) {
                         for (var i = 0; i < xhr.responseJSON.errors.length; i++) {
                             toastr.error(xhr.responseJSON.errors[i].message, {
                                 CloseButton: true,
@@ -295,7 +300,7 @@
                     } else if (xhr.responseJSON && xhr.responseJSON.message) {
                         toastr.error(xhr.responseJSON.message);
                     } else {
-                        toastr.error('Error al actualizar el banner');
+                        toastr.error('Error al actualizar el banner. Es posible que el archivo sea muy pesado o exista un problema de conexión.');
                     }
                 }
             });
