@@ -455,8 +455,8 @@ class ProductLogic
             return collect();
         }
 
-        // Get up to 40 candidate items from the same store (excluding the current one).
-        $candidates = Item::active()->visibleInCustomerApp()
+        // Get up to 40 candidate items from the same store (excluding the current one) that share the same category.
+        $query = Item::active()->visibleInCustomerApp()
             ->whereHas('module.zones', function ($query) use ($zone_id) {
                 $query->whereIn('zones.id', json_decode($zone_id, true));
             })
@@ -468,12 +468,17 @@ class ProductLogic
                 })->whereIn('zone_id', json_decode($zone_id, true));
             })
             ->where('store_id', $product->store_id)
-            ->where('id', '!=', $product->id)
-            ->limit(40)
-            ->get();
+            ->where('id', '!=', $product->id);
 
+        $candidates = (clone $query)->where('category_id', $product->category_id)->limit(40)->get();
+
+        // Fallback: if no items in the same category are found, get any item from the store
         if ($candidates->isEmpty()) {
-            return collect();
+            $candidates = $query->limit(40)->get();
+            
+            if ($candidates->isEmpty()) {
+                return collect();
+            }
         }
 
         return $candidates->take(10);
