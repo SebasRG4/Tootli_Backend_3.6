@@ -280,8 +280,22 @@
                             ProgressBar: true
                         });
                         setTimeout(function () {
-                            location.href = "{{url()->full()}}";
+                            location.href = "{{route('admin.banner.add-new')}}";
                         }, 2000);
+                    }
+                },
+                error: function (xhr) {
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        for (var i = 0; i < xhr.responseJSON.errors.length; i++) {
+                            toastr.error(xhr.responseJSON.errors[i].message, {
+                                CloseButton: true,
+                                ProgressBar: true
+                            });
+                        }
+                    } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                        toastr.error(xhr.responseJSON.message);
+                    } else {
+                        toastr.error('Error al actualizar el banner');
                     }
                 }
             });
