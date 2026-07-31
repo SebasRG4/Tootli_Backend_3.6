@@ -1197,7 +1197,7 @@ class ProductLogic
         return $item;
     }
 
-    public static function cart_suggest_products($zone_id, $store_id, $limit = null, $offset = null, $type = 'all', $recomended = false)
+    public static function cart_suggest_products($zone_id, $store_id, $limit = null, $offset = null, $type = 'all', $recomended = false, $category_ids = null)
     {
         $data = [];
         $total_size = 0;
@@ -1214,6 +1214,10 @@ class ProductLogic
                 });
 
             $paginator = (clone $query)
+                ->when($category_ids, function ($q) use ($category_ids) {
+                    $cat_array = is_array($category_ids) ? $category_ids : explode(',', $category_ids);
+                    return $q->whereIn('category_id', $cat_array);
+                })
                 ->when($recomended, function ($query) {
                     $query->Recommended();
                 })
@@ -1222,6 +1226,19 @@ class ProductLogic
                 ->paginate($limit, ['*'], 'page', $offset);
             $data = $paginator->items();
 
+            // Fallback 1: If category filtering returned nothing, ignore categories but keep recommended
+            if ($category_ids && count($data) === 0) {
+                $paginator = (clone $query)
+                    ->when($recomended, function ($query) {
+                        $query->Recommended();
+                    })
+                    ->withCount('reviews')
+                    ->orderBy('reviews_count', 'desc')
+                    ->paginate($limit, ['*'], 'page', $offset);
+                $data = $paginator->items();
+            }
+
+            // Fallback 2: If recommended returned nothing, just fetch any popular items from the store
             if ($recomended && count($data) === 0) {
                 $paginator = $query
                     ->withCount('reviews')
@@ -1240,6 +1257,10 @@ class ProductLogic
             });
 
             $paginator = (clone $query)
+                ->when($category_ids, function ($q) use ($category_ids) {
+                    $cat_array = is_array($category_ids) ? $category_ids : explode(',', $category_ids);
+                    return $q->whereIn('category_id', $cat_array);
+                })
                 ->when($recomended, function ($query) {
                     $query->Recommended();
                 })
@@ -1248,6 +1269,19 @@ class ProductLogic
                 ->limit(50)->get();
             $data = $paginator;
 
+            // Fallback 1: If category filtering returned nothing, ignore categories but keep recommended
+            if ($category_ids && count($data) === 0) {
+                $paginator = (clone $query)
+                    ->when($recomended, function ($query) {
+                        $query->Recommended();
+                    })
+                    ->withCount('reviews')
+                    ->orderBy('reviews_count', 'desc')
+                    ->limit(50)->get();
+                $data = $paginator;
+            }
+
+            // Fallback 2: If recommended returned nothing, just fetch any popular items from the store
             if ($recomended && count($data) === 0) {
                 $paginator = $query
                     ->withCount('reviews')

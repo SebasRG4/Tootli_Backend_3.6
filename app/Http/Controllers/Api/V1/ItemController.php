@@ -539,8 +539,9 @@ class ItemController extends Controller
 
         $type = $request->query('type', 'all');
         $recommended = $request->query('recommended');
+        $category_ids = $request->query('category_ids');
 
-        $items = ProductLogic::cart_suggest_products($zone_id, $request['store_id'], $request['limit'], $request['offset'], $type, $recommended);
+        $items = ProductLogic::cart_suggest_products($zone_id, $request['store_id'], $request['limit'], $request['offset'], $type, $recommended, $category_ids);
         $items['items'] = Helpers::product_data_formatting($items['items'], true, false, app()->getLocale());
         return response()->json($items, 200);
     }
