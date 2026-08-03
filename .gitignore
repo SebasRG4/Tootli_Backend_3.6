@@ -13,6 +13,7 @@
 
 # Environment files
 .env
+.env.docker
 .env.backup
 .env.*.local
 *.bak.*
