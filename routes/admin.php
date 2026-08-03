@@ -842,6 +842,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
         Route::group(['prefix' => 'dispatch', 'as' => 'dispatch.'], function () {
             Route::get('/', 'DashboardController@dispatch_dashboard')->name('dashboard');
+            Route::get('/dashboard', 'DashboardController@dispatch_dashboard')->name('dashboard_alt');
             Route::group(['middleware' => ['module:order']], function () {
                 Route::get('list/{module?}/{status?}', 'OrderController@dispatch_list')->name('list');
                 Route::get('parcel/list/{module?}/{status?}', 'ParcelController@parcel_dispatch_list')->name('parcel.list');

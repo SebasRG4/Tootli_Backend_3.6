@@ -163,62 +163,92 @@ class DashboardController extends Controller
             'zone_id' => $request['zone_id'] ?? 'all',
             'module_id' => Config::get('module.current_module_id'),
             'statistics_type' => $request['statistics_type'] ?? 'overall',
-            'user_overview' => $request['user_overview'] ?? 'overall',
-            'commission_overview' => $request['commission_overview'] ?? 'this_year',
-            'business_overview' => $request['business_overview'] ?? 'overall',
         ];
 
         session()->put('dash_params', $params);
-        $data = self::dashboard_data($request);
-        $total_sell = $data['total_sell'];
-        $commission = $data['commission'];
-        $delivery_commission = $data['delivery_commission'];
-        $label = $data['label'];
-        $customers = User::zone($params['zone_id'])->take(2)->get();
 
-        $delivery_man = DeliveryMan::with('last_location')->when(is_numeric($params['zone_id']), function ($q) use ($params) {
-            return $q->where('zone_id', $params['zone_id']);
-        })
-            ->Zonewise()
-            ->limit(2)->get('image');
+        // 1. Total Vendido
+        $total_sold = Order::whereIn('order_status', ['delivered', 'completed'])->sum('order_amount');
 
+        // 2. Total Ganado para el Admin (Comisiones + Ganancias)
+        $admin_earnings = OrderTransaction::sum('admin_commission') + OrderTransaction::sum('admin_expense');
+        if ($admin_earnings == 0) {
+            $admin_earnings = Order::whereIn('order_status', ['delivered', 'completed'])->sum('admin_charge');
+        }
+
+        // 3. Órdenes Activas en Curso
+        $active_orders = Order::whereIn('order_status', ['pending', 'accepted', 'processing', 'confirmed', 'handover', 'picked_up'])->count();
+
+        // 4. Tickets Abiertos (Soporte Feature)
+        $open_tickets = 0;
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('support_tickets')) {
+                $open_tickets = DB::table('support_tickets')->where('status', 'open')->count();
+            }
+        } catch (\Exception $e) {
+            $open_tickets = 0;
+        }
+
+        // 5. Gráfica: Ventas por Módulo (Abastos, Comida, Paquetería, Taxi, etc.)
+        $module_sales_raw = Order::whereIn('order_status', ['delivered', 'completed'])
+            ->whereNotNull('module_id')
+            ->select('module_id', DB::raw('SUM(order_amount) as total_amount'), DB::raw('COUNT(id) as total_orders'))
+            ->groupBy('module_id')
+            ->orderByDesc('total_amount')
+            ->get();
+
+        $module_ids = $module_sales_raw->pluck('module_id')->toArray();
+        $modules_map = \App\Models\Module::whereIn('id', $module_ids)->get()->keyBy('id');
+
+        $module_sales = [];
+        foreach ($module_sales_raw as $item) {
+            $mod = $modules_map->get($item->module_id);
+            $module_sales[] = [
+                'name' => $mod ? $mod->module_name : 'Módulo #' . $item->module_id,
+                'type' => $mod ? $mod->module_type : 'general',
+                'amount' => (float)$item->total_amount,
+                'count' => $item->total_orders,
+            ];
+        }
+
+        // 6. Gráfica: Ventas por Día (Últimos 7 Días)
+        $daily_sales = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::now()->subDays($i);
+            $dayName = ucfirst($date->locale('es')->isoFormat('dddd D/MM'));
+            $amount = Order::whereIn('order_status', ['delivered', 'completed'])
+                ->whereDate('created_at', $date->format('Y-m-d'))
+                ->sum('order_amount');
+            $count = Order::whereDate('created_at', $date->format('Y-m-d'))->count();
+
+            $daily_sales[] = [
+                'day' => $dayName,
+                'amount' => (float)$amount,
+                'count' => $count,
+                'date' => $date->format('Y-m-d'),
+            ];
+        }
+
+        // Métricas de repartidores
         $active_deliveryman = DeliveryMan::when(is_numeric($params['zone_id']), function ($q) use ($params) {
             return $q->where('zone_id', $params['zone_id']);
-        })
-            ->Zonewise()->where('active', 1)->count();
-
-        $inactive_deliveryman = DeliveryMan::when(is_numeric($params['zone_id']), function ($q) use ($params) {
-            return $q->where('zone_id', $params['zone_id']);
-        })
-            ->Zonewise()->where('application_status', 'approved')->where('active', 0)->count();
-
-        $suspend_deliveryman = DeliveryMan::when(is_numeric($params['zone_id']), function ($q) use ($params) {
-            return $q->where('zone_id', $params['zone_id']);
-        })
-            ->Zonewise()->where('application_status', 'approved')->where('status', 0)->count();
-
-        $unavailable_deliveryman = DeliveryMan::when(is_numeric($params['zone_id']), function ($q) use ($params) {
-            return $q->where('zone_id', $params['zone_id']);
-        })
-            ->Zonewise()->where('active', 1)->Unavailable()->count();
+        })->Zonewise()->where('active', 1)->count();
 
         $available_deliveryman = DeliveryMan::when(is_numeric($params['zone_id']), function ($q) use ($params) {
             return $q->where('zone_id', $params['zone_id']);
-        })
-            ->Zonewise()->where('active', 1)->Available()->count();
+        })->Zonewise()->where('active', 1)->Available()->count();
 
-        $newly_joined_deliveryman = DeliveryMan::when(is_numeric($params['zone_id']), function ($q) use ($params) {
-            return $q->where('zone_id', $params['zone_id']);
-        })
-            ->Zonewise()->whereDate('created_at', '>=', now()->subDays(30)->format('Y-m-d'))->count();
-        $deliveryMen = DeliveryMan::when(is_numeric($params['zone_id']), function ($q) use ($params) {
-            return $q->where('zone_id', $params['zone_id']);
-        })->zonewise()->available()->active()->get();
-
-        $deliveryMen = Helpers::deliverymen_list_formatting($deliveryMen);
-
-        $module_type = Config::get('module.current_module_type');
-        return view("admin-views.dashboard-{$module_type}", compact('data', 'active_deliveryman', 'deliveryMen', 'unavailable_deliveryman', 'available_deliveryman', 'inactive_deliveryman', 'newly_joined_deliveryman', 'delivery_man', 'total_sell', 'commission', 'delivery_commission', 'label', 'params', 'module_type', 'suspend_deliveryman'));
+        return view('admin-views.dispatch.dashboard', compact(
+            'total_sold',
+            'admin_earnings',
+            'active_orders',
+            'open_tickets',
+            'module_sales',
+            'daily_sales',
+            'active_deliveryman',
+            'available_deliveryman',
+            'params'
+        ));
     }
 
     public function dashboard(Request $request)
