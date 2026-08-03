@@ -171,27 +171,9 @@ class DashboardController extends Controller
         $total_sold = Order::whereIn('order_status', ['delivered', 'completed'])->sum('order_amount');
 
         // 2. Total Ganado para el Admin (Día, Semana, Mes)
-        $admin_earnings_today = OrderTransaction::whereDate('created_at', now()->format('Y-m-d'))->sum(DB::raw('admin_commission + admin_expense'));
-        if ($admin_earnings_today == 0) {
-            $admin_earnings_today = Order::whereIn('order_status', ['delivered', 'completed'])
-                ->whereDate('created_at', now()->format('Y-m-d'))
-                ->sum('admin_charge');
-        }
-
-        $admin_earnings_week = OrderTransaction::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->sum(DB::raw('admin_commission + admin_expense'));
-        if ($admin_earnings_week == 0) {
-            $admin_earnings_week = Order::whereIn('order_status', ['delivered', 'completed'])
-                ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
-                ->sum('admin_charge');
-        }
-
-        $admin_earnings_month = OrderTransaction::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->sum(DB::raw('admin_commission + admin_expense'));
-        if ($admin_earnings_month == 0) {
-            $admin_earnings_month = Order::whereIn('order_status', ['delivered', 'completed'])
-                ->whereMonth('created_at', now()->month)
-                ->whereYear('created_at', now()->year)
-                ->sum('admin_charge');
-        }
+        $admin_earnings_today = OrderTransaction::whereDate('created_at', now()->format('Y-m-d'))->sum('admin_commission');
+        $admin_earnings_week = OrderTransaction::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->sum('admin_commission');
+        $admin_earnings_month = OrderTransaction::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->sum('admin_commission');
 
         // 3. Órdenes Activas en Curso
         $active_orders = Order::whereIn('order_status', ['pending', 'accepted', 'processing', 'confirmed', 'handover', 'picked_up'])->count();
