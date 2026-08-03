@@ -107,22 +107,28 @@
             </div>
         </div>
 
-        <!-- 2. Total Ganado Admin -->
+        <!-- 2. Total Ganado Admin (Día, Semana, Mes) -->
         <div class="col-sm-6 col-lg-3">
             <div class="kpi-card">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="kpi-title">{{ 'Ganancia Admin' }}</div>
-                        <div class="kpi-value text-primary">
-                            {{\App\CentralLogics\Helpers::format_currency($admin_earnings)}}
-                        </div>
-                    </div>
-                    <div class="kpi-icon-wrapper bg-soft-primary text-primary">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <div class="kpi-title">{{ 'Ganancia Admin' }}</div>
+                    <div class="kpi-icon-wrapper bg-soft-primary text-primary" style="width: 38px; height: 38px; font-size: 1.1rem;">
                         <i class="tio-wallet"></i>
                     </div>
                 </div>
-                <div class="mt-3 fs-12 text-muted d-flex align-items-center gap-1">
-                    <span class="text-primary font-semibold">💼 {{ 'Comisiones + Tarifas' }}</span>
+                <div class="d-flex flex-column gap-1 mt-1">
+                    <div class="d-flex align-items-center justify-content-between fs-13 border-bottom pb-1">
+                        <span class="text-muted font-medium">📅 {{ 'Día:' }}</span>
+                        <span class="font-bold text-dark fs-14">{{\App\CentralLogics\Helpers::format_currency($admin_earnings_today)}}</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between fs-13 border-bottom py-1">
+                        <span class="text-muted font-medium">🗓️ {{ 'Semana:' }}</span>
+                        <span class="font-bold text-primary fs-14">{{\App\CentralLogics\Helpers::format_currency($admin_earnings_week)}}</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between fs-13 pt-1">
+                        <span class="text-muted font-medium">📊 {{ 'Mes:' }}</span>
+                        <span class="font-bold text-success fs-14">{{\App\CentralLogics\Helpers::format_currency($admin_earnings_month)}}</span>
+                    </div>
                 </div>
             </div>
         </div>

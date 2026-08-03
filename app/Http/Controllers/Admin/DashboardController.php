@@ -170,10 +170,27 @@ class DashboardController extends Controller
         // 1. Total Vendido
         $total_sold = Order::whereIn('order_status', ['delivered', 'completed'])->sum('order_amount');
 
-        // 2. Total Ganado para el Admin (Comisiones + Ganancias)
-        $admin_earnings = OrderTransaction::sum('admin_commission') + OrderTransaction::sum('admin_expense');
-        if ($admin_earnings == 0) {
-            $admin_earnings = Order::whereIn('order_status', ['delivered', 'completed'])->sum('admin_charge');
+        // 2. Total Ganado para el Admin (Día, Semana, Mes)
+        $admin_earnings_today = OrderTransaction::whereDate('created_at', now()->format('Y-m-d'))->sum(DB::raw('admin_commission + admin_expense'));
+        if ($admin_earnings_today == 0) {
+            $admin_earnings_today = Order::whereIn('order_status', ['delivered', 'completed'])
+                ->whereDate('created_at', now()->format('Y-m-d'))
+                ->sum('admin_charge');
+        }
+
+        $admin_earnings_week = OrderTransaction::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->sum(DB::raw('admin_commission + admin_expense'));
+        if ($admin_earnings_week == 0) {
+            $admin_earnings_week = Order::whereIn('order_status', ['delivered', 'completed'])
+                ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
+                ->sum('admin_charge');
+        }
+
+        $admin_earnings_month = OrderTransaction::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->sum(DB::raw('admin_commission + admin_expense'));
+        if ($admin_earnings_month == 0) {
+            $admin_earnings_month = Order::whereIn('order_status', ['delivered', 'completed'])
+                ->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year)
+                ->sum('admin_charge');
         }
 
         // 3. Órdenes Activas en Curso
@@ -240,7 +257,9 @@ class DashboardController extends Controller
 
         return view('admin-views.dispatch.dashboard', compact(
             'total_sold',
-            'admin_earnings',
+            'admin_earnings_today',
+            'admin_earnings_week',
+            'admin_earnings_month',
             'active_orders',
             'open_tickets',
             'module_sales',
