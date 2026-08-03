@@ -9656,4 +9656,6 @@ Smartly or Earn. ',
   'multi_store_not_allowed' => 'Ordering from multiple stores in a single checkout is not allowed.',
   'exclusive_for_tootli_abastos' => 'Exclusive for Tootli Abastos',
   'ADMIN' => 'ADMIN',
+  'OTP_sent_successfully' => 'OTP sent successfully',
+  'Phone_verified._Proceeding_to_registration.' => 'Phone verified. Proceeding to registration.',
 );

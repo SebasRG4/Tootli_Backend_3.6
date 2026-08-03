@@ -54,6 +54,8 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
 
         Route::group(['prefix' => 'delivery-man', 'middleware' => 'actch:deliveryman_app'], function () {
             Route::post('login', 'DeliveryManLoginController@login');
+            Route::post('send-otp', 'DeliveryManLoginController@send_otp');
+            Route::post('verify-otp', 'DeliveryManLoginController@verify_otp');
             Route::post('store', 'DeliveryManLoginController@store');
             Route::post('request-device-migration', 'DeliveryManLoginController@request_device_migration_otp');
             Route::post('verify-device-migration', 'DeliveryManLoginController@verify_device_migration');
