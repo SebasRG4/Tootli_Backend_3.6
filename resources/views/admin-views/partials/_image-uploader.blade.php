@@ -58,8 +58,8 @@
     </div>
     @if ($textPosition == 'bottom')
         <p class="mb-2 fs-12 gray-dark">
-            {{ translate($imageFormat . '. Less Than ' . $maxSize . 'MB')}} <span
-                class="font-medium text-title">{{ '(\' . $tamaño .'')}}</span>
+            {{ $imageFormat }}. Menos de {{ $maxSize }}MB <span
+                class="font-medium text-title">({{ $size }})</span>
         </p>
     @endif
 </div>
