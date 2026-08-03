@@ -131,15 +131,13 @@
                     @endif
 
 
-                    <li class="nav-item max-sm-m-0 w-xxl-200px ml-auto flex-grow-0">
-                        <button type="button" id="modalOpener" class="title-color bg--secondary border-0 rounded justify-content-between w-100 align-items-center py-2 px-2 px-md-3 d-flex gap-1" data-toggle="modal" data-target="#staticBackdrop">
-                            <div class="align-items-center d-flex flex-grow-1 gap-1 justify-content-between">
-                                <span class="align-items-center d-none d-xxl-flex gap-2 text-muted">{{'Buscar o'}}
-
-                                    <span class="bg-E7E6E8 border ctrlplusk d-md-block d-none font-bold fs-12 fw-bold lh-1 ms-1 px-1 rounded text-muted">Ctrl+K</span>
-
+                    <li class="nav-item max-sm-m-0 ml-auto flex-grow-0">
+                        <button type="button" id="modalOpener" class="title-color bg--secondary border-0 rounded justify-content-between align-items-center py-2 px-3 d-flex gap-2" data-toggle="modal" data-target="#staticBackdrop">
+                            <div class="align-items-center d-flex flex-grow-1 gap-2 justify-content-between">
+                                <span class="align-items-center d-none d-lg-flex gap-2 text-muted" style="white-space: nowrap;">{{'Buscar'}}
+                                    <span class="bg-E7E6E8 border ctrlplusk d-md-inline-block d-none font-bold fs-12 fw-bold lh-1 ms-1 px-1.5 py-0.5 rounded text-muted">Ctrl+K</span>
                                 </span>
-                                <img width="14" class="h-auto" src="{{asset('assets/admin/img/new-img/search.svg')}}" class="svg" alt="">
+                                <img width="14" class="h-auto ml-1" src="{{asset('assets/admin/img/new-img/search.svg')}}" class="svg" alt="">
                             </div>
                         </button>
                     </li>
