@@ -99,7 +99,7 @@ aside.navbar-vertical-aside,
     letter-spacing: 0.09em !important;
     text-transform: uppercase !important;
     padding: 1.25rem 1.25rem 0.4rem !important;
-    display: block !important;
+    display: block;
     line-height: 1 !important;
 }
 
@@ -123,7 +123,7 @@ aside .nav-link {
 /* Sidebar nav link text/spans */
 .navbar-vertical-aside .nav-link .text-truncate,
 .navbar-vertical-aside .nav-link span.navbar-vertical-aside-mini-mode-hidden-elements {
-    color: var(--t-text-body) !important;
+    color: var(--t-text-dark) !important;
     font-weight: 500 !important;
     font-size: 0.875rem !important;
 }
@@ -145,7 +145,7 @@ aside .nav-link {
 .navbar-vertical-aside .nav-link:hover,
 .navbar-vertical-aside .nav-link:focus {
     background-color: var(--t-border-light) !important;
-    color: var(--t-green) !important;
+    color: var(--t-text-dark) !important;
     text-decoration: none !important;
 }
 
@@ -155,18 +155,20 @@ aside .nav-link {
 .navbar-vertical-aside .nav-link:hover .nav-icon,
 .navbar-vertical-aside .nav-link:focus .text-truncate,
 .navbar-vertical-aside .nav-link:focus i {
-    color: var(--t-green) !important;
+    color: var(--t-text-dark) !important;
 }
 
-/* Sidebar active */
+/* Sidebar active — VERDE GLOBAL TOOTLI (#006837) */
 .navbar-vertical-aside .nav-item.active > .nav-link,
 .navbar-vertical-aside .navbar-vertical-aside-has-menu.active > .nav-link,
 .navbar-vertical-aside .nav-link.active,
-.navbar-vertical-aside .show > .nav-link.active {
-    background-color: var(--t-green-light) !important;
-    color: var(--t-green) !important;
+.navbar-vertical-aside .show > .nav-link.active,
+aside .nav-link.active {
+    background-color: var(--t-green) !important;
+    color: var(--t-white) !important;
     font-weight: 600 !important;
     border-radius: var(--t-radius-sm) !important;
+    box-shadow: 0 3px 10px rgba(0, 104, 55, 0.22) !important;
 }
 
 .navbar-vertical-aside .nav-item.active > .nav-link .text-truncate,
@@ -174,9 +176,12 @@ aside .nav-link {
 .navbar-vertical-aside .nav-item.active > .nav-link i,
 .navbar-vertical-aside .nav-item.active > .nav-link .nav-icon,
 .navbar-vertical-aside .nav-link.active .text-truncate,
+.navbar-vertical-aside .nav-link.active span,
 .navbar-vertical-aside .nav-link.active i,
-.navbar-vertical-aside .nav-link.active .nav-icon {
-    color: var(--t-green) !important;
+.navbar-vertical-aside .nav-link.active .nav-icon,
+aside .nav-link.active i,
+aside .nav-link.active span {
+    color: var(--t-white) !important;
     font-weight: 600 !important;
 }
 
@@ -201,7 +206,7 @@ aside .nav-link {
 .navbar-vertical-aside .badge,
 .navbar-vertical-aside .badge-pill,
 .navbar-vertical-aside .badge-soft-success {
-    background-color: var(--t-green) !important;
+    background-color: var(--t-text-dark) !important;
     color: var(--t-white) !important;
     font-size: 0.7rem !important;
     font-weight: 700 !important;
@@ -211,11 +216,11 @@ aside .nav-link {
     text-align: center !important;
 }
 
-/* Sidebar search — white background, green border */
+/* Sidebar search — limpio, borde neutro */
 .navbar-vertical-aside .sidebar--search-form .search--form-group,
 .sidebar--search-form .search--form-group {
     background-color: var(--t-white) !important;
-    border: 1.5px solid var(--t-green) !important;
+    border: 1px solid var(--t-border) !important;
     border-radius: var(--t-radius-pill) !important;
     display: flex !important;
     align-items: center !important;
@@ -226,7 +231,8 @@ aside .nav-link {
 
 .navbar-vertical-aside .sidebar--search-form .search--form-group:focus-within,
 .sidebar--search-form .search--form-group:focus-within {
-    box-shadow: 0 0 0 3px rgba(0, 104, 55, 0.12) !important;
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08) !important;
+    border-color: var(--t-text-dark) !important;
 }
 
 .navbar-vertical-aside .sidebar--search-form input,
@@ -248,10 +254,62 @@ aside .nav-link {
 
 .sidebar--search-form .btn i,
 .sidebar--search-form .btn {
-    color: var(--t-green) !important;
+    color: var(--t-text-muted) !important;
     font-size: 1rem !important;
     padding: 0 !important;
 }
+
+/* ── Mini Mode (Sidebar Colapsado) ─────────────────────────── */
+.navbar-vertical-aside-mini-mode .sidebar--search-form,
+.navbar-vertical-aside-mini-mode .search--form-group,
+body.navbar-vertical-aside-mini-mode .sidebar--search-form,
+body.navbar-vertical-aside-mini-mode .search--form-group {
+    display: none !important;
+}
+
+.navbar-vertical-aside-mini-mode .nav-subtitle,
+.navbar-vertical-aside-mini-mode span.nav-subtitle,
+.navbar-vertical-aside-mini-mode .nav-sub-title,
+.navbar-vertical-aside-mini-mode .nav-subtitle-replacer,
+body.navbar-vertical-aside-mini-mode .nav-subtitle,
+body.navbar-vertical-aside-mini-mode span.nav-subtitle,
+body.navbar-vertical-aside-mini-mode .nav-sub-title,
+body.navbar-vertical-aside-mini-mode .nav-subtitle-replacer {
+    display: none !important;
+}
+
+.navbar-vertical-aside-mini-mode .text-truncate,
+.navbar-vertical-aside-mini-mode span.navbar-vertical-aside-mini-mode-hidden-elements,
+.navbar-vertical-aside-mini-mode .nav-link-toggle::after,
+body.navbar-vertical-aside-mini-mode .text-truncate,
+body.navbar-vertical-aside-mini-mode span.navbar-vertical-aside-mini-mode-hidden-elements,
+body.navbar-vertical-aside-mini-mode .nav-link-toggle::after {
+    display: none !important;
+}
+
+.navbar-vertical-aside-mini-mode .navbar-vertical-aside .nav-link,
+.navbar-vertical-aside-mini-mode aside .nav-link,
+body.navbar-vertical-aside-mini-mode .navbar-vertical-aside .nav-link,
+body.navbar-vertical-aside-mini-mode aside .nav-link {
+    justify-content: center !important;
+    padding: 0.65rem 0 !important;
+    margin: 4px auto !important;
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: var(--t-radius-sm) !important;
+}
+
+.navbar-vertical-aside-mini-mode .navbar-vertical-aside .nav-icon,
+.navbar-vertical-aside-mini-mode aside .nav-icon,
+.navbar-vertical-aside-mini-mode .nav-link i,
+body.navbar-vertical-aside-mini-mode .navbar-vertical-aside .nav-icon,
+body.navbar-vertical-aside-mini-mode aside .nav-icon,
+body.navbar-vertical-aside-mini-mode .nav-link i {
+    margin: 0 !important;
+    width: auto !important;
+    font-size: 1.25rem !important;
+}
+
 
 /* ── Top Header / Navbar ────────────────────────────────────── */
 header#header,
@@ -280,13 +338,14 @@ header .__nav-link {
 .navbar .__nav-link:hover,
 header .__nav-link:hover {
     background-color: var(--t-border-light) !important;
-    color: var(--t-green) !important;
+    color: var(--t-text-dark) !important;
 }
 
 .navbar .__nav-link.active,
 header .__nav-link.active {
-    color: var(--t-green) !important;
-    font-weight: 600 !important;
+    color: var(--t-text-dark) !important;
+    font-weight: 700 !important;
+    background-color: #f1f5f9 !important;
 }
 
 .navbar .__nav-link img {
