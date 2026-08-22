@@ -19,7 +19,7 @@ class BadgesApiController extends Controller
      */
     public function getBadgesData(Request $request)
     {
-        $dm = Auth::guard('deliveryman')->user();
+        $dm = \App\Models\DeliveryMan::where(['auth_token' => $request['token']])->first();
 
         if (!$dm) {
             return response()->json(['message' => 'No autenticado.'], 401);
