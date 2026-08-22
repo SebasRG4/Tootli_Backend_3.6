@@ -303,6 +303,24 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::delete('delete/{id}', 'MissionController@delete')->name('delete');
         });
 
+        Route::group(['prefix' => 'badges', 'as' => 'badges.'], function () {
+            Route::get('list', 'BadgeController@index')->name('list');
+            Route::get('add', 'BadgeController@create')->name('add');
+            Route::post('store', 'BadgeController@store')->name('store');
+            Route::get('edit/{id}', 'BadgeController@edit')->name('edit');
+            Route::post('update/{id}', 'BadgeController@update')->name('update');
+            Route::post('status', 'BadgeController@status')->name('status');
+            Route::delete('delete/{id}', 'BadgeController@destroy')->name('delete');
+        });
+
+        Route::group(['prefix' => 'badge-levels', 'as' => 'badge-levels.'], function () {
+            Route::get('/', 'BadgeLevelController@index')->name('list');
+            Route::post('update-order', 'BadgeLevelController@updateOrder')->name('update-order');
+            Route::get('edit/{id}', 'BadgeLevelController@edit')->name('edit');
+            Route::post('update/{id}', 'BadgeLevelController@update')->name('update');
+        });
+
+
         Route::group(['prefix' => 'message', 'as' => 'message.'], function () {
             Route::get('list/delivery-support', 'ConversationController@listDeliverySupport')->name('list.delivery-support');
             Route::get('list', 'ConversationController@list')->name('list');

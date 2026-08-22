@@ -353,6 +353,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                     Route::get('reset-device/{id}', [DeliveryManController::class, 'reset_device'])->name('reset-device');
                     Route::get(DeliveryMan::STATUS[URI] . '/{id}/{status}', [DeliveryManController::class, 'updateStatus'])->name('status');
                     Route::post('update-tier/{id}', [DeliveryManController::class, 'updateTier'])->name('update-tier');
+                    Route::post('{id}/update-services', [DeliveryManController::class, 'updateServices'])->name('update-services');
                     Route::post('{id}/kyc-status', [DeliveryManController::class, 'updateKycStatus'])->name('kyc-status');
                     Route::post('{id}/strike-event', [DeliveryManController::class, 'storeStrikeEvent'])->name('store-strike-event');
                     Route::post('{id}/strike-suspension', [DeliveryManController::class, 'updateStrikeSuspension'])->name('update-strike-suspension');

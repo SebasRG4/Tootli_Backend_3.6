@@ -57,6 +57,7 @@ use App\Services\DeliveryStrike\DeliveryStrikeService;
 use App\Services\DeliveryStrike\RecordDeliveryManStrikeAction;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use App\Models\Module;
 
 class DeliveryManController extends BaseController
 {
@@ -87,18 +88,20 @@ class DeliveryManController extends BaseController
             filters: ['type' => 'zone_wise', 'application_status' => 'approved'],
             additionalFilter: $request['filter'],
             jobType: $request['job_type'],
-            relations: ['zone', 'wallet'],
+            relations: ['zone', 'wallet', 'modules'],
             dataLimit: config('default_pagination')
         );
         $zone = is_numeric($zoneId) ? $this->zoneRepo->getFirstWhere(params: ['id' => $zoneId]) : null;
         return view(DeliveryManViewPath::LIST [VIEW], compact('deliveryMen', 'zone'));
     }
 
+
     public function getAddView(): View
     {
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
-        return view(DeliveryManViewPath::ADD[VIEW], compact('language', 'defaultLang'));
+        $modules = Module::where('status', 1)->orderBy('order')->get();
+        return view(DeliveryManViewPath::ADD[VIEW], compact('language', 'defaultLang', 'modules'));
     }
 
     public function getNewDeliveryManView(Request $request): View
@@ -156,7 +159,11 @@ class DeliveryManController extends BaseController
 
     public function add(DeliveryManAddRequest $request): JsonResponse
     {
-        $this->deliveryManRepo->add(data: $this->deliveryManService->getAddData(request: $request));
+        $deliveryMan = $this->deliveryManRepo->add(data: $this->deliveryManService->getAddData(request: $request));
+        // Sincronizar módulos seleccionados
+        if ($deliveryMan) {
+            $deliveryMan->modules()->sync($request->input('modules', []));
+        }
         Toastr::success(translate('messages.deliveryman_added_successfully'));
         return response()->json([
             'message' => translate('messages.deliveryman_added_successfully'),
@@ -169,7 +176,9 @@ class DeliveryManController extends BaseController
         $deliveryMan = $this->deliveryManRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
-        return view(DeliveryManViewPath::UPDATE[VIEW], compact('deliveryMan', 'language', 'defaultLang'));
+        $modules = Module::where('status', 1)->orderBy('order')->get();
+        $selectedModuleIds = $deliveryMan->modules()->pluck('modules.id')->toArray();
+        return view(DeliveryManViewPath::UPDATE[VIEW], compact('deliveryMan', 'language', 'defaultLang', 'modules', 'selectedModuleIds'));
     }
 
     public function update(DeliveryManUpdateRequest $request, $id): JsonResponse
@@ -185,6 +194,9 @@ class DeliveryManController extends BaseController
                 'image' => $deliveryMan->image,
             ]);
         }
+
+        // Sincronizar módulos seleccionados (vacío = todos desmarcados)
+        $deliveryMan->modules()->sync($request->input('modules', []));
 
         Toastr::success(translate('messages.deliveryman_updated_successfully'));
         return response()->json([
@@ -651,7 +663,9 @@ class DeliveryManController extends BaseController
         $strikeIncidentTypes = collect();
         if ($tab == 'info') {
             $reviews = $this->dmReviewRepo->getListWhere(searchValue: $request['search'], filters: ['delivery_man_id' => $id], dataLimit: config('default_pagination'));
-            $deliveryMan->loadMissing(['wallet', 'zone']);
+            $deliveryMan->loadMissing(['wallet', 'zone', 'modules']);
+            $modules = Module::where('status', 1)->orderBy('order')->get();
+            $selectedModuleIds = $deliveryMan->modules ? $deliveryMan->modules->pluck('id')->toArray() : [];
             $dmAssignmentSnapshot = null;
             $dmAdminAuditLogs = collect();
             if ($deliveryMan->application_status === 'approved') {
@@ -713,7 +727,7 @@ class DeliveryManController extends BaseController
                     ->get();
             }
 
-            return view(DeliveryManViewPath::INFO[VIEW], compact('deliveryMan', 'reviews', 'dmAssignmentSnapshot', 'dmAdminAuditLogs', 'strikeIncidentTypes'));
+            return view(DeliveryManViewPath::INFO[VIEW], compact('deliveryMan', 'reviews', 'dmAssignmentSnapshot', 'dmAdminAuditLogs', 'strikeIncidentTypes', 'modules', 'selectedModuleIds'));
         } else if ($tab == 'transaction') {
             $date = $request->query('dates');
             if ($request->has('date_range') && $request->date_range != 'custom') {
@@ -1253,4 +1267,30 @@ class DeliveryManController extends BaseController
         }
     }
 
+    public function updateServices(Request $request, $id): RedirectResponse
+    {
+        $deliveryMan = $this->deliveryManRepo->getFirstWhere(params: ['id' => $id]);
+        if (! $deliveryMan) {
+            Toastr::error(translate('messages.deliveryman_not_found'));
+            return back();
+        }
+
+        // Sincronizar módulos autorizados
+        $modules = $request->input('modules', []);
+        $deliveryMan->modules()->sync($modules);
+
+        // Actualizar permisos/aprobación de Viajes (Taxi)
+        $canDriveTaxi = $request->has('can_drive_taxi') ? 1 : 0;
+        $taxiIsVerified = $request->has('taxi_is_verified') ? 1 : 0;
+
+        $deliveryMan->can_drive_taxi = $canDriveTaxi;
+        $deliveryMan->taxi_is_verified = $canDriveTaxi ? $taxiIsVerified : 0;
+        if ($canDriveTaxi && $taxiIsVerified) {
+            $deliveryMan->taxi_active = 1;
+        }
+        $deliveryMan->save();
+
+        Toastr::success(translate('messages.services_updated_successfully'));
+        return back();
+    }
 }

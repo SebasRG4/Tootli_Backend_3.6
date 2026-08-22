@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http/Controllers/Api/V1;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Http/Controllers/Controller;
+use App\Http\Controllers\Controller;
 use App\Models\ProtectedTransaction;
 use App\Models\User;
 use Illuminate\Http\Request;

@@ -27,6 +27,7 @@ use App\Models\OrderStrikeReviewQueue;
 use App\Models\DeliverymanLoyaltyPointHistory;
 use App\Models\DeliverymanReferralHistory;
 use App\Models\DeliveryManWallet;
+use App\Models\Store;
 use App\Models\DisbursementDetails;
 use App\Models\DisbursementWithdrawalMethod;
 use App\Models\Notification;
@@ -246,6 +247,32 @@ class DeliverymanController extends Controller
         // ────────────────────────────────────────────────────────────────
 
         return response()->json($dm, 200);
+    }
+
+    public function get_my_reviews(Request $request)
+    {
+        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+        if (!$dm) {
+            return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
+        }
+        
+        $reviews = DMReview::with('customer:id,f_name,l_name')->where('delivery_man_id', $dm->id)->where('status', 1)->get();
+        return response()->json($reviews, 200);
+    }
+
+    public function get_popular_restaurants(Request $request)
+    {
+        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+        if (!$dm) {
+            return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
+        }
+
+        $stores = Store::Active()->where('zone_id', $dm->zone_id)
+            ->orderBy('order_count', 'desc')
+            ->take(15)
+            ->get(['id', 'name', 'latitude', 'longitude', 'order_count']);
+            
+        return response()->json($stores, 200);
     }
 
     public function get_missions(Request $request)
@@ -1596,6 +1623,16 @@ class DeliverymanController extends Controller
         $order->order_status = $request['status'];
         $order[$request['status']] = now();
         $order->save();
+
+        // Actualizar racha de días activos al completar una entrega
+        if ($request->status === 'delivered' && $dm) {
+            try {
+                \App\Models\DeliveryManStreak::updateForDeliveryMan((int) $dm->id);
+            } catch (\Throwable $e) {
+                // No interrumpir el flujo principal si falla la racha
+                \Illuminate\Support\Facades\Log::error('[Streak] Error actualizando racha DM ' . $dm->id . ': ' . $e->getMessage());
+            }
+        }
 
         if ($request->status === 'canceled' && $order->order_type !== 'parcel' && $this->deliveryCancelMeta !== null) {
             try {

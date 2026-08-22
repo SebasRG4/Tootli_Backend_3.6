@@ -168,12 +168,29 @@
                             </div>
                             @endif
 
+                            {{-- Módulos habilitados --}}
+                            <div class="text-muted line-30"></div>
+                            <div class="d-flex justify-content-center justify-content-md-start gap-3">
+                                <div class="">
+                                    <h6 class="fs-13 mb-1 font-weight-normal text-dark">{{ 'Módulos habilitados' }}</h6>
+                                    <div class="mb-0 font-weight-bold text-dark d-flex flex-wrap gap-1">
+                                        @php $dmModules = $deliveryMan->modules; @endphp
+                                        @if($dmModules && $dmModules->count() > 0)
+                                            @foreach($dmModules as $mod)
+                                                <span class="badge badge-soft-primary">{{ $mod->module_name }}</span>
+                                            @endforeach
+                                        @else
+                                            <span class="text-muted fs-12">{{ 'Todos los módulos (sin restricción)' }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                     @if ($deliveryMan->application_status == 'approved')
-                        @php($total = $deliveryMan->reviews->count())
-                        <div
-                            class="d-flex flex-column flex-sm-nowrap flex-wrap flex-sm-row gap-3 flex-grow-1 border-lg-left">
+                        @php $total = $deliveryMan->reviews->count(); @endphp
+                        <div class="d-flex flex-column flex-sm-nowrap flex-wrap flex-sm-row gap-3 flex-grow-1 border-lg-left">
                             @if ($total > 0)
                                 <div class="d-flex flex-column align-items-center justify-content-center px-4">
                                     <img class=""
@@ -197,7 +214,7 @@
 
                                     <!-- Review Ratings -->
                                     <li class="d-flex align-items-center font-size-sm">
-                                        @php($five = \App\CentralLogics\Helpers::dm_rating_count($deliveryMan['id'], 5))
+                                        @php $five = \App\CentralLogics\Helpers::dm_rating_count($deliveryMan['id'], 5); @endphp
                                         <span class="progress-name mr-3">{{ 'excelente' }}</span>
                                         <div class="progress flex-grow-1">
                                             <div class="progress-bar" role="progressbar"
@@ -211,7 +228,7 @@
 
                                     <!-- Review Ratings -->
                                     <li class="d-flex align-items-center font-size-sm">
-                                        @php($four = \App\CentralLogics\Helpers::dm_rating_count($deliveryMan['id'], 4))
+                                        @php $four = \App\CentralLogics\Helpers::dm_rating_count($deliveryMan['id'], 4); @endphp
                                         <span class="progress-name mr-3">{{ 'bien' }}</span>
                                         <div class="progress flex-grow-1">
                                             <div class="progress-bar" role="progressbar"
@@ -225,7 +242,7 @@
 
                                     <!-- Review Ratings -->
                                     <li class="d-flex align-items-center font-size-sm">
-                                        @php($three = \App\CentralLogics\Helpers::dm_rating_count($deliveryMan['id'], 3))
+                                        @php $three = \App\CentralLogics\Helpers::dm_rating_count($deliveryMan['id'], 3); @endphp
                                         <span class="progress-name mr-3">{{ 'promedio' }}</span>
                                         <div class="progress flex-grow-1">
                                             <div class="progress-bar" role="progressbar"
@@ -239,7 +256,7 @@
 
                                     <!-- Review Ratings -->
                                     <li class="d-flex align-items-center font-size-sm">
-                                        @php($two = \App\CentralLogics\Helpers::dm_rating_count($deliveryMan['id'], 2))
+                                        @php $two = \App\CentralLogics\Helpers::dm_rating_count($deliveryMan['id'], 2); @endphp
                                         <span class="progress-name mr-3">{{ 'por debajo del promedio' }}</span>
                                         <div class="progress flex-grow-1">
                                             <div class="progress-bar" role="progressbar"
@@ -253,7 +270,7 @@
 
                                     <!-- Review Ratings -->
                                     <li class="d-flex align-items-center font-size-sm">
-                                        @php($one = \App\CentralLogics\Helpers::dm_rating_count($deliveryMan['id'], 1))
+                                        @php $one = \App\CentralLogics\Helpers::dm_rating_count($deliveryMan['id'], 1); @endphp
                                         <span class="progress-name mr-3">{{ 'pobre' }}</span>
                                         <div class="progress flex-grow-1">
                                             <div class="progress-bar" role="progressbar"
@@ -275,9 +292,92 @@
                                 </div>
                             @endif
                         </div>
-
-
                     @endif
+                </div>
+
+                {{-- Card de Servicios y Módulos Autorizados por Administrador --}}
+                <div class="card mt-3">
+                    <div class="card-header bg-white border-bottom py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <h5 class="card-title mb-0 d-flex align-items-center gap-2 text-dark font-weight-bold">
+                            <i class="tio-settings-outlined text-primary fs-18"></i>
+                            <span>{{ 'Servicios y Módulos Autorizados por Administrador' }}</span>
+                        </h5>
+                        <span class="badge badge-soft-info px-3 py-1 font-weight-medium fs-12">{{ 'Configuración Admin' }}</span>
+                    </div>
+                    <div class="card-body p-4">
+                        <form action="{{ route('admin.users.delivery-man.update-services', [$deliveryMan->id]) }}" method="post">
+                            @csrf
+
+                            {{-- Módulos asignados --}}
+                            <div class="mb-4">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <label class="form-label font-weight-bold text-dark mb-0 fs-14">
+                                        <i class="tio-category-outlined text-secondary me-1"></i>
+                                        {{ 'Módulos Permitidos para este Repartidor' }}
+                                    </label>
+                                    <small class="text-muted">{{ 'Selecciona los servicios a los que el repartidor tendrá acceso.' }}</small>
+                                </div>
+
+                                @if(isset($modules) && $modules->count() > 0)
+                                <div class="row g-3">
+                                    @foreach($modules as $module)
+                                        @php $isChecked = isset($selectedModuleIds) && in_array($module->id, $selectedModuleIds); @endphp
+                                        <div class="col-xl-3 col-lg-4 col-sm-6">
+                                            <div class="border rounded p-3 h-100 bg-white shadow-sm hover-shadow d-flex align-items-center">
+                                                <label class="form-check form--check mb-0 d-flex align-items-center gap-2 cursor-pointer w-100">
+                                                    <input class="form-check-input mt-0" type="checkbox"
+                                                           name="modules[]"
+                                                           value="{{ $module->id }}"
+                                                           id="preview_module_{{ $module->id }}"
+                                                           {{ $isChecked ? 'checked' : '' }}>
+                                                    <span class="form-check-label font-weight-medium text-dark fs-14">
+                                                        {{ $module->module_name }}
+                                                        <span class="badge badge-soft-secondary badge-sm ms-1">{{ $module->module_type }}</span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                @endif
+                            </div>
+
+                            {{-- Aprobación del Servicio de Viajes (Taxi) --}}
+                            <div class="border-top pt-4">
+                                <div class="bg-soft-primary p-3 p-md-4 rounded-lg d-flex flex-wrap align-items-center justify-content-between gap-3">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="avatar avatar-circle bg-white text-primary p-2 d-flex align-items-center justify-content-center shadow-xs" style="width: 45px; height: 45px;">
+                                            <i class="tio-car fs-20"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1 text-dark font-weight-bold fs-15">{{ 'Aprobación del Servicio de Viajes (Taxi)' }}</h6>
+                                            <p class="text-muted mb-0 fs-13">
+                                                {{ 'Se requiere aprobación del Administrador para que el repartidor pueda operar el servicio de Viajes.' }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-4 flex-wrap">
+                                        <div class="form-check form-switch mb-0 d-flex align-items-center gap-2 cursor-pointer">
+                                            <input type="checkbox" class="form-check-input mt-0" name="can_drive_taxi" value="1"
+                                                   id="preview_can_drive_taxi" {{ $deliveryMan->can_drive_taxi ? 'checked' : '' }}>
+                                            <span class="form-check-label font-weight-bold text-dark fs-14">{{ 'Habilitar Servicio de Viajes' }}</span>
+                                        </div>
+                                        <div class="form-check form-switch mb-0 d-flex align-items-center gap-2 cursor-pointer">
+                                            <input type="checkbox" class="form-check-input mt-0" name="taxi_is_verified" value="1"
+                                                   id="preview_taxi_is_verified" {{ $deliveryMan->taxi_is_verified ? 'checked' : '' }}>
+                                            <span class="form-check-label font-weight-bold text-success fs-14">{{ 'Documentos Verificados' }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end mt-4">
+                                <button type="submit" class="btn btn--primary px-4 py-2 font-weight-bold">
+                                    <i class="tio-save me-1"></i> {{ 'Guardar Cambios de Servicios' }}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
 
                 @if ($deliveryMan->application_status == 'approved')
@@ -408,9 +508,9 @@
     {{-- ╔══════════════════════════════════════════╗ --}}
     {{-- ║  SECCIÓN: VERIFICACIÓN DE IDENTIDAD KYC  ║ --}}
     {{-- ╚══════════════════════════════════════════╝ --}}
-    @php($kycUser = \App\Http\Controllers\Admin\DeliveryMan\DeliveryManController::findOrCreateUserForDeliveryMan($deliveryMan))
-    @php($kycStatus = $kycUser?->identity_verified ?? 'none')
-    @php($kycVerificationId = $kycUser?->metamap_verification_id ?? null)
+    @php $kycUser = \App\Http\Controllers\Admin\DeliveryMan\DeliveryManController::findOrCreateUserForDeliveryMan($deliveryMan); @endphp
+    @php $kycStatus = $kycUser?->identity_verified ?? 'none'; @endphp
+    @php $kycVerificationId = $kycUser?->metamap_verification_id ?? null; @endphp
     <div class="content container-fluid pt-0">
         <div class="card">
             <div class="card-body p-xxl-20 p-3">

@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Scopes\ZoneScope;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class DeliveryMan extends Authenticatable
 {
@@ -96,6 +97,30 @@ class DeliveryMan extends Authenticatable
     public function wallet()
     {
         return $this->hasOne(DeliveryManWallet::class);
+    }
+
+    /**
+     * Módulos habilitados para este repartidor (p. ej. Comida, Taxi, Paquetería, etc.)
+     */
+    public function modules(): BelongsToMany
+    {
+        return $this->belongsToMany(Module::class, 'delivery_man_module');
+    }
+
+    /**
+     * Verifica si el repartidor tiene habilitado un módulo específico.
+     * Si no tiene ningún módulo asignado, se le permite todos (retro-compatibilidad).
+     */
+    public function hasModuleEnabled(?int $moduleId): bool
+    {
+        if ($moduleId === null) {
+            return true;
+        }
+        // Si no tiene módulos configurados, se asume acceso a todos (compatibilidad con DMs existentes)
+        if ($this->relationLoaded('modules') && $this->modules->isEmpty()) {
+            return true;
+        }
+        return $this->modules()->where('modules.id', $moduleId)->exists();
     }
 
     public function adminAuditLogs()
@@ -376,6 +401,22 @@ class DeliveryMan extends Authenticatable
     public function storage()
     {
         return $this->morphMany(Storage::class, 'data');
+    }
+
+    /**
+     * Progreso de insignias del repartidor.
+     */
+    public function badgeProgress()
+    {
+        return $this->hasMany(DeliveryManBadgeProgress::class);
+    }
+
+    /**
+     * Racha de días activos del repartidor.
+     */
+    public function streak()
+    {
+        return $this->hasOne(DeliveryManStreak::class);
     }
 
     protected static function booted()

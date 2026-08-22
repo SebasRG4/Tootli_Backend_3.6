@@ -148,6 +148,8 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         });
         Route::group(['middleware' => ['dm.api', 'dm.pending_revision_gate']], function () {
             Route::get('profile', 'DeliverymanController@get_profile');
+            Route::get('my-reviews', 'DeliverymanController@get_my_reviews');
+            Route::get('popular-restaurants', 'DeliverymanController@get_popular_restaurants');
             Route::get('missions', 'DeliverymanController@get_missions');
             Route::get('convert-loyalty-points', 'DeliverymanController@convertLoyaltyPoints');
             Route::get('notifications', 'DeliverymanController@get_notifications');
@@ -225,6 +227,8 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::post('toggle-services', 'DeliverymanController@toggleServices');
             Route::get('taxi-profile', 'DeliverymanController@getTaxiProfile');
 
+            // Insignias y niveles
+            Route::get('badges', 'DeliveryMan\BadgesApiController@getBadgesData');
 
         });
     });

@@ -357,6 +357,9 @@ Route::group(['prefix' => 'deliveryman', 'as' => 'deliveryman.'], function () {
 Route::get('/crece', 'HomeController@crece')->name('crece');
 Route::post('/crece/contacto', 'HomeController@creceContacto')->name('crece.contacto');
 
+Route::get('/tootlidirecto', function () {
+    return view('tootlidirecto');
+})->name('tootlidirecto');
 Route::get('/image-proxy', function () {
     $url = request('url');
     if (!$url) {

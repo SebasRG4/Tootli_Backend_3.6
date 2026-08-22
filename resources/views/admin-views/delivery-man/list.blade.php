@@ -169,7 +169,20 @@
                                     @endif
                                 </div>
                                 @endif
+                                @php
+                                    $dmModules = $dm->modules;
+                                @endphp
+                                @if($dmModules && $dmModules->count() > 0)
+                                <div class="d-flex flex-wrap gap-1 mt-1">
+                                    @foreach($dmModules as $mod)
+                                        <span class="badge badge-soft-primary" style="font-size:10px;" title="{{ $mod->module_type }}">{{ $mod->module_name }}</span>
+                                    @endforeach
+                                </div>
+                                @else
+                                <span class="text-muted" style="font-size:11px;">{{'Todos los módulos'}}</span>
+                                @endif
                             </td>
+
                             <td>
                                 <a class="deco-none" href="{{route('admin.users.delivery-man.preview',['id'=> $dm['id'],'tab' => 'transaction' ])}}">{{count($dm['order_transaction'])}}</a>
                             </td>

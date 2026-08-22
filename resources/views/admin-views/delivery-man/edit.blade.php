@@ -132,6 +132,38 @@
                                                             </div>
                                                         </div>
                                                     </div>
+
+                                                    {{-- Módulos habilitados --}}
+                                                    @if(isset($modules) && $modules->count() > 0)
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group mb-0">
+                                                            <label class="input-label d-block mb-1">
+                                                                {{'Módulos habilitados'}}
+                                                                <small class="text-muted font-weight-normal">— Módulos que puede atender este repartidor. Si no marcas ninguno, tendrá acceso a todos.</small>
+                                                            </label>
+                                                            <div class="border rounded p-3 bg-soft-secondary">
+                                                                <div class="row g-2">
+                                                                    @foreach($modules as $module)
+                                                                    <div class="col-sm-4 col-6">
+                                                                        <label class="form-check form--check mb-0 d-flex align-items-center gap-2">
+                                                                            <input class="form-check-input mt-0" type="checkbox"
+                                                                                   name="modules[]"
+                                                                                   value="{{ $module->id }}"
+                                                                                   id="module_edit_{{ $module->id }}"
+                                                                                   {{ isset($selectedModuleIds) && in_array($module->id, $selectedModuleIds) ? 'checked' : '' }}>
+                                                                            <span class="form-check-label">
+                                                                                {{ $module->module_name }}
+                                                                                <span class="badge badge-soft-secondary badge-sm ms-1">{{ $module->module_type }}</span>
+                                                                            </span>
+                                                                        </label>
+                                                                    </div>
+                                                                    @endforeach
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @endif
+
                                                     <div class="col-sm-6">
                                                         <div class="form-group mb-0">
                                                             <label class="input-label" for="exampleFormControlInput1">{{'Zona de entrega'}} <span class="form-label-secondary text-danger"

@@ -469,6 +469,17 @@ class DeliveryManLoginController extends Controller
         }
 
         $phone = $request->phone;
+        $exists = DeliveryMan::where('phone', $phone)->exists();
+
+        // Si el repartidor ya está registrado, se responde indicando que existe sin enviar OTP por SMS/WhatsApp
+        if ($exists) {
+            return response()->json([
+                'status' => true,
+                'exists' => true,
+                'message' => translate('phone_number_already_registered'),
+            ], 200);
+        }
+
         $otp = rand(100000, 999999);
 
         if ($phone === '+527291234567' || $phone === '7291234567' || $phone === '+527290000000') {
@@ -479,8 +490,6 @@ class DeliveryManLoginController extends Controller
             ['phone' => $phone],
             ['token' => $otp, 'updated_at' => now(), 'created_at' => now()]
         );
-
-        $exists = DeliveryMan::where('phone', $phone)->exists();
 
         try {
             $message = "Tu código de verificación para Tootli Conductor es: {$otp}";
@@ -495,7 +504,7 @@ class DeliveryManLoginController extends Controller
 
         return response()->json([
             'status' => true,
-            'exists' => $exists,
+            'exists' => false,
             'message' => translate('OTP_sent_successfully'),
             'otp' => config('app.debug') ? $otp : null,
         ], 200);

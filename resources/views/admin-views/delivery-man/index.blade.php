@@ -125,6 +125,36 @@
                                         </div>
                                     </div>
 
+                                    {{-- Módulos habilitados --}}
+                                    @if(isset($modules) && $modules->count() > 0)
+                                    <div class="col-sm-12">
+                                        <div class="form-group mb-0">
+                                            <label class="input-label d-block mb-1">
+                                                {{'Módulos habilitados'}}
+                                                <small class="text-muted font-weight-normal">— Selecciona los módulos que puede atender este repartidor. Si no marcas ninguno, tendrá acceso a todos.</small>
+                                            </label>
+                                            <div class="border rounded p-3 bg-soft-secondary">
+                                                <div class="row g-2">
+                                                    @foreach($modules as $module)
+                                                    <div class="col-sm-4 col-6">
+                                                        <label class="form-check form--check mb-0 d-flex align-items-center gap-2">
+                                                            <input class="form-check-input mt-0" type="checkbox"
+                                                                   name="modules[]"
+                                                                   value="{{ $module->id }}"
+                                                                   id="module_{{ $module->id }}">
+                                                            <span class="form-check-label">
+                                                                {{ $module->module_name }}
+                                                                <span class="badge badge-soft-secondary badge-sm ms-1">{{ $module->module_type }}</span>
+                                                            </span>
+                                                        </label>
+                                                    </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
+
                                     <div class="col-sm-6" id="ref_code" style="display: none;">
                                         <div class="form-group mb-0">
                                             <label class="input-label"

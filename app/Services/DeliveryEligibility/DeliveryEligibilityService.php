@@ -45,6 +45,22 @@ class DeliveryEligibilityService
             );
         }
 
+        // Validar que el repartidor tenga acceso al módulo del pedido
+        $orderModuleId = $order->module_id ?? null;
+        if ($orderModuleId !== null) {
+            $dm->loadMissing('modules');
+            $assignedModules = $dm->modules;
+            // Solo restringir si tiene módulos explícitamente asignados
+            if ($assignedModules->isNotEmpty() && ! $assignedModules->contains('id', $orderModuleId)) {
+                return DeliveryEligibilityResult::deny(
+                    'module_not_enabled',
+                    'module_not_enabled',
+                    403,
+                    translate('messages.dm_module_not_enabled') ?? 'No tienes habilitado el módulo de este pedido.',
+                );
+            }
+        }
+
         if (! $dm->status) {
             return DeliveryEligibilityResult::deny(
                 'dm_suspended',
