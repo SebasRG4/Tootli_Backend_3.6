@@ -102,12 +102,12 @@ class BadgesApiController extends Controller
 
         $nightTrips = Order::where('delivery_man_id', $dm->id)
             ->where('order_status', 'delivered')
-            ->whereRaw('HOUR(delivered_time) >= 22 OR HOUR(delivered_time) < 6')
+            ->whereRaw('HOUR(updated_at) >= 22 OR HOUR(updated_at) < 6')
             ->count();
 
         $weekendTrips = Order::where('delivery_man_id', $dm->id)
             ->where('order_status', 'delivered')
-            ->whereRaw('DAYOFWEEK(delivered_time) IN (1, 7)') // 1=Dom, 7=Sáb
+            ->whereRaw('DAYOFWEEK(updated_at) IN (1, 7)') // 1=Dom, 7=Sáb
             ->count();
 
         // Propinas: contar órdenes con dm_tips > 0 consecutivas (simplificado: total con propinas)
