@@ -97,7 +97,7 @@ class BadgesApiController extends Controller
         // Datos extra que algunas condiciones necesitan
         $foodDeliveries = Order::where('delivery_man_id', $dm->id)
             ->where('order_status', 'delivered')
-            ->whereHas('store', fn($q) => $q->whereIn('module_type', ['food', 'restaurant']))
+            ->whereHas('store.module', fn($q) => $q->whereIn('module_type', ['food', 'restaurant']))
             ->count();
 
         $nightTrips = Order::where('delivery_man_id', $dm->id)
