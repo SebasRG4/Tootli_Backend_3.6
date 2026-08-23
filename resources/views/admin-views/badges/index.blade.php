@@ -183,7 +183,7 @@
         const title = $(this).data('title');
         $('#deleteBadgeId').val(id);
         $('#deleteBadgeTitle').text(title);
-        $('#deleteBadgeForm').attr('action', '{{ route("admin.badges.delete", "") }}/' + id);
+        $('#deleteBadgeForm').attr('action', '{{ route("admin.badges.delete", 999999) }}'.replace('999999', id));
         $('#deleteBadgeModal').modal('show');
     });
 
