@@ -98,6 +98,15 @@
                                 </span>
                             </a>
                         </li>
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/badges*') || Request::is('admin/badge-levels*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                href="{{ route('admin.badges.list') }}" title="Gestión de Insignias">
+                                <i class="tio-medal nav-icon"></i>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                    Insignias y Niveles
+                                </span>
+                            </a>
+                        </li>
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/delivery-man/add') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
