@@ -43,10 +43,19 @@ class DeliveryManOfflinePaymentController extends Controller
 
                 // Automate debt reduction
                 $wallet = DeliveryManWallet::firstOrCreate(['delivery_man_id' => $payment->delivery_man_id]);
-                if ($wallet->collected_cash >= $payment->amount) {
-                    $wallet->collected_cash -= $payment->amount;
+                $remaining = $payment->amount;
+
+                if ($wallet->collected_cash >= $remaining) {
+                    $wallet->collected_cash -= $remaining;
+                    $remaining = 0;
                 } else {
+                    $remaining -= $wallet->collected_cash;
                     $wallet->collected_cash = 0;
+                }
+
+                // Si aún queda pago y hay balance negativo, reducir el total retirado para compensar el balance
+                if ($remaining > 0) {
+                    $wallet->total_withdrawn -= $remaining;
                 }
                 $wallet->save();
 
