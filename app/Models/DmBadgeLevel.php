@@ -32,10 +32,23 @@ class DmBadgeLevel extends Model
     public static function forXp(int $xp): self
     {
         // El nivel es el más alto cuyo xp_required <= $xp
-        return static::where('xp_required', '<=', $xp)
+        $level = static::where('xp_required', '<=', $xp)
             ->orderByDesc('xp_required')
             ->first()
             ?? static::orderBy('level_index')->first();
+            
+        if (!$level) {
+            $level = new static([
+                'level_index' => 1,
+                'name' => 'Principiante',
+                'sub_level' => 'I',
+                'xp_required' => 0,
+                'color_from' => '#000000',
+                'color_to' => '#000000',
+            ]);
+        }
+        
+        return $level;
     }
 
     /**
