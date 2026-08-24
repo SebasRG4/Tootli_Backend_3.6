@@ -930,6 +930,24 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('cash-deposit-list', 'CashDepositController@list')->name('cash-deposit-list');
             Route::post('cash-deposit-update', 'CashDepositController@update_status')->name('cash-deposit-update');
             Route::get('cash-heatmap', 'DashboardController@cash_heatmap')->name('cash-heatmap');
+
+            // Juegos y Recompensas
+            Route::group(['prefix' => 'rewards', 'as' => 'rewards.'], function () {
+                Route::get('/', 'DmRewardController@index')->name('index');
+                Route::post('store', 'DmRewardController@store')->name('store');
+                Route::post('status', 'DmRewardController@status')->name('status');
+                Route::delete('delete/{id}', 'DmRewardController@destroy')->name('delete');
+                
+                Route::post('discount/store', 'DmRewardController@store_discount')->name('discount.store');
+                Route::delete('discount/delete/{id}', 'DmRewardController@destroy_discount')->name('discount.delete');
+            });
+
+            Route::group(['prefix' => 'games', 'as' => 'games.'], function () {
+                Route::get('/', 'DmGameController@index')->name('index');
+                Route::post('store', 'DmGameController@store')->name('store');
+                Route::post('status', 'DmGameController@status')->name('status');
+                Route::delete('delete/{id}', 'DmGameController@destroy')->name('delete');
+            });
         });
 
         Route::group(['prefix' => 'transactions', 'as' => 'transactions.'], function () {

@@ -242,6 +242,21 @@
                             </a>
                         </li>
 
+                        <!-- Juegos y Recompensas -->
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/delivery-man/rewards*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.delivery-man.rewards.index') }}" title="Recompensas">
+                                <i class="tio-gift nav-icon"></i>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Recompensas</span>
+                            </a>
+                        </li>
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/delivery-man/games*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.delivery-man.games.index') }}" title="Juegos Nativos">
+                                <i class="tio-gamepad nav-icon"></i>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Juegos Nativos</span>
+                            </a>
+                        </li>
+
+
                         <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/mission*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.mission.list') }}"
                                 title="{{ 'misiones de conductor' }}">

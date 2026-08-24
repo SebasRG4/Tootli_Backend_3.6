@@ -148,6 +148,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         });
         Route::group(['middleware' => ['dm.api', 'dm.pending_revision_gate']], function () {
             Route::get('profile', 'DeliverymanController@get_profile');
+            Route::get('games-and-rewards', 'GamesAndRewardsController@get_games_and_rewards');
             Route::get('my-reviews', 'DeliverymanController@get_my_reviews');
             Route::get('popular-restaurants', 'DeliverymanController@get_popular_restaurants');
             Route::get('missions', 'DeliverymanController@get_missions');
