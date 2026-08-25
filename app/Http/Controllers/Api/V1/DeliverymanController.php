@@ -3233,4 +3233,38 @@ class DeliverymanController extends Controller
             'message' => translate('messages.deposit_report_submitted_successfully'),
         ], 200);
     }
+
+    public function generate_agora_token(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'channel' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        require_once base_path('app/Library/Agora/RtcTokenBuilder2.php');
+        require_once base_path('app/Library/Agora/AccessToken2.php');
+
+        $appId = env('AGORA_APP_ID', 'a53474aa58bd45b2a3304e82b63a68ec');
+        $appCertificate = env('AGORA_APP_CERTIFICATE', '');
+        $channelName = $request->channel;
+        $uid = 0; // Using 0 allows any UID
+        $role = \RtcTokenBuilder2::ROLE_PUBLISHER;
+        $expireTimeInSeconds = 3600;
+        $currentTimestamp = (new \DateTime("now", new \DateTimeZone('UTC')))->getTimestamp();
+        $privilegeExpiredTs = $currentTimestamp + $expireTimeInSeconds;
+
+        if (empty($appCertificate)) {
+            return response()->json(['errors' => [['code' => 'config', 'message' => 'Agora App Certificate no configurado en .env']]], 500);
+        }
+
+        $token = \RtcTokenBuilder2::buildTokenWithUid($appId, $appCertificate, $channelName, $uid, $role, $privilegeExpiredTs, $privilegeExpiredTs);
+
+        return response()->json([
+            'token' => $token,
+            'channel' => $channelName,
+        ], 200);
+    }
 }

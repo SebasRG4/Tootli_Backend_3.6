@@ -159,6 +159,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::post('update-active-status', 'DeliverymanController@activeStatus');
             Route::post('kyc/start', 'KycController@startVerificationDm');
             Route::get('current-orders', 'DeliverymanController@get_current_orders');
+            Route::get('agora-token', 'DeliverymanController@generate_agora_token');
             Route::get('latest-orders', 'DeliverymanController@get_latest_orders');
             Route::post('record-location-data', 'DeliverymanController@record_location_data');
             Route::get('all-orders', 'DeliverymanController@get_all_orders');
