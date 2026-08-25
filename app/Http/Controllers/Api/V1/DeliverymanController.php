@@ -3233,6 +3233,53 @@ class DeliverymanController extends Controller
             'message' => translate('messages.deposit_report_submitted_successfully'),
         ], 200);
     }
+    public function evaluate_failed_delivery(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required|integer',
+            'latitude' => 'required',
+            'longitude' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => \App\CentralLogics\Helpers::error_processor($validator)], 403);
+        }
+
+        $dm = $request->user();
+        $order = \App\Models\Order::where('id', $request->order_id)->where('delivery_man_id', $dm->id)->first();
+        if (!$order) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'order', 'message' => translate('messages.not_found')]
+                ]
+            ], 404);
+        }
+
+        $store = $order->store;
+        if (!$store) {
+            return response()->json([
+                'action' => 'donate',
+                'distance_km' => 0,
+                'message' => 'Restaurante no encontrado, procede con labor social.',
+            ], 200);
+        }
+
+        $distance_km = \App\CentralLogics\Helpers::get_distance($store->latitude, $store->longitude, $request->latitude, $request->longitude);
+
+        if ($distance_km <= 3) {
+            return response()->json([
+                'action' => 'return_to_store',
+                'distance_km' => round($distance_km, 2),
+                'message' => 'Restaurante cercano, retorna el producto.',
+            ], 200);
+        } else {
+            return response()->json([
+                'action' => 'donate',
+                'distance_km' => round($distance_km, 2),
+                'message' => 'Restaurante lejano, procede con labor social.',
+            ], 200);
+        }
+    }
 
     public function generate_agora_token(Request $request)
     {
@@ -3266,5 +3313,36 @@ class DeliverymanController extends Controller
             'token' => $token,
             'channel' => $channelName,
         ], 200);
+    }
+
+    public function start_call(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required|integer',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => \App\CentralLogics\Helpers::error_processor($validator)], 403);
+        }
+
+        $order = \App\Models\Order::where('id', $request->order_id)->first();
+        if(!$order) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+
+        $customer = $order->customer;
+        if($customer && $customer->cm_firebase_token) {
+            $data = [
+                'title' => 'Llamada Entrante',
+                'description' => 'El repartidor te está llamando.',
+                'order_id' => $order->id,
+                'image' => '',
+                'type' => 'incoming_call',
+                'channel' => 'order_'.$order->id,
+                'caller_name' => $order->delivery_man ? $order->delivery_man->f_name : 'Repartidor',
+            ];
+            \App\CentralLogics\Helpers::send_push_notif_to_device($customer->cm_firebase_token, $data);
+        }
+
+        return response()->json(['message' => 'Call started successfully'], 200);
     }
 }

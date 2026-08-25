@@ -950,7 +950,35 @@ class CustomerController extends Controller
             'data' => ['error_code' => 402, 'message' => "Invalid token"]
         ];
         return response()->json($data);
+    }
 
+    public function generate_agora_token(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'channel' => 'required|string',
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json(['errors' => \App\CentralLogics\Helpers::error_processor($validator)], 403);
+        }
+
+        require_once base_path('app/Library/Agora/RtcTokenBuilder2.php');
+        require_once base_path('app/Library/Agora/AccessToken2.php');
+
+        $appId = "0cda91e604f3460882efcece3dcfa61a"; // Your Agora App ID
+        $appCertificate = "9634e32d66dc47bf84b90da8591ef1fc"; // Your Agora App Cert
+        $channelName = $request->channel;
+        $uid = 0; // Use 0 for dynamic UID assignment
+        $role = \RtcTokenBuilder2::ROLE_PUBLISHER;
+        $expireTimeInSeconds = 3600;
+        $currentTimestamp = now()->getTimestamp();
+        $privilegeExpiredTs = $currentTimestamp + $expireTimeInSeconds;
+
+        $token = \RtcTokenBuilder2::buildTokenWithUid($appId, $appCertificate, $channelName, $uid, $role, $privilegeExpiredTs, $privilegeExpiredTs);
+
+        return response()->json([
+            'token' => $token,
+            'channel' => $channelName,
+        ], 200);
     }
 }
