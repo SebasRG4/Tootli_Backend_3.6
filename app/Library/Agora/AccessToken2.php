@@ -1,6 +1,6 @@
 <?php
 
-require_once "Util.php";
+require_once __DIR__ . "/Util.php";
 
 /**
  * Represent the common service type and privilege payload.
