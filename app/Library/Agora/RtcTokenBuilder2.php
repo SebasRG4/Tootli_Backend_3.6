@@ -1,6 +1,6 @@
 <?php
 
-require_once "AccessToken2.php";
+require_once __DIR__ . "/AccessToken2.php";
 
 class RtcTokenBuilder2
 {
