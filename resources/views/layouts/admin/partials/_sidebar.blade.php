@@ -1617,6 +1617,39 @@
                     @endif
                     <!-- End Employee -->
 
+                    <!-- ── Inteligencia Artificial ── -->
+                    <li class="nav-item">
+                        <small class="nav-subtitle" title="Inteligencia Artificial">Inteligencia Artificial</small>
+                        <small class="tio-more-horizontal nav-subtitle-replacer"></small>
+                    </li>
+
+                    <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/laboratorio-ia*') ? 'active' : '' }}">
+                        <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
+                            title="Laboratorio IA">
+                            <i class="tio-magic-wand nav-icon" style="background: linear-gradient(135deg,#7c3aed,#06b6d4); -webkit-background-clip:text; -webkit-text-fill-color:transparent;"></i>
+                            <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                Laboratorio IA
+                            </span>
+                        </a>
+                        <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
+                            style="display:{{ Request::is('admin/laboratorio-ia*') ? 'block' : 'none' }}">
+                            <li class="nav-item {{ Request::is('admin/laboratorio-ia') && request()->query('tab', 'laboratorio') === 'laboratorio' ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('admin.laboratorio-ia.index', ['tab' => 'laboratorio']) }}"
+                                    title="Laboratorio de Marketing">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate">🧪 Laboratorio Marketing</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('admin/laboratorio-ia*') && request()->query('tab') === 'configuracion' ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('admin.laboratorio-ia.index', ['tab' => 'configuracion']) }}"
+                                    title="Configuración Modal.com">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate">⚙️ Configuración</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- ── End Inteligencia Artificial ── -->
 
                     <li class="nav-item py-5">
 

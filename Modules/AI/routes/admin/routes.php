@@ -3,6 +3,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\AI\app\Http\Controllers\Admin\Web\Product\ProductAutoFillController;
+use Modules\AI\app\Http\Controllers\Admin\Web\LaboratorioIA\LaboratorioIAController;
 
 
 /*
@@ -27,6 +28,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['module:ite
         Route::get('variation-setup-auto-fill', [ProductAutoFillController::class, 'variationSetupAutoFill'])->name('variation-setup-auto-fill');
         Route::post('analyze-image-auto-fill', [ProductAutoFillController::class, 'analyzeImageAutoFill'])->name('analyze-image-auto-fill');
         Route::post('generate-title-suggestions', [ProductAutoFillController::class, 'generateTitleSuggestions'])->name('generate-title-suggestions');
+    });
+
+    Route::group(['prefix' => 'laboratorio-ia', 'as' => 'laboratorio-ia.', 'middleware' => ['admin']], function () {
+        Route::get('/', [LaboratorioIAController::class, 'index'])->name('index');
+        Route::post('/configuracion/guardar', [LaboratorioIAController::class, 'guardarConfiguracion'])->name('configuracion.guardar');
+        Route::post('/generar-ugc', [LaboratorioIAController::class, 'generarUGC'])->name('generar-ugc');
+        Route::post('/generar-prompt-marketing', [LaboratorioIAController::class, 'generarPromptMarketing'])->name('generar-prompt-marketing');
     });
 
 });

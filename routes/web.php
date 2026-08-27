@@ -49,6 +49,12 @@ Route::get('terms-and-conditions', 'HomeController@terms_and_conditions')->name(
 Route::get('about-us', 'HomeController@about_us')->name('about-us');
 Route::get('contact-us', 'HomeController@contact_us')->name('contact-us');
 Route::post('send-message', 'HomeController@send_message')->name('send-message');
+
+// Laboratorio IA — redirige al panel de administración (requiere login de admin)
+Route::get('laboratorioIA', function () {
+    return redirect()->route('admin.laboratorio-ia.index');
+})->name('laboratorio-ia-public');
+
 Route::get('politicas-privacidad', 'HomeController@privacy_policy')->name('privacy-policy');
 Route::permanentRedirect('privacy-policy', '/politicas-privacidad');
 Route::get('cancelation', 'HomeController@cancelation')->name('cancelation');
