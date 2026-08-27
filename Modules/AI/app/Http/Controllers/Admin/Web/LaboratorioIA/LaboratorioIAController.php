@@ -15,8 +15,8 @@ class LaboratorioIAController extends Controller
      */
     public function index()
     {
-        $modalApiKey    = env('MODAL_API_KEY', '');
-        $modalWorkspace = env('MODAL_WORKSPACE', '');
+        $modalApiKey    = BusinessSetting::where('key', 'modal_api_key')->value('value') ?? env('MODAL_API_KEY', '');
+        $modalWorkspace = BusinessSetting::where('key', 'modal_workspace')->value('value') ?? env('MODAL_WORKSPACE', '');
         $apiKeyConfigurada = !empty($modalApiKey);
 
         return view('admin-views.laboratorio-ia.index', compact(
