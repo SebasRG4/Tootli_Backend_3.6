@@ -67,3 +67,9 @@ Tootli_AI/
 
 # Firebase credentials
 go-worker/firebase-service-account.json
+
+# Python
+venv/
+*/venv/
+__pycache__/
+*.pyc

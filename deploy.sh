@@ -39,6 +39,7 @@ sshpass -p "$VPS_PASS" ssh -p "$VPS_PORT" -o StrictHostKeyChecking=no "${VPS_USE
   cd $REMOTE_DIR
 
   echo "==> [VPS] Descargando ultimos cambios de GitHub..."
+  git checkout -- . 2>/dev/null || true
   git pull origin main
 
   echo "==> [VPS] Ejecutando migraciones de base de datos..."
