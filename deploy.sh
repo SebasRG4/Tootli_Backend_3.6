@@ -48,7 +48,6 @@ sshpass -p "$VPS_PASS" ssh -p "$VPS_PORT" -o StrictHostKeyChecking=no "${VPS_USE
   echo "==> [VPS] Limpiando y optimizando cache de Laravel..."
   echo '$VPS_PASS' | sudo -S docker compose exec -T app php artisan optimize:clear
   echo '$VPS_PASS' | sudo -S docker compose exec -T app php artisan config:cache
-  echo '$VPS_PASS' | sudo -S docker compose exec -T app php artisan route:cache
 
   echo "==> [VPS] Reiniciando cola de procesos (queue worker)..."
   echo '$VPS_PASS' | sudo -S docker compose restart queue > /dev/null 2>&1 || true

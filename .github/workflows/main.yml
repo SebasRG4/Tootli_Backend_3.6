@@ -101,6 +101,5 @@ jobs:
             echo '${{ secrets.SSH_PASSWORD }}' | sudo -S docker compose exec -T app php artisan migrate --force
             echo '${{ secrets.SSH_PASSWORD }}' | sudo -S docker compose exec -T app php artisan optimize:clear
             echo '${{ secrets.SSH_PASSWORD }}' | sudo -S docker compose exec -T app php artisan config:cache
-            echo '${{ secrets.SSH_PASSWORD }}' | sudo -S docker compose exec -T app php artisan route:cache
             echo '${{ secrets.SSH_PASSWORD }}' | sudo -S docker compose restart queue || true
 
