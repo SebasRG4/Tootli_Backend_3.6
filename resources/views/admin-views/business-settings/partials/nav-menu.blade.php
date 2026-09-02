@@ -67,6 +67,11 @@
                     href="{{ route('admin.business-settings.business-setup', ['tab' => 'dynamic-pricing']) }}"
                     aria-disabled="true">Tarifa dinámica</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/to-do-list') ? 'active' : '' }}"
+                    href="{{ route('admin.business-settings.business-setup', ['tab' => 'to-do-list']) }}"
+                    aria-disabled="true">To do list</a>
+            </li>
         </ul>
         <!-- End Nav -->
     </div>

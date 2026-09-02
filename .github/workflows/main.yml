@@ -80,53 +80,10 @@ jobs:
           REDIS_HOST: 127.0.0.1
         run: php artisan test
 
-  # ─── 2. Build & Push de Imágenes Docker (Solo en main) ─────────────
-  build-and-push:
-    name: Build & Push Docker Images
-    needs: test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Laravel App
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: docker/php/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_APP }}:latest
-
-      - name: Build and push Go Worker
-        uses: docker/build-push-action@v5
-        with:
-          context: ./go-worker
-          file: go-worker/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_GO }}:latest
-
-      - name: Build and push AI Service
-        uses: docker/build-push-action@v5
-        with:
-          context: ./Tootli_AI
-          file: Tootli_AI/Dockerfile
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_AI }}:latest
-
-  # ─── 3. Despliegue Automático a VPS (Solo si QA y Build pasaron) ─
+  # ─── 2. Despliegue Automático a VPS (Solo si QA pasó en rama main) ───
   deploy:
     name: Deploy to Production VPS
-    needs: build-and-push
+    needs: test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
@@ -135,11 +92,15 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
           key: ${{ secrets.SSH_KEY }}
           port: 5225
           script: |
             cd /opt/tootli
-            docker compose pull
-            docker compose up -d
-            docker compose exec -T app php artisan migrate --force
-            docker compose exec -T app php artisan optimize:clear
+            git pull origin main
+            echo '${{ secrets.SSH_PASSWORD }}' | sudo -S docker compose exec -T app php artisan migrate --force
+            echo '${{ secrets.SSH_PASSWORD }}' | sudo -S docker compose exec -T app php artisan optimize:clear
+            echo '${{ secrets.SSH_PASSWORD }}' | sudo -S docker compose exec -T app php artisan config:cache
+            echo '${{ secrets.SSH_PASSWORD }}' | sudo -S docker compose exec -T app php artisan route:cache
+            echo '${{ secrets.SSH_PASSWORD }}' | sudo -S docker compose restart queue || true
+

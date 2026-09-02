@@ -59,7 +59,6 @@
                                 {{ 'Panel de Control' }}
                             </span>
                         </a>
-                    </li>
                     <!-- End Dashboards -->
 
                     <!-- Marketing section -->

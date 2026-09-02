@@ -109,6 +109,15 @@ class DeliveryEligibilityService
              // return DeliveryEligibilityResult::deny('deposit_required', 'deposit_required', 403, translate('messages.dm_deposit_required_time_limit'));
         }
 
+        if ($this->orderExceedsTierCodOrderValue($dm, $order)) {
+            return DeliveryEligibilityResult::deny(
+                'tier_restricted',
+                'tier_restricted',
+                403,
+                translate('messages.dm_order_exceeds_tier_cod_limit') ?? 'Order amount exceeds tier cash limit',
+            );
+        }
+
         // 2. Validar Límite de Efectivo
         if ($this->exceedsCashInHandLimit($dm, $order)) {
             // REGLA TOOTLI: Zona de Relajación

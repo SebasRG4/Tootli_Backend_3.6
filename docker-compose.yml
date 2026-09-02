@@ -15,7 +15,7 @@ services:
     image: redis:alpine
     restart: always
     ports:
-      - "127.0.0.1:6379:6379"
+      - "127.0.0.1:6380:6379"
 
 
   app:
@@ -32,7 +32,7 @@ services:
       - ./docker/php/www.conf:/usr/local/etc/php-fpm.d/www.conf
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-      - /opt/tootli/go-worker/firebase-service-account.json:/app/firebase-service-account.json:ro
+      - ./go-worker/firebase-service-account.json:/app/firebase-service-account.json:ro
     depends_on:
       - db
       - redis
@@ -51,7 +51,7 @@ services:
       - ./docker/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-      - /opt/tootli/go-worker/firebase-service-account.json:/app/firebase-service-account.json:ro
+      - ./go-worker/firebase-service-account.json:/app/firebase-service-account.json:ro
     depends_on:
       - db
       - redis
@@ -89,7 +89,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-      - /opt/tootli/go-worker/firebase-service-account.json:/app/firebase-service-account.json:ro
+      - ./go-worker/firebase-service-account.json:/app/firebase-service-account.json:ro
     environment:
       TZ: America/Mexico_City
     depends_on:
@@ -113,9 +113,9 @@ services:
     container_name: tootli-osrm
     restart: always
     ports:
-      - "5000:5000"
+      - "5001:5000"
     volumes:
-      - /opt/osrm/data:/data
+      - ./osrm_data:/data
     command: osrm-routed --algorithm mld /data/estado-de-mexico.osrm
 
 volumes:

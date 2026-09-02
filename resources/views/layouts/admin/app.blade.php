@@ -78,6 +78,10 @@ $countryCode = strtolower($country ? $country : 'auto');
     @php($module_type = 'settings')
     @endif
 
+    @if(Request::is('admin/espacios*'))
+    @php($module_type = 'pharmacy')
+    @endif
+
     @if($module_type == 'rental')
         @include("rental::admin.partials._sidebar_{$module_type}")
     @else

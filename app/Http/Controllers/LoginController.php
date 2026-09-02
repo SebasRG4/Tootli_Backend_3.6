@@ -165,9 +165,14 @@ class LoginController extends Controller
         } elseif ($request->role == 'admin') {
             $data = Admin::where('email', $request->email)->where('role_id', 1)->exists();
             if (!$data) {
-                RateLimiter::hit($key, $decayMinutes * 60);
-                return redirect()->back()->withInput($request->only('email', 'remember'))
-                    ->withErrors(['Email does not match.']);
+                $employee_data = Admin::where('email', $request->email)->where('role_id', '!=', 1)->exists();
+                if ($employee_data) {
+                    $request->merge(['role' => 'admin_employee']);
+                } else {
+                    RateLimiter::hit($key, $decayMinutes * 60);
+                    return redirect()->back()->withInput($request->only('email', 'remember'))
+                        ->withErrors(['Email does not match.']);
+                }
             }
         } elseif ($request->role == 'vendor') {
             $vendor = Vendor::where('email', $request->email)->first();

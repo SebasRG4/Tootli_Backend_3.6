@@ -1,0 +1,11 @@
+{
+    "name": "Espacios",
+    "alias": "espacios",
+    "description": "Módulo de renta de espacios tipo Airbnb",
+    "keywords": ["espacios", "renta", "airbnb", "hospedaje"],
+    "priority": 0,
+    "providers": [
+        "Modules\\Espacios\\Providers\\EspaciosServiceProvider"
+    ],
+    "files": []
+}

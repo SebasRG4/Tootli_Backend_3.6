@@ -62,6 +62,20 @@
                     </li>
                     <!-- End Dashboards -->
 
+                    <!-- Espacios -->
+                    <li class="nav-item">
+                        <small class="nav-subtitle" title="Gestión de Espacios">Espacios (Módulo)</small>
+                        <small class="tio-more-horizontal nav-subtitle-replacer"></small>
+                    </li>
+                    <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/espacios*') ? 'active' : '' }}">
+                        <a class="js-navbar-vertical-aside-menu-link nav-link " href="{{ route('admin.espacios.index') }}"
+                            title="Gestión de Espacios">
+                            <i class="tio-home-work nav-icon"></i>
+                            <span class="text-truncate">Gestión de Espacios</span>
+                        </a>
+                    </li>
+                    <!-- End Espacios -->
+
                     <!-- Marketing section -->
                     @if(\App\CentralLogics\Helpers::module_permission_check('pos'))
                         <li class="nav-item">

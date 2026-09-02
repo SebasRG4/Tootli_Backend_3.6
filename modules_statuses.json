@@ -4,5 +4,6 @@
     "Controller": true,
     "TaxModule": true,
     "AI": true,
-    "Taxi": true
+    "Taxi": true,
+    "Espacios": true
 }

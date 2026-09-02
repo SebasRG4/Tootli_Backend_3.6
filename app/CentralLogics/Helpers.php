@@ -2870,7 +2870,11 @@ class Helpers
     {
         $config = self::get_business_settings('local_storage');
 
-        return isset($config) ? ($config == 0 ? 's3' : 'public') : 'public';
+        if (isset($config)) {
+            return $config == 0 ? 's3' : 'public';
+        }
+
+        return config('filesystems.default') === 's3' ? 's3' : 'public';
     }
 
     public static function upload(string $dir, string $format, $image = null)
@@ -4077,11 +4081,8 @@ class Helpers
             'email_template' => asset('assets/admin/img/blank1.png'),
         ];
         try {
-            if ($data && $type == 's3' && Storage::disk('s3')->exists($path . '/' . $data)) {
+            if ($data && $type == 's3') {
                 return Storage::disk('s3')->url($path . '/' . $data);
-                //                $awsUrl = config('filesystems.disks.s3.url');
-//                $awsBucket = config('filesystems.disks.s3.bucket');
-//                return rtrim($awsUrl, '/') . '/' . ltrim($awsBucket . '/' . $path . '/' . $data, '/');
             }
         } catch (\Exception $e) {
         }

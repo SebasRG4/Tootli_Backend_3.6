@@ -586,6 +586,22 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post('activation', 'AddonActivationController@activation')->name('activation');
             });
 
+            // To Do List
+            Route::group(['prefix' => 'to-do-list', 'as' => 'todo.'], function () {
+                // Tasks
+                Route::get('/', 'TodoController@index')->name('index');
+                Route::post('/store', 'TodoController@store')->name('store');
+                Route::put('/{todo}', 'TodoController@update')->name('update');
+                Route::delete('/{todo}', 'TodoController@destroy')->name('destroy');
+                Route::post('/{todo}/status', 'TodoController@updateStatus')->name('status');
+
+                // Categories
+                Route::post('/categories/store', 'TodoController@storeCategory')->name('categories.store');
+                Route::put('/categories/{category}', 'TodoController@updateCategory')->name('categories.update');
+                Route::delete('/categories/{category}', 'TodoController@destroyCategory')->name('categories.destroy');
+                Route::post('/categories/reorder', 'TodoController@reorderCategories')->name('categories.reorder');
+            });
+
             Route::get('login-url-setup', 'BusinessSettingsController@login_url_page')->name('login_url_page');
             Route::post('login-url-setup/update', 'BusinessSettingsController@login_url_page_update')->name('login_url_update');
 

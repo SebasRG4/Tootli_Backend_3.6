@@ -170,12 +170,17 @@ class DeliveryEligibilityServiceTest extends TestCase
 
     public function test_denies_cash_limit_via_stub(): void
     {
+        \App\Models\BusinessSetting::updateOrCreate(
+            ['key' => 'high_value_strategy'],
+            ['value' => 'strict_block']
+        );
+
         $svc = new DeliveryEligibilityServiceStub(
             redisSisMember: fn () => false,
             forceCashExceeded: true,
             cashLimitForDisplay: 250,
         );
-        $r = $svc->evaluateForAccept($this->dm(), $this->order(), null, null);
+        $r = $svc->evaluateForAccept($this->dm(), $this->order(['order_amount' => 800]), null, null);
 
         $this->assertFalse($r->allowed);
         $this->assertSame('cash_limit', $r->code);

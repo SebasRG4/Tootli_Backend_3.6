@@ -35,6 +35,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['module:ite
         Route::post('/configuracion/guardar', [LaboratorioIAController::class, 'guardarConfiguracion'])->name('configuracion.guardar');
         Route::post('/generar-ugc', [LaboratorioIAController::class, 'generarUGC'])->name('generar-ugc');
         Route::post('/generar-prompt-marketing', [LaboratorioIAController::class, 'generarPromptMarketing'])->name('generar-prompt-marketing');
+        Route::post('/generar-video', [LaboratorioIAController::class, 'generarVideo'])->name('generar-video');
+        Route::post('/generar-avatar', [LaboratorioIAController::class, 'generarAvatar'])->name('generar-avatar');
+        Route::get('/tendencias', [LaboratorioIAController::class, 'obtenerTendencias'])->name('tendencias');
+        Route::post('/analizar-url', [LaboratorioIAController::class, 'analizarUrl'])->name('analizar-url');
+        Route::post('/generar-fastlane', [LaboratorioIAController::class, 'generarFastlane'])->name('generar-fastlane');
+        Route::get('/estado-fastlane/{jobId}', [LaboratorioIAController::class, 'estadoFastlane'])->name('estado-fastlane');
     });
 
 });

@@ -449,6 +449,14 @@
                 onclick="switchTab('configuracion')" id="tab-btn-configuracion">
             ⚙️ Configuración
         </button>
+        <button class="lab-tab-btn {{ request('tab') === 'avatar' ? 'active' : '' }}"
+                onclick="switchTab('avatar')" id="tab-btn-avatar">
+            🗣️ Avatar Hablante
+        </button>
+        <button class="lab-tab-btn {{ request('tab') === 'fastlane' ? 'active' : '' }}"
+                onclick="switchTab('fastlane')" id="tab-btn-fastlane">
+            🚀 Creador Fastlane
+        </button>
     </div>
 
     {{-- ══════════════════════════════════════════════ --}}
@@ -461,12 +469,17 @@
             {{-- ── Generador de UGC ── --}}
             <div class="col-md-6">
                 <div class="lab-card">
-                    <div class="lab-card-header">
-                        <div class="lab-card-icon purple">✨</div>
-                        <div>
-                            <p class="lab-card-title">Generador de Contenido (UGC)</p>
-                            <p class="lab-card-desc">Captions, posts y copies listos para publicar</p>
+                    <div class="lab-card-header d-flex justify-content-between align-items-center">
+                        <div class="d-flex">
+                            <div class="lab-card-icon purple">✨</div>
+                            <div>
+                                <p class="lab-card-title">Generador de Contenido (UGC)</p>
+                                <p class="lab-card-desc">Captions, posts y copies listos para publicar</p>
+                            </div>
                         </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="obtenerTendencias()" id="btn-tendencias">
+                            <i class="tio-trending-up"></i> 🔥 Tendencias
+                        </button>
                     </div>
 
                     <form id="ugcForm">
@@ -748,6 +761,110 @@
             </div>
         </div>
     </div>
+    </div>
+
+    {{-- ══════════════════════════════════════════════ --}}
+    {{-- TAB: AVATAR HABLANTE                           --}}
+    {{-- ══════════════════════════════════════════════ --}}
+    <div id="panel-avatar" class="{{ request('tab') !== 'avatar' ? 'd-none' : '' }}">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="lab-card">
+                    <div class="lab-card-header">
+                        <div class="lab-card-icon purple">🗣️</div>
+                        <div>
+                            <p class="lab-card-title">Avatar Hablante</p>
+                            <p class="lab-card-desc">Sube una foto, escribe un guion, y genera un video narrado.</p>
+                        </div>
+                    </div>
+                    <form id="avatarForm" enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-3">
+                            <label class="lab-label">Foto del Avatar (PNG/JPG, max 5MB)</label>
+                            <input type="file" name="imagen_avatar" class="lab-input" accept="image/png, image/jpeg" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="lab-label">Guion (Lo que va a decir el avatar)</label>
+                            <textarea name="guion" class="lab-input" rows="4" placeholder="Ej: Hola, bienvenidos a Tootli..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-generar" id="avatarSubmitBtn">
+                            <i class="tio-video-camera"></i> <span id="avatarBtnText">🎬 Generar Video</span>
+                            <div class="lab-spinner" id="avatarSpinner"></div>
+                        </button>
+                    </form>
+                    
+                    <div class="lab-result-card mt-3" id="avatarOutput">
+                        <p class="lab-label text-success mb-2"><i class="tio-checkmark-circle"></i> ¡Video Generado!</p>
+                        <video id="avatarPlayer" controls width="100%" style="border-radius: 12px; display: none;"></video>
+                        <div id="avatarResult" class="text-danger mt-2" style="font-size: 14px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- ══════════════════════════════════════════════ --}}
+    {{-- TAB: CREADOR FASTLANE                          --}}
+    {{-- ══════════════════════════════════════════════ --}}
+    <div id="panel-fastlane" class="{{ request('tab') !== 'fastlane' ? 'd-none' : '' }}">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="lab-card">
+                    <div class="lab-card-header">
+                        <div class="lab-card-icon" style="background: rgba(255, 107, 107, 0.2); color: #ff6b6b;">🚀</div>
+                        <div>
+                            <p class="lab-card-title">Fastlane Creator (BETA)</p>
+                            <p class="lab-card-desc">Convierte cualquier URL en un video narrado por tu Avatar.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Paso 1: Ingresar URL -->
+                    <form id="fastlaneUrlForm">
+                        @csrf
+                        <div class="mb-3">
+                            <label class="lab-label">Pega el link (URL) de tu producto/negocio</label>
+                            <input type="url" name="url" class="lab-input" placeholder="Ej: https://tootli.mx/restaurantes/burger-king" required>
+                        </div>
+                        <button type="submit" class="btn-generar" id="flUrlBtn">
+                            <i class="tio-search"></i> <span id="flUrlBtnText">Analizar URL y Generar Hooks</span>
+                            <div class="lab-spinner" id="flUrlSpinner"></div>
+                        </button>
+                    </form>
+
+                    <!-- Paso 2: Elegir Hook y Generar Video -->
+                    <div id="flHooksSection" class="mt-4 d-none">
+                        <h5 class="text-white mb-3"><i class="tio-format-points"></i> Hooks Generados</h5>
+                        <form id="fastlaneAvatarForm" enctype="multipart/form-data">
+                            @csrf
+                            <div id="flHooksContainer" class="mb-3">
+                                <!-- Tarjetas de radio buttons inyectadas por JS -->
+                            </div>
+                            
+                            <hr style="border-color: rgba(255,255,255,0.1);">
+                            <h5 class="text-white mb-3 mt-3"><i class="tio-face"></i> Configuración del Avatar</h5>
+                            
+                            <div class="mb-3">
+                                <label class="lab-label">Foto del Avatar (PNG/JPG)</label>
+                                <input type="file" name="imagen_avatar" class="lab-input" accept="image/png, image/jpeg" required>
+                            </div>
+                            
+                            <button type="submit" class="btn-generar" id="flAvatarBtn" style="background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);">
+                                <i class="tio-video-camera"></i> <span id="flAvatarBtnText">Generar Video Final</span>
+                                <div class="lab-spinner" id="flAvatarSpinner"></div>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Resultado Video -->
+                    <div class="lab-result-card mt-3" id="flOutput">
+                        <p class="lab-label text-success mb-2"><i class="tio-checkmark-circle"></i> ¡Video Fastlane Generado!</p>
+                        <video id="flPlayer" controls width="100%" style="border-radius: 12px; display: none;"></video>
+                        <div id="flResult" class="text-danger mt-2" style="font-size: 14px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 @endsection
@@ -758,8 +875,22 @@
 function switchTab(name) {
     document.getElementById('panel-laboratorio').classList.toggle('d-none', name !== 'laboratorio');
     document.getElementById('panel-configuracion').classList.toggle('d-none', name !== 'configuracion');
+    
+    const panelAvatar = document.getElementById('panel-avatar');
+    if(panelAvatar) panelAvatar.classList.toggle('d-none', name !== 'avatar');
+    
+    const panelFastlane = document.getElementById('panel-fastlane');
+    if(panelFastlane) panelFastlane.classList.toggle('d-none', name !== 'fastlane');
+    
     document.getElementById('tab-btn-laboratorio').classList.toggle('active', name === 'laboratorio');
     document.getElementById('tab-btn-configuracion').classList.toggle('active', name === 'configuracion');
+    
+    const tabAvatar = document.getElementById('tab-btn-avatar');
+    if(tabAvatar) tabAvatar.classList.toggle('active', name === 'avatar');
+    
+    const tabFastlane = document.getElementById('tab-btn-fastlane');
+    if(tabFastlane) tabFastlane.classList.toggle('active', name === 'fastlane');
+    
     history.replaceState(null, '', '?tab=' + name);
 }
 
@@ -896,6 +1027,271 @@ function copyPrompt(card, text) {
         setTimeout(() => card.style.borderColor = '', 800);
         toastr.success('Prompt copiado — pégalo en ChatGPT, Gemini o Claude', '', {timeOut: 2000});
     });
+}
+
+/* ── Avatar Form ── */
+const avatarFormEl = document.getElementById('avatarForm');
+if (avatarFormEl) {
+    avatarFormEl.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const btn  = document.getElementById('avatarSubmitBtn');
+        const spin = document.getElementById('avatarSpinner');
+        const txt  = document.getElementById('avatarBtnText');
+        const out  = document.getElementById('avatarOutput');
+        const res  = document.getElementById('avatarResult');
+        const player = document.getElementById('avatarPlayer');
+
+        btn.disabled = true;
+        spin.style.display = 'block';
+        txt.textContent = 'Generando video... Esto puede tardar 1 minuto.';
+        out.classList.remove('show');
+        player.style.display = 'none';
+        res.textContent = '';
+
+        const data = new FormData(this);
+        try {
+            const resp = await fetch('{{ route("admin.laboratorio-ia.generar-avatar") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('[name=_token]').value,
+                    'Accept': 'application/json',
+                },
+                body: data
+            });
+            const json = await resp.json();
+            if (json.success) {
+                out.classList.add('show');
+                player.src = json.video_url;
+                player.style.display = 'block';
+                toastr.success('¡Video avatar generado con éxito!');
+            } else {
+                res.textContent = json.error || 'Error desconocido';
+                out.classList.add('show');
+            }
+        } catch(err) {
+            toastr.error('Error de conexión con el servidor');
+        } finally {
+            btn.disabled = false;
+            spin.style.display = 'none';
+            txt.textContent = '🎬 Generar Video';
+        }
+    });
+}
+
+/* ── Fastlane Creator ── */
+const flUrlForm = document.getElementById('fastlaneUrlForm');
+if (flUrlForm) {
+    flUrlForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('flUrlBtn');
+        const spin = document.getElementById('flUrlSpinner');
+        const txt = document.getElementById('flUrlBtnText');
+        const section = document.getElementById('flHooksSection');
+        const container = document.getElementById('flHooksContainer');
+
+        btn.disabled = true;
+        spin.style.display = 'block';
+        txt.textContent = 'Analizando y extrayendo guiones...';
+        section.classList.add('d-none');
+
+        const data = new FormData(this);
+        try {
+            const resp = await fetch('{{ route("admin.laboratorio-ia.analizar-url") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('[name=_token]').value,
+                    'Accept': 'application/json',
+                },
+                body: data
+            });
+            const json = await resp.json();
+            if (json.success) {
+                // Llenar container con los hooks
+                container.innerHTML = json.hooks.map((hook, idx) => `
+                    <div class="lab-card mb-2" style="cursor:pointer; border: 1px solid rgba(255,255,255,0.1);" onclick="document.getElementById('hook_${idx}').checked = true">
+                        <div class="d-flex align-items-center">
+                            <input type="radio" name="guion_elegido" id="hook_${idx}" value="${hook.texto}" class="mr-3" required ${idx === 0 ? 'checked' : ''}>
+                            <div>
+                                <h6 class="text-white mb-1">${hook.titulo}</h6>
+                                <p class="text-muted mb-0" style="font-size:13px;">${hook.texto}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                section.classList.remove('d-none');
+                toastr.success('URL analizada con éxito.');
+            } else {
+                toastr.error(json.error || 'No se pudo analizar la URL');
+            }
+        } catch(err) {
+            toastr.error('Error de conexión');
+        } finally {
+            btn.disabled = false;
+            spin.style.display = 'none';
+            txt.textContent = 'Analizar URL y Generar Hooks';
+        }
+    });
+}
+
+const flAvatarForm = document.getElementById('fastlaneAvatarForm');
+if (flAvatarForm) {
+    flAvatarForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('flAvatarBtn');
+        const spin = document.getElementById('flAvatarSpinner');
+        const txt = document.getElementById('flAvatarBtnText');
+        const out = document.getElementById('flOutput');
+        const res = document.getElementById('flResult');
+        const player = document.getElementById('flPlayer');
+
+        btn.disabled = true;
+        spin.style.display = 'block';
+        txt.textContent = 'Ensamblando video en JSON2Video... (1 min aprox)';
+        out.classList.remove('show');
+        player.style.display = 'none';
+        res.textContent = '';
+
+        // Copiamos el guion y el file
+        const data = new FormData(this);
+        data.append('guion', document.querySelector('input[name="guion_elegido"]:checked').value);
+
+        try {
+            const resp = await fetch('{{ route("admin.laboratorio-ia.generar-fastlane") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('[name=_token]').value,
+                    'Accept': 'application/json',
+                },
+                body: data
+            });
+            const json = await resp.json();
+            
+            if (json.success && json.job_id) {
+                // Iniciar Polling (cada 5 segundos)
+                const jobId = json.job_id;
+                let attempts = 0;
+                
+                const pollInterval = setInterval(async () => {
+                    attempts++;
+                    try {
+                        const checkResp = await fetch(`/admin/laboratorio-ia/estado-fastlane/${jobId}`);
+                        const checkJson = await checkResp.json();
+                        
+                        if (checkJson.success && checkJson.data) {
+                            if (checkJson.data.status === 'done') {
+                                clearInterval(pollInterval);
+                                out.classList.add('show');
+                                player.src = checkJson.data.video_url;
+                                player.style.display = 'block';
+                                toastr.success('¡Plantilla TikTok generada con éxito!');
+                                btn.disabled = false;
+                                spin.style.display = 'none';
+                                txt.textContent = 'Generar Video Final';
+                            } else if (checkJson.data.status === 'error') {
+                                clearInterval(pollInterval);
+                                res.textContent = checkJson.data.error || 'Error desconocido';
+                                out.classList.add('show');
+                                btn.disabled = false;
+                                spin.style.display = 'none';
+                                txt.textContent = 'Generar Video Final';
+                            } else {
+                                // Sigue processing, actualizamos UI para que el usuario no desespere
+                                txt.textContent = `Procesando... (${attempts * 5}s transcurridos)`;
+                            }
+                        }
+                        
+                        if (attempts > 60) { // Timeout de 5 mins en front
+                            clearInterval(pollInterval);
+                            toastr.error('Tiempo de espera agotado. Por favor revisa más tarde.');
+                            btn.disabled = false;
+                            spin.style.display = 'none';
+                            txt.textContent = 'Generar Video Final';
+                        }
+                    } catch(e) {
+                        console.error('Error polling', e);
+                    }
+                }, 5000);
+            } else {
+                res.textContent = json.error || 'Error de conexión';
+                out.classList.add('show');
+                btn.disabled = false;
+                spin.style.display = 'none';
+                txt.textContent = 'Generar Video Final';
+            }
+        } catch(err) {
+            toastr.error('Error de conexión con el servidor');
+            btn.disabled = false;
+            spin.style.display = 'none';
+            txt.textContent = 'Generar Video Final';
+        }
+    });
+}
+
+// ─────────────── TENDENCIAS TIKTOK ───────────────
+let tendenciasCargadas = false;
+
+async function obtenerTendencias() {
+    $('#tendenciasModal').modal('show');
+    
+    if (tendenciasCargadas) return;
+
+    const loading = document.getElementById('tendencias-loading');
+    const errorDiv = document.getElementById('tendencias-error');
+    const listDiv = document.getElementById('tendencias-list');
+
+    loading.classList.remove('d-none');
+    errorDiv.classList.add('d-none');
+    listDiv.classList.add('d-none');
+
+    try {
+        const resp = await fetch('{{ route('admin.laboratorio-ia.tendencias') }}');
+        const json = await resp.json();
+
+        if (json.success) {
+            tendenciasCargadas = true;
+            listDiv.innerHTML = '';
+            
+            if (json.tendencias && json.tendencias.length > 0) {
+                json.tendencias.forEach((trend, index) => {
+                    const viewsStr = trend['Video Views'] ? (trend['Video Views'] / 1000000).toFixed(1) + 'M' : 'N/A';
+                    const html = `
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-3" style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <div>
+                                <h4 class="mb-1 text-white" style="font-size:16px;">${index + 1}. ${trend.Hashtag}</h4>
+                                <small class="text-muted"><i class="tio-play-circle-outlined"></i> ${viewsStr} vistas en México</small>
+                            </div>
+                            <button class="btn btn-sm btn-primary rounded-pill px-3" onclick="usarTendencia('${trend.Hashtag}')">Usar</button>
+                        </div>
+                    `;
+                    listDiv.innerHTML += html;
+                });
+            } else {
+                listDiv.innerHTML = '<p class="text-muted text-center">No se encontraron tendencias recientes.</p>';
+            }
+            
+            loading.classList.add('d-none');
+            listDiv.classList.remove('d-none');
+        } else {
+            throw new Error(json.error || 'Error desconocido');
+        }
+    } catch (err) {
+        loading.classList.add('d-none');
+        errorDiv.classList.remove('d-none');
+        errorDiv.textContent = '❌ Error al cargar tendencias: ' + err.message;
+    }
+}
+
+function usarTendencia(hashtag) {
+    const inputProducto = document.querySelector('input[name="producto"]');
+    if (inputProducto) {
+        inputProducto.value = (inputProducto.value ? inputProducto.value + ' + ' : '') + 'Trend: ' + hashtag;
+        inputProducto.style.transition = 'all 0.3s';
+        inputProducto.style.boxShadow = '0 0 10px #7367f0';
+        setTimeout(() => {
+            inputProducto.style.boxShadow = 'none';
+        }, 1000);
+    }
+    $('#tendenciasModal').modal('hide');
 }
 </script>
 @endpush

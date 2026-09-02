@@ -22,6 +22,11 @@ final class DeliveryEligibilityResult
         return new self(allowed: true);
     }
 
+    public static function allow(): self
+    {
+        return self::ok();
+    }
+
     public static function deny(
         string $code,
         string $messageKey,

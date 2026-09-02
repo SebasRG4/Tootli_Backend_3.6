@@ -114,6 +114,14 @@
                                 <span class="text-truncate">{{ 'entornos empresariales' }}</span>
                             </a>
                         </li>
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/to-do-list*') ? 'active' : '' }}">
+                            <a class="nav-link " href="{{ url('admin/business-settings/to-do-list') }}"
+                                title="To do list">
+                                <span class="tio-format-bullets nav-icon"></span>
+                                <span class="text-truncate">To do list</span>
+                            </a>
+                        </li>
                         @if (addon_published_status('TaxModule'))
                             <li class="navbar-vertical-aside-has-menu @yield('taxmodule')">
 
