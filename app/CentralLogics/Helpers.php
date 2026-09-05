@@ -4092,7 +4092,8 @@ class Helpers
         }
 
         if (request()->is('api/*')) {
-            return null;
+            // 🚧 LOCAL DEV OVERRIDE: Pull missing images from production
+            return 'https://tootli.mx/storage/' . $path . '/' . $data;
         }
 
         if (isset($placeholder) && array_key_exists($placeholder, $place_holders)) {
