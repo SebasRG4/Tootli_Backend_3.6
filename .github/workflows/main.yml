@@ -102,4 +102,6 @@ jobs:
             echo '${{ secrets.SSH_PASSWORD }}' | sudo -S docker compose exec -T app php artisan optimize:clear
             echo '${{ secrets.SSH_PASSWORD }}' | sudo -S docker compose exec -T app php artisan config:cache
             echo '${{ secrets.SSH_PASSWORD }}' | sudo -S docker compose restart queue || true
+            echo '${{ secrets.SSH_PASSWORD }}' | sudo -S docker compose exec -T app chown -R www-data:www-data storage bootstrap/cache
+            echo '${{ secrets.SSH_PASSWORD }}' | sudo -S docker compose exec -T app chmod -R 775 storage bootstrap/cache
 
