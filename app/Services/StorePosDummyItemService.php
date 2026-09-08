@@ -131,6 +131,18 @@ class StorePosDummyItemService
 
     private static function resolveCategoryId(Store $store): ?int
     {
+        $categoryIds = json_decode($store->category_ids ?? '[]', true);
+        if (is_array($categoryIds) && count($categoryIds) > 0) {
+            $firstCategory = $categoryIds[0];
+            $catId = is_array($firstCategory) && isset($firstCategory['id']) 
+                ? (int) $firstCategory['id'] 
+                : (int) $firstCategory;
+                
+            if ($catId > 0) {
+                return $catId;
+            }
+        }
+
         $fromStoreItem = Item::withoutGlobalScope(StoreScope::class)
             ->where('store_id', $store->id)
             ->whereNotNull('category_id')

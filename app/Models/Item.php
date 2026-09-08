@@ -183,7 +183,8 @@ class Item extends Model
             $q->where('pos_only', false)->orWhereNull('pos_only');
         })->where('is_abastos', 0)
         ->where('name', '!=', 'Demo Product')
-        ->where('name', 'not like', '%Demo Product%');
+        ->where('name', 'not like', '%Demo Product%')
+        ->where('name', '!=', 'Articulo personalizado');
     }
     public function scopePopular($query)
     {
