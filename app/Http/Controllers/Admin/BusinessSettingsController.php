@@ -847,6 +847,18 @@ class BusinessSettingsController extends Controller
             'value' => $request['country'],
         ]);
 
+        Helpers::businessUpdateOrInsert(['key' => 'super_tootli_delivery_cost'], [
+            'value' => $request['super_tootli_delivery_cost'],
+        ]);
+        
+        Helpers::businessUpdateOrInsert(['key' => 'super_tootli_gift_cost'], [
+            'value' => $request['super_tootli_gift_cost'],
+        ]);
+        
+        Helpers::businessUpdateOrInsert(['key' => 'super_tootli_margin_percentage'], [
+            'value' => $request['super_tootli_margin_percentage'],
+        ]);
+
         Helpers::businessUpdateOrInsert(['key' => 'default_location'], [
             'value' => json_encode(['lat' => $request['latitude'], 'lng' => $request['longitude']]),
         ]);

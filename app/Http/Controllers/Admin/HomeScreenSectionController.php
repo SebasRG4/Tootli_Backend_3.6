@@ -19,7 +19,22 @@ class HomeScreenSectionController extends Controller
             return back();
         }
 
+        $allowedKeys = ['banner', 'categories', 'most_popular', 'dynamic_sections'];
+
+        // Auto-create missing fixed sections if they don't exist in the DB yet
+        $missingKeys = [
+            'banner' => 'Banner Principal',
+            'categories' => 'Categorías',
+        ];
+        foreach ($missingKeys as $key => $title) {
+            \App\Models\HomeScreenSection::firstOrCreate(
+                ['key' => $key, 'module_id' => $module->id],
+                ['title' => $title, 'priority' => 0, 'status' => true]
+            );
+        }
+
         $sections = HomeScreenSection::where('module_id', $module->id)
+            ->whereIn('key', $allowedKeys)
             ->ordered()
             ->get();
 

@@ -164,7 +164,9 @@ class ConfigController extends Controller
             'dm_referal_status',
             'dm_referal_amount',
             'dm_referal_bonus',
-
+            'super_tootli_delivery_cost',
+            'super_tootli_gift_cost',
+            'super_tootli_margin_percentage',
         ];
 
         $vehicle_distance_min = 0;
@@ -214,11 +216,31 @@ class ConfigController extends Controller
         ];
 
         // REGLA ESPECIAL SUPER TOOTLI: Grocery (Module 1) Gratis > Dinámico desde la BD o $350 por defecto
+        $super_tootli_bronze_threshold = 150;
+        $super_tootli_gold_threshold = 600;
         if (request()->header('moduleId') == 1) {
             $db_threshold = (float) data_get($settings, 'free_delivery_over', 0);
+            
+            // Calculadora de Rentabilidad (Super Tootli Gamification)
+            $commission = (float) data_get($settings, 'admin_commission', 20);
+            if ($commission <= 0) $commission = 20; // fallback prevent div by zero
+            
+            $delivery_cost = (float) data_get($settings, 'super_tootli_delivery_cost', 25);
+            $gift_cost = (float) data_get($settings, 'super_tootli_gift_cost', 50);
+            $margin_pct = (float) data_get($settings, 'super_tootli_margin_percentage', 30);
+            
+            $margin_multiplier = 1 + ($margin_pct / 100);
+            $break_even_delivery = $delivery_cost / ($commission / 100);
+            $break_even_gift = ($delivery_cost + $gift_cost) / ($commission / 100);
+            
+            $calculated_silver = round($break_even_delivery * $margin_multiplier);
+            
             $admin_free_delivery['status'] = true;
-            $admin_free_delivery['free_delivery_over'] = $db_threshold > 0 ? $db_threshold : 350;
+            $admin_free_delivery['free_delivery_over'] = $calculated_silver > 0 ? $calculated_silver : ($db_threshold > 0 ? $db_threshold : 350);
             $admin_free_delivery['type'] = 'free_delivery_by_order_amount';
+            
+            $super_tootli_bronze_threshold = round($calculated_silver / 2);
+            $super_tootli_gold_threshold = round($break_even_gift * $margin_multiplier);
         }
 
         $multi_store_delivery_extra = [
@@ -429,6 +451,8 @@ class ConfigController extends Controller
             'new_customer_discount_validity_type' => (isset($settings['new_customer_discount_validity_type']) ? $settings['new_customer_discount_validity_type'] : 'day'),
             'store_review_reply' => (int) (isset($settings['store_review_reply']) ? $settings['store_review_reply'] : 0),
             'admin_commission' => (float) (isset($settings['admin_commission']) ? $settings['admin_commission'] : 0),
+            'super_tootli_bronze_threshold' => (float) $super_tootli_bronze_threshold,
+            'super_tootli_gold_threshold' => (float) $super_tootli_gold_threshold,
             'subscription_business_model' => (int) (isset($settings['subscription_business_model']) ? $settings['subscription_business_model'] : 1),
             'commission_business_model' => (int) (isset($settings['commission_business_model']) ? $settings['commission_business_model'] : 1),
             'subscription_deadline_warning_days' => (int) (isset($settings['subscription_deadline_warning_days']) ? $settings['subscription_deadline_warning_days'] : 1),

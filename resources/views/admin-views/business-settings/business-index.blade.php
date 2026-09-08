@@ -875,6 +875,43 @@
                                         </div>
                                     </div>
                                 </div>
+                                </div>
+                            </div>
+                            
+                            <div class="shadow-sm p-xxl-20 p-xl-3 p-2 bg-white mb-20">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <div>
+                                            <h4 class="mb-1 text-primary">
+                                                <i class="tio-star-half"></i> Incentivos Gamificación (Super Tootli)
+                                            </h4>
+                                            <p class="mb-0 fs-12">
+                                                Calcula automáticamente las metas del termómetro basándose en la rentabilidad (Comisión de Tienda).
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 col-lg-4">
+                                        @php($super_tootli_delivery_cost = \App\Models\BusinessSetting::where('key', 'super_tootli_delivery_cost')->first())
+                                        <div class="form-group mb-0">
+                                            <label class="form-label text-capitalize" for="super_tootli_delivery_cost">Costo Promedio Envío a Subsidiar ($)</label>
+                                            <input type="number" name="super_tootli_delivery_cost" class="form-control" id="super_tootli_delivery_cost" value="{{ $super_tootli_delivery_cost ? $super_tootli_delivery_cost->value : 25 }}" min="0" step="0.01" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 col-lg-4">
+                                        @php($super_tootli_gift_cost = \App\Models\BusinessSetting::where('key', 'super_tootli_gift_cost')->first())
+                                        <div class="form-group mb-0">
+                                            <label class="form-label text-capitalize" for="super_tootli_gift_cost">Costo Regalo Sorpresa ($)</label>
+                                            <input type="number" name="super_tootli_gift_cost" class="form-control" id="super_tootli_gift_cost" value="{{ $super_tootli_gift_cost ? $super_tootli_gift_cost->value : 50 }}" min="0" step="0.01" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 col-lg-4">
+                                        @php($super_tootli_margin_percentage = \App\Models\BusinessSetting::where('key', 'super_tootli_margin_percentage')->first())
+                                        <div class="form-group mb-0">
+                                            <label class="form-label text-capitalize" for="super_tootli_margin_percentage">Margen Ganancia Extra (%)</label>
+                                            <input type="number" name="super_tootli_margin_percentage" class="form-control" id="super_tootli_margin_percentage" value="{{ $super_tootli_margin_percentage ? $super_tootli_margin_percentage->value : 30 }}" min="0" max="500" step="1" required>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="shadow-sm p-xxl-20 p-xl-3 p-2 bg-white mb-20">
                                 <div class="row g-3">
