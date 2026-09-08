@@ -170,7 +170,7 @@ class SaboresCiudadController extends Controller
         // 2. 🔥 TRENDING (Smart Collection)
         // ---------------------------------------------------------------------
         // Use a base query for stores that respects Viewport/Zone
-        $baseStoreQuery = Store::withoutGlobalScope(\App\Scopes\ZoneScope::class)
+        $baseStoreQuery = Store::withoutGlobalScope(\App\Scopes\ZoneScope::class)->withoutGlobalScope(\App\Scopes\DirectoryScope::class)
             ->where('exclude_from_sabores', 0)
             ->whereHas('module', fn($q) => $q->where('module_type', 'food'));
 
@@ -335,11 +335,11 @@ class SaboresCiudadController extends Controller
         $max_lng = $request->query('max_lng');
 
         // Query all restaurants from the FOOD module
-        $stores = Store::withoutGlobalScope(\App\Scopes\ZoneScope::class)
+        $stores = Store::withoutGlobalScope(\App\Scopes\ZoneScope::class)->withoutGlobalScope(\App\Scopes\DirectoryScope::class)
             ->with(['module', 'schedules'])
             ->where('exclude_from_sabores', 0)
             ->whereHas('module', function ($query) {
-                $query->where('module_type', 'food');
+                $query->whereIn('module_type', ['food', 'sabores']);
             })
             // If viewport is provided, filter by coordinates. Otherwise, filter by zone.
             ->when($min_lat && $max_lat && $min_lng && $max_lng, function ($query) use ($min_lat, $max_lat, $min_lng, $max_lng) {
@@ -381,7 +381,7 @@ class SaboresCiudadController extends Controller
             ->when($search, function ($query) use ($search) {
                 return $query->where('name', 'like', '%' . $search . '%');
             })
-            ->select('id', 'name', 'address', 'latitude', 'longitude', 'cover_photo', 'average_ticket', 'rating', 'delivery_time', 'google_address', 'google_place_id', 'serves_alcohol', 'cuisine_names', 'sabores_map_emoji', 'infrastructure_images', 'menu_images', 'accepts_reservations', 'featured', 'zone_id', 'module_id', 'exclude_from_sabores', 'event_title', 'event_image', 'event_card_image', 'event_date', 'tootli_lana')
+            ->select('id', 'name', 'address', 'latitude', 'longitude', 'cover_photo', 'average_ticket', 'rating', 'delivery_time', 'google_address', 'google_place_id', 'serves_alcohol', 'cuisine_names', 'sabores_map_emoji', 'infrastructure_images', 'menu_images', 'accepts_reservations', 'featured', 'zone_id', 'module_id', 'exclude_from_sabores', 'event_title', 'event_image', 'event_card_image', 'event_date', 'tootli_lana', 'is_directory_only', 'directory_description')
             ->with('activeCoupons')
             ->withCount(['wishlists', 'userListStores', 'eventInterests'])
             ->get();
@@ -587,7 +587,8 @@ class SaboresCiudadController extends Controller
         $longitude = $request->header('longitude');
         $latitude = $request->header('latitude');
 
-        $store = Store::with(['module', 'schedules', 'activeCoupons'])
+        $store = Store::withoutGlobalScope(\App\Scopes\DirectoryScope::class)
+            ->with(['module', 'schedules', 'activeCoupons'])
             ->withCount(['wishlists', 'userListStores'])
             ->when(is_numeric($id), function ($query) use ($id) {
                 $query->where('id', $id);
@@ -596,7 +597,7 @@ class SaboresCiudadController extends Controller
                 $query->where('slug', $id);
             })
             ->whereHas('module', function ($query) {
-                $query->where('module_type', 'food');
+                $query->whereIn('module_type', ['food', 'sabores']);
             })
             ->where('exclude_from_sabores', 0)
             ->first();

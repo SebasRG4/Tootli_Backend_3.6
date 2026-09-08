@@ -225,6 +225,16 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('restaurants/{id}/update', 'SaboresController@updateRestaurant')->name('restaurants.update');
             Route::post('restaurants/{id}/update-images-order', 'SaboresController@updateInfrastructureImagesOrder')->name('restaurants.update-images-order');
 
+            // Directory Places (Sin dueño)
+            Route::group(['prefix' => 'directory-places', 'as' => 'directory-places.'], function () {
+                Route::get('/', 'Sabores\DirectoryPlaceController@index')->name('index');
+                Route::get('/create', 'Sabores\DirectoryPlaceController@create')->name('create');
+                Route::post('/store', 'Sabores\DirectoryPlaceController@store')->name('store');
+                Route::get('/{id}/edit', 'Sabores\DirectoryPlaceController@edit')->name('edit');
+                Route::post('/{id}/update', 'Sabores\DirectoryPlaceController@update')->name('update');
+                Route::delete('/{id}/delete', 'Sabores\DirectoryPlaceController@destroy')->name('delete');
+            });
+
             // Dineout Categories
             Route::group(['prefix' => 'dineout-categories', 'as' => 'dineout-categories.'], function () {
                 Route::get('/', 'Sabores\DineoutCategoryController@index')->name('index');

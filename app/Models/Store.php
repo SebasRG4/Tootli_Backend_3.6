@@ -966,6 +966,7 @@ class Store extends Model
     protected static function booted(): void
     {
         static::addGlobalScope(new ZoneScope);
+        static::addGlobalScope(new \App\Scopes\DirectoryScope);
 
         static::addGlobalScope('translate', function (Builder $builder) {
             $builder->with([

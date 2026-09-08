@@ -9663,4 +9663,5 @@ Smartly or Earn. ',
   'services_updated_successfully' => 'Services updated successfully',
   'device_reset_successfully' => 'Device reset successfully',
   'privacy_policy_updated' => 'Privacy policy updated',
+  'category_created_successfully' => 'Category created successfully',
 );

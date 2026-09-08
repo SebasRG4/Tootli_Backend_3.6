@@ -63,8 +63,9 @@ class VendorController extends Controller
 
     public function store(Request $request)
     {
+        $isDirectory = $request->has('is_directory_only');
         $validator = Validator::make($request->all(), [
-            'f_name' => 'required|max:100',
+            'f_name' => $isDirectory ? 'nullable|max:100' : 'required|max:100',
             'l_name' => 'nullable|max:100',
             'name.0' => 'required',
             'name.*' => 'max:191',
@@ -72,16 +73,16 @@ class VendorController extends Controller
             'address.*' => 'max:1000',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
-            'email' => 'required|unique:vendors',
-            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:20|unique:vendors',
+            'email' => $isDirectory ? 'nullable' : 'required|unique:vendors',
+            'phone' => $isDirectory ? 'nullable' : 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:20|unique:vendors',
             'minimum_delivery_time' => 'required',
             'maximum_delivery_time' => 'required',
             'delivery_time_type' => 'required',
             'password' => [
-                'required',
+                $isDirectory ? 'nullable' : 'required',
                 Password::min(8)->mixedCase()->letters()->numbers()->symbols(),
                 function ($attribute, $value, $fail) {
-                    if (strpos($value, ' ') !== false) {
+                    if ($value && strpos($value, ' ') !== false) {
                         $fail('The :attribute cannot contain white spaces.');
                     }
                 },
@@ -122,13 +123,25 @@ class VendorController extends Controller
 
 
 
-        $vendor = new Vendor();
-        $vendor->f_name = $request->f_name;
-        $vendor->l_name = $request->l_name;
-        $vendor->email = $request->email;
-        $vendor->phone = $request->phone;
-        $vendor->password = bcrypt($request->password);
-        $vendor->save();
+        if ($isDirectory) {
+            $vendor = Vendor::firstOrCreate(
+                ['email' => 'directory@tootli.com'],
+                [
+                    'f_name' => 'Directory',
+                    'l_name' => 'System',
+                    'phone' => '0000000000',
+                    'password' => bcrypt(\Illuminate\Support\Str::random(16)),
+                ]
+            );
+        } else {
+            $vendor = new Vendor();
+            $vendor->f_name = $request->f_name;
+            $vendor->l_name = $request->l_name;
+            $vendor->email = $request->email;
+            $vendor->phone = $request->phone;
+            $vendor->password = bcrypt($request->password);
+            $vendor->save();
+        }
 
         $store = new Store;
         $store->name = $request->name[array_search('default', $request->lang)];
@@ -151,6 +164,8 @@ class VendorController extends Controller
         $store->allow_standard = $request->has('allow_standard');
         $store->allow_next_day = $request->has('allow_next_day');
         $store->tootli_lana = true;
+        $store->is_directory_only = $isDirectory;
+        $store->directory_description = $request->directory_description;
         try {
             $store->save();
             // $store->module->increment('stores_count');
@@ -213,15 +228,16 @@ class VendorController extends Controller
             }
         }
 
+        $isDirectory = $request->has('is_directory_only');
         $validator = Validator::make($request->all(), [
-            'f_name' => 'required|max:100',
+            'f_name' => $isDirectory ? 'nullable|max:100' : 'required|max:100',
             'l_name' => 'nullable|max:100',
             'name.0' => 'required',
             'name.*' => 'max:191',
             'address.0' => 'required',
             'address.*' => 'max:1000',
-            'email' => 'required|unique:vendors,email,' . $store->vendor->id,
-            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:20|unique:vendors,phone,' . $store->vendor->id,
+            'email' => $isDirectory ? 'nullable' : 'required|unique:vendors,email,' . $store->vendor->id,
+            'phone' => $isDirectory ? 'nullable' : 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:20|unique:vendors,phone,' . $store->vendor->id,
             'zone_id' => 'required',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
