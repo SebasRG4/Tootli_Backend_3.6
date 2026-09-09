@@ -258,6 +258,8 @@ class Helpers
                 'id' => (int) $item->id,
                 'name' => $item->title ?? $item->name,
                 'image_full_url' => $item->image_full_url,
+                'video' => $item->video,
+                'video_full_url' => $item->video_full_url,
                 'price' => $item->price,
                 'veg' => $item->veg,
                 'unit_type' => $item->unit_type,
@@ -286,6 +288,7 @@ class Helpers
                 'brand_name' => $item->ecommerce_item_details?->brand?->name,
                 'brand_image_full_url' => $item->ecommerce_item_details?->brand?->image_full_url,
                 'is_new' => $item->created_at >= now()->subDays(14) ? 1 : 0,
+                'is_made_in_mexico' => (int) ($item->is_made_in_mexico ?? 0),
                 'weight' => (float) $item->weight,
 
                 // Full store (schedules, open, active, …) so the app can compute
@@ -845,9 +848,15 @@ class Helpers
                 $item['brand_id'] = (int) $item->ecommerce_item_details?->brand_id ?? 0;
                 $item['brand_name'] = $item->ecommerce_item_details?->brand?->name;
                 $item['brand_image_full_url'] = $item->ecommerce_item_details?->brand?->image_full_url;
-                $item['is_new'] = $item->created_at >= now()->subDays(14) ? 1 : 0;
                 $item['halal_tag_status'] = (int) $item->store->storeConfig?->halal_tag_status ?? 0;
                 $item['is_halal'] = (int) ($item->is_halal ?? 0);
+                $item['is_made_in_mexico'] = (int) ($item->is_made_in_mexico ?? 0);
+                if (isset($item->store_distance_km)) {
+                    $item['store_distance_km'] = $item->store_distance_km;
+                }
+                if (isset($item->is_same_store)) {
+                    $item['is_same_store'] = (int)$item->is_same_store;
+                }
 
                 $item->store['self_delivery_system'] = (int) $item->store->sub_self_delivery;
 
@@ -956,6 +965,7 @@ class Helpers
             $data['is_prescription_required'] = (int) $data->pharmacy_item_details?->is_prescription_required ?? 0;
             $data['halal_tag_status'] = (int) $data->store->storeConfig?->halal_tag_status ?? 0;
             $data['is_halal'] = (int) ($data->is_halal ?? 0);
+            $data['is_made_in_mexico'] = (int) ($data->is_made_in_mexico ?? 0);
             $data['weight'] = (float) $data->weight;
 
             $data['nutritions_name'] = $data?->nutritions ? Nutrition::whereIn('id', $data?->nutritions->pluck('id'))->pluck('nutrition') : null;
@@ -2893,6 +2903,14 @@ class Helpers
                 }
                 $imageName = \Carbon\Carbon::now()->toDateString() . '-' . uniqid() . '.' . $format;
 
+                // Optimización de video (H.264 + faststart moov atom para streaming instantáneo)
+                $validVideoExts = ['mp4', 'mkv', 'webm', 'mov'];
+                if (in_array(strtolower($format), $validVideoExts) && $image instanceof UploadedFile) {
+                    $image = self::optimizeVideoFile($image);
+                    $format = 'mp4';
+                    $imageName = \Carbon\Carbon::now()->toDateString() . '-' . uniqid() . '.mp4';
+                }
+
                 if (!Storage::disk(self::getDisk())->exists($dir)) {
                     Storage::disk(self::getDisk())->makeDirectory($dir);
                 }
@@ -2953,6 +2971,40 @@ class Helpers
         }
 
         return $imageFile;
+    }
+
+    public static function optimizeVideoFile(UploadedFile $videoFile)
+    {
+        // Verificar si ffmpeg está disponible en el sistema operativo
+        $ffmpegPath = trim(shell_exec('which ffmpeg 2>/dev/null') ?? '');
+        if (empty($ffmpegPath)) {
+            // Si no hay ffmpeg en el servidor, subir el archivo original
+            return $videoFile;
+        }
+
+        try {
+            $inputPath = $videoFile->getRealPath();
+            $tempOutput = tempnam(sys_get_temp_dir(), 'opt_vid_') . '.mp4';
+
+            // Optimización: H.264, audio AAC, faststart (moov atom al inicio), resolución máx 720p escalada preservando aspect ratio
+            $command = escapeshellcmd($ffmpegPath) . ' -y -i ' . escapeshellarg($inputPath) . ' -vf "scale=\'min(720,iw)\':-2" -c:v libx264 -crf 26 -preset fast -movflags +faststart -c:a aac -b:a 128k ' . escapeshellarg($tempOutput) . ' 2>&1';
+            
+            exec($command, $output, $returnCode);
+
+            if ($returnCode === 0 && file_exists($tempOutput) && filesize($tempOutput) > 0) {
+                return new \Illuminate\Http\UploadedFile(
+                    $tempOutput,
+                    pathinfo($videoFile->getClientOriginalName(), PATHINFO_FILENAME) . '.mp4',
+                    'video/mp4',
+                    null,
+                    true
+                );
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('Video optimization via FFmpeg failed, falling back to original: ' . $e->getMessage());
+        }
+
+        return $videoFile;
     }
 
     public static function update(string $dir, $old_image, string $format, $image = null)
@@ -4082,6 +4134,10 @@ class Helpers
         ];
         try {
             if ($data && $type == 's3') {
+                $customUrl = rtrim(config('filesystems.disks.s3.url', ''), '/');
+                if (!empty($customUrl)) {
+                    return $customUrl . '/' . ltrim($path, '/') . '/' . $data;
+                }
                 return Storage::disk('s3')->url($path . '/' . $data);
             }
         } catch (\Exception $e) {

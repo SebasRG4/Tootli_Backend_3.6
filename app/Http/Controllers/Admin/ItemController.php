@@ -358,6 +358,7 @@ class ItemController extends Controller
         $module_type = Config::get('module.current_module_type');
         if ($module_type == 'grocery' || $module_type == 'ecommerce') {
             $item->organic = $request->organic ?? 0;
+            $item->is_made_in_mexico = $request->is_made_in_mexico ?? 0;
             $item->delivery_time_type = $request->delivery_time_type ?? 'standard';
         }
         $item->stock = $request->current_stock ?? 0;
@@ -721,6 +722,7 @@ class ItemController extends Controller
         $item->is_abastos = $request->is_abastos ?? 0;
         $item->abastos_price = $request->abastos_price ?? 0;
         $item->organic = $request->organic ?? 0;
+        $item->is_made_in_mexico = $request->is_made_in_mexico ?? 0;
         $item->delivery_time_type = $request->delivery_time_type ?? 'standard';
         $item->veg = $request->veg ?? 0;
         $item->is_promotional = $request->is_promotional ?? 0;

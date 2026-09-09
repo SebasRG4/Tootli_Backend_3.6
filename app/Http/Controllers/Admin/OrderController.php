@@ -945,6 +945,10 @@ class OrderController extends Controller
             $deliveryman->save();
             $deliveryman->increment('assigned_order_count');
 
+            // --- MULTIPLE ECOMMERCE BATCHING LOGIC ---
+            \App\CentralLogics\MapboxLogic::batch_orders_if_possible($order, $delivery_man_id);
+            // -----------------------------------------
+
             $fcm_token = $order->is_guest == 0 ? $order?->customer?->cm_firebase_token : $order?->guest?->fcm_token;
             $value = Helpers::order_status_update_message('accepted', $order->module->module_type, $order->customer ?
                 $order?->customer?->current_language_key : 'en');

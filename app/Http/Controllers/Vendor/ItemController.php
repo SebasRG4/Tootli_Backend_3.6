@@ -411,6 +411,7 @@ class ItemController extends Controller
         $module_type = Helpers::get_store_data()->module->module_type;
         if ($module_type == 'grocery' || $module_type == 'ecommerce') {
             $food->organic = $request->organic ?? 0;
+            $food->is_made_in_mexico = $request->is_made_in_mexico ?? 0;
             $food->delivery_time_type = $request->delivery_time_type ?? 'standard';
         }
         if ($module_type == 'ecommerce') {
@@ -801,6 +802,7 @@ class ItemController extends Controller
         $module_type = Helpers::get_store_data()->module->module_type;
         if ($module_type == 'grocery' || $module_type == 'ecommerce') {
             $p->organic = $request->organic ?? 0;
+            $p->is_made_in_mexico = $request->is_made_in_mexico ?? 0;
             $p->delivery_time_type = $request->delivery_time_type ?? 'standard';
         }
         if ($module_type == 'ecommerce') {

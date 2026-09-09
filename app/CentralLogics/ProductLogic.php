@@ -448,40 +448,109 @@ class ProductLogic
             ->limit(10)
             ->get();
     }
-    public static function get_related_store_products($zone_id, $product_id)
+    public static function get_related_store_products($zone_id, $product_id, $longitude = null, $latitude = null, $is_made_in_mexico = null)
     {
-        $product = Item::find($product_id);
+        $product = Item::with('store')->find($product_id);
         if (!$product) {
             return collect();
         }
 
-        // Get up to 40 candidate items from the same store (excluding the current one) that share the same category.
-        $query = Item::active()->visibleInCustomerApp()
+        $baseStore = $product->store;
+        $originLat = $baseStore ? (float)$baseStore->latitude : (float)$latitude;
+        $originLng = $baseStore ? (float)$baseStore->longitude : (float)$longitude;
+
+        // 1. Get candidate items from the same store (prioridad máxima, misma tienda)
+        $sameStoreItems = Item::active()->visibleInCustomerApp()
             ->whereHas('module.zones', function ($query) use ($zone_id) {
                 $query->whereIn('zones.id', json_decode($zone_id, true));
             })
-            ->whereHas('store', function ($query) use ($zone_id) {
-                $query->when(config('module.current_module_data'), function ($query) {
-                    $query->where('module_id', config('module.current_module_data')['id'])->whereHas('zone.modules', function ($query) {
-                        $query->where('modules.id', config('module.current_module_data')['id']);
-                    });
-                })->whereIn('zone_id', json_decode($zone_id, true));
-            })
             ->where('store_id', $product->store_id)
-            ->where('id', '!=', $product->id);
+            ->where('id', '!=', $product->id)
+            ->when($is_made_in_mexico !== null && $is_made_in_mexico !== '', function ($q) use ($is_made_in_mexico) {
+                $q->where('is_made_in_mexico', (int)$is_made_in_mexico);
+            })
+            ->where('category_id', $product->category_id)
+            ->limit(10)
+            ->get();
 
-        $candidates = (clone $query)->where('category_id', $product->category_id)->limit(40)->get();
+        if ($sameStoreItems->count() < 10) {
+            $fallbackSameStore = Item::active()->visibleInCustomerApp()
+                ->where('store_id', $product->store_id)
+                ->where('id', '!=', $product->id)
+                ->when($is_made_in_mexico !== null && $is_made_in_mexico !== '', function ($q) use ($is_made_in_mexico) {
+                    $q->where('is_made_in_mexico', (int)$is_made_in_mexico);
+                })
+                ->whereNotIn('id', $sameStoreItems->pluck('id'))
+                ->limit(10 - $sameStoreItems->count())
+                ->get();
+            $sameStoreItems = $sameStoreItems->merge($fallbackSameStore);
+        }
 
-        // Fallback: if no items in the same category are found, get any item from the store
-        if ($candidates->isEmpty()) {
-            $candidates = $query->limit(40)->get();
-            
-            if ($candidates->isEmpty()) {
-                return collect();
+        // Marcar distancia 0 para items de la misma tienda
+        foreach ($sameStoreItems as $it) {
+            $it->store_distance_km = 0.0;
+            $it->is_same_store = 1;
+        }
+
+        // 2. Si se tienen coordenadas, traer productos de tiendas cercanas en la misma zona
+        $nearbyStoreItems = collect();
+        if ($originLat && $originLng) {
+            $maxDistanceKm = 2.5; // Radio de 2.5 km de la ruta principal entre tiendas
+            $nearbyStores = Store::whereIn('zone_id', json_decode($zone_id, true))
+                ->where('id', '!=', $product->store_id)
+                ->where('status', 1)
+                ->where('active', 1)
+                ->when(config('module.current_module_data'), function ($query) {
+                    $query->where('module_id', config('module.current_module_data')['id']);
+                })
+                ->get()
+                ->filter(function ($store) use ($originLat, $originLng, $maxDistanceKm) {
+                    if (!$store->latitude || !$store->longitude) return false;
+                    $dist = Helpers::get_distance($originLat, $originLng, (float)$store->latitude, (float)$store->longitude);
+                    $store->calculated_distance_km = round($dist, 2);
+                    return $dist <= $maxDistanceKm;
+                })
+                ->sortBy('calculated_distance_km');
+
+            if ($nearbyStores->isNotEmpty()) {
+                $topNearbyStoreIds = $nearbyStores->take(5)->pluck('id');
+                $nearbyStoreDistanceMap = $nearbyStores->pluck('calculated_distance_km', 'id');
+
+                $nearbyStoreItems = Item::active()->visibleInCustomerApp()
+                    ->whereIn('store_id', $topNearbyStoreIds)
+                    ->where('id', '!=', $product->id)
+                    ->when($is_made_in_mexico !== null && $is_made_in_mexico !== '', function ($q) use ($is_made_in_mexico) {
+                        $q->where('is_made_in_mexico', (int)$is_made_in_mexico);
+                    })
+                    ->when($product->category_id, function ($q) use ($product) {
+                        $q->where('category_id', $product->category_id);
+                    })
+                    ->limit(10)
+                    ->get();
+
+                // Si no hay de la misma categoría en tiendas cercanas, tomar los más populares de esas tiendas
+                if ($nearbyStoreItems->isEmpty()) {
+                    $nearbyStoreItems = Item::active()->visibleInCustomerApp()
+                        ->whereIn('store_id', $topNearbyStoreIds)
+                        ->where('id', '!=', $product->id)
+                        ->when($is_made_in_mexico !== null && $is_made_in_mexico !== '', function ($q) use ($is_made_in_mexico) {
+                            $q->where('is_made_in_mexico', (int)$is_made_in_mexico);
+                        })
+                        ->popular()
+                        ->limit(10)
+                        ->get();
+                }
+
+                foreach ($nearbyStoreItems as $it) {
+                    $it->store_distance_km = $nearbyStoreDistanceMap[$it->store_id] ?? null;
+                    $it->is_same_store = 0;
+                }
             }
         }
 
-        return $candidates->take(10);
+        // Combinar: primero misma tienda, luego tiendas cercanas
+        $merged = $sameStoreItems->merge($nearbyStoreItems);
+        return $merged->take(15);
     }
 
     public static function recommended_items($zone_id, $store_id = null, $limit = null, $offset = null, $type = 'all', $filter = 'all')

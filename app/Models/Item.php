@@ -99,6 +99,7 @@ class Item extends Model
         'height' => 'float',
         'requires_large_vehicle' => 'boolean',
         'is_promotional' => 'boolean',
+        'is_made_in_mexico' => 'integer',
     ];
 
     protected $appends = ['unit_type', 'image_full_url', 'images_full_url', 'video_full_url'];
@@ -106,6 +107,11 @@ class Item extends Model
     public function scopeRecommended($query)
     {
         return $query->where('recommended', 1);
+    }
+
+    public function scopeMadeInMexico($query)
+    {
+        return $query->where('is_made_in_mexico', 1);
     }
 
     public function carts()

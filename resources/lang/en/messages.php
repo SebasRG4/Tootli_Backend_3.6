@@ -9671,4 +9671,5 @@ Smartly or Earn. ',
   'Flash Sale' => 'Flash Sale',
   'Most Popular Items' => 'Most Popular Items',
   'Categorías' => 'Categorías',
+  'variation_max_limit_50' => 'Variation max limit 50',
 );

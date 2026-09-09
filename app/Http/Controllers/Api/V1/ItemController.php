@@ -661,8 +661,11 @@ class ItemController extends Controller
             ], 403);
         }
         $zone_id = $request->header('zoneId');
+        $longitude = $request->header('longitude');
+        $latitude = $request->header('latitude');
+        $is_made_in_mexico = $request->query('is_made_in_mexico');
         if (Item::find($id)) {
-            $items = ProductLogic::get_related_store_products($zone_id, $id);
+            $items = ProductLogic::get_related_store_products($zone_id, $id, $longitude, $latitude, $is_made_in_mexico);
             $items = Helpers::product_data_formatting($items, true, false, app()->getLocale());
             return response()->json($items, 200);
         }

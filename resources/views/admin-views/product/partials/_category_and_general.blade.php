@@ -409,6 +409,20 @@
                             </div>
                         @endif
 
+                        @if (Config::get('module.current_module_type') == 'ecommerce' || Config::get('module.current_module_type') == 'grocery')
+                            <div class="col-sm-6 col-lg-4 error-wrapper" id="made_in_mexico_wrapper">
+                                <div class="form-check mb-sm-2 pb-sm-1">
+                                    <input class="form-check-input" name="is_made_in_mexico" type="checkbox" value="1"
+                                        id="is_made_in_mexico"
+                                        {{ isset($product) && $product->is_made_in_mexico == 1 ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="is_made_in_mexico">
+                                        <span class="badge badge-soft-success font-weight-bold mr-1">🇲🇽</span>
+                                        {{ 'Hecho en México' }}
+                                    </label>
+                                </div>
+                            </div>
+                        @endif
+
                         @if (Config::get('module.current_module_type') == 'grocery' || Config::get('module.current_module_type') == 'ecommerce')
                             <div class="col-sm-6 col-lg-4 error-wrapper">
                                 <div class="form-group mb-0">

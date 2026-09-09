@@ -457,7 +457,7 @@ $('#reset_btn').click(function(){
         $.each($("#choice_attributes option:selected"), function() {
             if ($(this).val().length > 50) {
                 toastr.error(
-                    '{{ 'validation.max.string\', [\'atributo\' => traducir(\'variación', 'max' => '50']) }}', {
+                    '{{ translate('messages.variation_max_limit_50') }}', {
                         CloseButton: true,
                         ProgressBar: true
                     });

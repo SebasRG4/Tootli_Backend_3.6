@@ -39,6 +39,9 @@ func StartServer(port string) error {
 	// Wallet QR payment
 	r.Post("/api/v1/user/wallet/qr-pay", HandleQrPay)
 
+	// Route to get AI recommendations with store proximity scoring
+	r.Get("/api/v1/recommendations/similar-items", HandleItemRecommendations)
+
 	// Health check endpoint
 	r.Get("/health", handleHealth)
 

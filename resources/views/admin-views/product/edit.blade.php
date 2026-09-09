@@ -74,7 +74,7 @@
 
                                         <input type="hidden" id="removedImageKeysInput" name="removedImageKeys"
                                             value="">
-                                        @foreach ($product->images as $key => $photo)
+                                        @foreach ($product->images ?? [] as $key => $photo)
                                             @php($photo = is_array($photo) ? $photo : ['img' => $photo, 'storage' => 'public'])
                                             <div id="product_images_{{ $key }}"
                                                 class="spartan_item_wrapper min-w-176px max-w-176px">
