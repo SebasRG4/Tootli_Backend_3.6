@@ -504,6 +504,55 @@ class TaxiController extends Controller
     }
 
     /**
+     * Get recent and popular destinations
+     */
+    public function getDestinations(Request $request): JsonResponse
+    {
+        $user = auth('api')->user() ?? $request->user();
+        $recent = [];
+
+        if ($user) {
+            $recent = TaxiRide::forUser($user->id)
+                ->whereNotNull('dropoff_address')
+                ->where('dropoff_address', '!=', '')
+                ->orderBy('created_at', 'desc')
+                ->get(['dropoff_address', 'dropoff_lat', 'dropoff_lng'])
+                ->unique('dropoff_address')
+                ->take(6)
+                ->values()
+                ->map(function ($ride) {
+                    return [
+                        'address' => $ride->dropoff_address,
+                        'lat' => (float) $ride->dropoff_lat,
+                        'lng' => (float) $ride->dropoff_lng,
+                    ];
+                });
+        }
+
+        // Popular destinations among all users
+        $popular = TaxiRide::select('dropoff_address', 'dropoff_lat', 'dropoff_lng', \DB::raw('COUNT(*) as total_rides'))
+            ->whereNotNull('dropoff_address')
+            ->where('dropoff_address', '!=', '')
+            ->groupBy('dropoff_address', 'dropoff_lat', 'dropoff_lng')
+            ->orderByDesc('total_rides')
+            ->take(6)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'address' => $item->dropoff_address,
+                    'lat' => (float) $item->dropoff_lat,
+                    'lng' => (float) $item->dropoff_lng,
+                    'total_rides' => (int) $item->total_rides,
+                ];
+            });
+
+        return response()->json([
+            'recent' => $recent,
+            'popular' => $popular,
+        ]);
+    }
+
+    /**
      * Calculate distance between two points using Haversine formula
      */
     private function calculateDistance(float $lat1, float $lng1, float $lat2, float $lng2): float

@@ -24,7 +24,7 @@ Route::group(['prefix' => 'taxi'], function () {
     Route::post('estimate-fare', [TaxiController::class, 'estimateFare']);
     Route::get('coupon/list', [TaxiController::class, 'getCoupons']); // Public - guest can view coupons
     Route::post('coupon/apply', [TaxiController::class, 'applyCoupon']); // Public - guest can validate coupon
-
+    Route::get('destinations', [TaxiController::class, 'getDestinations']);
     // User routes (authenticated)
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('nearby-drivers', [TaxiController::class, 'getNearbyDrivers']);
