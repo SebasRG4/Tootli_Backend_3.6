@@ -240,6 +240,9 @@
                                             @if($trip->status === 'pending')
                                                 <span class="pulse-pending ml-1"></span>
                                             @endif
+                                            @if($trip->otp)
+                                                <span class="badge badge-warning text-dark font-weight-bold ml-1" title="PIN de Seguridad"><i class="tio-lock"></i> PIN: {{ $trip->otp }}</span>
+                                            @endif
                                         </div>
                                         <span class="badge-status badge-{{ $trip->status }}">
                                             {{ ucfirst($trip->status) }}
@@ -344,7 +347,12 @@
                     <!-- Selected Trip Summary Card -->
                     <div class="action-card d-flex flex-wrap justify-content-between align-items-center mb-3" id="trip-header-summary">
                         <div>
-                            <span class="badge-status" id="panel-status-badge">PENDING</span>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <span class="badge-status" id="panel-status-badge">PENDING</span>
+                                <span class="badge badge-warning text-dark font-weight-bold ml-2 py-1 px-2" id="panel-trip-otp-badge" style="font-size: 13px;" title="PIN requerido para iniciar viaje">
+                                    <i class="tio-lock mr-1"></i> PIN Pasajero: <span id="panel-trip-otp" class="font-weight-bolder">----</span>
+                                </span>
+                            </div>
                             <h5 class="mb-1 font-weight-bold text-dark mt-1" id="panel-trip-title">Viaje #</h5>
                             <div class="small text-muted" id="panel-trip-sub">Pasajero: -</div>
                         </div>
@@ -601,6 +609,7 @@
                                 <div>
                                     <span class="font-weight-bold text-dark">Viaje #${trip.id}</span>
                                     ${isPending ? '<span class="pulse-pending ml-1"></span>' : ''}
+                                    ${trip.otp ? `<span class="badge badge-warning text-dark font-weight-bold ml-1" title="PIN de Seguridad"><i class="tio-lock"></i> PIN: ${trip.otp}</span>` : ''}
                                 </div>
                                 <span class="badge-status badge-${trip.status}">
                                     ${trip.status}
@@ -673,6 +682,9 @@
             document.getElementById('panel-trip-title').textContent = `Viaje #${selectedTrip.id} (${selectedTrip.vehicle_type || 'Standard'})`;
             document.getElementById('panel-trip-sub').textContent = `Pasajero: ${userName} | Tel: ${selectedTrip.user?.phone || 'N/A'}`;
             document.getElementById('panel-trip-fare').textContent = `$${fare} MXN`;
+            if (document.getElementById('panel-trip-otp')) {
+                document.getElementById('panel-trip-otp').textContent = selectedTrip.otp || '----';
+            }
 
             const etaBadge = document.getElementById('panel-trip-eta');
             if (selectedTrip.eta_minutes) {
@@ -742,7 +754,7 @@
                 btnAutopilot.style.display = 'inline-block';
             } else if (status === 'arrived') {
                 actionTitle.textContent = 'Conductor en el punto de recogida (Esperando Pasajero)';
-                actionDesc.textContent = 'El conductor ha llegado. Para iniciar el viaje, solicita al pasajero su PIN de 4 dígitos e ingrésalo a continuación para verificar su identidad.';
+                actionDesc.innerHTML = `El conductor ha llegado. Para iniciar el viaje, solicita al pasajero su PIN de 4 dígitos (<strong>PIN asignado: <span class="badge badge-warning text-dark font-weight-bolder">${selectedTrip.otp || '----'}</span></strong>) e ingrésalo a continuación.`;
                 btnStartTrip.style.display = 'inline-block';
                 btnStepMove.style.display = 'none';
                 btnAutopilot.style.display = 'none';
@@ -980,7 +992,8 @@
         // Action: Start trip with passenger OTP
         function startTripWithOtpPrompt() {
             if (!selectedTrip) return;
-            const otp = prompt('🔒 Ingresa el código PIN de 4 dígitos proporcionado por el pasajero al abordar para iniciar el viaje:');
+            const expectedOtp = selectedTrip.otp || '';
+            const otp = prompt(`🔒 Ingresa el código PIN de 4 dígitos proporcionado por el pasajero al abordar para iniciar el viaje:\n\n(PIN del pasajero: ${expectedOtp})`, expectedOtp);
             if (otp === null) return;
             if (!otp.trim()) {
                 toastr.warning('Debes ingresar el PIN de 4 dígitos para iniciar el viaje');
