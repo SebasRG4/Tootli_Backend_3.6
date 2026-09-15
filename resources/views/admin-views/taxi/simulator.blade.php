@@ -413,8 +413,8 @@
                                 </button>
 
                                 <!-- When Arrived -->
-                                <button class="btn btn-warning text-dark font-weight-bold mr-2 mb-2" id="btn-start-trip" onclick="changeStatus('in_progress')" style="display: none;">
-                                    <i class="tio-play mr-1"></i> Iniciar Viaje con Pasajero
+                                <button class="btn btn-warning text-dark font-weight-bold mr-2 mb-2" id="btn-start-trip" onclick="startTripWithOtpPrompt()" style="display: none;">
+                                    <i class="tio-lock mr-1"></i> Iniciar Viaje con PIN (4 dígitos)
                                 </button>
 
                                 <!-- When In Progress -->
@@ -741,8 +741,8 @@
                 btnStepMove.style.display = 'inline-block';
                 btnAutopilot.style.display = 'inline-block';
             } else if (status === 'arrived') {
-                actionTitle.textContent = 'Conductor en el punto de recogida (Arrived)';
-                actionDesc.textContent = 'El conductor ha llegado. En la app del usuario corre el temporizador de cortesía de 5 min.';
+                actionTitle.textContent = 'Conductor en el punto de recogida (Esperando Pasajero)';
+                actionDesc.textContent = 'El conductor ha llegado. Para iniciar el viaje, solicita al pasajero su PIN de 4 dígitos e ingrésalo a continuación para verificar su identidad.';
                 btnStartTrip.style.display = 'inline-block';
                 btnStepMove.style.display = 'none';
                 btnAutopilot.style.display = 'none';
@@ -977,9 +977,24 @@
             }
         }
 
-        // Action: Change Status
-        function changeStatus(status) {
+        // Action: Start trip with passenger OTP
+        function startTripWithOtpPrompt() {
             if (!selectedTrip) return;
+            const otp = prompt('🔒 Ingresa el código PIN de 4 dígitos proporcionado por el pasajero al abordar para iniciar el viaje:');
+            if (otp === null) return;
+            if (!otp.trim()) {
+                toastr.warning('Debes ingresar el PIN de 4 dígitos para iniciar el viaje');
+                return;
+            }
+            changeStatus('in_progress', otp.trim());
+        }
+
+        // Action: Change Status
+        function changeStatus(status, otp = null) {
+            if (!selectedTrip) return;
+
+            const payload = { status: status };
+            if (otp) payload.otp = otp;
 
             fetch(`/admin/taxi/simulator/trip/${selectedTrip.id}/change-status`, {
                 method: 'POST',
@@ -987,7 +1002,7 @@
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                body: JSON.stringify({ status })
+                body: JSON.stringify(payload)
             })
             .then(r => r.json())
             .then(data => {

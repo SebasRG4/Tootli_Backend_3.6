@@ -24,6 +24,7 @@ class TaxiRide extends Model
         'dropoff_lng',
         'dropoff_address',
         'status',
+        'otp',
         'vehicle_type',
         'estimated_distance_km',
         'estimated_duration_min',
@@ -85,6 +86,15 @@ class TaxiRide extends Model
         'driver_rating' => 'integer',
         'is_for_another_person' => 'boolean',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function ($ride) {
+            if (empty($ride->otp)) {
+                $ride->otp = (string) rand(1000, 9999);
+            }
+        });
+    }
 
     // Status constants
     const STATUS_PENDING = 'pending';

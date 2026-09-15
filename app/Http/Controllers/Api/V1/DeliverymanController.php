@@ -1261,6 +1261,16 @@ class DeliverymanController extends Controller
                 if ($newTaxiStatus === 'arrived') {
                     $taxiRide->arrived_at = now();
                 } elseif ($newTaxiStatus === 'in_progress') {
+                    if ($taxiRide->otp) {
+                        $providedOtp = $request['otp'] ?? $request->input('otp');
+                        if (!$providedOtp || trim((string)$providedOtp) !== trim((string)$taxiRide->otp)) {
+                            return response()->json([
+                                'errors' => [
+                                    ['code' => 'invalid_otp', 'message' => translate('messages.Invalid 4-digit ride PIN code')],
+                                ],
+                            ], 403);
+                        }
+                    }
                     $taxiRide->started_at = now();
                 } elseif ($newTaxiStatus === 'completed') {
                     $taxiRide->completed_at = now();

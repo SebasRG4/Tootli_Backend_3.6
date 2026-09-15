@@ -527,6 +527,15 @@ class TaxiSimulatorController extends Controller
             $updates['distance_to_pickup_km'] = 0;
             $updates['eta_minutes'] = 0;
         } elseif ($newStatus === 'in_progress') {
+            if ($trip->otp) {
+                $providedOtp = $request->otp;
+                if (!$providedOtp || trim((string)$providedOtp) !== trim((string)$trip->otp)) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'El PIN de viaje es incorrecto. Pide al pasajero su código de 4 dígitos para iniciar el viaje.'
+                    ], 422);
+                }
+            }
             $updates['started_at'] = now();
         } elseif ($newStatus === 'completed') {
             $updates['completed_at'] = now();
