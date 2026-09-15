@@ -116,6 +116,30 @@
                                         </label>
                                     </div>
                                 </div>
+
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group mb-0">
+                                        <label
+                                            class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control"
+                                            for="wallet_cashback_status">
+                                            <span class="pr-2">{{ 'Cashback en viajes con Billetera' }} :</span>
+                                            <input type="checkbox" class="toggle-switch-input" name="wallet_cashback_status"
+                                                id="wallet_cashback_status" value="1"
+                                                {{ (isset($data['wallet_cashback_status']) ? $data['wallet_cashback_status'] : 1) == 1 ? 'checked' : '' }}>
+                                            <span class="toggle-switch-label text">
+                                                <span class="toggle-switch-indicator"></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group mb-0">
+                                        <label class="input-label" for="wallet_cashback_percentage">{{ 'Porcentaje de Cashback (%)' }}</label>
+                                        <input type="number" step="0.1" min="0" max="100" class="form-control" name="wallet_cashback_percentage"
+                                            id="wallet_cashback_percentage" value="{{ isset($data['wallet_cashback_percentage']) ? $data['wallet_cashback_percentage'] : '3' }}" placeholder="Ej: 3">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

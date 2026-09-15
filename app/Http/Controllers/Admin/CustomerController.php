@@ -478,6 +478,12 @@ class CustomerController extends Controller
         Helpers::businessUpdateOrInsert(['key' => 'wallet_add_refund'], [
             'value' => $request['refund_to_wallet'] ?? 0
         ]);
+        Helpers::businessUpdateOrInsert(['key' => 'wallet_cashback_status'], [
+            'value' => $request['wallet_cashback_status'] ?? 0
+        ]);
+        Helpers::businessUpdateOrInsert(['key' => 'wallet_cashback_percentage'], [
+            'value' => $request['wallet_cashback_percentage'] ?? 0
+        ]);
         Helpers::businessUpdateOrInsert(['key' => 'loyalty_point_exchange_rate'], [
             'value' => $request['loyalty_point_exchange_rate'] ?? 0
         ]);

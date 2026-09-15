@@ -295,6 +295,27 @@ class TaxiServiceController extends Controller
             $dm->save();
         }
 
+        // Credit dynamic cashback to user wallet if paid via wallet
+        if ($ride->payment_method === 'wallet' && $ride->user_id) {
+            try {
+                $cashbackStatus = (int) (\App\Models\BusinessSetting::where('key', 'wallet_cashback_status')->value('value') ?? 1);
+                $cashbackPct = (float) (\App\Models\BusinessSetting::where('key', 'wallet_cashback_percentage')->value('value') ?? 3.0);
+                if ($cashbackStatus == 1 && $cashbackPct > 0) {
+                    $cashbackAmount = round(($finalFare * $cashbackPct) / 100, 2);
+                    if ($cashbackAmount > 0) {
+                        \App\CentralLogics\CustomerLogic::create_wallet_transaction(
+                            $ride->user_id,
+                            $cashbackAmount,
+                            'cashback',
+                            'taxi_ride_' . $ride->id
+                        );
+                    }
+                }
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Error crediting taxi wallet cashback: ' . $e->getMessage());
+            }
+        }
+
         // Notify user
         \App\Services\FirebaseService::sendRideCompletedNotification($ride);
 
