@@ -66,13 +66,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin', '
 
         // Taxi Simulator for testing (without driver app)
         Route::get('simulator', [TaxiSimulatorController::class, 'index'])->name('simulator');
+        Route::get('simulator/active-trips', [TaxiSimulatorController::class, 'getActiveTrips'])->name('simulator.active-trips');
+        Route::post('simulator/create-test-trip', [TaxiSimulatorController::class, 'createTestTrip'])->name('simulator.create-test-trip');
         Route::post('simulator/trip/{trip_id}/accept', [TaxiSimulatorController::class, 'acceptTrip'])->name('simulator.accept');
         Route::post('simulator/trip/{trip_id}/update-location', [TaxiSimulatorController::class, 'updateDriverLocation'])->name('simulator.update-location');
         Route::post('simulator/trip/{trip_id}/simulate-movement', [TaxiSimulatorController::class, 'simulateMovement'])->name('simulator.simulate-movement');
         Route::post('simulator/trip/{trip_id}/change-status', [TaxiSimulatorController::class, 'changeStatus'])->name('simulator.change-status');
-        Route::get('simulator/trip/{trip_id}', function ($trip_id) {
-            return response()->json(['trip' => \Modules\Taxi\Models\TaxiRide::with(['user', 'driver'])->find($trip_id)]);
-        })->name('simulator.get-trip');
+        Route::get('simulator/trip/{trip_id}', [TaxiSimulatorController::class, 'getTrip'])->name('simulator.get-trip');
 
         // Safety Alerts
         Route::group(['prefix' => 'safety', 'as' => 'safety.'], function () {

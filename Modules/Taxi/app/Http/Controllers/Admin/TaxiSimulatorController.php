@@ -9,6 +9,10 @@ use App\Models\DeliveryMan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use App\Services\FirebaseService;
 
 class TaxiSimulatorController extends Controller
 {
@@ -17,17 +21,103 @@ class TaxiSimulatorController extends Controller
      */
     public function index()
     {
-        $pendingTrips = TaxiRide::with(['user', 'driver', 'driver.vehicle'])
-            ->whereIn('status', ['pending', 'accepted', 'arriving'])
+        $activeTrips = TaxiRide::with(['user', 'driver', 'driver.vehicle'])
+            ->whereIn('status', ['pending', 'accepted', 'arriving', 'arrived', 'in_progress'])
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Get all taxi drivers with their user info
+        // Get all taxi drivers with their vehicle info (fallback to active delivery men if needed)
         $allDrivers = DeliveryMan::with(['vehicle'])
             ->canTaxi()
             ->get();
 
-        return view('admin-views.taxi.simulator', compact('pendingTrips', 'allDrivers'));
+        if ($allDrivers->isEmpty()) {
+            $allDrivers = DeliveryMan::with(['vehicle'])->where('is_active', 1)->get();
+        }
+
+        if ($allDrivers->isEmpty()) {
+            $allDrivers = DeliveryMan::with(['vehicle'])->get();
+        }
+
+        $mapApiKey = Helpers::get_business_settings('map_api_key') 
+            ?? \App\Models\BusinessSetting::where('key', 'map_api_key')->first()?->value 
+            ?? config('app.google_maps_api_key') 
+            ?? '';
+
+        return view('admin-views.taxi.simulator', compact('activeTrips', 'allDrivers', 'mapApiKey'));
+    }
+
+    /**
+     * Get list of active trips for real-time polling
+     */
+    public function getActiveTrips()
+    {
+        $trips = TaxiRide::with(['user', 'driver', 'driver.vehicle'])
+            ->whereIn('status', ['pending', 'accepted', 'arriving', 'arrived', 'in_progress'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'trips' => $trips,
+            'count' => $trips->count(),
+        ]);
+    }
+
+    /**
+     * Get single trip details
+     */
+    public function getTrip($tripId)
+    {
+        $trip = TaxiRide::with(['user', 'driver', 'driver.vehicle'])->findOrFail($tripId);
+
+        return response()->json([
+            'success' => true,
+            'trip' => $trip
+        ]);
+    }
+
+    /**
+     * Create a test trip directly from admin for rapid debugging
+     */
+    public function createTestTrip(Request $request)
+    {
+        $user = User::first();
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No hay usuarios registrados en el sistema para asociar al viaje de prueba.'
+            ], 400);
+        }
+
+        $zone = ($user->zone_id && \App\Models\Zone::where('id', $user->zone_id)->exists())
+            ? $user->zone_id
+            : (\App\Models\Zone::first()?->id ?? null);
+
+        $trip = TaxiRide::create([
+            'user_id' => $user->id,
+            'zone_id' => $zone,
+            'pickup_lat' => 19.432608,
+            'pickup_lng' => -99.133209,
+            'pickup_address' => 'Zócalo, Centro Histórico, Ciudad de México',
+            'dropoff_lat' => 19.426989,
+            'dropoff_lng' => -99.167812,
+            'dropoff_address' => 'Ángel de la Independencia, Paseo de la Reforma, CDMX',
+            'status' => 'pending',
+            'vehicle_type' => 'standard',
+            'estimated_distance_km' => 4.6,
+            'estimated_duration_min' => 16,
+            'estimated_fare' => 95.00,
+            'payment_method' => 'cash',
+            'payment_status' => 'unpaid',
+            'is_test' => true,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Viaje de prueba creado exitosamente',
+            'trip' => $trip->fresh(['user', 'driver'])
+        ]);
     }
 
     /**
@@ -36,26 +126,48 @@ class TaxiSimulatorController extends Controller
     public function acceptTrip(Request $request, $tripId)
     {
         $request->validate([
-            'driver_id' => 'required|exists:delivery_men,id',
-            'initial_lat' => 'required|numeric',
-            'initial_lng' => 'required|numeric',
+            'driver_id' => 'nullable|exists:delivery_men,id',
+            'initial_lat' => 'nullable|numeric|between:-90,90',
+            'initial_lng' => 'nullable|numeric|between:-180,180',
         ]);
 
         $trip = TaxiRide::findOrFail($tripId);
 
-        if ($trip->status !== 'pending') {
+        if (!in_array($trip->status, ['pending', 'accepted'])) {
             return response()->json([
                 'success' => false,
-                'message' => 'Trip is not in pending status'
+                'message' => 'El viaje no se encuentra en estado pendiente para ser aceptado'
             ], 400);
         }
 
+        // Driver selection fallback
+        $driverId = $request->driver_id;
+        if (!$driverId) {
+            $defaultDriver = DeliveryMan::canTaxi()->first() ?? DeliveryMan::first();
+            if (!$defaultDriver) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No hay conductores disponibles para asignar'
+                ], 400);
+            }
+            $driverId = $defaultDriver->id;
+        }
+
+        // Location fallback (~500m northeast of pickup)
+        $initialLat = $request->initial_lat;
+        $initialLng = $request->initial_lng;
+
+        if (!$initialLat || !$initialLng) {
+            $initialLat = (float) $trip->pickup_lat + 0.0038;
+            $initialLng = (float) $trip->pickup_lng + 0.0038;
+        }
+
         $trip->update([
-            'delivery_man_id' => $request->driver_id,
+            'delivery_man_id' => $driverId,
             'status' => 'accepted',
             'accepted_at' => now(),
-            'driver_current_lat' => $request->initial_lat,
-            'driver_current_lng' => $request->initial_lng,
+            'driver_current_lat' => $initialLat,
+            'driver_current_lng' => $initialLng,
             'driver_updated_at' => now(),
             'is_test' => true,
         ]);
@@ -65,20 +177,20 @@ class TaxiSimulatorController extends Controller
 
         // Send push notification to user
         try {
-            \App\Services\FirebaseService::sendDriverAcceptedNotification($trip->fresh(['user', 'driver']));
+            FirebaseService::sendDriverAcceptedNotification($trip->fresh(['user', 'driver']));
         } catch (\Exception $e) {
-            \Log::error('Failed to send driver accepted notification: ' . $e->getMessage());
+            Log::error('Failed to send driver accepted notification: ' . $e->getMessage());
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Trip accepted successfully',
+            'message' => '¡Viaje aceptado con éxito! Conductor asignado y notificado.',
             'trip' => $trip->fresh(['user', 'driver', 'driver.vehicle'])
         ]);
     }
 
     /**
-     * Update driver's current location
+     * Update driver's current location manually
      */
     public function updateDriverLocation(Request $request, $tripId)
     {
@@ -88,13 +200,6 @@ class TaxiSimulatorController extends Controller
         ]);
 
         $trip = TaxiRide::findOrFail($tripId);
-
-        if (!in_array($trip->status, ['accepted', 'arriving'])) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Trip is not in a trackable status'
-            ], 400);
-        }
 
         $trip->update([
             'driver_current_lat' => $request->lat,
@@ -107,8 +212,8 @@ class TaxiSimulatorController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Driver location updated',
-            'trip' => $trip->fresh()
+            'message' => 'Ubicación del conductor actualizada',
+            'trip' => $trip->fresh(['user', 'driver', 'driver.vehicle'])
         ]);
     }
 
@@ -119,7 +224,6 @@ class TaxiSimulatorController extends Controller
     {
         $request->validate([
             'speed' => 'in:slow,normal,fast',
-            'steps' => 'integer|min:5|max:100' // Kept for backward compatibility, but we'll use speed mainly
         ]);
 
         $trip = TaxiRide::findOrFail($tripId);
@@ -127,28 +231,34 @@ class TaxiSimulatorController extends Controller
         if (!$trip->driver_current_lat || !$trip->driver_current_lng) {
             return response()->json([
                 'success' => false,
-                'message' => 'Driver location not set'
+                'message' => 'La ubicación inicial del conductor no está definida'
             ], 400);
+        }
+
+        // Transition from accepted to arriving upon moving
+        if ($trip->status === 'accepted') {
+            $trip->update(['status' => 'arriving']);
+            try {
+                FirebaseService::sendDriverArrivingNotification($trip->fresh(['user', 'driver']));
+            } catch (\Exception $e) {}
         }
 
         $targetLat = (float) $trip->pickup_lat;
         $targetLng = (float) $trip->pickup_lng;
-        $status = 'arriving';
+        $leg = 'to_pickup';
 
-        // If trip is already in progress, target is dropoff
+        // If trip is in progress, target is dropoff
         if ($trip->status === 'in_progress') {
             $targetLat = (float) $trip->dropoff_lat;
             $targetLng = (float) $trip->dropoff_lng;
-            $status = 'in_progress';
+            $leg = 'to_dropoff';
         }
 
-        // 1. Get Route Coordinates (Cached)
-        // We use a cache key based on trip ID and status (to differentiate pickup vs dropoff leg)
-        $cacheKey = "taxi_sim_route_{$trip->id}_{$status}";
-        $routePoints = \Illuminate\Support\Facades\Cache::get($cacheKey);
+        // Route cache key
+        $cacheKey = "taxi_sim_route_{$trip->id}_{$leg}";
+        $routePoints = Cache::get($cacheKey);
 
         if (!$routePoints) {
-            // Fetch from Google Directions API
             $routePoints = $this->getRouteCoordinates(
                 $trip->driver_current_lat,
                 $trip->driver_current_lng,
@@ -157,16 +267,13 @@ class TaxiSimulatorController extends Controller
             );
 
             if (empty($routePoints)) {
-                // Fallback to linear if API fails
                 return $this->simulateLinearMovement($request, $trip, $targetLat, $targetLng);
             }
 
-            // Store in cache for 1 hour
-            \Illuminate\Support\Facades\Cache::put($cacheKey, $routePoints, 3600);
+            Cache::put($cacheKey, $routePoints, 3600);
         }
 
-        // 2. Find closest point in route to current location (to resume correctly)
-        // This is simple: we look for the point with min distance to current loc
+        // Find closest point in route
         $currentIndex = 0;
         $minDist = 999999;
 
@@ -183,10 +290,7 @@ class TaxiSimulatorController extends Controller
             }
         }
 
-        // 3. Move forward based on speed
-        // Speed determines how many points we skip. 
-        // Google polyline points are roughly close, but can vary.
-        // Let's say: slow = 1 point, normal = 3 points, fast = 5 points
+        // Step speed
         $speedSteps = [
             'slow' => 1,
             'normal' => 3,
@@ -197,7 +301,7 @@ class TaxiSimulatorController extends Controller
         $nextIndex = min($currentIndex + $stepCount, count($routePoints) - 1);
         $nextPoint = $routePoints[$nextIndex];
 
-        // 4. Update Location
+        // Update Location
         $trip->update([
             'driver_current_lat' => $nextPoint['lat'],
             'driver_current_lng' => $nextPoint['lng'],
@@ -206,8 +310,7 @@ class TaxiSimulatorController extends Controller
 
         $this->calculateEtaAndDistance($trip);
 
-        // 5. Check if arrived
-        // If we represent the last point or are very close to target
+        // Distance to target
         $distToTarget = $this->haversineDistance(
             $nextPoint['lat'],
             $nextPoint['lng'],
@@ -215,57 +318,74 @@ class TaxiSimulatorController extends Controller
             $targetLng
         );
 
-        $arrived = $distToTarget < 0.05; // 50 meters
+        $arrived = $distToTarget < 0.05 || $nextIndex >= (count($routePoints) - 1); // 50m or end of route
 
         if ($arrived) {
-            if ($status === 'arriving') {
-                $trip->update(['status' => 'arrived']);
-            } elseif ($status === 'in_progress') {
-                $trip->update(['status' => 'completed']);
+            if ($trip->status === 'arriving' || $trip->status === 'accepted') {
+                $trip->update([
+                    'status' => 'arrived',
+                    'arrived_at' => now(),
+                    'driver_current_lat' => $targetLat,
+                    'driver_current_lng' => $targetLng,
+                    'distance_to_pickup_km' => 0,
+                    'eta_minutes' => 0,
+                ]);
+                try {
+                    FirebaseService::sendDriverArrivedNotification($trip->fresh(['user', 'driver']));
+                } catch (\Exception $e) {}
+            } elseif ($trip->status === 'in_progress') {
+                $trip->update([
+                    'status' => 'completed',
+                    'completed_at' => now(),
+                    'driver_current_lat' => $targetLat,
+                    'driver_current_lng' => $targetLng,
+                    'payment_status' => 'paid',
+                    'final_fare' => $trip->final_fare ?: $trip->estimated_fare,
+                ]);
+                try {
+                    FirebaseService::sendRideCompletedNotification($trip->fresh(['user', 'driver']));
+                } catch (\Exception $e) {}
             }
-            // Clear cache when leg is done
-            \Illuminate\Support\Facades\Cache::forget($cacheKey);
+            Cache::forget($cacheKey);
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Driver moved (Realistic)',
-            'trip' => $trip->fresh(),
+            'message' => 'Conductor avanzó en la ruta',
+            'trip' => $trip->fresh(['user', 'driver', 'driver.vehicle']),
             'arrived' => $arrived,
             'distance_remaining' => round($distToTarget, 2)
         ]);
     }
 
     /**
-     * Fallback linear movement
+     * Fallback linear movement if Google Directions API is unavailable
      */
     private function simulateLinearMovement($request, $trip, $targetLat, $targetLng)
     {
         $currentLat = (float) $trip->driver_current_lat;
         $currentLng = (float) $trip->driver_current_lng;
 
-        // Calculate steps based on speed
         $speedMultiplier = [
             'slow' => 0.5,
             'normal' => 1,
             'fast' => 2
         ];
-        $steps = 20; // Default
+        $steps = 20;
         $multiplier = $speedMultiplier[$request->speed ?? 'normal'];
 
-        // Calculate incremental movement
         $latStep = ($targetLat - $currentLat) / $steps;
         $lngStep = ($targetLng - $currentLng) / $steps;
 
-        // Move one step (with multiplier)
         $newLat = $currentLat + ($latStep * $multiplier);
         $newLng = $currentLng + ($lngStep * $multiplier);
 
-        // Don't overshoot
-        if (($latStep > 0 && $newLat > $targetLat) || ($latStep < 0 && $newLat < $targetLat))
+        if (($latStep > 0 && $newLat > $targetLat) || ($latStep < 0 && $newLat < $targetLat)) {
             $newLat = $targetLat;
-        if (($lngStep > 0 && $newLng > $targetLng) || ($lngStep < 0 && $newLng < $targetLng))
+        }
+        if (($lngStep > 0 && $newLng > $targetLng) || ($lngStep < 0 && $newLng < $targetLng)) {
             $newLng = $targetLng;
+        }
 
         $trip->update([
             'driver_current_lat' => $newLat,
@@ -278,14 +398,38 @@ class TaxiSimulatorController extends Controller
         $distance = $this->haversineDistance($newLat, $newLng, $targetLat, $targetLng);
         $arrived = $distance < 0.05;
 
-        if ($arrived && $trip->status === 'arriving') {
-            $trip->update(['status' => 'arrived']);
+        if ($arrived) {
+            if ($trip->status === 'arriving' || $trip->status === 'accepted') {
+                $trip->update([
+                    'status' => 'arrived',
+                    'arrived_at' => now(),
+                    'driver_current_lat' => $targetLat,
+                    'driver_current_lng' => $targetLng,
+                    'distance_to_pickup_km' => 0,
+                    'eta_minutes' => 0,
+                ]);
+                try {
+                    FirebaseService::sendDriverArrivedNotification($trip->fresh(['user', 'driver']));
+                } catch (\Exception $e) {}
+            } elseif ($trip->status === 'in_progress') {
+                $trip->update([
+                    'status' => 'completed',
+                    'completed_at' => now(),
+                    'driver_current_lat' => $targetLat,
+                    'driver_current_lng' => $targetLng,
+                    'payment_status' => 'paid',
+                    'final_fare' => $trip->final_fare ?: $trip->estimated_fare,
+                ]);
+                try {
+                    FirebaseService::sendRideCompletedNotification($trip->fresh(['user', 'driver']));
+                } catch (\Exception $e) {}
+            }
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Driver moved (Linear Fallback)',
-            'trip' => $trip->fresh(),
+            'message' => 'Conductor avanzó (Interpolación directa)',
+            'trip' => $trip->fresh(['user', 'driver', 'driver.vehicle']),
             'arrived' => $arrived,
             'distance_remaining' => round($distance, 2)
         ]);
@@ -296,31 +440,24 @@ class TaxiSimulatorController extends Controller
      */
     private function getRouteCoordinates($originLat, $originLng, $destLat, $destLng)
     {
-        $apiKey = Helpers::get_business_settings('map_api_key');
-        // Fallback or explicit config if needed, but Helpers usually has it.
-        // If Helpers::get_business_settings returns null/false, we might have issues.
-        // Assuming 'map_api_key' is the correct key based on standard 6amMart/StackFood structures.
+        $apiKey = Helpers::get_business_settings('map_api_key')
+            ?? \App\Models\BusinessSetting::where('key', 'map_api_key')->first()?->value
+            ?? config('app.google_maps_api_key');
 
         if (!$apiKey) {
-            // Try to find it in config if helper fails
-            $apiKey = config('app.google_maps_api_key');
-        }
-
-        if (!$apiKey)
             return [];
+        }
 
         try {
             $url = "https://maps.googleapis.com/maps/api/directions/json?origin={$originLat},{$originLng}&destination={$destLat},{$destLng}&key={$apiKey}";
-
-            $response = \Illuminate\Support\Facades\Http::get($url);
+            $response = Http::get($url);
             $data = $response->json();
 
-            if ($data['status'] === 'OK') {
-                $points = $this->decodePolyline($data['routes'][0]['overview_polyline']['points']);
-                return $points;
+            if (isset($data['status']) && $data['status'] === 'OK') {
+                return $this->decodePolyline($data['routes'][0]['overview_polyline']['points']);
             }
         } catch (\Exception $e) {
-            \Log::error('Taxi Simulation Directions API Error: ' . $e->getMessage());
+            Log::error('Taxi Simulator Directions API Error: ' . $e->getMessage());
         }
 
         return [];
@@ -366,7 +503,7 @@ class TaxiSimulatorController extends Controller
     }
 
     /**
-     * Change trip status
+     * Change trip status with timestamps and notifications
      */
     public function changeStatus(Request $request, $tripId)
     {
@@ -375,19 +512,61 @@ class TaxiSimulatorController extends Controller
         ]);
 
         $trip = TaxiRide::findOrFail($tripId);
-        $trip->update(['status' => $request->status]);
+        $newStatus = $request->status;
 
-        // Clear cache when status changes manually to ensure new route is calculated for new status
-        $cacheKey = "taxi_sim_route_{$trip->id}_{$trip->status}"; // The OLD status
-        \Illuminate\Support\Facades\Cache::forget($cacheKey);
+        $updates = ['status' => $newStatus];
 
-        // Also clear for the NEW status just in case
-        $newCacheKey = "taxi_sim_route_{$trip->id}_{$request->status}";
-        \Illuminate\Support\Facades\Cache::forget($newCacheKey);
+        if ($newStatus === 'accepted' && !$trip->accepted_at) {
+            $updates['accepted_at'] = now();
+        } elseif ($newStatus === 'arriving') {
+            // driver is on the way
+        } elseif ($newStatus === 'arrived') {
+            $updates['arrived_at'] = now();
+            $updates['driver_current_lat'] = $trip->pickup_lat;
+            $updates['driver_current_lng'] = $trip->pickup_lng;
+            $updates['distance_to_pickup_km'] = 0;
+            $updates['eta_minutes'] = 0;
+        } elseif ($newStatus === 'in_progress') {
+            $updates['started_at'] = now();
+        } elseif ($newStatus === 'completed') {
+            $updates['completed_at'] = now();
+            $updates['driver_current_lat'] = $trip->dropoff_lat;
+            $updates['driver_current_lng'] = $trip->dropoff_lng;
+            $updates['payment_status'] = 'paid';
+            $updates['final_fare'] = $trip->final_fare ?: $trip->estimated_fare;
+        } elseif ($newStatus === 'cancelled') {
+            $updates['cancelled_at'] = now();
+            $updates['cancelled_by'] = 'driver';
+            $updates['cancellation_reason'] = $request->reason ?? 'Cancelado desde Simulador de Conductor';
+        }
+
+        $trip->update($updates);
+
+        // Clear route caches
+        Cache::forget("taxi_sim_route_{$trip->id}_to_pickup");
+        Cache::forget("taxi_sim_route_{$trip->id}_to_dropoff");
+
+        // Send corresponding push notifications
+        try {
+            $refreshed = $trip->fresh(['user', 'driver', 'driver.vehicle']);
+            if ($newStatus === 'accepted') {
+                FirebaseService::sendDriverAcceptedNotification($refreshed);
+            } elseif ($newStatus === 'arriving') {
+                FirebaseService::sendDriverArrivingNotification($refreshed);
+            } elseif ($newStatus === 'arrived') {
+                FirebaseService::sendDriverArrivedNotification($refreshed);
+            } elseif ($newStatus === 'completed') {
+                FirebaseService::sendRideCompletedNotification($refreshed);
+            } elseif ($newStatus === 'cancelled') {
+                FirebaseService::sendRideCancelledNotification($refreshed, 'driver');
+            }
+        } catch (\Exception $e) {
+            Log::error('Simulator status change notification error: ' . $e->getMessage());
+        }
 
         return response()->json([
             'success' => true,
-            'message' => 'Trip status updated',
+            'message' => "Estado del viaje actualizado a '{$newStatus}'",
             'trip' => $trip->fresh(['user', 'driver', 'driver.vehicle'])
         ]);
     }
@@ -401,15 +580,17 @@ class TaxiSimulatorController extends Controller
             return;
         }
 
+        $targetLat = ($trip->status === 'in_progress') ? $trip->dropoff_lat : $trip->pickup_lat;
+        $targetLng = ($trip->status === 'in_progress') ? $trip->dropoff_lng : $trip->pickup_lng;
+
         $distance = $this->haversineDistance(
             $trip->driver_current_lat,
             $trip->driver_current_lng,
-            $trip->pickup_lat,
-            $trip->pickup_lng
+            $targetLat,
+            $targetLng
         );
 
-        // Assuming average speed of 30 km/h in city
-        $averageSpeed = 30;
+        $averageSpeed = 30; // 30 km/h in city
         $etaMinutes = ($distance / $averageSpeed) * 60;
 
         $trip->update([
@@ -433,8 +614,6 @@ class TaxiSimulatorController extends Controller
             sin($dLon / 2) * sin($dLon / 2);
 
         $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-        $distance = $earthRadius * $c;
-
-        return $distance;
+        return $earthRadius * $c;
     }
 }
