@@ -59,6 +59,15 @@ class TaxiRide extends Model
         'eta_minutes',
         'distance_to_pickup_km',
         'is_test',
+        // Anti-fraud & telemetry
+        'is_fare_frozen',
+        'frozen_fare',
+        'frozen_at',
+        'passenger_last_lat',
+        'passenger_last_lng',
+        'passenger_last_seen_at',
+        'extended_trip_by_driver',
+        'completed_by_passenger',
     ];
 
     protected $casts = [
@@ -74,6 +83,14 @@ class TaxiRide extends Model
         'estimated_duration_min' => 'integer',
         'estimated_fare' => 'float',
         'final_fare' => 'float',
+        'is_fare_frozen' => 'boolean',
+        'frozen_fare' => 'float',
+        'frozen_at' => 'datetime',
+        'passenger_last_lat' => 'float',
+        'passenger_last_lng' => 'float',
+        'passenger_last_seen_at' => 'datetime',
+        'extended_trip_by_driver' => 'boolean',
+        'completed_by_passenger' => 'boolean',
         'surge_multiplier' => 'float',
         'tip' => 'float',
         'admin_incentive' => 'float',

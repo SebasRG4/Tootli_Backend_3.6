@@ -70,6 +70,10 @@ class TaxiRideController extends Controller
                     'surge_multiplier' => (float) ($ride->surge_multiplier ?? 1),
                     'vehicle_type' => $ride->vehicle_type,
                     'payment_method' => $ride->payment_method,
+                    'is_fare_frozen' => (bool) ($ride->is_fare_frozen ?? false),
+                    'frozen_fare' => $ride->frozen_fare ? (float) $ride->frozen_fare : null,
+                    'completed_by_passenger' => (bool) ($ride->completed_by_passenger ?? false),
+                    'extended_trip_by_driver' => (bool) ($ride->extended_trip_by_driver ?? false),
                 ]
             ]);
         } catch (\Exception $e) {

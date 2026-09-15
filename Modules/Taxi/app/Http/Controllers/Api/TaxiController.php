@@ -914,4 +914,226 @@ class TaxiController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Update passenger telemetry and verify proximity to vehicle/destination
+     */
+    public function passengerTelemetry(Request $request, int $id): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'lat' => 'required|numeric',
+            'lng' => 'required|numeric',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $ride = TaxiRide::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if (!$ride) {
+            return response()->json(['message' => 'Viaje no encontrado'], 404);
+        }
+
+        $passengerLat = (float) $request->lat;
+        $passengerLng = (float) $request->lng;
+
+        $ride->passenger_last_lat = $passengerLat;
+        $ride->passenger_last_lng = $passengerLng;
+        $ride->passenger_last_seen_at = now();
+
+        $fareFrozenNow = false;
+
+        // Check proximity if ride is in progress and not already extended or frozen
+        if ($ride->status === TaxiRide::STATUS_IN_PROGRESS && !$ride->extended_trip_by_driver && !$ride->is_fare_frozen) {
+            $driverLat = $ride->driver_current_lat;
+            $driverLng = $ride->driver_current_lng;
+
+            if ($driverLat && $driverLng) {
+                // Distance between driver and passenger in km
+                $separationKm = $this->calculateDistance($passengerLat, $passengerLng, (float) $driverLat, (float) $driverLng);
+
+                // If separation is > 200m (0.2 km), freeze the fare to protect passenger
+                if ($separationKm > 0.20) {
+                    $ride->is_fare_frozen = true;
+                    $ride->frozen_fare = $ride->estimated_fare;
+                    $ride->frozen_at = now();
+                    $fareFrozenNow = true;
+
+                    \Illuminate\Support\Facades\Log::info("Taxi Ride #{$ride->id}: Fare frozen due to passenger separation ({$separationKm} km)");
+                }
+            }
+        }
+
+        $ride->save();
+
+        return response()->json([
+            'success' => true,
+            'is_fare_frozen' => (bool) $ride->is_fare_frozen,
+            'frozen_fare' => $ride->frozen_fare ? (float) $ride->frozen_fare : null,
+            'fare_frozen_now' => $fareFrozenNow,
+            'completed_by_passenger' => (bool) $ride->completed_by_passenger,
+            'status' => $ride->status,
+        ]);
+    }
+
+    /**
+     * Change dropoff destination while ride is pending or in progress
+     */
+    public function editDestination(Request $request, int $id): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'dropoff_lat' => 'required|numeric',
+            'dropoff_lng' => 'required|numeric',
+            'dropoff_address' => 'required|string|max:500',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $ride = TaxiRide::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if (!$ride) {
+            return response()->json(['message' => 'Viaje no encontrado'], 404);
+        }
+
+        if (!in_array($ride->status, [
+            TaxiRide::STATUS_PENDING,
+            TaxiRide::STATUS_ACCEPTED,
+            TaxiRide::STATUS_ARRIVING,
+            TaxiRide::STATUS_ARRIVED,
+            TaxiRide::STATUS_IN_PROGRESS,
+        ])) {
+            return response()->json(['message' => 'No es posible cambiar el destino en este estado del viaje.'], 400);
+        }
+
+        $newDropoffLat = (float) $request->dropoff_lat;
+        $newDropoffLng = (float) $request->dropoff_lng;
+        $newAddress = $request->dropoff_address;
+
+        // If in progress and driver position is available, route originates from driver's current position, otherwise from pickup
+        $originLat = ($ride->status === TaxiRide::STATUS_IN_PROGRESS && $ride->driver_current_lat)
+            ? (float) $ride->driver_current_lat
+            : (float) $ride->pickup_lat;
+        $originLng = ($ride->status === TaxiRide::STATUS_IN_PROGRESS && $ride->driver_current_lng)
+            ? (float) $ride->driver_current_lng
+            : (float) $ride->pickup_lng;
+
+        // Calculate new route
+        $routeData = $this->getGoogleDirectionsRoute($originLat, $originLng, $newDropoffLat, $newDropoffLng);
+        if ($routeData) {
+            $newDistance = $routeData['distance_km'];
+            $newDuration = $routeData['duration_min'];
+        } else {
+            $newDistance = $this->calculateDistance($originLat, $originLng, $newDropoffLat, $newDropoffLng);
+            $newDuration = ceil(($newDistance / 30) * 60);
+        }
+
+        // Recalculate fare for the new total distance
+        $vehicleType = TaxiVehicleType::where('slug', $ride->vehicle_type)->active()->first();
+        $fareConfig = null;
+        if ($vehicleType) {
+            $query = TaxiFareConfig::active()->forVehicleType($vehicleType->id);
+            if ($ride->zone_id) {
+                $fareConfig = (clone $query)->forZone($ride->zone_id)->first();
+            }
+            if (!$fareConfig) {
+                $fareConfig = $query->first();
+            }
+        }
+
+        $weatherService = app(\App\Services\WeatherService::class);
+        $weatherInfo = $weatherService->getWeatherInfo($newDropoffLat, $newDropoffLng);
+        $weatherMultiplier = $weatherInfo['multiplier'] ?? 1.0;
+
+        if ($fareConfig) {
+            $fareIntelligence = app(\App\Services\FareIntelligenceService::class);
+            $staticTotal = $fareIntelligence->getDynamicFare(
+                (int) $ride->zone_id,
+                (float) $newDistance,
+                (int) $newDuration,
+                (string) $ride->vehicle_type
+            );
+            $newFare = round($staticTotal * $weatherMultiplier, 2);
+        } else {
+            $subtotal = 25.00 + ($newDistance * 8) + ($newDuration * 2);
+            $newFare = round(max($subtotal * $weatherMultiplier, 35), 2);
+        }
+
+        // Update ride
+        $ride->dropoff_lat = $newDropoffLat;
+        $ride->dropoff_lng = $newDropoffLng;
+        $ride->dropoff_address = $newAddress;
+        $ride->estimated_distance_km = $newDistance;
+        $ride->estimated_duration_minutes = $newDuration;
+        $ride->estimated_fare = $newFare;
+
+        // Reset freeze flags since user explicitly changed the route
+        $ride->is_fare_frozen = false;
+        $ride->frozen_fare = null;
+        $ride->frozen_at = null;
+        $ride->extended_trip_by_driver = false;
+
+        $ride->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Destino actualizado correctamente',
+            'ride' => $ride->fresh(['user', 'driver', 'driver.vehicle']),
+        ]);
+    }
+
+    /**
+     * Passenger confirms arrival and completes the ride
+     */
+    public function passengerCompleteRide(Request $request, int $id): JsonResponse
+    {
+        $ride = TaxiRide::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if (!$ride) {
+            return response()->json(['message' => 'Viaje no encontrado'], 404);
+        }
+
+        if ($ride->status !== TaxiRide::STATUS_IN_PROGRESS) {
+            return response()->json([
+                'success' => false,
+                'message' => 'El viaje no está en curso',
+            ], 400);
+        }
+
+        $finalFare = ($ride->is_fare_frozen && $ride->frozen_fare > 0)
+            ? (float) $ride->frozen_fare
+            : (float) $ride->estimated_fare;
+
+        $ride->completed_by_passenger = true;
+        $ride->status = TaxiRide::STATUS_COMPLETED;
+        $ride->completed_at = now();
+        $ride->final_fare = $finalFare;
+        $ride->payment_status = 'paid';
+
+        if ($ride->driver) {
+            $ride->driver->increment('taxi_total_rides');
+            $ride->driver->decrement('current_orders');
+        }
+
+        $ride->save();
+
+        // Dispatch completed notification via Firebase
+        \App\Services\FirebaseService::sendRideCompletedNotification($ride);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Viaje finalizado con éxito',
+            'final_fare' => $finalFare,
+            'ride' => $ride->fresh(['user', 'driver', 'driver.vehicle']),
+        ]);
+    }
 }
+

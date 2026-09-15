@@ -38,6 +38,11 @@ Route::group(['prefix' => 'taxi'], function () {
         Route::get('history', [TaxiController::class, 'history']);
         Route::get('current-ride', [TaxiController::class, 'getCurrentRide']);
 
+        // Anti-fraud telemetry, dynamic destination & passenger completion
+        Route::post('ride/{id}/passenger-telemetry', [TaxiController::class, 'passengerTelemetry']);
+        Route::post('ride/{id}/edit-destination', [TaxiController::class, 'editDestination']);
+        Route::post('ride/{id}/passenger-complete', [TaxiController::class, 'passengerCompleteRide']);
+
         // DEBUG ONLY: Simulate driver acceptance
         Route::post('ride/{id}/debug-accept', [TaxiController::class, 'debugAcceptRide']);
 

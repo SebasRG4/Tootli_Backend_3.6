@@ -9673,4 +9673,5 @@ Smartly or Earn. ',
   'Categorías' => 'Categorías',
   'variation_max_limit_50' => 'Variation max limit 50',
   'cannot_delete_vehicle_type_in_use' => 'Cannot delete vehicle type in use',
+  'vehicle_type_status_updated' => 'Vehicle type status updated',
 );

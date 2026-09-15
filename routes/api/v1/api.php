@@ -230,6 +230,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             // Taxi/Unified Service Routes
             Route::post('toggle-services', 'DeliverymanController@toggleServices');
             Route::get('taxi-profile', 'DeliverymanController@getTaxiProfile');
+            Route::post('taxi/extend-trip', 'DeliverymanController@extendTaxiTrip');
 
             // Insignias y niveles
             Route::get('badges', 'DeliveryMan\BadgesApiController@getBadgesData');

@@ -711,6 +711,10 @@ class DeliverymanController extends Controller
             'is_taxi' => true,
             'taxi_ride_id' => $ride->id,
             'details_count' => 1,
+            'is_fare_frozen' => (bool) ($ride->is_fare_frozen ?? false),
+            'frozen_fare' => $ride->frozen_fare ? (float) $ride->frozen_fare : null,
+            'completed_by_passenger' => (bool) ($ride->completed_by_passenger ?? false),
+            'extended_trip_by_driver' => (bool) ($ride->extended_trip_by_driver ?? false),
             'customer' => $ride->user ? [
                 'id' => $ride->user->id,
                 'f_name' => $ride->user->f_name,
@@ -1274,7 +1278,10 @@ class DeliverymanController extends Controller
                     $taxiRide->started_at = now();
                 } elseif ($newTaxiStatus === 'completed') {
                     $taxiRide->completed_at = now();
-                    $taxiRide->final_fare = $taxiRide->estimated_fare;
+                    $finalFare = ($taxiRide->is_fare_frozen && $taxiRide->frozen_fare > 0)
+                        ? (float) $taxiRide->frozen_fare
+                        : (float) $taxiRide->estimated_fare;
+                    $taxiRide->final_fare = $finalFare;
                     $taxiRide->payment_status = 'paid';
                     $dm->current_orders = $dm->current_orders > 1 ? $dm->current_orders - 1 : 0;
                     $dm->save();
@@ -3355,4 +3362,40 @@ class DeliverymanController extends Controller
 
         return response()->json(['message' => 'Call started successfully'], 200);
     }
+
+    /**
+     * Driver confirms passenger verbally requested to continue trip (unfreezes fare)
+     */
+    public function extendTaxiTrip(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+        if (!$dm) {
+            return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
+        }
+
+        $taxiRide = \Modules\Taxi\Models\TaxiRide::where(['id' => $request['order_id'], 'delivery_man_id' => $dm['id']])->first();
+
+        if (!$taxiRide) {
+            return response()->json(['errors' => [['code' => 'not_found', 'message' => 'Viaje no encontrado']]], 404);
+        }
+
+        $taxiRide->extended_trip_by_driver = true;
+        $taxiRide->is_fare_frozen = false;
+        $taxiRide->frozen_fare = null;
+        $taxiRide->frozen_at = null;
+        $taxiRide->save();
+
+        return response()->json([
+            'message' => 'Viaje extendido por confirmación verbal del pasajero',
+        ], 200);
+    }
 }
+
