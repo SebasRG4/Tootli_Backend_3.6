@@ -9672,4 +9672,5 @@ Smartly or Earn. ',
   'Most Popular Items' => 'Most Popular Items',
   'Categorías' => 'Categorías',
   'variation_max_limit_50' => 'Variation max limit 50',
+  'cannot_delete_vehicle_type_in_use' => 'Cannot delete vehicle type in use',
 );

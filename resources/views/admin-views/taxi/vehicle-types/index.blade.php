@@ -28,12 +28,12 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>{{ 'Imagen' }}</th>
-                                <th>{{ 'Babosa' }}</th>
+                                <th>{{ 'Identificador (Slug)' }}</th>
                                 <th>{{ 'Nombre' }}</th>
-                                <th>{{ 'Pasajeros máximos' }}</th>
+                                <th>{{ 'Pasajeros Máximos' }}</th>
                                 <th>{{ 'Orden' }}</th>
-                                <th>{{ 'Estado' }}</th>
-                                <th>{{ 'Comportamiento' }}</th>
+                                <th class="text-center">{{ 'Estado' }}</th>
+                                <th class="text-center">{{ 'Acciones' }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -52,12 +52,19 @@
                                     <td>{{ $type->name }}</td>
                                     <td>{{ $type->max_passengers }}</td>
                                     <td>{{ $type->sort_order }}</td>
-                                    <td>
-                                        <span class="badge badge-{{ $type->status ? 'success' : 'danger' }}">
-                                            {{ $type->status ? 'Activo' : 'Inactivo' }}
-                                        </span>
+                                    <td class="text-center">
+                                        <label class="toggle-switch toggle-switch-sm" for="statusCheckbox{{ $type->id }}">
+                                            <input type="checkbox"
+                                                data-url="{{ route('admin.taxi.vehicle-types.status', [$type->id, $type->status ? 0 : 1]) }}"
+                                                class="toggle-switch-input redirect-url"
+                                                id="statusCheckbox{{ $type->id }}"
+                                                {{ $type->status ? 'checked' : '' }}>
+                                            <span class="toggle-switch-label mx-auto">
+                                                <span class="toggle-switch-indicator"></span>
+                                            </span>
+                                        </label>
                                     </td>
-                                    <td>
+                                    <td class="text-center">
                                         <div class="dropdown">
                                             <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
                                                 <i class="tio-more-vertical"></i>
@@ -66,7 +73,7 @@
                                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editTypeModal{{ $type->id }}">
                                                     <i class="tio-edit"></i> {{ 'Editar' }}
                                                 </a>
-                                                <form action="{{ route('admin.taxi.vehicle-types.delete', $type->id) }}" method="POST" onsubmit="return confirm('{{ '¿Está seguro?' }}')">
+                                                <form action="{{ route('admin.taxi.vehicle-types.delete', $type->id) }}" method="POST" onsubmit="return confirm('{{ '¿Está seguro de eliminar este tipo de vehículo?' }}')">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="dropdown-item text-danger">
@@ -92,7 +99,7 @@
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label>{{ 'Babosa' }} *</label>
+                                                                <label>{{ 'Identificador (Slug)' }} *</label>
                                                                 <input type="text" name="slug" class="form-control" value="{{ $type->slug }}" required>
                                                             </div>
                                                         </div>
@@ -106,7 +113,7 @@
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label>{{ 'Pasajeros máximos' }} *</label>
+                                                                <label>{{ 'Pasajeros Máximos' }} *</label>
                                                                 <input type="number" name="max_passengers" class="form-control" value="{{ $type->max_passengers }}" min="1" max="10" required>
                                                             </div>
                                                         </div>
@@ -131,10 +138,16 @@
                                                         <input type="file" name="image" class="form-control" accept="image/*">
                                                     </div>
                                                     <div class="form-group">
-                                                        <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" name="status" class="custom-control-input" id="typeStatus{{ $type->id }}" {{ $type->status ? 'checked' : '' }}>
-                                                            <label class="custom-control-label" for="typeStatus{{ $type->id }}">{{ 'Activo' }}</label>
-                                                        </div>
+                                                        <label class="input-label d-block">{{ 'Estado' }}</label>
+                                                        <label class="toggle-switch toggle-switch-sm d-flex align-items-center" for="typeStatus{{ $type->id }}">
+                                                            <input type="checkbox" name="status" class="toggle-switch-input" id="typeStatus{{ $type->id }}" {{ $type->status ? 'checked' : '' }}>
+                                                            <span class="toggle-switch-label">
+                                                                <span class="toggle-switch-indicator"></span>
+                                                            </span>
+                                                            <span class="toggle-switch-content ml-2">
+                                                                <small class="text-muted">{{ 'Habilitado para viajes' }}</small>
+                                                            </span>
+                                                        </label>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
@@ -174,7 +187,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>{{ 'Babosa' }} *</label>
+                                    <label>{{ 'Identificador (Slug)' }} *</label>
                                     <input type="text" name="slug" class="form-control" placeholder="e.g. suv, motorbike" required>
                                 </div>
                             </div>
@@ -188,7 +201,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>{{ 'Pasajeros máximos' }} *</label>
+                                    <label>{{ 'Pasajeros Máximos' }} *</label>
                                     <input type="number" name="max_passengers" class="form-control" value="4" min="1" max="10" required>
                                 </div>
                             </div>
@@ -201,17 +214,23 @@
                         </div>
                         <div class="form-group">
                             <label>{{ 'Descripción' }}</label>
-                            <textarea name="description" class="form-control" rows="2"></textarea>
+                            <textarea name="description" class="form-control" rows="2" placeholder="Breve descripción del servicio"></textarea>
                         </div>
                         <div class="form-group">
                             <label>{{ 'Imagen' }}</label>
                             <input type="file" name="image" class="form-control" accept="image/*">
                         </div>
                         <div class="form-group">
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox" name="status" class="custom-control-input" id="newTypeStatus" checked>
-                                <label class="custom-control-label" for="newTypeStatus">{{ 'Activo' }}</label>
-                            </div>
+                            <label class="input-label d-block">{{ 'Estado' }}</label>
+                            <label class="toggle-switch toggle-switch-sm d-flex align-items-center" for="newTypeStatus">
+                                <input type="checkbox" name="status" class="toggle-switch-input" id="newTypeStatus" checked>
+                                <span class="toggle-switch-label">
+                                    <span class="toggle-switch-indicator"></span>
+                                </span>
+                                <span class="toggle-switch-content ml-2">
+                                    <small class="text-muted">{{ 'Habilitado por defecto' }}</small>
+                                </span>
+                            </label>
                         </div>
                     </div>
                     <div class="modal-footer">

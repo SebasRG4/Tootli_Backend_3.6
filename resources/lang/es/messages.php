@@ -9620,4 +9620,5 @@ Smartly or Earn. ',
   'deposit_required' => 'Deposit required',
   'you_have' => 'You have',
   'cash_in_hand_please_deposit_soon' => 'Cash in hand please deposit soon',
+  'vehicle_type_status_updated' => 'Estado del tipo de vehículo actualizado',
 );

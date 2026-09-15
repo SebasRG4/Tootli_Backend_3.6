@@ -530,6 +530,23 @@ class TaxiManagementController extends Controller
         return back();
     }
 
+    public function vehicleTypeStatus(Request $request, $id, $status)
+    {
+        $type = TaxiVehicleType::findOrFail($id);
+        $type->status = (bool) $status;
+        $type->save();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => translate('messages.vehicle_type_status_updated') ?? 'Estado del tipo de vehículo actualizado',
+            ]);
+        }
+
+        Toastr::success(translate('messages.vehicle_type_status_updated') ?? 'Estado del tipo de vehículo actualizado');
+        return back();
+    }
+
     // ===================
     // COUPONS
     // ===================

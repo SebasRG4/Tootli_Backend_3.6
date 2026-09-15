@@ -57,6 +57,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin', '
         Route::post('vehicle-types/store', [TaxiManagementController::class, 'storeVehicleType'])->name('vehicle-types.store');
         Route::post('vehicle-types/update/{id}', [TaxiManagementController::class, 'updateVehicleType'])->name('vehicle-types.update');
         Route::delete('vehicle-types/delete/{id}', [TaxiManagementController::class, 'deleteVehicleType'])->name('vehicle-types.delete');
+        Route::get('vehicle-types/status/{id}/{status}', [TaxiManagementController::class, 'vehicleTypeStatus'])->name('vehicle-types.status');
 
         // Rides
         Route::get('rides', [TaxiManagementController::class, 'rides'])->name('rides');
