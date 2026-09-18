@@ -231,13 +231,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Tarifa Base *</label>
-                                    <input type="number" step="0.01" name="base_fare" class="form-control" value="25" required>
+                                    <input type="number" step="0.01" name="base_fare" class="form-control" value="15" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Tarifa por KM *</label>
-                                    <input type="number" step="0.01" name="per_km_rate" class="form-control" value="8" required>
+                                    <input type="number" step="0.01" name="per_km_rate" class="form-control" value="7.20" required>
                                 </div>
                             </div>
                         </div>
@@ -245,13 +245,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Tarifa por Minuto *</label>
-                                    <input type="number" step="0.01" name="per_min_rate" class="form-control" value="2" required>
+                                    <input type="number" step="0.01" name="per_min_rate" class="form-control" value="1.70" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Tarifa Mínima *</label>
-                                    <input type="number" step="0.01" name="minimum_fare" class="form-control" value="35" required>
+                                    <input type="number" step="0.01" name="minimum_fare" class="form-control" value="32" required>
                                 </div>
                             </div>
                         </div>

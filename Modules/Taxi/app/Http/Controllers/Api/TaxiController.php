@@ -174,48 +174,33 @@ class TaxiController extends Controller
             }
         }
 
-        // Get weather condition and pricing multiplier
-        $weatherService = app(\App\Services\WeatherService::class);
-        $weatherInfo = $weatherService->getWeatherInfo((float) $request->pickup_lat, (float) $request->pickup_lng);
-        $weatherMultiplier = $weatherInfo['multiplier'];
+        // Calculate fare using the automated dynamic pricing engine (x2.0 cap, peak/night demand fallback, surge_prices)
+        $pricingService = app(\App\Services\TaxiPricingService::class);
+        $fareCalculation = $pricingService->calculateFare(
+            $fareConfig,
+            $zoneId,
+            (float) $distance,
+            (int) $estimatedDuration,
+            (float) $request->pickup_lat,
+            (float) $request->pickup_lng,
+            (string) $vehicleTypeSlug
+        );
 
-        if (!$fareConfig) {
-            $fareBreakdown = [
-                'base_fare' => 25.00,
-                'distance_charge' => round($distance * 8, 2),
-                'time_charge' => round($estimatedDuration * 2, 2),
-                'subtotal' => 0,
-                'surge_multiplier' => $weatherMultiplier,
-                'total' => 0,
-            ];
-            $fareBreakdown['subtotal'] = $fareBreakdown['base_fare'] + $fareBreakdown['distance_charge'] + $fareBreakdown['time_charge'];
-            $fareBreakdown['total'] = round(max($fareBreakdown['subtotal'] * $weatherMultiplier, 35));
-        } else {
-            // Get static fare total (WITHOUT weather, since we apply it below)
-            $fareIntelligence = app(\App\Services\FareIntelligenceService::class);
-            $staticTotal = $fareIntelligence->getDynamicFare(
-                (int) $zoneId,
-                (float) $distance,
-                (int) $estimatedDuration,
-                (string) $vehicleTypeSlug
-            );
-
-            // Apply weather multiplier ONCE to the static total
-            $finalTotal = round($staticTotal * $weatherMultiplier);
-
-            // Get breakdown for UI transparency (no weather in breakdown formula, apply manually)
-            $fareBreakdown = $fareConfig->calculateFare($distance, $estimatedDuration);
-            $fareBreakdown['surge_multiplier'] = $weatherMultiplier;
-            $fareBreakdown['total'] = $finalTotal;
-        }
-
-        // Count available drivers nearby for this specific vehicle type
-        $availableDrivers = DeliveryMan::canTaxi()
-            ->taxiAvailable()
-            ->whereHas('vehicle', function ($query) use ($vehicleTypeSlug) {
-                $query->where('type', $vehicleTypeSlug);
-            })
-            ->count();
+        $weatherInfo = $fareCalculation['weather'];
+        $availableDrivers = $fareCalculation['available_drivers'];
+        $fareBreakdown = [
+            'base_fare' => $fareCalculation['base_fare'],
+            'distance_charge' => $fareCalculation['distance_charge'],
+            'time_charge' => $fareCalculation['time_charge'],
+            'subtotal' => $fareCalculation['subtotal'],
+            'surge_multiplier' => $fareCalculation['surge_multiplier'],
+            'surge_amount' => $fareCalculation['surge_amount'],
+            'is_surge_active' => $fareCalculation['is_surge_active'],
+            'surge_title' => $fareCalculation['surge_title'],
+            'surge_note' => $fareCalculation['surge_note'],
+            'surge_reasons' => $fareCalculation['surge_reasons'],
+            'total' => $fareCalculation['total'],
+        ];
 
         // Get max passengers and image from vehicle type
         $maxPassengers = $vehicleType ? $vehicleType->max_passengers : 4;
@@ -309,32 +294,36 @@ class TaxiController extends Controller
         );
         $estimatedDuration = ceil(($distance / 30) * 60);
 
-        // Get weather condition and pricing multiplier
-        $weatherService = app(\App\Services\WeatherService::class);
-        $weatherInfo = $weatherService->getWeatherInfo((float) $request->pickup_lat, (float) $request->pickup_lng);
-        $weatherMultiplier = $weatherInfo['multiplier'];
+        // Get fare config for zone and vehicle type (with fallback)
+        $fareConfig = null;
+        if ($vehicleType) {
+            $query = TaxiFareConfig::active()
+                ->forVehicleType($vehicleType->id)
+                ->with('vehicleType');
 
-        $fareConfig = TaxiFareConfig::active()
-            ->forZone($zoneId)
-            ->forVehicleType($vehicleType->id)
-            ->first();
+            if ($zoneId) {
+                $fareConfig = (clone $query)->forZone($zoneId)->first();
+            }
 
-        if ($fareConfig) {
-            // Use Dynamic AI/ML Fare Calculation
-            $fareIntelligence = app(\App\Services\FareIntelligenceService::class);
-            $estimatedFare = $fareIntelligence->getDynamicFare(
-                (int) $zoneId,
-                (float) $distance,
-                (int) $estimatedDuration,
-                (string) $vehicleTypeSlug
-            );
-            $estimatedFare = round($estimatedFare * $weatherMultiplier);
-            $surgeMultiplier = $weatherMultiplier;
-        } else {
-            $baseFare = max(25 + ($distance * 8) + ($estimatedDuration * 2), 35);
-            $estimatedFare = round($baseFare * $weatherMultiplier);
-            $surgeMultiplier = $weatherMultiplier;
+            if (!$fareConfig) {
+                $fareConfig = $query->first();
+            }
         }
+
+        // Calculate dynamic fare using the automated pricing engine (x2.0 cap, peak/night demand fallback, surge_prices)
+        $pricingService = app(\App\Services\TaxiPricingService::class);
+        $fareCalculation = $pricingService->calculateFare(
+            $fareConfig,
+            $zoneId,
+            (float) $distance,
+            (int) $estimatedDuration,
+            (float) $request->pickup_lat,
+            (float) $request->pickup_lng,
+            (string) $vehicleTypeSlug
+        );
+
+        $estimatedFare = $fareCalculation['total'];
+        $surgeMultiplier = $fareCalculation['surge_multiplier'];
         
         $tip = (float) ($request->tip ?? 0.00);
         
