@@ -3,6 +3,8 @@
 namespace Modules\Taxi\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\CentralLogics\CustomerLogic;
+use App\Models\DeliveryManWallet;
 use App\Models\DeliveryMan;
 use Modules\Taxi\Models\TaxiFareConfig;
 use Modules\Taxi\Models\TaxiRide;
@@ -187,7 +189,7 @@ class TaxiController extends Controller
                 'total' => 0,
             ];
             $fareBreakdown['subtotal'] = $fareBreakdown['base_fare'] + $fareBreakdown['distance_charge'] + $fareBreakdown['time_charge'];
-            $fareBreakdown['total'] = round(max($fareBreakdown['subtotal'] * $weatherMultiplier, 35), 2);
+            $fareBreakdown['total'] = round(max($fareBreakdown['subtotal'] * $weatherMultiplier, 35));
         } else {
             // Get static fare total (WITHOUT weather, since we apply it below)
             $fareIntelligence = app(\App\Services\FareIntelligenceService::class);
@@ -199,7 +201,7 @@ class TaxiController extends Controller
             );
 
             // Apply weather multiplier ONCE to the static total
-            $finalTotal = round($staticTotal * $weatherMultiplier, 2);
+            $finalTotal = round($staticTotal * $weatherMultiplier);
 
             // Get breakdown for UI transparency (no weather in breakdown formula, apply manually)
             $fareBreakdown = $fareConfig->calculateFare($distance, $estimatedDuration);
@@ -263,6 +265,10 @@ class TaxiController extends Controller
             'passenger_address_details' => 'nullable|string',
             'tip' => 'nullable|numeric|min:0',
             'failed_attempts' => 'nullable|integer|min:0',
+            // Trip preferences
+            'conversation_preference' => 'nullable|string|in:quiet,chatty,none',
+            'climate_preference' => 'nullable|string|in:ac,windows,normal',
+            'has_luggage' => 'nullable|boolean',
         ]);
 
         if ($validator->fails()) {
@@ -322,11 +328,11 @@ class TaxiController extends Controller
                 (int) $estimatedDuration,
                 (string) $vehicleTypeSlug
             );
-            $estimatedFare = round($estimatedFare * $weatherMultiplier, 2);
+            $estimatedFare = round($estimatedFare * $weatherMultiplier);
             $surgeMultiplier = $weatherMultiplier;
         } else {
             $baseFare = max(25 + ($distance * 8) + ($estimatedDuration * 2), 35);
-            $estimatedFare = round($baseFare * $weatherMultiplier, 2);
+            $estimatedFare = round($baseFare * $weatherMultiplier);
             $surgeMultiplier = $weatherMultiplier;
         }
         
@@ -336,14 +342,14 @@ class TaxiController extends Controller
         $adminIncentive = 0.00;
         if ($failedAttempts === 1) {
             // Platform bonus (100%): 10% of fare, capped at $20 MXN
-            $adminIncentive = round(min($estimatedFare * 0.10, 20.00), 2);
+            $adminIncentive = round(min($estimatedFare * 0.10, 20.00));
         } elseif ($failedAttempts >= 2) {
             // Platform bonus (50%): 5% of fare, capped at $10 MXN
-            $adminIncentive = round(min($estimatedFare * 0.05, 10.00), 2);
+            $adminIncentive = round(min($estimatedFare * 0.05, 10.00));
         }
 
         // Final offered fare to drivers: Tarifa Principal + Tip + Admin Incentive
-        $estimatedFare += $tip + $adminIncentive;
+        $estimatedFare = round($estimatedFare + $tip + $adminIncentive);
 
         // Create the ride
         $ride = TaxiRide::create([
@@ -369,6 +375,10 @@ class TaxiController extends Controller
             'passenger_name' => $request->passenger_name,
             'passenger_phone' => $request->passenger_phone,
             'passenger_address_details' => $request->passenger_address_details,
+            // Trip preferences
+            'conversation_preference' => $request->conversation_preference ?? 'none',
+            'climate_preference' => $request->climate_preference ?? 'normal',
+            'has_luggage' => $request->boolean('has_luggage', false),
         ]);
 
         // Dispatch push notification to nearby eligible drivers
@@ -444,22 +454,29 @@ class TaxiController extends Controller
     }
 
     /**
-     * Rate a completed ride
+     * Rate a completed ride and optionally add a tip
      */
-    public function rateRide(Request $request, int $id): JsonResponse
+    public function rateRide(Request $request, ?int $id = null): JsonResponse
     {
+        $id = $id ?? (int) $request->input('ride_id');
+
         $validator = Validator::make($request->all(), [
             'rating' => 'required|integer|min:1|max:5',
             'review' => 'nullable|string|max:500',
+            'tip' => 'nullable|numeric|min:0',
+            'tip_payment_method' => 'nullable|string|in:wallet,card,digital_payment',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $ride = TaxiRide::findOrFail($id);
-        $user = $request->user();
+        $ride = TaxiRide::find($id);
+        if (!$ride) {
+            return response()->json(['message' => 'Viaje no encontrado'], 404);
+        }
 
+        $user = $request->user();
         if ($ride->user_id !== $user->id) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
@@ -468,10 +485,65 @@ class TaxiController extends Controller
             return response()->json(['message' => 'Can only rate completed rides'], 400);
         }
 
-        $ride->update([
+        $updateData = [
             'driver_rating' => $request->rating,
             'user_review' => $request->review,
-        ]);
+        ];
+
+        if ($request->has('tip') && (float)$request->tip > 0) {
+            $tipAmount = round((float)$request->tip, 2);
+            $tipMethod = $request->input('tip_payment_method', 'wallet');
+
+            if ($tipMethod === 'wallet') {
+                $currentBalance = (float)($user->wallet_balance ?? 0);
+                if ($currentBalance < $tipAmount) {
+                    return response()->json([
+                        'message' => 'Saldo insuficiente en tu Billetera Tootli. Tu saldo disponible es de $' . number_format($currentBalance, 2)
+                    ], 400);
+                }
+
+                // Debit user's Tootli Wallet
+                $walletTx = CustomerLogic::create_wallet_transaction(
+                    $user->id,
+                    $tipAmount,
+                    'trip_booking',
+                    'Propina Viaje #' . $ride->id
+                );
+
+                if (!$walletTx) {
+                    return response()->json([
+                        'message' => 'No se pudo procesar el cobro desde tu Billetera Tootli. Intenta nuevamente.'
+                    ], 500);
+                }
+
+                // Credit driver's delivery man wallet
+                if ($ride->delivery_man_id) {
+                    $dmWallet = DeliveryManWallet::firstOrCreate(['delivery_man_id' => $ride->delivery_man_id]);
+                    $dmWallet->total_earning = (float)($dmWallet->total_earning ?? 0) + $tipAmount;
+                    $dmWallet->save();
+                }
+
+                $updateData['tip'] = round(((float)($ride->tip ?? 0)) + $tipAmount, 2);
+                $updateData['tip_payment_method'] = 'wallet';
+                $updateData['tip_payment_status'] = 'paid';
+            } else {
+                // Card / Digital payment
+                if ($ride->delivery_man_id) {
+                    $dmWallet = DeliveryManWallet::firstOrCreate(['delivery_man_id' => $ride->delivery_man_id]);
+                    $dmWallet->total_earning = (float)($dmWallet->total_earning ?? 0) + $tipAmount;
+                    $dmWallet->save();
+                }
+
+                $updateData['tip'] = round(((float)($ride->tip ?? 0)) + $tipAmount, 2);
+                $updateData['tip_payment_method'] = 'card';
+                $updateData['tip_payment_status'] = 'paid';
+            }
+
+            $baseFare = (float)($ride->final_fare ?? $ride->estimated_fare ?? 0);
+            $updateData['final_fare'] = round($baseFare + $tipAmount, 2);
+        }
+
+        $ride->update($updateData);
 
         // Update driver's average rating
         if ($ride->driver) {
@@ -479,12 +551,13 @@ class TaxiController extends Controller
                 ->whereNotNull('driver_rating')
                 ->avg('driver_rating');
 
-            $ride->driver->update(['avg_rating' => round($avgRating, 2)]);
+            $ride->driver->taxi_rating = round($avgRating, 2);
+            $ride->driver->save();
         }
 
         return response()->json([
-            'message' => 'Rating submitted successfully',
-            'ride' => $ride->fresh(),
+            'message' => 'Rating and tip submitted successfully',
+            'ride' => $ride->fresh(['driver', 'driver.vehicle']),
         ]);
     }
 
@@ -611,49 +684,107 @@ class TaxiController extends Controller
     }
 
     /**
-     * Get route from Google Directions API
+     * Get route from Google Directions API (with Mapbox and OSRM fallback for GPS street routing)
      */
     private function getGoogleDirectionsRoute(float $originLat, float $originLng, float $destLat, float $destLng): ?array
     {
+        // 1. Try Google Directions API
         $apiKey = config('services.google.map_api_key')
             ?? env('GOOGLE_MAP_API_KEY')
             ?? 'AIzaSyA9Ed3wGMFVZqgFpJFqOu2UeWMQshC5ozE';
 
-        if (!$apiKey) {
-            return null;
+        if ($apiKey) {
+            $url = sprintf(
+                'https://maps.googleapis.com/maps/api/directions/json?origin=%s,%s&destination=%s,%s&mode=driving&key=%s',
+                $originLat,
+                $originLng,
+                $destLat,
+                $destLng,
+                $apiKey
+            );
+
+            try {
+                $response = \Illuminate\Support\Facades\Http::timeout(3.0)->get($url);
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if (($data['status'] ?? '') === 'OK' && !empty($data['routes'])) {
+                        $route = $data['routes'][0];
+                        $leg = $route['legs'][0];
+
+                        return [
+                            'distance_km' => $leg['distance']['value'] / 1000, // meters to km
+                            'duration_min' => ceil($leg['duration']['value'] / 60), // seconds to min
+                            'polyline' => $route['overview_polyline']['points'],
+                        ];
+                    }
+                }
+            } catch (\Exception $e) {
+                // Fall through to Mapbox/OSRM
+            }
         }
 
-        $url = sprintf(
-            'https://maps.googleapis.com/maps/api/directions/json?origin=%s,%s&destination=%s,%s&mode=driving&key=%s',
-            $originLat,
-            $originLng,
-            $destLat,
-            $destLng,
-            $apiKey
-        );
-
+        // 2. Fallback to Mapbox Directions (driving-traffic)
         try {
-            $response = \Illuminate\Support\Facades\Http::timeout(3.0)->get($url);
-            if ($response->failed()) {
-                return null;
+            $token = config('services.mapbox.access_token')
+                ?? env('MAPBOX_ACCESS_TOKEN');
+
+            if (!empty($token)) {
+                $path = sprintf('%s,%s;%s,%s', $originLng, $originLat, $destLng, $destLat);
+                $url = 'https://api.mapbox.com/directions/v5/mapbox/driving-traffic/' . $path;
+                $response = \Illuminate\Support\Facades\Http::timeout(3.5)->acceptJson()->get($url, [
+                    'access_token' => $token,
+                    'alternatives' => 'false',
+                    'geometries' => 'polyline',
+                    'overview' => 'full',
+                    'steps' => 'false',
+                ]);
+
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if (($data['code'] ?? '') === 'Ok' && !empty($data['routes'])) {
+                        $route = $data['routes'][0];
+                        $meters = (float) ($route['distance'] ?? 0);
+                        $seconds = (float) ($route['duration'] ?? 0);
+                        if ($meters > 0 && !empty($route['geometry'])) {
+                            return [
+                                'distance_km' => round($meters / 1000, 2),
+                                'duration_min' => max(1, (int) ceil($seconds / 60)),
+                                'polyline' => $route['geometry'],
+                            ];
+                        }
+                    }
+                }
             }
-            $data = $response->json();
-
-            if (($data['status'] ?? '') !== 'OK' || empty($data['routes'])) {
-                return null;
-            }
-
-            $route = $data['routes'][0];
-            $leg = $route['legs'][0];
-
-            return [
-                'distance_km' => $leg['distance']['value'] / 1000, // meters to km
-                'duration_min' => ceil($leg['duration']['value'] / 60), // seconds to min
-                'polyline' => $route['overview_polyline']['points'],
-            ];
         } catch (\Exception $e) {
-            return null;
+            // Fall through to OSRM
         }
+
+        // 3. Fallback to OSRM (Open Source Routing Machine)
+        try {
+            $path = sprintf('%s,%s;%s,%s', $originLng, $originLat, $destLng, $destLat);
+            $url = 'https://router.project-osrm.org/route/v1/driving/' . $path . '?overview=full&geometries=polyline';
+            $response = \Illuminate\Support\Facades\Http::timeout(3.5)->acceptJson()->get($url);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                if (($data['code'] ?? '') === 'Ok' && !empty($data['routes'])) {
+                    $route = $data['routes'][0];
+                    $meters = (float) ($route['distance'] ?? 0);
+                    $seconds = (float) ($route['duration'] ?? 0);
+                    if ($meters > 0 && !empty($route['geometry'])) {
+                        return [
+                            'distance_km' => round($meters / 1000, 2),
+                            'duration_min' => max(1, (int) ceil($seconds / 60)),
+                            'polyline' => $route['geometry'],
+                        ];
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            // All fallbacks failed
+        }
+
+        return null;
     }
 
     /**
@@ -889,10 +1020,10 @@ class TaxiController extends Controller
             // Only apply if pending and no admin incentive is set yet
             if ($ride->status === TaxiRide::STATUS_PENDING && (float) ($ride->admin_incentive ?? 0.00) === 0.00) {
                 // Compute 10% of the estimated_fare, capped at $20 MXN
-                $adminIncentive = round(min($ride->estimated_fare * 0.10, 20.00), 2);
+                $adminIncentive = round(min($ride->estimated_fare * 0.10, 20.00));
 
                 $ride->admin_incentive = $adminIncentive;
-                $ride->estimated_fare += $adminIncentive;
+                $ride->estimated_fare = round($ride->estimated_fare + $adminIncentive);
                 $ride->save();
 
                 return response()->json([
@@ -1059,19 +1190,58 @@ class TaxiController extends Controller
                 (int) $newDuration,
                 (string) $ride->vehicle_type
             );
-            $newFare = round($staticTotal * $weatherMultiplier, 2);
+            $newFare = round($staticTotal * $weatherMultiplier);
         } else {
             $subtotal = 25.00 + ($newDistance * 8) + ($newDuration * 2);
-            $newFare = round(max($subtotal * $weatherMultiplier, 35), 2);
+            $newFare = round(max($subtotal * $weatherMultiplier, 35));
         }
 
-        // Update ride
+        // Regla: la tarifa nunca puede ser inferior a la ya pactada
+        $currentFare = (float) ($ride->estimated_fare ?? 0);
+        if ($newFare < $currentFare) {
+            $newFare = $currentFare;
+        }
+
+        $hasAssignedDriver = !empty($ride->delivery_man_id) && $ride->status !== TaxiRide::STATUS_PENDING;
+
+        if ($hasAssignedDriver) {
+            $ride->pending_dropoff_lat = $newDropoffLat;
+            $ride->pending_dropoff_lng = $newDropoffLng;
+            $ride->pending_dropoff_address = $newAddress;
+            $ride->pending_distance_km = $newDistance;
+            $ride->pending_duration_min = $newDuration;
+            $ride->pending_estimated_fare = $newFare;
+            $ride->destination_change_status = 'pending';
+            $ride->save();
+
+            try {
+                \App\Services\FirebaseService::sendDestinationChangeRequestedNotification($ride->fresh(['driver', 'user']));
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Error notifying driver of destination change: ' . $e->getMessage());
+            }
+
+            return response()->json([
+                'success' => true,
+                'requires_driver_approval' => true,
+                'message' => 'Solicitud de cambio de destino enviada al conductor. Esperando confirmación.',
+                'ride' => $ride->fresh(['user', 'driver', 'driver.vehicle']),
+            ]);
+        }
+
+        // Si no hay conductor asignado todavía, se actualiza directamente
         $ride->dropoff_lat = $newDropoffLat;
         $ride->dropoff_lng = $newDropoffLng;
         $ride->dropoff_address = $newAddress;
         $ride->estimated_distance_km = $newDistance;
         $ride->estimated_duration_minutes = $newDuration;
         $ride->estimated_fare = $newFare;
+        $ride->destination_change_status = 'none';
+        $ride->pending_dropoff_lat = null;
+        $ride->pending_dropoff_lng = null;
+        $ride->pending_dropoff_address = null;
+        $ride->pending_estimated_fare = null;
+        $ride->pending_distance_km = null;
+        $ride->pending_duration_min = null;
 
         // Reset freeze flags since user explicitly changed the route
         $ride->is_fare_frozen = false;
@@ -1083,8 +1253,97 @@ class TaxiController extends Controller
 
         return response()->json([
             'success' => true,
+            'requires_driver_approval' => false,
             'message' => 'Destino actualizado correctamente',
             'ride' => $ride->fresh(['user', 'driver', 'driver.vehicle']),
+        ]);
+    }
+
+    /**
+     * Passenger decides to keep original destination (dismissing pending or rejected change)
+     */
+    public function keepOriginalDestination(Request $request, int $id): JsonResponse
+    {
+        $ride = TaxiRide::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if (!$ride) {
+            return response()->json(['message' => 'Viaje no encontrado'], 404);
+        }
+
+        $ride->destination_change_status = 'none';
+        $ride->pending_dropoff_lat = null;
+        $ride->pending_dropoff_lng = null;
+        $ride->pending_dropoff_address = null;
+        $ride->pending_estimated_fare = null;
+        $ride->pending_distance_km = null;
+        $ride->pending_duration_min = null;
+        $ride->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Continuando hacia el destino original pactado',
+            'ride' => $ride->fresh(['user', 'driver', 'driver.vehicle']),
+        ]);
+    }
+
+    /**
+     * Passenger elects to finish ride at current safe point and request a new car
+     */
+    public function safeDropoffFinish(Request $request, int $id): JsonResponse
+    {
+        $ride = TaxiRide::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if (!$ride) {
+            return response()->json(['message' => 'Viaje no encontrado'], 404);
+        }
+
+        if ($ride->status !== TaxiRide::STATUS_IN_PROGRESS && $ride->status !== TaxiRide::STATUS_ARRIVED) {
+            return response()->json(['message' => 'El viaje no está en un estado apto para finalización en punto seguro.'], 400);
+        }
+
+        $dropLat = $ride->driver_current_lat ? (float) $ride->driver_current_lat : (float) $ride->pickup_lat;
+        $dropLng = $ride->driver_current_lng ? (float) $ride->driver_current_lng : (float) $ride->pickup_lng;
+
+        $distanceKm = $this->calculateDistance((float)$ride->pickup_lat, (float)$ride->pickup_lng, $dropLat, $dropLng);
+        $durationMin = max(ceil(($distanceKm / 25) * 60), 3);
+
+        $subtotal = 25.00 + ($distanceKm * 8) + ($durationMin * 2);
+        $proportionalFare = round(max($subtotal, 35.00));
+        $proportionalFare = min($proportionalFare, (float) $ride->estimated_fare);
+
+        $incentive = 15.00;
+
+        $ride->status = TaxiRide::STATUS_COMPLETED;
+        $ride->final_fare = $proportionalFare;
+        $ride->safe_dropoff_incentive = $incentive;
+        $ride->safe_dropoff_reason = 'passenger_safe_dropoff_after_rejected_destination';
+        $ride->completed_at = now();
+        $ride->completed_by_passenger = true;
+        $ride->destination_change_status = 'none';
+        $ride->pending_dropoff_lat = null;
+        $ride->pending_dropoff_lng = null;
+        $ride->pending_dropoff_address = null;
+        $ride->pending_estimated_fare = null;
+        $ride->save();
+
+        try {
+            \App\Services\FirebaseService::sendRideCompletedNotification($ride->fresh(['user', 'driver']));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error sending ride completed notification: ' . $e->getMessage());
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Viaje finalizado con seguridad. Puedes solicitar tu nuevo viaje hacia tu nuevo destino.',
+            'ride' => $ride->fresh(['user', 'driver', 'driver.vehicle']),
+            'safe_dropoff_location' => [
+                'latitude' => $dropLat,
+                'longitude' => $dropLng,
+            ],
         ]);
     }
 
@@ -1106,6 +1365,19 @@ class TaxiController extends Controller
                 'success' => false,
                 'message' => 'El viaje no está en curso',
             ], 400);
+        }
+
+        $passengerLat = $request->input('passenger_lat', $ride->passenger_last_lat ?? $ride->driver_current_lat);
+        $passengerLng = $request->input('passenger_lng', $ride->passenger_last_lng ?? $ride->driver_current_lng);
+
+        if ($passengerLat && $passengerLng && $ride->dropoff_lat && $ride->dropoff_lng) {
+            $distMeters = $this->calculateDistance((float)$passengerLat, (float)$passengerLng, (float)$ride->dropoff_lat, (float)$ride->dropoff_lng) * 1000;
+            if ($distMeters > 150) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Solo puedes finalizar el viaje a 100 metros o menos de tu destino. Distancia actual: ' . round($distMeters) . 'm.',
+                ], 400);
+            }
         }
 
         $finalFare = ($ride->is_fare_frozen && $ride->frozen_fare > 0)

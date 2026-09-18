@@ -68,7 +68,7 @@ class DeliverymanController extends Controller
 
     public function get_profile(Request $request)
     {
-        $dm = DeliveryMan::with(['rating', 'userinfo'])->where(['auth_token' => $request['token']])->first();
+        $dm = DeliveryMan::with(['rating', 'userinfo', 'vehicle'])->where(['auth_token' => $request['token']])->first();
         if (!$dm) {
             return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
         }
@@ -82,8 +82,24 @@ class DeliverymanController extends Controller
         }
 
         $min_amount_to_pay_dm = BusinessSetting::where('key', 'min_amount_to_pay_dm')->first()->value ?? 0;
-        $dm['avg_rating'] = (float) (!empty($dm->rating[0]) ? $dm->rating[0]->average : 0);
-        $dm['rating_count'] = (float) (!empty($dm->rating[0]) ? $dm->rating[0]->rating_count : 0);
+        
+        $dmReviewsCount = !empty($dm->rating[0]) ? (int)$dm->rating[0]->rating_count : 0;
+        $dmReviewsAvg = !empty($dm->rating[0]) ? (float)$dm->rating[0]->average : 0;
+        $dmReviewsSum = $dmReviewsAvg * $dmReviewsCount;
+
+        $taxiCount = 0;
+        $taxiSum = 0;
+        if (class_exists(\Modules\Taxi\app\Models\TaxiRide::class)) {
+            $taxiRides = \Modules\Taxi\app\Models\TaxiRide::where('delivery_man_id', $dm->id)->whereNotNull('driver_rating');
+            $taxiCount = $taxiRides->count();
+            $taxiSum = (float) $taxiRides->sum('driver_rating');
+        }
+
+        $totalRatings = $dmReviewsCount + $taxiCount;
+        $avgRating = $totalRatings > 0 ? round(($dmReviewsSum + $taxiSum) / $totalRatings, 1) : (float)($dm->taxi_rating ?? 5.0);
+
+        $dm['avg_rating'] = (float) $avgRating;
+        $dm['rating_count'] = (float) $totalRatings;
         $dm['order_count'] = (int) $dm->orders->count();
         $dm['todays_order_count'] = (int) $dm->todaysorders->count();
         $dm['this_week_order_count'] = (int) $dm->this_week_orders->count();
@@ -246,6 +262,12 @@ class DeliverymanController extends Controller
         }
         // ────────────────────────────────────────────────────────────────
 
+        $dm['vehicle_plate'] = $dm->vehicle?->plate ?? $dm->vehicle?->license_plate;
+        $dm['vehicle_brand'] = $dm->vehicle?->brand;
+        $dm['vehicle_model'] = $dm->vehicle?->model;
+        $dm['vehicle_color'] = $dm->vehicle?->color;
+        $dm['vehicle_year'] = $dm->vehicle?->year;
+
         return response()->json($dm, 200);
     }
 
@@ -257,6 +279,40 @@ class DeliverymanController extends Controller
         }
         
         $reviews = DMReview::with('customer:id,f_name,l_name')->where('delivery_man_id', $dm->id)->where('status', 1)->get();
+
+        // Also include taxi ride reviews
+        if (class_exists(\Modules\Taxi\app\Models\TaxiRide::class)) {
+            $taxiReviews = \Modules\Taxi\app\Models\TaxiRide::with('user:id,f_name,l_name,phone,email,image')
+                ->where('delivery_man_id', $dm->id)
+                ->whereNotNull('driver_rating')
+                ->where(function ($q) {
+                    $q->whereNotNull('user_review')->orWhere('driver_rating', '>', 0);
+                })
+                ->get()
+                ->map(function ($ride) {
+                    return [
+                        'id' => $ride->id,
+                        'delivery_man_id' => $ride->delivery_man_id,
+                        'order_id' => null,
+                        'user_id' => $ride->user_id,
+                        'rating' => (int) $ride->driver_rating,
+                        'comment' => $ride->user_review,
+                        'created_at' => $ride->created_at?->toISOString() ?? now()->toISOString(),
+                        'updated_at' => $ride->updated_at?->toISOString() ?? now()->toISOString(),
+                        'customer' => $ride->user ? [
+                            'id' => $ride->user->id,
+                            'f_name' => $ride->user->f_name,
+                            'l_name' => $ride->user->l_name,
+                            'phone' => $ride->user->phone,
+                            'email' => $ride->user->email,
+                            'image_full_url' => $ride->user->image_full_url ?? null,
+                        ] : null,
+                    ];
+                });
+
+            $reviews = $reviews->concat($taxiReviews)->sortByDesc('created_at')->values();
+        }
+
         return response()->json($reviews, 200);
     }
 
@@ -319,6 +375,57 @@ class DeliverymanController extends Controller
         }
 
         $dm->vehicle_id = $request->vehicle_id ?? $dm->vehicle_id ?? null;
+
+        // Soporte de Taxi y Asignación de Placas / Vehículo
+        if ($request->has('can_drive_taxi')) {
+            $canDriveTaxi = filter_var($request->can_drive_taxi, FILTER_VALIDATE_BOOLEAN);
+            $dm->can_drive_taxi = $canDriveTaxi;
+            if ($canDriveTaxi) {
+                if ($request->filled('taxi_license_number')) {
+                    $dm->taxi_license_number = $request->taxi_license_number;
+                }
+                if ($request->filled('taxi_license_expiry')) {
+                    $dm->taxi_license_expiry = $request->taxi_license_expiry;
+                }
+                $dm->taxi_is_verified = false; // Requiere aprobación del admin tras actualizar
+            }
+        } elseif ($request->filled('taxi_license_number')) {
+            $dm->can_drive_taxi = true;
+            $dm->taxi_license_number = $request->taxi_license_number;
+            if ($request->filled('taxi_license_expiry')) {
+                $dm->taxi_license_expiry = $request->taxi_license_expiry;
+            }
+            $dm->taxi_is_verified = false;
+        }
+
+        if ($request->filled('vehicle_plate')) {
+            $plate = strtoupper(trim($request->vehicle_plate));
+            $vehicle = $dm->vehicle;
+            if ($vehicle && $vehicle->type === 'taxi') {
+                $vehicle->plate = $plate;
+                $vehicle->license_plate = $plate;
+                if ($request->filled('vehicle_brand')) $vehicle->brand = $request->vehicle_brand;
+                if ($request->filled('vehicle_model')) $vehicle->model = $request->vehicle_model;
+                if ($request->filled('vehicle_color')) $vehicle->color = $request->vehicle_color;
+                if ($request->filled('vehicle_year')) $vehicle->year = $request->vehicle_year;
+                $vehicle->save();
+            } else {
+                $vehicle = new DMVehicle();
+                $vehicle->type = 'taxi';
+                $vehicle->brand = $request->filled('vehicle_brand') ? $request->vehicle_brand : 'N/A';
+                $vehicle->model = $request->filled('vehicle_model') ? $request->vehicle_model : 'N/A';
+                $vehicle->plate = $plate;
+                $vehicle->license_plate = $plate;
+                $vehicle->color = $request->filled('vehicle_color') ? $request->vehicle_color : 'N/A';
+                $vehicle->year = $request->filled('vehicle_year') ? $request->vehicle_year : date('Y');
+                $vehicle->seats = 4;
+                $vehicle->status = 1;
+                $vehicle->can_taxi = 1;
+                $vehicle->can_delivery = 1;
+                $vehicle->save();
+                $dm->vehicle_id = $vehicle->id;
+            }
+        }
 
         $dm->f_name = $request->f_name;
         $dm->l_name = $request->l_name;
@@ -715,6 +822,17 @@ class DeliverymanController extends Controller
             'frozen_fare' => $ride->frozen_fare ? (float) $ride->frozen_fare : null,
             'completed_by_passenger' => (bool) ($ride->completed_by_passenger ?? false),
             'extended_trip_by_driver' => (bool) ($ride->extended_trip_by_driver ?? false),
+            'destination_change_status' => (string) ($ride->destination_change_status ?? 'none'),
+            'pending_dropoff_address' => $ride->pending_dropoff_address,
+            'pending_dropoff_lat' => $ride->pending_dropoff_lat ? (float) $ride->pending_dropoff_lat : null,
+            'pending_dropoff_lng' => $ride->pending_dropoff_lng ? (float) $ride->pending_dropoff_lng : null,
+            'pending_estimated_fare' => $ride->pending_estimated_fare ? (float) $ride->pending_estimated_fare : null,
+            'pending_distance_km' => $ride->pending_distance_km ? (float) $ride->pending_distance_km : null,
+            'pending_duration_min' => $ride->pending_duration_min ? (int) $ride->pending_duration_min : null,
+            // Trip preferences
+            'conversation_preference' => (string) ($ride->conversation_preference ?? 'none'),
+            'climate_preference' => (string) ($ride->climate_preference ?? 'normal'),
+            'has_luggage' => (bool) ($ride->has_luggage ?? false),
             'customer' => $ride->user ? [
                 'id' => $ride->user->id,
                 'f_name' => $ride->user->f_name,
@@ -3395,6 +3513,116 @@ class DeliverymanController extends Controller
 
         return response()->json([
             'message' => 'Viaje extendido por confirmación verbal del pasajero',
+        ], 200);
+    }
+
+    /**
+     * Driver accepts proposed destination change from passenger
+     */
+    public function acceptDestinationChange(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+        if (!$dm) {
+            return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
+        }
+
+        $taxiRide = \Modules\Taxi\Models\TaxiRide::where(['id' => $request['order_id'], 'delivery_man_id' => $dm['id']])->first();
+
+        if (!$taxiRide) {
+            return response()->json(['errors' => [['code' => 'not_found', 'message' => 'Viaje no encontrado']]], 404);
+        }
+
+        if ($taxiRide->destination_change_status !== 'pending' || empty($taxiRide->pending_dropoff_lat)) {
+            return response()->json(['errors' => [['code' => 'invalid_state', 'message' => 'No hay una solicitud de cambio de destino pendiente']]], 400);
+        }
+
+        // Apply new destination and fare
+        $taxiRide->dropoff_lat = $taxiRide->pending_dropoff_lat;
+        $taxiRide->dropoff_lng = $taxiRide->pending_dropoff_lng;
+        $taxiRide->dropoff_address = $taxiRide->pending_dropoff_address;
+        $taxiRide->estimated_fare = $taxiRide->pending_estimated_fare ?? $taxiRide->estimated_fare;
+        $taxiRide->estimated_distance_km = $taxiRide->pending_distance_km ?? $taxiRide->estimated_distance_km;
+        $taxiRide->estimated_duration_minutes = $taxiRide->pending_duration_min ?? $taxiRide->estimated_duration_minutes;
+
+        // Clear pending fields
+        $taxiRide->destination_change_status = 'accepted';
+        $taxiRide->pending_dropoff_lat = null;
+        $taxiRide->pending_dropoff_lng = null;
+        $taxiRide->pending_dropoff_address = null;
+        $taxiRide->pending_estimated_fare = null;
+        $taxiRide->pending_distance_km = null;
+        $taxiRide->pending_duration_min = null;
+        $taxiRide->is_fare_frozen = false;
+        $taxiRide->frozen_fare = null;
+        $taxiRide->frozen_at = null;
+        $taxiRide->save();
+
+        // Notify user via push notification
+        try {
+            \App\Services\FirebaseService::sendDestinationChangeAcceptedNotification($taxiRide->fresh(['user', 'driver']));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error sending destination change accepted notification: ' . $e->getMessage());
+        }
+
+        return response()->json([
+            'message' => 'Cambio de destino aceptado exitosamente',
+            'order' => $this->transformTaxiRideToOrder($taxiRide->fresh(['user', 'driver'])),
+        ], 200);
+    }
+
+    /**
+     * Driver rejects proposed destination change from passenger
+     */
+    public function rejectDestinationChange(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+        if (!$dm) {
+            return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
+        }
+
+        $taxiRide = \Modules\Taxi\Models\TaxiRide::where(['id' => $request['order_id'], 'delivery_man_id' => $dm['id']])->first();
+
+        if (!$taxiRide) {
+            return response()->json(['errors' => [['code' => 'not_found', 'message' => 'Viaje no encontrado']]], 404);
+        }
+
+        $taxiRide->destination_change_status = 'rejected';
+        $taxiRide->pending_dropoff_lat = null;
+        $taxiRide->pending_dropoff_lng = null;
+        $taxiRide->pending_dropoff_address = null;
+        $taxiRide->pending_estimated_fare = null;
+        $taxiRide->pending_distance_km = null;
+        $taxiRide->pending_duration_min = null;
+        $taxiRide->save();
+
+        // Notify user via push notification
+        try {
+            \App\Services\FirebaseService::sendDestinationChangeRejectedNotification($taxiRide->fresh(['user', 'driver']));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error sending destination change rejected notification: ' . $e->getMessage());
+        }
+
+        return response()->json([
+            'message' => 'Cambio de destino rechazado',
+            'safety_alert' => 'La seguridad del pasajero y la tuya es lo más importante, por favor espera en un punto seguro.',
+            'incentive_notice' => 'Tootli te gratificará por esperar.',
+            'order' => $this->transformTaxiRideToOrder($taxiRide->fresh(['user', 'driver'])),
         ], 200);
     }
 }

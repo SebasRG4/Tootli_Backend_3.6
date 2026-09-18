@@ -35,12 +35,15 @@ Route::group(['prefix' => 'taxi'], function () {
         Route::get('ride/{id}/tracking', [TaxiRideController::class, 'tracking']);
         Route::get('ride/{id}/details', [TaxiRideController::class, 'show']);
         Route::post('ride/{id}/rate', [TaxiController::class, 'rateRide']);
+        Route::post('rate-ride', [TaxiController::class, 'rateRide']);
         Route::get('history', [TaxiController::class, 'history']);
         Route::get('current-ride', [TaxiController::class, 'getCurrentRide']);
 
         // Anti-fraud telemetry, dynamic destination & passenger completion
         Route::post('ride/{id}/passenger-telemetry', [TaxiController::class, 'passengerTelemetry']);
         Route::post('ride/{id}/edit-destination', [TaxiController::class, 'editDestination']);
+        Route::post('ride/{id}/keep-original-destination', [TaxiController::class, 'keepOriginalDestination']);
+        Route::post('ride/{id}/safe-dropoff-finish', [TaxiController::class, 'safeDropoffFinish']);
         Route::post('ride/{id}/passenger-complete', [TaxiController::class, 'passengerCompleteRide']);
 
         // DEBUG ONLY: Simulate driver acceptance

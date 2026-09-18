@@ -279,4 +279,90 @@ class FirebaseService
             'priority' => 'high',
         ]);
     }
+
+    /**
+     * Send notification to driver when user requests a destination change
+     */
+    public static function sendDestinationChangeRequestedNotification($ride)
+    {
+        $driver = $ride->driver;
+        if (!$driver || !$driver->fcm_token) {
+            return null;
+        }
+
+        $newAddress = $ride->pending_dropoff_address ?? 'Nuevo destino';
+        $fare = number_format($ride->pending_estimated_fare ?? $ride->estimated_fare, 2);
+
+        return self::send([
+            'to' => $driver->fcm_token,
+            'notification' => [
+                'title' => '📍 Solicitud de cambio de destino ($' . $fare . ')',
+                'body' => 'El pasajero desea ir a: ' . $newAddress,
+                'sound' => 'default',
+            ],
+            'data' => [
+                'type' => 'taxi_destination_change_request',
+                'order_id' => (string) $ride->id,
+                'ride_id' => (string) $ride->id,
+                'pending_dropoff_address' => (string) $newAddress,
+                'pending_estimated_fare' => (string) ($ride->pending_estimated_fare ?? $ride->estimated_fare),
+                'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+            ],
+            'priority' => 'high',
+        ]);
+    }
+
+    /**
+     * Send notification to user when driver accepts destination change
+     */
+    public static function sendDestinationChangeAcceptedNotification($ride)
+    {
+        $user = $ride->user;
+        if (!$user || !$user->cm_firebase_token) {
+            return null;
+        }
+
+        return self::send([
+            'to' => $user->cm_firebase_token,
+            'notification' => [
+                'title' => '✅ Cambio de destino aceptado',
+                'body' => 'Tu conductor aceptó la nueva ruta hacia ' . ($ride->dropoff_address ?? 'tu nuevo destino'),
+                'sound' => 'default',
+            ],
+            'data' => [
+                'type' => 'taxi_destination_change_accepted',
+                'ride_id' => (string) $ride->id,
+                'dropoff_address' => (string) ($ride->dropoff_address ?? ''),
+                'estimated_fare' => (string) ($ride->estimated_fare ?? 0),
+                'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+            ],
+            'priority' => 'high',
+        ]);
+    }
+
+    /**
+     * Send notification to user when driver rejects destination change
+     */
+    public static function sendDestinationChangeRejectedNotification($ride)
+    {
+        $user = $ride->user;
+        if (!$user || !$user->cm_firebase_token) {
+            return null;
+        }
+
+        return self::send([
+            'to' => $user->cm_firebase_token,
+            'notification' => [
+                'title' => '⚠️ Cambio de destino no disponible',
+                'body' => 'El conductor no puede tomar la nueva ruta. Puedes continuar al destino original o descender en un punto seguro.',
+                'sound' => 'default',
+            ],
+            'data' => [
+                'type' => 'taxi_destination_change_rejected',
+                'ride_id' => (string) $ride->id,
+                'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+            ],
+            'priority' => 'high',
+        ]);
+    }
 }

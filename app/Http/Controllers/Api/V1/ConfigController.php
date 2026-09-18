@@ -636,28 +636,216 @@ class ConfigController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
-        $apiKey = $this->map_api_key;
-        $url = 'https://places.googleapis.com/v1/places:autocomplete';
-        $data = [
-            'input' => $request['search_text'],
-            'languageCode' => app()->getLocale(),
-        ];
+        $searchText = trim($request['search_text']);
+        $lat = $request->input('lat');
+        $lng = $request->input('lng');
+        $mapboxToken = config('services.mapbox.access_token') ?? env('MAPBOX_ACCESS_TOKEN');
 
-        $headers = [
-            'Content-Type: application/json',
-            "X-Goog-Api-Key: $apiKey",
-        ];
+        // Fallback a ubicación por defecto del negocio si la app no envió GPS en ese momento
+        if (($lat === null || $lng === null) || (!is_numeric($lat) || !is_numeric($lng))) {
+            $defaultLocation = BusinessSetting::where('key', 'default_location')->first();
+            if ($defaultLocation && !empty($defaultLocation->value)) {
+                $loc = json_decode($defaultLocation->value, true);
+                if (isset($loc['lat'], $loc['lng']) && is_numeric($loc['lat']) && is_numeric($loc['lng'])) {
+                    $lat = (float) $loc['lat'];
+                    $lng = (float) $loc['lng'];
+                }
+            }
+        }
+        $hasCoordinates = ($lat !== null && $lng !== null && is_numeric($lat) && is_numeric($lng));
 
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        if ($mapboxToken) {
+            // 1. Mapbox Search Box API (Motor POI, marcas, direcciones con distancia exacta nativa)
+            try {
+                $sessionToken = md5($request->header('user-agent', '') . ($request->ip() ?? '') . date('Y-m-d H:i'));
+                $params = [
+                    'q'            => $searchText,
+                    'access_token' => $mapboxToken,
+                    'country'      => 'mx',
+                    'language'     => app()->getLocale() ?? 'es',
+                    'limit'        => 10,
+                    'types'        => 'poi,address,street,neighborhood,locality',
+                    'session_token'=> $sessionToken,
+                ];
 
-        $response = curl_exec($ch);
-        curl_close($ch);
+                if ($hasCoordinates) {
+                    $params['proximity'] = "{$lng},{$lat}";
+                }
 
-        return json_decode($response, true);
+                $url = 'https://api.mapbox.com/search/searchbox/v1/suggest';
+                $response = \Illuminate\Support\Facades\Http::timeout(5)->get($url, $params);
+
+                if ($response->successful()) {
+                    $data = $response->json();
+                    $suggestions = [];
+
+                    foreach ($data['suggestions'] ?? [] as $s) {
+                        // Omitir marcas genéricas sin dirección
+                        if (($s['feature_type'] ?? '') === 'brand') {
+                            continue;
+                        }
+
+                        $mapboxId = $s['mapbox_id'] ?? null;
+                        if (!$mapboxId) {
+                            continue;
+                        }
+
+                        $rawName = (string) ($s['name'] ?? '');
+                        
+                        // Limpieza de nombres comerciales y códigos internos de franquicia (ej. "OXXO Nicho Villas TLC" -> "OXXO Villas")
+                        $cleanName = preg_replace('/[-\/]?\s*\b(nicho|sucursal|tienda)\b\s*[-\/]?/i', ' ', $rawName);
+                        $cleanName = preg_replace('/[-\/]?\s*suc\.\s*[-\/]?/i', ' ', $cleanName);
+                        $cleanName = preg_replace('/[-\/]?\s*\b(TLC|CDMX|EDOMEX|MEX|GDL|MTY|PUE|QRO)\b\s*[-\/]?/i', '', $cleanName);
+                        $cleanName = preg_replace('/\s+/', ' ', trim($cleanName));
+
+                        $address = (string) ($s['address'] ?? '');
+                        $placeFormatted = (string) ($s['place_formatted'] ?? '');
+                        $secondaryText = $address ? ($address . ', ' . $placeFormatted) : $placeFormatted;
+                        $fullText = $cleanName . ($secondaryText ? (', ' . $secondaryText) : '');
+                        $distanceMeters = isset($s['distance']) ? (int) $s['distance'] : null;
+
+                        // Blindaje Uber/Rappi: Si excede 65 km, se descarta para mantener relevancia local
+                        if ($hasCoordinates && $distanceMeters !== null && $distanceMeters > 65000) {
+                            continue;
+                        }
+
+                        $placeId = 'mapbox:id:' . $mapboxId;
+
+                        $suggestions[] = [
+                            'distanceMeters' => $distanceMeters,
+                            'placePrediction' => [
+                                'place' => $placeId,
+                                'placeId' => $placeId,
+                                'distanceMeters' => $distanceMeters,
+                                'text' => [
+                                    'text' => $fullText,
+                                ],
+                                'structuredFormat' => [
+                                    'mainText' => [
+                                        'text' => $cleanName,
+                                    ],
+                                    'secondaryText' => [
+                                        'text' => $secondaryText,
+                                    ],
+                                ],
+                                'types' => isset($s['feature_type']) ? [$s['feature_type']] : ['geocode'],
+                            ],
+                        ];
+                    }
+
+                    if (!empty($suggestions)) {
+                        // Ordenar por distancia: el lugar más cercano al usuario SIEMPRE primero
+                        if ($hasCoordinates) {
+                            usort($suggestions, function ($a, $b) {
+                                $dA = $a['distanceMeters'] ?? 99999999;
+                                $dB = $b['distanceMeters'] ?? 99999999;
+                                return $dA <=> $dB;
+                            });
+                        }
+
+                        $finalSuggestions = array_map(function ($s) {
+                            return ['placePrediction' => $s['placePrediction']];
+                        }, $suggestions);
+
+                        return response()->json([
+                            'suggestions' => $finalSuggestions,
+                        ], 200);
+                    }
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('mapbox_searchbox_error', ['message' => $e->getMessage()]);
+            }
+
+            // 2. Fallback a Mapbox Geocoding v5 con filtrado y ordenamiento Haversine
+            try {
+                $params = [
+                    'access_token' => $mapboxToken,
+                    'autocomplete' => 'true',
+                    'limit'        => 10,
+                    'country'      => 'mx',
+                    'language'     => app()->getLocale() ?? 'es',
+                    'types'        => 'poi,address,neighborhood,locality',
+                ];
+
+                if ($hasCoordinates) {
+                    $params['proximity'] = "{$lng},{$lat}";
+                }
+
+                $url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' . rawurlencode($searchText) . '.json';
+                $response = \Illuminate\Support\Facades\Http::timeout(5)->get($url, $params);
+
+                if ($response->successful()) {
+                    $data = $response->json();
+                    $suggestions = [];
+
+                    foreach ($data['features'] ?? [] as $feature) {
+                        $fLng = (float) ($feature['center'][0] ?? 0);
+                        $fLat = (float) ($feature['center'][1] ?? 0);
+                        $fullText = (string) ($feature['place_name'] ?? ($feature['text'] ?? ''));
+                        $mainText = (string) ($feature['text'] ?? $fullText);
+                        $secondaryText = trim(str_replace($mainText, '', $fullText), ", \t\n\r\0\x0B");
+
+                        $distanceMeters = null;
+                        if ($hasCoordinates && $fLat && $fLng) {
+                            $theta = $lng - $fLng;
+                            $dist = sin(deg2rad($lat)) * sin(deg2rad($fLat)) + cos(deg2rad($lat)) * cos(deg2rad($fLat)) * cos(deg2rad($theta));
+                            $dist = acos(min(1.0, max(-1.0, $dist)));
+                            $distanceMeters = (int) round(rad2deg($dist) * 60 * 1.1515 * 1.609344 * 1000);
+                        }
+
+                        if ($hasCoordinates && $distanceMeters !== null && $distanceMeters > 65000) {
+                            continue;
+                        }
+
+                        $placeId = 'mapbox:' . $fLng . ',' . $fLat;
+
+                        $suggestions[] = [
+                            'distanceMeters' => $distanceMeters,
+                            'placePrediction' => [
+                                'place' => $placeId,
+                                'placeId' => $placeId,
+                                'distanceMeters' => $distanceMeters,
+                                'text' => [
+                                    'text' => $fullText,
+                                ],
+                                'structuredFormat' => [
+                                    'mainText' => [
+                                        'text' => $mainText,
+                                    ],
+                                    'secondaryText' => [
+                                        'text' => $secondaryText,
+                                    ],
+                                ],
+                                'types' => $feature['place_type'] ?? ['geocode'],
+                            ],
+                        ];
+                    }
+
+                    if (!empty($suggestions) && $hasCoordinates) {
+                        usort($suggestions, function ($a, $b) {
+                            $dA = $a['distanceMeters'] ?? 99999999;
+                            $dB = $b['distanceMeters'] ?? 99999999;
+                            return $dA <=> $dB;
+                        });
+                    }
+
+                    $finalSuggestions = array_map(function ($s) {
+                        return ['placePrediction' => $s['placePrediction']];
+                    }, $suggestions);
+
+                    return response()->json([
+                        'suggestions' => $finalSuggestions,
+                    ], 200);
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('mapbox_geocoding_error', ['message' => $e->getMessage()]);
+            }
+        }
+
+        // 3. Si no hay resultados dentro del rango operativo, devolver lista vacía segura
+        return response()->json([
+            'suggestions' => [],
+        ], 200);
     }
 
     public function distance_api(Request $request)
@@ -833,22 +1021,113 @@ class ConfigController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
+        $placeId = $request['placeid'];
+
+        // 1. Si el placeId proviene de Mapbox Search Box (mapbox:id:...)
+        if (str_starts_with($placeId, 'mapbox:id:')) {
+            $mapboxId = str_replace('mapbox:id:', '', $placeId);
+            $mapboxToken = config('services.mapbox.access_token') ?? env('MAPBOX_ACCESS_TOKEN');
+            if ($mapboxToken) {
+                try {
+                    $sessionToken = md5($request->header('user-agent', '') . ($request->ip() ?? '') . date('Y-m-d H:i'));
+                    $response = \Illuminate\Support\Facades\Http::timeout(5)->get("https://api.mapbox.com/search/searchbox/v1/retrieve/{$mapboxId}", [
+                        'access_token'  => $mapboxToken,
+                        'session_token' => $sessionToken,
+                    ]);
+
+                    if ($response->successful()) {
+                        $data = $response->json();
+                        $features = $data['features'] ?? [];
+                        if (!empty($features)) {
+                            $coords = $features[0]['geometry']['coordinates'] ?? null;
+                            if (is_array($coords) && count($coords) >= 2) {
+                                return response()->json([
+                                    'location' => [
+                                        'latitude' => (float) $coords[1],
+                                        'longitude' => (float) $coords[0],
+                                    ],
+                                ], 200);
+                            }
+                        }
+                    }
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::warning('mapbox_retrieve_error', ['message' => $e->getMessage()]);
+                }
+            }
+        }
+
+        // 2. Si el placeId contiene coordenadas codificadas (mapbox:lng,lat)
+        if (str_starts_with($placeId, 'mapbox:')) {
+            $raw = str_replace(['mapbox:coord:', 'mapbox:'], '', $placeId);
+            $coords = explode(',', $raw);
+            $lng = isset($coords[0]) ? (float) $coords[0] : 0.0;
+            $lat = isset($coords[1]) ? (float) $coords[1] : 0.0;
+
+            return response()->json([
+                'location' => [
+                    'latitude' => $lat,
+                    'longitude' => $lng,
+                ],
+            ], 200);
+        }
+
+        // 3. Si es un feature ID de Mapbox Geocoding clásico (ej. poi.123 o address.456)
+        $mapboxToken = config('services.mapbox.access_token') ?? env('MAPBOX_ACCESS_TOKEN');
+        if ($mapboxToken && !str_starts_with($placeId, 'ChIJ')) {
+            try {
+                $response = \Illuminate\Support\Facades\Http::timeout(5)->get('https://api.mapbox.com/geocoding/v5/mapbox.places/' . rawurlencode($placeId) . '.json', [
+                    'access_token' => $mapboxToken,
+                    'limit' => 1,
+                ]);
+
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if (!empty($data['features'])) {
+                        $center = $data['features'][0]['center'];
+                        return response()->json([
+                            'location' => [
+                                'latitude' => (float) $center[1],
+                                'longitude' => (float) $center[0],
+                            ],
+                        ], 200);
+                    }
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('mapbox_place_details_error', ['message' => $e->getMessage()]);
+            }
+        }
+
+        // 3. Fallback en caso de que quede algún placeId antiguo
         $apiKey = $this->map_api_key;
-        $url = 'https://places.googleapis.com/v1/places/' . $request['placeid'];
+        if ($apiKey && str_starts_with($placeId, 'ChIJ')) {
+            try {
+                $url = 'https://places.googleapis.com/v1/places/' . $placeId;
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                    'Content-Type: application/json',
+                    'X-Goog-Api-Key: ' . $apiKey,
+                    'X-Goog-FieldMask: id,displayName,formattedAddress,location',
+                ]);
+                $response = curl_exec($ch);
+                curl_close($ch);
+                $decoded = json_decode($response, true);
+                if (isset($decoded['location'])) {
+                    return $decoded;
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('google_place_details_error', ['message' => $e->getMessage()]);
+            }
+        }
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'X-Goog-Api-Key: ' . $apiKey,
-            'X-Goog-FieldMask: id,displayName,formattedAddress,location',
-        ]);
-
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        return json_decode($response, true);
+        return response()->json([
+            'location' => [
+                'latitude' => 0.0,
+                'longitude' => 0.0,
+            ],
+        ], 200);
     }
 
     public function geocode_api(Request $request)
@@ -940,9 +1219,12 @@ class ConfigController extends Controller
             }
         }
 
-        $response = \Illuminate\Support\Facades\Http::get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . $request->lat . ',' . $request->lng . '&key=' . $this->map_api_key);
-
-        return $response->json();
+        // Mapbox no disponible o sin token — devolver resultado vacío (sin llamada a Google)
+        // para evitar cargos no previstos en la API de Geocoding de Google.
+        return response()->json([
+            'status'  => 'ZERO_RESULTS',
+            'results' => [],
+        ], 200);
     }
 
     public function landing_page()

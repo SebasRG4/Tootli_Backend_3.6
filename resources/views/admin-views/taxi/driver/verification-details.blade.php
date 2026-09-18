@@ -47,6 +47,45 @@
                             <span class="badge badge-warning">{{ 'Pendiente' }}</span>
                         @endif
                     </div>
+
+                    <hr>
+                    <div class="text-left">
+                        <h6 class="font-weight-bold mb-3"><i class="tio-car mr-1 text-primary"></i> {{ 'Vehículo Asignado / Placas' }}</h6>
+                        @if($driver->vehicle)
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">{{ 'Placa' }}:</span>
+                                <span class="badge badge-soft-dark font-weight-bold" style="font-size: 0.95rem; letter-spacing: 1px;">{{ $driver->vehicle->plate ?? $driver->vehicle->license_plate ?? 'N/A' }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">{{ 'Marca y Modelo' }}:</span>
+                                <strong>{{ $driver->vehicle->brand ?? '' }} {{ $driver->vehicle->model ?? '' }}</strong>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">{{ 'Color' }}:</span>
+                                <span>{{ $driver->vehicle->color ?? 'N/A' }}</span>
+                            </div>
+                            @if($driver->vehicle->year)
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="text-muted">{{ 'Año' }}:</span>
+                                    <span>{{ $driver->vehicle->year }}</span>
+                                </div>
+                            @endif
+                        @else
+                            <div class="alert alert-soft-warning py-2 mb-2">
+                                <small>{{ 'Sin vehículo asignado' }}</small>
+                            </div>
+                        @endif
+
+                        <h6 class="font-weight-bold mb-3 mt-3"><i class="tio-file-text mr-1 text-primary"></i> {{ 'Licencia de Conducir' }}</h6>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted">{{ 'No. Licencia' }}:</span>
+                            <strong>{{ $driver->taxi_license_number ?? 'N/A' }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted">{{ 'Vigencia' }}:</span>
+                            <span>{{ $driver->taxi_license_expiry ? (is_string($driver->taxi_license_expiry) ? $driver->taxi_license_expiry : $driver->taxi_license_expiry->format('Y-m-d')) : 'N/A' }}</span>
+                        </div>
+                    </div>
                     <div class="mt-4">
                         @if(!$driver->taxi_is_verified)
                             <form action="{{ route('admin.taxi.drivers.verification.update', $driver->id) }}" method="POST">

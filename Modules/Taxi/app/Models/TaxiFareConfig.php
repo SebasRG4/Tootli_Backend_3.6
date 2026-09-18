@@ -94,7 +94,7 @@ class TaxiFareConfig extends Model
             'time_charge' => round($timeCharge, 2),
             'subtotal' => round($subtotal, 2),
             'surge_multiplier' => $surgeMultiplier,
-            'total' => round($total, 2),
+            'total' => round($total),
         ];
     }
 }

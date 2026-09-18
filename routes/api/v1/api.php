@@ -231,6 +231,8 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::post('toggle-services', 'DeliverymanController@toggleServices');
             Route::get('taxi-profile', 'DeliverymanController@getTaxiProfile');
             Route::post('taxi/extend-trip', 'DeliverymanController@extendTaxiTrip');
+            Route::post('taxi/accept-destination-change', 'DeliverymanController@acceptDestinationChange');
+            Route::post('taxi/reject-destination-change', 'DeliverymanController@rejectDestinationChange');
 
             // Insignias y niveles
             Route::get('badges', 'DeliveryMan\BadgesApiController@getBadgesData');

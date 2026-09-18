@@ -286,66 +286,70 @@ class ParcelController extends Controller
         });
 
         $placeSuggestions = [];
-        if ($apiKey) {
-            // origin: sin esto Google no devuelve distanceMeters y el círculo a veces deja pasar resultados lejanos.
-            $data = [
-                'input' => $search,
-                'languageCode' => app()->getLocale(),
-                'includeQueryPredictions' => false,
-                'origin' => [
-                    'latitude' => $lat,
-                    'longitude' => $lng,
-                ],
-                'locationRestriction' => [
-                    'circle' => [
-                        'center' => [
-                            'latitude' => $lat,
-                            'longitude' => $lng,
-                        ],
-                        'radius' => (float) $radiusMeters,
-                    ],
-                ],
-            ];
-
-            $url = 'https://places.googleapis.com/v1/places:autocomplete';
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-            // Sin X-Goog-FieldMask Google suele omitir distanceMeters → el filtro por km no hace nada.
-            $fieldMask = implode(',', [
-                'suggestions.placePrediction.place',
-                'suggestions.placePrediction.placeId',
-                'suggestions.placePrediction.text',
-                'suggestions.placePrediction.structuredFormat',
-                'suggestions.placePrediction.types',
-                'suggestions.placePrediction.distanceMeters',
-            ]);
-
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'Content-Type: application/json',
-                'X-Goog-Api-Key: ' . $apiKey,
-                'X-Goog-FieldMask: ' . $fieldMask,
-            ]);
-
-            $response = curl_exec($ch);
-            curl_close($ch);
-            $decoded = json_decode($response, true);
-            $rawSuggestions = is_array($decoded) ? ($decoded['suggestions'] ?? []) : [];
-
-            foreach ($rawSuggestions as $suggestion) {
-                if (! is_array($suggestion)) {
-                    continue;
+        $mapboxToken = config('services.mapbox.access_token') ?? env('MAPBOX_ACCESS_TOKEN');
+        if ($mapboxToken) {
+            try {
+                $params = [
+                    'access_token' => $mapboxToken,
+                    'autocomplete' => 'true',
+                    'limit'        => 10,
+                    'country'      => 'mx',
+                    'language'     => app()->getLocale() ?? 'es',
+                ];
+                if ($lat && $lng) {
+                    $params['proximity'] = "{$lng},{$lat}";
                 }
-                $pp = $suggestion['placePrediction'] ?? null;
-                if (! is_array($pp)) {
-                    continue;
+                $url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' . rawurlencode($search) . '.json';
+                $response = \Illuminate\Support\Facades\Http::timeout(5)->get($url, $params);
+
+                if ($response->successful()) {
+                    $data = $response->json();
+                    foreach ($data['features'] ?? [] as $feature) {
+                        $fLng = (float) ($feature['center'][0] ?? 0);
+                        $fLat = (float) ($feature['center'][1] ?? 0);
+                        $fullText = (string) ($feature['place_name'] ?? ($feature['text'] ?? ''));
+                        $mainText = (string) ($feature['text'] ?? $fullText);
+                        $secondaryText = trim(str_replace($mainText, '', $fullText), ", \t\n\r\0\x0B");
+
+                        // Calcular distancia aproximada si tenemos coordenadas de origen
+                        $distanceMeters = null;
+                        if ($lat && $lng && $fLat && $fLng) {
+                            $theta = $lng - $fLng;
+                            $dist = sin(deg2rad($lat)) * sin(deg2rad($fLat)) + cos(deg2rad($lat)) * cos(deg2rad($fLat)) * cos(deg2rad($theta));
+                            $dist = acos(min(1, max(-1, $dist)));
+                            $dist = rad2deg($dist);
+                            $distanceMeters = (int) round($dist * 60 * 1.1515 * 1.609344 * 1000);
+                        }
+
+                        if ($distanceMeters !== null && (int) $distanceMeters > $radiusMeters) {
+                            continue;
+                        }
+
+                        $placeId = 'mapbox:' . $fLng . ',' . $fLat;
+
+                        $placeSuggestions[] = [
+                            'placePrediction' => [
+                                'place' => $placeId,
+                                'placeId' => $placeId,
+                                'text' => [
+                                    'text' => $fullText,
+                                ],
+                                'structuredFormat' => [
+                                    'mainText' => [
+                                        'text' => $mainText,
+                                    ],
+                                    'secondaryText' => [
+                                        'text' => $secondaryText,
+                                    ],
+                                ],
+                                'types' => $feature['place_type'] ?? ['geocode'],
+                                'distanceMeters' => $distanceMeters,
+                            ],
+                        ];
+                    }
                 }
-                $distanceMeters = $pp['distanceMeters'] ?? null;
-                if ($distanceMeters !== null && (int) $distanceMeters > $radiusMeters) {
-                    continue;
-                }
-                $placeSuggestions[] = $suggestion;
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('parcel_mapbox_autocomplete_error', ['message' => $e->getMessage()]);
             }
         }
 

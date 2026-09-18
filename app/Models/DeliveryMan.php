@@ -14,6 +14,8 @@ class DeliveryMan extends Authenticatable
 {
     use Notifiable;
 
+    protected $guarded = ['id'];
+
     protected $casts = [
         'zone_id' => 'integer',
         'status' => 'boolean',

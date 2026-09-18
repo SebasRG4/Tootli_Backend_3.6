@@ -84,6 +84,7 @@ class CustomerController extends Controller
             'longitude' => $request->longitude,
             'latitude' => $request->latitude,
             'zone_id' => $zone[0]->id,
+            'icon' => $request->icon ?? null,
             'created_at' => now(),
             'updated_at' => now()
         ];
@@ -125,7 +126,7 @@ class CustomerController extends Controller
             'longitude' => $request->longitude,
             'latitude' => $request->latitude,
             'zone_id' => $zone[0]->id,
-            'created_at' => now(),
+            'icon' => $request->icon ?? null,
             'updated_at' => now()
         ];
         DB::table('customer_addresses')->where('id', $id)->update($address);

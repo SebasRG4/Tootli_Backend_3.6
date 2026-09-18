@@ -32,6 +32,8 @@ class TaxiRide extends Model
         'final_fare',
         'surge_multiplier',
         'tip',
+        'tip_payment_method',
+        'tip_payment_status',
         'admin_incentive',
         'accepted_at',
         'arrived_at',
@@ -68,6 +70,20 @@ class TaxiRide extends Model
         'passenger_last_seen_at',
         'extended_trip_by_driver',
         'completed_by_passenger',
+        // Destination change & safe dropoff
+        'pending_dropoff_lat',
+        'pending_dropoff_lng',
+        'pending_dropoff_address',
+        'pending_estimated_fare',
+        'pending_distance_km',
+        'pending_duration_min',
+        'destination_change_status',
+        'safe_dropoff_reason',
+        'safe_dropoff_incentive',
+        // Trip preferences
+        'conversation_preference',
+        'climate_preference',
+        'has_luggage',
     ];
 
     protected $casts = [
@@ -91,6 +107,12 @@ class TaxiRide extends Model
         'passenger_last_seen_at' => 'datetime',
         'extended_trip_by_driver' => 'boolean',
         'completed_by_passenger' => 'boolean',
+        'pending_dropoff_lat' => 'float',
+        'pending_dropoff_lng' => 'float',
+        'pending_estimated_fare' => 'float',
+        'pending_distance_km' => 'float',
+        'pending_duration_min' => 'integer',
+        'safe_dropoff_incentive' => 'float',
         'surge_multiplier' => 'float',
         'tip' => 'float',
         'admin_incentive' => 'float',
@@ -102,6 +124,7 @@ class TaxiRide extends Model
         'user_rating' => 'integer',
         'driver_rating' => 'integer',
         'is_for_another_person' => 'boolean',
+        'has_luggage' => 'boolean',
     ];
 
     protected static function booted(): void

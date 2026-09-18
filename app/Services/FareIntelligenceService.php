@@ -109,7 +109,7 @@ class FareIntelligenceService
             $calc = $config->calculateFare($distanceKm, $durationMin);
             $safeFare = $calc['total'] * $this->safetyMultiplier;
             Log::info("Applied $this->safetyMultiplier x multiplier over static fare.");
-            return round($safeFare, 2);
+            return round($safeFare);
         }
 
         // Absolute fallback if no config exists (shouldn't happen)
