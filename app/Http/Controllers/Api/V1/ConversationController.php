@@ -422,9 +422,15 @@ class ConversationController extends Controller
             }else if($conversation->sender_type == 'delivery_man' && $conversation->sender){
                 $user2 = DeliveryMan::find($conversation->sender->deliveryman_id);
                 $order = Order::where('user_id',$user->user_id)->where('delivery_man_id', $user2->id)->whereIn('order_status', ['pending','accepted','confirmed','processing','handover','picked_up'])->count();
+                if ($order == 0 && class_exists(\Modules\Taxi\Models\TaxiRide::class)) {
+                    $order = \Modules\Taxi\Models\TaxiRide::where('user_id', $user->user_id)->where('driver_id', $user2->id)->whereIn('status', ['accepted', 'arriving', 'arrived', 'ongoing', 'started'])->count();
+                }
             }else if($conversation->receiver_type == 'delivery_man' && $conversation->receiver){
                 $user2 = DeliveryMan::find($conversation->receiver->deliveryman_id);
                 $order = Order::where('user_id',$user->user_id)->where('delivery_man_id', $user2->id)->whereIn('order_status', ['pending','accepted','confirmed','processing','handover','picked_up'])->count();
+                if ($order == 0 && class_exists(\Modules\Taxi\Models\TaxiRide::class)) {
+                    $order = \Modules\Taxi\Models\TaxiRide::where('user_id', $user->user_id)->where('driver_id', $user2->id)->whereIn('status', ['accepted', 'arriving', 'arrived', 'ongoing', 'started'])->count();
+                }
             }
             else{
                 $order=1;

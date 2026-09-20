@@ -478,7 +478,8 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
                 Route::get('details', 'ConversationController@messages');
                 Route::post('send', 'ConversationController@messages_store');
 
-                // Taxi driver chat (ensures UserInfo exists)
+                // Taxi driver chat alias
+                Route::get('taxi-driver-chat', 'ConversationController@messages');
 
             });
 
