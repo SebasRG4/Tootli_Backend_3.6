@@ -37,6 +37,7 @@ Route::group(['prefix' => 'taxi'], function () {
         Route::post('ride/{id}/rate', [TaxiController::class, 'rateRide']);
         Route::post('rate-ride', [TaxiController::class, 'rateRide']);
         Route::get('history', [TaxiController::class, 'history']);
+        Route::get('ride-history', [TaxiController::class, 'history']);
         Route::get('current-ride', [TaxiController::class, 'getCurrentRide']);
 
         // Anti-fraud telemetry, dynamic destination & passenger completion

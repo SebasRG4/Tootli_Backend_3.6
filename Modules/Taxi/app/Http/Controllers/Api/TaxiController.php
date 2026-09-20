@@ -254,6 +254,10 @@ class TaxiController extends Controller
             'conversation_preference' => 'nullable|string|in:quiet,chatty,none',
             'climate_preference' => 'nullable|string|in:ac,windows,normal',
             'has_luggage' => 'nullable|boolean',
+            // Intermediate stop fields
+            'stop_lat' => 'nullable|numeric',
+            'stop_lng' => 'nullable|numeric',
+            'stop_address' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -285,13 +289,27 @@ class TaxiController extends Controller
             ], 400);
         }
 
-        // Calculate fare
-        $distance = $this->calculateDistance(
-            $request->pickup_lat,
-            $request->pickup_lng,
-            $request->dropoff_lat,
-            $request->dropoff_lng
-        );
+        // Calculate fare (considering intermediate stop if present)
+        if ($request->filled('stop_lat') && $request->filled('stop_lng')) {
+            $distance = $this->calculateDistance(
+                (float) $request->pickup_lat,
+                (float) $request->pickup_lng,
+                (float) $request->stop_lat,
+                (float) $request->stop_lng
+            ) + $this->calculateDistance(
+                (float) $request->stop_lat,
+                (float) $request->stop_lng,
+                (float) $request->dropoff_lat,
+                (float) $request->dropoff_lng
+            );
+        } else {
+            $distance = $this->calculateDistance(
+                (float) $request->pickup_lat,
+                (float) $request->pickup_lng,
+                (float) $request->dropoff_lat,
+                (float) $request->dropoff_lng
+            );
+        }
         $estimatedDuration = ceil(($distance / 30) * 60);
 
         // Get fare config for zone and vehicle type (with fallback)
@@ -321,6 +339,12 @@ class TaxiController extends Controller
             (float) $request->pickup_lng,
             (string) $vehicleTypeSlug
         );
+
+        if ($fareCalculation['available_drivers'] <= 0) {
+            return response()->json([
+                'message' => 'No hay conductores disponibles para esta categoría en tu zona en este momento.',
+            ], 422);
+        }
 
         $estimatedFare = $fareCalculation['total'];
         $surgeMultiplier = $fareCalculation['surge_multiplier'];
@@ -557,12 +581,25 @@ class TaxiController extends Controller
     {
         $user = $request->user();
 
+        if (!$user) {
+            return response()->json(['message' => 'Unauthenticated'], 401);
+        }
+
+        $limit = (int) ($request->limit ?? 10);
+        $offset = (int) ($request->offset ?? $request->page ?? 1);
+
         $rides = TaxiRide::with(['driver', 'driver.vehicle'])
             ->forUser($user->id)
             ->orderBy('created_at', 'desc')
-            ->paginate($request->limit ?? 10);
+            ->paginate($limit, ['*'], 'page', $offset);
 
-        return response()->json($rides);
+        return response()->json([
+            'total_size' => $rides->total(),
+            'limit' => $limit,
+            'offset' => $offset,
+            'rides' => $rides->items(),
+            'data' => $rides->items(),
+        ]);
     }
 
     /**

@@ -88,7 +88,7 @@ class TaxiPricingService
         $subtotal = round($baseFare + $distanceCharge + $timeCharge, 2);
 
         // 2. Métricas de Oferta y Demanda en tiempo real
-        $metrics = $this->getZoneMetrics($zoneId, $vehicleTypeSlug);
+        $metrics = $this->getZoneMetrics($zoneId, $vehicleTypeSlug, $pickupLat, $pickupLng);
         $availableDrivers = $metrics['available_drivers'];
         $pendingRides = $metrics['pending_rides'];
         $activeRides = $metrics['active_rides'];
@@ -472,8 +472,13 @@ class TaxiPricingService
     /**
      * Obtiene métricas de la zona (conductores disponibles, viajes pendientes, viajes activos)
      */
-    protected function getZoneMetrics(?int $zoneId, string $vehicleTypeSlug): array
-    {
+    protected function getZoneMetrics(
+        ?int $zoneId,
+        string $vehicleTypeSlug,
+        float $pickupLat = 0.0,
+        float $pickupLng = 0.0,
+        float $radiusKm = 8.0
+    ): array {
         $availableDriversQuery = DeliveryMan::canTaxi()
             ->taxiAvailable();
 
@@ -487,7 +492,34 @@ class TaxiPricingService
             });
         }
 
-        $availableDrivers = $availableDriversQuery->count();
+        if ($pickupLat != 0.0 && $pickupLng != 0.0) {
+            // Filtrar únicamente conductores con ubicación real dentro del radio de cobertura
+            $drivers = $availableDriversQuery->with('last_location')->get();
+            $nearbyCount = 0;
+            $earthRadius = 6371; // km
+
+            foreach ($drivers as $driver) {
+                $loc = $driver->last_location;
+                if (!$loc || !$loc->latitude || !$loc->longitude) {
+                    continue;
+                }
+
+                $latDiff = deg2rad($loc->latitude - $pickupLat);
+                $lngDiff = deg2rad($loc->longitude - $pickupLng);
+                $a = sin($latDiff / 2) * sin($latDiff / 2) +
+                    cos(deg2rad($pickupLat)) * cos(deg2rad($loc->latitude)) *
+                    sin($lngDiff / 2) * sin($lngDiff / 2);
+                $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+                $distance = $earthRadius * $c;
+
+                if ($distance <= $radiusKm) {
+                    $nearbyCount++;
+                }
+            }
+            $availableDrivers = $nearbyCount;
+        } else {
+            $availableDrivers = $availableDriversQuery->count();
+        }
 
         $pendingQuery = TaxiRide::pending()
             ->where('created_at', '>=', now()->subMinutes(15));
