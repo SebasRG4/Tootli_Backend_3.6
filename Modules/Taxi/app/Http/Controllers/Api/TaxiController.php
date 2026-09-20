@@ -261,7 +261,7 @@ class TaxiController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json(['errors' => \App\CentralLogics\Helpers::error_processor($validator)], 422);
         }
 
         $user = $request->user();
@@ -340,11 +340,7 @@ class TaxiController extends Controller
             (string) $vehicleTypeSlug
         );
 
-        if ($fareCalculation['available_drivers'] <= 0) {
-            return response()->json([
-                'message' => 'No hay conductores disponibles para esta categoría en tu zona en este momento.',
-            ], 422);
-        }
+
 
         $estimatedFare = $fareCalculation['total'];
         $surgeMultiplier = $fareCalculation['surge_multiplier'];

@@ -488,7 +488,15 @@ class TaxiPricingService
 
         if (!empty($vehicleTypeSlug)) {
             $availableDriversQuery->whereHas('vehicle', function ($q) use ($vehicleTypeSlug) {
-                $q->where('type', $vehicleTypeSlug);
+                if (in_array($vehicleTypeSlug, ['economy', 'comfort', 'premium'])) {
+                    $q->whereIn('type', ['taxi', 'car', 'sedan', 'auto', $vehicleTypeSlug]);
+                } elseif (in_array($vehicleTypeSlug, ['motocicleta', 'motorcycle', 'moto'])) {
+                    $q->whereIn('type', ['motorcycle', 'motocicleta', 'moto', $vehicleTypeSlug]);
+                } elseif (in_array($vehicleTypeSlug, ['scooter'])) {
+                    $q->whereIn('type', ['scooter', $vehicleTypeSlug]);
+                } else {
+                    $q->where('type', $vehicleTypeSlug);
+                }
             });
         }
 
