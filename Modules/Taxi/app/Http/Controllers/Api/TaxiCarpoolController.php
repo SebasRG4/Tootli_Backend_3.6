@@ -41,7 +41,9 @@ class TaxiCarpoolController extends Controller
     public function verifyCommunity(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'organization_id' => 'required|exists:taxi_community_organizations,id',
+            'organization_id' => 'required_without:custom_organization_name|nullable|exists:taxi_community_organizations,id',
+            'custom_organization_name' => 'nullable|string|max:255',
+            'custom_organization_type' => 'nullable|string|in:university,corporate,industrial_park,other',
             'document_type' => 'nullable|string|max:50',
             'document_number' => 'nullable|string|max:50',
             'institutional_email' => 'nullable|email',
@@ -64,7 +66,18 @@ class TaxiCarpoolController extends Controller
         }
 
         $user = $request->user();
-        $org = TaxiCommunityOrganization::findOrFail($request->organization_id);
+        if ($request->organization_id) {
+            $org = TaxiCommunityOrganization::findOrFail($request->organization_id);
+        } else {
+            $org = TaxiCommunityOrganization::firstOrCreate(
+                ['name' => trim($request->custom_organization_name)],
+                [
+                    'short_name' => trim($request->custom_organization_name),
+                    'type' => $request->custom_organization_type ?? 'university',
+                    'is_active' => true,
+                ]
+            );
+        }
 
         $imagePath = null;
         if ($request->hasFile('id_card_image')) {
