@@ -69,13 +69,22 @@ Route::group(['prefix' => 'taxi'], function () {
             Route::delete('contacts/{id}', [TaxiSafetyController::class, 'deleteEmergencyContact']);
         });
 
-        // Carpool Comunitario (Pasajeros)
+        // Carpool Comunitario (Pasajeros y Conductores Universitarios)
         Route::group(['prefix' => 'carpool'], function () {
             Route::post('verify-community', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'verifyCommunity']);
             Route::get('verification-status', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'getVerificationStatus']);
             Route::post('routes/book', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'bookRoute']);
             Route::get('my-bookings', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'getMyBookings']);
             Route::post('bookings/{id}/cancel', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'cancelBooking']);
+
+            // Creación y gestión de rutas (Tengo Auto / Ofrezco Ride)
+            Route::post('routes', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'createRoute']);
+            Route::get('my-published-routes', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'getMyPublishedRoutes']);
+
+            // Creación y consulta de solicitudes (Busco Ride / Pasajero)
+            Route::post('requests', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'createRequest']);
+            Route::get('requests', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'getRequests']);
+            Route::get('my-requests', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'getMyRequests']);
         });
     });
 

@@ -7,6 +7,7 @@ use Modules\Taxi\Models\TaxiCommunityOrganization;
 use Modules\Taxi\Models\UserCommunityVerification;
 use Modules\Taxi\Models\TaxiCarpoolRoute;
 use Modules\Taxi\Models\TaxiCarpoolBooking;
+use Modules\Taxi\Models\TaxiCarpoolRequest;
 use App\CentralLogics\Helpers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -183,7 +184,7 @@ class TaxiCarpoolController extends Controller
         $womenOnly = $request->query('is_women_only');
         $dayOfWeek = $request->query('day_of_week'); // ej: lun, mar, etc.
 
-        $query = TaxiCarpoolRoute::with(['deliveryMan', 'organization'])
+        $query = TaxiCarpoolRoute::with(['deliveryMan', 'user', 'organization'])
             ->where('status', 'active')
             ->where('available_seats', '>', 0);
 
@@ -206,9 +207,9 @@ class TaxiCarpoolController extends Controller
             })->values();
         }
 
-        // Enriquecer datos del conductor
+        // Enriquecer datos del conductor (sea deliveryMan o estudiante verificado con auto)
         $formattedRoutes = $routes->map(function ($route) {
-            $dm = $route->deliveryMan;
+            $driverObj = $route->deliveryMan ?? $route->user;
             return [
                 'id' => $route->id,
                 'origin_name' => $route->origin_name,
@@ -233,12 +234,13 @@ class TaxiCarpoolController extends Controller
                     'type' => $route->organization->type,
                     'logo' => $route->organization->logo,
                 ] : null,
-                'driver' => $dm ? [
-                    'id' => $dm->id,
-                    'name' => "{$dm->f_name} {$dm->l_name}",
-                    'image' => $dm->image,
-                    'avg_rating' => $dm->avg_rating ?? 5.0,
-                    'rating_count' => $dm->rating_count ?? 0,
+                'driver' => $driverObj ? [
+                    'id' => $driverObj->id,
+                    'name' => "{$driverObj->f_name} {$driverObj->l_name}",
+                    'image' => $driverObj->image,
+                    'avg_rating' => $driverObj->avg_rating ?? 5.0,
+                    'rating_count' => $driverObj->rating_count ?? 0,
+                    'is_student' => !empty($route->user_id),
                 ] : null,
             ];
         });
@@ -408,6 +410,228 @@ class TaxiCarpoolController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Reserva cancelada exitosamente.',
+        ]);
+    }
+
+    /**
+     * Publicar una ruta de Carpool (Modo Conductor / Tengo Auto)
+     */
+    public function createRoute(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'origin_name' => 'required|string|max:255',
+            'origin_lat' => 'required|numeric',
+            'origin_lng' => 'required|numeric',
+            'destination_name' => 'required|string|max:255',
+            'destination_lat' => 'required|numeric',
+            'destination_lng' => 'required|numeric',
+            'departure_time' => 'required',
+            'days_of_week' => 'required|array|min:1',
+            'total_seats' => 'required|integer|min:1|max:6',
+            'price_per_seat' => 'required|numeric|min:0',
+            'is_women_only' => 'nullable|boolean',
+            'community_restriction_type' => 'nullable|string|in:organization_only,all_verified,public',
+            'meeting_point_notes' => 'nullable|string|max:500',
+            'vehicle_info' => 'nullable|string|max:255',
+            'organization_id' => 'nullable|exists:taxi_community_organizations,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => Helpers::error_processor($validator),
+            ], 422);
+        }
+
+        $user = $request->user();
+
+        // Validar que el usuario esté verificado en su comunidad
+        $isVerified = UserCommunityVerification::where('user_id', $user->id)
+            ->where('verification_status', 'approved')
+            ->exists();
+
+        if (!$isVerified) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Debes verificar tu credencial universitaria o institucional antes de poder publicar rutas de Carpool.',
+            ], 403);
+        }
+
+        // Si no envía organization_id, tomar la de su verificación aprobada
+        $orgId = $request->organization_id;
+        if (!$orgId) {
+            $verification = UserCommunityVerification::where('user_id', $user->id)
+                ->where('verification_status', 'approved')
+                ->first();
+            $orgId = $verification?->organization_id;
+        }
+
+        $totalSeats = (int) $request->total_seats;
+
+        $route = TaxiCarpoolRoute::create([
+            'user_id' => $user->id,
+            'organization_id' => $orgId,
+            'origin_name' => $request->origin_name,
+            'origin_lat' => $request->origin_lat,
+            'origin_lng' => $request->origin_lng,
+            'destination_name' => $request->destination_name,
+            'destination_lat' => $request->destination_lat,
+            'destination_lng' => $request->destination_lng,
+            'departure_time' => $request->departure_time,
+            'days_of_week' => $request->days_of_week,
+            'total_seats' => $totalSeats,
+            'available_seats' => $totalSeats,
+            'price_per_seat' => $request->price_per_seat,
+            'is_women_only' => (bool) ($request->is_women_only ?? false),
+            'community_restriction_type' => $request->community_restriction_type ?? 'organization_only',
+            'meeting_point_notes' => $request->meeting_point_notes,
+            'vehicle_info' => $request->vehicle_info,
+            'status' => 'active',
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => '¡Tu ruta de Carpool ha sido publicada con éxito! Tus compañeros podrán sumarse.',
+            'data' => $route->load('organization'),
+        ]);
+    }
+
+    /**
+     * Publicar una solicitud de viaje (Modo Pasajero / Busco Ride)
+     */
+    public function createRequest(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'origin_name' => 'required|string|max:255',
+            'origin_lat' => 'nullable|numeric',
+            'origin_lng' => 'nullable|numeric',
+            'destination_name' => 'required|string|max:255',
+            'destination_lat' => 'nullable|numeric',
+            'destination_lng' => 'nullable|numeric',
+            'preferred_departure_time' => 'required',
+            'days_of_week' => 'required|array|min:1',
+            'seat_count' => 'nullable|integer|min:1|max:4',
+            'offered_price_per_seat' => 'required|numeric|min:0',
+            'is_women_only' => 'nullable|boolean',
+            'school_only' => 'nullable|boolean',
+            'notes' => 'nullable|string|max:500',
+            'organization_id' => 'nullable|exists:taxi_community_organizations,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => Helpers::error_processor($validator),
+            ], 422);
+        }
+
+        $user = $request->user();
+
+        // Validar que el usuario esté verificado en su comunidad
+        $isVerified = UserCommunityVerification::where('user_id', $user->id)
+            ->where('verification_status', 'approved')
+            ->exists();
+
+        if (!$isVerified) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Debes verificar tu credencial universitaria antes de solicitar viajes.',
+            ], 403);
+        }
+
+        $orgId = $request->organization_id;
+        if (!$orgId) {
+            $verification = UserCommunityVerification::where('user_id', $user->id)
+                ->where('verification_status', 'approved')
+                ->first();
+            $orgId = $verification?->organization_id;
+        }
+
+        $passengerRequest = TaxiCarpoolRequest::create([
+            'user_id' => $user->id,
+            'organization_id' => $orgId,
+            'origin_name' => $request->origin_name,
+            'origin_lat' => $request->origin_lat,
+            'origin_lng' => $request->origin_lng,
+            'destination_name' => $request->destination_name,
+            'destination_lat' => $request->destination_lat,
+            'destination_lng' => $request->destination_lng,
+            'preferred_departure_time' => $request->preferred_departure_time,
+            'days_of_week' => $request->days_of_week,
+            'seat_count' => $request->seat_count ?? 1,
+            'offered_price_per_seat' => $request->offered_price_per_seat,
+            'is_women_only' => (bool) ($request->is_women_only ?? false),
+            'school_only' => (bool) ($request->school_only ?? true),
+            'notes' => $request->notes,
+            'status' => 'active',
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => '¡Tu solicitud de viaje diario ha sido publicada! Los conductores podrán contactarte o sumarte.',
+            'data' => $passengerRequest->load('organization'),
+        ]);
+    }
+
+    /**
+     * Mis rutas publicadas (como conductor)
+     */
+    public function getMyPublishedRoutes(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        $routes = TaxiCarpoolRoute::with(['organization', 'bookings.user'])
+            ->where('user_id', $user->id)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $routes,
+        ]);
+    }
+
+    /**
+     * Mis solicitudes de viaje (como pasajero)
+     */
+    public function getMyRequests(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        $requests = TaxiCarpoolRequest::with('organization')
+            ->where('user_id', $user->id)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $requests,
+        ]);
+    }
+
+    /**
+     * Listado de solicitudes de pasajeros ("Busco Ride") para conductores
+     */
+    public function getRequests(Request $request): JsonResponse
+    {
+        $orgId = $request->query('organization_id');
+        $womenOnly = $request->query('is_women_only');
+
+        $query = TaxiCarpoolRequest::with(['user', 'organization'])
+            ->where('status', 'active');
+
+        if ($orgId) {
+            $query->where('organization_id', $orgId);
+        }
+
+        if ($womenOnly !== null) {
+            $query->where('is_women_only', filter_var($womenOnly, FILTER_VALIDATE_BOOLEAN));
+        }
+
+        $requests = $query->orderBy('preferred_departure_time', 'asc')->get();
+
+        return response()->json([
+            'status' => 'success',
+            'count' => $requests->count(),
+            'data' => $requests,
         ]);
     }
 }

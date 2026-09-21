@@ -16,6 +16,7 @@ class TaxiCarpoolRoute extends Model
 
     protected $fillable = [
         'delivery_man_id',
+        'user_id',
         'organization_id',
         'origin_name',
         'origin_lat',
@@ -50,6 +51,11 @@ class TaxiCarpoolRoute extends Model
     public function deliveryMan(): BelongsTo
     {
         return $this->belongsTo(DeliveryMan::class, 'delivery_man_id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
 
     public function organization(): BelongsTo
