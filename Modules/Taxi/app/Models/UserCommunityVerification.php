@@ -27,12 +27,19 @@ class UserCommunityVerification extends Model
         'id_card_image',
         'id_card_back_image',
         'verification_status',
+        'ai_verified',
+        'ai_confidence_score',
+        'ai_extracted_data',
+        'ai_review_notes',
         'rejection_reason',
         'verified_at',
     ];
 
     protected $casts = [
         'verified_at' => 'datetime',
+        'ai_verified' => 'boolean',
+        'ai_confidence_score' => 'float',
+        'ai_extracted_data' => 'array',
     ];
 
     protected $appends = [

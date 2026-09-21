@@ -11,7 +11,9 @@ use App\CentralLogics\Helpers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Modules\Taxi\Services\CredentialAiVerificationService;
 
 class TaxiCarpoolController extends Controller
 {
@@ -89,7 +91,7 @@ class TaxiCarpoolController extends Controller
             $backImagePath = Helpers::upload('community_cards/', 'png', $request->file('id_card_back_image'));
         }
 
-        // Si el correo institucional coincide con los dominios oficiales de la organización, pre-aprobamos
+        // 1. Pre-aprobación por dominio de correo institucional oficial
         $isAutoApproved = false;
         if ($request->institutional_email && !empty($org->allowed_email_domains)) {
             foreach ($org->allowed_email_domains as $domain) {
@@ -97,6 +99,23 @@ class TaxiCarpoolController extends Controller
                     $isAutoApproved = true;
                     break;
                 }
+            }
+        }
+
+        // 2. Análisis y Validación Automática por Inteligencia Artificial (Gemini Vision)
+        $aiResult = null;
+        if ($imagePath) {
+            $aiResult = CredentialAiVerificationService::analyze(
+                user: $user,
+                organization: $org,
+                frontImage: $imagePath,
+                backImage: $backImagePath,
+                documentType: $request->document_type ?? 'credencial',
+                documentNumber: $request->document_number
+            );
+
+            if (!empty($aiResult['is_approved'])) {
+                $isAutoApproved = true;
             }
         }
 
@@ -113,15 +132,27 @@ class TaxiCarpoolController extends Controller
                 'id_card_image' => $imagePath ?? DB::raw('id_card_image'),
                 'id_card_back_image' => $backImagePath ?? DB::raw('id_card_back_image'),
                 'verification_status' => $isAutoApproved ? 'approved' : 'pending',
+                'ai_verified' => !empty($aiResult['ai_verified']),
+                'ai_confidence_score' => $aiResult['confidence_score'] ?? null,
+                'ai_extracted_data' => $aiResult['extracted_data'] ?? null,
+                'ai_review_notes' => $aiResult['notes'] ?? null,
                 'verified_at' => $isAutoApproved ? now() : null,
             ]
         );
 
+        $responseMessage = 'Tu solicitud de verificación fue enviada y será revisada en breve.';
+        if ($isAutoApproved) {
+            if (!empty($aiResult['is_approved'])) {
+                $responseMessage = '¡Tu credencial ha sido validada y aprobada automáticamente por IA! Ya puedes viajar en Carpool.';
+            } else {
+                $responseMessage = '¡Comunidad verificada con éxito mediante tu correo institucional!';
+            }
+        }
+
         return response()->json([
             'status' => 'success',
-            'message' => $isAutoApproved
-                ? '¡Comunidad verificada con éxito mediante tu correo institucional!'
-                : 'Tu solicitud de verificación fue enviada y será revisada en breve.',
+            'message' => $responseMessage,
+            'is_approved' => $isAutoApproved,
             'data' => $verification->load('organization'),
         ]);
     }

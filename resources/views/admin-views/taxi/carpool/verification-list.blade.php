@@ -316,6 +316,14 @@
                             @else
                                 <span class="badge badge-soft-secondary py-1 px-2">{{ $v->verification_status }}</span>
                             @endif
+
+                            @if($v->ai_verified)
+                                <div class="mt-1">
+                                    <span class="badge badge-soft-info py-0 px-1 font-size-xs" title="Auditado automáticamente por Gemini Vision: {{ round(($v->ai_confidence_score ?? 0) * 100) }}% confianza">
+                                        🤖 IA: {{ round(($v->ai_confidence_score ?? 0) * 100) }}%
+                                    </span>
+                                </div>
+                            @endif
                         </td>
 
                         <!-- Acciones -->

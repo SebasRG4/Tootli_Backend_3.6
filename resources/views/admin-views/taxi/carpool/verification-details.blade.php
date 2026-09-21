@@ -176,6 +176,67 @@
                 </div>
             </div>
 
+            <!-- AI Audit Card -->
+            <div class="card mb-3 shadow-sm border-0" style="border-left: 4px solid #00c9a7 !important;">
+                <div class="card-header bg-soft-info d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0 text-dark">
+                        <i class="tio-cpu text-info mr-1"></i> Auditoría Inteligente por IA
+                    </h5>
+                    @if($verification->ai_verified)
+                        <span class="badge {{ $verification->verification_status === 'approved' ? 'badge-success' : 'badge-warning' }}">
+                            {{ round(($verification->ai_confidence_score ?? 0) * 100) }}% confianza
+                        </span>
+                    @endif
+                </div>
+                <div class="card-body">
+                    @if($verification->ai_verified && $verification->ai_extracted_data)
+                        @php($ai = $verification->ai_extracted_data)
+                        <div class="mb-2 d-flex justify-content-between">
+                            <span class="text-muted font-size-sm">Veredicto IA:</span>
+                            @if(!empty($ai['is_approved']))
+                                <span class="badge badge-soft-success font-weight-bold">✅ Aprobación Automática</span>
+                            @else
+                                <span class="badge badge-soft-warning font-weight-bold">⚠️ Requiere Revisión</span>
+                            @endif
+                        </div>
+                        <div class="mb-2">
+                            <span class="text-muted font-size-sm d-block">Nombre leído en el documento:</span>
+                            <strong class="text-dark">{{ $ai['extracted_name'] ?? 'No detectado' }}</strong>
+                            @if(isset($ai['name_match_score']))
+                                <span class="badge badge-soft-primary ml-1">{{ $ai['name_match_score'] }}% coincidencia</span>
+                            @endif
+                        </div>
+                        <div class="mb-2">
+                            <span class="text-muted font-size-sm d-block">Institución leída:</span>
+                            <strong class="text-dark">{{ $ai['extracted_institution'] ?? 'No detectada' }}</strong>
+                        </div>
+                        @if(!empty($ai['extracted_matricula']))
+                            <div class="mb-2">
+                                <span class="text-muted font-size-sm d-block">Matrícula leída:</span>
+                                <code>{{ $ai['extracted_matricula'] }}</code>
+                            </div>
+                        @endif
+                        @if(!empty($ai['extracted_validity']))
+                            <div class="mb-2">
+                                <span class="text-muted font-size-sm d-block">Vigencia / Ciclo escolar:</span>
+                                <span>{{ $ai['extracted_validity'] }}</span>
+                            </div>
+                        @endif
+                        @if(!empty($verification->ai_review_notes))
+                            <div class="mt-3 p-2 bg-light rounded font-size-sm text-muted">
+                                <strong>Notas del auditor IA:</strong>
+                                <p class="mb-0 mt-1">{{ $verification->ai_review_notes }}</p>
+                            </div>
+                        @endif
+                    @else
+                        <div class="text-center py-3 text-muted">
+                            <i class="tio-time display-4 d-block mb-1"></i>
+                            <span class="font-size-sm">Sin auditoría de IA registrada o solicitud enviada previamente.</span>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
             <!-- Approval / Rejection Actions -->
             <div class="card shadow-sm border-0">
                 <div class="card-body">
