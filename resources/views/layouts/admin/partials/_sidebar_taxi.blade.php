@@ -308,6 +308,23 @@
                         </a>
                     </li>
 
+                    <!-- Carpool Community Verification -->
+                    <li
+                        class="navbar-vertical-aside-has-menu {{ Request::is('admin/taxi/carpool/verifications*') ? 'active' : '' }}">
+                        <a class="js-navbar-vertical-aside-menu-link nav-link"
+                            href="{{ route('admin.taxi.carpool.verifications.index') }}"
+                            title="{{ 'Validación de Credenciales Carpool' }}">
+                            <i class="tio-user-big-outlined nav-icon text-success"></i>
+                            <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                {{ 'Validación Credenciales' }}
+                                @php($pendingCommunity = \Modules\Taxi\Models\UserCommunityVerification::where('verification_status', 'pending')->count())
+                                @if($pendingCommunity > 0)
+                                    <span class="badge badge-danger ml-1">{{ $pendingCommunity }}</span>
+                                @endif
+                            </span>
+                        </a>
+                    </li>
+
                     <!-- Trip Tracking -->
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('admin/taxi/security/tracking*') ? 'active' : '' }}">

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Taxi\Http\Controllers\Admin\TaxiManagementController;
 use Modules\Taxi\Http\Controllers\Admin\TaxiDriverVerificationController;
+use Modules\Taxi\Http\Controllers\Admin\TaxiCarpoolVerificationController;
 use Modules\Taxi\Http\Controllers\Admin\TaxiSafetyController;
 use Modules\Taxi\Http\Controllers\Admin\TaxiSimulatorController;
 use Modules\Taxi\Models\TaxiRide;
@@ -38,6 +39,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin', '
             Route::get('/{id}', [TaxiDriverVerificationController::class, 'show'])->name('show');
             Route::post('/{id}/update', [TaxiDriverVerificationController::class, 'updateStatus'])->name('update');
             Route::post('/{id}/documents', [TaxiDriverVerificationController::class, 'updateDocuments'])->name('update-documents');
+        });
+
+        // Carpool Community Verifications
+        Route::group(['prefix' => 'carpool', 'as' => 'carpool.'], function () {
+            Route::group(['prefix' => 'verifications', 'as' => 'verifications.'], function () {
+                Route::get('/', [TaxiCarpoolVerificationController::class, 'index'])->name('index');
+                Route::get('/{id}', [TaxiCarpoolVerificationController::class, 'show'])->name('show');
+                Route::post('/{id}/status', [TaxiCarpoolVerificationController::class, 'updateStatus'])->name('update-status');
+            });
         });
 
         // Vehicles

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\User;
 use App\Models\DeliveryMan;
+use App\CentralLogics\Helpers;
+use Illuminate\Support\Facades\Storage;
 
 class UserCommunityVerification extends Model
 {
@@ -33,6 +35,11 @@ class UserCommunityVerification extends Model
         'verified_at' => 'datetime',
     ];
 
+    protected $appends = [
+        'id_card_image_url',
+        'id_card_back_image_url',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -51,5 +58,38 @@ class UserCommunityVerification extends Model
     public function isApproved(): bool
     {
         return $this->verification_status === 'approved';
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('verification_status', 'pending');
+    }
+
+    public function scopeApproved($query)
+    {
+        return $query->where('verification_status', 'approved');
+    }
+
+    public function scopeRejected($query)
+    {
+        return $query->where('verification_status', 'rejected');
+    }
+
+    public function getIdCardImageUrlAttribute(): ?string
+    {
+        if (!$this->id_card_image) return null;
+        if (Storage::disk('public')->exists('community_cards/' . $this->id_card_image)) {
+            return asset('storage/community_cards/' . $this->id_card_image);
+        }
+        return Helpers::get_full_url('community_cards', $this->id_card_image, 'public');
+    }
+
+    public function getIdCardBackImageUrlAttribute(): ?string
+    {
+        if (!$this->id_card_back_image) return null;
+        if (Storage::disk('public')->exists('community_cards/' . $this->id_card_back_image)) {
+            return asset('storage/community_cards/' . $this->id_card_back_image);
+        }
+        return Helpers::get_full_url('community_cards', $this->id_card_back_image, 'public');
     }
 }
