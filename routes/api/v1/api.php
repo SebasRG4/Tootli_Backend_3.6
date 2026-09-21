@@ -234,6 +234,16 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
             Route::post('taxi/accept-destination-change', 'DeliverymanController@acceptDestinationChange');
             Route::post('taxi/reject-destination-change', 'DeliverymanController@rejectDestinationChange');
 
+            // Carpool Comunitario (Conductor / Estudiante)
+            Route::group(['prefix' => 'taxi/carpool'], function () {
+                Route::post('register-community', [\Modules\Taxi\Http\Controllers\Api\TaxiDriverCarpoolController::class, 'registerCommunityDriver']);
+                Route::post('routes', [\Modules\Taxi\Http\Controllers\Api\TaxiDriverCarpoolController::class, 'createRoute']);
+                Route::get('routes', [\Modules\Taxi\Http\Controllers\Api\TaxiDriverCarpoolController::class, 'getMyRoutes']);
+                Route::post('routes/{id}/toggle-status', [\Modules\Taxi\Http\Controllers\Api\TaxiDriverCarpoolController::class, 'toggleRouteStatus']);
+                Route::get('routes/{id}/manifest', [\Modules\Taxi\Http\Controllers\Api\TaxiDriverCarpoolController::class, 'getPassengerManifest']);
+                Route::post('check-in-passenger', [\Modules\Taxi\Http\Controllers\Api\TaxiDriverCarpoolController::class, 'checkInPassenger']);
+            });
+
             // Insignias y niveles
             Route::get('badges', 'DeliveryMan\BadgesApiController@getBadgesData');
 

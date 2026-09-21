@@ -68,8 +68,21 @@ Route::group(['prefix' => 'taxi'], function () {
             Route::put('contacts/{id}', [TaxiSafetyController::class, 'updateEmergencyContact']);
             Route::delete('contacts/{id}', [TaxiSafetyController::class, 'deleteEmergencyContact']);
         });
+
+        // Carpool Comunitario (Pasajeros)
+        Route::group(['prefix' => 'carpool'], function () {
+            Route::post('verify-community', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'verifyCommunity']);
+            Route::get('verification-status', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'getVerificationStatus']);
+            Route::post('routes/book', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'bookRoute']);
+            Route::get('my-bookings', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'getMyBookings']);
+            Route::post('bookings/{id}/cancel', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'cancelBooking']);
+        });
     });
 
     // Public: Track shared ride (no auth required)
     Route::get('track/{token}', [TaxiSafetyController::class, 'getSharedRideTracking']);
+
+    // Carpool Comunitario (Rutas públicas)
+    Route::get('carpool/organizations', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'getOrganizations']);
+    Route::get('carpool/routes/search', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'searchRoutes']);
 });
