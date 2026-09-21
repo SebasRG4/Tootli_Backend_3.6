@@ -42,8 +42,11 @@ class TaxiCarpoolController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'organization_id' => 'required|exists:taxi_community_organizations,id',
+            'document_type' => 'nullable|string|max:50',
+            'document_number' => 'nullable|string|max:50',
             'institutional_email' => 'nullable|email',
-            'id_card_image' => 'nullable|image|max:5120', // Max 5MB
+            'id_card_image' => 'nullable|image|max:10240', // Max 10MB
+            'id_card_back_image' => 'nullable|image|max:10240',
         ]);
 
         if ($validator->fails()) {
@@ -53,12 +56,24 @@ class TaxiCarpoolController extends Controller
             ], 422);
         }
 
+        if (!$request->hasFile('id_card_image') && empty($request->institutional_email)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Debes adjuntar la fotografía de tu credencial o tira de materias para verificar tu identidad.',
+            ], 422);
+        }
+
         $user = $request->user();
         $org = TaxiCommunityOrganization::findOrFail($request->organization_id);
 
         $imagePath = null;
         if ($request->hasFile('id_card_image')) {
             $imagePath = Helpers::upload('community_cards/', 'png', $request->file('id_card_image'));
+        }
+
+        $backImagePath = null;
+        if ($request->hasFile('id_card_back_image')) {
+            $backImagePath = Helpers::upload('community_cards/', 'png', $request->file('id_card_back_image'));
         }
 
         // Si el correo institucional coincide con los dominios oficiales de la organización, pre-aprobamos
@@ -79,8 +94,11 @@ class TaxiCarpoolController extends Controller
                 'role' => 'passenger',
             ],
             [
+                'document_type' => $request->document_type ?? 'credencial',
+                'document_number' => $request->document_number,
                 'institutional_email' => $request->institutional_email,
                 'id_card_image' => $imagePath ?? DB::raw('id_card_image'),
+                'id_card_back_image' => $backImagePath ?? DB::raw('id_card_back_image'),
                 'verification_status' => $isAutoApproved ? 'approved' : 'pending',
                 'verified_at' => $isAutoApproved ? now() : null,
             ]
