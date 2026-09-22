@@ -31,4 +31,14 @@ class ProtectedTransaction extends Model
     {
         return $this->belongsTo(User::class, 'seller_id');
     }
+
+    public function dispute()
+    {
+        return $this->morphOne(TootliDispute::class, 'disputable')->latestOfMany();
+    }
+
+    public function disputes()
+    {
+        return $this->morphMany(TootliDispute::class, 'disputable');
+    }
 }

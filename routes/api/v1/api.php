@@ -759,6 +759,10 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         Route::get('{job_id}/bids', 'ServiceJobController@getBids');
         Route::post('bids/{bid_id}/accept', 'ServiceJobController@acceptBid');
         Route::post('{job_id}/complete', 'ServiceJobController@completeJob');
+        Route::post('{job_id}/dispute', 'ServiceJobController@dispute');
+        Route::get('{job_id}/dispute', 'ServiceJobController@getDispute');
+        Route::post('{job_id}/dispute/cancel', 'ServiceJobController@cancelDispute');
+        Route::post('{job_id}/dispute/resolve', 'ServiceJobController@resolveDispute');
     });
 
     // Custom Escrow Protected Transactions Routes (PayPal-style Buy/Sell)
@@ -768,5 +772,9 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         Route::post('{id}/pay', 'ProtectedTransactionController@pay');
         Route::post('{id}/complete', 'ProtectedTransactionController@complete');
         Route::post('{id}/cancel', 'ProtectedTransactionController@cancel');
+        Route::post('{id}/dispute', 'ProtectedTransactionController@dispute');
+        Route::get('{id}/dispute', 'ProtectedTransactionController@getDispute');
+        Route::post('{id}/dispute/cancel', 'ProtectedTransactionController@cancelDispute');
+        Route::post('{id}/dispute/resolve', 'ProtectedTransactionController@resolveDispute');
     });
 });

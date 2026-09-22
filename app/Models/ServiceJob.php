@@ -41,4 +41,14 @@ class ServiceJob extends Model
     {
         return $this->belongsTo(ServiceBid::class, 'accepted_bid_id');
     }
+
+    public function dispute()
+    {
+        return $this->morphOne(TootliDispute::class, 'disputable')->latestOfMany();
+    }
+
+    public function disputes()
+    {
+        return $this->morphMany(TootliDispute::class, 'disputable');
+    }
 }
