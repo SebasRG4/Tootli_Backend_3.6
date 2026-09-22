@@ -117,6 +117,16 @@ class TaxiDriverCarpoolController extends Controller
             ], 403);
         }
 
+        // Validar restricción Pink Ride: solo conductoras verificadas pueden publicar rutas Solo Mujeres
+        if (!empty($request->is_women_only)) {
+            if (empty($dm->is_female_verified)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Solo las conductoras verificadas pueden publicar rutas Pink Ride (Solo Mujeres). Verifica tu INE o credencial institucional primero.',
+                ], 403);
+            }
+        }
+
         $route = TaxiCarpoolRoute::create([
             'delivery_man_id' => $dm->id,
             'organization_id' => $request->organization_id,

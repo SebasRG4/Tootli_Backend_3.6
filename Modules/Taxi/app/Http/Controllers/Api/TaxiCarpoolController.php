@@ -145,6 +145,24 @@ class TaxiCarpoolController extends Controller
             }
         }
 
+        $isFemaleVerified = false;
+        $extractedGender = null;
+        if (!empty($aiResult['extracted_data'])) {
+            $extractedGender = $aiResult['extracted_data']['extracted_gender'] ?? null;
+            $isFemale = !empty($aiResult['extracted_data']['is_female']) || $extractedGender === 'female';
+            if ($isFemale && ($aiResult['extracted_data']['gender_confidence'] ?? 0.8) >= 0.7) {
+                $isFemaleVerified = true;
+                $extractedGender = 'female';
+            } elseif ($extractedGender === 'male') {
+                $extractedGender = 'male';
+            }
+        }
+
+        if (!empty($user->is_female_verified)) {
+            $isFemaleVerified = true;
+            $extractedGender = 'female';
+        }
+
         $updateData = [
             'document_type' => $request->document_type ?? 'credencial',
             'document_number' => $request->document_number,
@@ -155,6 +173,8 @@ class TaxiCarpoolController extends Controller
             'ai_extracted_data' => $aiResult['extracted_data'] ?? null,
             'ai_review_notes' => $aiResult['notes'] ?? null,
             'verified_at' => $isAutoApproved ? now() : null,
+            'is_female_verified' => $isFemaleVerified,
+            'gender' => $extractedGender,
         ];
 
         if ($imagePath) {
@@ -173,6 +193,15 @@ class TaxiCarpoolController extends Controller
             $updateData
         );
 
+        if ($isFemaleVerified) {
+            $user->is_female_verified = true;
+            $user->gender = 'female';
+            $user->save();
+        } elseif ($extractedGender && empty($user->gender)) {
+            $user->gender = $extractedGender;
+            $user->save();
+        }
+
         $responseMessage = 'Tu solicitud de verificación fue enviada y será revisada en breve.';
         if ($isAutoApproved) {
             if (!empty($aiResult['is_approved'])) {
@@ -186,6 +215,7 @@ class TaxiCarpoolController extends Controller
             'status' => 'success',
             'message' => $responseMessage,
             'is_approved' => $isAutoApproved,
+            'is_female_verified' => (bool) ($user->is_female_verified ?? false),
             'data' => $verification->load('organization'),
         ]);
     }
@@ -200,8 +230,21 @@ class TaxiCarpoolController extends Controller
             ->where('user_id', $user->id)
             ->get();
 
+        $isFemaleVerified = (bool) ($user->is_female_verified ?? false);
+        if (!$isFemaleVerified && $verifications->isNotEmpty()) {
+            $hasFemale = $verifications->where('is_female_verified', true)->isNotEmpty();
+            if ($hasFemale && $user) {
+                $isFemaleVerified = true;
+                $user->is_female_verified = true;
+                $user->gender = 'female';
+                $user->save();
+            }
+        }
+
         return response()->json([
             'status' => 'success',
+            'is_female_verified' => $isFemaleVerified,
+            'gender' => $user->gender ?? null,
             'data' => $verifications,
         ]);
     }
@@ -344,13 +387,12 @@ class TaxiCarpoolController extends Controller
             }
         }
 
-        // 3. Validar restricción Solo Mujeres
+        // 3. Validar restricción Solo Mujeres / Pink Ride
         if ($route->is_women_only) {
-            // Se puede validar por género registrado en perfil si existe
-            if (isset($user->gender) && strtolower($user->gender) !== 'female' && strtolower($user->gender) !== 'mujer') {
+            if (empty($user->is_female_verified)) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Esta ruta está configurada exclusivamente para mujeres.',
+                    'message' => 'Esta ruta es exclusiva para mujeres verificadas (Pink Ride). Debes subir tu INE o credencial institucional para que nuestro sistema confirme tu género.',
                 ], 403);
             }
         }
@@ -570,6 +612,16 @@ class TaxiCarpoolController extends Controller
             ], 403);
         }
 
+        // Validar restricción Pink Ride: solo conductoras verificadas pueden publicar rutas Solo Mujeres
+        if (!empty($request->is_women_only)) {
+            if (empty($user->is_female_verified)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Solo las conductoras verificadas pueden publicar rutas Pink Ride (Solo Mujeres). Verifica tu INE o credencial institucional primero.',
+                ], 403);
+            }
+        }
+
         // Si no envía organization_id, tomar la de su verificación aprobada
         $orgId = $request->organization_id;
         if (!$orgId) {
@@ -650,6 +702,16 @@ class TaxiCarpoolController extends Controller
                 'status' => 'error',
                 'message' => 'Debes verificar tu credencial universitaria antes de solicitar viajes.',
             ], 403);
+        }
+
+        // Validar restricción Pink Ride: solo pasajeras verificadas pueden publicar solicitudes Solo Mujeres
+        if (!empty($request->is_women_only)) {
+            if (empty($user->is_female_verified)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Solo las pasajeras verificadas pueden publicar solicitudes Pink Ride (Solo Mujeres). Verifica tu INE o credencial institucional primero.',
+                ], 403);
+            }
         }
 
         $orgId = $request->organization_id;
