@@ -76,7 +76,12 @@ REGLAS DE EVALUACIÓN:
 3. INSTITUCIÓN: Extrae la universidad, escuela o centro laboral (busca nombres, siglas como UNAM, IPN, UVM, UAEMex, ITESM, etc. o logotipos visibles). ¿Coincide con "{$orgName}"?
 4. VIGENCIA: Busca fechas, años (2024, 2025, 2026), semestres, hologramas o sellos de ciclo escolar. ¿El documento parece vigente o actual?
 5. MATRÍCULA: Extrae el número de cuenta / matrícula si es visible.
-6. CRITERIO DE APROBACIÓN AUTOMÁTICA:
+6. GÉNERO / SEXO (SEGURIDAD PINK RIDE):
+   - Analiza si el documento incluye campo explícito de "SEXO: M/H/F", "GÉNERO", CURP (donde el carácter 11 es 'M' para Mujer o 'H' para Hombre), o infiere a partir del nombre de pila del titular.
+   - "extracted_gender": "female" (si es mujer), "male" (si es hombre) o "unknown".
+   - "is_female": true si es mujer, false en caso contrario.
+   - "gender_confidence": certeza de 0.0 a 1.0 respecto al género femenino.
+7. CRITERIO DE APROBACIÓN AUTOMÁTICA:
    - "is_approved" debe ser true SÓLO SI:
      a) Es un documento legítimo y legible.
      b) La coincidencia del nombre es >= 75%.
@@ -88,6 +93,9 @@ Genera ÚNICAMENTE un JSON con esta estructura exacta:
 {
   "is_legitimate_document": true,
   "extracted_name": "Nombre exacto leído",
+  "extracted_gender": "female",
+  "is_female": true,
+  "gender_confidence": 0.95,
   "extracted_institution": "Institución leída",
   "extracted_matricula": "Matrícula leída o N/A",
   "extracted_validity": "Vigencia / ciclo leído",

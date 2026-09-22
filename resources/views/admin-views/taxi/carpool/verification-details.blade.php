@@ -256,6 +256,63 @@
                 </div>
             </div>
 
+            <!-- Gender Verification & Pink Ride Eligibility Card -->
+            <div class="card mb-3 shadow-sm border-0" style="border-left: 4px solid #e83e8c !important;">
+                <div class="card-header bg-soft-pink d-flex justify-content-between align-items-center" style="background-color: #fff0f5;">
+                    <h5 class="card-title mb-0" style="color: #d63384; font-weight: 700;">
+                        <i class="tio-female mr-1"></i> Verificar Género (Solo Mujeres)
+                    </h5>
+                    @if($verification->is_female_verified || $verification->user?->is_female_verified || $verification->deliveryMan?->is_female_verified)
+                        <span class="badge badge-success py-1 px-2 font-size-sm">
+                            <i class="tio-checkmark-circle mr-1"></i> Acreditada como Mujer
+                        </span>
+                    @else
+                        <span class="badge badge-soft-secondary py-1 px-2 font-size-sm">
+                            No Acreditada
+                        </span>
+                    @endif
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        <span class="text-muted font-size-sm d-block">Detección por IA en Credencial/INE:</span>
+                        @if(!empty($verification->ai_extracted_data['extracted_gender']))
+                            @if($verification->ai_extracted_data['extracted_gender'] === 'female' || !empty($verification->ai_extracted_data['is_female']))
+                                <span class="badge badge-soft-success font-size-sm">
+                                    🌸 Detectado: Mujer / Femenino (Confianza: {{ round(($verification->ai_extracted_data['gender_confidence'] ?? 0.95) * 100) }}%)
+                                </span>
+                            @elseif($verification->ai_extracted_data['extracted_gender'] === 'male')
+                                <span class="badge badge-soft-info font-size-sm">
+                                    Detectado: Hombre / Masculino
+                                </span>
+                            @else
+                                <span class="badge badge-soft-warning font-size-sm">
+                                    Indeterminado en el documento
+                                </span>
+                            @endif
+                        @else
+                            <span class="text-muted font-size-sm">Sin detección de género previa</span>
+                        @endif
+                    </div>
+
+                    <p class="font-size-sm text-muted mb-3">
+                        Al verificar a esta persona como <strong>Mujer</strong>, quedará habilitada para publicar y reservar viajes en modalidad exclusiva de <strong>Solo Conductoras Mujeres (Pink Ride)</strong>.
+                    </p>
+
+                    <form action="{{ route('admin.taxi.carpool.verifications.toggle-female-gender', $verification->id) }}" method="POST">
+                        @csrf
+                        @if($verification->is_female_verified || $verification->user?->is_female_verified || $verification->deliveryMan?->is_female_verified)
+                            <button type="submit" class="btn btn-outline-danger btn-block btn-sm py-2">
+                                <i class="tio-clear mr-1"></i> Remover Acreditación de Género Mujer
+                            </button>
+                        @else
+                            <button type="submit" class="btn btn-block text-white btn-sm py-2" style="background-color: #d63384; font-weight: 600;">
+                                <i class="tio-checkmark-circle mr-1"></i> Acreditar para Solo Conductoras Mujeres
+                            </button>
+                        @endif
+                    </form>
+                </div>
+            </div>
+
             <!-- Approval / Rejection Actions -->
             <div class="card shadow-sm border-0">
                 <div class="card-body">

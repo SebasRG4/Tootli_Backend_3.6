@@ -312,6 +312,7 @@ class TaxiCarpoolController extends Controller
                 'driver' => $driverObj ? [
                     'id' => $driverObj->id,
                     'name' => "{$driverObj->f_name} {$driverObj->l_name}",
+                    'phone' => $driverObj->phone ?? null,
                     'image' => $driverObj->image,
                     'avg_rating' => $driverObj->avg_rating ?? ($driverObj->taxi_rating ?? 5.0),
                     'rating_count' => $driverObj->rating_count ?? ($driverObj->taxi_total_rides ?? 0),

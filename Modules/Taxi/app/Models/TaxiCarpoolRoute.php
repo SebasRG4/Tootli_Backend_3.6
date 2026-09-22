@@ -48,6 +48,33 @@ class TaxiCarpoolRoute extends Model
         'is_women_only' => 'boolean',
     ];
 
+    protected $appends = ['driver'];
+
+    public function getDriverAttribute(): ?array
+    {
+        $driverObj = $this->deliveryMan ?? $this->user;
+        if (!$driverObj) {
+            return null;
+        }
+
+        $name = trim(($driverObj->f_name ?? '') . ' ' . ($driverObj->l_name ?? ''));
+        if (empty($name)) {
+            $name = $driverObj->name ?? 'Conductor';
+        }
+
+        return [
+            'id' => $driverObj->id,
+            'name' => $name,
+            'phone' => $driverObj->phone ?? null,
+            'image' => $driverObj->image ?? null,
+            'avg_rating' => (float) ($driverObj->avg_rating ?? ($driverObj->taxi_rating ?? 5.0)),
+            'rating_count' => (int) ($driverObj->rating_count ?? ($driverObj->taxi_total_rides ?? 0)),
+            'trust_score' => (float) ($driverObj->carpool_trust_score ?? 100.00),
+            'trust_badge' => (($driverObj->carpool_trust_score ?? 100) >= 98) ? 'Conductor Destacado' : ((($driverObj->carpool_trust_score ?? 100) >= 85) ? 'Conductor Confiable' : 'Conductor con Reportes'),
+            'is_student' => !empty($this->user_id),
+        ];
+    }
+
     public function deliveryMan(): BelongsTo
     {
         return $this->belongsTo(DeliveryMan::class, 'delivery_man_id');

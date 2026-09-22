@@ -32,6 +32,8 @@ class UserCommunityVerification extends Model
         'ai_extracted_data',
         'ai_review_notes',
         'rejection_reason',
+        'is_female_verified',
+        'gender',
         'verified_at',
     ];
 
@@ -40,6 +42,7 @@ class UserCommunityVerification extends Model
         'ai_verified' => 'boolean',
         'ai_confidence_score' => 'float',
         'ai_extracted_data' => 'array',
+        'is_female_verified' => 'boolean',
     ];
 
     protected $appends = [

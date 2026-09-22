@@ -149,6 +149,20 @@ class TaxiCarpoolVerificationController extends Controller
         $verification->ai_extracted_data = $aiResult['extracted_data'] ?? null;
         $verification->ai_review_notes = $aiResult['notes'] ?? null;
 
+        if (!empty($aiResult['extracted_data'])) {
+            $extractedGender = $aiResult['extracted_data']['extracted_gender'] ?? null;
+            $isFemale = !empty($aiResult['extracted_data']['is_female']) || $extractedGender === 'female';
+            if ($isFemale && ($aiResult['extracted_data']['gender_confidence'] ?? 0.8) >= 0.7) {
+                $verification->is_female_verified = true;
+                $verification->gender = 'female';
+                if ($verification->user) {
+                    $verification->user->is_female_verified = true;
+                    $verification->user->gender = 'female';
+                    $verification->user->save();
+                }
+            }
+        }
+
         if (!empty($aiResult['is_approved'])) {
             $verification->verification_status = 'approved';
             $verification->verified_at = now();
@@ -172,6 +186,39 @@ class TaxiCarpoolVerificationController extends Controller
         }
 
         $verification->save();
+        return redirect()->back();
+    }
+
+    /**
+     * Alternar acreditación de género femenino (Solo Mujeres / Pink Ride)
+     */
+    public function toggleFemaleGender($id)
+    {
+        $verification = UserCommunityVerification::with(['user', 'deliveryMan'])->findOrFail($id);
+
+        $newStatus = !$verification->is_female_verified;
+        $verification->is_female_verified = $newStatus;
+        $verification->gender = $newStatus ? 'female' : null;
+        $verification->save();
+
+        if ($verification->user) {
+            $verification->user->is_female_verified = $newStatus;
+            $verification->user->gender = $newStatus ? 'female' : null;
+            $verification->user->save();
+        }
+
+        if ($verification->deliveryMan) {
+            $verification->deliveryMan->is_female_verified = $newStatus;
+            $verification->deliveryMan->gender = $newStatus ? 'female' : null;
+            $verification->deliveryMan->save();
+        }
+
+        if ($newStatus) {
+            Toastr::success('¡Elegibilidad confirmada! Acreditada como Mujer para modalidad Solo Mujeres (Pink Ride).');
+        } else {
+            Toastr::warning('Acreditación de género mujer removida.');
+        }
+
         return redirect()->back();
     }
 }
