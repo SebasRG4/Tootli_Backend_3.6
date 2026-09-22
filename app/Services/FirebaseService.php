@@ -365,4 +365,34 @@ class FirebaseService
             'priority' => 'high',
         ]);
     }
+
+    /**
+     * Notificar al pasajero que alguien le ofrece aventón ("Sumar")
+     */
+    public static function sendCarpoolOfferNotification($carpoolRequest, $driver)
+    {
+        $user = $carpoolRequest->user;
+        if (!$user || !$user->cm_firebase_token) {
+            return null;
+        }
+
+        $driverName = $driver->f_name ?? $driver->name ?? 'Un compañero';
+        $dest = $carpoolRequest->destination_name ?? 'tu destino';
+
+        return self::send([
+            'to' => $user->cm_firebase_token,
+            'notification' => [
+                'title' => '🚗 ¡Alguien quiere darte aventón!',
+                'body' => $driverName . ' puede llevarte en tu viaje a ' . $dest . '.',
+                'sound' => 'default',
+            ],
+            'data' => [
+                'type' => 'carpool_request_offer',
+                'request_id' => (string) $carpoolRequest->id,
+                'driver_name' => $driverName,
+                'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+            ],
+            'priority' => 'high',
+        ]);
+    }
 }

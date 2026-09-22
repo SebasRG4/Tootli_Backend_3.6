@@ -809,4 +809,73 @@ class TaxiCarpoolController extends Controller
             'data' => $requests,
         ]);
     }
+
+    /**
+     * Ofrecer llevar a un pasajero que pidió aventón (Acción del botón "Sumar")
+     */
+    public function respondToRequest(int $id, Request $request): JsonResponse
+    {
+        $driver = $request->user();
+        $passengerRequest = TaxiCarpoolRequest::with(['user', 'organization'])->find($id);
+
+        if (!$passengerRequest) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Solicitud de aventón no encontrada.',
+            ], 404);
+        }
+
+        if ($passengerRequest->user_id == $driver->id) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No puedes sumarte a tu propia solicitud de aventón.',
+            ], 400);
+        }
+
+        // Si la solicitud es Pink Ride, solo conductoras verificadas pueden ofrecer aventón
+        if ($passengerRequest->is_women_only && empty($driver->is_female_verified)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Esta solicitud es exclusiva para mujeres (Pink Ride). Debes estar verificada.',
+            ], 403);
+        }
+
+        try {
+            \App\Services\FirebaseService::sendCarpoolOfferNotification($passengerRequest, $driver);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error sending carpool offer push notification: ' . $e->getMessage());
+        }
+
+        $passengerName = $passengerRequest->user->f_name ?? 'tu compañero';
+
+        return response()->json([
+            'status' => 'success',
+            'message' => '¡Genial! Le hemos notificado a ' . $passengerName . ' que vas en su misma dirección y puedes darle aventón.',
+        ]);
+    }
+
+    /**
+     * Cancelar o eliminar una solicitud propia de aventón
+     */
+    public function deleteRequest(int $id, Request $request): JsonResponse
+    {
+        $user = $request->user();
+        $passengerRequest = TaxiCarpoolRequest::where('id', $id)
+            ->where('user_id', $user->id)
+            ->first();
+
+        if (!$passengerRequest) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Solicitud no encontrada o no pertenece a tu cuenta.',
+            ], 404);
+        }
+
+        $passengerRequest->update(['status' => 'cancelled']);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Tu solicitud de aventón ha sido cancelada correctamente.',
+        ]);
+    }
 }

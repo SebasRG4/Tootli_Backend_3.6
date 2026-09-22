@@ -85,6 +85,8 @@ Route::group(['prefix' => 'taxi'], function () {
             Route::post('requests', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'createRequest']);
             Route::get('requests', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'getRequests']);
             Route::get('my-requests', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'getMyRequests']);
+            Route::post('requests/{id}/offer', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'respondToRequest']);
+            Route::delete('requests/{id}', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'deleteRequest']);
         });
     });
 
