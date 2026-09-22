@@ -120,25 +120,32 @@ class TaxiCarpoolController extends Controller
             }
         }
 
+        $updateData = [
+            'document_type' => $request->document_type ?? 'credencial',
+            'document_number' => $request->document_number,
+            'institutional_email' => $request->institutional_email,
+            'verification_status' => $isAutoApproved ? 'approved' : 'pending',
+            'ai_verified' => !empty($aiResult['ai_verified']),
+            'ai_confidence_score' => $aiResult['confidence_score'] ?? null,
+            'ai_extracted_data' => $aiResult['extracted_data'] ?? null,
+            'ai_review_notes' => $aiResult['notes'] ?? null,
+            'verified_at' => $isAutoApproved ? now() : null,
+        ];
+
+        if ($imagePath) {
+            $updateData['id_card_image'] = $imagePath;
+        }
+        if ($backImagePath) {
+            $updateData['id_card_back_image'] = $backImagePath;
+        }
+
         $verification = UserCommunityVerification::updateOrCreate(
             [
                 'user_id' => $user->id,
                 'organization_id' => $org->id,
                 'role' => 'passenger',
             ],
-            [
-                'document_type' => $request->document_type ?? 'credencial',
-                'document_number' => $request->document_number,
-                'institutional_email' => $request->institutional_email,
-                'id_card_image' => $imagePath ?? DB::raw('id_card_image'),
-                'id_card_back_image' => $backImagePath ?? DB::raw('id_card_back_image'),
-                'verification_status' => $isAutoApproved ? 'approved' : 'pending',
-                'ai_verified' => !empty($aiResult['ai_verified']),
-                'ai_confidence_score' => $aiResult['confidence_score'] ?? null,
-                'ai_extracted_data' => $aiResult['extracted_data'] ?? null,
-                'ai_review_notes' => $aiResult['notes'] ?? null,
-                'verified_at' => $isAutoApproved ? now() : null,
-            ]
+            $updateData
         );
 
         $responseMessage = 'Tu solicitud de verificación fue enviada y será revisada en breve.';

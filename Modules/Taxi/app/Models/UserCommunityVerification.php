@@ -84,7 +84,7 @@ class UserCommunityVerification extends Model
 
     public function getIdCardImageUrlAttribute(): ?string
     {
-        if (!$this->id_card_image) return null;
+        if (empty($this->id_card_image) || !is_string($this->id_card_image)) return null;
         if (Storage::disk('public')->exists('community_cards/' . $this->id_card_image)) {
             return asset('storage/community_cards/' . $this->id_card_image);
         }
@@ -93,7 +93,7 @@ class UserCommunityVerification extends Model
 
     public function getIdCardBackImageUrlAttribute(): ?string
     {
-        if (!$this->id_card_back_image) return null;
+        if (empty($this->id_card_back_image) || !is_string($this->id_card_back_image)) return null;
         if (Storage::disk('public')->exists('community_cards/' . $this->id_card_back_image)) {
             return asset('storage/community_cards/' . $this->id_card_back_image);
         }
