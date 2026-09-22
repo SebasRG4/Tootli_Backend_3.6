@@ -47,6 +47,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin', '
                 Route::get('/', [TaxiCarpoolVerificationController::class, 'index'])->name('index');
                 Route::get('/{id}', [TaxiCarpoolVerificationController::class, 'show'])->name('show');
                 Route::post('/{id}/status', [TaxiCarpoolVerificationController::class, 'updateStatus'])->name('update-status');
+                Route::post('/{id}/reanalyze-ai', [TaxiCarpoolVerificationController::class, 'reanalyzeAi'])->name('reanalyze-ai');
             });
         });
 

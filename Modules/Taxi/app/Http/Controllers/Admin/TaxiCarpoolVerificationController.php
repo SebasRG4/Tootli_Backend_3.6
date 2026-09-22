@@ -97,4 +97,39 @@ class TaxiCarpoolVerificationController extends Controller
 
         return redirect()->back();
     }
+
+    public function reanalyzeAi($id)
+    {
+        $verification = UserCommunityVerification::with(['user', 'organization'])->findOrFail($id);
+
+        if (!$verification->id_card_image) {
+            Toastr::error('No hay fotografía frontal registrada para auditar.');
+            return redirect()->back();
+        }
+
+        $aiResult = \Modules\Taxi\Services\CredentialAiVerificationService::analyze(
+            user: $verification->user,
+            organization: $verification->organization,
+            frontImage: $verification->id_card_image,
+            backImage: $verification->id_card_back_image,
+            documentType: $verification->document_type,
+            documentNumber: $verification->document_number
+        );
+
+        $verification->ai_verified = !empty($aiResult['ai_verified']);
+        $verification->ai_confidence_score = $aiResult['confidence_score'] ?? null;
+        $verification->ai_extracted_data = $aiResult['extracted_data'] ?? null;
+        $verification->ai_review_notes = $aiResult['notes'] ?? null;
+
+        if (!empty($aiResult['is_approved'])) {
+            $verification->verification_status = 'approved';
+            $verification->verified_at = now();
+            Toastr::success('¡Auditoría de IA completada y aprobada automáticamente!');
+        } else {
+            Toastr::info('Auditoría ejecutada: ' . ($aiResult['notes'] ?? 'Revisar detalles'));
+        }
+
+        $verification->save();
+        return redirect()->back();
+    }
 }

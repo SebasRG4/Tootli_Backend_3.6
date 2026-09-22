@@ -189,7 +189,7 @@
                     @endif
                 </div>
                 <div class="card-body">
-                    @if($verification->ai_verified && $verification->ai_extracted_data)
+                    @if($verification->ai_extracted_data)
                         @php($ai = $verification->ai_extracted_data)
                         <div class="mb-2 d-flex justify-content-between">
                             <span class="text-muted font-size-sm">Veredicto IA:</span>
@@ -228,10 +228,29 @@
                                 <p class="mb-0 mt-1">{{ $verification->ai_review_notes }}</p>
                             </div>
                         @endif
+                    @elseif(!empty($verification->ai_review_notes))
+                        <div class="p-3 bg-soft-warning rounded border border-warning">
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="tio-warning-outlined text-warning mr-2 font-size-lg"></i>
+                                <strong class="text-dark">Estado del Servicio de IA:</strong>
+                            </div>
+                            <p class="mb-0 font-size-sm text-dark">{{ $verification->ai_review_notes }}</p>
+                        </div>
                     @else
                         <div class="text-center py-3 text-muted">
                             <i class="tio-time display-4 d-block mb-1"></i>
                             <span class="font-size-sm">Sin auditoría de IA registrada o solicitud enviada previamente.</span>
+                        </div>
+                    @endif
+
+                    @if($verification->id_card_image)
+                        <div class="mt-3 pt-3 border-top text-center">
+                            <form action="{{ route('admin.taxi.carpool.verifications.reanalyze-ai', $verification->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-info btn-sm btn-block">
+                                    <i class="tio-refresh mr-1"></i> Re-ejecutar Auditoría con IA
+                                </button>
+                            </form>
                         </div>
                     @endif
                 </div>

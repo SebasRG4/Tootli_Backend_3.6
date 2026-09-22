@@ -32,7 +32,8 @@ class CredentialAiVerificationService
         ?string $documentNumber = null
     ): array {
         $apiKey = BusinessSetting::where('key', 'gemini_api_key')->value('value') 
-            ?? env('GEMINI_API_KEY', 'AIzaSyAun36m_HffV9s-BoTD8f0gxcsvnJVvKac');
+            ?? config('services.gemini.key')
+            ?? env('GEMINI_API_KEY');
 
         if (empty($apiKey)) {
             Log::warning('[CredentialAi] Gemini API Key no configurada. Fallback a revisión manual.');
@@ -41,7 +42,7 @@ class CredentialAiVerificationService
                 'confidence_score' => 0.0,
                 'ai_verified' => false,
                 'extracted_data' => null,
-                'notes' => 'API Key de IA no configurada. Requiere revisión manual.',
+                'notes' => 'API Key de IA no configurada en el servidor. Requiere revisión manual.',
                 'rejection_reason' => null,
             ];
         }
@@ -118,8 +119,8 @@ PROMPT;
                 }
             }
 
-            // 4. Llamada HTTP a Gemini 2.5 Flash
-            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$apiKey}";
+            // 4. Llamada HTTP a Gemini 1.5 Flash
+            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}";
 
             $response = Http::timeout(25)
                 ->withHeaders(['Content-Type' => 'application/json'])
@@ -134,13 +135,15 @@ PROMPT;
                 ]);
 
             if (!$response->successful()) {
-                Log::error('[CredentialAi] Error en respuesta de Gemini API: ' . $response->body());
+                $errBody = $response->json();
+                $errMsg = $errBody['error']['message'] ?? $response->body();
+                Log::error('[CredentialAi] Error en respuesta de Gemini API: ' . $errMsg);
                 return [
                     'is_approved' => false,
                     'confidence_score' => 0.0,
                     'ai_verified' => false,
                     'extracted_data' => null,
-                    'notes' => 'Error de conexión con servicio de IA. Pendiente de validación manual.',
+                    'notes' => 'Servicio IA (Google Gemini): ' . $errMsg,
                     'rejection_reason' => null,
                 ];
             }
