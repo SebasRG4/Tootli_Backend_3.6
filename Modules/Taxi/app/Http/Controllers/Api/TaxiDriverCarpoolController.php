@@ -7,11 +7,13 @@ use Modules\Taxi\Models\TaxiCommunityOrganization;
 use Modules\Taxi\Models\UserCommunityVerification;
 use Modules\Taxi\Models\TaxiCarpoolRoute;
 use Modules\Taxi\Models\TaxiCarpoolBooking;
+use Modules\Taxi\Models\TaxiCarpoolStrike;
 use App\CentralLogics\Helpers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class TaxiDriverCarpoolController extends Controller
 {
@@ -105,6 +107,15 @@ class TaxiDriverCarpoolController extends Controller
         }
 
         $dm = $request->user();
+
+        // Validar si el conductor está suspendido de Carpool
+        if ($dm->carpool_suspended_until && Carbon::parse($dm->carpool_suspended_until)->isFuture()) {
+            $formattedDate = Carbon::parse($dm->carpool_suspended_until)->format('d/m/Y H:i');
+            return response()->json([
+                'status' => 'error',
+                'message' => "Tu cuenta tiene una suspensión temporal hasta el {$formattedDate} por cancelaciones tardías.",
+            ], 403);
+        }
 
         $route = TaxiCarpoolRoute::create([
             'delivery_man_id' => $dm->id,
@@ -214,6 +225,8 @@ class TaxiDriverCarpoolController extends Controller
                 'pickup_lng' => $b->pickup_lng,
                 'status' => $b->status,
                 'checked_in_at' => $b->checked_in_at,
+                'trust_score' => (float) ($b->user->carpool_trust_score ?? 100.00),
+                'trust_badge' => (($b->user->carpool_trust_score ?? 100) >= 95) ? 'Pasajero Ejemplar' : ((($b->user->carpool_trust_score ?? 100) >= 80) ? 'Miembro Confiable' : 'En Observación'),
             ];
         });
 

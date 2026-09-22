@@ -8,6 +8,7 @@ use Modules\Taxi\Models\UserCommunityVerification;
 use Modules\Taxi\Models\TaxiCarpoolRoute;
 use Modules\Taxi\Models\TaxiCarpoolBooking;
 use Modules\Taxi\Models\TaxiCarpoolRequest;
+use Modules\Taxi\Models\TaxiCarpoolStrike;
 use App\CentralLogics\Helpers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -269,8 +270,10 @@ class TaxiCarpoolController extends Controller
                     'id' => $driverObj->id,
                     'name' => "{$driverObj->f_name} {$driverObj->l_name}",
                     'image' => $driverObj->image,
-                    'avg_rating' => $driverObj->avg_rating ?? 5.0,
-                    'rating_count' => $driverObj->rating_count ?? 0,
+                    'avg_rating' => $driverObj->avg_rating ?? ($driverObj->taxi_rating ?? 5.0),
+                    'rating_count' => $driverObj->rating_count ?? ($driverObj->taxi_total_rides ?? 0),
+                    'trust_score' => (float) ($driverObj->carpool_trust_score ?? 100.00),
+                    'trust_badge' => (($driverObj->carpool_trust_score ?? 100) >= 98) ? 'Conductor Destacado' : ((($driverObj->carpool_trust_score ?? 100) >= 85) ? 'Conductor Confiable' : 'Conductor con Reportes'),
                     'is_student' => !empty($route->user_id),
                 ] : null,
             ];
@@ -305,6 +308,16 @@ class TaxiCarpoolController extends Controller
         }
 
         $user = $request->user();
+
+        // 0. Validar si el usuario está suspendido por amonestaciones de Carpool
+        if ($user->carpool_suspended_until && Carbon::parse($user->carpool_suspended_until)->isFuture()) {
+            $formattedDate = Carbon::parse($user->carpool_suspended_until)->format('d/m/Y H:i');
+            return response()->json([
+                'status' => 'error',
+                'message' => "Tu cuenta tiene una suspensión comunitaria temporal hasta el {$formattedDate} por cancelaciones tardías reiteradas.",
+            ], 403);
+        }
+
         $route = TaxiCarpoolRoute::with('organization')->findOrFail($request->route_id);
         $seatsNeeded = (int) ($request->seat_count ?? 1);
 
@@ -385,20 +398,29 @@ class TaxiCarpoolController extends Controller
     public function getMyBookings(Request $request): JsonResponse
     {
         $user = $request->user();
-        $bookings = TaxiCarpoolBooking::with(['route.deliveryMan', 'route.organization'])
+        $bookings = TaxiCarpoolBooking::with(['route.deliveryMan', 'route.user', 'route.organization'])
             ->where('user_id', $user->id)
             ->orderBy('travel_date', 'desc')
             ->orderBy('id', 'desc')
             ->get();
 
+        $activeStrikes = TaxiCarpoolStrike::where('user_id', $user->id)->active()->count();
+        $isSuspended = $user->carpool_suspended_until && Carbon::parse($user->carpool_suspended_until)->isFuture();
+
         return response()->json([
             'status' => 'success',
+            'user_reputation' => [
+                'trust_score' => (float) ($user->carpool_trust_score ?? 100.00),
+                'active_strikes' => $activeStrikes,
+                'is_suspended' => (bool) $isSuspended,
+                'suspended_until' => $user->carpool_suspended_until,
+            ],
             'data' => $bookings,
         ]);
     }
 
     /**
-     * Cancelar reserva de Carpool
+     * Cancelar reserva de Carpool con política de Amonestaciones (Strikes)
      */
     public function cancelBooking(Request $request, $id): JsonResponse
     {
@@ -429,6 +451,21 @@ class TaxiCarpoolController extends Controller
             ], 400);
         }
 
+        // Calcular minutos de anticipación antes de la salida programada
+        $isLateCancellation = false;
+        $minutesBefore = 999;
+        if ($booking->route && $booking->travel_date && $booking->route->departure_time) {
+            $travelDateStr = Carbon::parse($booking->travel_date)->toDateString();
+            $departureTimeStr = substr($booking->route->departure_time, 0, 5);
+            $departureDateTime = Carbon::parse("{$travelDateStr} {$departureTimeStr}");
+            $minutesBefore = (int) Carbon::now()->diffInMinutes($departureDateTime, false);
+
+            // Si faltan 60 minutos o menos (o ya pasó la hora), se considera cancelación tardía
+            if ($minutesBefore <= 60) {
+                $isLateCancellation = true;
+            }
+        }
+
         $booking->status = 'cancelled';
         $booking->payment_status = 'refunded';
         $booking->save();
@@ -438,9 +475,45 @@ class TaxiCarpoolController extends Controller
             $booking->route->increment('available_seats', $booking->seat_count);
         }
 
+        $activeStrikes = 0;
+        $strikeMessage = 'Reserva cancelada exitosamente sin amonestaciones.';
+
+        if ($isLateCancellation) {
+            // Registrar strike de amonestación
+            TaxiCarpoolStrike::create([
+                'user_id' => $user->id,
+                'booking_id' => $booking->id,
+                'route_id' => $booking->route_id,
+                'reason' => 'late_cancellation',
+                'minutes_before_departure' => $minutesBefore,
+                'notes' => "Cancelación con {$minutesBefore} min de anticipación (límite: 60 min).",
+                'strike_at' => now(),
+                'expires_at' => now()->addDays(30),
+                'is_active' => true,
+            ]);
+
+            $activeStrikes = TaxiCarpoolStrike::where('user_id', $user->id)->active()->count();
+            // Cada strike descuenta 15% de confiabilidad durante 30 días
+            $newTrustScore = max(10, 100.0 - ($activeStrikes * 15.0));
+            $user->carpool_trust_score = $newTrustScore;
+
+            if ($activeStrikes >= 3) {
+                $user->carpool_suspended_until = now()->addDays(7);
+                $strikeMessage = "Reserva cancelada. Has acumulado {$activeStrikes} amonestaciones por cancelación tardía, por lo que tu cuenta en Carpool queda suspendida por 7 días.";
+            } else {
+                $strikeMessage = "Reserva cancelada. Al cancelar con menos de 60 min de anticipación se ha sumado 1 amonestación comunitaria ({$activeStrikes}/3).";
+            }
+            $user->save();
+        } else {
+            $activeStrikes = TaxiCarpoolStrike::where('user_id', $user->id)->active()->count();
+        }
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Reserva cancelada exitosamente.',
+            'message' => $strikeMessage,
+            'strike_applied' => $isLateCancellation,
+            'active_strikes' => $activeStrikes,
+            'trust_score' => (float) ($user->carpool_trust_score ?? 100.00),
         ]);
     }
 
@@ -475,6 +548,15 @@ class TaxiCarpoolController extends Controller
         }
 
         $user = $request->user();
+
+        // Validar si el usuario está suspendido
+        if ($user->carpool_suspended_until && Carbon::parse($user->carpool_suspended_until)->isFuture()) {
+            $formattedDate = Carbon::parse($user->carpool_suspended_until)->format('d/m/Y H:i');
+            return response()->json([
+                'status' => 'error',
+                'message' => "Tu cuenta tiene una suspensión comunitaria temporal hasta el {$formattedDate}.",
+            ], 403);
+        }
 
         // Validar que el usuario esté verificado en su comunidad
         $isVerified = UserCommunityVerification::where('user_id', $user->id)
