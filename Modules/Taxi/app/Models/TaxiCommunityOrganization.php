@@ -40,4 +40,9 @@ class TaxiCommunityOrganization extends Model
     {
         return $this->hasMany(TaxiCarpoolRoute::class, 'organization_id');
     }
+
+    public function requests(): HasMany
+    {
+        return $this->hasMany(TaxiCarpoolRequest::class, 'organization_id');
+    }
 }

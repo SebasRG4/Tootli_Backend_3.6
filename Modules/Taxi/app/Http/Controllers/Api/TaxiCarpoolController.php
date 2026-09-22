@@ -24,13 +24,37 @@ class TaxiCarpoolController extends Controller
     public function getOrganizations(Request $request): JsonResponse
     {
         $type = $request->query('type');
-        $query = TaxiCommunityOrganization::where('is_active', true);
+        $query = TaxiCommunityOrganization::where('is_active', true)
+            ->withCount([
+                'routes as active_routes_count' => function ($q) {
+                    $q->where('status', 'active');
+                },
+                'requests as active_requests_count' => function ($q) {
+                    $q->where('status', 'active');
+                },
+                'verifications as verifications_count' => function ($q) {
+                    $q->where('verification_status', 'approved');
+                },
+            ]);
 
         if ($type) {
             $query->where('type', $type);
         }
 
-        $organizations = $query->orderBy('name', 'asc')->get();
+        $organizations = $query->get()->map(function ($org) {
+            $totalTrips = (int) $org->active_routes_count + (int) $org->active_requests_count;
+            $totalVerifications = (int) $org->verifications_count;
+            $activityScore = ($totalTrips * 5) + $totalVerifications;
+
+            $org->is_popular = $activityScore > 0;
+            $org->activity_score = $activityScore;
+            return $org;
+        })->sort(function ($a, $b) {
+            if ($b->activity_score !== $a->activity_score) {
+                return $b->activity_score <=> $a->activity_score;
+            }
+            return strcmp($a->name, $b->name);
+        })->values();
 
         return response()->json([
             'status' => 'success',
