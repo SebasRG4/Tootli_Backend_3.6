@@ -89,8 +89,36 @@ class TaxiCarpoolVerificationController extends Controller
 
         if ($request->status === 'approved') {
             Toastr::success('¡Credencial / Documento verificado y aprobado con éxito!');
+
+            if ($verification->user && !empty($verification->user->cm_firebase_token)) {
+                $orgName = $verification->organization?->name ?? 'tu comunidad';
+                $data = [
+                    'title' => '¡Tu acreditación Carpool fue Aprobada! 🎉',
+                    'description' => "Tu credencial para {$orgName} ha sido verificada. Ya puedes reservar y publicar viajes.",
+                    'order_id' => '',
+                    'image' => '',
+                    'type' => 'carpool_verified',
+                ];
+                try {
+                    \App\CentralLogics\Helpers::send_push_notif_to_device($verification->user->cm_firebase_token, $data);
+                } catch (\Throwable $e) {}
+            }
         } elseif ($request->status === 'rejected') {
             Toastr::warning('La verificación de la credencial ha sido rechazada.');
+
+            if ($verification->user && !empty($verification->user->cm_firebase_token)) {
+                $reason = $request->rejection_reason ? ": {$request->rejection_reason}" : '';
+                $data = [
+                    'title' => 'Actualización de verificación Carpool',
+                    'description' => "Tu credencial requiere atención{$reason}. Puedes volver a subirla en la app.",
+                    'order_id' => '',
+                    'image' => '',
+                    'type' => 'carpool_rejected',
+                ];
+                try {
+                    \App\CentralLogics\Helpers::send_push_notif_to_device($verification->user->cm_firebase_token, $data);
+                } catch (\Throwable $e) {}
+            }
         } else {
             Toastr::info('Estado de verificación actualizado a pendiente.');
         }
@@ -125,6 +153,20 @@ class TaxiCarpoolVerificationController extends Controller
             $verification->verification_status = 'approved';
             $verification->verified_at = now();
             Toastr::success('¡Auditoría de IA completada y aprobada automáticamente!');
+
+            if ($verification->user && !empty($verification->user->cm_firebase_token)) {
+                $orgName = $verification->organization?->name ?? 'tu comunidad';
+                $data = [
+                    'title' => '¡Tu acreditación Carpool fue Aprobada! 🎉',
+                    'description' => "Tu credencial para {$orgName} ha sido validada con éxito. Ya puedes reservar y publicar viajes.",
+                    'order_id' => '',
+                    'image' => '',
+                    'type' => 'carpool_verified',
+                ];
+                try {
+                    \App\CentralLogics\Helpers::send_push_notif_to_device($verification->user->cm_firebase_token, $data);
+                } catch (\Throwable $e) {}
+            }
         } else {
             Toastr::info('Auditoría ejecutada: ' . ($aiResult['notes'] ?? 'Revisar detalles'));
         }
