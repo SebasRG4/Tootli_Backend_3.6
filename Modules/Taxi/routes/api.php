@@ -76,10 +76,12 @@ Route::group(['prefix' => 'taxi'], function () {
             Route::post('routes/book', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'bookRoute']);
             Route::get('my-bookings', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'getMyBookings']);
             Route::post('bookings/{id}/cancel', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'cancelBooking']);
+            Route::post('bookings/{id}/rate', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'rateBooking']);
 
             // Creación y gestión de rutas (Tengo Auto / Ofrezco Ride)
             Route::post('routes', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'createRoute']);
             Route::get('my-published-routes', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'getMyPublishedRoutes']);
+            Route::delete('routes/{id}', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'deleteRoute']);
 
             // Creación y consulta de solicitudes (Busco Ride / Pasajero)
             Route::post('requests', [\Modules\Taxi\Http\Controllers\Api\TaxiCarpoolController::class, 'createRequest']);

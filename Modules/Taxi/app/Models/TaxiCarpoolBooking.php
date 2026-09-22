@@ -26,6 +26,9 @@ class TaxiCarpoolBooking extends Model
         'status',
         'checked_in_at',
         'payment_status',
+        'rating',
+        'rating_comment',
+        'rated_at',
     ];
 
     protected $casts = [
@@ -35,6 +38,8 @@ class TaxiCarpoolBooking extends Model
         'pickup_lng' => 'float',
         'price_paid' => 'float',
         'checked_in_at' => 'datetime',
+        'rating' => 'integer',
+        'rated_at' => 'datetime',
     ];
 
     public function route(): BelongsTo

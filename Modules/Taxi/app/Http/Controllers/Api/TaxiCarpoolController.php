@@ -879,4 +879,103 @@ class TaxiCarpoolController extends Controller
             'message' => 'Tu solicitud de aventón ha sido cancelada correctamente.',
         ]);
     }
+
+    /**
+     * Cancelar / retirar una ruta publicada por el usuario
+     */
+    public function deleteRoute(Request $request, int $id): JsonResponse
+    {
+        $user = $request->user();
+        $route = TaxiCarpoolRoute::where('id', $id)
+            ->where('user_id', $user->id)
+            ->first();
+
+        if (!$route) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Ruta no encontrada o no tienes permisos para gestionarla.',
+            ], 404);
+        }
+
+        $route->status = 'cancelled';
+        $route->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Tu ruta ha sido cancelada exitosamente.',
+        ]);
+    }
+
+    /**
+     * Calificar viaje de Carpool como pasajero (1 a 5 estrellas)
+     */
+    public function rateBooking(Request $request, int $id): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'nullable|string|max:500',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => Helpers::error_processor($validator),
+            ], 422);
+        }
+
+        $user = $request->user();
+        $booking = TaxiCarpoolBooking::with(['route.deliveryMan', 'route.user'])
+            ->where('id', $id)
+            ->where('user_id', $user->id)
+            ->first();
+
+        if (!$booking) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Reserva no encontrada.',
+            ], 404);
+        }
+
+        if ($booking->status !== 'checked_in' && $booking->status !== 'completed') {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Solo puedes calificar un viaje que ya hayas abordado.',
+            ], 400);
+        }
+
+        if ($booking->rating) {
+            return response()->json([
+                'status' => 'info',
+                'message' => 'Ya habías calificado este viaje previamente.',
+            ]);
+        }
+
+        $booking->rating = (int) $request->rating;
+        $booking->rating_comment = $request->comment;
+        $booking->rated_at = now();
+        $booking->status = 'completed';
+        $booking->save();
+
+        // Actualizar promedio de calificación del conductor si aplica
+        $driverObj = $booking->route?->deliveryMan ?? $booking->route?->user;
+        if ($driverObj && $driverObj instanceof \App\Models\DeliveryMan) {
+            $driverRouteIds = TaxiCarpoolRoute::where('delivery_man_id', $driverObj->id)->pluck('id');
+            $avgRating = TaxiCarpoolBooking::whereIn('route_id', $driverRouteIds)->whereNotNull('rating')->avg('rating');
+            $ratingCount = TaxiCarpoolBooking::whereIn('route_id', $driverRouteIds)->whereNotNull('rating')->count();
+
+            $driverObj->avg_rating = round((float) $avgRating, 1);
+            $driverObj->rating_count = $ratingCount;
+            $driverObj->save();
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => '¡Gracias por calificar a tu conductor! Tu reseña apoya a la comunidad.',
+            'data' => [
+                'booking_id' => $booking->id,
+                'rating' => $booking->rating,
+                'comment' => $booking->rating_comment,
+            ],
+        ]);
+    }
 }
