@@ -527,6 +527,28 @@
                             </ul>
                         </li>
 
+                        <!-- Tootli Protector (Disputas & Escrow) -->
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/tootli-protector*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.tootli-protector.disputes.index') }}"
+                                title="Tootli Protector (Disputas)">
+                                <i class="tio-shield-check nav-icon"></i>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate sidebar--badge-container">
+                                    Tootli Protector
+                                    @php
+                                        $openDisputesTotal = 0;
+                                        try {
+                                            $openDisputesTotal = \App\Models\TootliDispute::whereIn('status', ['open', 'under_review'])->count();
+                                        } catch (\Throwable $e) {}
+                                    @endphp
+                                    @if($openDisputesTotal > 0)
+                                        <span class="badge badge-soft-danger badge-pill ml-1 font-weight-bold">
+                                            {{ $openDisputesTotal }}
+                                        </span>
+                                    @endif
+                                </span>
+                            </a>
+                        </li>
+
                         <!-- Order refund -->
                         <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/refund/*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"

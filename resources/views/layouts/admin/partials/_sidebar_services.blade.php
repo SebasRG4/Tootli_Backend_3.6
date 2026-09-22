@@ -124,6 +124,22 @@
                         </ul>
                     </li>
 
+                    <!-- Tootli Protector (Disputas) -->
+                    <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/tootli-protector*') ? 'active' : '' }}">
+                        <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.tootli-protector.disputes.index') }}" title="Tootli Protector">
+                            <i class="tio-shield-check nav-icon"></i>
+                            <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate sidebar--badge-container">
+                                Tootli Protector
+                                @php($openDisputesCount = \App\Models\TootliDispute::whereIn('status', ['open', 'under_review'])->count())
+                                @if($openDisputesCount > 0)
+                                    <span class="badge badge-soft-danger badge-pill ml-1 font-weight-bold">
+                                        {{ $openDisputesCount }}
+                                    </span>
+                                @endif
+                            </span>
+                        </a>
+                    </li>
+
                     <!-- Providers / Aliados -->
                     <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/store*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" title="{{ 'proveedores' }}">

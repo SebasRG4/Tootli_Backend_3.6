@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('app:cart-marketing-reminders')->everyMinute();
         $schedule->command('order:check-scheduled-drivers')->everyMinute();
         $schedule->command('taxi:cancel-timeout-rides')->everyMinute();
+        $schedule->command('tootli:auto-release-escrow')->hourly();
     }
 
     /**

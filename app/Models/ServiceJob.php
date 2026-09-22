@@ -18,6 +18,7 @@ class ServiceJob extends Model
         'latitude' => 'float',
         'longitude' => 'float',
         'accepted_bid_id' => 'integer',
+        'auto_release_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
@@ -50,5 +51,10 @@ class ServiceJob extends Model
     public function disputes()
     {
         return $this->morphMany(TootliDispute::class, 'disputable');
+    }
+
+    public function review()
+    {
+        return $this->hasOne(ServiceJobReview::class, 'service_job_id');
     }
 }

@@ -50,6 +50,11 @@ class TootliDispute extends Model
         return $this->morphTo();
     }
 
+    public function resolver()
+    {
+        return $this->belongsTo(Admin::class, 'resolved_by');
+    }
+
     public function getEvidenceFullUrlsAttribute()
     {
         $urls = [];

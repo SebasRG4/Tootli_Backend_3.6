@@ -19,7 +19,12 @@ class ProtectedTransaction extends Model
         'total_amount',
         'creator_role',
         'status',
+        'auto_release_at',
         'payment_method',
+    ];
+
+    protected $casts = [
+        'auto_release_at' => 'datetime',
     ];
 
     public function buyer()

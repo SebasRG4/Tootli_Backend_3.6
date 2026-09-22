@@ -280,7 +280,7 @@ class Store extends Model
     /**
      * @var string[]
      */
-    protected $appends = ['gst_status', 'gst_code', 'logo_full_url', 'cover_photo_full_url', 'meta_image_full_url', 'tin_certificate_image_full_url', 'infrastructure_images_full_url', 'menu_images_full_url', 'event_image_full_url', 'event_card_image_full_url'];
+    protected $appends = ['gst_status', 'gst_code', 'logo_full_url', 'cover_photo_full_url', 'meta_image_full_url', 'tin_certificate_image_full_url', 'infrastructure_images_full_url', 'menu_images_full_url', 'event_image_full_url', 'event_card_image_full_url', 'trust_score'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -746,6 +746,46 @@ class Store extends Model
     public function vehicle_reviews(): HasMany
     {
         return $this->hasMany(VehicleReview::class, 'provider_id');
+    }
+
+    public function service_reviews(): HasMany
+    {
+        return $this->hasMany(ServiceJobReview::class, 'store_id');
+    }
+
+    public function getTrustScoreAttribute(): array
+    {
+        try {
+            $totalReviews = $this->service_reviews()->count();
+            $avgRating = $totalReviews > 0 ? (float)round($this->service_reviews()->avg('rating'), 1) : 5.0;
+            $positiveReviews = $this->service_reviews()->where('rating', '>=', 4)->count();
+            $disputeCount = \App\Models\TootliDispute::where('defendant_id', $this->vendor_id)
+                ->whereIn('status', ['resolved_buyer_refund', 'open'])
+                ->count();
+
+            $score = 100;
+            if ($totalReviews > 0) {
+                $positiveRatio = ($positiveReviews / $totalReviews) * 100;
+                $score = (int)round($positiveRatio);
+            }
+            if ($disputeCount > 0) {
+                $score = max(50, $score - ($disputeCount * 10));
+            }
+
+            return [
+                'score_percent' => $score,
+                'average_rating' => $avgRating,
+                'total_reviews' => $totalReviews,
+                'badge' => $score >= 95 ? 'Top Pro' : ($score >= 85 ? 'Verificado' : 'Confiable'),
+            ];
+        } catch (\Throwable $e) {
+            return [
+                'score_percent' => 100,
+                'average_rating' => 5.0,
+                'total_reviews' => 0,
+                'badge' => 'Verificado',
+            ];
+        }
     }
 
     public function reviews_comments()

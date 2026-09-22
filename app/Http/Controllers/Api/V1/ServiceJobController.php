@@ -82,7 +82,7 @@ class ServiceJobController extends Controller
             return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
         }
 
-        $jobs = ServiceJob::with(['category', 'acceptedBid.store', 'dispute'])
+        $jobs = ServiceJob::with(['category', 'acceptedBid.store', 'dispute', 'review'])
             ->where('user_id', $user->id)
             ->orderBy('id', 'desc')
             ->get();
@@ -215,6 +215,7 @@ class ServiceJobController extends Controller
                 $job->status = 'accepted';
                 $job->payment_status = 'paid';
                 $job->payment_method = 'wallet';
+                $job->auto_release_at = now()->addHours(48);
                 $job->save();
 
                 // Accept this bid, reject others
@@ -231,6 +232,7 @@ class ServiceJobController extends Controller
             $job->status = 'accepted';
             $job->payment_status = 'paid'; // Automatically paid for mock cards, in real it updates on success
             $job->payment_method = 'card';
+            $job->auto_release_at = now()->addHours(48);
             $job->save();
 
             $bid->status = 'accepted';
@@ -360,6 +362,7 @@ class ServiceJobController extends Controller
             ]);
 
             $job->status = 'disputed';
+            $job->auto_release_at = null; // Freeze auto-release timer
             $job->save();
         });
 
@@ -414,6 +417,7 @@ class ServiceJobController extends Controller
             $dispute->save();
 
             $job->status = 'accepted';
+            $job->auto_release_at = now()->addHours(48); // Restart 48h timer
             $job->save();
         });
 
@@ -529,5 +533,59 @@ class ServiceJobController extends Controller
             'dispute' => $dispute->fresh(),
             'job' => $job->fresh()->load(['category', 'acceptedBid.store', 'dispute'])
         ], 200);
+    }
+
+    /**
+     * Calificar y reseñar un trabajo de servicio concluido.
+     */
+    public function rateJob(Request $request, $job_id)
+    {
+        $user = auth('api')->user();
+        if (!$user) {
+            return response()->json(['errors' => [['code' => 'auth-001', 'message' => translate('messages.unauthorized')]]], 401);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'rating'  => 'required|integer|min:1|max:5',
+            'comment' => 'nullable|string|max:1000',
+            'tags'    => 'nullable|array',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $job = ServiceJob::with(['acceptedBid.store', 'review'])->findOrFail($job_id);
+
+        if ($job->user_id !== $user->id) {
+            return response()->json(['errors' => [['code' => 'job-003', 'message' => 'No autorizado para calificar este servicio']]], 403);
+        }
+
+        if (!in_array($job->status, ['delivered', 'completed'])) {
+            return response()->json(['errors' => [['code' => 'job-004', 'message' => 'Solo se pueden calificar servicios finalizados o entregados']]], 400);
+        }
+
+        if (!$job->acceptedBid || !$job->acceptedBid->store_id) {
+            return response()->json(['errors' => [['code' => 'job-005', 'message' => 'El servicio no tiene un prestador asignado']]], 400);
+        }
+
+        if ($job->review) {
+            return response()->json(['errors' => [['code' => 'job-006', 'message' => 'Este servicio ya ha sido calificado previamente']]], 400);
+        }
+
+        $review = \App\Models\ServiceJobReview::create([
+            'service_job_id' => $job->id,
+            'store_id'       => $job->acceptedBid->store_id,
+            'user_id'        => $user->id,
+            'rating'         => $request->rating,
+            'comment'        => $request->comment,
+            'tags'           => $request->tags ?? [],
+        ]);
+
+        return response()->json([
+            'message' => '¡Calificación registrada exitosamente!',
+            'review'  => $review,
+            'job'     => $job->fresh()->load(['category', 'acceptedBid.store', 'dispute', 'review'])
+        ], 201);
     }
 }

@@ -119,6 +119,7 @@ class ProtectedTransactionController extends Controller
 
                 $transaction->status = 'paid';
                 $transaction->payment_method = 'wallet';
+                $transaction->auto_release_at = now()->addHours(48);
                 $transaction->save();
             });
 
@@ -135,6 +136,7 @@ class ProtectedTransactionController extends Controller
             }
             $transaction->status = 'paid';
             $transaction->payment_method = $paymentMethod;
+            $transaction->auto_release_at = now()->addHours(48);
             $transaction->save();
         });
 
@@ -272,6 +274,7 @@ class ProtectedTransactionController extends Controller
             ]);
 
             $transaction->status = 'disputed';
+            $transaction->auto_release_at = null; // Freeze timer while in dispute
             $transaction->save();
         });
 
@@ -327,6 +330,7 @@ class ProtectedTransactionController extends Controller
 
             // Los fondos regresan al estado seguro en custodia para que puedan ser liberados
             $transaction->status = 'paid';
+            $transaction->auto_release_at = now()->addHours(48); // Restart 48h timer
             $transaction->save();
         });
 

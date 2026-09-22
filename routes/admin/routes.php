@@ -19,6 +19,7 @@ use App\Enums\ViewPaths\Admin\WalletBonus;
 use App\Enums\ViewPaths\Admin\Notification;
 use App\Enums\ViewPaths\Admin\CommonCondition;
 use App\Http\Controllers\Admin\VendorController;
+use App\Http\Controllers\Admin\AdminTootliProtectorController;
 use App\Http\Controllers\Admin\TootliDirectTrialController;
 use App\Http\Controllers\Admin\TootliDirectMembershipController;
 use App\Http\Controllers\Admin\Item\UnitController;
@@ -243,6 +244,16 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             // Autocomplete de tiendas para Tootli Direct (sin middleware module:subscription para permitir AJAX)
             Route::get('/subscription/tootli-direct-trials/search-stores',    [TootliDirectTrialController::class, 'searchStores'])->name('tootli-direct.search-stores');
             Route::get('/subscription/tootli-direct-memberships/search-stores', [TootliDirectMembershipController::class, 'searchStores'])->name('tootli-direct.memberships.search-stores');
+
+            // Tootli Protector — Gestión de Disputas (Servicios & Transacciones Protegidas)
+            Route::group(['prefix' => 'tootli-protector', 'as' => 'tootli-protector.'], function () {
+                Route::group(['prefix' => 'disputes', 'as' => 'disputes.'], function () {
+                    Route::get('/', [AdminTootliProtectorController::class, 'index'])->name('disputes.index');
+                    Route::get('/{id}', [AdminTootliProtectorController::class, 'show'])->name('disputes.show');
+                    Route::post('/{id}/status', [AdminTootliProtectorController::class, 'updateStatus'])->name('disputes.update-status');
+                    Route::post('/{id}/resolve', [AdminTootliProtectorController::class, 'resolve'])->name('disputes.resolve');
+                });
+            });
 
 
 
