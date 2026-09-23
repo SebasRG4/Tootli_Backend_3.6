@@ -549,6 +549,28 @@
                             </a>
                         </li>
 
+                        <!-- Tootli Wallet: Retiros SPEI -->
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/customer-withdraw*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.customer-withdraw.index') }}"
+                                title="Retiros SPEI (Clientes)">
+                                <i class="tio-bank nav-icon"></i>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate sidebar--badge-container">
+                                    Retiros SPEI
+                                    @php
+                                        $pendingWithdrawsTotal = 0;
+                                        try {
+                                            $pendingWithdrawsTotal = \App\Models\CustomerWithdrawRequest::where('status', 'pending')->count();
+                                        } catch (\Throwable $e) {}
+                                    @endphp
+                                    @if($pendingWithdrawsTotal > 0)
+                                        <span class="badge badge-warning badge-pill ml-1 font-weight-bold text-dark">
+                                            {{ $pendingWithdrawsTotal }}
+                                        </span>
+                                    @endif
+                                </span>
+                            </a>
+                        </li>
+
                         <!-- Order refund -->
                         <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/refund/*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"

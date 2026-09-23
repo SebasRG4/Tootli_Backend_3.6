@@ -34,6 +34,7 @@ class User extends Authenticatable
         'password',
         'remember_token',
         'interest',
+        'wallet_pin',
     ];
 
     /**
@@ -52,8 +53,20 @@ class User extends Authenticatable
         'ref_by' => 'integer',
         'identity_verified' => 'string',
         'metamap_verification_id' => 'string',
+        'wallet_locked_until' => 'datetime',
+        'wallet_pin_set_at' => 'datetime',
     ];
-    protected $appends = ['image_full_url'];
+    protected $appends = ['image_full_url', 'has_wallet_pin', 'is_wallet_locked'];
+
+    public function getHasWalletPinAttribute(): bool
+    {
+        return !empty($this->wallet_pin);
+    }
+
+    public function getIsWalletLockedAttribute(): bool
+    {
+        return $this->wallet_locked_until && $this->wallet_locked_until->isFuture();
+    }
     public function getImageFullUrlAttribute(){
         $value = $this->image;
         if (count($this->storage) > 0) {
@@ -93,6 +106,16 @@ class User extends Authenticatable
     public function userinfo()
     {
         return $this->hasOne(UserInfo::class,'user_id', 'id');
+    }
+
+    public function bankAccounts()
+    {
+        return $this->hasMany(CustomerBankAccount::class, 'user_id');
+    }
+
+    public function withdrawRequests()
+    {
+        return $this->hasMany(CustomerWithdrawRequest::class, 'user_id');
     }
 
     public function scopeZone($query, $zone_id=null){

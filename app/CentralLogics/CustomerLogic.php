@@ -30,7 +30,7 @@ class CustomerLogic
         $credit = 0.0;
         $admin_bonus = 0.0;
 
-        if (in_array($transaction_type, ['add_fund_by_admin', 'add_fund', 'order_refund', 'loyalty_point', 'referrer', 'CashBack', 'subscription_refund'])) {
+        if (in_array($transaction_type, ['add_fund_by_admin', 'add_fund', 'order_refund', 'loyalty_point', 'referrer', 'CashBack', 'subscription_refund', 'withdraw_rejected_refund'])) {
             $credit = $amount;
             if ($transaction_type == 'add_fund') {
                 $admin_bonus = self::calculate_wallet_bonus($amount);
@@ -46,7 +46,7 @@ class CustomerLogic
                     $credit = (int) ($amount / BusinessSetting::where('key', 'loyalty_point_exchange_rate')->first()->value);
                 }
             }
-        } else if (in_array($transaction_type, ['order_place', 'trip_booking', 'order_charge', 'debt_applied'])) {
+        } else if (in_array($transaction_type, ['order_place', 'trip_booking', 'order_charge', 'debt_applied', 'bank_withdraw'])) {
             $debit = $amount;
         } else if ($transaction_type == 'partial_payment') {
             $debit = $amount;

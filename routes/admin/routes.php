@@ -20,6 +20,7 @@ use App\Enums\ViewPaths\Admin\Notification;
 use App\Enums\ViewPaths\Admin\CommonCondition;
 use App\Http\Controllers\Admin\VendorController;
 use App\Http\Controllers\Admin\AdminTootliProtectorController;
+use App\Http\Controllers\Admin\AdminCustomerWithdrawController;
 use App\Http\Controllers\Admin\TootliDirectTrialController;
 use App\Http\Controllers\Admin\TootliDirectMembershipController;
 use App\Http\Controllers\Admin\Item\UnitController;
@@ -253,6 +254,15 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                     Route::post('/{id}/status', [AdminTootliProtectorController::class, 'updateStatus'])->name('disputes.update-status');
                     Route::post('/{id}/resolve', [AdminTootliProtectorController::class, 'resolve'])->name('disputes.resolve');
                 });
+            });
+
+            // Tootli Wallet — Retiros Bancarios SPEI para Clientes
+            Route::group(['prefix' => 'customer-withdraw', 'as' => 'customer-withdraw.'], function () {
+                Route::get('/', [AdminCustomerWithdrawController::class, 'index'])->name('index');
+                Route::get('/{id}', [AdminCustomerWithdrawController::class, 'show'])->name('show');
+                Route::post('/{id}/approve', [AdminCustomerWithdrawController::class, 'approve'])->name('approve');
+                Route::post('/{id}/mark-transferred', [AdminCustomerWithdrawController::class, 'markTransferred'])->name('mark-transferred');
+                Route::post('/{id}/reject', [AdminCustomerWithdrawController::class, 'reject'])->name('reject');
             });
 
 

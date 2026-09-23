@@ -507,6 +507,21 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
                 #handshake
                 Route::post('transfer-mart-to-drivemond', 'WalletController@transferMartToDrivemondWallet');
                 Route::post('transfer-mart-from-drivemond', 'WalletController@transferMartFromDrivemondWallet')->withoutMiddleware('auth:api');
+
+                # Customer Bank Withdrawals (SPEI)
+                Route::group(['prefix' => 'withdraw'], function () {
+                    Route::get('security-status', 'CustomerWalletWithdrawController@getSecurityStatus');
+                    Route::post('pin/setup', 'CustomerWalletWithdrawController@setupPin');
+                    Route::post('pin/change', 'CustomerWalletWithdrawController@changePin');
+
+                    Route::get('bank-accounts', 'CustomerWalletWithdrawController@getBankAccounts');
+                    Route::post('bank-accounts', 'CustomerWalletWithdrawController@addBankAccount');
+                    Route::delete('bank-accounts/{id}', 'CustomerWalletWithdrawController@deleteBankAccount');
+
+                    Route::get('requests', 'CustomerWalletWithdrawController@getWithdrawRequests');
+                    Route::post('request', 'CustomerWalletWithdrawController@requestWithdraw');
+                    Route::post('requests/{id}/cancel', 'CustomerWalletWithdrawController@cancelWithdrawRequest');
+                });
             });
 
             Route::get('visit-again', 'OrderController@order_again');
