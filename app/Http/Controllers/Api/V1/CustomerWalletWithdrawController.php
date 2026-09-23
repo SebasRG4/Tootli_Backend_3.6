@@ -60,6 +60,8 @@ class CustomerWalletWithdrawController extends Controller
         $isLocked = ($user->wallet_locked_until && $user->wallet_locked_until->isFuture());
         $lockMinutesRemaining = $isLocked ? (int) now()->diffInMinutes($user->wallet_locked_until, false) : 0;
 
+        $balances = self::calculateWalletBalances($user->id, $user->wallet_balance);
+
         return response()->json([
             'has_pin' => !empty($user->wallet_pin),
             'is_locked' => $isLocked,
@@ -74,11 +76,13 @@ class CustomerWalletWithdrawController extends Controller
                 'monthly_limit' => $limits['monthly'],
                 'daily_used' => $dailyUsed,
                 'monthly_used' => $monthlyUsed,
-                'daily_available' => max(0, $limits['daily'] - $dailyUsed),
-                'monthly_available' => max(0, $limits['monthly'] - $monthlyUsed),
+                'daily_available' => max(0, min($limits['daily'] - $dailyUsed, $balances['withdrawable_balance'])),
+                'monthly_available' => max(0, min($limits['monthly'] - $monthlyUsed, $balances['withdrawable_balance'])),
             ],
             'cooling_off_period_hours' => 24,
-            'wallet_balance' => (float) $user->wallet_balance,
+            'wallet_balance' => $balances['total_balance'],
+            'withdrawable_balance' => $balances['withdrawable_balance'],
+            'promotional_balance' => $balances['promotional_balance'],
         ], 200);
     }
 
@@ -417,6 +421,11 @@ class CustomerWalletWithdrawController extends Controller
                     throw new \Exception('INSUFFICIENT_FUNDS');
                 }
 
+                $balances = self::calculateWalletBalances($lockedUser->id, $lockedUser->wallet_balance);
+                if ($amount > $balances['withdrawable_balance']) {
+                    throw new \Exception('EXCEEDS_WITHDRAWABLE_BALANCE');
+                }
+
                 // Create ledger debit transaction
                 $reference = "Retiro SPEI a {$bankAccount->bank_name} ({$bankAccount->clabe_last4})";
                 $walletTx = CustomerLogic::create_wallet_transaction($lockedUser->id, $amount, 'bank_withdraw', $reference);
@@ -460,6 +469,15 @@ class CustomerWalletWithdrawController extends Controller
             if ($e->getMessage() === 'INSUFFICIENT_FUNDS') {
                 return response()->json([
                     'errors' => [['code' => 'insufficient-funds', 'message' => 'Saldo insuficiente en su billetera para realizar este retiro.']]
+                ], 422);
+            }
+
+            if ($e->getMessage() === 'EXCEEDS_WITHDRAWABLE_BALANCE') {
+                return response()->json([
+                    'errors' => [[
+                        'code' => 'promotional-balance-not-withdrawable',
+                        'message' => 'El monto supera su saldo retirable a cuenta bancaria. Los saldos promocionales, Cashback y bonos Tootli solo pueden ser utilizados para compras en la app o pagos con código QR en comercios.'
+                    ]]
                 ], 422);
             }
 
@@ -611,5 +629,49 @@ class CustomerWalletWithdrawController extends Controller
         }
 
         return ['success' => true, 'message' => null];
+    }
+
+    /**
+     * Calculate dual balance: Withdrawable Cash (SPEI) vs Promotional/Cashback Balance (In-App/QR)
+     *
+     * Rule: Promotional credits (CashBack, loyalty points converted, referral bonuses, admin deposit bonuses)
+     * are consumed FIRST by in-app orders, trips, and QR payments (FIFO / Priority Consumption).
+     *
+     * @param int $userId
+     * @param float $currentWalletBalance
+     * @return array{total_balance: float, withdrawable_balance: float, promotional_balance: float}
+     */
+    public static function calculateWalletBalances($userId, $currentWalletBalance): array
+    {
+        $currentWalletBalance = (float) $currentWalletBalance;
+
+        // Total promotional credits ever received
+        $promoCredits = (float) (DB::table('wallet_transactions')
+            ->where('user_id', $userId)
+            ->where(function ($q) {
+                $q->whereIn('transaction_type', ['CashBack', 'loyalty_point', 'referrer'])
+                  ->orWhere('admin_bonus', '>', 0);
+            })
+            ->selectRaw('SUM(CASE WHEN transaction_type IN ("CashBack", "loyalty_point", "referrer") THEN credit ELSE 0 END + admin_bonus) as total_promo')
+            ->value('total_promo') ?? 0.0);
+
+        // Total debits (money spent by customer in app/QR)
+        $totalDebits = (float) (DB::table('wallet_transactions')
+            ->where('user_id', $userId)
+            ->where('debit', '>', 0)
+            ->sum('debit') ?? 0.0);
+
+        // Remaining promotional balance (cannot exceed current balance)
+        $remainingPromo = max(0.0, $promoCredits - $totalDebits);
+        $promotionalBalance = min($currentWalletBalance, $remainingPromo);
+
+        // Liquid Withdrawable Balance (real fiat from sales, services, refunds)
+        $withdrawableBalance = max(0.0, $currentWalletBalance - $promotionalBalance);
+
+        return [
+            'total_balance' => $currentWalletBalance,
+            'withdrawable_balance' => round($withdrawableBalance, 2),
+            'promotional_balance' => round($promotionalBalance, 2),
+        ];
     }
 }
