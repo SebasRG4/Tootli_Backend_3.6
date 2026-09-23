@@ -233,87 +233,87 @@ class AiSearchController extends Controller
         $recommendation_ids = [];
         $is_route = $is_route_request;
 
-        // Attempt 5A: Try local/configured Python service
-        try {
-            $aiUrl = env('AI_SERVICE_URL', 'http://127.0.0.1:8000');
-            $pyResponse = \Illuminate\Support\Facades\Http::timeout(4)->post($aiUrl . '/recommend', [
-                'user_query' => $message,
-                'user_name' => $user_name,
-                'filters' => [
-                    'zone_id' => $zone_id,
-                    'detected_categories' => $detected_categories,
-                    'context' => $detected_context,
-                    'destination' => $destination,
-                    'plan_type' => $plan_type,
-                    'is_route' => $is_route_request,
-                ],
-                'candidates' => $candidates,
-                'history' => $history,
-                'user_location' => ($user_lat && $user_lng) ? ['latitude' => $user_lat, 'longitude' => $user_lng] : null,
-            ]);
+        // 5. Call AI: Direct Google Gemini 1.5 Flash API first for speed & reliability
+        $geminiKey = env('GEMINI_API_KEY') ?: env('GOOGLE_API_KEY');
+        if (!empty($geminiKey) && !empty($candidates)) {
+            try {
+                $prompt = $this->buildGeminiPrompt($user_name, $message, $candidates, $destination, $origin, $plan_type, $is_route_request, $history);
 
-            if ($pyResponse->successful()) {
-                $pyData = $pyResponse->json();
-                $ai_response_text = $pyData['responseText'] ?? null;
-                $recommendation_ids = $pyData['recommendation_ids'] ?? [];
-                if (isset($pyData['is_route'])) {
-                    $is_route = (bool) $pyData['is_route'];
-                }
-            }
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::info("Python AI microservice offline, proceeding to Direct Gemini: " . $e->getMessage());
-        }
-
-        // Attempt 5B: Direct Google Gemini 1.5 Flash API
-        if (empty($ai_response_text)) {
-            $geminiKey = env('GEMINI_API_KEY') ?: env('GOOGLE_API_KEY');
-            if (!empty($geminiKey) && !empty($candidates)) {
-                try {
-                    $prompt = $this->buildGeminiPrompt($user_name, $message, $candidates, $destination, $origin, $plan_type, $is_route_request, $history);
-
-                    $geminiResponse = \Illuminate\Support\Facades\Http::withHeaders([
-                        'Content-Type' => 'application/json',
-                    ])->timeout(12)->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$geminiKey}", [
-                        'contents' => [
-                            [
-                                'role' => 'user',
-                                'parts' => [
-                                    ['text' => $prompt]
-                                ]
+                $geminiResponse = \Illuminate\Support\Facades\Http::withHeaders([
+                    'Content-Type' => 'application/json',
+                ])->timeout(7)->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$geminiKey}", [
+                    'contents' => [
+                        [
+                            'role' => 'user',
+                            'parts' => [
+                                ['text' => $prompt]
                             ]
-                        ],
-                        'generationConfig' => [
-                            'temperature' => 0.7,
-                            'maxOutputTokens' => 1200,
                         ]
-                    ]);
+                    ],
+                    'generationConfig' => [
+                        'temperature' => 0.7,
+                        'maxOutputTokens' => 1200,
+                    ]
+                ]);
 
-                    if ($geminiResponse->successful()) {
-                        $geminiData = $geminiResponse->json();
-                        $rawText = $geminiData['candidates'][0]['content']['parts'][0]['text'] ?? '';
+                if ($geminiResponse->successful()) {
+                    $geminiData = $geminiResponse->json();
+                    $rawText = $geminiData['candidates'][0]['content']['parts'][0]['text'] ?? '';
 
-                        // Extract recommendation IDs
-                        if (preg_match('/\[RECOMENDACION_IDS:\s*([0-9,\s]*)\]/i', $rawText, $idMatches)) {
-                            if (!empty(trim($idMatches[1]))) {
-                                $parsed_ids = array_map('intval', array_filter(array_map('trim', explode(',', $idMatches[1]))));
-                                if (!empty($parsed_ids)) {
-                                    $recommendation_ids = $parsed_ids;
-                                }
+                    // Extract recommendation IDs
+                    if (preg_match('/\[RECOMENDACION_IDS:\s*([0-9,\s]*)\]/i', $rawText, $idMatches)) {
+                        if (!empty(trim($idMatches[1]))) {
+                            $parsed_ids = array_map('intval', array_filter(array_map('trim', explode(',', $idMatches[1]))));
+                            if (!empty($parsed_ids)) {
+                                $recommendation_ids = $parsed_ids;
                             }
                         }
-
-                        // Extract route flag
-                        if (preg_match('/\[ROUTE:\s*(true|false)\]/i', $rawText, $routeMatches)) {
-                            $is_route = strtolower($routeMatches[1]) === 'true';
-                        }
-
-                        $ai_response_text = trim(preg_replace('/\[(RECOMENDACION_IDS|ROUTE):[^\]]*\]/i', '', $rawText));
-                    } else {
-                        \Illuminate\Support\Facades\Log::error("Gemini Direct Error: " . $geminiResponse->body());
                     }
-                } catch (\Exception $e) {
-                    \Illuminate\Support\Facades\Log::error("Gemini Direct Exception: " . $e->getMessage());
+
+                    // Extract route flag
+                    if (preg_match('/\[ROUTE:\s*(true|false)\]/i', $rawText, $routeMatches)) {
+                        $is_route = strtolower($routeMatches[1]) === 'true';
+                    }
+
+                    $ai_response_text = trim(preg_replace('/\[(RECOMENDACION_IDS|ROUTE):[^\]]*\]/i', '', $rawText));
+                } else {
+                    \Illuminate\Support\Facades\Log::error("Gemini Direct Error: " . $geminiResponse->body());
                 }
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("Gemini Direct Exception: " . $e->getMessage());
+            }
+        }
+
+        // Attempt 5B: Secondary attempt with Python service only if enabled and Gemini was empty
+        if (empty($ai_response_text) && env('ENABLE_PYTHON_AI', false)) {
+            try {
+                $aiUrl = env('AI_SERVICE_URL', 'http://127.0.0.1:8000');
+                $pyResponse = \Illuminate\Support\Facades\Http::timeout(3)->post($aiUrl . '/recommend', [
+                    'user_query' => $message,
+                    'user_name' => $user_name,
+                    'filters' => [
+                        'zone_id' => $zone_id,
+                        'detected_categories' => $detected_categories,
+                        'context' => $detected_context,
+                        'destination' => $destination,
+                        'plan_type' => $plan_type,
+                        'is_route' => $is_route_request,
+                    ],
+                    'candidates' => $candidates,
+                    'history' => $history,
+                    'user_location' => ($user_lat && $user_lng) ? ['latitude' => $user_lat, 'longitude' => $user_lng] : null,
+                ]);
+
+                if ($pyResponse->successful()) {
+                    $pyData = $pyResponse->json();
+                    $ai_response_text = $pyData['responseText'] ?? null;
+                    $recommendation_ids = $pyData['recommendation_ids'] ?? [];
+                    if (isset($pyData['is_route'])) {
+                        $is_route = (bool) $pyData['is_route'];
+                    }
+                }
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::info("Python microservice skipped: " . $e->getMessage());
             }
         }
 
