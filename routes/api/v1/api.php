@@ -515,6 +515,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
                     Route::post('pin/change', 'CustomerWalletWithdrawController@changePin');
 
                     Route::get('bank-accounts', 'CustomerWalletWithdrawController@getBankAccounts');
+                    Route::post('bank-accounts/send-otp', 'CustomerWalletWithdrawController@sendBankAccountOtp');
                     Route::post('bank-accounts', 'CustomerWalletWithdrawController@addBankAccount');
                     Route::delete('bank-accounts/{id}', 'CustomerWalletWithdrawController@deleteBankAccount');
 

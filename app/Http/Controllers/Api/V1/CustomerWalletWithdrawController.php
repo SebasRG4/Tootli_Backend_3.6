@@ -5,14 +5,17 @@ namespace App\Http\Controllers\Api\V1;
 use App\CentralLogics\CustomerLogic;
 use App\CentralLogics\Helpers;
 use App\Http\Controllers\Controller;
+use App\Mail\CustomerWalletSecurityAlertMail;
 use App\Models\CustomerBankAccount;
 use App\Models\CustomerWithdrawRequest;
 use App\Models\User;
 use App\Services\Fintech\BanxicoClabeValidator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class CustomerWalletWithdrawController extends Controller
@@ -79,7 +82,7 @@ class CustomerWalletWithdrawController extends Controller
                 'daily_available' => max(0, min($limits['daily'] - $dailyUsed, $balances['withdrawable_balance'])),
                 'monthly_available' => max(0, min($limits['monthly'] - $monthlyUsed, $balances['withdrawable_balance'])),
             ],
-            'cooling_off_period_hours' => 24,
+            'cooling_off_period_hours' => 0,
             'wallet_balance' => $balances['total_balance'],
             'withdrawable_balance' => $balances['withdrawable_balance'],
             'promotional_balance' => $balances['promotional_balance'],
@@ -124,6 +127,18 @@ class CustomerWalletWithdrawController extends Controller
         $user->wallet_locked_until = null;
         $user->save();
 
+        $this->sendSecurityNotification(
+            $user,
+            'PIN de Seguridad Configurado',
+            'Has configurado exitosamente el PIN de 6 dígitos para proteger las operaciones de tu billetera Tootli.',
+            [
+                'Acción' => 'Configuración inicial de PIN',
+                'Fecha' => now()->format('d/m/Y H:i') . ' hrs',
+                'Dirección IP' => $request->ip() ?? 'N/A',
+            ],
+            'pin_setup'
+        );
+
         return response()->json([
             'message' => 'PIN de seguridad de Tootli Wallet configurado exitosamente.',
             'has_pin' => true,
@@ -160,6 +175,18 @@ class CustomerWalletWithdrawController extends Controller
         $user->wallet_locked_until = null;
         $user->save();
 
+        $this->sendSecurityNotification(
+            $user,
+            'PIN de Seguridad Actualizado',
+            'Tu PIN de seguridad para retiros y movimientos de billetera ha sido modificado exitosamente.',
+            [
+                'Acción' => 'Actualización de PIN',
+                'Fecha' => now()->format('d/m/Y H:i') . ' hrs',
+                'Dirección IP' => $request->ip() ?? 'N/A',
+            ],
+            'pin_changed'
+        );
+
         return response()->json([
             'message' => 'PIN de seguridad actualizado exitosamente.',
         ], 200);
@@ -180,14 +207,59 @@ class CustomerWalletWithdrawController extends Controller
     }
 
     /**
-     * Add a bank account (validated against Banxico CLABE standard)
+     * Send 6-digit OTP code to user's email for Bank Account verification
+     */
+    public function sendBankAccountOtp(Request $request)
+    {
+        $user = $request->user();
+
+        if (empty($user->email)) {
+            return response()->json([
+                'errors' => [['code' => 'email-missing', 'message' => 'Su cuenta no tiene un correo electrónico registrado para recibir el código de seguridad.']]
+            ], 422);
+        }
+
+        $otp = (string) rand(100000, 999999);
+        if (env('APP_MODE') == 'test') {
+            $otp = '123456';
+        }
+
+        Cache::put("clabe_otp_{$user->id}", [
+            'otp' => $otp,
+            'email' => $user->email,
+            'created_at' => now(),
+        ], now()->addMinutes(10));
+
+        $this->sendSecurityNotification(
+            $user,
+            'Código de Verificación Bancaria',
+            "Tu código de seguridad para vincular y activar tu cuenta bancaria en Tootli Wallet es: {$otp}. Este código expira en 10 minutos. No lo compartas con nadie.",
+            [
+                'Código OTP' => $otp,
+                'Válido por' => '10 minutos',
+                'Acción' => 'Vinculación de cuenta bancaria',
+                'Fecha' => now()->format('d/m/Y H:i') . ' hrs',
+            ],
+            'bank_account_otp'
+        );
+
+        return response()->json([
+            'message' => 'Código de verificación enviado exitosamente a ' . $user->email,
+            'email' => $user->email,
+        ], 200);
+    }
+
+    /**
+     * Add a bank account (validated with Banxico CLABE, Wallet PIN, Email OTP and Facial Selfie)
      */
     public function addBankAccount(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'clabe' => 'required|string',
+            'clabe' => 'required|digits:18',
             'account_holder' => 'required|string|min:3|max:150',
             'pin' => 'required|digits:6',
+            'email_otp' => 'required|digits:6',
+            'selfie' => 'required|image|mimes:jpeg,jpg,png|max:5120',
         ]);
 
         if ($validator->fails()) {
@@ -204,7 +276,18 @@ class CustomerWalletWithdrawController extends Controller
             ], 403);
         }
 
-        // 2. Validate CLABE format and Modulo 10 checksum
+        // 2. Validate Email OTP
+        $cachedOtpData = Cache::get("clabe_otp_{$user->id}");
+        $isTestOtp = (env('APP_MODE') == 'test' && $request->email_otp === '123456');
+
+        if (!$isTestOtp && (!$cachedOtpData || $cachedOtpData['otp'] !== $request->email_otp)) {
+            return response()->json([
+                'errors' => [['code' => 'otp-invalid', 'message' => 'El código de verificación por correo es incorrecto o ha expirado. Solicite un nuevo código.']]
+            ], 422);
+        }
+        Cache::forget("clabe_otp_{$user->id}");
+
+        // 3. Validate CLABE format and Modulo 10 checksum
         $clabe = trim($request->clabe);
         $validation = BanxicoClabeValidator::validate($clabe);
 
@@ -214,7 +297,7 @@ class CustomerWalletWithdrawController extends Controller
             ], 422);
         }
 
-        // 3. Deduplication check via HMAC-SHA256
+        // 4. Deduplication check via HMAC-SHA256
         $clabeHash = hash_hmac('sha256', $clabe, config('app.key'));
         $existing = CustomerBankAccount::where('user_id', $user->id)
             ->where('clabe_hash', $clabeHash)
@@ -227,7 +310,13 @@ class CustomerWalletWithdrawController extends Controller
             ], 422);
         }
 
-        // 4. Save account with AES-256 encryption and 24h cooling-off period
+        // 5. Store Selfie image for Biometric Facial Proof
+        $selfieImageName = null;
+        if ($request->hasFile('selfie')) {
+            $selfieImageName = Helpers::upload('customer/bank_accounts/selfies/', 'png', $request->file('selfie'));
+        }
+
+        // 6. Save account with Immediate Activation (No 24h cooling off thanks to Selfie + Email OTP)
         $bankAccount = CustomerBankAccount::create([
             'user_id' => $user->id,
             'bank_code' => $validation['bankCode'],
@@ -236,13 +325,30 @@ class CustomerWalletWithdrawController extends Controller
             'clabe_encrypted' => Crypt::encryptString($clabe),
             'clabe_last4' => substr($clabe, -4),
             'clabe_hash' => $clabeHash,
-            'cooling_off_until' => now()->addHours(24),
+            'selfie_image' => $selfieImageName,
+            'cooling_off_until' => null, // Immediate activation!
             'is_verified' => true,
+            'email_verified_at' => now(),
             'status' => 'active',
         ]);
 
+        $this->sendSecurityNotification(
+            $user,
+            'Cuenta Bancaria Activada Inmediatamente',
+            "Tu cuenta bancaria ({$validation['bankName']}) ha sido vinculada y verificada exitosamente mediante validación de correo y registro facial de identidad. Ya puedes realizar retiros inmediatos.",
+            [
+                'Banco' => $validation['bankName'],
+                'Titular' => trim($request->account_holder),
+                'Cuenta' => '•••• ' . substr($clabe, -4),
+                'Estatus' => 'Verificada y Activa para Retiros',
+                'Fecha' => now()->format('d/m/Y H:i') . ' hrs',
+                'Dirección IP' => $request->ip() ?? 'N/A',
+            ],
+            'bank_account_verified'
+        );
+
         return response()->json([
-            'message' => 'Cuenta bancaria registrada exitosamente. Por seguridad bancaria antifraude, entrará en período de protección de 24 horas antes de permitir retiros.',
+            'message' => 'Cuenta bancaria verificada y activada exitosamente. Ya puedes realizar retiros a esta cuenta de forma inmediata.',
             'bank_account' => $bankAccount,
         ], 201);
     }
@@ -318,17 +424,19 @@ class CustomerWalletWithdrawController extends Controller
 
         $user = $request->user();
         $amount = round((float) $request->amount, 2);
+        $idempotencyKey = $request->header('X-Idempotency-Key') ?? $request->idempotency_key;
 
         // 1. Idempotency Check
-        if ($request->filled('idempotency_key')) {
-            $existingRequest = CustomerWithdrawRequest::where('idempotency_key', $request->idempotency_key)
+        if (!empty($idempotencyKey)) {
+            $existingRequest = CustomerWithdrawRequest::where('idempotency_key', $idempotencyKey)
                 ->where('user_id', $user->id)
                 ->first();
 
             if ($existingRequest) {
                 return response()->json([
                     'message' => 'Solicitud de retiro procesada previamente.',
-                    'withdraw_request' => $existingRequest,
+                    'withdraw_request' => $existingRequest->load('bankAccount'),
+                    'remaining_balance' => (float) User::find($user->id)->wallet_balance,
                 ], 200);
             }
         }
@@ -412,8 +520,17 @@ class CustomerWalletWithdrawController extends Controller
         }
 
         // 6. Concurrency Protection & Atomic Balance Deduction
+        $lockKey = "withdraw_idem_{$user->id}_" . ($idempotencyKey ?: uniqid('w_', true));
+        $lock = Cache::lock($lockKey, 15);
+
+        if (!$lock->get()) {
+            return response()->json([
+                'errors' => [['code' => 'request-in-progress', 'message' => 'Hay una transacción en curso. Por favor espere unos segundos.']]
+            ], 429);
+        }
+
         try {
-            $withdrawRequest = DB::transaction(function () use ($user, $bankAccount, $amount, $request) {
+            $withdrawRequest = DB::transaction(function () use ($user, $bankAccount, $amount, $request, $idempotencyKey) {
                 // Pessimistic Lock on User Record
                 $lockedUser = User::where('id', $user->id)->lockForUpdate()->first();
 
@@ -454,10 +571,28 @@ class CustomerWalletWithdrawController extends Controller
                     'fee' => 0.00,
                     'net_amount' => $amount,
                     'status' => 'pending',
-                    'idempotency_key' => $request->idempotency_key,
+                    'idempotency_key' => $idempotencyKey,
                     'audit_metadata' => $auditData,
                 ]);
             });
+
+            // 7. Send Security Notification (Push + Email)
+            $this->sendSecurityNotification(
+                $user,
+                'Solicitud de Retiro SPEI Recibida',
+                "Se ha registrado una solicitud de retiro por $" . number_format($amount, 2) . " MXN hacia tu cuenta {$bankAccount->bank_name}.",
+                [
+                    'Monto Solicitado' => '$' . number_format($amount, 2) . ' MXN',
+                    'Banco Destino' => $bankAccount->bank_name,
+                    'Cuenta Destino' => '•••• ' . $bankAccount->clabe_last4,
+                    'Titular' => $bankAccount->account_holder,
+                    'Folio / ID' => '#' . $withdrawRequest->id,
+                    'Estatus' => 'En proceso de dispersión',
+                    'Fecha' => now()->format('d/m/Y H:i') . ' hrs',
+                    'Dirección IP' => $request->ip() ?? 'N/A',
+                ],
+                'withdraw_requested'
+            );
 
             return response()->json([
                 'message' => 'Solicitud de retiro recibida con éxito. Nuestro equipo financiero procesará su transferencia SPEI.',
@@ -481,9 +616,12 @@ class CustomerWalletWithdrawController extends Controller
                 ], 422);
             }
 
+            info("Withdraw Request Error (User {$user->id}): " . $e->getMessage());
             return response()->json([
                 'errors' => [['code' => 'system-error', 'message' => 'Ocurrió un error al procesar la solicitud de retiro. Intente más tarde.']]
             ], 500);
+        } finally {
+            $lock->release();
         }
     }
 
@@ -673,5 +811,39 @@ class CustomerWalletWithdrawController extends Controller
             'withdrawable_balance' => round($withdrawableBalance, 2),
             'promotional_balance' => round($promotionalBalance, 2),
         ];
+    }
+
+    /**
+     * Dispatch out-of-band security alerts (Push Notification & Email)
+     */
+    private function sendSecurityNotification(User $user, string $title, string $message, array $details = [], string $eventType = 'general'): void
+    {
+        // 1. Firebase Push Notification
+        try {
+            if (!empty($user->cm_firebase_token)) {
+                $pushData = [
+                    'title' => '🛡️ ' . $title,
+                    'description' => $message,
+                    'order_id' => '',
+                    'image' => '',
+                    'type' => 'wallet_security',
+                ];
+                Helpers::send_push_notif_to_device($user->cm_firebase_token, $pushData);
+            }
+        } catch (\Throwable $e) {
+            info("Wallet Security Push Error (User {$user->id}): " . $e->getMessage());
+        }
+
+        // 2. Transactional Security Email
+        try {
+            if (!empty($user->email)) {
+                $userName = $user->f_name ?? 'Usuario Tootli';
+                Mail::to($user->email)->send(
+                    new CustomerWalletSecurityAlertMail($userName, $title, $message, $details, $eventType)
+                );
+            }
+        } catch (\Throwable $e) {
+            info("Wallet Security Mail Error (User {$user->id}): " . $e->getMessage());
+        }
     }
 }

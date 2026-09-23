@@ -20,8 +20,10 @@ class CustomerBankAccount extends Model
         'clabe_encrypted',
         'clabe_last4',
         'clabe_hash',
+        'selfie_image',
         'cooling_off_until',
         'is_verified',
+        'email_verified_at',
         'status',
     ];
 
@@ -33,13 +35,26 @@ class CustomerBankAccount extends Model
     protected $casts = [
         'is_verified' => 'boolean',
         'cooling_off_until' => 'datetime',
+        'email_verified_at' => 'datetime',
     ];
 
     protected $appends = [
         'masked_clabe',
         'is_in_cooling_off',
         'cooling_off_remaining_minutes',
+        'selfie_image_full_url',
     ];
+
+    /**
+     * Get full URL for selfie image
+     */
+    public function getSelfieImageFullUrlAttribute(): ?string
+    {
+        if (empty($this->selfie_image)) {
+            return null;
+        }
+        return asset('storage/app/public/customer/bank_accounts/selfies/' . $this->selfie_image);
+    }
 
     /**
      * Get masked CLABE (e.g. •••• •••• •••• 1234)
