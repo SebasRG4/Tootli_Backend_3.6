@@ -26,6 +26,14 @@ class AiSearchController extends Controller
             'history' => 'nullable|array',
             'history.*.role' => 'required|in:user,model',
             'history.*.content' => 'required|string',
+            'destination' => 'nullable|string',
+            'destination_lat' => 'nullable|numeric',
+            'destination_lng' => 'nullable|numeric',
+            'origin' => 'nullable|string',
+            'origin_lat' => 'nullable|numeric',
+            'origin_lng' => 'nullable|numeric',
+            'plan_type' => 'nullable|string',
+            'is_route_request' => 'nullable|boolean',
         ]);
 
         if ($validator->fails()) {
@@ -33,6 +41,25 @@ class AiSearchController extends Controller
         }
 
         $message = strtolower($request->message);
+        $destination = $request->input('destination');
+        $destination_lat = $request->input('destination_lat') ? (float)$request->input('destination_lat') : null;
+        $destination_lng = $request->input('destination_lng') ? (float)$request->input('destination_lng') : null;
+        $origin = $request->input('origin');
+        $origin_lat = $request->input('origin_lat') ? (float)$request->input('origin_lat') : null;
+        $origin_lng = $request->input('origin_lng') ? (float)$request->input('origin_lng') : null;
+        $plan_type = $request->input('plan_type');
+        $is_route_request = (bool) $request->input('is_route_request', false);
+
+        if (!$is_route_request) {
+            $route_keywords = ['ruta', 'itinerario', 'tour', 'recorrido', 'visitar', 'camino a', 'voy a', 'voy para', 'lugares para ir'];
+            foreach ($route_keywords as $kw) {
+                if (str_contains($message, $kw)) {
+                    $is_route_request = true;
+                    break;
+                }
+            }
+        }
+
         $zone_id = $request->header('zoneId');
 
         // Handle Zone ID formatting (remove brackets if present)
@@ -93,23 +120,7 @@ class AiSearchController extends Controller
         if (str_contains($message, 'pareja') || str_contains($message, 'cita'))
             $detected_context[] = 'romántico';
 
-
-        // 3. Semantic Search Logic
-        $user_vector = [];
-        try {
-            // Get vector for the user's query from Python service
-            $aiUrl = env('AI_SERVICE_URL', 'http://127.0.0.1:8000');
-            $emb_response = \Illuminate\Support\Facades\Http::post($aiUrl . '/get-embedding', [
-                'text' => $message
-            ]);
-
-            if ($emb_response->successful()) {
-                $user_vector = $emb_response->json()['embedding'];
-            }
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error("Embedding API Error: " . $e->getMessage());
-        }
-
+        // 3. Store Query
         $stores_query = Store::with([
             'module',
             'activeCoupons',
@@ -120,92 +131,34 @@ class AiSearchController extends Controller
             ->whereHas('module', function ($query) {
                 $query->where('module_type', 'food');
             })
-            ->where('zone_id', $zone_id)
             ->where('exclude_from_sabores', 0)
             ->active();
 
-        if (!empty($user_vector)) {
-            // Vector Search using Cosine Similarity in MySQL (JSON approach)
-            // Note: This is computationally expensive for large datasets but fine for <10k rows.
-            // Formula: (A . B) / (|A| * |B|)
-            // Since OpenAi/Gemini vectors are normalized, |A|=1 and |B|=1, so we just need Dot Product (A . B).
-
-            $vector_str = implode(',', $user_vector);
-
-            // We join with store_embeddings and calculate dot product
-            $stores_query->join('store_embeddings', 'stores.id', '=', 'store_embeddings.store_id')
-                ->select('stores.*')
-                ->selectRaw("
-                    (
-                        SELECT SUM(JSON_EXTRACT(store_embeddings.embedding, CONCAT('$[', n.n, ']')) * JSON_EXTRACT(?, CONCAT('$[', n.n, ']')))
-                        FROM (
-                            SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 
-                            UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9
-                            -- In reality we need 0 to 767 (for Gemini embeddings). 
-                            -- MySQL JSON processing this way is SLOW and COMPLEX without a vector plugin.
-                            -- OPTIMIZATION: For this MVP, we will fetch ALL embeddings in PHP and calculate similarity there.
-                            -- It is actually faster for < 1000 stores than this complex SQL.
-                        ) n
-                    ) as similarity
-                ", ["[$vector_str]"]); // This SQL approach is too complex for standard MySQL without vector extension.
-
-            // --- PHP-SIDE VECTOR SEARCH (Better for MVP/Standard MySQL) ---
-            // 1. Fetch available store IDs in zone
-            $candidate_stores = $stores_query->get();
-            $store_ids = $candidate_stores->pluck('id')->toArray();
-
-            // 2. Fetch embeddings for these stores
-            $embeddings = \Illuminate\Support\Facades\DB::table('store_embeddings')
-                ->whereIn('store_id', $store_ids)
-                ->pluck('embedding', 'store_id');
-
-            // 3. Calculate Similarity in PHP
-            $scored_stores = [];
-            foreach ($candidate_stores as $store) {
-                if (isset($embeddings[$store->id])) {
-                    $store_vec = json_decode($embeddings[$store->id]);
-                    if (is_array($store_vec) && count($store_vec) == count($user_vector)) {
-                        $dot_product = 0;
-                        for ($i = 0; $i < count($user_vector); $i++) {
-                            $dot_product += $user_vector[$i] * $store_vec[$i];
-                        }
-                        $store->similarity = $dot_product;
-                        $scored_stores[] = $store;
-                    }
-                }
-            }
-
-            // 4. Sort by similarity
-            usort($scored_stores, function ($a, $b) {
-                return $b->similarity <=> $a->similarity;
-            });
-
-            $results = collect($scored_stores)->take(5);
-
-        } else {
-            // Fallback to old keyword search if embedding fails
-            if (!empty($detected_categories)) {
-                $stores_query->where(function ($q) use ($detected_categories) {
-                    foreach ($detected_categories as $cat) {
-                        $q->orWhere('name', 'like', "%$cat%")
-                            ->orWhere('cuisine_names', 'like', "%$cat%");
-                    }
-                });
-            } else {
-                if (strlen($message) > 3) {
-                    $stores_query->where(function ($q) use ($message) {
-                        $q->where('name', 'like', "%$message%")
-                            ->orWhere('cuisine_names', 'like', "%$message%");
-                    });
-                }
-            }
-            $results = $stores_query->take(5)->get();
+        if (!empty($zone_id)) {
+            $stores_query->where('zone_id', $zone_id);
         }
+
+        // Filter by categories or keywords if available
+        if (!empty($detected_categories)) {
+            $stores_query->where(function ($q) use ($detected_categories) {
+                foreach ($detected_categories as $cat) {
+                    $q->orWhere('name', 'like', "%$cat%")
+                        ->orWhere('cuisine_names', 'like', "%$cat%");
+                }
+            });
+        } elseif (strlen($message) > 3 && !$is_route_request) {
+            $stores_query->where(function ($q) use ($message) {
+                $q->where('name', 'like', "%$message%")
+                    ->orWhere('cuisine_names', 'like', "%$message%");
+            });
+        }
+
+        // Take candidates for AI analysis
+        $results = $stores_query->take(20)->get();
 
         $formatted_results = $results->map(function ($store) {
             $store->cover_photo_full_url = $store->cover_photo_full_url;
 
-            // Recalculate rating manually if needed or use attribute
             $ratings = is_string($store->rating) ? json_decode($store->rating, true) : $store->rating;
             $total_rating = 0;
             $total_reviews = 0;
@@ -221,29 +174,29 @@ class AiSearchController extends Controller
             return $store;
         });
 
-        // 4. Prepare Candidates for Python Service
-        // Get user location for distance calculation
-        // Headers come JSON-encoded from Flutter (e.g., "\"24.123\""), so we need json_decode
+        // 4. Prepare Candidates with Distances
         $raw_lat = $request->header('latitude');
         $raw_lng = $request->header('longitude');
-        $user_lat = $raw_lat ? (float) json_decode($raw_lat) : null;
-        $user_lng = $raw_lng ? (float) json_decode($raw_lng) : null;
+        $user_lat = $origin_lat ?? ($raw_lat ? (float) json_decode($raw_lat) : null);
+        $user_lng = $origin_lng ?? ($raw_lng ? (float) json_decode($raw_lng) : null);
 
-        \Illuminate\Support\Facades\Log::info("📍 User Location: lat=$user_lat, lng=$user_lng (raw: $raw_lat, $raw_lng)");
+        \Illuminate\Support\Facades\Log::info("📍 Location: lat=$user_lat, lng=$user_lng, dest_lat=$destination_lat, dest_lng=$destination_lng");
 
-        $candidates = $formatted_results->map(function ($store) use ($user_lat, $user_lng) {
-
-            // Merge Cuisine Names and Dineout Categories for better context
-            $categories = $store->dineoutCategories->pluck('name')->toArray();
-            $store_tags = $store->tags->pluck('tag')->toArray();
+        $candidates = $formatted_results->map(function ($store) use ($user_lat, $user_lng, $destination_lat, $destination_lng) {
+            $categories = $store->dineoutCategories ? $store->dineoutCategories->pluck('name')->toArray() : [];
+            $store_tags = $store->tags ? $store->tags->pluck('tag')->toArray() : [];
             $tags = array_merge($store->cuisine_names ?? [], $categories, $store_tags);
 
-            // Calculate distance if user location is available
             $distance_km = null;
+            $dist_to_destination_km = null;
             $store_lat = $store->latitude ? (float) $store->latitude : null;
             $store_lng = $store->longitude ? (float) $store->longitude : null;
+
             if ($user_lat && $user_lng && $store_lat && $store_lng) {
                 $distance_km = round($this->haversineDistance($user_lat, $user_lng, $store_lat, $store_lng), 1);
+            }
+            if ($destination_lat && $destination_lng && $store_lat && $store_lng) {
+                $dist_to_destination_km = round($this->haversineDistance($destination_lat, $destination_lng, $store_lat, $store_lng), 1);
             }
 
             return [
@@ -253,91 +206,206 @@ class AiSearchController extends Controller
                 'avg_price_for_two' => (float) ($store->average_ticket ?? $store->minimum_order ?? 0),
                 'description' => $store->footer_text ?? $store->meta_description ?? '',
                 'tags' => array_unique($tags),
-                'discount_info' => $store->activeCoupons->first() ? $store->activeCoupons->first()->title : null,
+                'discount_info' => $store->activeCoupons && $store->activeCoupons->first() ? $store->activeCoupons->first()->title : null,
                 'rating' => (float) $store->avg_rating,
                 'serves_alcohol' => (bool) $store->serves_alcohol,
                 'featured' => (bool) $store->featured,
                 'delivery_time' => $store->delivery_time,
-                'tipo_cocina' => count($categories) > 0 ? implode(', ', $categories) : (isset($store->cuisine_names) && count($store->cuisine_names) > 0 ? $store->cuisine_names[0] : null),
+                'tipo_cocina' => count($categories) > 0 ? implode(', ', $categories) : (isset($store->cuisine_names) && count($store->cuisine_names) > 0 ? $store->cuisine_names[0] : 'Variada'),
                 'latitude' => $store_lat,
                 'longitude' => $store_lng,
                 'distance_km' => $distance_km,
-                'items' => $store->items ? $store->items->take(15)->map(function ($item) {
+                'dist_to_destination_km' => $dist_to_destination_km,
+                'items' => $store->items ? $store->items->take(10)->map(function ($item) {
                     return [
                         'name' => $item->name,
                         'price' => (float) $item->price
                     ];
                 })->toArray() : [],
-                'coupons' => $store->activeCoupons ? $store->activeCoupons->map(function ($coupon) {
-                    return [
-                        'code' => $coupon->code,
-                        'title' => $coupon->title,
-                        'discount' => (float) $coupon->discount,
-                        'discount_type' => $coupon->discount_type,
-                        'min_purchase' => (float) $coupon->min_purchase,
-                        'max_discount' => (float) $coupon->max_discount
-                    ];
-                })->toArray() : []
             ];
         })->toArray();
 
-        // 5. Call Python AI Service
+        // 5. Call AI (FastAPI microservice or Direct Google Gemini API)
         $user_name = $request->user() ? $request->user()->f_name : "Amigo";
-        $history = $request->history ?? []; // Expecting [{'role': 'user', 'content': '...'}, ...] from frontend
+        $history = $request->history ?? [];
 
+        $ai_response_text = null;
+        $recommendation_ids = [];
+        $is_route = $is_route_request;
+
+        // Attempt 5A: Try local/configured Python service
         try {
             $aiUrl = env('AI_SERVICE_URL', 'http://127.0.0.1:8000');
-            $response = \Illuminate\Support\Facades\Http::post($aiUrl . '/recommend', [
+            $pyResponse = \Illuminate\Support\Facades\Http::timeout(4)->post($aiUrl . '/recommend', [
                 'user_query' => $message,
                 'user_name' => $user_name,
                 'filters' => [
                     'zone_id' => $zone_id,
                     'detected_categories' => $detected_categories,
-                    'context' => $detected_context
+                    'context' => $detected_context,
+                    'destination' => $destination,
+                    'plan_type' => $plan_type,
+                    'is_route' => $is_route_request,
                 ],
                 'candidates' => $candidates,
                 'history' => $history,
                 'user_location' => ($user_lat && $user_lng) ? ['latitude' => $user_lat, 'longitude' => $user_lng] : null,
             ]);
 
-            if ($response->successful()) {
-                $data = $response->json();
-                $ai_response_text = $data['responseText'];
-                $recommendation_ids = $data['recommendation_ids'] ?? [];
-                $is_route = $data['is_route'] ?? false;
-
-                // Filter and sort the formatted results to only return those recommended by the AI
-                if (!empty($recommendation_ids)) {
-                    $recommendation_ids = array_map('intval', $recommendation_ids);
-                    $formatted_results = $formatted_results->filter(function ($store) use ($recommendation_ids) {
-                        return in_array((int) $store->id, $recommendation_ids, true);
-                    })->sortBy(function ($store) use ($recommendation_ids) {
-                        return array_search((int) $store->id, $recommendation_ids, true);
-                    })->values();
-                } else {
-                    $formatted_results = collect([]);
+            if ($pyResponse->successful()) {
+                $pyData = $pyResponse->json();
+                $ai_response_text = $pyData['responseText'] ?? null;
+                $recommendation_ids = $pyData['recommendation_ids'] ?? [];
+                if (isset($pyData['is_route'])) {
+                    $is_route = (bool) $pyData['is_route'];
                 }
-
-                return response()->json([
-                    'message' => $ai_response_text,
-                    'recommendations' => $formatted_results,
-                    'recommendation_ids' => $recommendation_ids,
-                    'is_route' => (bool) $is_route
-                ]);
-            } else {
-                \Illuminate\Support\Facades\Log::error("Python Service Error: " . $response->body());
-                throw new \Exception("Python Service Failed");
             }
-
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error("AI Service Connection Error: " . $e->getMessage());
-
-            // Fallback: Return basic list without AI text
-            return response()->json([
-                'message' => "¡Hola $user_name! Aquí tienes algunas opciones que encontré.",
-                'recommendations' => $formatted_results
-            ]);
+            \Illuminate\Support\Facades\Log::info("Python AI microservice offline, proceeding to Direct Gemini: " . $e->getMessage());
         }
+
+        // Attempt 5B: Direct Google Gemini 1.5 Flash API
+        if (empty($ai_response_text)) {
+            $geminiKey = env('GEMINI_API_KEY') ?: env('GOOGLE_API_KEY');
+            if (!empty($geminiKey) && !empty($candidates)) {
+                try {
+                    $prompt = $this->buildGeminiPrompt($user_name, $message, $candidates, $destination, $origin, $plan_type, $is_route_request, $history);
+
+                    $geminiResponse = \Illuminate\Support\Facades\Http::withHeaders([
+                        'Content-Type' => 'application/json',
+                    ])->timeout(12)->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$geminiKey}", [
+                        'contents' => [
+                            [
+                                'role' => 'user',
+                                'parts' => [
+                                    ['text' => $prompt]
+                                ]
+                            ]
+                        ],
+                        'generationConfig' => [
+                            'temperature' => 0.7,
+                            'maxOutputTokens' => 1200,
+                        ]
+                    ]);
+
+                    if ($geminiResponse->successful()) {
+                        $geminiData = $geminiResponse->json();
+                        $rawText = $geminiData['candidates'][0]['content']['parts'][0]['text'] ?? '';
+
+                        // Extract recommendation IDs
+                        if (preg_match('/\[RECOMENDACION_IDS:\s*([0-9,\s]*)\]/i', $rawText, $idMatches)) {
+                            if (!empty(trim($idMatches[1]))) {
+                                $parsed_ids = array_map('intval', array_filter(array_map('trim', explode(',', $idMatches[1]))));
+                                if (!empty($parsed_ids)) {
+                                    $recommendation_ids = $parsed_ids;
+                                }
+                            }
+                        }
+
+                        // Extract route flag
+                        if (preg_match('/\[ROUTE:\s*(true|false)\]/i', $rawText, $routeMatches)) {
+                            $is_route = strtolower($routeMatches[1]) === 'true';
+                        }
+
+                        $ai_response_text = trim(preg_replace('/\[(RECOMENDACION_IDS|ROUTE):[^\]]*\]/i', '', $rawText));
+                    } else {
+                        \Illuminate\Support\Facades\Log::error("Gemini Direct Error: " . $geminiResponse->body());
+                    }
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error("Gemini Direct Exception: " . $e->getMessage());
+                }
+            }
+        }
+
+        // 6. Smart Fallback if AI APIs did not return text
+        if (empty($ai_response_text)) {
+            if ($is_route_request && count($candidates) > 0) {
+                $is_route = true;
+                $route_stores = collect($formatted_results)->take(3);
+                $recommendation_ids = $route_stores->pluck('id')->toArray();
+                $destName = $destination ?: 'tu destino';
+
+                $stopNames = $route_stores->pluck('name')->toArray();
+                $ai_response_text = "¡Hola $user_name! He diseñado para ti una ruta gastronómica hacia **$destName** con 3 paradas recomendadas:\n\n" .
+                    "📍 **Parada 1:** " . ($stopNames[0] ?? 'Lugar de inicio') . " (ideal para abrir apetito o tomar un café).\n" .
+                    "📍 **Parada 2:** " . ($stopNames[1] ?? 'Plato fuerte') . " (el plato principal con excelente sazón).\n" .
+                    "📍 **Parada 3:** " . ($stopNames[2] ?? 'Postre') . " (para cerrar con broche de oro y disfrutar el ambiente).\n\n" .
+                    "¡Puedes ver la ruta trazada en el mapa y explorar cada parada!";
+            } else {
+                $recommendation_ids = collect($formatted_results)->take(5)->pluck('id')->toArray();
+                $ai_response_text = "¡Hola $user_name! Aquí tienes excelentes recomendaciones de Sabores de la Ciudad para ti.";
+            }
+        }
+
+        // 7. Filter and sequence final stores
+        if (!empty($recommendation_ids)) {
+            $recommendation_ids = array_map('intval', $recommendation_ids);
+            $final_stores = $formatted_results->filter(function ($store) use ($recommendation_ids) {
+                return in_array((int) $store->id, $recommendation_ids, true);
+            })->sortBy(function ($store) use ($recommendation_ids) {
+                return array_search((int) $store->id, $recommendation_ids, true);
+            })->values();
+        } else {
+            $final_stores = $formatted_results->take(3)->values();
+        }
+
+        return response()->json([
+            'message' => $ai_response_text,
+            'recommendations' => $final_stores,
+            'recommendation_ids' => $recommendation_ids,
+            'is_route' => (bool) $is_route,
+            'destination' => $destination,
+            'origin' => $origin,
+            'plan_type' => $plan_type,
+        ]);
+    }
+
+    /**
+     * Build Prompt for Gemini AI
+     */
+    private function buildGeminiPrompt($userName, $userQuery, $candidates, $destination, $origin, $planType, $isRouteRequest, $history)
+    {
+        $destText = $destination ? "Destino al que irá o zona: '$destination'." : "Destino no especificado.";
+        $origText = $origin ? "Origen o partida: '$origin'." : "Origen: Ubicación actual.";
+        $planText = $planType ? "Tipo de experiencia deseada: '$planType'." : "Experiencia general.";
+
+        $candidatesJson = json_encode(array_slice($candidates, 0, 15), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+        return <<<PROMPT
+Eres Tootli IA, el concierge gastronómico inteligente, divertido y experto de Tootli en "Sabores de la Ciudad".
+
+USUARIO: {$userName}
+SOLICITUD: "{$userQuery}"
+CONTEXTO DE RUTA:
+- {$destText}
+- {$origText}
+- {$planText}
+- Es solicitud de ruta/itinerario: {$isRouteRequest}
+
+RESTAURANTES CANDIDATOS DISPONIBLES EN LA ZONA:
+{$candidatesJson}
+
+INSTRUCCIONES CLAVE:
+1. SI ES UNA RUTA O ITINERARIO (o si el usuario pide a dónde ir, visitar o comer):
+   - Diseña un recorrido secuencial de 2 a 4 lugares (máximo 4) ordenados lógicamente (ejemplo: Parada 1: Desayuno/Café/Entrada, Parada 2: Comida principal o Plato fuerte, Parada 3: Postre/Helado o Bar nocturno).
+   - Para cada parada indica con entusiasmo: el número de parada, el nombre exacto del restaurante, por qué encaja en la ruta y qué platillo o experiencia probar.
+   - Si se indicó un destino o zona, recalca que los lugares quedan ideales para su visita a dicho lugar.
+   - OBLIGATORIO: Añade al final de tu mensaje:
+     [ROUTE: true]
+     [RECOMENDACION_IDS: id1, id2, id3]
+     (Los IDs deben corresponder a los seleccionados y en el orden de la ruta).
+
+2. SI ES UNA BÚSQUEDA GENERAL (un platillo o lugar único):
+   - Recomienda de 1 a 3 lugares destacando sus virtudes, precios y platillos.
+   - Añade al final:
+     [ROUTE: false]
+     [RECOMENDACION_IDS: id1, id2]
+
+3. REGLAS ESTRICTAS:
+   - Utiliza ÚNICAMENTE restaurantes de la lista de CANDIDATOS proporcionada. No inventes IDs ni nombres.
+   - No menciones los IDs numéricos dentro del texto de la conversación, solo en el token final [RECOMENDACION_IDS: ...].
+   - Sé cálido, conciso y motivador con un tono mexicano amable y foodie.
+PROMPT;
     }
 
     /**
