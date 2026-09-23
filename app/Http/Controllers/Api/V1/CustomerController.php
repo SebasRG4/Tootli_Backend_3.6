@@ -200,7 +200,9 @@ class CustomerController extends Controller
         $data['is_valid_for_discount'] = data_get($discount_data, 'is_valid');
         $data['discount_amount'] = (float) data_get($discount_data, 'discount_amount');
         $data['discount_amount_type'] = data_get($discount_data, 'discount_amount_type');
-        $data['validity'] = (string) data_get($discount_data, 'validity');
+        $balances = CustomerWalletWithdrawController::calculateWalletBalances($request->user());
+        $data['withdrawable_balance'] = $balances['withdrawable_balance'];
+        $data['promotional_balance'] = $balances['promotional_balance'];
 
         unset($data['orders']);
         return response()->json($data, 200);
