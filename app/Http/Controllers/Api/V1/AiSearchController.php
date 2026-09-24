@@ -331,6 +331,9 @@ class AiSearchController extends Controller
                     "📍 **Parada 2:** " . ($stopNames[1] ?? 'Plato fuerte') . " (el plato principal con excelente sazón).\n" .
                     "📍 **Parada 3:** " . ($stopNames[2] ?? 'Postre') . " (para cerrar con broche de oro y disfrutar el ambiente).\n\n" .
                     "¡Puedes ver la ruta trazada en el mapa y explorar cada parada!";
+            } else if ($is_route_request && count($candidates) === 0) {
+                $destName = $destination ?: 'esta zona';
+                $ai_response_text = "¡Hola $user_name! Por el momento no encontré restaurantes o lugares registrados en $destName para armar la ruta gastronómica. Prueba seleccionando otra zona o destino.";
             } else {
                 $recommendation_ids = collect($formatted_results)->take(5)->pluck('id')->toArray();
                 $ai_response_text = "¡Hola $user_name! Aquí tienes excelentes recomendaciones de Sabores de la Ciudad para ti.";
