@@ -34,6 +34,7 @@ class AiSearchController extends Controller
             'origin_lng' => 'nullable|numeric',
             'plan_type' => 'nullable|string',
             'is_route_request' => 'nullable|boolean',
+            'radius' => 'nullable|numeric',
         ]);
 
         if ($validator->fails()) {
@@ -225,6 +226,29 @@ class AiSearchController extends Controller
             ];
         })->toArray();
 
+        // 4B. Filter and sort by 5 km radius if 'Cerca de mí' is requested
+        $radius_param = $request->input('radius') ? (float) $request->input('radius') : null;
+        $is_near_me = str_contains(strtolower($destination ?? ''), 'cerca')
+            || str_contains($message, 'cerca de mi')
+            || str_contains($message, 'cerca de mí')
+            || $radius_param !== null;
+
+        if ($is_near_me && $user_lat && $user_lng) {
+            $max_radius_km = $radius_param ?? 5.0;
+            $filtered_candidates = array_values(array_filter($candidates, function ($c) use ($max_radius_km) {
+                return $c['distance_km'] !== null && $c['distance_km'] <= $max_radius_km;
+            }));
+
+            if (!empty($filtered_candidates)) {
+                $candidates = $filtered_candidates;
+            }
+
+            // Order candidates by closest distance
+            usort($candidates, function ($a, $b) {
+                return ($a['distance_km'] ?? 999) <=> ($b['distance_km'] ?? 999);
+            });
+        }
+
         // 5. Call AI (FastAPI microservice or Direct Google Gemini API)
         $user_name = $request->user() ? $request->user()->f_name : "Amigo";
         $history = $request->history ?? [];
@@ -321,9 +345,18 @@ class AiSearchController extends Controller
         if (empty($ai_response_text)) {
             if ($is_route_request && count($candidates) > 0) {
                 $is_route = true;
-                $route_stores = collect($formatted_results)->take(3);
+                $candIds = array_column($candidates, 'id');
+                $route_stores = collect($formatted_results)->filter(function ($store) use ($candIds) {
+                    return in_array($store->id, $candIds);
+                })->sortBy(function ($store) use ($candIds) {
+                    return array_search($store->id, $candIds);
+                })->take(3)->values();
+
+                if ($route_stores->isEmpty()) {
+                    $route_stores = collect($formatted_results)->take(3);
+                }
                 $recommendation_ids = $route_stores->pluck('id')->toArray();
-                $destName = $destination ?: 'tu destino';
+                $destName = $is_near_me ? 'tu ubicación actual (radio de 5 km)' : ($destination ?: 'tu destino');
 
                 $stopNames = $route_stores->pluck('name')->toArray();
                 $ai_response_text = "¡Hola $user_name! He diseñado para ti una ruta gastronómica hacia **$destName** con 3 paradas recomendadas:\n\n" .
@@ -332,7 +365,7 @@ class AiSearchController extends Controller
                     "📍 **Parada 3:** " . ($stopNames[2] ?? 'Postre') . " (para cerrar con broche de oro y disfrutar el ambiente).\n\n" .
                     "¡Puedes ver la ruta trazada en el mapa y explorar cada parada!";
             } else if ($is_route_request && count($candidates) === 0) {
-                $destName = $destination ?: 'esta zona';
+                $destName = $is_near_me ? 'un radio de 5 km de tu ubicación' : ($destination ?: 'esta zona');
                 $ai_response_text = "¡Hola $user_name! Por el momento no encontré restaurantes o lugares registrados en $destName para armar la ruta gastronómica. Prueba seleccionando otra zona o destino.";
             } else {
                 $recommendation_ids = collect($formatted_results)->take(5)->pluck('id')->toArray();
@@ -369,6 +402,9 @@ class AiSearchController extends Controller
     private function buildGeminiPrompt($userName, $userQuery, $candidates, $destination, $origin, $planType, $isRouteRequest, $history)
     {
         $destText = $destination ? "Destino al que irá o zona: '$destination'." : "Destino no especificado.";
+        if (str_contains(strtolower($destination ?? ''), 'cerca') || str_contains(strtolower($userQuery), 'cerca')) {
+            $destText = "Destino: Cerca de la ubicación actual del usuario (radio máximo de 5 km).";
+        }
         $origText = $origin ? "Origen o partida: '$origin'." : "Origen: Ubicación actual.";
         $planText = $planType ? "Tipo de experiencia deseada: '$planType'." : "Experiencia general.";
 
