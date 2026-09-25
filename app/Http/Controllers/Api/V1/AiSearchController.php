@@ -235,13 +235,9 @@ class AiSearchController extends Controller
 
         if ($is_near_me && $user_lat && $user_lng) {
             $max_radius_km = $radius_param ?? 5.0;
-            $filtered_candidates = array_values(array_filter($candidates, function ($c) use ($max_radius_km) {
+            $candidates = array_values(array_filter($candidates, function ($c) use ($max_radius_km) {
                 return $c['distance_km'] !== null && $c['distance_km'] <= $max_radius_km;
             }));
-
-            if (!empty($filtered_candidates)) {
-                $candidates = $filtered_candidates;
-            }
 
             // Order candidates by closest distance
             usort($candidates, function ($a, $b) {
@@ -381,8 +377,17 @@ class AiSearchController extends Controller
             })->sortBy(function ($store) use ($recommendation_ids) {
                 return array_search((int) $store->id, $recommendation_ids, true);
             })->values();
+        } else if ($is_route_request && count($candidates) === 0) {
+            $final_stores = collect([]);
         } else {
             $final_stores = $formatted_results->take(3)->values();
+        }
+
+        // If it's a route request and no places were found, ensure the chat message states it clearly
+        if ($is_route_request && $final_stores->isEmpty()) {
+            $is_route = false;
+            $destName = $is_near_me ? 'un radio de 5 km de tu ubicación' : ($destination ?: 'esta zona');
+            $ai_response_text = "¡Hola $user_name! Por el momento no encontré restaurantes o lugares registrados en $destName para armar la ruta gastronómica. 🗺️🍽️\n\nPrueba seleccionando otra zona o destino con restaurantes disponibles.";
         }
 
         return response()->json([
