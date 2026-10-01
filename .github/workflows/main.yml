@@ -80,10 +80,9 @@ jobs:
           REDIS_HOST: 127.0.0.1
         run: php artisan test
 
-  # ─── 2. Despliegue Automático a VPS (Solo si QA pasó en rama main) ───
+  # ─── 2. Despliegue Automático a VPS (Al hacer push a main) ───────────
   deploy:
     name: Deploy to Production VPS
-    needs: test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
