@@ -1,4 +1,4 @@
-@extends('layouts.vendor.app')
+@extends('layouts.admin.app')
 
 @section('title', 'POS Distribuidora — ' . $store->name)
 
@@ -148,10 +148,13 @@
                 </div>
                 <span class="dp-badge">POS Distribuidora</span>
                 <div class="dp-topbar-actions">
-                    <a href="{{ route('vendor.distributor-pos.sales') }}" class="btn btn-outline-primary btn-sm">
+                    <a href="{{ route('admin.distributor-pos.select-store') }}" class="btn btn-outline-info btn-sm">
+                        <i class="tio-shop"></i> Cambiar Tienda
+                    </a>
+                    <a href="{{ route('admin.distributor-pos.sales') }}" class="btn btn-outline-primary btn-sm">
                         <i class="tio-receipt"></i> Ventas
                     </a>
-                    <a href="{{ route('vendor.distributor-pos.settings') }}" class="btn btn-outline-secondary btn-sm">
+                    <a href="{{ route('admin.distributor-pos.settings') }}" class="btn btn-outline-secondary btn-sm">
                         <i class="tio-settings"></i> Config
                     </a>
                 </div>
@@ -177,7 +180,7 @@
 
             {{-- Grid de productos --}}
             <div id="dp-products-container">
-                @include('vendor-views.distributor-pos._products_grid', ['products' => $products])
+                @include('admin-views.distributor-pos._products_grid', ['products' => $products])
             </div>
         </div>
 
@@ -221,7 +224,7 @@
 
             {{-- Carrito --}}
             <div class="dp-cart-list" id="dp-cart-container">
-                @include('vendor-views.distributor-pos._cart', ['config' => $config])
+                @include('admin-views.distributor-pos._cart', ['config' => $config])
             </div>
 
             {{-- Puntos a canjear (solo si hay cliente) --}}
@@ -287,18 +290,18 @@
 @push('script')
 <script>
 const ROUTES = {
-    products:         '{{ route("vendor.distributor-pos.products-grid") }}',
-    addToCart:        '{{ route("vendor.distributor-pos.add-to-cart") }}',
-    updateQty:        '{{ route("vendor.distributor-pos.update-quantity") }}',
-    removeItem:       '{{ route("vendor.distributor-pos.remove-from-cart") }}',
-    emptyCart:        '{{ route("vendor.distributor-pos.empty-cart") }}',
-    cartItems:        '{{ route("vendor.distributor-pos.cart-items") }}',
-    discount:         '{{ route("vendor.distributor-pos.discount") }}',
-    lookupCustomer:   '{{ route("vendor.distributor-pos.lookup-customer") }}',
-    registerCustomer: '{{ route("vendor.distributor-pos.register-customer") }}',
-    checkoutSummary:  '{{ route("vendor.distributor-pos.checkout-summary") }}',
-    placeSale:        '{{ route("vendor.distributor-pos.place-sale") }}',
-    printReceipt:     '{{ route("vendor.distributor-pos.print-receipt", ":id") }}',
+    products:         '{{ route("admin.distributor-pos.products-grid") }}',
+    addToCart:        '{{ route("admin.distributor-pos.add-to-cart") }}',
+    updateQty:        '{{ route("admin.distributor-pos.update-quantity") }}',
+    removeItem:       '{{ route("admin.distributor-pos.remove-from-cart") }}',
+    emptyCart:        '{{ route("admin.distributor-pos.empty-cart") }}',
+    cartItems:        '{{ route("admin.distributor-pos.cart-items") }}',
+    discount:         '{{ route("admin.distributor-pos.discount") }}',
+    lookupCustomer:   '{{ route("admin.distributor-pos.lookup-customer") }}',
+    registerCustomer: '{{ route("admin.distributor-pos.register-customer") }}',
+    checkoutSummary:  '{{ route("admin.distributor-pos.checkout-summary") }}',
+    placeSale:        '{{ route("admin.distributor-pos.place-sale") }}',
+    printReceipt:     '{{ route("admin.distributor-pos.print-receipt", ":id") }}',
 };
 const CSRF  = document.querySelector('meta[name="csrf-token"]').content;
 const $     = id => document.getElementById(id);

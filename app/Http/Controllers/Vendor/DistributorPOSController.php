@@ -420,6 +420,14 @@ class DistributorPOSController extends Controller
                 'status'                    => 'completed',
             ]);
 
+            // Descontar inventario
+            foreach ($itemsSnapshot as $it) {
+                $itemModel = Item::withoutGlobalScope(\App\Scopes\StoreScope::class)->find($it['id']);
+                if ($itemModel && $itemModel->stock !== null && $itemModel->stock > 0) {
+                    $itemModel->decrement('stock', min($itemModel->stock, (int)$it['quantity']));
+                }
+            }
+
             // Actualizar total_spent del cliente
             if ($customer) {
                 $customer->total_spent = round($customer->total_spent + $totalAfterPoints, 2);
@@ -488,6 +496,14 @@ class DistributorPOSController extends Controller
         $sales = $query->paginate(25)->withQueryString();
 
         return view('vendor-views.distributor-pos.sales', compact('sales', 'config', 'store'));
+    }
+
+    public function printReceipt(int $id)
+    {
+        $store  = Helpers::get_store_data();
+        $config = $this->distributorConfig();
+        $sale   = DistributorSale::where('store_id', $store->id)->with(['customer', 'store'])->findOrFail($id);
+        return view('vendor-views.distributor-pos.receipt', compact('sale', 'config'));
     }
 
     /** Detalle de un cliente + historial de puntos */

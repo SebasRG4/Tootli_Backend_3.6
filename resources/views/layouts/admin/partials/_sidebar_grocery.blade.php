@@ -78,6 +78,13 @@
                                 <span class="text-truncate">{{'Nueva venta'}}</span>
                             </a>
                         </li>
+                        <li class="navbar-vertical-aside-has-menu {{Request::is('admin/distributor-pos*') ? 'active' : ''}}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link " href="{{route('admin.distributor-pos.index')}}"
+                                title="POS Distribuidora">
+                                <i class="tio-shop-outlined nav-icon"></i>
+                                <span class="text-truncate">POS Distribuidora</span>
+                            </a>
+                        </li>
                     @endif
                     <!-- Pos -->
 

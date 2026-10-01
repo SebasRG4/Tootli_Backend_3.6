@@ -1,4 +1,4 @@
-@extends('layouts.vendor.app')
+@extends('layouts.admin.app')
 
 @section('title', 'Ventas — POS Distribuidora')
 
@@ -11,7 +11,7 @@
                     <h1 class="page-header-title">🧾 Historial de Ventas — Distribuidora</h1>
                 </div>
                 <div class="col-auto">
-                    <a href="{{ route('vendor.distributor-pos.index') }}" class="btn btn--primary">
+                    <a href="{{ route('admin.distributor-pos.index') }}" class="btn btn--primary">
                         <i class="tio-arrow-backward mr-1"></i> Volver al POS
                     </a>
                 </div>
@@ -34,7 +34,7 @@
                     </div>
                     <div class="col-sm-4">
                         <button type="submit" class="btn btn--primary btn-sm">Filtrar</button>
-                        <a href="{{ route('vendor.distributor-pos.sales') }}" class="btn btn-outline-secondary btn-sm ml-1">Limpiar</a>
+                        <a href="{{ route('admin.distributor-pos.sales') }}" class="btn btn-outline-secondary btn-sm ml-1">Limpiar</a>
                     </div>
                 </form>
             </div>
@@ -67,7 +67,7 @@
                                     <td><strong class="text-primary">{{ $sale->folio }}</strong></td>
                                     <td>
                                         @if($sale->customer)
-                                            <a href="{{ route('vendor.distributor-pos.customer-detail', $sale->customer->id) }}"
+                                            <a href="{{ route('admin.distributor-pos.customer-detail', $sale->customer->id) }}"
                                                class="text-body">
                                                 {{ $sale->customer->name }}<br>
                                                 <small class="text-muted">{{ $sale->customer->phone }}</small>
@@ -105,7 +105,7 @@
                                         </span>
                                     </td>
                                     <td class="text-center">
-                                        <a href="{{ route('vendor.distributor-pos.print-receipt', $sale->id) }}" target="_blank"
+                                        <a href="{{ route('admin.distributor-pos.print-receipt', $sale->id) }}" target="_blank"
                                            class="btn btn-outline-info btn-xs py-1 px-2" title="Imprimir Ticket">
                                             <i class="tio-print"></i>
                                         </a>

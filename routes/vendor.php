@@ -41,6 +41,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::post('checkout-summary', 'DistributorPOSController@checkoutSummary')->name('checkout-summary');
             Route::post('place-sale', 'DistributorPOSController@placeSale')->name('place-sale');
             Route::get('sales', 'DistributorPOSController@salesHistory')->name('sales');
+            Route::get('print-receipt/{id}', 'DistributorPOSController@printReceipt')->name('print-receipt');
             Route::get('customer/{id}', 'DistributorPOSController@customerDetail')->name('customer-detail');
             Route::post('adjust-points', 'DistributorPOSController@adjustPoints')->name('adjust-points');
             Route::get('search-customers', 'DistributorPOSController@searchCustomers')->name('search-customers');
