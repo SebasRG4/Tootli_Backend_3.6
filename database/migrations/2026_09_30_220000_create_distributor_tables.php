@@ -75,7 +75,8 @@ return new class extends Migration
             $table->string('description', 255)->default('');
             $table->timestamps();
 
-            $table->index(['distributor_customer_id', 'created_at']);
+            // Nombre explícito corto (MySQL límite 64 chars)
+            $table->index(['distributor_customer_id', 'created_at'], 'dist_pt_cust_date_idx');
         });
 
         // ── 4. Configuración POS distribuidora en store_configs ──────────
