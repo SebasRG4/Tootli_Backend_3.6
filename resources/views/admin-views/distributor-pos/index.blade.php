@@ -135,6 +135,29 @@
 @endphp
 
 <section class="section-content">
+    <div class="content container-fluid pt-2 pb-0">
+        {{-- Pestañas de modo POS --}}
+        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+            <ul class="nav nav-pills border-0" style="gap: 8px;">
+                <li class="nav-item">
+                    <a class="nav-link font-weight-bold" href="{{ route('admin.pos.index', $store ? ['store_id' => $store->id] : []) }}" style="border-radius: 8px; padding: 10px 22px; background: #fff; color: #1E293B; border: 1px solid #CBD5E1; transition: all 0.2s;">
+                        <i class="tio-shopping-basket-outlined mr-1"></i> POS Tradicional
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active font-weight-bold" href="{{ route('admin.distributor-pos.index', $store ? ['store_id' => $store->id] : []) }}" style="border-radius: 8px; padding: 10px 22px; background: #2563EB; color: #fff; box-shadow: 0 2px 6px rgba(37,99,235,0.25);">
+                        <i class="tio-shop-outlined mr-1 text-white"></i> POS Distribuidora (Cashback & Precios Directos)
+                    </a>
+                </li>
+            </ul>
+
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge badge-soft-primary p-2" style="font-size: 13px; font-weight: 600;">
+                    <i class="tio-category mr-1"></i> Módulo: {{ Config::get('module.current_module_name') ?? 'Supermercado' }}
+                </span>
+            </div>
+        </div>
+    </div>
     <div class="dp-shell">
 
         {{-- ────────────────── LEFT: productos ──────────────────── --}}

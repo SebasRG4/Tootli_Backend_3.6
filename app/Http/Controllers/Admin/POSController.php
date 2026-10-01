@@ -31,6 +31,10 @@ class POSController extends Controller
     use PlaceNewOrder;
     public function index(Request $request)
     {
+        if ($request->query('mode') === 'distributor') {
+            return redirect()->route('admin.distributor-pos.index', $request->query());
+        }
+
         $time = Carbon::now()->toTimeString();
         $category = $request->query('category_id', 0);
         $module_id = Config::get('module.current_module_id');
