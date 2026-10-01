@@ -26,6 +26,28 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
         Route::get('site_direction', 'BusinessSettingsController@site_direction_vendor')->name('site_direction');
 
 
+        // ── POS Distribuidora (sistema independiente con puntos por teléfono) ──
+        Route::group(['prefix' => 'distributor-pos', 'as' => 'distributor-pos.'], function () {
+            Route::get('/', 'DistributorPOSController@index')->name('index');
+            Route::get('products-grid', 'DistributorPOSController@productsGrid')->name('products-grid');
+            Route::post('add-to-cart', 'DistributorPOSController@addToCart')->name('add-to-cart');
+            Route::post('update-quantity', 'DistributorPOSController@updateQuantity')->name('update-quantity');
+            Route::post('remove-from-cart', 'DistributorPOSController@removeFromCart')->name('remove-from-cart');
+            Route::post('empty-cart', 'DistributorPOSController@emptyCart')->name('empty-cart');
+            Route::post('cart-items', 'DistributorPOSController@cartItems')->name('cart-items');
+            Route::post('discount', 'DistributorPOSController@updateDiscount')->name('discount');
+            Route::post('lookup-customer', 'DistributorPOSController@lookupCustomer')->name('lookup-customer');
+            Route::post('register-customer', 'DistributorPOSController@registerCustomer')->name('register-customer');
+            Route::post('checkout-summary', 'DistributorPOSController@checkoutSummary')->name('checkout-summary');
+            Route::post('place-sale', 'DistributorPOSController@placeSale')->name('place-sale');
+            Route::get('sales', 'DistributorPOSController@salesHistory')->name('sales');
+            Route::get('customer/{id}', 'DistributorPOSController@customerDetail')->name('customer-detail');
+            Route::post('adjust-points', 'DistributorPOSController@adjustPoints')->name('adjust-points');
+            Route::get('search-customers', 'DistributorPOSController@searchCustomers')->name('search-customers');
+            Route::get('settings', 'DistributorPOSController@settings')->name('settings');
+            Route::post('settings', 'DistributorPOSController@saveSettings')->name('settings.save');
+        });
+
         Route::group(['prefix' => 'pos', 'as' => 'pos.'], function () {
             Route::post('variant_price', 'POSController@variant_price')->name('variant_price');
             Route::group(['middleware' => ['module:pos','subscription:pos' ]], function () {
