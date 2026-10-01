@@ -27,14 +27,50 @@ class DistributorPOSController extends Controller
     // HELPERS INTERNOS
     // ─────────────────────────────────────────────────────────────────────
 
-    /** Obtiene la tienda por store_id del request (admin siempre lo pasa). */
+    /** Obtiene la tienda única de Grocery o por store_id si se especifica. */
     protected function getStore(Request $request): ?Store
     {
         $storeId = $request->input('store_id') ?? session('dist_store_id');
-        if (!$storeId) return null;
-        return Store::withoutGlobalScope(\App\Scopes\StoreScope::class)
+        if ($storeId) {
+            $store = Store::withoutGlobalScope(StoreScope::class)
+                ->with('store_sub')
+                ->find($storeId);
+            if ($store) {
+                session(['dist_store_id' => $store->id]);
+                return $store;
+            }
+        }
+
+        // Buscar automáticamente la tienda única del módulo grocery
+        $groceryStore = Store::withoutGlobalScope(StoreScope::class)
+            ->whereHas('module', fn ($q) => $q->where('module_type', 'grocery'))
             ->with('store_sub')
-            ->find($storeId);
+            ->first();
+
+        if ($groceryStore) {
+            session(['dist_store_id' => $groceryStore->id]);
+            return $groceryStore;
+        }
+
+        // Si el módulo actual en sesión es de tipo grocery o tiene módulo activo
+        $currentModuleId = Config::get('module.current_module_id');
+        if ($currentModuleId) {
+            $store = Store::withoutGlobalScope(StoreScope::class)
+                ->where('module_id', $currentModuleId)
+                ->with('store_sub')
+                ->first();
+            if ($store) {
+                session(['dist_store_id' => $store->id]);
+                return $store;
+            }
+        }
+
+        // Fallback: primera tienda activa
+        $fallback = Store::withoutGlobalScope(StoreScope::class)->active()->with('store_sub')->first();
+        if ($fallback) {
+            session(['dist_store_id' => $fallback->id]);
+        }
+        return $fallback;
     }
 
     /** Configuración de la distribuidora para una tienda. */
@@ -60,11 +96,10 @@ class DistributorPOSController extends Controller
     {
         $store = $this->getStore($request);
         if (!$store) {
-            Toastr::error('Selecciona una tienda para continuar.');
-            return redirect()->route('admin.distributor-pos.select-store');
+            Toastr::error('No se encontró una tienda de Grocery activa.');
+            return redirect()->route('admin.dashboard');
         }
 
-        // Guardar store_id en sesión para las rutas AJAX que no lo reciben
         session(['dist_store_id' => $store->id]);
 
         $config     = $this->getConfig($store->id);
@@ -72,11 +107,16 @@ class DistributorPOSController extends Controller
         $keyword    = $request->input('keyword', '');
         $moduleId   = $store->module_id;
 
-        $categories = Category::active()->module($moduleId)->get();
+        $categories = Category::active()->when($moduleId, fn ($q) => $q->module($moduleId))->get();
 
         $products = Item::withoutGlobalScope(StoreScope::class)
             ->active()
-            ->whereHas('store', fn ($q) => $q->where('id', $store->id))
+            ->where(function ($q) use ($store) {
+                $q->where('store_id', $store->id);
+                if ($store->module_id) {
+                    $q->orWhere('module_id', $store->module_id);
+                }
+            })
             ->when($category, fn ($q) => $q->whereHas('category', fn ($sq) =>
                 $sq->where('id', $category)->orWhere('parent_id', $category)
             ))
@@ -118,7 +158,12 @@ class DistributorPOSController extends Controller
 
         $products = Item::withoutGlobalScope(StoreScope::class)
             ->active()
-            ->whereHas('store', fn ($q) => $q->where('id', $store->id))
+            ->where(function ($q) use ($store) {
+                $q->where('store_id', $store->id);
+                if ($store->module_id) {
+                    $q->orWhere('module_id', $store->module_id);
+                }
+            })
             ->when($category, fn ($q) => $q->whereHas('category', fn ($sq) =>
                 $sq->where('id', $category)->orWhere('parent_id', $category)
             ))
@@ -465,11 +510,11 @@ class DistributorPOSController extends Controller
 
     public function salesHistory(Request $request)
     {
-        $storeId = session('dist_store_id') ?? $request->input('store_id');
-        $store   = Store::withoutGlobalScope(StoreScope::class)->find($storeId);
+        $store   = $this->getStore($request);
+        $storeId = $store?->id;
         $config  = $storeId ? $this->getConfig($storeId) : new StoreConfig();
 
-        $query = DistributorSale::where('store_id', $storeId)->with('customer')->latest();
+        $query = DistributorSale::when($storeId, fn ($q) => $q->where('store_id', $storeId))->with('customer')->latest();
         if ($request->filled('date'))  $query->whereDate('created_at', $request->date);
         if ($request->filled('folio')) $query->where('folio', 'like', '%' . $request->folio . '%');
 
@@ -527,9 +572,9 @@ class DistributorPOSController extends Controller
 
     public function settings(Request $request)
     {
-        $storeId = session('dist_store_id') ?? $request->input('store_id');
+        $store   = $this->getStore($request);
+        $storeId = $store?->id;
         $config  = $storeId ? $this->getConfig($storeId) : new StoreConfig();
-        $store   = $storeId ? Store::withoutGlobalScope(StoreScope::class)->find($storeId) : null;
         return view('admin-views.distributor-pos.settings', compact('config', 'store'));
     }
 
@@ -545,8 +590,9 @@ class DistributorPOSController extends Controller
             Toastr::error($validator->errors()->first());
             return back()->withInput();
         }
-        $storeId = session('dist_store_id') ?? $request->input('store_id');
-        if (!$storeId) { Toastr::error('Sin tienda activa.'); return back(); }
+        $store   = $this->getStore($request);
+        $storeId = $store?->id;
+        if (!$storeId) { Toastr::error('Sin tienda de Grocery activa.'); return back(); }
 
         $config = $this->getConfig($storeId);
         $config->update([
@@ -557,7 +603,6 @@ class DistributorPOSController extends Controller
             'distributor_max_redemption_pct'  => $request->distributor_max_redemption_pct,
         ]);
         Toastr::success('Configuración actualizada.');
-        return back();
     }
 
     public function searchCustomers(Request $request): JsonResponse
