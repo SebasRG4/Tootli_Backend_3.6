@@ -10,7 +10,6 @@ use App\Models\DistributorSale;
 use App\Models\DistributorPointTransaction;
 use App\Models\Item;
 use App\Models\StoreConfig;
-use App\Traits\PlaceNewOrder;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -21,7 +20,6 @@ use Illuminate\Support\Facades\Validator;
 
 class DistributorPOSController extends Controller
 {
-    use PlaceNewOrder;
 
     // ─────────────────────────────────────────────────────────────────────
     // HELPERS INTERNOS
