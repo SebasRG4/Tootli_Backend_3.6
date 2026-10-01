@@ -32,22 +32,23 @@ class SaboresCiudadController extends Controller
             return response()->json(['errors' => [['code' => 'zoneId', 'message' => translate('messages.zone_id_required')]]], 403);
         }
 
-        // Parse zone_id - manually since Helpers::get_zone_id doesn't exist
+        // Parse zone_id - it can come as "[1, 2]" or "[2]" or "2"
         $zone_id_raw = $request->header('zoneId');
+        $zone_ids = [];
         if (is_string($zone_id_raw) && str_starts_with($zone_id_raw, '[')) {
             $zone_array = json_decode($zone_id_raw, true);
-            $zone_id = is_array($zone_array) && !empty($zone_array) ? $zone_array[0] : $zone_id_raw;
-        } else {
-            $zone_id = $zone_id_raw;
+            $zone_ids = is_array($zone_array) && !empty($zone_array) ? $zone_array : [];
+        } elseif ($zone_id_raw) {
+            $zone_ids = [$zone_id_raw];
         }
 
         // 1. Fetch Coupons for Food Module
         $coupons = Coupon::with('store')
-            ->where(function ($parentQuery) use ($zone_id) {
-                $parentQuery->where(function ($q) use ($zone_id) {
+            ->where(function ($parentQuery) use ($zone_ids) {
+                $parentQuery->where(function ($q) use ($zone_ids) {
                     // Option A: Coupon linked to a Store
-                    $q->whereHas('store', function ($query) use ($zone_id) {
-                        $query->where('zone_id', $zone_id)
+                    $q->whereHas('store', function ($query) use ($zone_ids) {
+                        $query->whereIn('zone_id', $zone_ids)
                             ->active()
                             ->whereHas('module', function ($m) {
                                 $m->where('module_type', 'food');
@@ -85,13 +86,14 @@ class SaboresCiudadController extends Controller
             return response()->json(['errors' => [['code' => 'zoneId', 'message' => translate('messages.zone_id_required')]]], 403);
         }
 
-        // Parse zone_id
+        // Parse zone_id - it can come as "[1, 2]" or "[2]" or "2"
         $zone_id_raw = $request->header('zoneId');
+        $zone_ids = [];
         if (is_string($zone_id_raw) && str_starts_with($zone_id_raw, '[')) {
             $zone_array = json_decode($zone_id_raw, true);
-            $zone_id = is_array($zone_array) && !empty($zone_array) ? $zone_array[0] : $zone_id_raw;
-        } else {
-            $zone_id = $zone_id_raw;
+            $zone_ids = is_array($zone_array) && !empty($zone_array) ? $zone_array : [];
+        } elseif ($zone_id_raw) {
+            $zone_ids = [$zone_id_raw];
         }
         // Parse Viewport
         $min_lat = $request->query('min_lat');
@@ -111,14 +113,18 @@ class SaboresCiudadController extends Controller
         $collections = [];
 
         // Helper to apply filter (Zone OR Viewport)
-        $applyFilter = function ($query) use ($zone_id, $has_viewport, $min_lat, $max_lat, $min_lng, $max_lng) {
+        $applyFilter = function ($query) use ($zone_ids, $has_viewport, $min_lat, $max_lat, $min_lng, $max_lng) {
             if ($has_viewport) {
+                $actual_min_lat = min($min_lat, $max_lat);
+                $actual_max_lat = max($min_lat, $max_lat);
+                $actual_min_lng = min($min_lng, $max_lng);
+                $actual_max_lng = max($min_lng, $max_lng);
                 // Viewport Filter (Ignores Zone)
-                return $query->whereRaw("latitude BETWEEN $min_lat AND $max_lat")
-                    ->whereRaw("longitude BETWEEN $min_lng AND $max_lng");
+                return $query->whereRaw("CAST(latitude AS DECIMAL(10,7)) BETWEEN $actual_min_lat AND $actual_max_lat")
+                    ->whereRaw("CAST(longitude AS DECIMAL(10,7)) BETWEEN $actual_min_lng AND $actual_max_lng");
             } else {
-                // Zone Filter (Legacy)
-                return $query->where('zone_id', $zone_id);
+                // Zone Filter
+                return $query->whereIn('zone_id', $zone_ids);
             }
         };
 
@@ -296,14 +302,14 @@ class SaboresCiudadController extends Controller
             return response()->json(['errors' => $errors], 403);
         }
 
-        // Parse zone_id - it comes as "[2]" from the app, extract the number
+        // Parse zone_id - it can come as "[1, 2]" or "[2]" or "2"
         $zone_id_raw = $request->header('zoneId');
+        $zone_ids = [];
         if (is_string($zone_id_raw) && str_starts_with($zone_id_raw, '[')) {
-            // Remove brackets and parse as array
             $zone_array = json_decode($zone_id_raw, true);
-            $zone_id = is_array($zone_array) && !empty($zone_array) ? $zone_array[0] : $zone_id_raw;
-        } else {
-            $zone_id = $zone_id_raw;
+            $zone_ids = is_array($zone_array) && !empty($zone_array) ? $zone_array : [];
+        } elseif ($zone_id_raw) {
+            $zone_ids = [$zone_id_raw];
         }
 
         $category_id = $request->query('category_id');
@@ -319,7 +325,7 @@ class SaboresCiudadController extends Controller
 
         \Log::info('🔍 Sabores API - getStoresForMap called', [
             'zone_id_raw' => $zone_id_raw,
-            'zone_id_parsed' => $zone_id,
+            'zone_ids' => $zone_ids,
             'category_id' => $category_id,
             'dineout_category_ids' => $dineout_category_ids,
             'min_rating' => $min_rating,
@@ -343,17 +349,16 @@ class SaboresCiudadController extends Controller
             })
             // If viewport is provided, filter by coordinates. Otherwise, filter by zone.
             ->when($min_lat && $max_lat && $min_lng && $max_lng, function ($query) use ($min_lat, $max_lat, $min_lng, $max_lng) {
-                // Cast to float for security and to fix DB binding issues with VARCHAR columns
-                $min_lat = (float) $min_lat;
-                $max_lat = (float) $max_lat;
-                $min_lng = (float) $min_lng;
-                $max_lng = (float) $max_lng;
+                $actual_min_lat = min((float)$min_lat, (float)$max_lat);
+                $actual_max_lat = max((float)$min_lat, (float)$max_lat);
+                $actual_min_lng = min((float)$min_lng, (float)$max_lng);
+                $actual_max_lng = max((float)$min_lng, (float)$max_lng);
 
-                return $query->whereRaw("latitude BETWEEN $min_lat AND $max_lat")
-                    ->whereRaw("longitude BETWEEN $min_lng AND $max_lng")
+                return $query->whereRaw("CAST(latitude AS DECIMAL(10,7)) BETWEEN $actual_min_lat AND $actual_max_lat")
+                    ->whereRaw("CAST(longitude AS DECIMAL(10,7)) BETWEEN $actual_min_lng AND $actual_max_lng")
                     ->limit(50);
-            }, function ($query) use ($zone_id) {
-                return $query->where('zone_id', $zone_id); // Fallback to zone if no viewport
+            }, function ($query) use ($zone_ids) {
+                return $query->whereIn('zone_id', $zone_ids); // Fallback to zones if no viewport
             })
             ->active()
             ->when($category_id, function ($query) use ($category_id) {
@@ -381,8 +386,8 @@ class SaboresCiudadController extends Controller
             ->when($search, function ($query) use ($search) {
                 return $query->where('name', 'like', '%' . $search . '%');
             })
-            ->select('id', 'name', 'address', 'latitude', 'longitude', 'cover_photo', 'average_ticket', 'rating', 'delivery_time', 'google_address', 'google_place_id', 'serves_alcohol', 'cuisine_names', 'sabores_map_emoji', 'infrastructure_images', 'menu_images', 'accepts_reservations', 'featured', 'zone_id', 'module_id', 'exclude_from_sabores', 'event_title', 'event_image', 'event_card_image', 'event_date', 'tootli_lana', 'is_directory_only', 'directory_description')
-            ->with('activeCoupons')
+            ->select('id', 'name', 'address', 'latitude', 'longitude', 'cover_photo', 'average_ticket', 'rating', 'delivery_time', 'google_address', 'google_place_id', 'serves_alcohol', 'cuisine_names', 'sabores_map_emoji', 'infrastructure_images', 'menu_images', 'accepts_reservations', 'featured', 'zone_id', 'module_id', 'exclude_from_sabores', 'event_title', 'event_image', 'event_card_image', 'event_date', 'tootli_lana', 'is_directory_only', 'directory_description', 'active')
+            ->with(['activeCoupons', 'schedules'])
             ->withCount(['wishlists', 'userListStores', 'eventInterests'])
             ->get();
 
