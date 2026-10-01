@@ -81,11 +81,11 @@ return new class extends Migration
 
         // ── 4. Configuración POS distribuidora en store_configs ──────────
         Schema::table('store_configs', function (Blueprint $table) {
-            $table->boolean('distributor_pos_enabled')->default(false)->after('is_iconic');
-            $table->decimal('distributor_cashback_rate', 5, 2)->default(0)->after('distributor_pos_enabled');    // % del total → puntos
-            $table->decimal('distributor_point_value', 8, 4)->default(1.0)->after('distributor_cashback_rate'); // $ por punto al canjear
-            $table->decimal('distributor_min_redemption', 10, 2)->default(10)->after('distributor_point_value');
-            $table->decimal('distributor_max_redemption_pct', 5, 2)->default(50)->after('distributor_min_redemption'); // % máx del total pagable con puntos
+            $table->boolean('distributor_pos_enabled')->default(false);
+            $table->decimal('distributor_cashback_rate', 5, 2)->default(0);    // % del total → puntos
+            $table->decimal('distributor_point_value', 8, 4)->default(1.0);     // $ por punto al canjear
+            $table->decimal('distributor_min_redemption', 10, 2)->default(10);
+            $table->decimal('distributor_max_redemption_pct', 5, 2)->default(50); // % máx del total pagable con puntos
         });
     }
 
