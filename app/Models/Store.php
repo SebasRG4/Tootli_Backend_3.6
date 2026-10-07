@@ -851,11 +851,11 @@ class Store extends Model
     public function getRatingAttribute($value): array
     {
         $ratings = $value ? json_decode($value, true) : [];
-        $rating5 = $ratings ? $ratings[5] : 0;
-        $rating4 = $ratings ? $ratings[4] : 0;
-        $rating3 = $ratings ? $ratings[3] : 0;
-        $rating2 = $ratings ? $ratings[2] : 0;
-        $rating1 = $ratings ? $ratings[1] : 0;
+        $rating5 = $ratings ? ($ratings[5] ?? $ratings['5'] ?? 0) : 0;
+        $rating4 = $ratings ? ($ratings[4] ?? $ratings['4'] ?? 0) : 0;
+        $rating3 = $ratings ? ($ratings[3] ?? $ratings['3'] ?? 0) : 0;
+        $rating2 = $ratings ? ($ratings[2] ?? $ratings['2'] ?? 0) : 0;
+        $rating1 = $ratings ? ($ratings[1] ?? $ratings['1'] ?? 0) : 0;
         return [$rating5, $rating4, $rating3, $rating2, $rating1];
     }
 

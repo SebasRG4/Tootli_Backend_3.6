@@ -28,10 +28,6 @@ class SaboresCiudadController extends Controller
      */
     public function getGlobalCoupons(Request $request)
     {
-        if (!$request->hasHeader('zoneId')) {
-            return response()->json(['errors' => [['code' => 'zoneId', 'message' => translate('messages.zone_id_required')]]], 403);
-        }
-
         // Parse zone_id - it can come as "[1, 2]" or "[2]" or "2"
         $zone_id_raw = $request->header('zoneId');
         $zone_ids = [];
@@ -40,6 +36,10 @@ class SaboresCiudadController extends Controller
             $zone_ids = is_array($zone_array) && !empty($zone_array) ? $zone_array : [];
         } elseif ($zone_id_raw) {
             $zone_ids = [$zone_id_raw];
+        }
+
+        if (empty($zone_ids)) {
+            $zone_ids = \App\Models\Zone::where('status', 1)->pluck('id')->toArray();
         }
 
         // 1. Fetch Coupons for Food Module
@@ -82,10 +82,6 @@ class SaboresCiudadController extends Controller
      */
     public function getSpecializedCampaigns(Request $request)
     {
-        if (!$request->hasHeader('zoneId')) {
-            return response()->json(['errors' => [['code' => 'zoneId', 'message' => translate('messages.zone_id_required')]]], 403);
-        }
-
         // Parse zone_id - it can come as "[1, 2]" or "[2]" or "2"
         $zone_id_raw = $request->header('zoneId');
         $zone_ids = [];
@@ -94,6 +90,10 @@ class SaboresCiudadController extends Controller
             $zone_ids = is_array($zone_array) && !empty($zone_array) ? $zone_array : [];
         } elseif ($zone_id_raw) {
             $zone_ids = [$zone_id_raw];
+        }
+
+        if (empty($zone_ids)) {
+            $zone_ids = \App\Models\Zone::where('status', 1)->pluck('id')->toArray();
         }
         // Parse Viewport
         $min_lat = $request->query('min_lat');
@@ -296,12 +296,6 @@ class SaboresCiudadController extends Controller
      */
     public function getStoresForMap(Request $request)
     {
-        if (!$request->hasHeader('zoneId')) {
-            $errors = [];
-            array_push($errors, ['code' => 'zoneId', 'message' => translate('messages.zone_id_required')]);
-            return response()->json(['errors' => $errors], 403);
-        }
-
         // Parse zone_id - it can come as "[1, 2]" or "[2]" or "2"
         $zone_id_raw = $request->header('zoneId');
         $zone_ids = [];
@@ -310,6 +304,10 @@ class SaboresCiudadController extends Controller
             $zone_ids = is_array($zone_array) && !empty($zone_array) ? $zone_array : [];
         } elseif ($zone_id_raw) {
             $zone_ids = [$zone_id_raw];
+        }
+
+        if (empty($zone_ids)) {
+            $zone_ids = \App\Models\Zone::where('status', 1)->pluck('id')->toArray();
         }
 
         $category_id = $request->query('category_id');
@@ -1160,23 +1158,32 @@ class SaboresCiudadController extends Controller
 
         $review->save();
 
-        // Update Store Rating
-        $store_rating = Review::where('store_id', $store->id)->avg('rating');
-        $store->rating = [
-            'rating' => number_format($store_rating, 1, '.', ''),
-            'total' => Review::where('store_id', $store->id)->count()
-            // Note: The existing 'rating' column structure in stores table is complex JSON '{"1":count, "2":count...}'.
-            // Updating that correctly requires recounting all ratings by stars.
-        ];
-        // Re-calculating the complex JSON structure for store rating
+        // Recalculate Store Ratings and Counters
+        $queryBase = Review::where(function ($q) use ($store) {
+            $q->where('store_id', $store->id)
+              ->orWhereHas('item', function ($iq) use ($store) {
+                  $iq->where('store_id', $store->id);
+              });
+        })->active();
+
+        $c1 = (clone $queryBase)->where('rating', 1)->count();
+        $c2 = (clone $queryBase)->where('rating', 2)->count();
+        $c3 = (clone $queryBase)->where('rating', 3)->count();
+        $c4 = (clone $queryBase)->where('rating', 4)->count();
+        $c5 = (clone $queryBase)->where('rating', 5)->count();
+
+        $totalReviews = $c1 + $c2 + $c3 + $c4 + $c5;
+
         $ratings = [
-            '1' => Review::where('store_id', $store->id)->where('rating', 1)->count(),
-            '2' => Review::where('store_id', $store->id)->where('rating', 2)->count(),
-            '3' => Review::where('store_id', $store->id)->where('rating', 3)->count(),
-            '4' => Review::where('store_id', $store->id)->where('rating', 4)->count(),
-            '5' => Review::where('store_id', $store->id)->where('rating', 5)->count(),
+            1 => $c1,
+            2 => $c2,
+            3 => $c3,
+            4 => $c4,
+            5 => $c5,
         ];
-        $store->rating = $ratings;
+        $store->rating = json_encode($ratings);
+        $store->rating_count = $totalReviews;
+        $store->reviews_comments_count = $totalReviews;
         $store->save();
 
 
