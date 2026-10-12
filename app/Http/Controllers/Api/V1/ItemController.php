@@ -549,29 +549,32 @@ class ItemController extends Controller
     public function get_product($id)
     {
         try {
-
-            $item = Item::withCount('whislists')->with(['tags', 'nutritions', 'allergies', 'reviews', 'reviews.customer'])->active()->visibleInCustomerApp()
-                ->when(config('module.current_module_data'), function ($query) {
-                    $query->module(config('module.current_module_data')['id']);
-                })
-                ->when(is_numeric($id), function ($qurey) use ($id) {
-                    $qurey->where('id', $id);
-                })
-                ->when(!is_numeric($id), function ($qurey) use ($id) {
-                    $qurey->where('slug', $id);
-                })
-                ->first();
-
-            // Fallback: si no se encontró en el módulo del header (ej. búsqueda global, Algolia cross-module o deep-link)
-            if (!$item) {
-                $item = Item::withCount('whislists')->with(['tags', 'nutritions', 'allergies', 'reviews', 'reviews.customer'])->active()->visibleInCustomerApp()
+            $baseQuery = function () use ($id) {
+                return Item::withCount('whislists')
+                    ->with(['tags', 'nutritions', 'allergies', 'reviews', 'reviews.customer'])
+                    ->where('status', 1)
+                    ->where('is_approved', 1)
+                    ->whereHas('store', function ($query) {
+                        $query->where('status', 1);
+                    })
+                    ->visibleInCustomerApp()
                     ->when(is_numeric($id), function ($qurey) use ($id) {
                         $qurey->where('id', $id);
                     })
                     ->when(!is_numeric($id), function ($qurey) use ($id) {
                         $qurey->where('slug', $id);
-                    })
-                    ->first();
+                    });
+            };
+
+            // Intentar primero con el módulo del header si viene configurado
+            $item = null;
+            if (config('module.current_module_data')) {
+                $item = $baseQuery()->module(config('module.current_module_data')['id'])->first();
+            }
+
+            // Fallback: si no se encontró en el módulo del header o si el producto es de otro módulo (Algolia, búsqueda global, deep-link)
+            if (!$item) {
+                $item = $baseQuery()->first();
             }
 
             if (!$item) {
