@@ -561,6 +561,25 @@ class ItemController extends Controller
                     $qurey->where('slug', $id);
                 })
                 ->first();
+
+            // Fallback: si no se encontró en el módulo del header (ej. búsqueda global, Algolia cross-module o deep-link)
+            if (!$item) {
+                $item = Item::withCount('whislists')->with(['tags', 'nutritions', 'allergies', 'reviews', 'reviews.customer'])->active()->visibleInCustomerApp()
+                    ->when(is_numeric($id), function ($qurey) use ($id) {
+                        $qurey->where('id', $id);
+                    })
+                    ->when(!is_numeric($id), function ($qurey) use ($id) {
+                        $qurey->where('slug', $id);
+                    })
+                    ->first();
+            }
+
+            if (!$item) {
+                return response()->json([
+                    'errors' => ['code' => 'product-001', 'message' => translate('messages.not_found')]
+                ], 404);
+            }
+
             $store = StoreLogic::get_store_details($item->store_id);
             if ($store) {
                 $category_ids = DB::table('items')

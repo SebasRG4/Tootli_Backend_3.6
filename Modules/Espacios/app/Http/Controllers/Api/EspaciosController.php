@@ -81,6 +81,39 @@ class EspaciosController extends Controller
             $query->where('price_per_night', '<=', (float) $request->max_price);
         }
 
+        // Filtro por número de habitaciones
+        if ($request->rooms) {
+            $query->where('num_rooms', '>=', (int) $request->rooms);
+        }
+
+        // Filtro por número de baños
+        if ($request->bathrooms) {
+            $query->where('num_bathrooms', '>=', (int) $request->bathrooms);
+        }
+
+        // Filtro por calificación mínima (estrellas)
+        if ($request->min_rating) {
+            $query->where('avg_rating', '>=', (float) $request->min_rating);
+        }
+
+        // Filtro por política de cancelación
+        if ($request->cancellation_policy) {
+            $query->where('cancellation_policy', $request->cancellation_policy);
+        }
+
+        // Filtro por amenidades (IDs separados por coma o array)
+        if ($request->amenities) {
+            $amenityIds = is_array($request->amenities) ? $request->amenities : explode(',', $request->amenities);
+            $amenityIds = array_filter(array_map('intval', $amenityIds));
+            if (!empty($amenityIds)) {
+                foreach ($amenityIds as $amenityId) {
+                    $query->whereHas('amenities', function ($q) use ($amenityId) {
+                        $q->where('espacios_amenities.id', $amenityId);
+                    });
+                }
+            }
+        }
+
         // Filtro por disponibilidad de fechas
         if ($request->check_in && $request->check_out) {
             $checkIn  = $request->check_in;
@@ -99,8 +132,17 @@ class EspaciosController extends Controller
             });
         }
 
-        // Filtro geográfico
-        if ($request->lat && $request->lng) {
+        // Filtro por Bounding Box (Viewport del Mapa)
+        if ($request->min_lat && $request->max_lat && $request->min_lng && $request->max_lng) {
+            $minLat = (float) $request->min_lat;
+            $maxLat = (float) $request->max_lat;
+            $minLng = (float) $request->min_lng;
+            $maxLng = (float) $request->max_lng;
+
+            $query->whereBetween('lat', [min($minLat, $maxLat), max($minLat, $maxLat)])
+                  ->whereBetween('lng', [min($minLng, $maxLng), max($minLng, $maxLng)]);
+        } elseif ($request->lat && $request->lng) {
+            // Filtro geográfico por radio
             $lat    = (float) $request->lat;
             $lng    = (float) $request->lng;
             $radius = (float) ($request->radius ?? 20); // km
@@ -111,10 +153,17 @@ class EspaciosController extends Controller
             );
         }
 
+        // Si se solicita específicamente para el mapa, requerir coordenadas y permitir mayor volumen
+        $isMap = filter_var($request->input('is_map', false), FILTER_VALIDATE_BOOLEAN);
+        if ($isMap) {
+            $query->whereNotNull('lat')->whereNotNull('lng');
+        }
+
         // Destacados primero, luego por rating
         $query->orderByDesc('is_featured')->orderByDesc('avg_rating');
 
-        $listings = $query->paginate(20);
+        $limit = $isMap ? (int) ($request->limit ?? 80) : (int) ($request->limit ?? 20);
+        $listings = $query->paginate($limit);
 
         return response()->json([
             'listings' => $listings->items(),

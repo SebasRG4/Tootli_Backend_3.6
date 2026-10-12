@@ -20,6 +20,7 @@ class EspacioListing extends Model
         'title',
         'description',
         'type',
+        'rental_type',
         'address',
         'city',
         'state',
@@ -28,8 +29,10 @@ class EspacioListing extends Model
         'lng',
         'zone_id',
         'price_per_night',
+        'price_per_hour',
         'min_nights',
         'max_nights',
+        'min_hours',
         'max_guests',
         'num_rooms',
         'num_bathrooms',
@@ -41,14 +44,24 @@ class EspacioListing extends Model
         'cancellation_policy',
         'house_rules',
         'safety_property',
+        'access_type',
+        'access_instructions',
+        'wifi_ssid',
+        'wifi_password',
+        'tootli_lana',
+        'cashback_percent',
     ];
 
     protected $casts = [
         'price_per_night' => 'float',
+        'price_per_hour'  => 'float',
+        'min_hours'       => 'integer',
         'lat'             => 'float',
         'lng'             => 'float',
         'is_featured'     => 'boolean',
         'avg_rating'      => 'float',
+        'tootli_lana'     => 'boolean',
+        'cashback_percent'=> 'float',
     ];
 
     protected $appends = ['cover_image_url'];
@@ -60,6 +73,21 @@ class EspacioListing extends Model
     public function store(): BelongsTo
     {
         return $this->belongsTo(Store::class, 'store_id');
+    }
+
+    public function host(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(EspacioMessage::class, 'listing_id');
     }
 
     public function images(): HasMany

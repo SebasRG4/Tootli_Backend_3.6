@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Espacios\Http\Controllers\Api\EspaciosController;
+use Modules\Espacios\Http\Controllers\Api\EspaciosAiController;
 use Modules\Espacios\Http\Controllers\Api\EspaciosBookingController;
+use Modules\Espacios\Http\Controllers\Api\EspaciosChatController;
+use Modules\Espacios\Http\Controllers\Api\EspaciosController;
 use Modules\Espacios\Http\Controllers\Api\EspaciosHostController;
 use Modules\Espacios\Http\Controllers\Api\EspaciosReviewController;
 
@@ -28,8 +30,11 @@ Route::group(['prefix' => 'espacios'], function () {
     Route::get('listings/{id}', [EspaciosController::class, 'show']);
     Route::get('listings/{id}/reviews', [EspaciosReviewController::class, 'index']);
 
+    // Tootli IA Concierge (disponible para visitantes o huéspedes)
+    Route::post('ai/concierge', [EspaciosAiController::class, 'concierge']);
+
     // ——————————————————————————————
-    // Rutas autenticadas (huésped)
+    // Rutas autenticadas (huésped / host)
     // ——————————————————————————————
     Route::group(['middleware' => 'auth:api'], function () {
 
@@ -39,6 +44,15 @@ Route::group(['prefix' => 'espacios'], function () {
         Route::get('bookings/{id}', [EspaciosBookingController::class, 'show']);
         Route::post('bookings/{id}/cancel', [EspaciosBookingController::class, 'cancel']);
         Route::post('bookings/{id}/review', [EspaciosReviewController::class, 'store']);
+
+        // Check-in y Check-out Digital
+        Route::post('bookings/{id}/check-in', [EspaciosBookingController::class, 'checkIn']);
+        Route::post('bookings/{id}/check-out', [EspaciosBookingController::class, 'checkOut']);
+
+        // Chat directo Huésped <-> Anfitrión
+        Route::get('messages', [EspaciosChatController::class, 'index']);
+        Route::post('messages', [EspaciosChatController::class, 'store']);
+        Route::get('conversations', [EspaciosChatController::class, 'conversations']);
 
         // ——————————————————————————————
         // Rutas del anfitrión (host)
@@ -55,6 +69,9 @@ Route::group(['prefix' => 'espacios'], function () {
             Route::get('bookings', [EspaciosHostController::class, 'hostBookings']);
             Route::post('bookings/{id}/confirm', [EspaciosHostController::class, 'confirmBooking']);
             Route::post('bookings/{id}/reject', [EspaciosHostController::class, 'rejectBooking']);
+
+            // Tootli IA Assistant para Hosts
+            Route::post('ai/generate-description', [EspaciosAiController::class, 'generateDescription']);
         });
     });
 });
