@@ -591,6 +591,11 @@ class ConfigController extends Controller
             $zone_ids = [$request->zone_id];
         }
 
+        $incentive_status = (int) (Helpers::get_business_settings('incentive_status') ?? 0);
+        if (!$incentive_status) {
+            return response()->json([], 200);
+        }
+
         $grids = \DB::table('delivery_grids')
             ->whereIn('zone_id', $zone_ids)
             ->when($request->module_id, function ($query) use ($request) {

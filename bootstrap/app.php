@@ -51,6 +51,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('delivery:send-deposit-reminders')->everyThirtyMinutes();
         $schedule->command('delivery:nightly-debt-reminders')->dailyAt('22:00');
         $schedule->command('order:incentivize')->everyMinute();
+        $schedule->command('order:cancel-unassigned')->everyMinute()->withoutOverlapping();
         $schedule->command('app:cart-marketing-reminders')->everyMinute();
     })
 

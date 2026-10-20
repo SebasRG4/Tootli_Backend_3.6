@@ -84,24 +84,30 @@ class ConversationController extends Controller
             }else if($request->receiver_type == 'vendor'){
                 $receiver = UserInfo::where('vendor_id',$request->receiver_id)->first();
                 $vendor = Vendor::find($request->receiver_id);
+                if(!$vendor){
+                    return response()->json(['message' => 'Vendor not found'], 404);
+                }
                 if(!$receiver){
                     $receiver = new UserInfo();
                     $receiver->vendor_id = $vendor->id;
-                    $receiver->f_name = $vendor->stores[0]->name;
+                    $receiver->f_name = $vendor->stores[0]->name ?? 'Store';
                     $receiver->l_name = '';
                     $receiver->phone = $vendor->phone;
                     $receiver->email = $vendor->email;
-                    $receiver->image = $vendor->stores[0]->logo;
+                    $receiver->image = $vendor->stores[0]->logo ?? null;
                     $receiver->save();
                 }
 
                 $receiver_id = $receiver->id;
                 $fcm_token=$vendor->firebase_token;
-                $fcm_token_web = "store_panel_{$vendor->stores[0]->id}_message";
+                $fcm_token_web = isset($vendor->stores[0]) ? "store_panel_{$vendor->stores[0]->id}_message" : null;
 
             }else if($request->receiver_type == 'delivery_man'){
                 $receiver = UserInfo::where('deliveryman_id',$request->receiver_id)->first();
                 $delivery_man = DeliveryMan::find($request->receiver_id);
+                if(!$delivery_man){
+                    return response()->json(['message' => 'Delivery man not found'], 404);
+                }
 
                 if(!$receiver){
                     $receiver = new UserInfo();
@@ -377,13 +383,16 @@ class ConversationController extends Controller
             $vendor = UserInfo::where('vendor_id', $request->vendor_id)->first();
             if(!$vendor){
                 $vd = Vendor::find($request->vendor_id);
+                if(!$vd){
+                    return response()->json(['message' => 'Vendor not found'], 404);
+                }
                 $vendor = new UserInfo();
                 $vendor->vendor_id = $vd->id;
-                $vendor->f_name = $vd->stores[0]->name;
+                $vendor->f_name = $vd->stores[0]->name ?? 'Store';
                 $vendor->l_name = '';
                 $vendor->phone = $vd->phone;
                 $vendor->email = $vd->email;
-                $vendor->image = $vd->stores[0]->logo;
+                $vendor->image = $vd->stores[0]->logo ?? null;
                 $vendor->save();
             }
             $conversation = Conversation::with(['sender','receiver','last_message'])->WhereConversation($user->id,$vendor->id)->first();
@@ -391,6 +400,9 @@ class ConversationController extends Controller
             $dm = UserInfo::where('deliveryman_id', $request->delivery_man_id)->first();
             if(!$dm){
                 $user2 = DeliveryMan::find($request->delivery_man_id);
+                if(!$user2){
+                    return response()->json(['message' => 'Delivery man not found'], 404);
+                }
                 $dm = new UserInfo();
                 $dm->deliveryman_id = $user2->id;
                 $dm->f_name = $user2->f_name;
@@ -421,15 +433,23 @@ class ConversationController extends Controller
                 }
             }else if($conversation->sender_type == 'delivery_man' && $conversation->sender){
                 $user2 = DeliveryMan::find($conversation->sender->deliveryman_id);
-                $order = Order::where('user_id',$user->user_id)->where('delivery_man_id', $user2->id)->whereIn('order_status', ['pending','accepted','confirmed','processing','handover','picked_up'])->count();
-                if ($order == 0 && class_exists(\Modules\Taxi\Models\TaxiRide::class)) {
-                    $order = \Modules\Taxi\Models\TaxiRide::where('user_id', $user->user_id)->where('driver_id', $user2->id)->whereIn('status', ['accepted', 'arriving', 'arrived', 'ongoing', 'started'])->count();
+                if ($user2) {
+                    $order = Order::where('user_id',$user->user_id)->where('delivery_man_id', $user2->id)->whereIn('order_status', ['pending','accepted','confirmed','processing','handover','picked_up'])->count();
+                    if ($order == 0 && class_exists(\Modules\Taxi\Models\TaxiRide::class)) {
+                        $order = \Modules\Taxi\Models\TaxiRide::where('user_id', $user->user_id)->where('driver_id', $user2->id)->whereIn('status', ['accepted', 'arriving', 'arrived', 'ongoing', 'started'])->count();
+                    }
+                } else {
+                    $order = 0;
                 }
             }else if($conversation->receiver_type == 'delivery_man' && $conversation->receiver){
                 $user2 = DeliveryMan::find($conversation->receiver->deliveryman_id);
-                $order = Order::where('user_id',$user->user_id)->where('delivery_man_id', $user2->id)->whereIn('order_status', ['pending','accepted','confirmed','processing','handover','picked_up'])->count();
-                if ($order == 0 && class_exists(\Modules\Taxi\Models\TaxiRide::class)) {
-                    $order = \Modules\Taxi\Models\TaxiRide::where('user_id', $user->user_id)->where('driver_id', $user2->id)->whereIn('status', ['accepted', 'arriving', 'arrived', 'ongoing', 'started'])->count();
+                if ($user2) {
+                    $order = Order::where('user_id',$user->user_id)->where('delivery_man_id', $user2->id)->whereIn('order_status', ['pending','accepted','confirmed','processing','handover','picked_up'])->count();
+                    if ($order == 0 && class_exists(\Modules\Taxi\Models\TaxiRide::class)) {
+                        $order = \Modules\Taxi\Models\TaxiRide::where('user_id', $user->user_id)->where('driver_id', $user2->id)->whereIn('status', ['accepted', 'arriving', 'arrived', 'ongoing', 'started'])->count();
+                    }
+                } else {
+                    $order = 0;
                 }
             }
             else{

@@ -26,6 +26,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('delivery:send-deposit-reminders')->everyThirtyMinutes();
         $schedule->command('delivery:nightly-debt-reminders')->dailyAt('22:00');
         $schedule->command('order:incentivize')->everyMinute();
+        $schedule->command('order:cancel-unassigned')->everyMinute()->withoutOverlapping();
         $schedule->command('app:cart-marketing-reminders')->everyMinute();
         $schedule->command('order:check-scheduled-drivers')->everyMinute();
         $schedule->command('taxi:cancel-timeout-rides')->everyMinute();
