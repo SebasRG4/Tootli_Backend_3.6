@@ -134,7 +134,6 @@ class ExpressDeliveryController extends Controller
                 $customer->email = ($cleanPhone ?: Str::random(8)) . '@tootli.com';
                 $customer->password = bcrypt(Str::random(12));
                 $customer->login_medium = 'manual';
-                $customer->is_active = 1;
                 $customer->ref_code = Helpers::generate_referer_code($customer);
                 $customer->save();
             }
