@@ -107,6 +107,11 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('cancellation-reason-export', 'ParcelController@cancellationReasonExport')->name('cancellationReasonExport');
         });
 
+        Route::group(['prefix' => 'express-delivery', 'as' => 'express-delivery.'], function () {
+            Route::get('/', 'ExpressDeliveryController@index')->name('index');
+            Route::post('calculate-fee', 'ExpressDeliveryController@calculateFee')->name('calculate-fee');
+            Route::post('store', 'ExpressDeliveryController@store')->name('store');
+        });
 
         Route::group(['prefix' => 'dashboard-stats', 'as' => 'dashboard-stats.'], function () {
             Route::post('order', 'DashboardController@order')->name('order');

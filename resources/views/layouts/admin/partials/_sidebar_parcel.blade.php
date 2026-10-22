@@ -59,9 +59,17 @@
                                 {{ 'Panel de Control' }}
                             </span>
                         </a>
-                    </li>
                     <!-- End Dashboards -->
 
+                    <!-- Envío Express / WhatsApp -->
+                    <li class="navbar-vertical-aside-has-menu {{Request::is('admin/express-delivery*') ? 'active' : ''}}">
+                        <a class="js-navbar-vertical-aside-menu-link nav-link " href="{{route('admin.express-delivery.index')}}"
+                            title="Envío Express / WhatsApp">
+                            <i class="tio-bike nav-icon text-success"></i>
+                            <span class="text-truncate"><strong>Envío WhatsApp (Express)</strong></span>
+                        </a>
+                    </li>
+                    <!-- Envío Express / WhatsApp -->
 
                     <!-- Orders -->
                     @if (\App\CentralLogics\Helpers::module_permission_check('order'))
