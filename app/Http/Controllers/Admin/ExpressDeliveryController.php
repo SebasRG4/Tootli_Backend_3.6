@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\BusinessSetting;
 use App\Models\DeliveryMan;
+use App\Models\DMVehicle;
 use App\Models\Module;
 use App\Models\Order;
 use App\Models\ParcelCategory;
@@ -223,6 +224,9 @@ class ExpressDeliveryController extends Controller
             $order->order_note = implode(' | ', $noteParts);
             $order->delivery_instruction = $request->delivery_instruction;
             
+            $defaultVehicle = DMVehicle::where('can_delivery', 1)->active()->first();
+            $order->dm_vehicle_id = $defaultVehicle?->id ?? 2;
+            
             $order->otp = rand(1000, 9999);
             $order->pending = now();
             $order->schedule_at = now();
@@ -238,6 +242,9 @@ class ExpressDeliveryController extends Controller
                     $order->delivery_man_id = $deliveryman->id;
                     $order->order_status = 'accepted';
                     $order->accepted = now();
+                    if ($deliveryman->vehicle_id) {
+                        $order->dm_vehicle_id = $deliveryman->vehicle_id;
+                    }
                     $order->save();
 
                     $deliveryman->increment('current_orders');
@@ -250,7 +257,7 @@ class ExpressDeliveryController extends Controller
                             'description' => 'Recoger en: ' . $request->pickup_name . ' para ' . $request->receiver_name,
                             'order_id' => $order->id,
                             'image' => '',
-                            'type' => 'order_status',
+                            'type' => 'assign',
                             'order_type' => 'parcel_order',
                         ];
                         Helpers::send_push_notif_to_device($deliveryman->fcm_token, $pushData);

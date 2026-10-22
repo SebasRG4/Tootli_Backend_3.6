@@ -90,12 +90,22 @@ class DeliveryEligibilityService
 
         $maxOrders = $this->getEffectiveMaxConcurrentOrders($dm);
         if ($dm->current_orders >= $maxOrders) {
-            return DeliveryEligibilityResult::deny(
-                'max_orders',
-                'max_orders',
-                405,
-                translate('messages.dm_maximum_order_exceed_warning'),
-            );
+            // Verificación de seguridad: si el contador en BD quedó desfasado, verificar pedidos activos reales
+            $realActiveOrders = Order::where('delivery_man_id', $dm->id)
+                ->whereNotIn('order_status', ['delivered', 'failed', 'canceled', 'refund_requested', 'refund_request_canceled', 'refunded'])
+                ->count();
+            if ($realActiveOrders >= $maxOrders) {
+                return DeliveryEligibilityResult::deny(
+                    'max_orders',
+                    'max_orders',
+                    405,
+                    translate('messages.dm_maximum_order_exceed_warning'),
+                );
+            } else {
+                // Auto-corregir el contador desfasado en BD
+                $dm->current_orders = $realActiveOrders;
+                $dm->saveQuietly();
+            }
         }
 
         // --- Nueva Lógica de Efectivo y Alto Valor ---
