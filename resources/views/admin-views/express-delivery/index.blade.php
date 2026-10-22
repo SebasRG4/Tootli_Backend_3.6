@@ -30,7 +30,7 @@
     .badge-summary { background: #3B82F6; }
     #expressMap {
         width: 100%;
-        height: 420px;
+        height: 480px;
         border-radius: 12px;
         border: 1px solid #CBD5E1;
     }
@@ -59,6 +59,14 @@
         background: #EFF6FF;
         color: #1E40AF;
     }
+    .map-mode-btn {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
 </style>
 @endpush
 
@@ -83,16 +91,18 @@
     <form id="expressDeliveryForm" action="{{ route('admin.express-delivery.store') }}" method="POST">
         @csrf
         <div class="row g-3">
-            <!-- Columna Izquierda: Origen y Destino -->
+            <!-- Columna Izquierda: Origen, Destino y Mapa -->
             <div class="col-lg-7">
                 <!-- Paso 1: Recogida (Restaurante / Negocio) -->
-                <div class="card step-card mb-4">
+                <div class="card step-card mb-4" id="card_pickup">
                     <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center gap-2">
                             <span class="badge-step badge-pickup">A</span>
                             <h5 class="mb-0 font-weight-bold">Punto de Recogida (Restaurante / Negocio)</h5>
                         </div>
-                        <span class="badge badge-soft-success">Origen</span>
+                        <button type="button" class="btn btn-sm btn-soft-success font-weight-bold" onclick="focusPinOnMap('pickup')">
+                            <i class="tio-map mr-1"></i> Fijar en Mapa (A)
+                        </button>
                     </div>
                     <div class="card-body">
                         <!-- Selector rápido si es tienda existente -->
@@ -131,14 +141,22 @@
                         </div>
 
                         <div class="form-group mb-2">
-                            <label class="form-label font-weight-bold">Dirección de Recogida <span class="text-danger">*</span></label>
+                            <label class="form-label font-weight-bold d-flex justify-content-between align-items-center">
+                                <span>Dirección de Recogida <span class="text-danger">*</span></span>
+                                <small class="text-success font-weight-bold" id="pickupCoordsBadge"></small>
+                            </label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="tio-poi text-success"></i></span>
                                 </div>
-                                <input type="text" name="pickup_address" id="pickup_address" class="form-control" placeholder="Buscar dirección en Google Maps o escribir calle y número..." value="{{ old('pickup_address') }}" required autocomplete="off">
+                                <input type="text" name="pickup_address" id="pickup_address" class="form-control" placeholder="Escribe para buscar o haz clic en 'Fijar en Mapa'..." value="{{ old('pickup_address') }}" required autocomplete="off">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-success font-weight-bold" onclick="focusPinOnMap('pickup')" title="Colocar punto de recogida en el mapa">
+                                        <i class="tio-map mr-1"></i> Fijar en Mapa
+                                    </button>
+                                </div>
                             </div>
-                            <small class="form-text text-muted">Escribe la dirección y selecciona la sugerencia de Google Maps o muévela en el mapa.</small>
+                            <small class="form-text text-muted">Escribe la dirección, selecciónala en Google Maps o haz clic/arrastra el marcador verde en el mapa.</small>
                         </div>
 
                         <input type="hidden" name="pickup_latitude" id="pickup_latitude" value="{{ old('pickup_latitude', $default_location['lat'] ?? '18.9261') }}">
@@ -147,13 +165,15 @@
                 </div>
 
                 <!-- Paso 2: Entrega (Cliente Final de WhatsApp) -->
-                <div class="card step-card mb-4">
+                <div class="card step-card mb-4" id="card_delivery">
                     <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center gap-2">
                             <span class="badge-step badge-delivery">B</span>
                             <h5 class="mb-0 font-weight-bold">Punto de Entrega (Cliente Final de WhatsApp)</h5>
                         </div>
-                        <span class="badge badge-soft-danger">Destino</span>
+                        <button type="button" class="btn btn-sm btn-soft-danger font-weight-bold" onclick="focusPinOnMap('delivery')">
+                            <i class="tio-map mr-1"></i> Fijar en Mapa (B)
+                        </button>
                     </div>
                     <div class="card-body">
                         <div class="row g-2">
@@ -172,14 +192,22 @@
                         </div>
 
                         <div class="form-group mb-2">
-                            <label class="form-label font-weight-bold">Dirección de Entrega <span class="text-danger">*</span></label>
+                            <label class="form-label font-weight-bold d-flex justify-content-between align-items-center">
+                                <span>Dirección de Entrega <span class="text-danger">*</span></span>
+                                <small class="text-danger font-weight-bold" id="deliveryCoordsBadge"></small>
+                            </label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="tio-poi-outlined text-danger"></i></span>
                                 </div>
-                                <input type="text" name="receiver_address" id="receiver_address" class="form-control" placeholder="Buscar dirección de entrega del cliente..." value="{{ old('receiver_address') }}" required autocomplete="off">
+                                <input type="text" name="receiver_address" id="receiver_address" class="form-control" placeholder="Escribe para buscar o haz clic en 'Fijar en Mapa'..." value="{{ old('receiver_address') }}" required autocomplete="off">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-danger font-weight-bold" onclick="focusPinOnMap('delivery')" title="Colocar punto de entrega en el mapa">
+                                        <i class="tio-map mr-1"></i> Fijar en Mapa
+                                    </button>
+                                </div>
                             </div>
-                            <small class="form-text text-muted">Escribe la colonia, calle y número del cliente o selecciónala en el mapa.</small>
+                            <small class="form-text text-muted">Escribe la colonia, calle y número del cliente o haz clic/arrastra el marcador rojo en el mapa.</small>
                         </div>
 
                         <input type="hidden" name="receiver_latitude" id="receiver_latitude" value="{{ old('receiver_latitude', $default_location['lat'] ?? '18.9261') }}">
@@ -187,13 +215,43 @@
                     </div>
                 </div>
 
-                <!-- Mapa interactivo de ruta -->
-                <div class="card step-card">
-                    <div class="card-header bg-white py-2 d-flex align-items-center justify-content-between">
-                        <span class="font-weight-bold text-muted small"><i class="tio-map mr-1"></i> Mapa de Ruta y Cobertura</span>
+                <!-- Mapa interactivo de ruta y selección de puntos -->
+                <div class="card step-card" id="mapCard">
+                    <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge-step bg-dark text-white"><i class="tio-map"></i></span>
+                            <div>
+                                <h5 class="mb-0 font-weight-bold">Fijar Puntos en el Mapa</h5>
+                                <small class="text-muted">Haz clic en el mapa o arrastra los marcadores A y B</small>
+                            </div>
+                        </div>
                         <span class="badge badge-soft-info" id="zoneDisplay">Zona: Detectando...</span>
                     </div>
-                    <div class="card-body p-2">
+                    <div class="card-body p-3">
+                        <!-- Barra de control de modo de clic -->
+                        <div class="d-flex align-items-center justify-content-between p-2 mb-2 bg-light rounded border flex-wrap gap-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="small font-weight-bold text-dark">Al hacer clic en el mapa fijarás:</span>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <button type="button" class="btn btn-success map-mode-btn" id="btnModePickup" onclick="setMapPinMode('pickup')">
+                                        <i class="tio-poi mr-1"></i> Punto A: Recogida (Verde)
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger map-mode-btn" id="btnModeDelivery" onclick="setMapPinMode('delivery')">
+                                        <i class="tio-poi-outlined mr-1"></i> Punto B: Entrega (Rojo)
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-white border" onclick="locateUser()" title="Centrar en mi ubicación actual">
+                                <i class="tio-near-me text-primary mr-1"></i> Mi Ubicación
+                            </button>
+                        </div>
+
+                        <!-- Indicador visual activo -->
+                        <div class="alert alert-soft-success py-2 px-3 mb-2 small d-flex align-items-center justify-content-between" id="mapModeIndicator">
+                            <span><i class="tio-info-outined mr-1"></i> <strong>Modo Recogida:</strong> Haz clic en cualquier lugar del mapa para mover el punto de recogida (Restaurante), o arrastra el marcador verde.</span>
+                        </div>
+
+                        <!-- Contenedor del mapa -->
                         <div id="expressMap"></div>
                     </div>
                 </div>
@@ -337,6 +395,8 @@
     "use strict";
 
     let expressMap, pickupMarker, receiverMarker, directionsService, directionsRenderer;
+    let currentPinMode = 'pickup'; // 'pickup' o 'delivery'
+
     const defaultLat = parseFloat("{{ $default_location['lat'] ?? 18.9261 }}");
     const defaultLng = parseFloat("{{ $default_location['lng'] ?? -99.2307 }}");
     const perKmRate = parseFloat("{{ $perKmCharge ?? 15 }}");
@@ -349,7 +409,10 @@
             zoom: 13,
             center: centerLatLng,
             streetViewControl: false,
-            mapTypeControl: false,
+            mapTypeControl: true,
+            mapTypeControlOptions: {
+                style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+            }
         });
 
         directionsService = new google.maps.DirectionsService();
@@ -368,7 +431,12 @@
             position: centerLatLng,
             map: expressMap,
             draggable: true,
-            title: "Punto de Recogida (Restaurante)",
+            label: {
+                text: "A",
+                color: "#FFFFFF",
+                fontWeight: "bold"
+            },
+            title: "Punto A: Recogida (Restaurante)",
             icon: {
                 url: "https://maps.google.com/mapfiles/ms/icons/green-dot.png"
             }
@@ -379,25 +447,33 @@
             position: { lat: defaultLat + 0.015, lng: defaultLng + 0.015 },
             map: expressMap,
             draggable: true,
-            title: "Punto de Entrega (Cliente)",
+            label: {
+                text: "B",
+                color: "#FFFFFF",
+                fontWeight: "bold"
+            },
+            title: "Punto B: Entrega (Cliente)",
             icon: {
                 url: "https://maps.google.com/mapfiles/ms/icons/red-dot.png"
             }
         });
 
+        // Evento: Al hacer clic en cualquier parte del mapa, fijar el punto según el modo activo
+        expressMap.addListener("click", function (e) {
+            if (currentPinMode === 'pickup') {
+                setPickupLocation(e.latLng.lat(), e.latLng.lng(), true);
+            } else {
+                setDeliveryLocation(e.latLng.lat(), e.latLng.lng(), true);
+            }
+        });
+
         // Eventos drag en marcadores
         pickupMarker.addListener("dragend", function (e) {
-            document.getElementById("pickup_latitude").value = e.latLng.lat();
-            document.getElementById("pickup_longitude").value = e.latLng.lng();
-            geocodeLatLng(e.latLng, "pickup_address");
-            calculateAndDisplayRoute();
+            setPickupLocation(e.latLng.lat(), e.latLng.lng(), true);
         });
 
         receiverMarker.addListener("dragend", function (e) {
-            document.getElementById("receiver_latitude").value = e.latLng.lat();
-            document.getElementById("receiver_longitude").value = e.latLng.lng();
-            geocodeLatLng(e.latLng, "receiver_address");
-            calculateAndDisplayRoute();
+            setDeliveryLocation(e.latLng.lat(), e.latLng.lng(), true);
         });
 
         // Autocomplete Google Places para Recogida
@@ -408,10 +484,8 @@
             const place = pickupAutocomplete.getPlace();
             if (!place.geometry || !place.geometry.location) return;
 
-            pickupMarker.setPosition(place.geometry.location);
-            document.getElementById("pickup_latitude").value = place.geometry.location.lat();
-            document.getElementById("pickup_longitude").value = place.geometry.location.lng();
-            calculateAndDisplayRoute();
+            setPickupLocation(place.geometry.location.lat(), place.geometry.location.lng(), false);
+            expressMap.panTo(place.geometry.location);
         });
 
         // Autocomplete Google Places para Entrega
@@ -422,13 +496,68 @@
             const place = receiverAutocomplete.getPlace();
             if (!place.geometry || !place.geometry.location) return;
 
-            receiverMarker.setPosition(place.geometry.location);
-            document.getElementById("receiver_latitude").value = place.geometry.location.lat();
-            document.getElementById("receiver_longitude").value = place.geometry.location.lng();
-            calculateAndDisplayRoute();
+            setDeliveryLocation(place.geometry.location.lat(), place.geometry.location.lng(), false);
+            expressMap.panTo(place.geometry.location);
         });
 
         // Trazar ruta inicial
+        calculateAndDisplayRoute();
+    }
+
+    // Cambiar modo de fijar punto en el mapa (pickup o delivery)
+    function setMapPinMode(mode) {
+        currentPinMode = mode;
+        const btnPickup = document.getElementById("btnModePickup");
+        const btnDelivery = document.getElementById("btnModeDelivery");
+        const indicator = document.getElementById("mapModeIndicator");
+
+        if (mode === 'pickup') {
+            btnPickup.className = "btn btn-success map-mode-btn";
+            btnDelivery.className = "btn btn-outline-danger map-mode-btn";
+            indicator.className = "alert alert-soft-success py-2 px-3 mb-2 small d-flex align-items-center justify-content-between";
+            indicator.innerHTML = `<span><i class="tio-poi mr-1"></i> <strong>Modo Recogida (A) Activo:</strong> Haz clic en cualquier lugar del mapa para colocar el Restaurante, o arrastra el marcador verde.</span>`;
+            if (pickupMarker) expressMap.panTo(pickupMarker.getPosition());
+        } else {
+            btnPickup.className = "btn btn-outline-success map-mode-btn";
+            btnDelivery.className = "btn btn-danger map-mode-btn";
+            indicator.className = "alert alert-soft-danger py-2 px-3 mb-2 small d-flex align-items-center justify-content-between";
+            indicator.innerHTML = `<span><i class="tio-poi-outlined mr-1"></i> <strong>Modo Entrega (B) Activo:</strong> Haz clic en cualquier lugar del mapa para colocar la dirección del Cliente, o arrastra el marcador rojo.</span>`;
+            if (receiverMarker) expressMap.panTo(receiverMarker.getPosition());
+        }
+    }
+
+    // Enfocar punto desde los botones de las tarjetas
+    function focusPinOnMap(mode) {
+        setMapPinMode(mode);
+        const mapElement = document.getElementById("mapCard");
+        if (mapElement) {
+            mapElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    function setPickupLocation(lat, lng, doGeocode = true) {
+        const latLng = new google.maps.LatLng(lat, lng);
+        pickupMarker.setPosition(latLng);
+        document.getElementById("pickup_latitude").value = lat;
+        document.getElementById("pickup_longitude").value = lng;
+        document.getElementById("pickupCoordsBadge").innerText = `Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`;
+
+        if (doGeocode) {
+            geocodeLatLng(latLng, "pickup_address");
+        }
+        calculateAndDisplayRoute();
+    }
+
+    function setDeliveryLocation(lat, lng, doGeocode = true) {
+        const latLng = new google.maps.LatLng(lat, lng);
+        receiverMarker.setPosition(latLng);
+        document.getElementById("receiver_latitude").value = lat;
+        document.getElementById("receiver_longitude").value = lng;
+        document.getElementById("deliveryCoordsBadge").innerText = `Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`;
+
+        if (doGeocode) {
+            geocodeLatLng(latLng, "receiver_address");
+        }
         calculateAndDisplayRoute();
     }
 
@@ -441,7 +570,28 @@
         });
     }
 
+    function locateUser() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                const pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                expressMap.setCenter(pos);
+                expressMap.setZoom(15);
+                if (currentPinMode === 'pickup') {
+                    setPickupLocation(pos.lat, pos.lng, true);
+                } else {
+                    setDeliveryLocation(pos.lat, pos.lng, true);
+                }
+            }, function () {
+                toastr.error("No se pudo obtener la geolocalización de tu navegador.");
+            });
+        }
+    }
+
     function calculateAndDisplayRoute() {
+        if (!pickupMarker || !receiverMarker) return;
         const origin = pickupMarker.getPosition();
         const destination = receiverMarker.getPosition();
 
@@ -460,12 +610,9 @@
                     if (route && route.legs && route.legs[0]) {
                         const distKm = (route.legs[0].distance.value / 1000).toFixed(1);
                         document.getElementById("distKmBadge").innerText = `Distancia: ${distKm} km`;
-                        
-                        // Consultar backend para cálculo exacto de tarifa y zona
                         syncFeeWithBackend(origin.lat(), origin.lng(), destination.lat(), destination.lng(), distKm);
                     }
                 } else {
-                    // Fallback si no hay ruta por carretera
                     const pLat = origin.lat();
                     const pLng = origin.lng();
                     const rLat = destination.lat();
@@ -496,7 +643,6 @@
                 }
             },
             error: function () {
-                // Cálculo fallback local
                 if (fallbackKm) {
                     const fee = Math.max(minChargeRate, Math.round(fallbackKm * perKmRate));
                     $('#delivery_fee').val(fee);
@@ -506,7 +652,6 @@
         });
     }
 
-    // Actualización de totales de cobro
     function updateTotals() {
         const itemPrice = parseFloat($('#item_price').val()) || 0;
         const deliveryFee = parseFloat($('#delivery_fee').val()) || 0;
@@ -534,7 +679,6 @@
     }
 
     $(document).ready(function () {
-        // Escuchar cambios de montos y radios
         $('#item_price, #delivery_fee').on('input change', updateTotals);
         $('input[name="payment_method"]').on('change', function () {
             $('.payment-pill').removeClass('active');
@@ -543,7 +687,6 @@
         });
         $('input[name="charge_payer"]').on('change', updateTotals);
 
-        // Selector de tienda registrada
         $('#registeredStoreSelect').on('change', function () {
             const selected = $(this).find(':selected');
             if (!selected.val()) return;
@@ -559,15 +702,11 @@
             if (address) $('#pickup_address').val(address);
 
             if (lat && lng && pickupMarker) {
-                const pos = new google.maps.LatLng(lat, lng);
-                pickupMarker.setPosition(pos);
-                $('#pickup_latitude').val(lat);
-                $('#pickup_longitude').val(lng);
-                calculateAndDisplayRoute();
+                setPickupLocation(lat, lng, false);
+                expressMap.panTo(pickupMarker.getPosition());
             }
         });
 
-        // Prevenir doble envío
         $('#expressDeliveryForm').on('submit', function () {
             $('#btnSubmitExpress').prop('disabled', true).html('<span class="spinner-border spinner-border-sm mr-2"></span> Enviando a repartidores...');
         });
