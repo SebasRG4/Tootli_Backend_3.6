@@ -44,28 +44,45 @@
         cursor: pointer;
         border: 2px solid #E2E8F0;
         border-radius: 10px;
-        padding: 10px 14px;
+        padding: 12px 14px;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
         font-weight: 600;
         transition: all 0.2s;
+        background: #fff;
     }
     .payment-pill input {
         display: none;
     }
     .payment-pill.active {
-        border-color: #2563EB;
-        background: #EFF6FF;
+        border-color: #2563EB !important;
+        background: #EFF6FF !important;
         color: #1E40AF;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+    }
+    .payer-option-card {
+        cursor: pointer;
+        border: 2px solid #E2E8F0;
+        border-radius: 10px;
+        transition: all 0.2s;
+        background: #fff;
+    }
+    .payer-option-card.active {
+        border-color: #2563EB !important;
+        background-color: #EFF6FF !important;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
     }
     .map-mode-btn {
         padding: 8px 16px;
         border-radius: 8px;
-        font-weight: 600;
+        font-weight: 700;
         font-size: 13px;
         cursor: pointer;
         transition: all 0.2s;
+    }
+    .map-mode-btn.active {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
 </style>
 @endpush
@@ -233,7 +250,7 @@
                             <div class="d-flex align-items-center gap-2">
                                 <span class="small font-weight-bold text-dark">Al hacer clic en el mapa fijarás:</span>
                                 <div class="btn-group btn-group-sm" role="group">
-                                    <button type="button" class="btn btn-success map-mode-btn" id="btnModePickup" onclick="setMapPinMode('pickup')">
+                                    <button type="button" class="btn btn-success map-mode-btn active" id="btnModePickup" onclick="setMapPinMode('pickup')">
                                         <i class="tio-poi mr-1"></i> Punto A: Recogida (Verde)
                                     </button>
                                     <button type="button" class="btn btn-outline-danger map-mode-btn" id="btnModeDelivery" onclick="setMapPinMode('delivery')">
@@ -248,7 +265,7 @@
 
                         <!-- Indicador visual activo -->
                         <div class="alert alert-soft-success py-2 px-3 mb-2 small d-flex align-items-center justify-content-between" id="mapModeIndicator">
-                            <span><i class="tio-info-outined mr-1"></i> <strong>Modo Recogida:</strong> Haz clic en cualquier lugar del mapa para mover el punto de recogida (Restaurante), o arrastra el marcador verde.</span>
+                            <span><i class="tio-info-outined mr-1"></i> <strong>Modo Recogida (A) Activo:</strong> Haz clic en cualquier lugar del mapa para colocar el Restaurante, o arrastra el marcador verde.</span>
                         </div>
 
                         <!-- Contenedor del mapa -->
@@ -304,27 +321,27 @@
                         <div class="form-group mb-3">
                             <label class="form-label font-weight-bold">Método de Pago <span class="text-danger">*</span></label>
                             <div class="d-flex flex-column gap-2">
-                                <label class="payment-pill active" id="pill_cod">
-                                    <input type="radio" name="payment_method" value="cash_on_delivery" checked>
+                                <label class="payment-pill active" id="pill_cod" onclick="selectPaymentMethod('cash_on_delivery')">
+                                    <input type="radio" name="payment_method" value="cash_on_delivery" id="pm_cod" checked>
                                     <span class="font-size-lg">💵</span>
                                     <div>
-                                        <div>Efectivo (Cobrar al entregar)</div>
+                                        <div class="font-weight-bold">Efectivo (Cobrar al entregar)</div>
                                         <small class="text-muted font-weight-normal">El repartidor cobra al cliente en destino</small>
                                     </div>
                                 </label>
-                                <label class="payment-pill" id="pill_spei">
-                                    <input type="radio" name="payment_method" value="offline_payment">
+                                <label class="payment-pill" id="pill_spei" onclick="selectPaymentMethod('offline_payment')">
+                                    <input type="radio" name="payment_method" value="offline_payment" id="pm_spei">
                                     <span class="font-size-lg">📲</span>
                                     <div>
-                                        <div>Transferencia / SPEI (Pagado)</div>
+                                        <div class="font-weight-bold">Transferencia / SPEI (Pagado)</div>
                                         <small class="text-muted font-weight-normal">El cliente ya le transfirió al restaurante o admin</small>
                                     </div>
                                 </label>
-                                <label class="payment-pill" id="pill_card">
-                                    <input type="radio" name="payment_method" value="digital_payment">
+                                <label class="payment-pill" id="pill_card" onclick="selectPaymentMethod('digital_payment')">
+                                    <input type="radio" name="payment_method" value="digital_payment" id="pm_card">
                                     <span class="font-size-lg">💳</span>
                                     <div>
-                                        <div>Tarjeta (Digital)</div>
+                                        <div class="font-weight-bold">Tarjeta (Digital)</div>
                                         <small class="text-muted font-weight-normal">Pagado previamente con tarjeta</small>
                                     </div>
                                 </label>
@@ -333,14 +350,24 @@
 
                         <!-- Quién paga el envío -->
                         <div class="form-group mb-3">
-                            <label class="form-label font-weight-bold small text-muted">¿Quién asume el costo de envío?</label>
-                            <div class="btn-group btn-group-toggle w-100" data-toggle="buttons">
-                                <label class="btn btn-outline-primary active w-50">
-                                    <input type="radio" name="charge_payer" value="receiver" checked> Cliente (Receptor)
-                                </label>
-                                <label class="btn btn-outline-primary w-50">
-                                    <input type="radio" name="charge_payer" value="sender"> Restaurante (Origen)
-                                </label>
+                            <label class="form-label font-weight-bold d-block text-dark">
+                                <i class="tio-money-vs mr-1 text-primary"></i> ¿Quién asume el costo de envío? <span class="text-danger">*</span>
+                            </label>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <div class="payer-option-card border rounded p-3 text-center cursor-pointer active" id="payer_card_receiver" onclick="selectChargePayer('receiver')">
+                                        <input type="radio" name="charge_payer" id="charge_payer_receiver" value="receiver" checked class="d-none">
+                                        <div class="h5 mb-1 font-weight-bold text-primary"><i class="tio-user mr-1"></i> Cliente (Receptor)</div>
+                                        <small class="text-muted d-block">El cliente paga el flete al recibir</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="payer-option-card border rounded p-3 text-center cursor-pointer" id="payer_card_sender" onclick="selectChargePayer('sender')">
+                                        <input type="radio" name="charge_payer" id="charge_payer_sender" value="sender" class="d-none">
+                                        <div class="h5 mb-1 font-weight-bold text-dark"><i class="tio-shop mr-1"></i> Restaurante (Origen)</div>
+                                        <small class="text-muted d-block">El restaurante cubre el envío</small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -512,14 +539,14 @@
         const indicator = document.getElementById("mapModeIndicator");
 
         if (mode === 'pickup') {
-            btnPickup.className = "btn btn-success map-mode-btn";
+            btnPickup.className = "btn btn-success map-mode-btn active";
             btnDelivery.className = "btn btn-outline-danger map-mode-btn";
             indicator.className = "alert alert-soft-success py-2 px-3 mb-2 small d-flex align-items-center justify-content-between";
             indicator.innerHTML = `<span><i class="tio-poi mr-1"></i> <strong>Modo Recogida (A) Activo:</strong> Haz clic en cualquier lugar del mapa para colocar el Restaurante, o arrastra el marcador verde.</span>`;
             if (pickupMarker) expressMap.panTo(pickupMarker.getPosition());
         } else {
             btnPickup.className = "btn btn-outline-success map-mode-btn";
-            btnDelivery.className = "btn btn-danger map-mode-btn";
+            btnDelivery.className = "btn btn-danger map-mode-btn active";
             indicator.className = "alert alert-soft-danger py-2 px-3 mb-2 small d-flex align-items-center justify-content-between";
             indicator.innerHTML = `<span><i class="tio-poi-outlined mr-1"></i> <strong>Modo Entrega (B) Activo:</strong> Haz clic en cualquier lugar del mapa para colocar la dirección del Cliente, o arrastra el marcador rojo.</span>`;
             if (receiverMarker) expressMap.panTo(receiverMarker.getPosition());
@@ -542,6 +569,12 @@
         document.getElementById("pickup_longitude").value = lng;
         document.getElementById("pickupCoordsBadge").innerText = `Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`;
 
+        // Rellenar inmediatamente para que nunca esté vacío
+        const input = document.getElementById("pickup_address");
+        if (!input.value || input.value.startsWith("Ubicación en mapa")) {
+            input.value = `Ubicación en mapa (${lat.toFixed(5)}, ${lng.toFixed(5)})`;
+        }
+
         if (doGeocode) {
             geocodeLatLng(latLng, "pickup_address");
         }
@@ -555,6 +588,10 @@
         document.getElementById("receiver_longitude").value = lng;
         document.getElementById("deliveryCoordsBadge").innerText = `Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`;
 
+        // Rellenar inmediatamente para que nunca esté vacío al enviar el formulario
+        const input = document.getElementById("receiver_address");
+        input.value = `Ubicación en mapa (${lat.toFixed(5)}, ${lng.toFixed(5)})`;
+
         if (doGeocode) {
             geocodeLatLng(latLng, "receiver_address");
         }
@@ -564,7 +601,7 @@
     function geocodeLatLng(latLng, targetInputId) {
         const geocoder = new google.maps.Geocoder();
         geocoder.geocode({ location: latLng }, function (results, status) {
-            if (status === "OK" && results[0]) {
+            if (status === "OK" && results && results[0]) {
                 document.getElementById(targetInputId).value = results[0].formatted_address;
             }
         });
@@ -652,11 +689,43 @@
         });
     }
 
+    function selectPaymentMethod(method) {
+        $('input[name="payment_method"]').prop('checked', false);
+        $('.payment-pill').removeClass('active');
+
+        if (method === 'offline_payment') {
+            $('#pm_spei').prop('checked', true);
+            $('#pill_spei').addClass('active');
+        } else if (method === 'digital_payment') {
+            $('#pm_card').prop('checked', true);
+            $('#pill_card').addClass('active');
+        } else {
+            $('#pm_cod').prop('checked', true);
+            $('#pill_cod').addClass('active');
+        }
+        updateTotals();
+    }
+
+    function selectChargePayer(payer) {
+        if (payer === 'sender') {
+            $('#charge_payer_sender').prop('checked', true);
+            $('#charge_payer_receiver').prop('checked', false);
+            $('#payer_card_sender').addClass('active').find('.h5').addClass('text-primary').removeClass('text-dark');
+            $('#payer_card_receiver').removeClass('active').find('.h5').removeClass('text-primary').addClass('text-dark');
+        } else {
+            $('#charge_payer_receiver').prop('checked', true);
+            $('#charge_payer_sender').prop('checked', false);
+            $('#payer_card_receiver').addClass('active').find('.h5').addClass('text-primary').removeClass('text-dark');
+            $('#payer_card_sender').removeClass('active').find('.h5').removeClass('text-primary').addClass('text-dark');
+        }
+        updateTotals();
+    }
+
     function updateTotals() {
         const itemPrice = parseFloat($('#item_price').val()) || 0;
         const deliveryFee = parseFloat($('#delivery_fee').val()) || 0;
-        const paymentMethod = $('input[name="payment_method"]:checked').val();
-        const chargePayer = $('input[name="charge_payer"]:checked').val();
+        const paymentMethod = $('input[name="payment_method"]:checked').val() || 'cash_on_delivery';
+        const chargePayer = $('input[name="charge_payer"]:checked').val() || 'receiver';
 
         let totalToCollect = 0;
         let explanation = "";
@@ -664,7 +733,7 @@
         if (paymentMethod === 'cash_on_delivery') {
             if (chargePayer === 'sender') {
                 totalToCollect = itemPrice;
-                explanation = "El cliente solo paga la comida (Restaurante cubre el flete)";
+                explanation = `El cliente solo paga la comida ($${itemPrice.toFixed(2)}). El restaurante cubre el envío.`;
             } else {
                 totalToCollect = itemPrice + deliveryFee;
                 explanation = `Comida ($${itemPrice.toFixed(2)}) + Envío ($${deliveryFee.toFixed(2)})`;
@@ -680,13 +749,16 @@
 
     $(document).ready(function () {
         $('#item_price, #delivery_fee').on('input change', updateTotals);
-        $('input[name="payment_method"]').on('change', function () {
-            $('.payment-pill').removeClass('active');
-            $(this).closest('.payment-pill').addClass('active');
-            updateTotals();
-        });
-        $('input[name="charge_payer"]').on('change', updateTotals);
 
+        // Al hacer clic o focus en los inputs de dirección, cambiar automáticamente el modo del mapa
+        $('#pickup_address').on('focus click', function () {
+            setMapPinMode('pickup');
+        });
+        $('#receiver_address').on('focus click', function () {
+            setMapPinMode('delivery');
+        });
+
+        // Selector de restaurante registrado
         $('#registeredStoreSelect').on('change', function () {
             const selected = $(this).find(':selected');
             if (!selected.val()) return;
@@ -707,7 +779,33 @@
             }
         });
 
-        $('#expressDeliveryForm').on('submit', function () {
+        $('#expressDeliveryForm').on('submit', function (e) {
+            // Verificar que los campos requeridos tengan valor
+            const recAddr = $('#receiver_address').val();
+            const recLat = $('#receiver_latitude').val();
+            const recLng = $('#receiver_longitude').val();
+
+            if (!recAddr || recAddr.trim() === '') {
+                if (recLat && recLng) {
+                    $('#receiver_address').val(`Ubicación en mapa (${parseFloat(recLat).toFixed(5)}, ${parseFloat(recLng).toFixed(5)})`);
+                } else {
+                    e.preventDefault();
+                    toastr.error("Por favor fija el punto de entrega en el mapa o escribe la dirección.");
+                    focusPinOnMap('delivery');
+                    return false;
+                }
+            }
+
+            const pickAddr = $('#pickup_address').val();
+            const pickLat = $('#pickup_latitude').val();
+            const pickLng = $('#pickup_longitude').val();
+
+            if (!pickAddr || pickAddr.trim() === '') {
+                if (pickLat && pickLng) {
+                    $('#pickup_address').val(`Ubicación en mapa (${parseFloat(pickLat).toFixed(5)}, ${parseFloat(pickLng).toFixed(5)})`);
+                }
+            }
+
             $('#btnSubmitExpress').prop('disabled', true).html('<span class="spinner-border spinner-border-sm mr-2"></span> Enviando a repartidores...');
         });
 
